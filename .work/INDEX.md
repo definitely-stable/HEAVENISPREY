@@ -2,6 +2,11 @@
 
 **Каталог перенесённых разделов; для работы начинайте с [предметной карты](guides/START_HERE.md).** 63 раздела исходной v6 сохранены дословно по тематическим файлам; пересмотренные правила — в v7.
 
+## FOUNDATION-2026 — исследовательский фундамент до реализации игры
+
+- [Актуальные практики и исследования 2024–2026: детерминизм, контент, UX, property testing, Godot, PCG и AI-агенты](spec/v7/foundation-research-2026.md) — **DESIGN PROPOSAL**, не runtime.
+- [15 проверяемых foundation gates, dependency DAG и evidence register](proposals/foundation-2026/README.md). Смысл: подтверждать инварианты, сохранять свободу билдов и **не** вводить преждевременный ECS/RL/GDExtension.
+
 ## GAMEPLAY-GAP-001 — системный аудит игрового цикла (design-proposal)
 
 - [Что упущено за пределами навыков: XP/pickups, карта, события, боссы, загрузка перед забегом, режимы и UX](spec/v7/gameplay-loop-gap-audit.md).
