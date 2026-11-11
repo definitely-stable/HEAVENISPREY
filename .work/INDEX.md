@@ -14,6 +14,11 @@
 - [Решения ADR](decisions/README.md) · [Карта агента](indexes/AGENT_ROUTING.md) · [CURRENT_STATE](CURRENT_STATE.md)
 - [Манифест](MANIFEST.json) · [Источники](research/SOURCES.md) · [Архив v6](archive/architecture-v6-original.md)
 
+## Канонический контент после согласования пакетов
+
+- [ContentRegistry: контракт](spec/v7/content-registry-contract.md) · [каталоги v7](config/v7/README.md) · [тесты связности](../tests/test_content_catalog.py).
+- [Дедупликация пакетов v5/v6](guides/PACKAGE_RECONCILIATION.md) · [SHA реестр](archive/package-source-inventory.json) · [изменения идентификаторов](config/v7/id_compatibility.json).
+
 ## Трассируемость
 
 - **[Матрица требований → спецификация → тест → статус](indexes/TRACEABILITY.md)** — что действительно реализовано, а что существует только в дизайне.

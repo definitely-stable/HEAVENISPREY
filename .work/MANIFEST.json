@@ -516,5 +516,16 @@
     ],
     "source_anchor_coverage": 63,
     "archive_reference_count": 85
+  },
+  "canonical_content": {
+    "location": ".work/config/v7/",
+    "contract": ".work/spec/v7/content-registry-contract.md",
+    "adr": ".work/decisions/ADR-006-content-catalog.md",
+    "source_reconciliation": ".work/guides/PACKAGE_RECONCILIATION.md",
+    "source_inventory": ".work/archive/package-source-inventory.json",
+    "cross_ref_validator": "scripts/validate_content.py",
+    "tests": "tests/test_content_catalog.py",
+    "runtime_status": "NOT IMPLEMENTED",
+    "original_zip_files_committed": false
   }
 }

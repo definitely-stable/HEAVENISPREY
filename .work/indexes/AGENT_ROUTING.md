@@ -15,4 +15,6 @@
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 
+**Любая задача, меняющая игровые определения:** [Контракт ContentRegistry](../spec/v7/content-registry-contract.md) → [JSON/CSV v7](../config/v7/README.md) → [совместимость ID](../config/v7/id_compatibility.json) → [сквозные проверки](../../scripts/validate_content.py). Роли не закреплены за моделями AI.
+
 Оформлять работу по [TASK_SPEC](../templates/TASK_SPEC.md) и evidence по [EVIDENCE](../templates/EVIDENCE.md). [Предметный индекс](../guides/START_HERE.md).

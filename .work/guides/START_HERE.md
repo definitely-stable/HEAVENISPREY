@@ -15,6 +15,10 @@
 | Reverse engineering | [RE pipeline](../spec/core/s23.md) | [RE evidence](../spec/v5/v5_re.md) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |
 
+## Контентные связи
+
+[Канонические каталоги v7](../config/v7/README.md) объединяют классы → навыки → статусы, карты → боссы → открытия, таланты → валюты, режимы → награды → ботов. [Content Registry Contract](../spec/v7/content-registry-contract.md) описывает загрузку и типизацию в Godot. [Сопоставление источников](PACKAGE_RECONCILIATION.md) сохраняет исторические решения без конкурирующих конфигов.
+
 ## Поиск по мета-ссылкам
 
 [Полный индекс 63 разделов](../INDEX.md) · [Машиночитаемый MANIFEST](../MANIFEST.json) · [Первоисточники](../research/SOURCES.md) · [Архив v6](../archive/architecture-v6-original.md).

@@ -13,6 +13,7 @@
 | Правила для **любого** исполнителя | [AGENTS.md](AGENTS.md) · [Единый процесс работы](.work/guides/WORKFLOW.md) |
 | Контракты и приоритет документов | [Стандарты документации](.work/guides/DOC_STANDARDS.md) · [ADR](.work/decisions/README.md) |
 | Поздние сложности / вторая валюта | [Небесная кара и Бездна Дао](.work/spec/v7/late-game-progression.md) · [Экономика](.work/spec/v7/economy-and-talent-sinks.md) |
+| **Канонические данные и связи** | **[ContentRegistry](.work/spec/v7/content-registry-contract.md)** · [JSON/CSV v7](.work/config/v7/README.md) · [Аудит пакетов v5/v6](.work/guides/PACKAGE_RECONCILIATION.md) |
 | Конфиги и локализация | [v7 fixtures](.work/config/v7/README.md) · [RU/EN](.work/spec/v6/v6_i18n.md) |
 | Что перенесено, а что ещё нет? | **[Аудит переноса](.work/guides/MIGRATION_AUDIT.md)** · [Матрица требований](.work/indexes/TRACEABILITY.md) |
 | Что проверено на GitHub? | [CURRENT_STATE](.work/CURRENT_STATE.md) · [Тесты](.github/workflows/design-validation.yml) |
