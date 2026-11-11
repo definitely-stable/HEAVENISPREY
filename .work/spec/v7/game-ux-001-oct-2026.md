@@ -63,6 +63,8 @@ Bank mode affects **presentation/when choices are committed**, not when experien
 
 Suppose the player has banked three normal level choices and then triggers an evolution ritual. The event ledger enqueues the ritual *after* the earlier levels. The panel opens because of the mandatory ritual, and the prior three choices are presented first. This preserves FIFO and permits earlier picks to change evolution eligibility. It can feel long; alternatives such as special priority routing must be defined as game mechanics, not hidden UI sorting.
 
+**SAVE-CONTRACT-001 linkage:** [reference checkpoint](save-contract-001.md) проверяет, что очередь, пауза, ревизия билда и уже полученные награды переживают сериализацию/восстановление между двумя выборами; сохранение DraftService hand/Reroll/Lock и UI focus ещё открыто.
+
 ## 4. Design-time state machine and contracts
 
 The prior \`pending_choices\` model convolved two distinct facts: (1) an unclaimed decision exists and (2) the simulation is paused. Separate them:

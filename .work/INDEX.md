@@ -2,6 +2,11 @@
 
 **Каталог перенесённых разделов; для работы начинайте с [предметной карты](guides/START_HERE.md).** 63 раздела исходной v6 сохранены дословно по тематическим файлам; пересмотренные правила — в v7.
 
+## SAVE-CONTRACT-001 — версия забега, checkpoint и replay (design-proposal)
+
+- [Версионируемый RunRulesSnapshot, сохранение очереди, RNG streams, checksum и восстановление](spec/v7/save-contract-001.md).
+- [Эталонное восстановление в середине XP → rank-up → Power → evolution и 42 теста](proposals/save-contract-001/README.md). Без Godot, runtime и реальной файловой записи.
+
 ## FOUNDATION-2026 — исследовательский фундамент до реализации игры
 
 - [Актуальные практики и исследования 2024–2026: детерминизм, контент, UX, property testing, Godot, PCG и AI-агенты](spec/v7/foundation-research-2026.md) — **DESIGN PROPOSAL**, не runtime.

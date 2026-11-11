@@ -63,6 +63,8 @@ Plus:
 
 The fixture merges three XP drops of values `14+9+17=40` at one grid point and leaves two other drops: one at an adjacent point (7), another in an inaccessible region (5). Total XP value stays `52` and is not auto-credited by condensation. With pickup radius 0, 40 XP is collected.
 
+**SAVE-CONTRACT-001 linkage:** [checkpoint contract](save-contract-001.md) требует сохранять source claims и независимый авторитетный журнал начислений вместе с очередью решений; без этого восстановление после конденсации XP может случайно оплатить источник второй раз.
+
 ## 4. Exactly-once XP source accounting
 
 Receipt dedupe on `event_uid` alone is **not** sufficient. A pickup originally represented as three source objects may later become one consolidated object with a different event UID.
