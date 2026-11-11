@@ -20,6 +20,7 @@ SAMPLE = ROOT / ".work/proposals/game-arch-00-01/reference_run.json"
 CANONICAL = ROOT / ".work/config/v7"
 EVENT_KINDS = {"XP_GAIN", "RITUAL_REWARD", "BREAKTHROUGH_READY"}
 CHOICE_KINDS = {"LEVEL_UP", "RITUAL_REWARD", "BREAKTHROUGH"}
+CHOICE_MODES = {"IMMEDIATE", "BANK_LEVELS"}
 PICKUP_KINDS = {"XP", "HEALTH", "CATALYST"}
 
 
@@ -83,16 +84,17 @@ def validate_pickups(pickups: list[dict]) -> None:
 
 
 def consolidate_pickups(pickups: list[dict]) -> list[dict]:
-    """Only exact same location/region/owner/kind/policy can be consolidated.
+    """Consolidate XP only at identical collection conditions and position.
 
-    Crucially this is NOT a merge-across-distance algorithm. Collection timing
-    is unchanged for any path because each source retains its logical position.
+    Health/catalyst/etc. have non-additive effects unless separately proven.
+    This conservative reference is NOT a world-space pooling algorithm.
     """
     validate_pickups(pickups)
     groups = defaultdict(list)
     for item in pickups:
-        key = (item["kind"], item["owner_uid"], item["region_id"],
-               item["collection_policy"], item["x"], item["y"])
+        key = ((item["kind"], item["owner_uid"], item["region_id"],
+                item["collection_policy"], item["x"], item["y"])
+               if item["kind"] == "XP" else ("NON_XP", item["id"]))
         groups[key].append(item)
     result = []
     for key in sorted(groups):
@@ -151,7 +153,10 @@ def xp_events_from_pickups(collected: list[dict], *, run_uid: str, tick: int,
 
 def initial_run(catalog: dict) -> dict:
     rules = catalog["rules"]
+    mode = rules.get("choice_mode", "IMMEDIATE")
+    require(mode in CHOICE_MODES, "unsupported choice presentation policy")
     return {
+        "choice_mode": mode,
         "run_uid": catalog["run_uid"],
         "level": 1,
         "xp_bank": 0,
@@ -204,6 +209,8 @@ def apply_events(run: dict, events: list[dict], xp_cost_by_level: list[int]) -> 
     for ev in events:
         validate_event(ev)
     ordered = sorted(events, key=event_order_key)
+    require(len({ev["tick"] for ev in ordered}) <= 1,
+            "event batch spans multiple simulation ticks")
     seen_batch = {}
     for ev in ordered:
         if ev["uid"] in seen_batch:
@@ -256,8 +263,69 @@ def apply_events(run: dict, events: list[dict], xp_cost_by_level: list[int]) -> 
                 "kind": name,
                 "source_event_uid": uid,
             })
-    result["paused"] = bool(result["pending_choices"])
+    result["paused"] = bool(run["paused"] or (result["pending_choices"] and
+                            (result["choice_mode"] == "IMMEDIATE" or
+                             any(c["kind"] != "LEVEL_UP" for c in result["pending_choices"]))))
     return result
+
+
+def open_pending_choices(run: dict) -> dict:
+    """Player requests the pending choice screen at a tick barrier; no game tick."""
+    require(bool(run["pending_choices"]), "no pending choices to open")
+    result = copy.deepcopy(run)
+    result["paused"] = True
+    return result
+
+
+def defer_pending_choices(run: dict) -> dict:
+    """Optional manual-bank UX: close UI without consuming earned levels.
+
+    Never suppress mandatory ritual/breakthrough decisions or erase their
+    existing position in the causal queue.
+    """
+    require(run["choice_mode"] == "BANK_LEVELS", "choice deferral not enabled")
+    require(run["paused"], "choices are not open")
+    require(all(c["kind"] == "LEVEL_UP" for c in run["pending_choices"]),
+            "cannot defer mandatory reward")
+    result = copy.deepcopy(run)
+    result["paused"] = False
+    return result
+
+
+def choice_summary(run: dict) -> dict:
+    """Small read-only view model: no DraftService/RunBuild access."""
+    pending = run["pending_choices"]
+    return {
+        "pending_level_count": sum(c["kind"] == "LEVEL_UP" for c in pending),
+        "mandatory_count": sum(c["kind"] != "LEVEL_UP" for c in pending),
+        "first_kind": pending[0]["kind"] if pending else None,
+        "choice_mode": run["choice_mode"],
+        "paused": run["paused"],
+    }
+
+
+def verify_xp_source_values(events: list[dict],
+                            expected_value_by_source: dict[str, int]) -> None:
+    """Check credited source values against a trusted fixture drop manifest.
+
+    In a future game this manifest must come from authoritative DropLedger,
+    NEVER from a mutable UI pickup/card or arbitrary caller-supplied values.
+    """
+    for uid, value in expected_value_by_source.items():
+        require(isinstance(uid, str) and uid, "invalid source manifest UID")
+        positive(value, "manifest source XP value")
+    seen = set()
+    for event in events:
+        validate_event(event)
+        if event["kind"] != "XP_GAIN":
+            continue
+        src = event["payload"]["source_uids"]
+        require(set(src) <= set(expected_value_by_source), "unknown XP source in receipt")
+        require(not seen.intersection(src), "XP source credited by multiple receipts")
+        seen.update(src)
+        require(event["payload"]["amount"] ==
+                sum(expected_value_by_source[s] for s in src),
+                "XP receipt amount differs from authoritative source values")
 
 
 def commit_choice(run: dict, *, choice_uid: str,
@@ -323,6 +391,12 @@ def validate_reference(catalog: dict, canonical: Path = CANONICAL) -> dict:
     events = xp_events_from_pickups(picked, run_uid=catalog["run_uid"], tick=rules["event_tick"],
                                     first_sequence=rules["first_sequence"])
     events += copy.deepcopy(catalog["other_events"])
+    # The sample raw drop manifest has exactly one logical source per entry.
+    require(all(len(p["source_uids"]) == 1 for p in original),
+            "raw witness requires one XP source per pickup")
+    source_manifest = {p["source_uids"][0]: p["value"] for p in original
+                       if p["kind"] == "XP"}
+    verify_xp_source_values(events, source_manifest)
     state = apply_events(initial_run(catalog), list(reversed(events)), costs)
     expected = catalog["expected"]
     require(state["level"] == expected["level"], "fixture: wrong level")
