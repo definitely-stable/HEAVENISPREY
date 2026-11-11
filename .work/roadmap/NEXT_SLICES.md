@@ -21,7 +21,9 @@
 |---|---|---|
 | FOUNDATION-2026 | Research-to-project decision map + dependency DAG + Metamorphic/negative fixtures | Evidence/source refs и положительные/отрицательные property tests; без утверждения игрового FPS |
 | SAVE-CONTRACT-001 | [Контракт и статическая проверка](../spec/v7/save-contract-001.md): версии, RulesHash, RNG policy, восстановление очереди и synthetic RunBuild | Reference JSON roundtrip, partial choice resume, v0 header migration, negative tests; **не настоящий Godot Save/Replay** |
-| CHOICE-VIEWMODEL-001 | Контракт карточки + focus, reroll/banish/lock и ошибки оплаты наград | Source-provenance, re-evaluation, stale/held input fixtures |
+| CHOICE-VIEWMODEL-001 | [Контракт, статический hand, Focus, Reroll/Banish/Lock](../spec/v7/choice-viewmodel-001.md) | Проверяемые факты, no-charge no-alternative reroll, overlay replay, Select/Skip exactly-once; **не UI/runtime** |
+| DRAFT-CONTRACT-002 | Версионированный RNG, anti-brick и полный пул предложений | Run-scoped bans, determinism, positive/negative RNG fixtures и честный fallback |
+| CHOICE-SAVE-002 | Интеграция draft hand в строго типизированный SAVE envelope | Schema migration, draw cursor parity, durable Focus и backup |
 | ARCH-02 | Граф достижимости N→M рецептов и развитие после max rank | Witness paths или объяснимые недостижимые рецепты |
 
 ### Аудит UX и связность существующей архитектуры (октябрь 2026)
