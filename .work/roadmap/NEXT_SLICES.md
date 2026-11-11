@@ -7,7 +7,7 @@
 | Architecture slice | Предмет | Статическая приёмка |
 |---|---|---|
 | ARCH-00 | Решения и реестр открытых вопросов для [BUILD-SKILL-001](../spec/v7/build-skill-architecture-proposal.md) | Нет неявных противоречащих политик |
-| ARCH-01 | [Контракт типов](../spec/v7/build-skill-type-contract.md), архитектурные фикстуры навыков, Powers и слотов | Есть reference catalog, 19 design tests; **формальные схемы и полная валидация ещё открыты** |
+| ARCH-01 | [Контракт типов](../spec/v7/build-skill-type-contract.md), [FLEXIBILITY-FIRST](../spec/v7/flexibility-first-build-policies.md), архитектурные фикстуры | Параметризованные слоты/ранги, конечные циклические реакции, негативные тесты; **полные формальные схемы ещё открыты** |
 | ARCH-02 | Эволюции, Union, Gift, меридианы | Positive witness и negative counterexamples на граф рецептов |
 | ARCH-03 | DraftService: eligibility, rarity, fallback, RNG streams | Детерминированные списки допустимых предложений |
 | ARCH-04 | Реакции, Skill Chain, Multicast и static proc budget | Формально ограниченные цепочки без неявного discard |
