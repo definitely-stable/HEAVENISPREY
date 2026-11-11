@@ -13,11 +13,6 @@
       "offer_id": "sample.offer.echo"
     },
     {
-      "uid": "sample.action.reroll.1",
-      "kind": "REROLL",
-      "offer_id": null
-    },
-    {
       "uid": "sample.action.banish.thunder",
       "kind": "BANISH",
       "offer_id": "sample.offer.new_thunder"
@@ -25,7 +20,7 @@
   ],
   "expected": {
     "cards": 2,
-    "rerolls_left": 1,
+    "rerolls_left": 2,
     "banishes_left": 1,
     "locked_offer": "sample.offer.echo"
   }
