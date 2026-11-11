@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "kind": "ordinary_enemy_difficulty_variants",
+  "status": "design-only-not-implemented",
+  "variants": [
+    {
+      "id": "variant.sickle_mantis.tribulation",
+      "enemy_id": "enemy.sickle_mantis",
+      "difficulty_id": "difficulty.tribulation",
+      "pattern_id": "second_locked_dash",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.ruined_jade_guardian.tribulation",
+      "enemy_id": "enemy.ruined_jade_guardian",
+      "difficulty_id": "difficulty.tribulation",
+      "pattern_id": "alternate_stomp_arc",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.cursed_spirit_lantern.tribulation",
+      "enemy_id": "enemy.cursed_spirit_lantern",
+      "difficulty_id": "difficulty.tribulation",
+      "pattern_id": "delayed_split_bolt",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.root_abomination.tribulation",
+      "enemy_id": "enemy.root_abomination",
+      "difficulty_id": "difficulty.tribulation",
+      "pattern_id": "two_sequential_soft_roots",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.omen_crow.abyss",
+      "enemy_id": "enemy.omen_crow",
+      "difficulty_id": "difficulty.abyss",
+      "pattern_id": "staggered_double_dive",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.root_abomination.abyss",
+      "enemy_id": "enemy.root_abomination",
+      "difficulty_id": "difficulty.abyss",
+      "pattern_id": "soft_root_afterglow",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    },
+    {
+      "id": "variant.corrupted_cultivator.abyss",
+      "enemy_id": "enemy.corrupted_cultivator",
+      "difficulty_id": "difficulty.abyss",
+      "pattern_id": "alternating_sword_seal",
+      "requires_runtime_implementation": true,
+      "availability": "design-only"
+    }
+  ],
+  "notes": "Normal enemies only; no unavoidable simultaneous hazards, no shorter-than-standard telegraphs."
+}

@@ -36,7 +36,8 @@
         "difficulty.tribulation": "boss.tribulation_avatar",
         "difficulty.abyss": "boss.tribulation_avatar"
       },
-      "availability": "design-only"
+      "availability": "design-only",
+      "enemy_roster_id": "roster.jade_grove"
     },
     {
       "id": "stage.mist_cliffs",
@@ -71,7 +72,8 @@
         "difficulty.abyss": "boss.tribulation_avatar"
       },
       "availability": "design-only",
-      "planned_slice": "M1-00"
+      "planned_slice": "M1-00",
+      "enemy_roster_id": "roster.mist_cliffs"
     }
   ]
 }

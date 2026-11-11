@@ -33,6 +33,44 @@
       "tick_period_ticks": 30,
       "dot_damage": 1,
       "availability": "design-only"
+    },
+    {
+      "id": "status.venom",
+      "name_key": "STATUS_VENOM_NAME",
+      "family": "poison",
+      "target": "player",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 3,
+      "tick_period_ticks": 60,
+      "dot_damage": 1,
+      "duration_ticks": 240,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.root_slow",
+      "name_key": "STATUS_ROOT_SLOW_NAME",
+      "family": "root",
+      "target": "player",
+      "stack_policy": "refresh_only",
+      "max_stacks": 1,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "duration_ticks": 90,
+      "movement_speed_multiplier": 0.72,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.qi_taint",
+      "name_key": "STATUS_QI_TAINT_NAME",
+      "family": "corruption",
+      "target": "player",
+      "stack_policy": "refresh_only",
+      "max_stacks": 1,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "duration_ticks": 180,
+      "shield_regen_multiplier": 0.8,
+      "availability": "design-only"
     }
   ]
 }

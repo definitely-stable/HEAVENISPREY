@@ -1,0 +1,234 @@
+{
+  "schema_version": 2,
+  "kind": "ordinary_enemy_stage_rosters",
+  "status": "unverified-balance-hypothesis",
+  "rosters": [
+    {
+      "id": "roster.jade_grove",
+      "stage_id": "stage.jade_grove",
+      "threat_caps": {
+        "simultaneous_projectile_casts_winding_up": 2,
+        "simultaneous_charge_windups": 2,
+        "active_control_zones": 2,
+        "active_death_hazards": 3,
+        "ordinary_ranged_on_screen": 3
+      },
+      "windows": [
+        {
+          "id": "jade_grove.w0",
+          "start_second": 0,
+          "end_second": 85,
+          "max_control_enemies_near_player": 0,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 8
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w1",
+          "start_second": 85,
+          "end_second": 175,
+          "max_control_enemies_near_player": 0,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 5
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.venom_spirit_snake",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w2",
+          "start_second": 175,
+          "end_second": 250,
+          "max_control_enemies_near_player": 1,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.cursed_spirit_lantern",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.paper_puppet",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.fallen_sword_disciple",
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w3",
+          "start_second": 250,
+          "end_second": 300,
+          "max_control_enemies_near_player": 2,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.root_abomination",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roster.mist_cliffs",
+      "stage_id": "stage.mist_cliffs",
+      "threat_caps": {
+        "simultaneous_projectile_casts_winding_up": 2,
+        "simultaneous_charge_windups": 2,
+        "active_control_zones": 2,
+        "active_death_hazards": 3,
+        "ordinary_ranged_on_screen": 3
+      },
+      "windows": [
+        {
+          "id": "mist_cliffs.w0",
+          "start_second": 0,
+          "end_second": 85,
+          "max_control_enemies_near_player": 0,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 6
+            },
+            {
+              "enemy_id": "enemy.omen_crow",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.venom_spirit_snake",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "mist_cliffs.w1",
+          "start_second": 85,
+          "end_second": 175,
+          "max_control_enemies_near_player": 0,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 4
+            },
+            {
+              "enemy_id": "enemy.omen_crow",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.corruption_centipede",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.fallen_sword_disciple",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "mist_cliffs.w2",
+          "start_second": 175,
+          "end_second": 250,
+          "max_control_enemies_near_player": 1,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.corruption_centipede",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.paper_puppet",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.cursed_spirit_lantern",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "id": "mist_cliffs.w3",
+          "start_second": 250,
+          "end_second": 300,
+          "max_control_enemies_near_player": 2,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.corruption_centipede",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.root_abomination",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.corrupted_cultivator",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.omen_crow",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "notes": "These are 5-minute pilot spawn weights, not verified enemy counts. Caps postpone future spawns/casts rather than deleting accepted combat events."
+}

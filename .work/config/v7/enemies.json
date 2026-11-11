@@ -1,0 +1,283 @@
+{
+  "schema_version": 2,
+  "kind": "ordinary_enemy_catalog",
+  "status": "design-only-not-implemented",
+  "source": "12 screenshot enemy concepts + corrupted cultivator from previous user turn",
+  "notes": "Every entry is NORMAL; no elites, no bosses. Stats and timings are starting balance hypotheses.",
+  "enemies": [
+    {
+      "id": "enemy.yin_corpse",
+      "name_key": "ENEMY_YIN_CORPSE_NAME",
+      "zh_name": "阴尸",
+      "combat_tier": "normal",
+      "role": "swarm",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 1.28,
+        "speed_mult": 0.68,
+        "collision_radius_mult": 1
+      },
+      "spawn_cost": 1,
+      "attack_ids": [
+        "enemy_attack.yin_grasp"
+      ],
+      "first_window": "early",
+      "visual_brief_ru": "Ригидный труп с серой кожей и остатками даосских одежд",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.blood_wolf",
+      "name_key": "ENEMY_BLOOD_WOLF_NAME",
+      "zh_name": "血狼",
+      "combat_tier": "normal",
+      "role": "flanker",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 0.78,
+        "speed_mult": 1.28,
+        "collision_radius_mult": 0.9
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.wolf_bite"
+      ],
+      "first_window": "early",
+      "visual_brief_ru": "Чёрно-бордовый зверь с костяными отростками и красными глазами",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.wandering_spirit",
+      "name_key": "ENEMY_WANDERING_SPIRIT_NAME",
+      "zh_name": "游魂",
+      "combat_tier": "normal",
+      "role": "phaser",
+      "movement_mode": "ethereal",
+      "stats": {
+        "health_mult": 0.58,
+        "speed_mult": 0.96,
+        "collision_radius_mult": 0.75
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.spirit_touch"
+      ],
+      "first_window": "early",
+      "visual_brief_ru": "Полупрозрачный дух в рваном халате; голубая аура",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.ruined_jade_guardian",
+      "name_key": "ENEMY_RUINED_JADE_GUARDIAN_NAME",
+      "zh_name": "残玉傀儡",
+      "combat_tier": "normal",
+      "role": "heavy",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 2.5,
+        "speed_mult": 0.54,
+        "collision_radius_mult": 1.28
+      },
+      "spawn_cost": 3,
+      "attack_ids": [
+        "enemy_attack.jade_stomp"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Тяжёлый автомат из потрескавшегося нефрита и зелёных рун",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.sickle_mantis",
+      "name_key": "ENEMY_SICKLE_MANTIS_NAME",
+      "zh_name": "刀螳",
+      "combat_tier": "normal",
+      "role": "charger",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 0.72,
+        "speed_mult": 1.1,
+        "collision_radius_mult": 0.78
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.mantis_lunge"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Насекомое с серповидными передними лапами и фиолетовым хитином",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.paper_puppet",
+      "name_key": "ENEMY_PAPER_PUPPET_NAME",
+      "zh_name": "符纸傀儡",
+      "combat_tier": "normal",
+      "role": "death_zone",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 0.82,
+        "speed_mult": 0.83,
+        "collision_radius_mult": 0.82
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.puppet_burst"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Деревянный каркас, огненные талисманы и полосы бумаги",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.venom_spirit_snake",
+      "name_key": "ENEMY_VENOM_SPIRIT_SNAKE_NAME",
+      "zh_name": "毒灵蛇",
+      "combat_tier": "normal",
+      "role": "poison_biter",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 0.65,
+        "speed_mult": 1.22,
+        "collision_radius_mult": 0.7
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.snake_bite"
+      ],
+      "first_window": "early",
+      "visual_brief_ru": "Чёрная змея с изумрудной чешуёй и ядовитым туманом",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.fallen_sword_disciple",
+      "name_key": "ENEMY_FALLEN_SWORD_DISCIPLE_NAME",
+      "zh_name": "亡剑弟子",
+      "combat_tier": "normal",
+      "role": "melee_arc",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 1.05,
+        "speed_mult": 1.03,
+        "collision_radius_mult": 1
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.disciple_cleave"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Мёртвый мечник в форме древней секты с повреждённым мечом",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.omen_crow",
+      "name_key": "ENEMY_OMEN_CROW_NAME",
+      "zh_name": "凶鸦",
+      "combat_tier": "normal",
+      "role": "aerial_diver",
+      "movement_mode": "flying",
+      "stats": {
+        "health_mult": 0.58,
+        "speed_mult": 1.3,
+        "collision_radius_mult": 0.72
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.crow_dive"
+      ],
+      "first_window": "early",
+      "visual_brief_ru": "Чёрная птица с красными перьями и тлеющими рунами",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.corruption_centipede",
+      "name_key": "ENEMY_CORRUPTION_CENTIPEDE_NAME",
+      "zh_name": "魔蜈",
+      "combat_tier": "normal",
+      "role": "swarm",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 1.58,
+        "speed_mult": 0.92,
+        "collision_radius_mult": 1.1
+      },
+      "spawn_cost": 2,
+      "attack_ids": [
+        "enemy_attack.centipede_bite"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Сегментированная многоножка с бронёй и алыми жвалами",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.cursed_spirit_lantern",
+      "name_key": "ENEMY_CURSED_SPIRIT_LANTERN_NAME",
+      "zh_name": "怨灵灯",
+      "combat_tier": "normal",
+      "role": "ranged",
+      "movement_mode": "flying",
+      "stats": {
+        "health_mult": 0.7,
+        "speed_mult": 0.82,
+        "collision_radius_mult": 0.7
+      },
+      "spawn_cost": 3,
+      "attack_ids": [
+        "enemy_attack.lantern_wisp"
+      ],
+      "first_window": "mid",
+      "visual_brief_ru": "Парящий бронзовый фонарь с горящим оком и руками духов",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.root_abomination",
+      "name_key": "ENEMY_ROOT_ABOMINATION_NAME",
+      "zh_name": "邪木灵",
+      "combat_tier": "normal",
+      "role": "zone_controller",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 1.1,
+        "speed_mult": 0.64,
+        "collision_radius_mult": 1.05
+      },
+      "spawn_cost": 3,
+      "attack_ids": [
+        "enemy_attack.root_growth"
+      ],
+      "first_window": "late",
+      "visual_brief_ru": "Тварь из чёрных корней с алыми прожилками",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    },
+    {
+      "id": "enemy.corrupted_cultivator",
+      "name_key": "ENEMY_CORRUPTED_CULTIVATOR_NAME",
+      "zh_name": "魔化修士",
+      "combat_tier": "normal",
+      "role": "ranged_controller",
+      "movement_mode": "ground",
+      "stats": {
+        "health_mult": 1.12,
+        "speed_mult": 0.84,
+        "collision_radius_mult": 1
+      },
+      "spawn_cost": 3,
+      "attack_ids": [
+        "enemy_attack.cultivator_sword",
+        "enemy_attack.cultivator_seal"
+      ],
+      "first_window": "late",
+      "visual_brief_ru": "Живой культиватор с изломанными меридианами и тёмной ци",
+      "availability": "design-only",
+      "art_status": "chat-reference-not-runtime-sprite"
+    }
+  ]
+}
