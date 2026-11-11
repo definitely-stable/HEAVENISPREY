@@ -4,6 +4,7 @@
 
 | Область | Актуальный вход | Детализация |
 |---|---|---|
+| **Версионированный weighted draft, RNG, anti-brick, soft pity и постоянные bans** | [DRAFT-CONTRACT-002](../spec/v7/draft-contract-002.md) | [Fixture и проверки](../proposals/draft-contract-002/README.md) |
 | **Карточки уровня, Reroll/Banish/Lock, controller focus, объяснение эволюций** | [CHOICE-VIEWMODEL-001](../spec/v7/choice-viewmodel-001.md) | [Reference hand и negative tests](../proposals/choice-viewmodel-001/README.md) |
 | **Сохранения, RunRulesHash, Replay, восстановление выбора и миграции** | [SAVE-CONTRACT-001](../spec/v7/save-contract-001.md) | [Эталон и негативные тесты](../proposals/save-contract-001/README.md) · [RunOrchestrator](../spec/v7/game-arch-00-run-orchestration.md) |
 | **Фундамент 2026: воспроизводимость, CI, производительность, AI-агенты, UX и исследования** | [FOUNDATION-2026](../spec/v7/foundation-research-2026.md) | [Gates и тесты](../proposals/foundation-2026/README.md) · [Roadmap](../roadmap/NEXT_SLICES.md) |

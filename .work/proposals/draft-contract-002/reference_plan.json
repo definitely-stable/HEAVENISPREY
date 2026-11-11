@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "draft_contract_002_architecture_fixture",
+  "status": "design-proposal-not-canonical",
+  "seed": "307",
+  "policy": {
+    "version": 1,
+    "algorithm": "sha256-counter-rejection-v1",
+    "hand_size": 2,
+    "rerolls": 2,
+    "banishes": 2,
+    "pity_after": 2,
+    "protected_ids": [
+      "sample.offer.echo"
+    ],
+    "empty_policy": "EXPLICIT_SKIP"
+  },
+  "expected": {
+    "opened_choices": 2,
+    "build_revision": 9,
+    "next_reward_kind": "RITUAL_REWARD",
+    "source_choices_consumed": 2
+  }
+}

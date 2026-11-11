@@ -44,5 +44,7 @@ jobs:
         run: python scripts/validate_save_contract_proposal.py
       - name: Verify CHOICE-VIEWMODEL-001 hand actions and persisted draft overlay
         run: python scripts/validate_choice_viewmodel_proposal.py
+      - name: Verify DRAFT-CONTRACT-002 integer RNG and run-scoped draft replay
+        run: python scripts/validate_draft_contract_proposal.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

@@ -5,6 +5,7 @@
 | Область работы | Сначала прочитать | Затем при необходимости |
 |---|---|---|
 | Автоатаки, попадания, DoT, proc chains | [Combat ADR](../decisions/ADR-002-combat.md) · [Семантика](../spec/v5/v5_semantics.md) | [Scheduler](../spec/core/s06.md) · [Event budgets](../spec/v5/v5_budget.md) |
+| **RNG предложения, постоянные Banish, anti-brick, редкость и soft pity** | [DRAFT-CONTRACT-002](../spec/v7/draft-contract-002.md) | [RNG и отрицательные проверки](../proposals/draft-contract-002/README.md) |
 | **Драфт карточек, Reroll/Banish/Lock, управление подтверждением и Focus** | [CHOICE-VIEWMODEL-001](../spec/v7/choice-viewmodel-001.md) | [Reference + negative checks](../proposals/choice-viewmodel-001/README.md) |
 | **Сохранение забега, миграция, JSON schema/digest, RNG state, восстановление очереди** | [SAVE-CONTRACT-001](../spec/v7/save-contract-001.md) | [Reference model](../proposals/save-contract-001/README.md) · [UX integration](../spec/v7/game-ux-001-oct-2026.md) |
 | **Системный фундамент, replay, миграции, архитектурные инварианты, property tests и CI** | [FOUNDATION-2026](../spec/v7/foundation-research-2026.md) | [Evidence gates](../proposals/foundation-2026/README.md) · [Architecture roadmap](../roadmap/NEXT_SLICES.md) |

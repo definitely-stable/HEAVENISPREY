@@ -2,6 +2,11 @@
 
 **Каталог перенесённых разделов; для работы начинайте с [предметной карты](guides/START_HERE.md).** 63 раздела исходной v6 сохранены дословно по тематическим файлам; пересмотренные правила — в v7.
 
+## DRAFT-CONTRACT-002 — RNG, Banish на весь забег и soft pity (design-proposal)
+
+- [Чёткая RNG-выборка без modulo bias, явные источники карточек и anti-brick](spec/v7/draft-contract-002.md).
+- [Две последовательные руки, run-scoped bans и негативные тесты](proposals/draft-contract-002/README.md). Это независимая статическая модель, не Godot.
+
 ## CHOICE-VIEWMODEL-001 — карточки, Reroll/Banish/Lock и защита ввода (design-proposal)
 
 - [Контракт выбора, отображения фактов, обновления и безопасного подтверждения](spec/v7/choice-viewmodel-001.md).
