@@ -1,0 +1,7 @@
+# Files created locally by Godot after the runtime is bootstrapped.
+.godot/
+.import/
+*.tmp
+__pycache__/
+.pytest_cache/
+*.pyc
