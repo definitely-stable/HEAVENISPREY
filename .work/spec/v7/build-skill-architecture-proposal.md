@@ -8,7 +8,7 @@
 - **acceptance:** design-only checks from §13, no runtime or balance claim
 - **evidence:** only existing v7 content catalogs and source references listed below; implementation tests NOT RUN
 
-> **Scope boundary (2026-11-11): architecture, contracts, validation plans and authoring efficiency ONLY.** No `game/`, Godot scenes, runtime, image assets, balance claims or gameplay code in this slice. Existing planned 6 active + 6 passive slots, 5 ranks, four classes etc. remain proposals until reviewed; do not silently mark them accepted.
+> **Scope boundary (2026-11-11): architecture, contracts, validation plans and authoring efficiency ONLY.** No `game/`, Godot scenes, runtime, image assets, balance claims or gameplay code in this slice. **New direction:** preserve freedom to build extremely powerful combinations; 6 active + 6 passive slots, 5 ranks, one-copy skills and nonrecursive proc chains are **possible presets, not engine ceilings**. Consult [FLEXIBILITY-FIRST-001](flexibility-first-build-policies.md) for configurable policies and finite bounded reaction cycles. Numbers, slot defaults and balance choices remain proposals until reviewed.
 
 ## 1. Product invariant: automation vs strategic choice
 
