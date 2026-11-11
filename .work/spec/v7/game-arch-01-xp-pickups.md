@@ -55,6 +55,7 @@ Plus:
 - at least for the reference model, **exact same integer coordinates**; this guarantees same collection-time test for any player path with a given radius and no differing activation states;
 - never silently merge a late-spawned pickup with an expired/hidden/unreachable one, or a pickup with differing collision/attraction/TTL policy;
 - never merge different loot kinds merely because they have equal numeric value;
+- **reference oracle combines XP only**; HEALTH/CATALYST are kept separate, even when co-located, until their kind-specific combination semantics are proven;
 - choose a stable merged ID from the **sorted source set**, not list order or VFX object identity;
 - merging only changes logical representation; it does not retroactively move XP, skip collision, change reward event order or award twice.
 
