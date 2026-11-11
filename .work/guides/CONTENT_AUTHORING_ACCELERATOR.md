@@ -56,13 +56,16 @@ All generated files are **derived views**, not independently editable sources:
 - `generated/decision-register.md`: unresolved policy entries with owner/status and ADR link.
 - `generated/art-reference-index.md`: asset ID, original file hash, view, scale, license/provenance, approved status.
 
-Proposed command interface for a **future** authoring tool, NOT implemented:
-- `python scripts/validate_build_catalog.py` (schema + graph + witnesses, no Godot).
-- `python scripts/render_content_graph.py` (read-only derived Markdown).
-- `python scripts/content_impact.py --changed ...` (path/ID dependency report).
-- `python scripts/validate_asset_manifest.py` (metadata only).
+**Available now (design-only; CI verified on Ubuntu + Windows):**
+- `python scripts/validate_build_proposal.py` — validates the isolated `.work/proposals/build-skill-001/reference_catalog.json` catalog, its five witnesses, transformation slot math, exact gates, and an acyclic conservative proc-event bound. This is **not** a runtime engine or canonical content validation.
+- `python scripts/content_impact.py --id status.mark --json` — read-only reverse dependency impact against the **existing** canonical v7 definitions; exact-ID references only.
+- `python -m unittest discover -s tests -v` — includes BUILD-SKILL negative cases and dependency-graph tests.
 
-Do not put these commands into mandatory CI until they exist and have negative tests.
+**Still proposed, NOT implemented:**
+- Formal JSON Schema 2020-12 structural validation / richer semantic schema tests.
+- `scripts/render_content_graph.py` (read-only derived Mermaid), asset manifest metadata validator, migration proof, seeded weighted draft sampler, all-build reachability analyzer.
+
+**Restriction:** the sample catalog uses `sample.*` IDs and synthetic numbers. Do not import these into `game/` or overwrite `.work/config/v7/`. Existing v7 remains the only accepted source of gameplay design definitions.
 
 ## 5. The minimum useful agent context pack
 
