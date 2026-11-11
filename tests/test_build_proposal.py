@@ -199,7 +199,7 @@ class BuildDesignProposalTests(unittest.TestCase):
 
     def test_bounded_feedback_budget_still_checked(self):
         catalog = source()
-        catalog["proc_rules"].append({"source": "DAMAGE", "target": "HIT", "max_children": 3})
+        catalog["proc_rules"].append({"source": "DAMAGE", "target": "HIT", "max_children": 5})
         catalog["policy"]["max_generation"] = 8
         catalog["policy"]["max_proc_events_per_root"] = 128
         with self.assertRaisesRegex(mod.ContractError, "exceeds declared budget"):
