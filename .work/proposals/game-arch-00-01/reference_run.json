@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "kind": "run_loop_architecture_fixture",
+  "status": "design-proposal-not-canonical",
+  "run_uid": "sample.run.jade_grove.001",
+  "rules": {
+    "class_id": "class.sword",
+    "stage_id": "stage.jade_grove",
+    "player_uid": "sample.owner.player",
+    "region_id": "sample.region.jade_grove",
+    "player_position": {
+      "x": 8,
+      "y": 2
+    },
+    "pickup_radius": 0,
+    "xp_cost_by_level": [
+      5,
+      12,
+      20,
+      30
+    ],
+    "event_tick": 100,
+    "first_sequence": 10
+  },
+  "pickups": [
+    {
+      "id": "sample.pickup.alpha",
+      "kind": "XP",
+      "value": 14,
+      "owner_uid": "sample.owner.player",
+      "region_id": "sample.region.jade_grove",
+      "collection_policy": "RADIUS",
+      "x": 8,
+      "y": 2,
+      "source_uids": [
+        "sample.source.enemy.1"
+      ]
+    },
+    {
+      "id": "sample.pickup.beta",
+      "kind": "XP",
+      "value": 9,
+      "owner_uid": "sample.owner.player",
+      "region_id": "sample.region.jade_grove",
+      "collection_policy": "RADIUS",
+      "x": 8,
+      "y": 2,
+      "source_uids": [
+        "sample.source.enemy.2"
+      ]
+    },
+    {
+      "id": "sample.pickup.gamma",
+      "kind": "XP",
+      "value": 17,
+      "owner_uid": "sample.owner.player",
+      "region_id": "sample.region.jade_grove",
+      "collection_policy": "RADIUS",
+      "x": 8,
+      "y": 2,
+      "source_uids": [
+        "sample.source.enemy.3"
+      ]
+    },
+    {
+      "id": "sample.pickup.delta",
+      "kind": "XP",
+      "value": 7,
+      "owner_uid": "sample.owner.player",
+      "region_id": "sample.region.jade_grove",
+      "collection_policy": "RADIUS",
+      "x": 9,
+      "y": 2,
+      "source_uids": [
+        "sample.source.enemy.4"
+      ]
+    },
+    {
+      "id": "sample.pickup.sealed",
+      "kind": "XP",
+      "value": 5,
+      "owner_uid": "sample.owner.player",
+      "region_id": "sample.region.sealed",
+      "collection_policy": "RADIUS",
+      "x": 8,
+      "y": 2,
+      "source_uids": [
+        "sample.source.enemy.5"
+      ]
+    }
+  ],
+  "other_events": [
+    {
+      "uid": "sample.event.ritual.1",
+      "kind": "RITUAL_REWARD",
+      "tick": 100,
+      "sequence": 11,
+      "payload": {}
+    },
+    {
+      "uid": "sample.event.breakthrough.1",
+      "kind": "BREAKTHROUGH_READY",
+      "tick": 100,
+      "sequence": 12,
+      "payload": {}
+    }
+  ],
+  "expected": {
+    "collected_value": 40,
+    "consolidated_count": 3,
+    "level": 4,
+    "xp_bank": 3,
+    "choice_kinds": [
+      "LEVEL_UP",
+      "LEVEL_UP",
+      "LEVEL_UP",
+      "RITUAL_REWARD",
+      "BREAKTHROUGH"
+    ]
+  }
+}
