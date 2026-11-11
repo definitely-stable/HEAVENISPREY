@@ -277,6 +277,47 @@ class ChoiceViewModelTests(unittest.TestCase):
                            kind="SKIP", offer_id="sample.offer.echo",
                            expected_state_revision=draft["state_revision"])
 
+    def test_duplicate_select_acknowledgment_is_idempotent(self):
+        _, _, bc, _, _, run, build, draft = baseline()
+        state = oracle.transaction_bundle(run, build, draft)
+        result = oracle.commit_once(
+            state, bc, uid="sample.accept.once", kind="SELECT",
+            offer_id="sample.offer.echo",
+            expected_state_revision=draft["state_revision"])
+        repeated = oracle.commit_once(
+            result, bc, uid="sample.accept.once", kind="SELECT",
+            offer_id="sample.offer.echo",
+            expected_state_revision=draft["state_revision"])
+        self.assertEqual(repeated, result)
+        self.assertEqual(len(result["run"]["committed_choices"]),
+                         len(run["committed_choices"]) + 1)
+        self.assertEqual(result["build"]["revision"], build["revision"] + 1)
+
+    def test_conflicting_second_choice_intent_is_rejected(self):
+        _, _, bc, _, _, run, build, draft = baseline()
+        state = oracle.transaction_bundle(run, build, draft)
+        result = oracle.commit_once(
+            state, bc, uid="sample.accept.once", kind="SELECT",
+            offer_id="sample.offer.echo",
+            expected_state_revision=draft["state_revision"])
+        with self.assertRaisesRegex(oracle.ContractError, "conflicting committed"):
+            oracle.commit_once(
+                result, bc, uid="sample.accept.other", kind="SKIP",
+                offer_id=None,
+                expected_state_revision=draft["state_revision"])
+
+    def test_duplicate_explicit_skip_is_not_paid_twice(self):
+        _, _, bc, _, _, run, build, draft = baseline()
+        state = oracle.transaction_bundle(run, build, draft)
+        result = oracle.commit_once(
+            state, bc, uid="sample.accept.skip", kind="SKIP",
+            offer_id=None, expected_state_revision=draft["state_revision"])
+        repeated = oracle.commit_once(
+            result, bc, uid="sample.accept.skip", kind="SKIP",
+            offer_id=None, expected_state_revision=draft["state_revision"])
+        self.assertEqual(result, repeated)
+        self.assertEqual(result["run"]["build_revision"], 8)
+
     def test_missing_or_duplicate_inputs_cannot_confirm(self):
         _, _, bc, _, _, run, build, draft = baseline()
         f = oracle.open_focus(draft, held_buttons={"CONFIRM", "DODGE"})
