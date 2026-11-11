@@ -104,7 +104,7 @@ def validate_v7():
         if not unlock["all"]:
             fail("Empty AND unlock: " + key)
         for condition in unlock["all"]:
-            if condition["event"] not in ("win", "boss_defeated", "class_mastery", "stage_complete"):
+            if condition["event"] not in ("win", "boss_defeated", "class_mastery", "stage_complete", "run_finished"):
                 fail("Unknown unlock event: " + key)
             if "difficulty_id" in condition and condition["difficulty_id"] not in difficulties:
                 fail("Unknown difficulty in unlock: " + key)
