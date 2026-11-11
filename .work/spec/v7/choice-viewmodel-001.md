@@ -163,6 +163,8 @@ Overlay не подписан криптографически; SHA-256 checksum
 
 **Что ещё не проверено:** реальный геймпад/клавиатура, локализация RU/EN, цвет/размер карточек, состояние highlight после анимаций, rendering performance, authoritative weighted DraftService, редкие источники (ритуал, Breakthrough), альтернативные источники наград, UX-метрики и human playtest. Reroll/Banish/Lock policies пока предложения.
 
+**DRAFT-CONTRACT-002 integration:** [новый независимый эталон](draft-contract-002.md) сохраняет Banish на уровне забега, использует integer rejection sampling с доменным разделением, показывает явную причину пустого пула и моделирует optional soft pity. Предыдущая модель карточки/Focus остаётся самостоятельной. Полное объединение RNG, RunDraftState и SaveEnvelope — отдельный CHOICE-SAVE-002.
+
 ## 11. Следующее правильное направление
 
 Не начинать массовый новый контент после одной UI-модели. Нужны:
