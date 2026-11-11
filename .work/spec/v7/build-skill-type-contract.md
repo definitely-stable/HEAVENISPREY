@@ -5,6 +5,7 @@
 - **Owner domain:** Build & Skill System
 - **Dependencies:** [BUILD-SKILL-001](build-skill-architecture-proposal.md), [ADR-002](../../decisions/ADR-002-combat.md), [ADR-006](../../decisions/ADR-006-content-catalog.md), [reference fixtures](../../proposals/build-skill-001/README.md)
 - **Non-goals:** Godot code, scene authoring, tuning numeric DPS, final art, auto-gameplay
+- **Flexibility principle:** [FLEXIBILITY-FIRST-001](flexibility-first-build-policies.md): 6/6 slots, 5 ranks, single skill instance and default no-retrigger are policy presets, **not type constraints**. Future instance-UID inventory, N-to-M transforms, post-cap growth and finite chain cycles should be representable.
 - **Evidence:** 19 isolated build-design tests + four dependency impact tests; GitHub CI evidence belongs to PR, not assumed here
 
 ## 1. Strict boundaries
