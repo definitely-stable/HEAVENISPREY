@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "kind": "boss_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "bosses": [
+    {
+      "id": "boss.jade_warden",
+      "name_key": "BOSS_JADE_WARDEN_NAME",
+      "stages": [
+        "stage.jade_grove"
+      ],
+      "min_difficulty_tier": 1,
+      "availability": "design-only",
+      "planned_slice": "M1-00"
+    },
+    {
+      "id": "boss.mist_sentinel",
+      "name_key": "BOSS_MIST_SENTINEL_NAME",
+      "stages": [
+        "stage.mist_cliffs"
+      ],
+      "min_difficulty_tier": 1,
+      "availability": "design-only",
+      "planned_slice": "M1-00"
+    },
+    {
+      "id": "boss.tribulation_avatar",
+      "name_key": "BOSS_TRIBULATION_AVATAR_NAME",
+      "stages": [
+        "stage.jade_grove",
+        "stage.mist_cliffs"
+      ],
+      "min_difficulty_tier": 3,
+      "availability": "design-only",
+      "planned_slice": "M1-01"
+    }
+  ]
+}

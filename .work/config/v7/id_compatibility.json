@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "kind": "legacy_id_and_rule_migration",
+  "status": "design-only-not-implemented",
+  "from": "v6-config-starter schema_version=1",
+  "to": "v7 canonical schema_version=2",
+  "mappings": [
+    {
+      "source": "mode.frenzy",
+      "target": "mode.hyper",
+      "action": "requires_explicit_rules_conversion",
+      "reason": "v6 increased spawn budget; v7 hyper has different intended speed semantics; cannot assume identical behavior"
+    },
+    {
+      "source": "mode.endless",
+      "target": "mode.endless_limited",
+      "action": "rename_with_reward_restriction",
+      "reason": "v7 caps late currency to first completed cycle"
+    },
+    {
+      "source": "unlock.tribulation",
+      "target": "unlock.tribulation",
+      "action": "override_condition",
+      "reason": "v6 single Hard win replaced with multiple stages + boss + mastery"
+    },
+    {
+      "source": "unlock.abyss",
+      "target": "unlock.abyss",
+      "action": "override_condition",
+      "reason": "v6 single Tribulation win replaced with 3 wins across 2 stages + specific boss"
+    },
+    {
+      "source": "mastery.sword",
+      "target": "mastery.sword",
+      "action": "preserve_non_spendable_mastery"
+    },
+    {
+      "source": "mastery.thunder",
+      "target": "mastery.thunder",
+      "action": "preserve_non_spendable_mastery"
+    },
+    {
+      "source": "tree.global",
+      "target": "tree.sect",
+      "action": "rename_to_canonical_sect_tree"
+    },
+    {
+      "source": "reward.minute3",
+      "target": "reward.minute3",
+      "action": "add_anti_idle_progress_gate"
+    }
+  ],
+  "profile_save_migration": "not_applicable_no_game_released",
+  "run_snapshot_migration": "reject_old_incompatible_snapshot_with_explicit_reason",
+  "unknown_id_handling": "fail_closed_and_report"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "kind": "bot_scenario_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "scenarios": [
+    {
+      "id": "bot.idle.standard.001",
+      "policy_id": "idle",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "seed": 101,
+      "profile_fixture": "profile.clean"
+    },
+    {
+      "id": "bot.beginner.apprentice.001",
+      "policy_id": "beginner",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.apprentice",
+      "modes": [],
+      "seed": 102,
+      "profile_fixture": "profile.clean"
+    },
+    {
+      "id": "bot.synergy.hard.001",
+      "policy_id": "synergy",
+      "class_id": "class.thunder",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.hard",
+      "modes": [],
+      "seed": 103,
+      "profile_fixture": "profile.hard_unlocked"
+    },
+    {
+      "id": "bot.farmer.standard.001",
+      "policy_id": "farmer",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "seed": 104,
+      "profile_fixture": "profile.clean"
+    },
+    {
+      "id": "bot.progression.tribulation.001",
+      "policy_id": "progression",
+      "class_id": "class.sword",
+      "stage_id": "stage.mist_cliffs",
+      "difficulty_id": "difficulty.tribulation",
+      "modes": [],
+      "seed": 201,
+      "profile_fixture": "profile.tribulation_unlocked"
+    },
+    {
+      "id": "bot.stress.abyss.001",
+      "policy_id": "stress",
+      "class_id": "class.thunder",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.abyss",
+      "modes": [
+        "mode.hyper"
+      ],
+      "seed": 301,
+      "profile_fixture": "profile.abyss_unlocked"
+    },
+    {
+      "id": "bot.training.no_rewards.001",
+      "policy_id": "idle",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [
+        "mode.training"
+      ],
+      "seed": 401,
+      "profile_fixture": "profile.clean"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "kind": "test_profile_fixtures",
+  "status": "design-only-not-implemented",
+  "profiles": [
+    {
+      "id": "profile.clean",
+      "unlocked_difficulty_ids": [
+        "difficulty.apprentice",
+        "difficulty.standard"
+      ],
+      "unlocked_class_ids": [
+        "class.sword"
+      ],
+      "mastery_level_by_class": {
+        "class.sword": 0
+      },
+      "currency_balances": {
+        "currency.spirit_stones": 0,
+        "currency.dao_seals": 0
+      }
+    },
+    {
+      "id": "profile.hard_unlocked",
+      "unlocked_difficulty_ids": [
+        "difficulty.apprentice",
+        "difficulty.standard",
+        "difficulty.hard"
+      ],
+      "unlocked_class_ids": [
+        "class.sword",
+        "class.thunder"
+      ],
+      "mastery_level_by_class": {
+        "class.thunder": 3
+      },
+      "currency_balances": {
+        "currency.spirit_stones": 30,
+        "currency.dao_seals": 0
+      }
+    },
+    {
+      "id": "profile.tribulation_unlocked",
+      "unlocked_difficulty_ids": [
+        "difficulty.apprentice",
+        "difficulty.standard",
+        "difficulty.hard",
+        "difficulty.tribulation"
+      ],
+      "unlocked_class_ids": [
+        "class.sword",
+        "class.thunder"
+      ],
+      "mastery_level_by_class": {
+        "class.sword": 6
+      },
+      "currency_balances": {
+        "currency.spirit_stones": 200,
+        "currency.dao_seals": 0
+      }
+    },
+    {
+      "id": "profile.abyss_unlocked",
+      "unlocked_difficulty_ids": [
+        "difficulty.apprentice",
+        "difficulty.standard",
+        "difficulty.hard",
+        "difficulty.tribulation",
+        "difficulty.abyss"
+      ],
+      "unlocked_class_ids": [
+        "class.sword",
+        "class.thunder"
+      ],
+      "mastery_level_by_class": {
+        "class.thunder": 9
+      },
+      "currency_balances": {
+        "currency.spirit_stones": 400,
+        "currency.dao_seals": 32
+      }
+    }
+  ]
+}

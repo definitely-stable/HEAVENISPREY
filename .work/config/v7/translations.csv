@@ -1,0 +1,43 @@
+keys,en,ru
+UI_START_RUN,Start run,Начать забег
+UI_DIFFICULTY,Challenge level,Уровень испытания
+CLASS_SWORD_NAME,Sword Cultivator,Культиватор меча
+CLASS_THUNDER_NAME,Thunder Daoist,Даос грома
+CLASS_TALISMAN_NAME,Talisman Master,Мастер талисманов
+CLASS_BODY_NAME,Body Cultivator,Культиватор тела
+SKILL_SWORD_NAME,Spirit Sword,Духовный меч
+SKILL_THUNDER_NAME,Heavenly Lightning,Небесная молния
+SKILL_SEAL_NAME,Talisman Seal,Печать талисмана
+SKILL_BODY_NAME,Body Pulse,Импульс тела
+STATUS_MARK_NAME,Sword Mark,Метка меча
+STATUS_SHOCK_NAME,Shock,Электрический разряд
+STATUS_BURN_NAME,Burn,Горение
+BOSS_JADE_WARDEN_NAME,Jade Warden,Нефритовый хранитель
+BOSS_MIST_SENTINEL_NAME,Mist Sentinel,Страж тумана
+BOSS_TRIBULATION_AVATAR_NAME,Tribulation Avatar,Аватар Небесной кары
+DIFFICULTY_APPRENTICE_NAME,Path of the Apprentice,Путь ученика
+DIFFICULTY_STANDARD_NAME,Cultivator Path,Путь культиватора
+DIFFICULTY_HARD_NAME,Sect Trial,Испытание секты
+DIFFICULTY_TRIBULATION_NAME,Heavenly Tribulation,Небесная кара
+DIFFICULTY_ABYSS_NAME,Abyss of Dao,Бездна Дао
+MODE_HURRY_NAME,Hurry,Ускоренный
+MODE_HYPER_NAME,Hyper,Гиперрежим
+MODE_ENDLESS_NAME,Endless,Бесконечный
+MODE_ASCETIC_NAME,Ascetic,Аскетический
+MODE_TRAINING_NAME,Training,Тренировка
+MODE_NORMAL_NAME,Normal,Обычный
+MODE_CHALLENGE_TRIALS_NAME,Challenge Trials,Испытания
+MODE_CUSTOM_UNRANKED_NAME,Custom (unranked),Пользовательский (без наград)
+STAGE_JADE_NAME,Jade Grove,Нефритовая роща
+STAGE_MIST_NAME,Misty Cliffs,Туманные утёсы
+CURRENCY_SPIRIT_STONES,Spirit Stones,Духовные камни
+CURRENCY_DAO_SEALS,Dao Seals,Печати Дао
+STAT_CLASS_MASTERY,Class Mastery,Мастерство класса
+TALENT_HEALTH_NAME,Body Tempering,Закалка тела
+TALENT_REROLL_NAME,Dao Insight,Прозрение Дао
+TALENT_BANISH_NAME,Banishment,Изгнание техники
+TALENT_SWORD_FOCUS_NAME,Sword Focus,Сосредоточение меча
+TALENT_THUNDER_CHAIN_NAME,Extended Lightning,Длинная молния
+TALENT_DAO_RESONANCE,Dao Resonance,Резонанс Дао
+TALENT_HEAVENLY_LIBRARY,Heavenly Library,Небесная библиотека
+TALENT_FATE_REFINEMENT,Fate Refinement,Переплетение судьбы

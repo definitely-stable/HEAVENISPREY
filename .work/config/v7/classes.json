@@ -1,0 +1,44 @@
+{
+  "schema_version": 2,
+  "kind": "class_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "classes": [
+    {
+      "id": "class.sword",
+      "name_key": "CLASS_SWORD_NAME",
+      "start_skill_id": "skill.spirit_sword",
+      "unlock_id": null,
+      "mastery_tree_id": "mastery.sword",
+      "planned_first_playable": true,
+      "archetype": "mark-and-precision"
+    },
+    {
+      "id": "class.thunder",
+      "name_key": "CLASS_THUNDER_NAME",
+      "start_skill_id": "skill.thunder_chain",
+      "unlock_id": "unlock.thunder",
+      "mastery_tree_id": "mastery.thunder",
+      "planned_first_playable": true,
+      "archetype": "chain-and-shock"
+    },
+    {
+      "id": "class.talisman",
+      "name_key": "CLASS_TALISMAN_NAME",
+      "start_skill_id": "skill.talisman_seal",
+      "unlock_id": "unlock.talisman",
+      "mastery_tree_id": "mastery.talisman",
+      "planned_first_playable": false,
+      "archetype": "zones-and-burning"
+    },
+    {
+      "id": "class.body",
+      "name_key": "CLASS_BODY_NAME",
+      "start_skill_id": "skill.body_pulse",
+      "unlock_id": "unlock.body",
+      "mastery_tree_id": "mastery.body",
+      "planned_first_playable": false,
+      "archetype": "close-combat-and-risk"
+    }
+  ]
+}

@@ -1,10 +1,23 @@
-# v7 — версионированные игровые конфиги
+# Канонический набор контентных дизайн-фикстур v7
 
-**Это дизайн-фикстуры, а не готовые ресурсы Godot**. Любые числовые значения — гипотезы до ботов и human playtest.
+**Это конфигурационный контракт, а не работающая игра.** Схема v7 предназначена для реализации будущего `ContentRegistry` и тестов. Не загружать JSON напрямую в CombatEngine минуя typed validation. Не создавать одновременно вторую «каноническую» копию в другом месте.
 
-- [Сложности](difficulty_profiles.json) · [Открытия](unlock_rules.json)
-- [Валюты](currencies.json) · [Награды](reward_contract.json)
-- [Режимы](modes.json) · [Поздние таланты](late_talents.json)
-- [Новые ключи локализации](localization_additions.csv)
+## Каталог
+- [Сложности](difficulty_profiles.json) · [Правила открытия](unlock_rules.json) · [Режимы](modes.json)
+- [Классы](classes.json) · [Навыки](skills.json) · [Статусы](statuses.json)
+- [Карты](stages.json) · [Боссы](bosses.json)
+- [Начальные/классовые таланты](talents.json) · [Поздние таланты](late_talents.json)
+- [Валюты](currencies.json) · [Политика наград](reward_contract.json) · [Промежуточные награды](economy_milestones.json)
+- [Сценарии ботов](bot_scenarios.json) · [Фикстуры профилей](profile_fixtures.json)
+- **[Единый каталог RU/EN](translations.csv)** — единственный активный CSV для будущего импорта Godot; [локализация v7, первоначальный слой](localization_additions.csv) сохранена для происхождения.
+- [Соответствие старых ID новым](id_compatibility.json) · [Настройки пользователя](settings.example.cfg).
 
-Прежде чем вводить в проект, построить ContentRegistry, проверить уникальность ID, условия открытий, отсутствие циклов в talents, ключи перевода, idempotent settlement. При изменении schema_version нужна миграция и тесты. Команды: python scripts/validate_work.py и python -m unittest discover -s tests -v.
+**Примечание по Godot:** у импортируемого CSV заголовок `keys,en,ru`, без вспомогательной колонки `_context`, которую раньше ошибочно предлагали передавать импортёру как locale. Пояснения переводов и provenance хранить отдельно от CSV.
+
+### Почему некоторые определения только планируются
+- `stage.mist_cliffs` и поздние варианты двух боссов определены, чтобы **модель открытий была непротиворечивой**, но у них нет готовой сцены, анимации, AI или волн; пометка `availability: design-only` обязательна.
+- `reward.minute6` и далее относятся к будущим забегам 20–30 минут; 5-минутная тестовая арена не обязана выдавать эти награды.
+- Боты — **контракт сценариев**, а не работающие `BotPolicy`.
+- Множители сложности, награды, пороги убийств и late currency — **непроверенные баланс-гипотезы**.
+
+**Правила изменений:** [Content Registry Contract](../../spec/v7/content-registry-contract.md) · [Происхождение и разбор конфликтов](../../guides/PACKAGE_RECONCILIATION.md). Проверка: `python scripts/validate_content.py` + общий CI.

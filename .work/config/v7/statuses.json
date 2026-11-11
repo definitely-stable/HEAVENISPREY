@@ -1,0 +1,38 @@
+{
+  "schema_version": 2,
+  "kind": "status_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "statuses": [
+    {
+      "id": "status.mark",
+      "name_key": "STATUS_MARK_NAME",
+      "family": "mark",
+      "stack_policy": "additive_with_cap",
+      "max_stacks": 20,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.shock",
+      "name_key": "STATUS_SHOCK_NAME",
+      "family": "lightning",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 12,
+      "tick_period_ticks": 30,
+      "dot_damage": 1,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.burn",
+      "name_key": "STATUS_BURN_NAME",
+      "family": "fire",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 12,
+      "tick_period_ticks": 30,
+      "dot_damage": 1,
+      "availability": "design-only"
+    }
+  ]
+}

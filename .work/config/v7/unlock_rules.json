@@ -87,6 +87,36 @@
           "count": 1
         }
       ]
+    },
+    {
+      "id": "unlock.thunder",
+      "all": [
+        {
+          "event": "run_finished",
+          "stage_id": "stage.jade_grove",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "unlock.talisman",
+      "all": [
+        {
+          "event": "win",
+          "stage_id": "stage.jade_grove",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "unlock.body",
+      "all": [
+        {
+          "event": "win",
+          "stage_id": "stage.jade_grove",
+          "count": 3
+        }
+      ]
     }
   ],
   "note": "Boss IDs and thresholds are game-design prerequisites: no actual boss exists yet."
