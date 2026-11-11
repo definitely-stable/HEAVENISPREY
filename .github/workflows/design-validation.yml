@@ -38,5 +38,7 @@ jobs:
         run: python scripts/validate_run_loop_proposal.py
       - name: Check GAME-UX cross-layer choice and evolution witness
         run: python scripts/validate_choice_bridge_proposal.py
+      - name: Verify FOUNDATION-2026 research-backed design gates
+        run: python scripts/validate_foundation_gates.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

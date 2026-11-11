@@ -1,0 +1,446 @@
+{
+  "schema_version": 1,
+  "kind": "architecture_foundation_gate_catalog",
+  "status": "design-proposal-not-canonical",
+  "cutoff_date": "2026-11-11",
+  "scope": "architecture_only",
+  "lifecycle": [
+    "existing_partial",
+    "planned",
+    "deferred"
+  ],
+  "horizons": [
+    "contract_now",
+    "fixture_now",
+    "experiment_later",
+    "research_after_playtest"
+  ],
+  "evidence_types": [
+    "documentation",
+    "standard",
+    "tooling",
+    "research",
+    "preprint",
+    "guidelines",
+    "benchmark",
+    "research_report"
+  ],
+  "sources": [
+    {
+      "id": "SRC-GODOT-PERF",
+      "type": "documentation",
+      "url": "https://docs.godotengine.org/en/4.7/tutorials/performance/index.html",
+      "use": "Godot 4.7 performance guidance; measurement before optimization"
+    },
+    {
+      "id": "SRC-GODOT-SERVERS",
+      "type": "documentation",
+      "url": "https://docs.godotengine.org/en/stable/tutorials/performance/using_servers.html",
+      "use": "Node/Server tradeoffs; server interaction may cause stalls"
+    },
+    {
+      "id": "SRC-GODOT-MULTIMESH",
+      "type": "documentation",
+      "url": "https://docs.godotengine.org/en/stable/tutorials/performance/using_multimesh.html",
+      "use": "MultiMesh GPU instancing and per-instance culling limitation"
+    },
+    {
+      "id": "SRC-GODOT-TICK",
+      "type": "documentation",
+      "url": "https://docs.godotengine.org/en/stable/tutorials/physics/interpolation/physics_interpolation_introduction.html",
+      "use": "Fixed ticks separated from rendering, interpolation"
+    },
+    {
+      "id": "SRC-JSON",
+      "type": "standard",
+      "url": "https://json-schema.org/draft/2020-12",
+      "use": "Structural contracts are distinct from semantic graphs"
+    },
+    {
+      "id": "SRC-HYPOTHESIS",
+      "type": "tooling",
+      "url": "https://hypothesis.readthedocs.io/en/latest/stateful.html",
+      "use": "Stateful property-based testing; future optional tool"
+    },
+    {
+      "id": "SRC-AIIDE-2025",
+      "type": "research",
+      "url": "https://ojs.aaai.org/index.php/AIIDE/article/view/36856",
+      "use": "Graph/economy and level PCG; does not validate survivor-like fun"
+    },
+    {
+      "id": "SRC-ICAC-2026",
+      "type": "research",
+      "url": "https://ieeexplore.ieee.org/abstract/document/11712397",
+      "use": "Automated game testing survey; generalization/explainability limits"
+    },
+    {
+      "id": "SRC-AGENT-PCG-2026",
+      "type": "preprint",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6499021",
+      "use": "Tool-using LLM-based PCG, open-ended directives; no proof for our engine"
+    },
+    {
+      "id": "SRC-IMMERSION-2026",
+      "type": "research",
+      "url": "https://www.tandfonline.com/doi/full/10.1080/1463922X.2026.2706451",
+      "use": "Systematic review and meta-analysis of immersion factors"
+    },
+    {
+      "id": "SRC-DDA-2026",
+      "type": "research",
+      "url": "https://www.mdpi.com/2078-2489/17/1/96",
+      "use": "Review of DDA in serious games; limited direct transfer"
+    },
+    {
+      "id": "SRC-ACCESS",
+      "type": "guidelines",
+      "url": "https://igda-gasig.org/get-involved/sig-initiatives/resources-for-game-developers/sig-guidelines/",
+      "use": "Accessible warning, color-independent cues, readability"
+    },
+    {
+      "id": "SRC-SWEBENCH-2026",
+      "type": "benchmark",
+      "url": "https://labs.scale.com/leaderboard/swe_bench_pro_public_v2?tab=full",
+      "use": "Independent acceptance must detect invalid tests/tasks"
+    },
+    {
+      "id": "SRC-CODESCALE",
+      "type": "research_report",
+      "url": "https://github.com/sourcegraph/CodeScaleBench/blob/public/docs/technical_reports/TECHNICAL_REPORT.md",
+      "use": "Targeted agent context can help; provider-produced comparison not universal"
+    },
+    {
+      "id": "SRC-AGENT-BENCH-2026",
+      "type": "benchmark",
+      "url": "https://artificialanalysis.ai/methodology/coding-agents-benchmarking",
+      "use": "Real repo verifier, anti-reward-hacking and end-to-end scoring"
+    }
+  ],
+  "gates": [
+    {
+      "id": "FND-01",
+      "priority": "P0",
+      "owner": "simulation",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [],
+      "existing_docs": [
+        ".work/spec/core/s04.md",
+        ".work/spec/v7/game-arch-00-run-orchestration.md"
+      ],
+      "evidence_ids": [
+        "SRC-GODOT-TICK",
+        "SRC-ICAC-2026"
+      ],
+      "capability": "Canonical fixed tick, stable IDs, phase ordering and independent named RNG streams",
+      "acceptance": "Two identical seed/input logs yield the same ordered event+build digest; distinguish cross-OS float divergence and inspect it",
+      "anti_goal": "Do not require global bit-identical GPU visuals or a networking rollback framework"
+    },
+    {
+      "id": "FND-02",
+      "priority": "P0",
+      "owner": "content",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [],
+      "existing_docs": [
+        ".work/spec/v7/build-skill-type-contract.md",
+        ".work/spec/v7/content-registry-contract.md"
+      ],
+      "evidence_ids": [
+        "SRC-JSON"
+      ],
+      "capability": "Versioned canonical definitions, schema + semantic registry, immutable RunRulesHash and migration policy",
+      "acceptance": "Reject schema mismatch, missing references and unversioned semantic change; model migration golden fixtures",
+      "anti_goal": "Do not replace semantic validators with JSON Schema alone"
+    },
+    {
+      "id": "FND-03",
+      "priority": "P0",
+      "owner": "combat",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-01",
+        "FND-02"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/flexibility-first-build-policies.md",
+        ".work/spec/v5/v5_budget.md"
+      ],
+      "evidence_ids": [
+        "SRC-ICAC-2026"
+      ],
+      "capability": "Effect provenance, source lifetime, snapshot stage, finite/provable event bounds and policy-specific performance profile",
+      "acceptance": "Reject unbounded cycles, preserve logical hit results, profile logical work separately from VFX",
+      "anti_goal": "Do not globally clamp proc count, Multicast or slot count to hide performance problems"
+    },
+    {
+      "id": "FND-04",
+      "priority": "P0",
+      "owner": "progression",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-01",
+        "FND-02"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/game-arch-01-xp-pickups.md",
+        ".work/spec/v7/game-ux-001-oct-2026.md"
+      ],
+      "evidence_ids": [
+        "SRC-HYPOTHESIS",
+        "SRC-ACCESS"
+      ],
+      "capability": "Exactly-once pickup source/value, reward arbitration and safe choice queue with accessibility modes",
+      "acceptance": "Value and IDs survive consolidation, replay, pause and multi-level receipts; stale offers reject atomically",
+      "anti_goal": "Do not grant XP from UI sprites or merge nonadditive reward kinds"
+    },
+    {
+      "id": "FND-05",
+      "priority": "P0",
+      "owner": "verification",
+      "status": "planned",
+      "horizon": "fixture_now",
+      "depends_on": [
+        "FND-01",
+        "FND-04"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/game-arch-00-run-orchestration.md",
+        ".work/guides/CONTENT_AUTHORING_ACCELERATOR.md"
+      ],
+      "evidence_ids": [
+        "SRC-HYPOTHESIS",
+        "SRC-SWEBENCH-2026"
+      ],
+      "capability": "Metamorphic/fuzz/state-transition tests with deterministic seed corpus and negative-control mutations",
+      "acceptance": "CI confirms same-seed reproducibility, safe permutation invariance and deliberate invalid fixtures failing",
+      "anti_goal": "Do not treat a single curated happy-path witness as proof of every possible build"
+    },
+    {
+      "id": "FND-06",
+      "priority": "P0",
+      "owner": "build",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-02",
+        "FND-03",
+        "FND-04"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/build-skill-architecture-proposal.md",
+        ".work/spec/v7/build-skill-type-contract.md"
+      ],
+      "evidence_ids": [
+        "SRC-AIIDE-2025"
+      ],
+      "capability": "Explicit acquisition, recipe reachability, slot deltas, catalysts and evolution source gates",
+      "acceptance": "For each authored evolution obtain positive witness or explain unreachability by policy; keep unusual high-power paths",
+      "anti_goal": "Do not impose universal six slots, one copy, exactly five ranks or forbid finite proc cycles"
+    },
+    {
+      "id": "FND-07",
+      "priority": "P1",
+      "owner": "world",
+      "status": "planned",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-01",
+        "FND-03"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/gameplay-loop-gap-audit.md",
+        ".work/spec/v7/game-arch-01-xp-pickups.md"
+      ],
+      "evidence_ids": [
+        "SRC-GODOT-SERVERS",
+        "SRC-GODOT-MULTIMESH"
+      ],
+      "capability": "Hybrid model: logical stores for dense enemies/pickups, authored scenes for unique objects, spatial queries via grid when warranted",
+      "acceptance": "Record CPU/render targets and independent costs, prove world-logic invariants before choosing Server/MultiMesh",
+      "anti_goal": "Do not force full ECS, GPU simulation, multithreaded Godot scenes or immediate GDExtension"
+    },
+    {
+      "id": "FND-08",
+      "priority": "P1",
+      "owner": "performance",
+      "status": "planned",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-03",
+        "FND-07"
+      ],
+      "existing_docs": [
+        ".work/spec/v5/v5_budget.md",
+        ".work/spec/v7/flexibility-first-build-policies.md"
+      ],
+      "evidence_ids": [
+        "SRC-GODOT-PERF",
+        "SRC-GODOT-MULTIMESH"
+      ],
+      "capability": "Per-profile workload instrumentation: casts, hits, active effects, pickup queries, VFX/audio, frame/tick CPU",
+      "acceptance": "Measure p50/p95/p99 CPU+GPU, memory and worst scenario once runtime exists; preserve game semantics",
+      "anti_goal": "Do not promise FPS from static proc-event bound or render every logical hit"
+    },
+    {
+      "id": "FND-09",
+      "priority": "P0",
+      "owner": "ux",
+      "status": "existing_partial",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-04"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/game-ux-001-oct-2026.md",
+        ".work/spec/v5/v5_ux.md"
+      ],
+      "evidence_ids": [
+        "SRC-ACCESS",
+        "SRC-IMMERSION-2026"
+      ],
+      "capability": "ChoiceViewModel from canonical data, explicit input focus contract and warning-layer priority",
+      "acceptance": "Cards explain owned tags, rank delta, recipe costs and source; no carried button press can confirm",
+      "anti_goal": "Do not silently auto-pick exclusive meridian/ritual or let cosmetic VFX hide boss tells"
+    },
+    {
+      "id": "FND-10",
+      "priority": "P1",
+      "owner": "testing",
+      "status": "planned",
+      "horizon": "experiment_later",
+      "depends_on": [
+        "FND-05",
+        "FND-06",
+        "FND-08"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/gameplay-loop-gap-audit.md",
+        ".work/spec/v7/bot-acceptance.md"
+      ],
+      "evidence_ids": [
+        "SRC-ICAC-2026",
+        "SRC-DDA-2026",
+        "SRC-AIIDE-2025"
+      ],
+      "capability": "Deterministic persona/scenario bots with multi-objective metrics; independent human UX tests",
+      "acceptance": "Collect build viability, threats, XP/min, warning failures and comfort; human studies validate enjoyment",
+      "anti_goal": "Do not optimize only DPS or claim agent playtesting proves player fun"
+    },
+    {
+      "id": "FND-11",
+      "priority": "P1",
+      "owner": "agent-workflow",
+      "status": "existing_partial",
+      "horizon": "fixture_now",
+      "depends_on": [
+        "FND-02",
+        "FND-05"
+      ],
+      "existing_docs": [
+        ".work/guides/CONTENT_AUTHORING_ACCELERATOR.md",
+        ".work/indexes/AGENT_ROUTING.md"
+      ],
+      "evidence_ids": [
+        "SRC-SWEBENCH-2026",
+        "SRC-CODESCALE",
+        "SRC-AGENT-BENCH-2026"
+      ],
+      "capability": "Small scoped tasks with impact graph, canary-failing negative fixtures, independent verify and CI-first merge",
+      "acceptance": "Each material architecture change has matching source map, acceptance trace and reject-on-mutation control",
+      "anti_goal": "Do not measure success by number of green tests alone or model benchmark rank"
+    },
+    {
+      "id": "FND-12",
+      "priority": "P2",
+      "owner": "generation",
+      "status": "deferred",
+      "horizon": "research_after_playtest",
+      "depends_on": [
+        "FND-05",
+        "FND-06",
+        "FND-10"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/gameplay-loop-gap-audit.md",
+        ".work/roadmap/NEXT_SLICES.md"
+      ],
+      "evidence_ids": [
+        "SRC-AGENT-PCG-2026",
+        "SRC-AIIDE-2025"
+      ],
+      "capability": "Optional PCG/RL/LLM-assisted encounter or level candidates with declarative constraints",
+      "acceptance": "Generated candidate must pass topology, reward, reachability, danger and human review gates",
+      "anti_goal": "Do not generate autonomous balance by optimizing a proxy metric without measured player outcomes"
+    },
+    {
+      "id": "FND-13",
+      "priority": "P1",
+      "owner": "saves",
+      "status": "planned",
+      "horizon": "contract_now",
+      "depends_on": [
+        "FND-01",
+        "FND-02",
+        "FND-04"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/game-arch-00-run-orchestration.md",
+        ".work/spec/v7/economy-and-talent-sinks.md"
+      ],
+      "evidence_ids": [
+        "SRC-HYPOTHESIS"
+      ],
+      "capability": "Versioned immutable run snapshot with replay checkpoint, RNG streams, choice queue and atomic meta settlement",
+      "acceptance": "Pause/resume and reopen cannot duplicate reward or silently change RulesHash; migration tests preserve semantics",
+      "anti_goal": "Do not build generalized distributed event store or network sync for offline solo game"
+    },
+    {
+      "id": "FND-14",
+      "priority": "P1",
+      "owner": "ux-testing",
+      "status": "planned",
+      "horizon": "experiment_later",
+      "depends_on": [
+        "FND-09",
+        "FND-10"
+      ],
+      "existing_docs": [
+        ".work/spec/v7/game-ux-001-oct-2026.md",
+        ".work/spec/v6/v6_ux.md"
+      ],
+      "evidence_ids": [
+        "SRC-IMMERSION-2026",
+        "SRC-ACCESS"
+      ],
+      "capability": "Measure agency/interruptions/recognizability and accessible input with keyboard+controller playtests",
+      "acceptance": "A/B compares immediate vs banked with consent and declared cohorts, not cherry-picked session traces",
+      "anti_goal": "Do not invent retention or universal UI reaction-time thresholds"
+    },
+    {
+      "id": "FND-15",
+      "priority": "P2",
+      "owner": "platform",
+      "status": "deferred",
+      "horizon": "research_after_playtest",
+      "depends_on": [
+        "FND-07",
+        "FND-08"
+      ],
+      "existing_docs": [
+        ".work/roadmap/NEXT_SLICES.md",
+        ".work/spec/core/s04.md"
+      ],
+      "evidence_ids": [
+        "SRC-GODOT-SERVERS"
+      ],
+      "capability": "Optional GDExtension/C++ / ECS / multithreading only after isolated CPU hotspot and benchmark",
+      "acceptance": "Same golden simulation outcomes, cross-OS CI and measurable speedup without authoring regressions",
+      "anti_goal": "Do not choose a native rewrite or networked co-op because it is fashionable"
+    }
+  ]
+}
