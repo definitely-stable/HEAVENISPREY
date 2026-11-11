@@ -6,6 +6,7 @@
 
 - [Что упущено за пределами навыков: XP/pickups, карта, события, боссы, загрузка перед забегом, режимы и UX](spec/v7/gameplay-loop-gap-audit.md).
 - [GAME-ARCH-00 — RunOrchestrator, EventLedger и ChoiceCoordinator](spec/v7/game-arch-00-run-orchestration.md) · [GAME-ARCH-01 — XP, подбираемые объекты и сохранение источников](spec/v7/game-arch-01-xp-pickups.md).
+- [GAME-UX-001 — UX аудит к октябрю 2026, отложенные уровни, проверяемые карточки, защита предупреждений](spec/v7/game-ux-001-oct-2026.md) · [Cross-layer witness](../scripts/validate_choice_bridge_proposal.py).
 - [Изолированные фикстуры и статические тесты](proposals/game-arch-00-01/README.md) — проверяемый дизайн без Godot.
 - Следующий рекомендуемый архитектурный этап: GAME-ARCH-00/01 — объединить цикл событий и формализовать подбираемые награды **до** масштабирования новых техник.
 - Не утверждает баланс, играбельность и не разрешает создание Godot runtime.
