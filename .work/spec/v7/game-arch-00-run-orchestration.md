@@ -81,6 +81,8 @@ At the end of tick `T`:
 
 `ChoiceCoordinator` may display several cards at once but must commit **sequentially**, because the first choice can alter the legality of the second. No silently bundled bonus that removes earned choices.
 
+**UX distinction (as-of October 2026):** the presence of an earned `pending_choice` does **not** itself imply `paused=True`. A deliberately deferred level-up is still owed; a mandatory ritual opens the queue while preserving FIFO. The isolated Python model now validates same-tick input batches, two presentation modes and an explicit manual open/defer action. [GAME-UX-001](game-ux-001-oct-2026.md) documents future controller/focus, auto-pick and batching behavior; none is claimed to exist in the game.
+
 ## 5. Lifecycle proposal
 
 `RUN_SETUP → RUNNING → CHOICE_PAUSED ↔ RUNNING → FINISHING → SETTLED`
