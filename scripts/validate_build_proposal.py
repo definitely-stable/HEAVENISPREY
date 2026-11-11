@@ -118,6 +118,41 @@ def eligible_offers(catalog: dict, build: dict) -> list[str]:
     return sorted(results)
 
 
+def apply_upgrade_offer(catalog: dict, build: dict, offer_id: str,
+                        expected_revision: int) -> dict:
+    """Design-time projection of the four *sample* offer kinds, NOT game runtime.
+
+    Both the offer and the whole operation are revalidated against the
+    current build. Future DraftService additionally owns offer provenance,
+    weight/choice rolls, bans, ranks for passives, and eligibility policies.
+    """
+    tables = tables_for(catalog)
+    must(build["revision"] == expected_revision, "stale build revision")
+    must(offer_id in tables["offers"], "unknown upgrade offer")
+    must(offer_id in eligible_offers(catalog, build), "upgrade offer no longer eligible")
+    offer = tables["offers"][offer_id]
+    kind, target = offer["kind"], offer["target_id"]
+    result = copy.deepcopy(build)
+    if kind == "rank_up_active":
+        owned = next(x for x in result["active"] if x["id"] == target)
+        owned["rank"] += 1
+    elif kind == "acquire_active":
+        result["active"].append({"id": target, "rank": 1})
+    elif kind == "acquire_passive":
+        result["passive"].append({"id": target, "rank": 1})
+    elif kind == "add_power":
+        existing = next((x for x in result["powers"] if x["id"] == target), None)
+        if existing is None:
+            result["powers"].append({"id": target, "stacks": 1})
+        else:
+            existing["stacks"] += 1
+    else:
+        raise ContractError(f"unsupported sample offer: {kind}")
+    result["revision"] += 1
+    validate_build(result, tables, catalog["policy"])
+    return result
+
+
 def is_applicable(recipe: dict, build: dict, policy: dict, event_gate: str) -> bool:
     if recipe["event_gate"] != event_gate:
         return False

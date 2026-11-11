@@ -20,7 +20,8 @@
       30
     ],
     "event_tick": 100,
-    "first_sequence": 10
+    "first_sequence": 10,
+    "choice_mode": "IMMEDIATE"
   },
   "pickups": [
     {

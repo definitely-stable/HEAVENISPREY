@@ -71,7 +71,7 @@ At the end of tick `T`:
 1. Collect all accepted world/reward intents from the committed simulation tick.
 2. Validate IDs, ordering and typed payloads; reject conflicting receipts.
 3. Apply XP accounting and produce one level-up **choice per earned level**; enqueue ritual/breakthrough choices with their independent UIDs.
-4. Complete the **entire deterministic event batch**, then enter `CHOICE_PAUSED`.
+4. Complete the **entire deterministic event batch**. Enter `CHOICE_PAUSED` if the [GAME-UX-001](game-ux-001-oct-2026.md) policy is **Immediate** or a mandatory ritual/breakthrough is pending; in optional **Bank Levels** mode, ordinary levels remain earned and queued while simulation may continue until the player opens the panel.
 5. Show first choice or a batched-sequential UI. Obtain **fresh eligible IDs** from `DraftService` / `RewardResolver` using the current `build_revision` and `RunRulesHash`.
 6. On user action validate first-in-queue choice UID, current build revision, selected eligible ID and available source. An atomic `BuildTransaction` commits the mutation and increments revision.
 7. Re-evaluate eligibility of the next queued choice; no stale menu options. Resume simulation **only once queue is empty**.
@@ -80,6 +80,8 @@ At the end of tick `T`:
 **Example (reference test):** one pickup grants 40 XP, thresholds `5,12,20,30` are incremental costs from levels 1→2→3→4→5. Player advances 1→4, keeps 3 XP, and queues 3 level choices. A ritual reward and Qi breakthrough at the same tick follow them according to event sequences. Total = 5 user decisions. After all five commits the run resumes **at the original tick**, not after five simulated frames.
 
 `ChoiceCoordinator` may display several cards at once but must commit **sequentially**, because the first choice can alter the legality of the second. No silently bundled bonus that removes earned choices.
+
+**UX distinction (as-of October 2026):** the presence of an earned `pending_choice` does **not** itself imply `paused=True`. A deliberately deferred level-up is still owed; a mandatory ritual opens the queue while preserving FIFO. The isolated Python model now validates same-tick input batches, two presentation modes and an explicit manual open/defer action. [GAME-UX-001](game-ux-001-oct-2026.md) documents future controller/focus, auto-pick and batching behavior; none is claimed to exist in the game.
 
 ## 5. Lifecycle proposal
 

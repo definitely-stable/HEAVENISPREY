@@ -36,5 +36,7 @@ jobs:
         run: python scripts/content_impact.py --id status.mark --json
       - name: Check GAME-ARCH-00/01 run and XP receipts (no game)
         run: python scripts/validate_run_loop_proposal.py
+      - name: Check GAME-UX cross-layer choice and evolution witness
+        run: python scripts/validate_choice_bridge_proposal.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

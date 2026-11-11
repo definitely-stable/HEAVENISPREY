@@ -408,5 +408,137 @@ class RunLoopDesignTests(unittest.TestCase):
         self.assertEqual(state2["level"], 4)
 
 
+    def test_non_xp_objects_do_not_become_additive_generic_rewards(self):
+        catalog = source()
+        catalog["pickups"][0]["kind"] = "HEALTH"
+        catalog["pickups"][1]["kind"] = "HEALTH"
+        result = oracle.consolidate_pickups(catalog["pickups"])
+        self.assertEqual(len(result), 5)
+        self.assertEqual(sum(p["value"] for p in result), 52)
+
+    def test_deferred_level_choices_do_not_pause_combat(self):
+        catalog = source()
+        catalog["rules"]["choice_mode"] = "BANK_LEVELS"
+        only_xp = event_fixture(catalog)[:1]
+        state = oracle.apply_events(oracle.initial_run(catalog), only_xp,
+                                    catalog["rules"]["xp_cost_by_level"])
+        self.assertFalse(state["paused"])
+        self.assertEqual(oracle.choice_summary(state)["pending_level_count"], 3)
+        self.assertEqual(oracle.choice_summary(state)["mandatory_count"], 0)
+        self.assertEqual(state["last_tick"], 100)
+        self.assertEqual(state["build_revision"], 1)
+
+    def test_bank_can_accumulate_across_committed_ticks(self):
+        catalog = source()
+        catalog["rules"]["choice_mode"] = "BANK_LEVELS"
+        state = oracle.apply_events(oracle.initial_run(catalog),
+                                    event_fixture(catalog)[:1],
+                                    catalog["rules"]["xp_cost_by_level"])
+        second = {"uid": "sample.event.nextxp", "run_uid": catalog["run_uid"],
+                  "tick": 101, "sequence": 11, "kind": "XP_GAIN",
+                  "payload": {"amount": 30, "source_uids": ["sample.source.next"]}}
+        state2 = oracle.apply_events(state, [second],
+                                     catalog["rules"]["xp_cost_by_level"])
+        self.assertEqual(state2["level"], 5)
+        self.assertFalse(state2["paused"])
+        self.assertEqual(oracle.choice_summary(state2)["pending_level_count"], 4)
+
+    def test_manual_open_and_deferral_preserve_queue_and_tick(self):
+        catalog = source()
+        catalog["rules"]["choice_mode"] = "BANK_LEVELS"
+        state = oracle.apply_events(oracle.initial_run(catalog),
+                                    event_fixture(catalog)[:1],
+                                    catalog["rules"]["xp_cost_by_level"])
+        original = copy.deepcopy(state)
+        opened = oracle.open_pending_choices(state)
+        self.assertTrue(opened["paused"])
+        self.assertEqual(state, original)
+        first = opened["pending_choices"][0]["uid"]
+        committed = oracle.commit_choice(opened, choice_uid=first,
+                                         expected_build_revision=1,
+                                         selection_token="sample.option.owned",
+                                         trusted_eligible_tokens=["sample.option.owned"])
+        self.assertEqual(oracle.choice_summary(committed)["pending_level_count"], 2)
+        banked = oracle.defer_pending_choices(committed)
+        self.assertFalse(banked["paused"])
+        self.assertEqual(banked["last_tick"], 100)
+        self.assertEqual(len(banked["pending_choices"]), 2)
+        self.assertEqual(banked["build_revision"], 2)
+
+    def test_mandatory_ritual_opens_banked_levels_in_fifo_order(self):
+        catalog = source()
+        catalog["rules"]["choice_mode"] = "BANK_LEVELS"
+        state = oracle.apply_events(oracle.initial_run(catalog),
+                                    event_fixture(catalog)[:1],
+                                    catalog["rules"]["xp_cost_by_level"])
+        ritual = copy.deepcopy(catalog["other_events"][0])
+        ritual["tick"] = 101
+        forced = oracle.apply_events(state, [ritual], catalog["rules"]["xp_cost_by_level"])
+        self.assertTrue(forced["paused"])
+        self.assertEqual([x["kind"] for x in forced["pending_choices"]],
+                         ["LEVEL_UP"] * 3 + ["RITUAL_REWARD"])
+        with self.assertRaisesRegex(oracle.ContractError, "mandatory reward"):
+            oracle.defer_pending_choices(forced)
+
+    def test_manual_deferral_not_allowed_in_immediate_mode(self):
+        state = started_run()
+        with self.assertRaisesRegex(oracle.ContractError, "not enabled"):
+            oracle.defer_pending_choices(state)
+
+    def test_open_without_pending_choices_rejected(self):
+        with self.assertRaisesRegex(oracle.ContractError, "no pending"):
+            oracle.open_pending_choices(oracle.initial_run(source()))
+
+    def test_invalid_presentation_mode_rejected(self):
+        catalog = source()
+        catalog["rules"]["choice_mode"] = "NEVER_SHOW_LEVEL_UP"
+        with self.assertRaisesRegex(oracle.ContractError, "unsupported"):
+            oracle.initial_run(catalog)
+
+    def test_event_batch_cannot_cross_simulation_tick_barrier(self):
+        catalog = source()
+        events = event_fixture(catalog)
+        events[1]["tick"] = 101
+        with self.assertRaisesRegex(oracle.ContractError, "spans multiple"):
+            oracle.apply_events(oracle.initial_run(catalog),
+                                events, catalog["rules"]["xp_cost_by_level"])
+
+    def test_xp_credit_checked_against_authoritative_fixture_values(self):
+        catalog = source()
+        manifest = {p["source_uids"][0]: p["value"] for p in catalog["pickups"]}
+        oracle.verify_xp_source_values(event_fixture(catalog), manifest)
+        forged = event_fixture(catalog)
+        forged[0]["payload"]["amount"] += 2000
+        with self.assertRaisesRegex(oracle.ContractError, "authoritative"):
+            oracle.verify_xp_source_values(forged, manifest)
+
+    def test_unknown_xp_source_rejected_by_manifest(self):
+        catalog = source()
+        event = event_fixture(catalog)[0]
+        manifest = {"sample.source.some_other_drop": event["payload"]["amount"]}
+        with self.assertRaisesRegex(oracle.ContractError, "unknown XP source"):
+            oracle.verify_xp_source_values([event], manifest)
+
+    def test_same_xp_source_across_distinct_receipts_rejected(self):
+        catalog = source()
+        event = event_fixture(catalog)[0]
+        other = copy.deepcopy(event)
+        other["uid"] = "sample.event.second"
+        other["sequence"] += 10
+        manifest = {p["source_uids"][0]: p["value"] for p in catalog["pickups"]}
+        with self.assertRaisesRegex(oracle.ContractError, "multiple receipts"):
+            oracle.verify_xp_source_values([event, other], manifest)
+
+    def test_choice_summary_empty_and_paused_views(self):
+        catalog = source()
+        empty = oracle.choice_summary(oracle.initial_run(catalog))
+        self.assertIsNone(empty["first_kind"])
+        self.assertFalse(empty["paused"])
+        active = oracle.choice_summary(started_run(catalog))
+        self.assertTrue(active["paused"])
+        self.assertEqual(active["first_kind"], "LEVEL_UP")
+        self.assertEqual(active["mandatory_count"], 2)
+
+
 if __name__ == "__main__":
     unittest.main()

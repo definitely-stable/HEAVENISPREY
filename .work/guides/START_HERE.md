@@ -4,7 +4,7 @@
 
 | Область | Актуальный вход | Детализация |
 |---|---|---|
-| **Полный геймплейный цикл, XP, награды, карта, боссы, предзабеговые выборы** | [GAMEPLAY-GAP-001 — аудит](../spec/v7/gameplay-loop-gap-audit.md) · [RunOrchestrator](../spec/v7/game-arch-00-run-orchestration.md) · [XP/Pickups](../spec/v7/game-arch-01-xp-pickups.md) | [Волны v7](../config/v7/enemy_rosters.json) · [Объекты карты](../config/v7/stages.json) · [Roadmap](../roadmap/NEXT_SLICES.md) |
+| **Полный геймплейный цикл, XP, награды, карта, боссы, предзабеговые выборы** | [GAMEPLAY-GAP-001 — аудит](../spec/v7/gameplay-loop-gap-audit.md) · [RunOrchestrator](../spec/v7/game-arch-00-run-orchestration.md) · [XP/Pickups](../spec/v7/game-arch-01-xp-pickups.md) · [UX Октябрь 2026](../spec/v7/game-ux-001-oct-2026.md) | [Волны v7](../config/v7/enemy_rosters.json) · [Объекты карты](../config/v7/stages.json) · [Roadmap](../roadmap/NEXT_SLICES.md) |
 | Продукт, игровая цель | [Границы и критерии](../spec/core/s02.md) | [Прогрессия](../spec/v6/v6_classes.md) · [Roadmap](../roadmap/NEXT_SLICES.md) |
 | **Бестиарий и поведение обычных врагов** | [13 монстров](../spec/v7/ordinary-enemy-bestiary.md) | [Контракт угроз](../spec/v7/enemy-threat-contract.md) · [Волны](../config/v7/enemy_rosters.json) · [Атаки](../config/v7/enemy_attacks.json) |
 | Симуляция, автоатаки и статусы | [ADR-002](../decisions/ADR-002-combat.md) | [Combat](../spec/v5/v5_semantics.md) · [Event budget](../spec/v5/v5_budget.md) |
