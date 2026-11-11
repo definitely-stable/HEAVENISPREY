@@ -77,6 +77,71 @@
       ],
       "seed": 401,
       "profile_fixture": "profile.clean"
+    },
+    {
+      "id": "bot.enemy.lantern_dodge.001",
+      "policy_id": "survival",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "profile_fixture": "profile.clean",
+      "seed": 501,
+      "target_enemy_id": "enemy.cursed_spirit_lantern",
+      "expected_check": "projectile evasion with locked trajectory",
+      "availability": "design-only"
+    },
+    {
+      "id": "bot.enemy.root_escape.001",
+      "policy_id": "survival",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "profile_fixture": "profile.clean",
+      "seed": 502,
+      "target_enemy_id": "enemy.root_abomination",
+      "expected_check": "zone escape and no unavoidable trap",
+      "availability": "design-only"
+    },
+    {
+      "id": "bot.enemy.puppet_death.001",
+      "policy_id": "adversarial",
+      "class_id": "class.sword",
+      "stage_id": "stage.jade_grove",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "profile_fixture": "profile.clean",
+      "seed": 503,
+      "target_enemy_id": "enemy.paper_puppet",
+      "expected_check": "on-death warning, no recursive death proc",
+      "availability": "design-only"
+    },
+    {
+      "id": "bot.enemy.crow_charge.001",
+      "policy_id": "beginner",
+      "class_id": "class.sword",
+      "stage_id": "stage.mist_cliffs",
+      "difficulty_id": "difficulty.standard",
+      "modes": [],
+      "profile_fixture": "profile.clean",
+      "seed": 504,
+      "target_enemy_id": "enemy.omen_crow",
+      "expected_check": "dive lock and recovery",
+      "availability": "design-only"
+    },
+    {
+      "id": "bot.enemy.cultist_combo.001",
+      "policy_id": "stress",
+      "class_id": "class.thunder",
+      "stage_id": "stage.mist_cliffs",
+      "difficulty_id": "difficulty.hard",
+      "modes": [],
+      "profile_fixture": "profile.hard_unlocked",
+      "seed": 505,
+      "target_enemy_id": "enemy.corrupted_cultivator",
+      "expected_check": "overlapping ranged and ground tell budget",
+      "availability": "design-only"
     }
   ]
 }

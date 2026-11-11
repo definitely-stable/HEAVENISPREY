@@ -34,6 +34,160 @@ def check_graph(catalog,parents,scope):
             else:walk(prev)
         visiting.remove(node);visited.add(node)
     for node in catalog:walk(node)
+def validate_enemies(difficulty, stages, statuses, modes, scenarios, trs):
+    """Check the new *ordinary* enemy catalogs and the stage/threat contracts."""
+    enemies = catalog("enemies.json", "enemies")
+    attacks = catalog("enemy_attacks.json", "attacks")
+    rosters = catalog("enemy_rosters.json", "rosters")
+    variants = catalog("enemy_variants.json", "variants")
+    expected_ids = {
+        "enemy.yin_corpse", "enemy.blood_wolf", "enemy.wandering_spirit",
+        "enemy.ruined_jade_guardian", "enemy.sickle_mantis", "enemy.paper_puppet",
+        "enemy.venom_spirit_snake", "enemy.fallen_sword_disciple", "enemy.omen_crow",
+        "enemy.corruption_centipede", "enemy.cursed_spirit_lantern",
+        "enemy.root_abomination", "enemy.corrupted_cultivator"
+    }
+    if set(enemies) != expected_ids:
+        problem("ordinary roster must include all 12 screenshot enemies and corrupted cultivator")
+    if "boss.jade_warden" in enemies or "enemy.jade_warden" in enemies:
+        problem("normal jade guardian must not alias the boss")
+    all_names = set()
+    for id, enemy in enemies.items():
+        if enemy["combat_tier"] != "normal":
+            problem("ordinary enemy escalated to elite/boss: " + id)
+        if enemy["stats"]["health_mult"] <= 0 or enemy["stats"]["speed_mult"] <= 0:
+            problem("invalid ordinary enemy stats: " + id)
+        if enemy["spawn_cost"] < 1 or not enemy["attack_ids"]:
+            problem("ordinary enemy lacks spawn cost or attacks: " + id)
+        if enemy["movement_mode"] not in ("ground", "flying", "ethereal"):
+            problem("unknown enemy movement mode: " + id)
+        if not enemy["visual_brief_ru"].strip():
+            problem("missing ordinary enemy art brief: " + id)
+        for attack_id in enemy["attack_ids"]:
+            if attack_id not in attacks:
+                problem("enemy missing attack: " + id + "/" + attack_id)
+        name_key = enemy["name_key"]
+        if name_key in all_names or name_key not in trs:
+            problem("enemy name_key lacks translation or is duplicate: " + id)
+        all_names.add(name_key)
+    allowed_kinds = {"CONTACT", "MELEE_ARC", "CHARGE", "ON_DEATH_ZONE", "PROJECTILE", "GROUND_ZONE"}
+    for id, attack in attacks.items():
+        kind = attack["kind"]
+        if kind not in allowed_kinds:
+            problem("enemy attack unknown kind: " + id)
+        if attack["active_ticks"] <= 0 or attack["cooldown_ticks"] < 0:
+            problem("enemy attack invalid timing: " + id)
+        if kind != "CONTACT" and attack["telegraph_ticks"] < 18:
+            problem("enemy attack insufficient telegraph: " + id)
+        if kind in ("CHARGE", "GROUND_ZONE", "ON_DEATH_ZONE") and attack["telegraph_ticks"] < 24:
+            problem("enemy attack insufficient danger warning: " + id)
+        if attack["damage_mult"] < 0:
+            problem("enemy attack negative damage: " + id)
+        if attack["hit_policy"] != "once_per_target_per_attack_instance":
+            problem("enemy attack unsafe hit policy: " + id)
+        if attack["name_key"] in all_names or attack["name_key"] not in trs:
+            problem("enemy attack name_key lacks translation or is duplicate: " + id)
+        all_names.add(attack["name_key"])
+        status_id = attack["apply_status_id"]
+        if status_id is not None and status_id not in statuses:
+            problem("enemy attack references undefined status: " + id + "/" + str(status_id))
+        params = attack["params"]
+        if kind == "CONTACT" and (params.get("hit_interval_ticks", 0) < 12 or attack["telegraph_ticks"] != 0):
+            problem("enemy contact attack may not hit every frame: " + id)
+        if kind == "CHARGE" and params.get("can_retarget") is not False:
+            problem("enemy charge re-targets after telegraph: " + id)
+        if kind == "PROJECTILE":
+            speed = params.get("projectile_speed_as_player_mult", 0)
+            if not 0 < speed < 1 or params.get("homing") is not False or params.get("aim_lock") != "telegraph_end":
+                problem("enemy projectile violates slow locked-path rule: " + id)
+        if kind == "ON_DEATH_ZONE" and (
+            params.get("requires_death") is not True or
+            params.get("no_retrigger_by_death_proc") is not True
+        ):
+            problem("enemy on-death hazard lacks safe proc origin: " + id)
+        if kind == "GROUND_ZONE":
+            if params.get("solid_barrier") is True:
+                problem("unsafe solid root barrier: " + id)
+            if params.get("persistent_ticks", 0) < 1:
+                problem("enemy ground zone lacks duration: " + id)
+        if id == "enemy_attack.root_growth" and params.get("solid_barrier") is not False:
+            problem("unsafe solid root barrier: " + id)
+    for id, status in statuses.items():
+        if status.get("target") != "player":
+            continue
+        if status.get("duration_ticks", 0) <= 0:
+            problem("player debuff missing duration: " + id)
+        for modifier in ("movement_speed_multiplier", "shield_regen_multiplier"):
+            if modifier in status and not 0 < status[modifier] <= 1:
+                problem("player debuff invalid multiplier: " + id)
+    appearing = set()
+    used_stages = set()
+    for id, roster in rosters.items():
+        stage_id = roster["stage_id"]
+        if stage_id not in stages:
+            problem("enemy roster missing stage: " + id)
+            continue
+        if stages[stage_id].get("enemy_roster_id") != id:
+            problem("stage enemy roster reverse link missing: " + id)
+        if stage_id in used_stages:
+            problem("duplicate stage enemy roster: " + stage_id)
+        used_stages.add(stage_id)
+        caps = roster["threat_caps"]
+        required_caps = ("simultaneous_projectile_casts_winding_up",
+                         "simultaneous_charge_windups", "active_control_zones",
+                         "active_death_hazards", "ordinary_ranged_on_screen")
+        if any(type(caps.get(k)) is not int or caps[k] < 0 for k in required_caps):
+            problem("invalid ordinary threat budget: " + id)
+        previous = 0
+        for window in roster["windows"]:
+            if window["start_second"] != previous:
+                problem("enemy roster window gap/overlap: " + window["id"])
+            if window["end_second"] <= window["start_second"]:
+                problem("enemy roster window not increasing: " + window["id"])
+            previous = window["end_second"]
+            if window["max_control_enemies_near_player"] > caps["active_control_zones"]:
+                problem("enemy roster control exceeds allowed threat cap: " + window["id"])
+            if not window["weighted_enemies"]:
+                problem("empty enemy roster window: " + window["id"])
+            for entry in window["weighted_enemies"]:
+                enemy_id = entry["enemy_id"]
+                if enemy_id not in enemies:
+                    problem("enemy roster references missing enemy: " + window["id"] + "/" + enemy_id)
+                elif entry["weight"] <= 0:
+                    problem("enemy roster nonpositive weight: " + window["id"] + "/" + enemy_id)
+                appearing.add(enemy_id)
+        if previous != stages[stage_id]["duration_minutes"] * 60:
+            problem("enemy roster does not cover full stage: " + id)
+    for stage_id, stage in stages.items():
+        if stage_id not in used_stages or stage.get("enemy_roster_id") not in rosters:
+            problem("stage missing ordinary enemy roster: " + stage_id)
+    if appearing != set(enemies):
+        problem("ordinary enemies not represented in stage rosters: " + str(sorted(set(enemies) - appearing)))
+    for id, variant in variants.items():
+        if variant["enemy_id"] not in enemies:
+            problem("enemy variant references missing enemy: " + id)
+        diff_id = variant["difficulty_id"]
+        if diff_id not in difficulty or difficulty[diff_id]["tier"] < 3:
+            problem("enemy variant requires locked late difficulty: " + id)
+    for id, scenario in scenarios.items():
+        target = scenario.get("target_enemy_id")
+        if target is None:
+            continue
+        if target not in enemies:
+            problem("enemy bot scenario references missing enemy: " + id)
+            continue
+        stage = stages.get(scenario["stage_id"])
+        if stage is None:
+            continue
+        roster = rosters.get(stage.get("enemy_roster_id"))
+        if roster is not None and not any(
+            entry["enemy_id"] == target
+            for wave in roster["windows"] for entry in wave["weighted_enemies"]
+        ):
+            problem("enemy bot scenario target not present on stage: " + id)
+    print("Ordinary enemies:", len(enemies), "attacks:", len(attacks),
+          "stage rosters:", len(rosters), "difficulty variants:", len(variants))
+
 def run():
     difficulty=catalog("difficulty_profiles.json","profiles")
     modes=catalog("modes.json","profiles")
@@ -172,6 +326,7 @@ def run():
             problem("non-equivalent mode mapping must reject old run snapshots")
     for required in ("unlock.tribulation","unlock.abyss"):
         if len(unlocks[required]["all"])<2:problem("late unlock diluted "+required)
+    validate_enemies(difficulty, stages, statuses, modes, scenarios, trs)
     print("Checked catalogs:",sum(map(len,(classes,skills,statuses,bosses,stages,talents,late,scenarios,profiles,unlocks,modes,difficulty))),"definitions")
     print("Checked RU/EN keys:",len(trs))
 def main():
