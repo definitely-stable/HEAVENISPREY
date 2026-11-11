@@ -143,7 +143,8 @@ def xp_events_from_pickups(collected: list[dict], *, run_uid: str, tick: int,
                 "tick": tick,
                 "sequence": first_sequence + len(events),
                 "kind": "XP_GAIN",
-                "payload": {"amount": item["value"]},
+                "payload": {"amount": item["value"],
+                            "source_uids": sorted(item["source_uids"])},
             })
     return events
 
@@ -158,6 +159,7 @@ def initial_run(catalog: dict) -> dict:
         "last_tick": 0,
         "last_sequence": 0,
         "processed_events": {},
+        "claimed_xp_sources": [],
         "pending_choices": [],
         "committed_choices": [],
         "paused": False,
@@ -179,8 +181,13 @@ def validate_event(event: dict) -> None:
     require(event["kind"] in EVENT_KINDS, "unknown run event kind")
     require(isinstance(event["payload"], dict), "event payload invalid")
     if event["kind"] == "XP_GAIN":
-        require(set(event["payload"]) == {"amount"}, "XP payload must contain amount only")
+        require(set(event["payload"]) == {"amount", "source_uids"},
+                "XP payload must contain amount and source_uids")
         positive(event["payload"]["amount"], "XP amount")
+        sources = event["payload"]["source_uids"]
+        require(isinstance(sources, list) and bool(sources) and
+                all(isinstance(x, str) and x for x in sources) and
+                sources == sorted(set(sources)), "XP sources must be sorted unique IDs")
     else:
         require(event["payload"] == {}, f"unrecognized payload for {event['kind']}")
 
@@ -225,6 +232,10 @@ def apply_events(run: dict, events: list[dict], xp_cost_by_level: list[int]) -> 
         result["last_sequence"] = ev["sequence"]
         result["processed_events"][uid] = signature
         if ev["kind"] == "XP_GAIN":
+            sources = ev["payload"]["source_uids"]
+            repeated = set(sources) & set(result["claimed_xp_sources"])
+            require(not repeated, f"XP source already claimed: {sorted(repeated)}")
+            result["claimed_xp_sources"] = sorted(result["claimed_xp_sources"] + sources)
             result["xp_bank"] += ev["payload"]["amount"]
             while result["level"] - 1 < len(xp_cost_by_level):
                 cost = xp_cost_by_level[result["level"] - 1]
