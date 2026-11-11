@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "design-proposal-not-canonical",
+  "kind": "choice_viewmodel_architecture_fixture",
+  "seed": "307",
+  "hand_size": 3,
+  "rerolls": 2,
+  "banishes": 2,
+  "actions": [
+    {
+      "uid": "sample.action.lock.echo",
+      "kind": "LOCK",
+      "offer_id": "sample.offer.echo"
+    },
+    {
+      "uid": "sample.action.banish.thunder",
+      "kind": "BANISH",
+      "offer_id": "sample.offer.new_thunder"
+    }
+  ],
+  "expected": {
+    "cards": 2,
+    "rerolls_left": 2,
+    "banishes_left": 1,
+    "locked_offer": "sample.offer.echo"
+  }
+}

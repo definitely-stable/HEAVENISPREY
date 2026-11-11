@@ -4,6 +4,7 @@
 
 | Область | Актуальный вход | Детализация |
 |---|---|---|
+| **Карточки уровня, Reroll/Banish/Lock, controller focus, объяснение эволюций** | [CHOICE-VIEWMODEL-001](../spec/v7/choice-viewmodel-001.md) | [Reference hand и negative tests](../proposals/choice-viewmodel-001/README.md) |
 | **Сохранения, RunRulesHash, Replay, восстановление выбора и миграции** | [SAVE-CONTRACT-001](../spec/v7/save-contract-001.md) | [Эталон и негативные тесты](../proposals/save-contract-001/README.md) · [RunOrchestrator](../spec/v7/game-arch-00-run-orchestration.md) |
 | **Фундамент 2026: воспроизводимость, CI, производительность, AI-агенты, UX и исследования** | [FOUNDATION-2026](../spec/v7/foundation-research-2026.md) | [Gates и тесты](../proposals/foundation-2026/README.md) · [Roadmap](../roadmap/NEXT_SLICES.md) |
 | **Полный геймплейный цикл, XP, награды, карта, боссы, предзабеговые выборы** | [GAMEPLAY-GAP-001 — аудит](../spec/v7/gameplay-loop-gap-audit.md) · [RunOrchestrator](../spec/v7/game-arch-00-run-orchestration.md) · [XP/Pickups](../spec/v7/game-arch-01-xp-pickups.md) · [UX Октябрь 2026](../spec/v7/game-ux-001-oct-2026.md) | [Волны v7](../config/v7/enemy_rosters.json) · [Объекты карты](../config/v7/stages.json) · [Roadmap](../roadmap/NEXT_SLICES.md) |

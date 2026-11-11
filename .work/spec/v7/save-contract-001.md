@@ -163,6 +163,8 @@ RunBuild revision 10; 1 breakthrough choice remains; XP bank = 3
 - Реальное применение Rune/Powers/Reroll/Banish/Lock, replay RNG draw или множество сохранений на других языках.
 - Реальный баланс/удобство игрока и отсутствие читов.
 
+**CHOICE-VIEWMODEL-001 integration note:** [проектная модель драфта](choice-viewmodel-001.md) добавляет source-grounded карточки, ручные Reroll/Banish/Lock/Skip, separate DraftCheckpointOverlay и safe held-input. Это ещё **не** внутренняя schema migration SaveEnvelope, не единый offers RNG cursor и не релизный DraftService.
+
 ## 11. Следующий проектный шаг после этого среза
 
 - \`CHOICE-VIEWMODEL-001\`: формальные карточки и UX-ввод; persisted offer/RNG hand/cursor, focus policy, reroll/banish/lock.
