@@ -37,7 +37,7 @@ def records(items, name):
 def validate_documentation():
     manifest = load_json(WORK / "MANIFEST.json")
     original = WORK / "archive" / "architecture-v6-original.md"
-    digest = hashlib.sha256(original.read_bytes()).hexdigest()
+    digest = hashlib.sha256(original.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     if digest != manifest["source"]["sha256"]:
         fail("Original v6 SHA-256 mismatch: " + digest)
     if len(original.read_text(encoding="utf-8").splitlines()) != manifest["source"]["lines"]:
