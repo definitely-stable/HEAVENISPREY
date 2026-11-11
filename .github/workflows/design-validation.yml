@@ -30,5 +30,9 @@ jobs:
         run: python scripts/validate_migration.py
       - name: Validate connected content registries
         run: python scripts/validate_content.py
+      - name: Check BUILD-SKILL proposal witnesses (no runtime)
+        run: python scripts/validate_build_proposal.py
+      - name: Check content impact on canonical mark status
+        run: python scripts/content_impact.py --id status.mark --json
       - name: Run design invariants
         run: python -m unittest discover -s tests -v
