@@ -476,5 +476,16 @@
     "current_state": ".work/CURRENT_STATE.md",
     "pr": "https://github.com/definitely-stable/HEAVENISPREY/pull/1"
   },
-  "source_authority": "v7 and ADRs override conflicting proposals in v6. Original v6 is preserved as immutable archive."
+  "source_authority": "v7 and ADRs override conflicting proposals in v6. Original v6 is preserved as immutable archive.",
+  "document_governance": {
+    "model_independent": true,
+    "active_guidance": "AGENTS.md",
+    "routing": ".work/indexes/AGENT_ROUTING.md",
+    "workflow": ".work/guides/WORKFLOW.md",
+    "subject_index": ".work/guides/START_HERE.md",
+    "doc_standards": ".work/guides/DOC_STANDARDS.md",
+    "migration_audit": ".work/guides/MIGRATION_AUDIT.md",
+    "historical_role_assignments": "archived-only; superseded by ADR-004",
+    "source_of_truth": "original archive + versioned ADR/v7 normative documents"
+  }
 }
