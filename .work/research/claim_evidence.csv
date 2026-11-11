@@ -1,0 +1,2 @@
+claim_id,game,game_build,mechanic,hypothesis,evidence_tier,source_uri,file_or_symbol,confidence,godot_contract,verification_test,status
+SS-STAT-001,Soulstone Survivors,UNKNOWN,status tick phase,Does another stack reset tick phase?,E0,,,LOW,Independent tick scheduling,test_refresh_no_tick_reset,UNKNOWN

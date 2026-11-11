@@ -51,6 +51,6 @@
     }
   ],
   "profile_save_migration": "not_applicable_no_game_released",
-  "run_snapshot_migration": "reject_old_incompatible_snapshot_with_explicit_reason",
+  "run_snapshot_migration": "reject_non-equivalent_legacy_run_snapshot_with_explicit_error",
   "unknown_id_handling": "fail_closed_and_report"
 }
