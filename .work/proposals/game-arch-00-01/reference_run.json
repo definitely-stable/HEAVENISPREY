@@ -95,14 +95,16 @@
       "kind": "RITUAL_REWARD",
       "tick": 100,
       "sequence": 11,
-      "payload": {}
+      "payload": {},
+      "run_uid": "sample.run.jade_grove.001"
     },
     {
       "uid": "sample.event.breakthrough.1",
       "kind": "BREAKTHROUGH_READY",
       "tick": 100,
       "sequence": 12,
-      "payload": {}
+      "payload": {},
+      "run_uid": "sample.run.jade_grove.001"
     }
   ],
   "expected": {
