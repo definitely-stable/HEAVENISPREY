@@ -371,7 +371,8 @@ class ChoiceViewModelTests(unittest.TestCase):
 
     def test_overlay_old_state_revision_replay_rejected(self):
         base, rc, bc, save_plan, plan, run, build, draft = baseline()
-        draft = action(draft, run, build, bc, "sample.reroll", "REROLL")
+        draft = action(draft, run, build, bc, "sample.lock", "LOCK",
+                       "sample.offer.echo")
         snap = oracle.overlay(base, draft, bc, plan)
         snap["actions"][0]["expected_revision"] = 5
         snap["checksum"] = oracle.json_hash({
