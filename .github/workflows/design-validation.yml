@@ -28,5 +28,7 @@ jobs:
         run: python scripts/validate_work.py
       - name: Check complete v6 migration and all canonical links
         run: python scripts/validate_migration.py
+      - name: Validate connected content registries
+        run: python scripts/validate_content.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v
