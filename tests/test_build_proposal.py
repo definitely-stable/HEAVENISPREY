@@ -169,5 +169,49 @@ class BuildDesignProposalTests(unittest.TestCase):
             mod.validate_build(build, mod.tables_for(catalog), catalog["policy"])
 
 
+    def test_capacity_policy_can_expand_without_rewriting_skills(self):
+        catalog = source()
+        catalog["policy"]["active_capacity"] = 12
+        catalog["policy"]["passive_capacity"] = 12
+        catalog["policy"]["gift_capacity"] = 4
+        result = mod.validate_catalog(catalog)
+        self.assertEqual(result["skills"], 4)
+
+    def test_rank_limit_is_definition_specific_not_globally_five(self):
+        catalog = source()
+        skill = next(x for x in catalog["skills"] if x["id"] == "sample.skill.spirit_sword")
+        skill["max_rank"] = 12
+        build = witness(catalog, ".evolution")
+        build["active"][0]["rank"] = 12
+        mod.validate_build(build, mod.tables_for(catalog), catalog["policy"])
+        self.assertIn("sample.evolution.thousand_swords",
+                      mod.applicable_recipes(catalog, build, "ritual_reward"))
+
+    def test_bounded_feedback_cycle_accepted_when_policy_explicit(self):
+        catalog = source()
+        catalog["proc_rules"].append({"source": "DAMAGE", "target": "HIT", "max_children": 1})
+        catalog["policy"]["max_generation"] = 8
+        catalog["policy"]["max_proc_events_per_root"] = 100000
+        bound = mod.max_proc_events(catalog)
+        self.assertGreater(bound, 36)
+        self.assertLess(bound, 100000)
+        self.assertEqual(mod.validate_catalog(catalog)["proc_bound"], bound)
+
+    def test_bounded_feedback_budget_still_checked(self):
+        catalog = source()
+        catalog["proc_rules"].append({"source": "DAMAGE", "target": "HIT", "max_children": 3})
+        catalog["policy"]["max_generation"] = 8
+        catalog["policy"]["max_proc_events_per_root"] = 128
+        with self.assertRaisesRegex(mod.ContractError, "exceeds declared budget"):
+            mod.validate_catalog(catalog)
+
+    def test_generation_limit_not_silent_if_unset(self):
+        catalog = source()
+        catalog["proc_rules"].append({"source": "DAMAGE", "target": "HIT", "max_children": 1})
+        catalog["policy"].pop("max_generation", None)
+        with self.assertRaisesRegex(mod.ContractError, "proc cycle detected"):
+            mod.validate_catalog(catalog)
+
+
 if __name__ == "__main__":
     unittest.main()
