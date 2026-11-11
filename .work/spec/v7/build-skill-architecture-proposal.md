@@ -13,7 +13,7 @@
 ## 1. Product invariant: automation vs strategic choice
 
 - **Automatic:** normal combat skill application, default aim, repeated casts, derived reactions, class intrinsic triggers. Rendering never changes combat events.
-- **Explicit choice while combat paused:** level-up offer, mutually exclusive evolution, meridian route, other strategic build choices.
+- **Explicit strategic choice with safe pause when shown:** ordinary level-up offers may be banked under an opt-in [GAME-UX-001](game-ux-001-oct-2026.md) policy; mutually exclusive evolution, meridian route and ritual choices remain mandatory paused decisions by proposed default. Earning a level does not force the modal to open in every mode.
 - **Candidate future option:** auto-pick strategy for accessibility/bots; it invokes the same draft/commit API as the player.
 - The historical `s18` proposal to *choose the moment of a breakthrough* conflicts with the pure-auto narrative if implemented as a combat-button. Resolve by separating `Qi accrual`, optional `BreakthroughReady` and paused `BreakthroughChoice`. Manual timing is **OPEN**, not an accepted mechanic.
 - Pause must freeze simulation tick and RNG streams; UI time may continue (existing `s04` contract).
