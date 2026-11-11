@@ -340,6 +340,38 @@ def consume(run, build, state, catalog, *, uid, kind, offer_id,
             "selected_token": selected, "interaction_uid": uid}
 
 
+def transaction_bundle(run, build, draft):
+    """A small optimistic boundary for one earned reward and its UI intent."""
+    return {"run": copy.deepcopy(run), "build": copy.deepcopy(build),
+            "draft": copy.deepcopy(draft), "committed": None}
+
+
+def commit_once(bundle, catalog, *, uid, kind, offer_id, expected_state_revision):
+    """Retry-safe acknowledgement for SELECT/SKIP; no second spend.
+
+    Must be persisted atomically with authoritative RunBuild in a future
+    runtime. Here it is an isolated synthetic transaction model.
+    """
+    text(uid, "commit UID")
+    signature = _digest_action(uid, kind, offer_id, expected_state_revision)
+    prior = bundle["committed"]
+    if prior is not None:
+        require(prior["signature"] == signature, "conflicting committed choice intent")
+        return copy.deepcopy(bundle)
+    result = consume(bundle["run"], bundle["build"], bundle["draft"],
+                     catalog, uid=uid, kind=kind, offer_id=offer_id,
+                     expected_state_revision=expected_state_revision)
+    output = copy.deepcopy(bundle)
+    output["run"] = result["run"]
+    output["build"] = result["build"]
+    output["committed"] = {
+        "signature": signature, "uid": uid,
+        "kind": kind, "offer_id": offer_id,
+        "consumed_choice_uid": result["consumed_choice_uid"],
+    }
+    return output
+
+
 def open_focus(state, *, held_buttons=()):
     require(type(held_buttons) in (tuple, list, set) and
             all(isinstance(x, str) and x for x in held_buttons),
