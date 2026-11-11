@@ -19,6 +19,12 @@
 - [ContentRegistry: контракт](spec/v7/content-registry-contract.md) · [каталоги v7](config/v7/README.md) · [тесты связности](../tests/test_content_catalog.py).
 - [Дедупликация пакетов v5/v6](guides/PACKAGE_RECONCILIATION.md) · [SHA реестр](archive/package-source-inventory.json) · [изменения идентификаторов](config/v7/id_compatibility.json).
 
+## Бестиарий и обычные враги
+
+- **[13 обычных врагов: роли, названия и контрприёмы](spec/v7/ordinary-enemy-bestiary.md)** · [правила угроз и читаемости](spec/v7/enemy-threat-contract.md).
+- [enemies.json](config/v7/enemies.json) · [enemy_attacks.json](config/v7/enemy_attacks.json) · [enemy_rosters.json](config/v7/enemy_rosters.json) · [enemy_variants.json](config/v7/enemy_variants.json).
+- [Сценарии ботов](config/v7/bot_scenarios.json) · [проверки неполных ссылок](../tests/test_enemy_catalog.py).
+
 ## Трассируемость
 
 - **[Матрица требований → спецификация → тест → статус](indexes/TRACEABILITY.md)** — что действительно реализовано, а что существует только в дизайне.

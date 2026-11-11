@@ -6,6 +6,9 @@
 |---|---|---|---|---|
 | ENGINE-001 | Godot 4.7.2 2D, typed GDScript | [ADR-001](../decisions/ADR-001-stack.md) | Clean import + headless smoke | ACCEPTED DESIGN; NOT IMPLEMENTED |
 | COMBAT-001 | Автоатаки, multicast, hit/status/proc | [ADR-002](../decisions/ADR-002-combat.md), [Combat Semantics](../spec/v5/v5_semantics.md) | Golden tests, replay-diff | DESIGN ONLY |
+| ENEMY-001 | 12 показанных существ + осквернённый культиватор — 13 обычных монстров | [Бестиарий](../spec/v7/ordinary-enemy-bestiary.md) · [JSON](../config/v7/enemies.json) | [Перекрёстные проверки](../../scripts/validate_content.py), [негативные тесты](../../tests/test_enemy_catalog.py) | DATA ONLY; NO GAMEPLAY |
+| ENEMY-002 | Честные телеграфы, корни без ловушек, статусные атаки | [Контракт угроз](../spec/v7/enemy-threat-contract.md) · [Атаки](../config/v7/enemy_attacks.json) | Статические проверки + будущие бот-прогоны | STATIC VALIDATED; RUNTIME NOT TESTED |
+| ENEMY-003 | Состав волн и late-game варианты | [Распределение](../config/v7/enemy_rosters.json) · [варианты](../config/v7/enemy_variants.json) | Проверка ссылок, интервалов, caps; баланс позднее | INITIAL HYPOTHESES |
 | HORDE-001 | Массовые враги, пространственная сетка | [Spawn](../spec/core/s11.md), [Spatial](../spec/core/s10.md) | Сценарии нагрузки, FPS/p95 | DESIGN ONLY |
 | CLASS-001 | Классы и мастерство | [Классы](../spec/v6/v6_classes.md) | Unlock/class replay | DESIGN ONLY |
 | META-001 | Общее дерево секты, ресет талантов | [Экономика](../spec/v7/economy-and-talent-sinks.md) | Settlement/respec tests | DESIGN FIXTURES ONLY |

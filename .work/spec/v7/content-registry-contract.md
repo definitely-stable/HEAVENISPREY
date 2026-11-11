@@ -30,6 +30,12 @@ bot_scenario -> policy + profile_fixture + class + stage + difficulty + modes
 all name_key -> translations.csv (RU/EN)
 ```
 
+## Нормативное дополнение: ordinary enemies
+
+`enemies.json` → `enemy_attacks.json` → `statuses.json`; `stages.json.enemy_roster_id` → `enemy_rosters.json` → `enemies.json`; `enemy_variants.json` → обычные сущности и поздние профили сложности. `bot_scenarios.json.target_enemy_id` должен присутствовать на указанной карте. Всё нормализуется и проверяется **до** создания мира.
+
+**Не смешивать с `bosses.json`:** тяжёлый нефритовый автомат `enemy.ruined_jade_guardian` — обычный монстр; `boss.jade_warden` — отдельный босс. [Полный бестиарий](ordinary-enemy-bestiary.md) и [контракт угроз](enemy-threat-contract.md).
+
 ## Нормативные требования
 
 1. Все IDs стабильны; `schema_version` для текущих дизайн-данных равен 2.

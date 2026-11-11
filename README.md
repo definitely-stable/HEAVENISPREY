@@ -18,6 +18,12 @@
 | Что перенесено, а что ещё нет? | **[Аудит переноса](.work/guides/MIGRATION_AUDIT.md)** · [Матрица требований](.work/indexes/TRACEABILITY.md) |
 | Что проверено на GitHub? | [CURRENT_STATE](.work/CURRENT_STATE.md) · [Тесты](.github/workflows/design-validation.yml) |
 
+## Обычные противники (новый бестиарий)
+
+**[12 монстров из скриншотов + Осквернённый культиватор](.work/spec/v7/ordinary-enemy-bestiary.md)** — все 13 относятся к обычным врагам, **не** элитам и **не** боссам. Описание ролей, контрприёмов, китайских имён и распределение по двум картам: [враги](.work/config/v7/enemies.json) · [атаки](.work/config/v7/enemy_attacks.json) · [волны](.work/config/v7/enemy_rosters.json) · [угрозы и безопасность](.work/spec/v7/enemy-threat-contract.md).
+
+**Статус:** дизайн-данные, не готовые анимации или игровой runtime. Скриншоты используются только как исходные визуальные ориентиры.
+
 ## Непересматриваемые решения
 
 Godot **4.7.2, 2D**, typed GDScript. GPU NVIDIA 12 ГБ VRAM, RAM 32 ГБ. Нативный GDExtension C++ / Rust — только после профилирования hot path. Графика через утверждённый GPT imagegen в имеющейся подписке; дополнительных платных AI API не требовать. GitHub-hosted CI, без необходимости включённого пользовательского ПК.

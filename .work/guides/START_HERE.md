@@ -5,6 +5,7 @@
 | Область | Актуальный вход | Детализация |
 |---|---|---|
 | Продукт, игровая цель | [Границы и критерии](../spec/core/s02.md) | [Прогрессия](../spec/v6/v6_classes.md) · [Roadmap](../roadmap/NEXT_SLICES.md) |
+| **Бестиарий и поведение обычных врагов** | [13 монстров](../spec/v7/ordinary-enemy-bestiary.md) | [Контракт угроз](../spec/v7/enemy-threat-contract.md) · [Волны](../config/v7/enemy_rosters.json) · [Атаки](../config/v7/enemy_attacks.json) |
 | Симуляция, автоатаки и статусы | [ADR-002](../decisions/ADR-002-combat.md) | [Combat](../spec/v5/v5_semantics.md) · [Event budget](../spec/v5/v5_budget.md) |
 | Классы, билды, таланты | [Классы](../spec/v6/v6_classes.md) | [Драфт](../spec/v5/v5_design.md) · [Поздние таланты](../config/v7/late_talents.json) |
 | Сложности, режимы, награды | [ADR-003](../decisions/ADR-003-late-game.md) | [v7 поздняя прогрессия](../spec/v7/late-game-progression.md) · [Режимы](../spec/v7/modes-and-compatibility.md) |
