@@ -10,6 +10,7 @@
 | ENEMY-002 | Честные телеграфы, корни без ловушек, статусные атаки | [Контракт угроз](../spec/v7/enemy-threat-contract.md) · [Атаки](../config/v7/enemy_attacks.json) | Статические проверки + будущие бот-прогоны | STATIC VALIDATED; RUNTIME NOT TESTED |
 | ENEMY-003 | Состав волн и late-game варианты | [Распределение](../config/v7/enemy_rosters.json) · [варианты](../config/v7/enemy_variants.json) | Проверка ссылок, интервалов, caps; баланс позднее | INITIAL HYPOTHESES |
 | HORDE-001 | Массовые враги, пространственная сетка | [Spawn](../spec/core/s11.md), [Spatial](../spec/core/s10.md) | Сценарии нагрузки, FPS/p95 | DESIGN ONLY |
+| BUILD-SKILL-001 | Приобретаемые активные/пассивные техники, Powers, классовые intrinsic, драфт, эволюции/Union/Gift, Qi/meridian, proc safety | [Предложение v7](../spec/v7/build-skill-architecture-proposal.md) · [Authoring](../guides/CONTENT_AUTHORING_ACCELERATOR.md) | Рецензия дизайна, будущие схемы и negative fixtures | PROPOSED ONLY; NO CONFIG/RUNTIME TESTS |
 | CLASS-001 | Классы и мастерство | [Классы](../spec/v6/v6_classes.md) | Unlock/class replay | DESIGN ONLY |
 | META-001 | Общее дерево секты, ресет талантов | [Экономика](../spec/v7/economy-and-talent-sinks.md) | Settlement/respec tests | DESIGN FIXTURES ONLY |
 | MODE-001 | Поздние Небесная кара / Бездна Дао | [ADR-003](../decisions/ADR-003-late-game.md), [Late game](../spec/v7/late-game-progression.md) | Unlock/profile validation | CONFIG TESTS PASS; GAME NOT RUN |
