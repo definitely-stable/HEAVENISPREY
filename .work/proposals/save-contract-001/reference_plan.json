@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "save_contract_architecture_fixture",
+  "status": "design-proposal-not-canonical",
+  "snapshot_after_choices": 1,
+  "checkpoint_choice_tokens": [
+    "sample.offer.sword_rank"
+  ],
+  "resume_choice_tokens": [
+    "sample.offer.echo",
+    "sample.offer.echo",
+    "sample.evolution.thousand_swords"
+  ],
+  "rng_policy": {
+    "id": "sample.counter_only_v1",
+    "streams": {
+      "enemy": {
+        "seed": "101",
+        "cursor": "0"
+      },
+      "drops": {
+        "seed": "211",
+        "cursor": "0"
+      },
+      "offers": {
+        "seed": "307",
+        "cursor": "0"
+      },
+      "stage": {
+        "seed": "401",
+        "cursor": "0"
+      }
+    }
+  },
+  "expected": {
+    "initial_pending": 5,
+    "checkpoint_pending": 4,
+    "checkpoint_build_revision": 7,
+    "after_resume_build_revision": 10,
+    "remaining_choice_kinds": [
+      "BREAKTHROUGH"
+    ],
+    "expected_evolved_skill": "sample.skill.thousand_swords",
+    "credited_xp": 40,
+    "remaining_xp": 3
+  }
+}
