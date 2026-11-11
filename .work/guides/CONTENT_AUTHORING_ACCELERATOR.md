@@ -57,7 +57,7 @@ All generated files are **derived views**, not independently editable sources:
 - `generated/art-reference-index.md`: asset ID, original file hash, view, scale, license/provenance, approved status.
 
 **Available now (design-only; CI verified on Ubuntu + Windows):**
-- `python scripts/validate_build_proposal.py` — validates the isolated `.work/proposals/build-skill-001/reference_catalog.json` catalog, its five witnesses, transformation slot math, exact gates, and an acyclic conservative proc-event bound. This is **not** a runtime engine or canonical content validation.
+- `python scripts/validate_build_proposal.py` — validates isolated `.work/proposals/build-skill-001/reference_catalog.json` witnesses, transformation slot math, gates, **acyclic or explicitly generation-bounded** conservative proc graphs. The capacities/ranks and event budget are test policies, **not permanent game caps**. This is **not** a runtime engine or canonical content validation.
 - `python scripts/content_impact.py --id status.mark --json` — read-only reverse dependency impact against the **existing** canonical v7 definitions; exact-ID references only.
 - `python -m unittest discover -s tests -v` — includes BUILD-SKILL negative cases and dependency-graph tests.
 
