@@ -13,6 +13,17 @@
 | ARCH-04 | Реакции, Skill Chain, Multicast и static proc budget | Формально ограниченные цепочки без неявного discard |
 | ARCH-05 | [Авторский конвейер](../guides/CONTENT_AUTHORING_ACCELERATOR.md), traceability, impact graph, арт-паспорт | Никакого второго источника истины; проверяемые документы |
 
+### Foundation gates — 2026 best practices / research, **только архитектура**
+
+[FOUNDATION-2026](../spec/v7/foundation-research-2026.md): 15 приоритизированных требований (детерминированный replay, схемы/версии, источники эффектов, модельные/property tests, UX, будущее profiling, AI-agent workflow) и [машинный реестр](../proposals/foundation-2026/README.md). Этот срез **не начинает** ECS, Godot runtime, RL/PCG или GDExtension. Конкретные технологии производительности и баланс выбираются по будущим измерениям.
+
+| Foundation Slice | Архитектурный результат | Статический gate |
+|---|---|---|
+| FOUNDATION-2026 | Research-to-project decision map + dependency DAG + Metamorphic/negative fixtures | Evidence/source refs и положительные/отрицательные property tests; без утверждения игрового FPS |
+| SAVE-CONTRACT-001 | Версионированные RunSnapshot, deterministic replay, RNG policy и восстановление очереди | Roundtrip snapshot/receipt/replay и negative migrated examples |
+| CHOICE-VIEWMODEL-001 | Контракт карточки + focus, reroll/banish/lock и ошибки оплаты наград | Source-provenance, re-evaluation, stale/held input fixtures |
+| ARCH-02 | Граф достижимости N→M рецептов и развитие после max rank | Witness paths или объяснимые недостижимые рецепты |
+
 ### Аудит UX и связность существующей архитектуры (октябрь 2026)
 
 [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) проверяет не новый контент, а **взаимодействие** уже предложенных систем: выбор, XP, ритуал, билд и интерфейс. В эталонной модели реализованы два режима отображения выбора (Immediate / Bank Levels), безопасная XP-консолидация только для XP, контроль авторитетных source-values и статический cross-layer путь к эволюции. Auto-pick, actual UI/gamepad, реальная лут-экономика и измерения UX остаются design-proposal.
