@@ -5,6 +5,7 @@
 ## BUILD-SKILL-001 — архитектурные предложения (не принятые правила)
 
 - [Активные/пассивные техники, Powers, драфт, эволюции, Union, Gift, культивация](spec/v7/build-skill-architecture-proposal.md) — design-proposal.
+- [ARCH-01 типизированный контракт жизненного цикла](spec/v7/build-skill-type-contract.md) · [Статические фикстуры и решение открытых вопросов](proposals/build-skill-001/README.md).
 - [Контентное авторство, валидация и агентская эффективность](guides/CONTENT_AUTHORING_ACCELERATOR.md) — design-proposal.
 - [Шаблон SKILL_SPEC](templates/SKILL_SPEC.md) · [Архитектурные gates](roadmap/NEXT_SLICES.md).
 - **Scope:** только архитектура и ускорение разработки; Godot runtime отложен.
