@@ -186,28 +186,56 @@ def tables_for(catalog: dict) -> dict:
 
 
 def max_proc_events(catalog: dict) -> int:
-    """Conservative upper bound for a tree expansion from DIRECT_CAST."""
+    """Conservative logical-event bound, optionally for a declared finite generation policy.
+
+    Without max_generation, every cycle is rejected. With max_generation,
+    *every* parent-to-child edge spends exactly one generation token, including
+    acyclic paths; a future runtime must implement precisely this contract.
+    This does not silently discard previously promised events for performance.
+    """
     edges = defaultdict(list)
     for edge in catalog["proc_rules"]:
         posint(edge["max_children"], "proc max_children")
         edges[edge["source"]].append((edge["target"], edge["max_children"]))
-    visiting, memo = set(), {}
+    nodes = set(edges) | {target for rules in edges.values() for target, _ in rules}
+    max_generation = catalog["policy"].get("max_generation")
+    if max_generation is not None:
+        posint(max_generation, "policy.max_generation")
+        memo_depth = {}
 
-    def count(node: str) -> int:
-        must(node not in visiting, f"proc cycle detected at {node}")
-        if node in memo:
-            return memo[node]
-        visiting.add(node)
-        result = 1 + sum(max_count * count(target) for target, max_count in edges[node])
-        visiting.remove(node)
-        memo[node] = result
-        return result
+        def count_bounded(node: str, remaining: int) -> int:
+            if remaining == 0:
+                return 1
+            key = (node, remaining)
+            if key not in memo_depth:
+                memo_depth[key] = 1 + sum(
+                    fanout * count_bounded(child, remaining - 1)
+                    for child, fanout in edges[node]
+                )
+            return memo_depth[key]
 
-    # All nodes, not only reachable from direct cast: isolated cycles are invalid.
-    for node in set(edges) | {e["target"] for rules in edges.values() for e in
-                              [{"target": target} for target, _ in rules]}:
-        count(node)
-    upper = memo["DIRECT_CAST"] if "DIRECT_CAST" in memo else count("DIRECT_CAST")
+        # All component roots, even if isolated from DIRECT_CAST, must have
+        # a finite bound and must fit the declared profile's event budget.
+        upper = max(
+            (count_bounded(node, max_generation) for node in nodes | {"DIRECT_CAST"}),
+            default=1,
+        )
+    else:
+        visiting, memo = set(), {}
+
+        def count(node: str) -> int:
+            must(node not in visiting, f"proc cycle detected at {node}")
+            if node in memo:
+                return memo[node]
+            visiting.add(node)
+            result = 1 + sum(max_count * count(target) for target, max_count in edges[node])
+            visiting.remove(node)
+            memo[node] = result
+            return result
+
+        for node in sorted(nodes | {"DIRECT_CAST"}):
+            count(node)
+        upper = max(memo.values(), default=1)
     must(upper <= catalog["policy"]["max_proc_events_per_root"],
          f"proc root bound {upper} exceeds declared budget")
     return upper
