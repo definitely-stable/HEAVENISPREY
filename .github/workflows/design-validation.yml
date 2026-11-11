@@ -34,5 +34,7 @@ jobs:
         run: python scripts/validate_build_proposal.py
       - name: Check content impact on canonical mark status
         run: python scripts/content_impact.py --id status.mark --json
+      - name: Check GAME-ARCH-00/01 run and XP receipts (no game)
+        run: python scripts/validate_run_loop_proposal.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v
