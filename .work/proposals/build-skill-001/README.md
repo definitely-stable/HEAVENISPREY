@@ -13,7 +13,7 @@ The single runtime-facing design source of truth remains [v7](../../config/v7/RE
 - A conflict witness: both evolution and Union require the same base, so explicit paused choice is required; no implicit JSON-order priority.
 - Five positive/negative witness states; exact expected eligible recipes.
 - Draft **eligibility** only (not weighted sampling, probabilities or in-game cards).
-- Static proc graph rooted in DIRECT_CAST; detects any cycle and limits conservative worst-case tree expansion.
+- Static proc graph rooted in DIRECT_CAST; rejects unbounded cycles; **explicitly bounded** feedback cycles can be permitted with an authored `max_generation` policy, and validated against a synthetic root event budget. No gameplay drops are assumed.
 
 ## Commands
 
