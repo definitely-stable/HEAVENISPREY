@@ -2,9 +2,11 @@
 id: v5_tools
 title: "Дополнение K. Реальные зависимости и AI-агенты: меньше пакетов, больше воспроизводимости"
 source: architecture-v6-2026-11-11
-status: historical-context
+status: adapted-role-neutral
 last_review: "2026-11-11"
 ---
+
+> **Адаптация v7:** текстовые назначения задач конкретным моделям отменены. [Единый регламент](../../guides/WORKFLOW.md) применим к любому исполнителю. [Историческая версия](../../archive/architecture-v6-original.md) сохранена без правок.
 
 [Индекс](../../INDEX.md) · [Исходник v6](../../archive/architecture-v6-original.md) · [Манифест](../../MANIFEST.json)
 
@@ -27,9 +29,7 @@ last_review: "2026-11-11"
 
 | Агент | Содержательная ответственность | Запрещённый конфликт |
 |---|---|---|
-| Codex | Combat kernel, Godot scenes/CI, GPT-imagegen, integration | не править параллельно с другим агентом один `CombatSimulation.gd` |
-| Claude Code | Спецификации/архитектурный review, сложные edge-case тесты | не выполнять auto-merge без подтверждения CI |
-| OpenCode Go | Независимые bounded tasks: content data, QA fixtures, asset manifests, source review | не предполагать API-доступ сверх возможностей его подписки |
+| Любой исполнитель | Scoped code/content/docs/QA task согласно TASK_SPEC | Избегать конкурентных правок одного файла; не менять схемы без ADR |
 
 Каждый работает в отдельном `git worktree`; PR содержит `scope`, `contract_revision`, `input_refs`, `exact commands`, `test log excerpt`, `known_uncertainty`. Результаты второго агента дают независимый review *только если его контекст не копирует весь ответ первого как истину*; передавать требования и исходники, не предварительный «вердикт». Для художественного review хранить два screenshot comparison, не заявление «красиво».
 

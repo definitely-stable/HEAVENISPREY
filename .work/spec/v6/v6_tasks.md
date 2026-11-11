@@ -1,10 +1,12 @@
 ---
 id: v6_tasks
-title: "AB. Конкретные задачи для Codex / Claude Code / OpenCode Go"
+title: "AB. Конкретные задачи, независимые от модели AI"
 source: architecture-v6-2026-11-11
-status: superseded-by-v7
+status: adapted-role-neutral
 last_review: "2026-11-11"
 ---
+
+> **Адаптация v7:** текстовые назначения задач конкретным моделям отменены. [Единый регламент](../../guides/WORKFLOW.md) применим к любому исполнителю. [Историческая версия](../../archive/architecture-v6-original.md) сохранена без правок.
 
 [Индекс](../../INDEX.md) · [Исходник v6](../../archive/architecture-v6-original.md) · [Манифест](../../MANIFEST.json)
 

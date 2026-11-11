@@ -2,9 +2,11 @@
 id: v5_re
 title: "Дополнение J. Reverse engineering: конкретная программа поиска кода, данных, формул, а не видеоигра по памяти"
 source: architecture-v6-2026-11-11
-status: historical-context
+status: adapted-role-neutral
 last_review: "2026-11-11"
 ---
+
+> **Адаптация v7:** текстовые назначения задач конкретным моделям отменены. [Единый регламент](../../guides/WORKFLOW.md) применим к любому исполнителю. [Историческая версия](../../archive/architecture-v6-original.md) сохранена без правок.
 
 [Индекс](../../INDEX.md) · [Исходник v6](../../archive/architecture-v6-original.md) · [Манифест](../../MANIFEST.json)
 
@@ -13,7 +15,7 @@ last_review: "2026-11-11"
 <a id="v5_re"></a>
 ## Дополнение J. Reverse engineering: конкретная программа поиска **кода, данных, формул**, а не видеоигра по памяти
 
-В предыдущем отчёте перечислены Cpp2IL, Il2CppDumper и Ghidra, но не определено, что именно результат каждой стадии *доказывает*. В первую очередь Codex должен проверять публичные проекты моддеров и актуальные game version build IDs. Код, полученный из IL2CPP, часто является лишь type/proxy metadata; сама native арифметика и порядок операций не восстановлены из interop stubs — это прямо объясняют Vampire Survivors modders. [R49](https://github.com/lukeod/vampiresurvivors-modding/blob/main/il2cpp-guide.md)[R61](https://github.com/Salmacis32/VampireSurvivorsRefCompilationProject)
+В предыдущем отчёте перечислены Cpp2IL, Il2CppDumper и Ghidra, но не определено, что именно результат каждой стадии *доказывает*. В первую очередь следует проверять публичные проекты моддеров и актуальные game version build IDs. Код, полученный из IL2CPP, часто является лишь type/proxy metadata; сама native арифметика и порядок операций не восстановлены из interop stubs — это прямо объясняют Vampire Survivors modders. [R49](https://github.com/lukeod/vampiresurvivors-modding/blob/main/il2cpp-guide.md)[R61](https://github.com/Salmacis32/VampireSurvivorsRefCompilationProject)
 
 ### 32J.1. Два потока по разной цене знания
 

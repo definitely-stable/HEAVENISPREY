@@ -175,15 +175,19 @@
       "id": "s22",
       "title": "22. Skills, MCP и разделение труда AI-агентов",
       "path": ".work/spec/core/s22.md",
-      "status": "historical-context",
-      "source_anchor": "s22"
+      "status": "adapted-role-neutral",
+      "source_anchor": "s22",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "s23",
       "title": "23. Reverse engineering обеих игр: code/data-first и протокол доказательств",
       "path": ".work/spec/core/s23.md",
-      "status": "historical-context",
-      "source_anchor": "s23"
+      "status": "adapted-role-neutral",
+      "source_anchor": "s23",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "s24",
@@ -224,8 +228,10 @@
       "id": "s29",
       "title": "29. Готовые ограниченные задачи для Codex / Claude Code / OpenCode Go",
       "path": ".work/spec/core/s29.md",
-      "status": "historical-context",
-      "source_anchor": "s29"
+      "status": "adapted-role-neutral",
+      "source_anchor": "s29",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "v5_audit",
@@ -294,15 +300,19 @@
       "id": "v5_re",
       "title": "Дополнение J. Reverse engineering: конкретная программа поиска кода, данных, формул, а не видеоигра по памяти",
       "path": ".work/spec/v5/v5_re.md",
-      "status": "historical-context",
-      "source_anchor": "v5_re"
+      "status": "adapted-role-neutral",
+      "source_anchor": "v5_re",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "v5_tools",
       "title": "Дополнение K. Реальные зависимости и AI-агенты: меньше пакетов, больше воспроизводимости",
       "path": ".work/spec/v5/v5_tools.md",
-      "status": "historical-context",
-      "source_anchor": "v5_tools"
+      "status": "adapted-role-neutral",
+      "source_anchor": "v5_tools",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "v5_tests",
@@ -378,8 +388,10 @@
       "id": "v6_config",
       "title": "T. Конфигурация как продуктовый API: что агентам разрешено менять без правки кода",
       "path": ".work/spec/v6/v6_config.md",
-      "status": "superseded-by-v7",
-      "source_anchor": "v6_config"
+      "status": "adapted-role-neutral",
+      "source_anchor": "v6_config",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "v6_economy",
@@ -434,8 +446,10 @@
       "id": "v6_tasks",
       "title": "AB. Конкретные задачи для Codex / Claude Code / OpenCode Go",
       "path": ".work/spec/v6/v6_tasks.md",
-      "status": "superseded-by-v7",
-      "source_anchor": "v6_tasks"
+      "status": "adapted-role-neutral",
+      "source_anchor": "v6_tasks",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
     },
     {
       "id": "v6_risks",
@@ -487,5 +501,20 @@
     "migration_audit": ".work/guides/MIGRATION_AUDIT.md",
     "historical_role_assignments": "archived-only; superseded by ADR-004",
     "source_of_truth": "original archive + versioned ADR/v7 normative documents"
+  },
+  "migration_validation": {
+    "original_sha256_normalized_newlines": true,
+    "exact_sections_except_adapted": true,
+    "adapted_section_ids": [
+      "s22",
+      "s23",
+      "s29",
+      "v5_re",
+      "v5_tools",
+      "v6_config",
+      "v6_tasks"
+    ],
+    "source_anchor_coverage": 63,
+    "archive_reference_count": 85
   }
 }

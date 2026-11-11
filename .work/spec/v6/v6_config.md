@@ -2,9 +2,11 @@
 id: v6_config
 title: "T. Конфигурация как продуктовый API: что агентам разрешено менять без правки кода"
 source: architecture-v6-2026-11-11
-status: superseded-by-v7
+status: adapted-role-neutral
 last_review: "2026-11-11"
 ---
+
+> **Адаптация v7:** текстовые назначения задач конкретным моделям отменены. [Единый регламент](../../guides/WORKFLOW.md) применим к любому исполнителю. [Историческая версия](../../archive/architecture-v6-original.md) сохранена без правок.
 
 [Индекс](../../INDEX.md) · [Исходник v6](../../archive/architecture-v6-original.md) · [Манифест](../../MANIFEST.json)
 
@@ -20,7 +22,7 @@ last_review: "2026-11-11"
 | `SkillDef`, `EnemyDef`, `StatusDef` | `res://data/defs/` JSON либо `.tres` после импорта | Контент-агент; review | при запуске билда, затем immutable для run | да |
 | `ClassDef`, `TalentDef`, `UnlockDef` | `res://data/progression/` | геймдизайн/AI | на старте/при входе в меню, snapshot в run | да |
 | `DifficultyProfile`, `ModeDef`, `StageDef`, `RewardDef` | `res://data/rules/` | баланс-агент | **до** начала нового забега | да |
-| `Localization` | `res://localization/` CSV/PO | Codex + ревью | runtime `TranslationServer`, без изменения симуляции | версионирование ключей |
+| `Localization` | `res://localization/` CSV/PO | правки через PR и проверку | runtime `TranslationServer`, без изменения симуляции | версионирование ключей |
 | `Settings` | `user://settings.cfg` | игрок | сразу и по согласованным runtime hooks | миграция настроек |
 | `PlayerProfile` | `user://profiles/<id>.json` | игра | смена меню, транзакции наград, сейв | строго да |
 | `RunSuspend` | `user://runs/<id>.json` или компактный бинарный формат | игра | только в безопасной точке snapshot | `RunRulesHash`, `schema_version` |
@@ -85,4 +87,4 @@ RunFactory(profile, selections, seed)
 
 ### T.5. Дисциплина AI content PR
 
-Codex получает: `TASK_SPEC`, ID затронутых классов/карт/режимов, разрешённые пути (`data/`, `localization/`, `tests/fixtures/`), ссылку на актуальную schema и требования acceptance. Он **не редактирует** базовые боевые формулы без отдельного архитектурного PR. Бот-пакет запускается в headless CI, выдаёт JSON/CSV с `config_hash`, seed, классом, профилем и результатами. Ручная настройка каждого уровня сводится к конфигам: `pressure_curve`, `spawn_set`, `boss_timeline`, `trial_tags`, `rewards`, `unlock_rules`, `localized_strings`.
+Исполнитель задачи получает: `TASK_SPEC`, ID затронутых классов/карт/режимов, разрешённые пути (`data/`, `localization/`, `tests/fixtures/`), ссылку на актуальную schema и требования acceptance. Базовые боевые формулы нельзя менять без отдельного архитектурного PR. Бот-пакет запускается в headless CI, выдаёт JSON/CSV с `config_hash`, seed, классом, профилем и результатами. Ручная настройка каждого уровня сводится к конфигам: `pressure_curve`, `spawn_set`, `boss_timeline`, `trial_tags`, `rewards`, `unlock_rules`, `localized_strings`.
