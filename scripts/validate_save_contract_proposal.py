@@ -203,6 +203,10 @@ def replay_journal(run_catalog: dict, build_catalog: dict,
     """
     require(type(receipts) is list and type(actions) is list,
             "invalid replay journal")
+    require(all(type(event) is dict and isinstance(event.get("uid"), str)
+                for event in receipts), "invalid receipt envelope")
+    require(len({event["uid"] for event in receipts}) == len(receipts),
+            "duplicate receipt UID in journal")
     ordered = sorted(receipts, key=loop.event_order_key)
     require(ordered == receipts, "receipt journal not in committed event order")
     require(receipts == trusted_receipts(run_catalog),
