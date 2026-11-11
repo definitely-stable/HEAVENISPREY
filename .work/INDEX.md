@@ -2,6 +2,13 @@
 
 **Каталог перенесённых разделов; для работы начинайте с [предметной карты](guides/START_HERE.md).** 63 раздела исходной v6 сохранены дословно по тематическим файлам; пересмотренные правила — в v7.
 
+## BUILD-SKILL-001 — архитектурные предложения (не принятые правила)
+
+- [Активные/пассивные техники, Powers, драфт, эволюции, Union, Gift, культивация](spec/v7/build-skill-architecture-proposal.md) — design-proposal.
+- [Контентное авторство, валидация и агентская эффективность](guides/CONTENT_AUTHORING_ACCELERATOR.md) — design-proposal.
+- [Шаблон SKILL_SPEC](templates/SKILL_SPEC.md) · [Архитектурные gates](roadmap/NEXT_SLICES.md).
+- **Scope:** только архитектура и ускорение разработки; Godot runtime отложен.
+
 ## Актуальные решения и рабочая навигация
 
 - **[Предметная карта](guides/START_HERE.md)** · [Единый процесс](guides/WORKFLOW.md) · [Правила документации](guides/DOC_STANDARDS.md) · [Аудит полноты переноса](guides/MIGRATION_AUDIT.md).
