@@ -2,6 +2,11 @@
 
 **Каталог перенесённых разделов; для работы начинайте с [предметной карты](guides/START_HERE.md).** 63 раздела исходной v6 сохранены дословно по тематическим файлам; пересмотренные правила — в v7.
 
+## CHOICE-VIEWMODEL-001 — карточки, Reroll/Banish/Lock и защита ввода (design-proposal)
+
+- [Контракт выбора, отображения фактов, обновления и безопасного подтверждения](spec/v7/choice-viewmodel-001.md).
+- [Эталонные фикстуры и тесты](proposals/choice-viewmodel-001/README.md) — sample draft/save overlay без Godot.
+
 ## SAVE-CONTRACT-001 — версия забега, checkpoint и replay (design-proposal)
 
 - [Версионируемый RunRulesSnapshot, сохранение очереди, RNG streams, checksum и восстановление](spec/v7/save-contract-001.md).
