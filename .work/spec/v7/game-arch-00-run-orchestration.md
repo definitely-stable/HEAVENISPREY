@@ -106,6 +106,8 @@ At the end of tick `T`:
 - `event_uid` is not `reward_event_id` of the **meta** settlement. Don't mix in-run drops with Spiritual Stones / Dao Seals payout.
 - `RulesHash` must include run-specific gameplay policy versions and content digests; not invented by the design oracle.
 
+**SAVE-CONTRACT-001 linkage:** [versioned snapshot/replay contract](save-contract-001.md) формализует сохранение ожидающих выборов, исходного XP и RunBuild revision, проверку RulesHash и запрет подмены результата после перезапуска. Это пока статическая модель, не физическое сохранение игры.
+
 ## 7. Replay and failure modes
 
 Proposed golden log: `run_uid, tick, event_sequence, event_uid, choice_uid, build_revision_before/after, source_uids, class/stage, rules_hash`. Do not store full redundant display objects with the event stream.
