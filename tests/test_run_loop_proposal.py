@@ -232,7 +232,7 @@ class RunLoopDesignTests(unittest.TestCase):
                 trusted_eligible_tokens=["sample.option"])
         e = {"uid": "sample.event.late", "run_uid": catalog["run_uid"],
              "tick": 100, "sequence": 9, "kind": "XP_GAIN",
-             "payload": {"amount": 2}}
+             "payload": {"amount": 2, "source_uids": ["sample.source.late"]}}
         with self.assertRaisesRegex(oracle.ContractError, "sequence moved backwards"):
             oracle.apply_events(state, [e], catalog["rules"]["xp_cost_by_level"])
 
@@ -247,7 +247,7 @@ class RunLoopDesignTests(unittest.TestCase):
                 trusted_eligible_tokens=["sample.option"])
         e = {"uid": "sample.event.oldtick", "run_uid": catalog["run_uid"],
              "tick": 99, "sequence": 13, "kind": "XP_GAIN",
-             "payload": {"amount": 2}}
+             "payload": {"amount": 2, "source_uids": ["sample.source.late"]}}
         with self.assertRaisesRegex(oracle.ContractError, "tick moved backwards"):
             oracle.apply_events(state, [e], catalog["rules"]["xp_cost_by_level"])
 
@@ -256,7 +256,7 @@ class RunLoopDesignTests(unittest.TestCase):
         state = started_run(catalog)
         e = {"uid": "sample.event.other", "run_uid": catalog["run_uid"],
              "tick": 100, "sequence": 13, "kind": "XP_GAIN",
-             "payload": {"amount": 2}}
+             "payload": {"amount": 2, "source_uids": ["sample.source.late"]}}
         with self.assertRaisesRegex(oracle.ContractError, "while choice queue paused"):
             oracle.apply_events(state, [e], catalog["rules"]["xp_cost_by_level"])
 
@@ -356,6 +356,56 @@ class RunLoopDesignTests(unittest.TestCase):
                                      catalog["rules"]["xp_cost_by_level"])
         self.assertEqual(result["level"], 4)
         self.assertEqual(len(result["pending_choices"]), 3)
+
+
+    def test_source_claim_cannot_be_reawarded_under_new_event_uid(self):
+        catalog = source()
+        state = started_run(catalog)
+        for choice in list(state["pending_choices"]):
+            state = oracle.commit_choice(
+                state, choice_uid=choice["uid"],
+                expected_build_revision=state["build_revision"],
+                selection_token="sample.option",
+                trusted_eligible_tokens=["sample.option"])
+        original = event_fixture(catalog)[0]
+        duplicate = copy.deepcopy(original)
+        duplicate["uid"] = "sample.event.reserialized"
+        duplicate["sequence"] = 13
+        with self.assertRaisesRegex(oracle.ContractError, "source already claimed"):
+            oracle.apply_events(state, [duplicate], catalog["rules"]["xp_cost_by_level"])
+
+    def test_partial_source_overlap_rejected_atomically(self):
+        catalog = source()
+        state = started_run(catalog)
+        for choice in list(state["pending_choices"]):
+            state = oracle.commit_choice(
+                state, choice_uid=choice["uid"],
+                expected_build_revision=state["build_revision"],
+                selection_token="sample.option",
+                trusted_eligible_tokens=["sample.option"])
+        before = copy.deepcopy(state)
+        duplicate = {"uid": "sample.event.individual", "run_uid": catalog["run_uid"],
+                     "tick": 101, "sequence": 13, "kind": "XP_GAIN",
+                     "payload": {"amount": 2,
+                                 "source_uids": ["sample.source.enemy.1", "sample.source.unique"]}}
+        with self.assertRaisesRegex(oracle.ContractError, "source already claimed"):
+            oracle.apply_events(state, [duplicate], catalog["rules"]["xp_cost_by_level"])
+        self.assertEqual(state, before)
+
+    def test_xp_source_list_requires_canonical_order_and_uniqueness(self):
+        event = event_fixture()[0]
+        event["payload"]["source_uids"].reverse()
+        with self.assertRaisesRegex(oracle.ContractError, "sorted unique"):
+            oracle.validate_event(event)
+
+    def test_no_double_claim_after_exact_receipt_replay(self):
+        catalog = source()
+        state = started_run(catalog)
+        self.assertEqual(len(state["claimed_xp_sources"]), 3)
+        state2 = oracle.apply_events(state, event_fixture(catalog),
+                                     catalog["rules"]["xp_cost_by_level"])
+        self.assertEqual(state2["claimed_xp_sources"], state["claimed_xp_sources"])
+        self.assertEqual(state2["level"], 4)
 
 
 if __name__ == "__main__":
