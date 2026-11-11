@@ -134,7 +134,7 @@ class SaveContractTests(unittest.TestCase):
     def test_repeated_receipt_uid_rejected(self):
         snap, rc, bc, plan = witness()
         snap["receipts"].append(copy.deepcopy(snap["receipts"][0]))
-        with self.assertRaisesRegex(save.ContractError, "receipt journal differs"):
+        with self.assertRaisesRegex(save.ContractError, "duplicate receipt UID"):
             recheck(save.seal(snap), rc, bc, plan)
 
     def test_missing_receipt_rejected(self):
