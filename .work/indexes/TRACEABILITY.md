@@ -16,6 +16,8 @@
 | ART-001 | 2D-ассеты и единый стиль | [Art factory](../spec/core/s16.md), [visual QA](../spec/v5/v5_assets.md) | Атласы + визуальный review | NOT IMPLEMENTED |
 | RE-001 | Code/data-first анализ референсов | [RE](../spec/core/s23.md) | Build-specific methods and observations | PLANNED; NO BINARIES |
 | SAVE-001 | Save profile, версии, exactly-once rewards | [Save](../spec/core/s20.md), [экономика](../spec/v7/economy-and-talent-sinks.md) | Atomicity, replay, migrations | CONTRACT ONLY |
+| CONTENT-001 | Канонические классы/навыки/статусы/карты/боссы/таланты/боты | [ContentRegistry](../spec/v7/content-registry-contract.md), [каталоги](../config/v7/README.md) | [Static refs](../../scripts/validate_content.py) + [negative tests](../../tests/test_content_catalog.py) | STATIC-CI ONLY; NO GODOT RUNTIME |
+| SOURCE-001 | Дедупликация v5 и интеграция schema v1→2 | [Reconciliation](../guides/PACKAGE_RECONCILIATION.md), [инвентарь](../archive/package-source-inventory.json) | [v6 migration](../../scripts/validate_migration.py), [v7 validator](../../scripts/validate_content.py) | DOCUMENTED; original ZIPs not in Git |
 | DOC-001 | История решений, ссылки, происхождение | [INDEX](../INDEX.md), [Manifest](../MANIFEST.json), [Migration](../guides/MIGRATION_AUDIT.md) | Linux+Windows Python CI | CI-VERIFIED (documentation only) |
 
 ## Как обновлять

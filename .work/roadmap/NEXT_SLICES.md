@@ -2,7 +2,7 @@
 
 | Slice | Результат | Acceptance |
 |---|---|---|
-| P0-00 | Godot 4.7.2 2D bootstrap, typed GDScript, GUT | headless CI Windows/Linux |
+| P0-00 | Godot 4.7.2 2D bootstrap, typed GDScript, GUT, ContentRegistry v7 | headless import Windows/Linux + canonical content digest |
 | P0-01 | Combat Kernel, PlayerCommand, RNG | golden tests для попаданий, DoT, replay |
 | P0-02 | Два класса, 5-минутный забег, RU/EN | игровой цикл и экран наград |
 | P0-03 | Сохранения, Spirit Stones, талант секты | exactly-once payout, бесплатный respec |
