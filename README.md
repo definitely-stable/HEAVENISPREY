@@ -14,7 +14,7 @@
 | Контракты и приоритет документов | [Стандарты документации](.work/guides/DOC_STANDARDS.md) · [ADR](.work/decisions/README.md) |
 | Поздние сложности / вторая валюта | [Небесная кара и Бездна Дао](.work/spec/v7/late-game-progression.md) · [Экономика](.work/spec/v7/economy-and-talent-sinks.md) |
 | Конфиги и локализация | [v7 fixtures](.work/config/v7/README.md) · [RU/EN](.work/spec/v6/v6_i18n.md) |
-| Что перенесено, а что ещё нет? | **[Аудит переноса](.work/guides/MIGRATION_AUDIT.md)** |
+| Что перенесено, а что ещё нет? | **[Аудит переноса](.work/guides/MIGRATION_AUDIT.md)** · [Матрица требований](.work/indexes/TRACEABILITY.md) |
 | Что проверено на GitHub? | [CURRENT_STATE](.work/CURRENT_STATE.md) · [Тесты](.github/workflows/design-validation.yml) |
 
 ## Непересматриваемые решения

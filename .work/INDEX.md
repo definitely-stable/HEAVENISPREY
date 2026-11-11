@@ -14,6 +14,10 @@
 - [Решения ADR](decisions/README.md) · [Карта агента](indexes/AGENT_ROUTING.md) · [CURRENT_STATE](CURRENT_STATE.md)
 - [Манифест](MANIFEST.json) · [Источники](research/SOURCES.md) · [Архив v6](archive/architecture-v6-original.md)
 
+## Трассируемость
+
+- **[Матрица требований → спецификация → тест → статус](indexes/TRACEABILITY.md)** — что действительно реализовано, а что существует только в дизайне.
+
 ## Каталог всех разделов
 
 ### Боевой движок и мир
