@@ -5,6 +5,7 @@
 | Область работы | Сначала прочитать | Затем при необходимости |
 |---|---|---|
 | Автоатаки, попадания, DoT, proc chains | [Combat ADR](../decisions/ADR-002-combat.md) · [Семантика](../spec/v5/v5_semantics.md) | [Scheduler](../spec/core/s06.md) · [Event budgets](../spec/v5/v5_budget.md) |
+| **Цикл забега, XP/pickups, игровые события, боссы, предметы карты, классовые задачи** | [GAMEPLAY-GAP-001](../spec/v7/gameplay-loop-gap-audit.md) | [Enemy threat](../spec/v7/enemy-threat-contract.md) · [v7 Stage/Roster](../config/v7/stages.json) · [v5 UX](../spec/v5/v5_ux.md) |
 | Новые обычные монстры, волны, телеграфы | [Бестиарий](../spec/v7/ordinary-enemy-bestiary.md) · [Контракт угроз](../spec/v7/enemy-threat-contract.md) | [Каталог врагов](../config/v7/enemies.json) · [Атаки](../config/v7/enemy_attacks.json) · [Волны](../config/v7/enemy_rosters.json) |
 | Противники, движение, спавн, performance | [Spatial](../spec/core/s10.md) · [Орда](../spec/core/s11.md) | [Визуализация](../spec/core/s14.md) · [Профилирование](../spec/core/s24.md) |
 | Сложности, unlock, поздние валюты | [ADR-003](../decisions/ADR-003-late-game.md) · [Late-game](../spec/v7/late-game-progression.md) | [v7 data](../config/v7/README.md) · [Боты](../spec/v7/bot-acceptance.md) |
