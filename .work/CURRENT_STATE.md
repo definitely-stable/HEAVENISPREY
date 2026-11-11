@@ -1,15 +1,15 @@
-# CURRENT_STATE — снимок проверки по репозиторию
+# CURRENT_STATE — проверяемый архитектурный снимок
 
-- **Last verified HEAD:** `main: e2b19d98a38fbdc090b3ad5d4a1e87c9a554ecb7` (до служебного обновления этого снимка).
-- **Current milestone:** ARCH — только архитектура геймплея, проверяемые контракты и ускорение будущей разработки. **Godot / game runtime / ассеты не создавались и не разрешены текущим scope.**
-- **Current slice:** [GAME-ARCH-00](spec/v7/game-arch-00-run-orchestration.md) и [GAME-ARCH-01](spec/v7/game-arch-01-xp-pickups.md) — новые проектные контракты событий/паузы/XP; [GAMEPLAY-GAP-001](spec/v7/gameplay-loop-gap-audit.md) — карта пробелов. ARCH-01/BUILD-SKILL остаётся параллельной архитектурной зависимостью.
-- **Open PR:** по текущему выполненному пакету нет: [#4](https://github.com/definitely-stable/HEAVENISPREY/pull/4) — MERGED `4280c9d7470ff2305fe22829bc88152a7686461c`; [#5](https://github.com/definitely-stable/HEAVENISPREY/pull/5) — MERGED `e2b19d98a38fbdc090b3ad5d4a1e87c9a554ecb7`. Новые PR проверяются отдельно, это исторический снимок.
-- **Last CI:** [#43048905916](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/43048905916) — SUCCESS на Windows-2022 и Ubuntu для HEAD PR #5 `908180cb21420fef454b67f161a79908e56a12aa`. Push-commit `main` этим прогоном **не подтверждается**.
-- **Acceptance:** 93/93 Python design/static tests, в том числе 42 новых теста GAME-ARCH-00/01; эталонный пример: пять исходных предметов → три логических объекта без потери 52 XP-единиц, подбираются 40 XP, +3 уровня с остатком 3 XP, в очередь входят 5 решений, `build_revision` 1→6. Это **проверка проектной модели**, а не game/runtime.
-- **Known blockers:** нормативный приоритет конкурирующих источников наград, правила смерти/победы в том же тике, сохранение в паузе, точный этап XP-модификатора, мировая геометрия подбираемых объектов и интеграция с реальными DraftService/BuildTransaction. GAME-ARCH-02 (encounter/boss/stage) пока не специфицирован полностью.
-- **Next allowed action:** архитектурный GAME-ARCH-02 (режиссура волн, боссы, StageTopology, POI, reward gates) и закрытие открытых RLOOP-01/02/03 и XP-01/02/03; статические контракты/негативные фикстуры, **без** Godot/runtime.
+- **Last verified HEAD:** `main: 7a139a022c220ac1f872fe068a1d3012c3d732f2` (на момент завершения PR #7; до служебного обновления этого снимка).
+- **Current milestone:** ARCH — архитектура геймплея, проверяемые статические модели и ускорение разработки. **Никакого Godot runtime, сцен, изображений или реальной игровой логики.**
+- **Current slice:** [GAME-UX-001](spec/v7/game-ux-001-oct-2026.md) — ревизия существующих GAME-ARCH-00/01 и BUILD-SKILL относительно UX практик по **31 октября 2026 года**, интегрирована в `main`.
+- **Open PR:** [#7](https://github.com/definitely-stable/HEAVENISPREY/pull/7) — MERGED `7a139a022c220ac1f872fe068a1d3012c3d732f2`; новых открытых PR данного изменения нет на момент снимка. Статусы перепроверять live.
+- **Last CI:** [#43070365082](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/43070365082) — SUCCESS на GitHub-hosted Ubuntu и Windows-2022, **113/113** статических/unit design tests для PR #7 `3b15b74509b8bf9adba30f7b229680ad31337e26`. Отдельный push-run итогового merge в `main` этим результатом **не подтверждён**.
+- **Acceptance:** режимы представления выбора `IMMEDIATE/BANK_LEVELS` на уровне эталонной модели; вручную открываемые/откладываемые только обычные уровни; обязательные ритуалы ставят на паузу; единственный тик в одном event batch; XP-консолидация только для XP; сверка источника с авторитетным **синтетическим** манифестом; cross-layer проекция `XP → rank-up → evolution → BuildTransaction revision`. Новых тестов 20, всего 113.
+- **Known blockers:** нет UX интерфейса, реального DraftService, настоящего Source/DropLedger, сохранения/восстановления посреди выборов, полного финального события смерти, формальной модели UI Focus/Input, фактического экрана карточек/контроллера, human playtests и метрик FPS. Auto-pick, cross-school N→M, сложная стоимость драфта остаются предложениями.
+- **Next allowed action:** спецификация `ChoiceViewModel`/UX input/focus + корректные статические негативные сценарии, затем GAME-ARCH-02 (карты, boss encounters, POI). **Только архитектура и CI, без игры.**
 - **Last updated from repository:** 2026-11-11.
 
-**Правило CI-first:** обычные архитектурные PR после зелёного CI и проверки diff интегрировать в `main`, не оставлять открытыми по инерции. [Workflow](guides/WORKFLOW.md). Статус `DESIGN PROPOSAL` не превращается в `ACCEPTED DESIGN` от факта merge.
+**Важно:** `main` и CI указаны как исторический верифицированный снимок. Перед новым ответом читать GitHub. Документ `GAME-UX-001` остаётся `DESIGN PROPOSAL`, даже после merge; значения баланса и UX политики не объявляются утверждёнными.
 
-[Reference fixtures](proposals/game-arch-00-01/README.md) · [Навигация](guides/START_HERE.md)
+[UX 2026](spec/v7/game-ux-001-oct-2026.md) · [Run event rules](spec/v7/game-arch-00-run-orchestration.md) · [XP contracts](spec/v7/game-arch-01-xp-pickups.md) · [Workflow](guides/WORKFLOW.md)
