@@ -239,8 +239,8 @@ class SaveContractTests(unittest.TestCase):
     def test_invalid_new_offer_does_not_mutate_checkpoint(self):
         snap, rc, bc, plan = witness()
         before = copy.deepcopy(snap)
-        with self.assertRaisesRegex(save.builds.ContractError,
-                                    "upgrade offer no longer eligible"):
+        with self.assertRaisesRegex(save.ContractError,
+                                    "ineligible upgrade offer on replay"):
             save.choose(snap, "sample.offer.sword_rank", rc, bc, plan)
         self.assertEqual(snap, before)
 
