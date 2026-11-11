@@ -20,7 +20,7 @@
 | Foundation Slice | Архитектурный результат | Статический gate |
 |---|---|---|
 | FOUNDATION-2026 | Research-to-project decision map + dependency DAG + Metamorphic/negative fixtures | Evidence/source refs и положительные/отрицательные property tests; без утверждения игрового FPS |
-| SAVE-CONTRACT-001 | Версионированные RunSnapshot, deterministic replay, RNG policy и восстановление очереди | Roundtrip snapshot/receipt/replay и negative migrated examples |
+| SAVE-CONTRACT-001 | [Контракт и статическая проверка](../spec/v7/save-contract-001.md): версии, RulesHash, RNG policy, восстановление очереди и synthetic RunBuild | Reference JSON roundtrip, partial choice resume, v0 header migration, negative tests; **не настоящий Godot Save/Replay** |
 | CHOICE-VIEWMODEL-001 | Контракт карточки + focus, reroll/banish/lock и ошибки оплаты наград | Source-provenance, re-evaluation, stale/held input fixtures |
 | ARCH-02 | Граф достижимости N→M рецептов и развитие после max rank | Witness paths или объяснимые недостижимые рецепты |
 
