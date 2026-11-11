@@ -26,6 +26,17 @@ def baseline():
         rerolls=plan["rerolls"], banishes=plan["banishes"])
     return base, rc, bc, save_plan, plan, run, build, draft
 
+def before_first_choice():
+    """Rev 6 has four eligible offers for a 3-card hand: meaningful rerolls."""
+    saved, rc, bc, save_plan = oracle.save.sample_checkpoint()
+    base = oracle.save.snapshot_from_journal(
+        rc, bc, save_plan, saved["receipts"], [])
+    run, build = base["state"]["run"], base["state"]["build"]
+    draft = oracle.start_draft(run, build, bc, seed="307", hand_size=3,
+                               rerolls=2, banishes=2)
+    assert len(oracle.eligible_ids(bc, build, [])) > len(draft["hand"])
+    return bc, run, build, draft
+
 
 def action(draft, run, build, catalog, uid, kind, offer=None):
     return oracle.act(draft, run, build, catalog, uid=uid, kind=kind,
@@ -37,7 +48,7 @@ class ChoiceViewModelTests(unittest.TestCase):
         result = oracle.verify_fixture()
         self.assertTrue(result["verified_overlay"])
         self.assertEqual(result["cards"], 2)
-        self.assertEqual(result["rerolls_left"], 1)
+        self.assertEqual(result["rerolls_left"], 2)
         self.assertEqual(result["banishes_left"], 1)
         self.assertEqual(result["choice_still_earned"], 4)
 
@@ -64,7 +75,6 @@ class ChoiceViewModelTests(unittest.TestCase):
         before_build = copy.deepcopy(build)
         draft = action(draft, run, build, bc, "sample.lock", "LOCK",
                        "sample.offer.echo")
-        draft = action(draft, run, build, bc, "sample.reroll", "REROLL")
         draft = action(draft, run, build, bc, "sample.banish", "BANISH",
                        "sample.offer.new_thunder")
         self.assertEqual(run, before_run)
@@ -73,12 +83,15 @@ class ChoiceViewModelTests(unittest.TestCase):
         self.assertEqual(len(run["pending_choices"]), 4)
 
     def test_locked_offer_survives_reroll(self):
-        _, _, bc, _, _, run, build, draft = baseline()
-        draft = action(draft, run, build, bc, "sample.lock", "LOCK",
-                       "sample.offer.echo")
+        bc, run, build, draft = before_first_choice()
+        locked = draft["hand"][0]
+        before_hand = set(draft["hand"])
+        draft = action(draft, run, build, bc, "sample.lock", "LOCK", locked)
         draft = action(draft, run, build, bc, "sample.reroll", "REROLL")
-        self.assertEqual(draft["locked_offer"], "sample.offer.echo")
-        self.assertIn("sample.offer.echo", draft["hand"])
+        self.assertEqual(draft["locked_offer"], locked)
+        self.assertIn(locked, draft["hand"])
+        self.assertTrue(set(draft["hand"]) - before_hand,
+                        "reroll with alternatives must reveal a new card")
 
     def test_banished_offer_not_in_current_hand(self):
         _, _, bc, _, _, run, build, draft = baseline()
@@ -97,7 +110,7 @@ class ChoiceViewModelTests(unittest.TestCase):
         self.assertNotIn("sample.offer.new_thunder", replayed["hand"])
 
     def test_duplicate_same_reroll_receipt_is_noop(self):
-        _, _, bc, _, _, run, build, draft = baseline()
+        bc, run, build, draft = before_first_choice()
         advanced = action(draft, run, build, bc, "sample.repeat", "REROLL")
         second = oracle.act(advanced, run, build, bc, uid="sample.repeat",
                             kind="REROLL", offer_id=None,
@@ -106,7 +119,7 @@ class ChoiceViewModelTests(unittest.TestCase):
         self.assertEqual(advanced["rerolls_left"], draft["rerolls_left"] - 1)
 
     def test_same_action_uid_with_different_args_rejected(self):
-        _, _, bc, _, _, run, build, draft = baseline()
+        bc, run, build, draft = before_first_choice()
         advanced = action(draft, run, build, bc, "sample.same", "REROLL")
         with self.assertRaisesRegex(oracle.ContractError, "action UID conflict"):
             oracle.act(advanced, run, build, bc, uid="sample.same", kind="LOCK",
@@ -114,13 +127,21 @@ class ChoiceViewModelTests(unittest.TestCase):
                        expected_revision=draft["state_revision"])
 
     def test_stale_hand_revision_does_not_charge_resources(self):
-        _, _, bc, _, _, run, build, draft = baseline()
+        bc, run, build, draft = before_first_choice()
         advanced = action(draft, run, build, bc, "sample.reroll", "REROLL")
         before = copy.deepcopy(advanced)
         with self.assertRaisesRegex(oracle.ContractError, "stale draft state revision"):
             oracle.act(advanced, run, build, bc, uid="sample.next", kind="REROLL",
                        expected_revision=1)
         self.assertEqual(advanced, before)
+
+    def test_reroll_does_not_spend_charge_on_exhausted_pool(self):
+        _, _, bc, _, _, run, build, draft = baseline()
+        before = copy.deepcopy(draft)
+        self.assertFalse(oracle.view(draft, run, build, bc)["can_reroll"])
+        with self.assertRaisesRegex(oracle.ContractError, "cannot reveal any new"):
+            action(draft, run, build, bc, "sample.noop", "REROLL")
+        self.assertEqual(draft, before)
 
     def test_no_rerolls_left_negative(self):
         _, _, bc, _, _, run, build, draft = baseline()
@@ -283,7 +304,7 @@ class ChoiceViewModelTests(unittest.TestCase):
                                transition="PRESS", focused_offer=None)
 
     def test_old_focus_invalid_after_reroll(self):
-        _, _, bc, _, _, run, build, draft = baseline()
+        bc, run, build, draft = before_first_choice()
         old_focus = oracle.open_focus(draft)
         newer = action(draft, run, build, bc, "sample.reroll", "REROLL")
         with self.assertRaisesRegex(oracle.ContractError, "stale focus session"):
@@ -307,7 +328,7 @@ class ChoiceViewModelTests(unittest.TestCase):
         roundtrip = json.loads(json.dumps(snap, sort_keys=True))
         restored = oracle.validate_overlay(roundtrip, base, bc, plan)
         self.assertEqual(restored, draft)
-        self.assertEqual(len(restored["actions"]), 3)
+        self.assertEqual(len(restored["actions"]), 2)
 
     def test_overlay_cannot_be_bound_to_another_base_save(self):
         base, rc, bc, save_plan, plan, run, build, draft = baseline()
@@ -339,7 +360,8 @@ class ChoiceViewModelTests(unittest.TestCase):
 
     def test_overlay_duplicate_action_rejected(self):
         base, rc, bc, save_plan, plan, run, build, draft = baseline()
-        draft = action(draft, run, build, bc, "sample.reroll", "REROLL")
+        draft = action(draft, run, build, bc, "sample.lock", "LOCK",
+                       "sample.offer.echo")
         snap = oracle.overlay(base, draft, bc, plan)
         snap["actions"].append(copy.deepcopy(snap["actions"][0]))
         snap["checksum"] = oracle.json_hash({
