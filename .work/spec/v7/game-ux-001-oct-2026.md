@@ -95,6 +95,8 @@ Reference helpers:
 - If no legal candidate remains: source- and mode-specific fallback is explained, not a fake selectable card.
 - Auto-pick preference is always **explicit**; respect user-defined priority/avoid list and record reason, rule revision and chosen token. Do not auto-pick a rare mutually exclusive evolution or meridian path by default.
 
+**Integration update:** [CHOICE-VIEWMODEL-001](choice-viewmodel-001.md) содержит проверяемую модель source-grounded карточек, hand/locked/banned, явный Skip и защиту от удерживаемого Confirm. Это ещё не интерфейс Godot и не human-verified accessibility.
+
 ## 5. Choice-card information architecture
 
 The choice card should answer in 2–3 seconds:
