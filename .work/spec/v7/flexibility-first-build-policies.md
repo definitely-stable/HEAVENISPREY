@@ -113,7 +113,36 @@ Do not make `can_proc_from_proc=false` an immutable global restriction. Allow sa
 
 These sources support a flexible design intent; they are not claims that specific mechanics in HEAVENISPREY have been playtested.
 
-## 9. Priority and acceptance
+## 9. Distinguish invalid mechanics from expensive but valid builds
+
+A static worst-case event estimate is often an **over-approximation**. For example, two reaction paths may be mutually exclusive or require different targets; multiplying both fanouts as if they always happen together can exaggerate the result.
+
+A future production validator should report separate results, not one blanket `VALID/INVALID` boolean:
+
+| Classification | Meaning | Required action |
+|---|---|---|
+| `INVALID_SEMANTICS` | Missing references, impossible recipe, unbounded reaction cycle or undefined effect order | Reject definition |
+| `PROFILE_EXCEEDED` | Finite combo exceeds a particular device/mode capacity profile | Reject that *profile*, retain valid authored combo for alternative mode / optimization |
+| `BOUND_TOO_COARSE` | Conservative estimate exceeds profile, but branches may be exclusive | Request stronger proof / scenario fixture, not a global content ban |
+| `DESIGN_RISK` | Dominant build, readability, grind, excessive randomness, rare synergy | Report for design review; no automatic nerf |
+| `VALID_FOR_PROFILE` | Defined, finite and within a declared capacity profile | Accept for that profile; not a claim of real FPS |
+
+Prefer exact mutual-exclusion predicates and root provenance when bounding mutually exclusive procs. Only require performance experiments when the game phase is authorized; performance cannot be proven from an event count alone.
+
+**Important:** An alternative high-power/Endless run profile may explicitly tolerate a higher event count than the baseline. The engine should not silently downgrade damage, status instances or proc results to meet a generic FPS budget. If a content design needs an alternative equivalent batched representation, validate semantic parity (number/identity of hits, status ticks, rewards and ordering).
+
+## 10. Preset examples (not approved balancing targets)
+
+| Mode proposal | Build freedom | Notes |
+|---|---|---|
+| Standard | E.g. 6 active + 6 passive, no repeated technique | Meaningful early draft choices; expansion through events possible |
+| Ascendant | Extra slot rewards, more advanced unions/gifts, optional duplicates | Powerful mid/late transformations |
+| Endless / experimental | Larger capacities, post-max growth, complex bounded chains | Strong power fantasy; device performance becomes an explicit test target |
+| Minimalist challenge | 1–2 active techniques, concentrated growth | Allow one-skill builds to be powerful, not a forced weakness |
+
+Mode presets are **data**, not new independently implemented combat engines. They share skill definitions, ownership, transaction and event semantics. A run snapshot contains the policy identifier and digest so changing a mode preset cannot mutate an existing run invisibly.
+
+## 11. Priority and acceptance
 
 **Immediate architecture-only priority:** remove hard caps from normative *intent*, add explicit policy-presets, strengthen static checks to accept variable capacities/ranks and finite bounded cycles, and add counterexamples. Do not multiply speculative skills before the authoring contract is stable.
 
