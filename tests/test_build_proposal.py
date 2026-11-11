@@ -76,7 +76,10 @@ class BuildDesignProposalTests(unittest.TestCase):
 
     def test_wrong_gate_cannot_trigger(self):
         catalog = source()
-        self.assertEqual(mod.applicable_recipes(catalog, witness(catalog, ".evolution"), "gift_event"), [])
+        self.assertEqual(mod.applicable_recipes(catalog, witness(catalog, ".evolution"), "gift_event"),
+                         ["sample.gift.sword_echo_reward"])
+        self.assertNotIn("sample.gift.sword_echo_reward",
+                         mod.applicable_recipes(catalog, witness(catalog, ".evolution"), "ritual_reward"))
 
     def test_draft_pool_is_order_independent(self):
         catalog = source()
