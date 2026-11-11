@@ -1,21 +1,16 @@
-# CURRENT_STATE — проверяемый репозиторный снимок
+# CURRENT_STATE — проверенный снимок ветки архитектуры
 
-Last verified HEAD (main): f8b18b31bf00e6abcd78a3afbdbb285bfb488322
+**Дата ручной проверки:** 2026-11-11. Это снимок, а не live-status; перед каждым новым отчётом сверять GitHub PR HEAD и CI.
 
-Current milestone: P0 — документационная основа проекта и правила поздней прогрессии
+- **Last verified HEAD (main):** `f8b18b31bf00e6abcd78a3afbdbb285bfb488322`.
+- **Base architecture PR #1:** `0c7320aeb0eb140cd8338fa91bdb5e507a7946ba`, OPEN.
+- **Latest independently checked PR #2 HEAD before this snapshot update:** `fd425dbd66eaf2832fa7af46d1f9a8a2558f6c40`, OPEN/DRAFT; stacked on PR #1.
+- **Current milestone:** ARCH — content architecture and future authoring efficiency; **game development explicitly deferred**.
+- **Current slice:** BUILD-SKILL-001 design proposal + ARCH-01 typed lifecycle contract / isolated static witnesses.
+- **Last CI verified:** [run 43021491134](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/43021491134), SUCCESS on Windows-2022 and Ubuntu. 46/46 unit tests, static build sample checker and content impact CLI.
+- **Acceptance:** 19 build design tests; 4 canonical dependency impact tests; 5 sample transformation witnesses, conservative synthetic root proc bound 36. Existing canonical design checks remain green.
+- **Known blockers:** 21 open policy decisions; no formal complete JSON Schema, no exhaustive recipe reachability, no seeded weighted draft proof; no gameplay runtime/bots/playtest.
+- **Next allowed action:** ARCH-01 formal schemas and additional negative fixtures, then ARCH-02/03; do not initiate Godot or merge without explicit user authorization.
+- **Last updated from repository:** 2026-11-11.
 
-Current slice: DOCS-FOUNDATION-001 + LATE-PROGRESSION-001
-
-Open PR: [#1 — agent-ready .work architecture and v7](https://github.com/definitely-stable/HEAVENISPREY/pull/1), рабочая ветка docs/agent-architecture-v7-late-progression (ещё не merged)
-
-Last CI: GitHub Actions run [42984159070](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/42984159070) — Ubuntu и Windows-2022 SUCCESS на commit 09adbc1ccbf3d7a78997bd3de9eb0d6fec7865e9; для последующих коммитов проверять новый CI отдельно.
-
-Acceptance: исходник v6 сохранён без сокращений, 63 раздела и 85 ссылок, ADR, v7 late-game / Dao Seals / конфиги, cross-link validation и Python design tests.
-
-Known blockers: пока нет Godot runtime, реальных ботов, игровых прогонов и binary-level RE; коэффициенты наград не балансировались.
-
-Next allowed action: завершить ревью и CI PR #1, затем Godot 4.7.2 2D bootstrap с headless CI и боевыми golden tests.
-
-Last updated from repository: 2026-11-11
-
-**Важно:** данный файл — снимок, а не автоматическая синхронизация. Агент должен перепроверить HEAD, PR и CI через GitHub при каждом статусном отчёте; никогда не использовать его как единственное доказательство.
+**Important:** The sample IDs in `.work/proposals/build-skill-001/` are never canonical gameplay definitions. This branch has not added a Godot project. See [BUILD-SKILL-001](spec/v7/build-skill-architecture-proposal.md) and [ARCH-01](spec/v7/build-skill-type-contract.md).
