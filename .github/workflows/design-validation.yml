@@ -26,5 +26,7 @@ jobs:
           python-version: '3.13'
       - name: Check architecture index and v7 configs
         run: python scripts/validate_work.py
+      - name: Check complete v6 migration and all canonical links
+        run: python scripts/validate_migration.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v
