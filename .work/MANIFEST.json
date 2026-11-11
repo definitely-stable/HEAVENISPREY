@@ -458,5 +458,23 @@
       "status": "superseded-by-v7",
       "source_anchor": "v6_state"
     }
-  ]
+  ],
+  "canonical_new_docs": [
+    ".work/spec/v7/late-game-progression.md",
+    ".work/spec/v7/economy-and-talent-sinks.md",
+    ".work/spec/v7/modes-and-compatibility.md",
+    ".work/spec/v7/bot-acceptance.md"
+  ],
+  "metadata_links": {
+    "index": ".work/INDEX.md",
+    "agents": "AGENTS.md",
+    "task_routing": ".work/indexes/AGENT_ROUTING.md",
+    "decision_log": ".work/decisions/README.md",
+    "source_registry": ".work/research/SOURCES.md",
+    "design_configs": ".work/config/v7/README.md",
+    "roadmap": ".work/roadmap/NEXT_SLICES.md",
+    "current_state": ".work/CURRENT_STATE.md",
+    "pr": "https://github.com/definitely-stable/HEAVENISPREY/pull/1"
+  },
+  "source_authority": "v7 and ADRs override conflicting proposals in v6. Original v6 is preserved as immutable archive."
 }
