@@ -203,6 +203,9 @@ def act(state, run, build, catalog, *, uid, kind, offer_id=None,
     if kind == "REROLL":
         require(offer_id is None, "reroll must not target card")
         require(result["rerolls_left"] > 0, "no rerolls left")
+        require(bool(set(eligible_ids(catalog, build, result["banned_ids"])) -
+                     set(result["hand"])),
+                "reroll cannot reveal any new legal card")
         result["rerolls_left"] -= 1
         result["hand"] = draw_hand(catalog, build, result,
                                    excluded=set(result["hand"]) -
@@ -290,6 +293,9 @@ def view(state, run, build, catalog):
         "hand_revision": state["state_revision"],
         "queue_remaining": len(run["pending_choices"]),
         "rerolls_left": state["rerolls_left"],
+        "can_reroll": (state["rerolls_left"] > 0 and bool(
+            set(eligible_ids(catalog, build, state["banned_ids"])) -
+            set(state["hand"]))),
         "banishes_left": state["banishes_left"],
         "cards": cards,
         "empty_fallback_needed": len(cards) == 0,
