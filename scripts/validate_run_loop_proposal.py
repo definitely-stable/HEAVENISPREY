@@ -127,10 +127,11 @@ def collect_pickups(pickups: list[dict], *, owner_uid: str,
     return picked, remaining
 
 
-def xp_events_from_pickups(collected: list[dict], *, tick: int,
+def xp_events_from_pickups(collected: list[dict], *, run_uid: str, tick: int,
                            first_sequence: int) -> list[dict]:
     """Produce receipts for eligible collected XP only; no implicit XP multiplier."""
     validate_pickups(collected)
+    require(isinstance(run_uid, str) and bool(run_uid), "run_uid missing")
     nat(tick, "tick")
     positive(first_sequence, "sequence")
     events = []
@@ -138,6 +139,7 @@ def xp_events_from_pickups(collected: list[dict], *, tick: int,
         if item["kind"] == "XP":
             events.append({
                 "uid": "sample.event.pickup." + digest({"sources": sorted(item["source_uids"])})[:24],
+                "run_uid": run_uid,
                 "tick": tick,
                 "sequence": first_sequence + len(events),
                 "kind": "XP_GAIN",
@@ -168,9 +170,10 @@ def event_order_key(event: dict) -> tuple[int, int, str]:
 
 def validate_event(event: dict) -> None:
     require(isinstance(event, dict), "event must be object")
-    require(set(event) == {"uid", "tick", "sequence", "kind", "payload"},
+    require(set(event) == {"uid", "run_uid", "tick", "sequence", "kind", "payload"},
             "event envelope keys invalid")
     require(isinstance(event["uid"], str) and bool(event["uid"]), "event UID missing")
+    require(isinstance(event["run_uid"], str) and bool(event["run_uid"]), "event run UID missing")
     nat(event["tick"], "event.tick")
     positive(event["sequence"], "event.sequence")
     require(event["kind"] in EVENT_KINDS, "unknown run event kind")
@@ -195,17 +198,11 @@ def apply_events(run: dict, events: list[dict], xp_cost_by_level: list[int]) -> 
         validate_event(ev)
     ordered = sorted(events, key=event_order_key)
     seen_batch = {}
-    seq_ids = set()
     for ev in ordered:
         if ev["uid"] in seen_batch:
             require(seen_batch[ev["uid"]] == digest(ev),
                     f"event UID collision: {ev['uid']}")
         seen_batch[ev["uid"]] = digest(ev)
-        require((ev["tick"], ev["sequence"]) not in seq_ids or
-                any(other["uid"] == ev["uid"] and other["tick"] == ev["tick"]
-                    and other["sequence"] == ev["sequence"] for other in ordered),
-                "two events have same tick/sequence")
-        seq_ids.add((ev["tick"], ev["sequence"]))
     # Enforce unique sequence across *distinct* events, independent of input order.
     distinct_seq = {}
     for ev in ordered:
@@ -215,6 +212,7 @@ def apply_events(run: dict, events: list[dict], xp_cost_by_level: list[int]) -> 
         distinct_seq[key] = ev["uid"]
     result = copy.deepcopy(run)
     for ev in ordered:
+        require(ev["run_uid"] == result["run_uid"], "cross-run event receipt rejected")
         uid, signature = ev["uid"], digest(ev)
         old = result["processed_events"].get(uid)
         if old is not None:
@@ -311,7 +309,7 @@ def validate_reference(catalog: dict, canonical: Path = CANONICAL) -> dict:
         radius=rules["pickup_radius"])
     require(sum(x["value"] for x in original) ==
             sum(x["value"] for x in picked + remaining), "pickup value lost")
-    events = xp_events_from_pickups(picked, tick=rules["event_tick"],
+    events = xp_events_from_pickups(picked, run_uid=catalog["run_uid"], tick=rules["event_tick"],
                                     first_sequence=rules["first_sequence"])
     events += copy.deepcopy(catalog["other_events"])
     state = apply_events(initial_run(catalog), list(reversed(events)), costs)
