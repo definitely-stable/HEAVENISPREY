@@ -172,6 +172,8 @@ Schema не может доказать, что Union достижим или ч
 
 ## 12. FND-13 — сохранения, версии и протокол восстановления
 
+**Implementation note (architecture-only):** [SAVE-CONTRACT-001](save-contract-001.md) и [reference replay fixtures](../../proposals/save-contract-001/README.md) теперь проверяют JSON checkpoint mid-choice, строгий RulesHash/content digest, source claims, explicit RNG stream policy, roundtrip, fail-closed v0 header migration и independent deterministic replay. Не заявляется реальный Godot RNG/save runtime.
+
 **Нужно спроектировать сразу:** \`RunSnapshotHeader {schema_version, content_digest, rules_hash, rng_algorithm_version, tick_policy, run_uid}\`, \`GameState\`, \`EventLedger checkpoint\`, \`ClaimedSources\`, \`ChoiceQueue\`, \`BuildRevision\`, \`MetaSettlementPending\`.
 
 Изменение UI-презентации, которое не меняет игру, возможно вне \`rules_hash\`. Изменение вероятности драфта, шага RNG, версии рецепта, порядка фаз или количества реальных наград обязательно вызывает новую версию семантики.
