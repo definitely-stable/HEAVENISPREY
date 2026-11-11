@@ -1,0 +1,93 @@
+{
+  "schema_version": 2,
+  "kind": "unlock_rules",
+  "status": "design-not-implemented",
+  "rules": [
+    {
+      "id": "unlock.hard",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.standard",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "unlock.tribulation",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.hard",
+          "distinct_stage_count": 2
+        },
+        {
+          "event": "boss_defeated",
+          "boss_id": "boss.jade_warden",
+          "min_difficulty_tier": 2
+        },
+        {
+          "event": "class_mastery",
+          "any_class": true,
+          "level_at_least": 5
+        }
+      ]
+    },
+    {
+      "id": "unlock.abyss",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.tribulation",
+          "count": 3,
+          "distinct_stage_count": 2
+        },
+        {
+          "event": "boss_defeated",
+          "boss_id": "boss.tribulation_avatar",
+          "min_difficulty_tier": 3
+        }
+      ]
+    },
+    {
+      "id": "unlock.hyper",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.standard",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "unlock.hurry",
+      "all": [
+        {
+          "event": "stage_complete",
+          "distinct_stage_count": 2
+        }
+      ]
+    },
+    {
+      "id": "unlock.endless",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.hard",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "unlock.challenge_trials",
+      "all": [
+        {
+          "event": "win",
+          "difficulty_id": "difficulty.tribulation",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "note": "Boss IDs and thresholds are game-design prerequisites: no actual boss exists yet."
+}

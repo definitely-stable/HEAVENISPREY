@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "kind": "reward_contract",
+  "status": "unverified-balance-hypothesis",
+  "run_uid_settlement": "exactly_once",
+  "immutable_rules_snapshot": true,
+  "spirit_stones_formula": "floor(earned_milestone_stones * difficulty.spirit_stones_mult * capped_approved_mode_multiplier)",
+  "dao_seals_allowed_difficulties": [
+    "difficulty.tribulation",
+    "difficulty.abyss"
+  ],
+  "dao_seals_completion_formula": "difficulty.dao_seals_on_clear + min(verified_optional_objectives,difficulty.optional_dao_seals_max)",
+  "dao_seals_optional_objective_requires": "unique_progress_event_and_verified_enemy_or_boss_objective",
+  "optional_objective_min_real_minutes": 10,
+  "dao_seals_on_time_only_or_early_exit": 0,
+  "prohibited_progress_modes": [
+    "mode.training",
+    "mode.custom_unranked"
+  ],
+  "max_mode_reward_multiplier": 1.25,
+  "endless_dao_seals": "first_complete_cycle_only",
+  "dedupe": "persisted_run_uid_and_reward_event_id",
+  "notes": "The values are draft targets. No gameplay or performance tests have been run."
+}

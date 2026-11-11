@@ -1,0 +1,2 @@
+# ADR-002 — combat kernel
+**ACCEPTED DESIGN**, не реализован. Состояние мира, AutoCastScheduler, CombatEffectEngine, StatusStore, SpatialGrid, SpawnDirector, PlayerCommand и Replay независимы от Godot presentation, аудио и локализации. Визуальные оптимизации не могут изменять точное число попаданий, урон или события наград. [Семантика](../spec/v5/v5_semantics.md) · [Event budget](../spec/v5/v5_budget.md).

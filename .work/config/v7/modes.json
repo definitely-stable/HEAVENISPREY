@@ -1,0 +1,61 @@
+{
+  "schema_version": 2,
+  "kind": "mode_profiles",
+  "status": "design-not-implemented",
+  "profiles": [
+    {
+      "id": "mode.normal",
+      "unlock_id": null,
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.hyper",
+      "unlock_id": "unlock.hyper",
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.hurry",
+      "unlock_id": "unlock.hurry",
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.endless_limited",
+      "unlock_id": "unlock.endless",
+      "reward_eligible": true,
+      "excludes": [
+        "mode.training"
+      ]
+    },
+    {
+      "id": "mode.challenge_trials",
+      "unlock_id": "unlock.challenge_trials",
+      "reward_eligible": true,
+      "excludes": [
+        "mode.training",
+        "mode.custom_unranked"
+      ]
+    },
+    {
+      "id": "mode.training",
+      "unlock_id": null,
+      "reward_eligible": false,
+      "excludes": [
+        "mode.endless_limited",
+        "mode.challenge_trials"
+      ]
+    },
+    {
+      "id": "mode.custom_unranked",
+      "unlock_id": null,
+      "reward_eligible": false,
+      "excludes": [
+        "mode.challenge_trials"
+      ]
+    }
+  ],
+  "composition": "difficulty + stage + explicit compatible mutators -> immutable RunRulesHash",
+  "max_approved_reward_mult": 1.25
+}
