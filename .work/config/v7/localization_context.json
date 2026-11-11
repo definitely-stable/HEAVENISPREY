@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "kind": "localization_hints",
+  "status": "design-only-not-implemented",
+  "format_note": "Non-locale context deliberately kept out of Godot import CSV",
+  "contexts": {
+    "UI_START_RUN": "main menu",
+    "UI_DIFFICULTY": "difficulty selector",
+    "CLASS_": "class selection",
+    "SKILL_": "skill upgrade description",
+    "STATUS_": "combat status tooltip",
+    "BOSS_": "boss name and enemy tooltip",
+    "DIFFICULTY_": "selectable difficulty",
+    "MODE_": "game mode selector",
+    "STAGE_": "stage selector",
+    "CURRENCY_": "persistent spendable resource",
+    "TALENT_": "talent tooltip",
+    "STAT_": "progression metadata"
+  },
+  "translation_file": "translations.csv"
+}

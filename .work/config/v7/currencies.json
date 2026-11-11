@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "kind": "currency_catalog",
+  "status": "design-not-implemented",
+  "currencies": [
+    {
+      "id": "currency.spirit_stones",
+      "name_key": "CURRENCY_SPIRIT_STONES",
+      "type": "spendable",
+      "sources": [
+        "milestones",
+        "elite",
+        "boss",
+        "clear"
+      ],
+      "sinks": [
+        "tree.sect"
+      ],
+      "paid": false
+    },
+    {
+      "id": "currency.dao_seals",
+      "name_key": "CURRENCY_DAO_SEALS",
+      "type": "spendable-late-game",
+      "sources": [
+        "tribulation_clear",
+        "abyss_clear",
+        "verified_late_objective"
+      ],
+      "sinks": [
+        "tree.heavenly_insight",
+        "late_technique_unlocks",
+        "late_challenges"
+      ],
+      "paid": false
+    },
+    {
+      "id": "stat.class_mastery_xp",
+      "name_key": "STAT_CLASS_MASTERY",
+      "type": "non-spendable-per-class",
+      "sources": [
+        "gameplay"
+      ],
+      "sinks": [],
+      "paid": false
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+keys,en,ru
+UI_START_RUN,Start run,Начать забег
+UI_DIFFICULTY,Challenge level,Уровень испытания
+CLASS_SWORD_NAME,Sword Cultivator,Культиватор меча
+CLASS_THUNDER_NAME,Thunder Daoist,Даос грома
+CLASS_TALISMAN_NAME,Talisman Master,Мастер талисманов
+CLASS_BODY_NAME,Body Cultivator,Культиватор тела
+SKILL_SWORD_NAME,Spirit Sword,Духовный меч
+SKILL_THUNDER_NAME,Heavenly Lightning,Небесная молния
+SKILL_SEAL_NAME,Talisman Seal,Печать талисмана
+SKILL_BODY_NAME,Body Pulse,Импульс тела
+STATUS_MARK_NAME,Sword Mark,Метка меча
+STATUS_SHOCK_NAME,Shock,Электрический разряд
+STATUS_BURN_NAME,Burn,Горение
+BOSS_JADE_WARDEN_NAME,Jade Warden,Нефритовый хранитель
+BOSS_MIST_SENTINEL_NAME,Mist Sentinel,Страж тумана
+BOSS_TRIBULATION_AVATAR_NAME,Tribulation Avatar,Аватар Небесной кары
+DIFFICULTY_APPRENTICE_NAME,Path of the Apprentice,Путь ученика
+DIFFICULTY_STANDARD_NAME,Cultivator Path,Путь культиватора
+DIFFICULTY_HARD_NAME,Sect Trial,Испытание секты
+DIFFICULTY_TRIBULATION_NAME,Heavenly Tribulation,Небесная кара
+DIFFICULTY_ABYSS_NAME,Abyss of Dao,Бездна Дао
+MODE_HURRY_NAME,Hurry,Ускоренный
+MODE_HYPER_NAME,Hyper,Гиперрежим
+MODE_ENDLESS_NAME,Endless,Бесконечный
+MODE_ASCETIC_NAME,Ascetic,Аскетический
+MODE_TRAINING_NAME,Training,Тренировка
+MODE_NORMAL_NAME,Normal,Обычный
+MODE_CHALLENGE_TRIALS_NAME,Challenge Trials,Испытания
+MODE_CUSTOM_UNRANKED_NAME,Custom (unranked),Пользовательский (без наград)
+STAGE_JADE_NAME,Jade Grove,Нефритовая роща
+STAGE_MIST_NAME,Misty Cliffs,Туманные утёсы
+CURRENCY_SPIRIT_STONES,Spirit Stones,Духовные камни
+CURRENCY_DAO_SEALS,Dao Seals,Печати Дао
+STAT_CLASS_MASTERY,Class Mastery,Мастерство класса
+TALENT_HEALTH_NAME,Body Tempering,Закалка тела
+TALENT_REROLL_NAME,Dao Insight,Прозрение Дао
+TALENT_BANISH_NAME,Banishment,Изгнание техники
+TALENT_SWORD_FOCUS_NAME,Sword Focus,Сосредоточение меча
+TALENT_THUNDER_CHAIN_NAME,Extended Lightning,Длинная молния
+TALENT_DAO_RESONANCE,Dao Resonance,Резонанс Дао
+TALENT_HEAVENLY_LIBRARY,Heavenly Library,Небесная библиотека
+TALENT_FATE_REFINEMENT,Fate Refinement,Переплетение судьбы
+ENEMY_YIN_CORPSE_NAME,Yin Corpse,Мертвец Инь
+ENEMY_BLOOD_WOLF_NAME,Blood Demon Wolf,Кровавый демонический волк
+ENEMY_WANDERING_SPIRIT_NAME,Wandering Spirit,Блуждающий дух
+ENEMY_RUINED_JADE_GUARDIAN_NAME,Ruined Jade Guardian,Разрушенный нефритовый страж
+ENEMY_SICKLE_MANTIS_NAME,Sickle Mantis,Серповидный богомол
+ENEMY_PAPER_PUPPET_NAME,Paper Puppet,Бумажная марионетка
+ENEMY_VENOM_SPIRIT_SNAKE_NAME,Venom Spirit Snake,Ядовитая духовная змея
+ENEMY_FALLEN_SWORD_DISCIPLE_NAME,Fallen Sword Disciple,Павший ученик меча
+ENEMY_OMEN_CROW_NAME,Omen Crow,Ворон дурного знамения
+ENEMY_CORRUPTION_CENTIPEDE_NAME,Corruption Centipede,Многоножка Скверны
+ENEMY_CURSED_SPIRIT_LANTERN_NAME,Cursed Spirit Lantern,Проклятый духовный фонарь
+ENEMY_ROOT_ABOMINATION_NAME,Root Abomination,Корневая тварь
+ENEMY_CORRUPTED_CULTIVATOR_NAME,Corrupted Cultivator,Осквернённый культиватор
+ATTACK_YIN_GRASP_NAME,Yin Grasp,Хватка Инь
+ATTACK_WOLF_BITE_NAME,Wolf Bite,Волчий укус
+ATTACK_SPIRIT_TOUCH_NAME,Spectral Touch,Прикосновение духа
+ATTACK_JADE_STOMP_NAME,Jade Stomp,Нефритовый удар
+ATTACK_MANTIS_LUNGE_NAME,Sickle Lunge,Рывок серпа
+ATTACK_PUPPET_BURST_NAME,Death Seal,Посмертная печать
+ATTACK_SNAKE_BITE_NAME,Venom Bite,Ядовитый укус
+ATTACK_DISCIPLE_CLEAVE_NAME,Fallen Cleave,Павший взмах
+ATTACK_CROW_DIVE_NAME,Crow Dive,Пикирование ворона
+ATTACK_CENTIPEDE_BITE_NAME,Centipede Bite,Укус многоножки
+ATTACK_LANTERN_WISP_NAME,Lantern Wisp,Духовный сгусток
+ATTACK_ROOT_GROWTH_NAME,Corrupted Roots,Прорастание скверны
+ATTACK_CULTIVATOR_SWORD_NAME,Corrupted Sword,Осквернённый меч
+ATTACK_CULTIVATOR_SEAL_NAME,Qi Corruption Seal,Печать скверной ци
+STATUS_VENOM_NAME,Venom,Яд
+STATUS_ROOT_SLOW_NAME,Entangling Roots,Опутывающие корни
+STATUS_QI_TAINT_NAME,Corrupted Qi,Осквернённая ци

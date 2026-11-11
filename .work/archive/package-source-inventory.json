@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "title": "HEAVENISPREY source package reconciliation",
+  "verified_at": "2026-11-11",
+  "source_archives": [
+    {
+      "filename": "Xianxia_Survivors_v5_Implementation_Package.zip",
+      "sha256": "ec616c6bd632751ec073235bfa232c1e7291d1257897427df857c3a24c0860e6",
+      "origin": "provided prior conversation; original zip not duplicated in git",
+      "files": [
+        {
+          "path": "docs/combat_semantics.md",
+          "sha256": "fdbbcd2cd54aad029614d0d1a271d17ee1aff95e4d6ed704bc7fdab30dcf57e4",
+          "canonical_path": ".work/spec/v5/v5_semantics.md",
+          "source_section_id": "v5_semantics",
+          "resolution": "deduplicated-exact-text-from-v6"
+        },
+        {
+          "path": "docs/event_workload.md",
+          "sha256": "c12f62fbb4aad07a5fd3ce32d4acb1b164044eada42b463e34e9aaa685188367",
+          "canonical_path": ".work/spec/v5/v5_budget.md",
+          "source_section_id": "v5_budget",
+          "resolution": "deduplicated-exact-text-from-v6"
+        },
+        {
+          "path": "docs/ai_art_pipeline.md",
+          "sha256": "c7b6503ee564fa51f4cbb8b280c33e16771ffd73b695f5a76ada1abecad94d73",
+          "canonical_path": ".work/spec/v5/v5_assets.md",
+          "source_section_id": "v5_assets",
+          "resolution": "deduplicated-exact-text-from-v6"
+        },
+        {
+          "path": "docs/reverse_engineering_protocol.md",
+          "sha256": "7f24f078cf8b34afc1b699318c7a22d43414bfb7eec412e2fc9c183b6e5372fb",
+          "canonical_path": ".work/spec/v5/v5_re.md",
+          "source_section_id": "v5_re",
+          "resolution": "role-neutral-adaptation; archived v6 is exact"
+        },
+        {
+          "path": "docs/dependency_agent_strategy.md",
+          "sha256": "e811f24dacc2d991b0d4dd2f0fdacce1f9f1e5387325c5afcdd8d304f37bb3d1",
+          "canonical_path": ".work/spec/v5/v5_tools.md",
+          "source_section_id": "v5_tools",
+          "resolution": "role-neutral-adaptation; archived v6 is exact"
+        },
+        {
+          "path": "docs/test_strategy.md",
+          "sha256": "3e06f8ec4b7275a9b258ac5f955288beb547ae17d3543df98109e708a82ab30c",
+          "canonical_path": ".work/spec/v5/v5_tests.md",
+          "source_section_id": "v5_tests",
+          "resolution": "deduplicated-exact-text-from-v6"
+        },
+        {
+          "path": "docs/implementation_backlog.md",
+          "sha256": "212162739c83e255ae86514a128dca1bc658a03fdbbe06e337e47146d67cda40",
+          "canonical_path": ".work/spec/v5/v5_scope.md",
+          "source_section_id": "v5_scope",
+          "resolution": "deduplicated-exact-text-from-v6"
+        },
+        {
+          "path": "templates/claim_evidence.csv",
+          "sha256": "4153d265da8ef67c489395aaceb595db9d033fd8c4889de8c6293438a8f07b4f",
+          "canonical_path": ".work/research/claim_evidence.csv",
+          "resolution": "imported-exact"
+        },
+        {
+          "path": "manifest.json",
+          "sha256": "03e248de22c696a70337faa002044f7c366ed3a8b4a1d0685c5164b25fe2b0da",
+          "resolution": "recorded-provenance; values superseded by accepted ADRs"
+        },
+        {
+          "path": "README.md",
+          "sha256": "0373a8b3aa7ab2d2675734454396dfc12d503535564a921699694496e24251c6",
+          "resolution": "historic instructions superseded by model-neutral workflow"
+        },
+        {
+          "path": "Xianxia_Survivors_Architecture_v5_Deep_Audit_2026-11-11.md",
+          "sha256": "e4eb88a78256ad618ccedbaa3ef338206b939cf7039af557e9a8a68c810ebc7a",
+          "resolution": "historical report, prior content incorporated into v6; full standalone original not copied to git"
+        }
+      ]
+    },
+    {
+      "filename": "Xianxia_Survivors_v6_Config_Starter.zip",
+      "sha256": "4502dfffdb581f927033813892984b9b2cd894073a239994379aa4b988349b78",
+      "origin": "provided prior conversation; original zip not duplicated in git",
+      "files": [
+        {
+          "path": "data/classes.json",
+          "resolution": "normalized",
+          "canonical_path": ".work/config/v7/classes.json"
+        },
+        {
+          "path": "data/stages.json",
+          "resolution": "normalized-and-expanded-with-design-only-stage",
+          "canonical_path": ".work/config/v7/stages.json"
+        },
+        {
+          "path": "data/skills.json",
+          "resolution": "normalized-typed-ops-and-status-links",
+          "canonical_path": ".work/config/v7/skills.json"
+        },
+        {
+          "path": "data/economy.json",
+          "resolution": "normalized-anti-idle-verified-milestones",
+          "canonical_path": ".work/config/v7/economy_milestones.json"
+        },
+        {
+          "path": "data/difficulty_profiles.json",
+          "resolution": "merge-v7-higher-gated-reward-preserved",
+          "canonical_path": ".work/config/v7/difficulty_profiles.json"
+        },
+        {
+          "path": "data/unlocks.json",
+          "resolution": "class-unlocks-merged; late-unlock-conditions-v6-rejected",
+          "canonical_path": ".work/config/v7/unlock_rules.json"
+        },
+        {
+          "path": "data/bot_scenarios.json",
+          "resolution": "normalized-and-expanded",
+          "canonical_path": ".work/config/v7/bot_scenarios.json"
+        },
+        {
+          "path": "data/talents.json",
+          "resolution": "normalized-global-vs-masteries",
+          "canonical_path": ".work/config/v7/talents.json"
+        },
+        {
+          "path": "data/modes.json",
+          "resolution": "reconciled-ascetic-preserved; renames-explicit",
+          "canonical_path": ".work/config/v7/modes.json"
+        },
+        {
+          "path": "localization/strings.csv",
+          "resolution": "merged-to-single-godot-compatible-translation-file",
+          "canonical_path": ".work/config/v7/translations.csv"
+        },
+        {
+          "path": "settings.example.cfg",
+          "resolution": "retained-as-design-configuration",
+          "canonical_path": ".work/config/v7/settings.example.cfg"
+        },
+        {
+          "path": "docs/CONFIG_CONTRACT.md",
+          "resolution": "semantically-integrated",
+          "canonical_path": ".work/spec/v7/content-registry-contract.md"
+        },
+        {
+          "path": "scripts/validate_configs.py",
+          "resolution": "replaced-by-stronger-cross-catalog-validator",
+          "canonical_path": "scripts/validate_content.py"
+        },
+        {
+          "path": "scripts/test_economy.py",
+          "resolution": "superseded-by-design-contract-tests; no game settlement yet",
+          "canonical_path": "tests/test_design_contracts.py"
+        },
+        {
+          "path": "README.md",
+          "resolution": "superseded-by-v7-catalog-readme",
+          "canonical_path": ".work/config/v7/README.md"
+        }
+      ]
+    }
+  ],
+  "validation_note": "Source package SHA-256 and per-file mapping recorded. Original standalone ZIP binary files are not checked into Git. Source exactness of 7 v5 docs established by matching anchor sections in retained full v6 report. No Godot runtime has been built."
+}

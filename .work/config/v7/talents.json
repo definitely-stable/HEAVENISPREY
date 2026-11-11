@@ -1,0 +1,104 @@
+{
+  "schema_version": 2,
+  "kind": "early_and_class_talents",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "talents": [
+    {
+      "id": "talent.global.health",
+      "name_key": "TALENT_HEALTH_NAME",
+      "tree_id": "tree.sect",
+      "acquisition": "purchase",
+      "cost_currency_id": "currency.spirit_stones",
+      "max_rank": 3,
+      "rank_costs": [
+        20,
+        45,
+        80
+      ],
+      "prerequisites": [],
+      "effect_ops": [
+        {
+          "op": "stat_add",
+          "stat": "max_health",
+          "per_rank": 5
+        }
+      ]
+    },
+    {
+      "id": "talent.global.reroll",
+      "name_key": "TALENT_REROLL_NAME",
+      "tree_id": "tree.sect",
+      "acquisition": "purchase",
+      "cost_currency_id": "currency.spirit_stones",
+      "max_rank": 2,
+      "rank_costs": [
+        35,
+        90
+      ],
+      "prerequisites": [],
+      "effect_ops": [
+        {
+          "op": "draft_reroll_add",
+          "per_rank": 1
+        }
+      ]
+    },
+    {
+      "id": "talent.global.banish",
+      "name_key": "TALENT_BANISH_NAME",
+      "tree_id": "tree.sect",
+      "acquisition": "purchase",
+      "cost_currency_id": "currency.spirit_stones",
+      "max_rank": 1,
+      "rank_costs": [
+        75
+      ],
+      "prerequisites": [
+        "talent.global.reroll"
+      ],
+      "effect_ops": [
+        {
+          "op": "draft_banish_add",
+          "per_rank": 1
+        }
+      ]
+    },
+    {
+      "id": "talent.sword.focus",
+      "name_key": "TALENT_SWORD_FOCUS_NAME",
+      "tree_id": "mastery.sword",
+      "acquisition": "mastery_level",
+      "cost_currency_id": null,
+      "max_rank": 1,
+      "rank_costs": [],
+      "required_mastery_level": 2,
+      "prerequisites": [],
+      "effect_ops": [
+        {
+          "op": "status_stack_threshold_add",
+          "status_id": "status.mark",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "talent.thunder.chain",
+      "name_key": "TALENT_THUNDER_CHAIN_NAME",
+      "tree_id": "mastery.thunder",
+      "acquisition": "mastery_level",
+      "cost_currency_id": null,
+      "max_rank": 1,
+      "rank_costs": [],
+      "required_mastery_level": 2,
+      "prerequisites": [],
+      "effect_ops": [
+        {
+          "op": "skill_chain_targets_add",
+          "skill_id": "skill.thunder_chain",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+{
+  "schema_version": 2,
+  "kind": "ordinary_enemy_attack_catalog",
+  "status": "design-only-not-implemented",
+  "fixed_sim_ticks_per_second": 60,
+  "attacks": [
+    {
+      "id": "enemy_attack.yin_grasp",
+      "name_key": "ATTACK_YIN_GRASP_NAME",
+      "kind": "CONTACT",
+      "telegraph_ticks": 0,
+      "active_ticks": 1,
+      "recovery_ticks": 0,
+      "cooldown_ticks": 36,
+      "damage_mult": 0.65,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "leave_contact",
+      "params": {
+        "hit_interval_ticks": 36
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.wolf_bite",
+      "name_key": "ATTACK_WOLF_BITE_NAME",
+      "kind": "CONTACT",
+      "telegraph_ticks": 0,
+      "active_ticks": 1,
+      "recovery_ticks": 0,
+      "cooldown_ticks": 42,
+      "damage_mult": 0.76,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "kite_flank",
+      "params": {
+        "hit_interval_ticks": 42
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.spirit_touch",
+      "name_key": "ATTACK_SPIRIT_TOUCH_NAME",
+      "kind": "CONTACT",
+      "telegraph_ticks": 0,
+      "active_ticks": 1,
+      "recovery_ticks": 0,
+      "cooldown_ticks": 45,
+      "damage_mult": 0.55,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "open_lane",
+      "params": {
+        "hit_interval_ticks": 45
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.jade_stomp",
+      "name_key": "ATTACK_JADE_STOMP_NAME",
+      "kind": "MELEE_ARC",
+      "telegraph_ticks": 48,
+      "active_ticks": 12,
+      "recovery_ticks": 40,
+      "cooldown_ticks": 180,
+      "damage_mult": 1.18,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "leave_arc",
+      "params": {
+        "radius_mult": 1.6,
+        "arc_degrees": 130
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.mantis_lunge",
+      "name_key": "ATTACK_MANTIS_LUNGE_NAME",
+      "kind": "CHARGE",
+      "telegraph_ticks": 33,
+      "active_ticks": 10,
+      "recovery_ticks": 36,
+      "cooldown_ticks": 150,
+      "damage_mult": 0.95,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "sidestep",
+      "params": {
+        "dash_player_radii": 4.5,
+        "can_retarget": false
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.puppet_burst",
+      "name_key": "ATTACK_PUPPET_BURST_NAME",
+      "kind": "ON_DEATH_ZONE",
+      "telegraph_ticks": 36,
+      "active_ticks": 54,
+      "recovery_ticks": 0,
+      "cooldown_ticks": 0,
+      "damage_mult": 0.38,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "leave_mark",
+      "params": {
+        "requires_death": true,
+        "persistent_ticks": 54,
+        "no_retrigger_by_death_proc": true
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.snake_bite",
+      "name_key": "ATTACK_SNAKE_BITE_NAME",
+      "kind": "MELEE_ARC",
+      "telegraph_ticks": 20,
+      "active_ticks": 6,
+      "recovery_ticks": 27,
+      "cooldown_ticks": 96,
+      "damage_mult": 0.5,
+      "apply_status_id": "status.venom",
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "sidestep",
+      "params": {
+        "radius_mult": 1,
+        "arc_degrees": 85
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.disciple_cleave",
+      "name_key": "ATTACK_DISCIPLE_CLEAVE_NAME",
+      "kind": "MELEE_ARC",
+      "telegraph_ticks": 30,
+      "active_ticks": 10,
+      "recovery_ticks": 37,
+      "cooldown_ticks": 120,
+      "damage_mult": 0.9,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "circle_behind",
+      "params": {
+        "radius_mult": 1.35,
+        "arc_degrees": 125
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.crow_dive",
+      "name_key": "ATTACK_CROW_DIVE_NAME",
+      "kind": "CHARGE",
+      "telegraph_ticks": 27,
+      "active_ticks": 9,
+      "recovery_ticks": 48,
+      "cooldown_ticks": 147,
+      "damage_mult": 0.88,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "sidestep",
+      "params": {
+        "dash_player_radii": 3.4,
+        "can_retarget": false
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.centipede_bite",
+      "name_key": "ATTACK_CENTIPEDE_BITE_NAME",
+      "kind": "CONTACT",
+      "telegraph_ticks": 0,
+      "active_ticks": 1,
+      "recovery_ticks": 0,
+      "cooldown_ticks": 48,
+      "damage_mult": 0.63,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "keep_distance",
+      "params": {
+        "hit_interval_ticks": 48,
+        "one_body_collisions": true
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.lantern_wisp",
+      "name_key": "ATTACK_LANTERN_WISP_NAME",
+      "kind": "PROJECTILE",
+      "telegraph_ticks": 36,
+      "active_ticks": 240,
+      "recovery_ticks": 27,
+      "cooldown_ticks": 204,
+      "damage_mult": 0.64,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "sidestep_projectile",
+      "params": {
+        "projectile_speed_as_player_mult": 0.58,
+        "projectiles_per_cast": 1,
+        "homing": false,
+        "aim_lock": "telegraph_end"
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.root_growth",
+      "name_key": "ATTACK_ROOT_GROWTH_NAME",
+      "kind": "GROUND_ZONE",
+      "telegraph_ticks": 57,
+      "active_ticks": 165,
+      "recovery_ticks": 45,
+      "cooldown_ticks": 360,
+      "damage_mult": 0,
+      "apply_status_id": "status.root_slow",
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "leave_slow_zone",
+      "params": {
+        "radius_mult": 1.6,
+        "persistent_ticks": 165,
+        "solid_barrier": false,
+        "max_zones_per_caster": 1
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.cultivator_sword",
+      "name_key": "ATTACK_CULTIVATOR_SWORD_NAME",
+      "kind": "PROJECTILE",
+      "telegraph_ticks": 39,
+      "active_ticks": 210,
+      "recovery_ticks": 36,
+      "cooldown_ticks": 225,
+      "damage_mult": 0.78,
+      "apply_status_id": null,
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "sidestep_sword",
+      "params": {
+        "projectile_speed_as_player_mult": 0.69,
+        "projectiles_per_cast": 1,
+        "homing": false,
+        "aim_lock": "telegraph_end"
+      },
+      "availability": "design-only"
+    },
+    {
+      "id": "enemy_attack.cultivator_seal",
+      "name_key": "ATTACK_CULTIVATOR_SEAL_NAME",
+      "kind": "GROUND_ZONE",
+      "telegraph_ticks": 45,
+      "active_ticks": 75,
+      "recovery_ticks": 48,
+      "cooldown_ticks": 300,
+      "damage_mult": 0.52,
+      "apply_status_id": "status.qi_taint",
+      "hit_policy": "once_per_target_per_attack_instance",
+      "counterplay_tag": "leave_mark",
+      "params": {
+        "radius_mult": 1.15,
+        "persistent_ticks": 75,
+        "max_zones_per_caster": 1
+      },
+      "availability": "design-only"
+    }
+  ],
+  "notes": "Contact damage uses hit_interval_ticks, not per-frame damage. Charged attacks lock aim after telegraph. Death effects have delayed warning."
+}

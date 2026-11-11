@@ -1,0 +1,73 @@
+{
+  "schema_version": 2,
+  "kind": "difficulty_profiles",
+  "status": "design-not-implemented",
+  "last_review": "2026-11-11",
+  "profiles": [
+    {
+      "id": "difficulty.apprentice",
+      "tier": 0,
+      "unlock_id": null,
+      "enemy_hp_mult": 0.85,
+      "enemy_damage_mult": 0.8,
+      "spawn_budget_mult": 0.85,
+      "elite_frequency_mult": 0.9,
+      "spirit_stones_mult": 0.85,
+      "dao_seals_on_clear": 0,
+      "optional_dao_seals_max": 0,
+      "name_key": "DIFFICULTY_APPRENTICE_NAME"
+    },
+    {
+      "id": "difficulty.standard",
+      "tier": 1,
+      "unlock_id": null,
+      "enemy_hp_mult": 1,
+      "enemy_damage_mult": 1,
+      "spawn_budget_mult": 1,
+      "elite_frequency_mult": 1,
+      "spirit_stones_mult": 1,
+      "dao_seals_on_clear": 0,
+      "optional_dao_seals_max": 0,
+      "name_key": "DIFFICULTY_STANDARD_NAME"
+    },
+    {
+      "id": "difficulty.hard",
+      "tier": 2,
+      "unlock_id": "unlock.hard",
+      "enemy_hp_mult": 1.22,
+      "enemy_damage_mult": 1.17,
+      "spawn_budget_mult": 1.22,
+      "elite_frequency_mult": 1.25,
+      "spirit_stones_mult": 1.3,
+      "dao_seals_on_clear": 0,
+      "optional_dao_seals_max": 0,
+      "name_key": "DIFFICULTY_HARD_NAME"
+    },
+    {
+      "id": "difficulty.tribulation",
+      "tier": 3,
+      "unlock_id": "unlock.tribulation",
+      "enemy_hp_mult": 1.45,
+      "enemy_damage_mult": 1.38,
+      "spawn_budget_mult": 1.5,
+      "elite_frequency_mult": 1.6,
+      "spirit_stones_mult": 1.75,
+      "dao_seals_on_clear": 4,
+      "optional_dao_seals_max": 2,
+      "name_key": "DIFFICULTY_TRIBULATION_NAME"
+    },
+    {
+      "id": "difficulty.abyss",
+      "tier": 4,
+      "unlock_id": "unlock.abyss",
+      "enemy_hp_mult": 1.8,
+      "enemy_damage_mult": 1.6,
+      "spawn_budget_mult": 1.85,
+      "elite_frequency_mult": 2,
+      "spirit_stones_mult": 2.5,
+      "dao_seals_on_clear": 10,
+      "optional_dao_seals_max": 4,
+      "name_key": "DIFFICULTY_ABYSS_NAME"
+    }
+  ]
+}

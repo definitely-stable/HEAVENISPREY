@@ -1,0 +1,76 @@
+{
+  "schema_version": 2,
+  "kind": "status_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "statuses": [
+    {
+      "id": "status.mark",
+      "name_key": "STATUS_MARK_NAME",
+      "family": "mark",
+      "stack_policy": "additive_with_cap",
+      "max_stacks": 20,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.shock",
+      "name_key": "STATUS_SHOCK_NAME",
+      "family": "lightning",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 12,
+      "tick_period_ticks": 30,
+      "dot_damage": 1,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.burn",
+      "name_key": "STATUS_BURN_NAME",
+      "family": "fire",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 12,
+      "tick_period_ticks": 30,
+      "dot_damage": 1,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.venom",
+      "name_key": "STATUS_VENOM_NAME",
+      "family": "poison",
+      "target": "player",
+      "stack_policy": "refresh_and_add",
+      "max_stacks": 3,
+      "tick_period_ticks": 60,
+      "dot_damage": 1,
+      "duration_ticks": 240,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.root_slow",
+      "name_key": "STATUS_ROOT_SLOW_NAME",
+      "family": "root",
+      "target": "player",
+      "stack_policy": "refresh_only",
+      "max_stacks": 1,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "duration_ticks": 90,
+      "movement_speed_multiplier": 0.72,
+      "availability": "design-only"
+    },
+    {
+      "id": "status.qi_taint",
+      "name_key": "STATUS_QI_TAINT_NAME",
+      "family": "corruption",
+      "target": "player",
+      "stack_policy": "refresh_only",
+      "max_stacks": 1,
+      "tick_period_ticks": null,
+      "dot_damage": 0,
+      "duration_ticks": 180,
+      "shield_regen_multiplier": 0.8,
+      "availability": "design-only"
+    }
+  ]
+}

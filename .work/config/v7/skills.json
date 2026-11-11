@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "kind": "skill_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "skills": [
+    {
+      "id": "skill.spirit_sword",
+      "name_key": "SKILL_SWORD_NAME",
+      "archetype": "projectile",
+      "element": "metal",
+      "base_cooldown_ticks": 50,
+      "effect_ops": [
+        {
+          "op": "damage"
+        },
+        {
+          "op": "apply_status",
+          "status_id": "status.mark"
+        }
+      ],
+      "availability": "design-only"
+    },
+    {
+      "id": "skill.thunder_chain",
+      "name_key": "SKILL_THUNDER_NAME",
+      "archetype": "chain",
+      "element": "lightning",
+      "base_cooldown_ticks": 65,
+      "effect_ops": [
+        {
+          "op": "damage"
+        },
+        {
+          "op": "apply_status",
+          "status_id": "status.shock"
+        }
+      ],
+      "availability": "design-only"
+    },
+    {
+      "id": "skill.talisman_seal",
+      "name_key": "SKILL_SEAL_NAME",
+      "archetype": "zone",
+      "element": "fire",
+      "base_cooldown_ticks": 90,
+      "effect_ops": [
+        {
+          "op": "damage"
+        },
+        {
+          "op": "apply_status",
+          "status_id": "status.burn"
+        }
+      ],
+      "availability": "design-only"
+    },
+    {
+      "id": "skill.body_pulse",
+      "name_key": "SKILL_BODY_NAME",
+      "archetype": "aura",
+      "element": "physical",
+      "base_cooldown_ticks": 40,
+      "effect_ops": [
+        {
+          "op": "damage"
+        }
+      ],
+      "availability": "design-only"
+    }
+  ]
+}

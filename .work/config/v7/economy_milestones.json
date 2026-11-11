@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "kind": "spirit_stones_milestones",
+  "status": "unverified-balance-hypothesis",
+  "currency_id": "currency.spirit_stones",
+  "requires_verified_progress": true,
+  "milestones": [
+    {
+      "id": "reward.minute3",
+      "at_game_minute": 3,
+      "stones": 8,
+      "minimum_kills": 20
+    },
+    {
+      "id": "reward.minute6",
+      "at_game_minute": 6,
+      "stones": 12,
+      "minimum_kills": 70
+    },
+    {
+      "id": "reward.minute10",
+      "at_game_minute": 10,
+      "stones": 15,
+      "minimum_kills": 140
+    },
+    {
+      "id": "reward.minute15",
+      "at_game_minute": 15,
+      "stones": 20,
+      "minimum_kills": 260
+    },
+    {
+      "id": "reward.minute20",
+      "at_game_minute": 20,
+      "stones": 25,
+      "minimum_kills": 400
+    }
+  ],
+  "additional_rewards": {
+    "elite_first": 10,
+    "boss_final": 30,
+    "stage_complete": 20
+  },
+  "notes": "v6 milestone table adapted: time thresholds are only eligible with verified gameplay progress, not automatic idle farming. 5 min pilot only reaches first milestone; later milestones belong to full 20–30 min runs."
+}

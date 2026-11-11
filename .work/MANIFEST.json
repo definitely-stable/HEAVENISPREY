@@ -1,0 +1,546 @@
+{
+  "format_version": 1,
+  "project": "HEAVENISPREY",
+  "date": "2026-11-11",
+  "source": {
+    "path": ".work/archive/architecture-v6-original.md",
+    "sha256": "73e145d33d0c8fe515beb610172b9499acebe9b4889e0b100a18e8ef417e3c23",
+    "lines": 2633,
+    "sections": 63,
+    "reference_definitions": 85
+  },
+  "priority": [
+    ".work/decisions/",
+    ".work/spec/v7/",
+    ".work/spec/v6/ (non-overridden)",
+    ".work/spec/v5/",
+    ".work/spec/core/"
+  ],
+  "sections": [
+    {
+      "id": "s00",
+      "title": "00. Executive decision и ключевые исправления",
+      "path": ".work/spec/core/s00.md",
+      "status": "historical-context",
+      "source_anchor": "s00"
+    },
+    {
+      "id": "s01",
+      "title": "01. Аудит всех 27 глав v3: пропуски и последствия",
+      "path": ".work/spec/core/s01.md",
+      "status": "historical-context",
+      "source_anchor": "s01"
+    },
+    {
+      "id": "s02",
+      "title": "02. Границы игры, продуктовые критерии и недопущение scope creep",
+      "path": ".work/spec/core/s02.md",
+      "status": "historical-context",
+      "source_anchor": "s02"
+    },
+    {
+      "id": "s03",
+      "title": "03. Версии Godot и выбор 2D-рендерера",
+      "path": ".work/spec/core/s03.md",
+      "status": "historical-context",
+      "source_anchor": "s03"
+    },
+    {
+      "id": "s04",
+      "title": "04. Runtime-система и явная модель времени",
+      "path": ".work/spec/core/s04.md",
+      "status": "historical-context",
+      "source_anchor": "s04"
+    },
+    {
+      "id": "s05",
+      "title": "05. Content definitions: типы, каталог, схемы, статические проверки",
+      "path": ".work/spec/core/s05.md",
+      "status": "historical-context",
+      "source_anchor": "s05"
+    },
+    {
+      "id": "s06",
+      "title": "06. Auto-cast scheduler: полный контракт",
+      "path": ".work/spec/core/s06.md",
+      "status": "historical-context",
+      "source_anchor": "s06"
+    },
+    {
+      "id": "s07",
+      "title": "07. Damage/stat modifier pipeline и математические ограничения",
+      "path": ".work/spec/core/s07.md",
+      "status": "historical-context",
+      "source_anchor": "s07"
+    },
+    {
+      "id": "s08",
+      "title": "08. Статусы: четыре семантики стаков и планировщик DoT",
+      "path": ".work/spec/core/s08.md",
+      "status": "historical-context",
+      "source_anchor": "s08"
+    },
+    {
+      "id": "s09",
+      "title": "09. Effect/proc engine: циклы, события и безопасные цепные реакции",
+      "path": ".work/spec/core/s09.md",
+      "status": "historical-context",
+      "source_anchor": "s09"
+    },
+    {
+      "id": "s10",
+      "title": "10. Spatial query и targeting: структуры и алгоритмы",
+      "path": ".work/spec/core/s10.md",
+      "status": "historical-context",
+      "source_anchor": "s10"
+    },
+    {
+      "id": "s11",
+      "title": "11. Орда: движение, разделение, группы, спавн и волны",
+      "path": ".work/spec/core/s11.md",
+      "status": "historical-context",
+      "source_anchor": "s11"
+    },
+    {
+      "id": "s12",
+      "title": "12. Логические снаряды, попадания, ауры и зоны",
+      "path": ".work/spec/core/s12.md",
+      "status": "historical-context",
+      "source_anchor": "s12"
+    },
+    {
+      "id": "s13",
+      "title": "13. Replay, RNG, детерминизм и отладка расхождений",
+      "path": ".work/spec/core/s13.md",
+      "status": "historical-context",
+      "source_anchor": "s13"
+    },
+    {
+      "id": "s14",
+      "title": "14. Godot 2D presentation: проекция, Y-sort, MultiMesh, анимации",
+      "path": ".work/spec/core/s14.md",
+      "status": "historical-context",
+      "source_anchor": "s14"
+    },
+    {
+      "id": "s15",
+      "title": "15. VFX, телеграфы, damage numbers, UI и доступность боя",
+      "path": ".work/spec/core/s15.md",
+      "status": "historical-context",
+      "source_anchor": "s15"
+    },
+    {
+      "id": "s16",
+      "title": "16. AI asset factory: Codex GPT + локальный детерминированный QA",
+      "path": ".work/spec/core/s16.md",
+      "status": "historical-context",
+      "source_anchor": "s16"
+    },
+    {
+      "id": "s17",
+      "title": "17. Атласы, память, импорт и визуальная консистентность",
+      "path": ".work/spec/core/s17.md",
+      "status": "historical-context",
+      "source_anchor": "s17"
+    },
+    {
+      "id": "s18",
+      "title": "18. Геймдизайн культивации и спецификация первых способностей",
+      "path": ".work/spec/core/s18.md",
+      "status": "historical-context",
+      "source_anchor": "s18"
+    },
+    {
+      "id": "s19",
+      "title": "19. Баланс, массовые симуляции и экспериментальный дизайн",
+      "path": ".work/spec/core/s19.md",
+      "status": "historical-context",
+      "source_anchor": "s19"
+    },
+    {
+      "id": "s20",
+      "title": "20. Сохранения, настройки, конфигурация и диагностика (уточнено разделами Q–V v6)",
+      "path": ".work/spec/core/s20.md",
+      "status": "historical-context",
+      "source_anchor": "s20"
+    },
+    {
+      "id": "s21",
+      "title": "21. Зависимости и инструменты: pin-матрица на 11.11.2026",
+      "path": ".work/spec/core/s21.md",
+      "status": "historical-context",
+      "source_anchor": "s21"
+    },
+    {
+      "id": "s22",
+      "title": "22. Skills, MCP и разделение труда AI-агентов",
+      "path": ".work/spec/core/s22.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "s22",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "s23",
+      "title": "23. Reverse engineering обеих игр: code/data-first и протокол доказательств",
+      "path": ".work/spec/core/s23.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "s23",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "s24",
+      "title": "24. Профилирование, CPU/GPU gates и поздний GDExtension",
+      "path": ".work/spec/core/s24.md",
+      "status": "historical-context",
+      "source_anchor": "s24"
+    },
+    {
+      "id": "s25",
+      "title": "25. Тесты, GitHub Actions, CI и реальные метрики",
+      "path": ".work/spec/core/s25.md",
+      "status": "historical-context",
+      "source_anchor": "s25"
+    },
+    {
+      "id": "s26",
+      "title": "26. Структура репозитория, ADR и контракты",
+      "path": ".work/spec/core/s26.md",
+      "status": "historical-context",
+      "source_anchor": "s26"
+    },
+    {
+      "id": "s27",
+      "title": "27. Дорожная карта P0—M4 (исторический план, заменён AA v6)",
+      "path": ".work/spec/core/s27.md",
+      "status": "historical-context",
+      "source_anchor": "s27"
+    },
+    {
+      "id": "s28",
+      "title": "28. Непроверенные допущения, угрозы качеству и риск-регистр",
+      "path": ".work/spec/core/s28.md",
+      "status": "historical-context",
+      "source_anchor": "s28"
+    },
+    {
+      "id": "s29",
+      "title": "29. Готовые ограниченные задачи для Codex / Claude Code / OpenCode Go",
+      "path": ".work/spec/core/s29.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "s29",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "v5_audit",
+      "title": "Дополнение A. Аудит всех 32 разделов v4: что недоопределено, какое исправление принято",
+      "path": ".work/spec/v5/v5_audit.md",
+      "status": "historical-context",
+      "source_anchor": "v5_audit"
+    },
+    {
+      "id": "v5_decisions",
+      "title": "Дополнение B. Непересматриваемые решения и таблица доказательств",
+      "path": ".work/spec/v5/v5_decisions.md",
+      "status": "historical-context",
+      "source_anchor": "v5_decisions"
+    },
+    {
+      "id": "v5_semantics",
+      "title": "Дополнение C. Полный Combat Semantics Contract: хит, иммунитет, исход и владение эффектом",
+      "path": ".work/spec/v5/v5_semantics.md",
+      "status": "historical-context",
+      "source_anchor": "v5_semantics"
+    },
+    {
+      "id": "v5_budget",
+      "title": "Дополнение D. Экономика событий (главный архитектурный риск): как не получить бесконечные проки",
+      "path": ".work/spec/v5/v5_budget.md",
+      "status": "historical-context",
+      "source_anchor": "v5_budget"
+    },
+    {
+      "id": "v5_enemies",
+      "title": "Дополнение E. Игрок, враги, элиты и боссы — недостающая игровая архитектура",
+      "path": ".work/spec/v5/v5_enemies.md",
+      "status": "historical-context",
+      "source_anchor": "v5_enemies"
+    },
+    {
+      "id": "v5_visual",
+      "title": "Дополнение F. Godot 2D presentation: от декларации «MultiMesh» к работающей схеме",
+      "path": ".work/spec/v5/v5_visual.md",
+      "status": "historical-context",
+      "source_anchor": "v5_visual"
+    },
+    {
+      "id": "v5_assets",
+      "title": "Дополнение G. Codex/GPT imagegen: производственный AI-конвейер без иных сервисов",
+      "path": ".work/spec/v5/v5_assets.md",
+      "status": "historical-context",
+      "source_anchor": "v5_assets"
+    },
+    {
+      "id": "v5_design",
+      "title": "Дополнение H. Геймдизайн билдов и культивации как формальные системы, а не список бонусов",
+      "path": ".work/spec/v5/v5_design.md",
+      "status": "historical-context",
+      "source_anchor": "v5_design"
+    },
+    {
+      "id": "v5_ux",
+      "title": "Дополнение I. UI, звук, управление и доступность: почему это архитектура, а не декор",
+      "path": ".work/spec/v5/v5_ux.md",
+      "status": "historical-context",
+      "source_anchor": "v5_ux"
+    },
+    {
+      "id": "v5_re",
+      "title": "Дополнение J. Reverse engineering: конкретная программа поиска кода, данных, формул, а не видеоигра по памяти",
+      "path": ".work/spec/v5/v5_re.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "v5_re",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "v5_tools",
+      "title": "Дополнение K. Реальные зависимости и AI-агенты: меньше пакетов, больше воспроизводимости",
+      "path": ".work/spec/v5/v5_tools.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "v5_tools",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "v5_tests",
+      "title": "Дополнение L. Тестирование и бенчмарки v5: не только 5000 врагов и не только FPS",
+      "path": ".work/spec/v5/v5_tests.md",
+      "status": "historical-context",
+      "source_anchor": "v5_tests"
+    },
+    {
+      "id": "v5_ci",
+      "title": "Дополнение M. CI, сохранения, диагностика и GitHub-hosted workflow",
+      "path": ".work/spec/v5/v5_ci.md",
+      "status": "historical-context",
+      "source_anchor": "v5_ci"
+    },
+    {
+      "id": "v5_scope",
+      "title": "Дополнение N. Новый конкретный roadmap, зависимости между этапами и критерии «действительно сделали»",
+      "path": ".work/spec/v5/v5_scope.md",
+      "status": "historical-context",
+      "source_anchor": "v5_scope"
+    },
+    {
+      "id": "v5_risk",
+      "title": "Дополнение O. Приоритеты рисков и вывод после пересмотра",
+      "path": ".work/spec/v5/v5_risk.md",
+      "status": "historical-context",
+      "source_anchor": "v5_risk"
+    },
+    {
+      "id": "s30",
+      "title": "30. Реестр источников: что подтверждено и что нет",
+      "path": ".work/research/source-register-v6.md",
+      "status": "historical-context",
+      "source_anchor": "s30"
+    },
+    {
+      "id": "s31",
+      "title": "31. Архивный CURRENT_STATE v5 / заменён разделом AE v6",
+      "path": ".work/archive/state-v5.md",
+      "status": "historical-context",
+      "source_anchor": "s31"
+    },
+    {
+      "id": "v6_decision",
+      "title": "P. Итог утверждённых решений и критика прошлой версии",
+      "path": ".work/spec/v6/v6_decision.md",
+      "status": "normative-v6",
+      "source_anchor": "v6_decision"
+    },
+    {
+      "id": "v6_i18n",
+      "title": "Q. Многоязычная архитектура с первого коммита: Godot 4.7",
+      "path": ".work/spec/v6/v6_i18n.md",
+      "status": "normative-v6",
+      "source_anchor": "v6_i18n"
+    },
+    {
+      "id": "v6_difficulty",
+      "title": "R. Настраиваемая сложность: пресеты угроз, а не один HP-множитель",
+      "path": ".work/spec/v6/v6_difficulty.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_difficulty"
+    },
+    {
+      "id": "v6_modes",
+      "title": "S. Режимы и испытания: независимые модификаторы с контрактом композиции",
+      "path": ".work/spec/v6/v6_modes.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_modes"
+    },
+    {
+      "id": "v6_config",
+      "title": "T. Конфигурация как продуктовый API: что агентам разрешено менять без правки кода",
+      "path": ".work/spec/v6/v6_config.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "v6_config",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "v6_economy",
+      "title": "U. Валюты и метапрогрессия: полная система источников, трат, ресета и антифарма",
+      "path": ".work/spec/v6/v6_economy.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_economy"
+    },
+    {
+      "id": "v6_rewards",
+      "title": "V. Экономическая модель: формулы, темп, критическая проверка и симуляция",
+      "path": ".work/spec/v6/v6_rewards.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_rewards"
+    },
+    {
+      "id": "v6_classes",
+      "title": "W. Классы и деревья: содержательные специализации вместо разных числовых стартов",
+      "path": ".work/spec/v6/v6_classes.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_classes"
+    },
+    {
+      "id": "v6_bots",
+      "title": "X. Набор ботов для автономного тестирования уровней, сложности, экономики и переводов",
+      "path": ".work/spec/v6/v6_bots.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_bots"
+    },
+    {
+      "id": "v6_ux",
+      "title": "Y. UX всей игры: карта → класс → трудность → забег → развитие",
+      "path": ".work/spec/v6/v6_ux.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_ux"
+    },
+    {
+      "id": "v6_re",
+      "title": "Z. Дополнение к reverse engineering: искать не только урон, но и метаэкономику, трудность и UI",
+      "path": ".work/spec/v6/v6_re.md",
+      "status": "normative-v6",
+      "source_anchor": "v6_re"
+    },
+    {
+      "id": "v6_roadmap",
+      "title": "AA. Пересмотр roadmap: теперь M1 — полный цикл с валютой и языками, а не демонстрация снарядов",
+      "path": ".work/spec/v6/v6_roadmap.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_roadmap"
+    },
+    {
+      "id": "v6_tasks",
+      "title": "AB. Конкретные задачи для Codex / Claude Code / OpenCode Go",
+      "path": ".work/spec/v6/v6_tasks.md",
+      "status": "adapted-role-neutral",
+      "source_anchor": "v6_tasks",
+      "content_integrity": "adapted-from-original; original archived",
+      "superseded_by": ".work/guides/WORKFLOW.md"
+    },
+    {
+      "id": "v6_risks",
+      "title": "AC. Риски v6 и критерии отказа от выбранного решения",
+      "path": ".work/spec/v6/v6_risks.md",
+      "status": "normative-v6",
+      "source_anchor": "v6_risks"
+    },
+    {
+      "id": "v6_sources",
+      "title": "AD. Новые источники (дополнение к R01–R63, проверка 11.11.2026)",
+      "path": ".work/spec/v6/v6_sources.md",
+      "status": "normative-v6",
+      "source_anchor": "v6_sources"
+    },
+    {
+      "id": "v6_state",
+      "title": "AE. CURRENT_STATE / Текущий статус после изменения документа",
+      "path": ".work/spec/v6/v6_state.md",
+      "status": "superseded-by-v7",
+      "source_anchor": "v6_state"
+    }
+  ],
+  "canonical_new_docs": [
+    ".work/spec/v7/late-game-progression.md",
+    ".work/spec/v7/economy-and-talent-sinks.md",
+    ".work/spec/v7/modes-and-compatibility.md",
+    ".work/spec/v7/bot-acceptance.md"
+  ],
+  "metadata_links": {
+    "index": ".work/INDEX.md",
+    "agents": "AGENTS.md",
+    "task_routing": ".work/indexes/AGENT_ROUTING.md",
+    "decision_log": ".work/decisions/README.md",
+    "source_registry": ".work/research/SOURCES.md",
+    "design_configs": ".work/config/v7/README.md",
+    "roadmap": ".work/roadmap/NEXT_SLICES.md",
+    "current_state": ".work/CURRENT_STATE.md",
+    "pr": "https://github.com/definitely-stable/HEAVENISPREY/pull/1"
+  },
+  "source_authority": "v7 and ADRs override conflicting proposals in v6. Original v6 is preserved as immutable archive.",
+  "document_governance": {
+    "model_independent": true,
+    "active_guidance": "AGENTS.md",
+    "routing": ".work/indexes/AGENT_ROUTING.md",
+    "workflow": ".work/guides/WORKFLOW.md",
+    "subject_index": ".work/guides/START_HERE.md",
+    "doc_standards": ".work/guides/DOC_STANDARDS.md",
+    "migration_audit": ".work/guides/MIGRATION_AUDIT.md",
+    "historical_role_assignments": "archived-only; superseded by ADR-004",
+    "source_of_truth": "original archive + versioned ADR/v7 normative documents"
+  },
+  "migration_validation": {
+    "original_sha256_normalized_newlines": true,
+    "exact_sections_except_adapted": true,
+    "adapted_section_ids": [
+      "s22",
+      "s23",
+      "s29",
+      "v5_re",
+      "v5_tools",
+      "v6_config",
+      "v6_tasks"
+    ],
+    "source_anchor_coverage": 63,
+    "archive_reference_count": 85
+  },
+  "canonical_content": {
+    "location": ".work/config/v7/",
+    "contract": ".work/spec/v7/content-registry-contract.md",
+    "adr": ".work/decisions/ADR-006-content-catalog.md",
+    "source_reconciliation": ".work/guides/PACKAGE_RECONCILIATION.md",
+    "source_inventory": ".work/archive/package-source-inventory.json",
+    "cross_ref_validator": "scripts/validate_content.py",
+    "tests": "tests/test_content_catalog.py",
+    "runtime_status": "NOT IMPLEMENTED",
+    "original_zip_files_committed": false
+  },
+  "canonical_ordinary_enemies": {
+    "status": "accepted-design-only",
+    "source": "user supplied six screenshot files, twelve enemy concepts; corrupted cultivator from earlier user text",
+    "count": 13,
+    "tier": "normal",
+    "bestiary": ".work/spec/v7/ordinary-enemy-bestiary.md",
+    "threat_contract": ".work/spec/v7/enemy-threat-contract.md",
+    "catalog": ".work/config/v7/enemies.json",
+    "attacks": ".work/config/v7/enemy_attacks.json",
+    "rosters": ".work/config/v7/enemy_rosters.json",
+    "variants": ".work/config/v7/enemy_variants.json",
+    "negative_tests": "tests/test_enemy_catalog.py",
+    "assets_committed": false,
+    "runtime_implemented": false
+  }
+}

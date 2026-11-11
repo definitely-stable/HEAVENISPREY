@@ -1,0 +1,41 @@
+{
+  "schema_version": 2,
+  "kind": "late_talent_tree",
+  "status": "design-not-implemented",
+  "tree_id": "tree.heavenly_insight",
+  "respec": "free_exactly_once_refund",
+  "talents": [
+    {
+      "id": "talent.dao_resonance",
+      "name_key": "TALENT_DAO_RESONANCE",
+      "cost_currency_id": "currency.dao_seals",
+      "cost": 5,
+      "max_rank": 1,
+      "requires": [],
+      "effect_id": "effect.unlock_ritual_draft_slot"
+    },
+    {
+      "id": "talent.heavenly_library",
+      "name_key": "TALENT_HEAVENLY_LIBRARY",
+      "cost_currency_id": "currency.dao_seals",
+      "cost": 8,
+      "max_rank": 1,
+      "requires": [
+        "talent.dao_resonance"
+      ],
+      "effect_id": "effect.enable_late_technique_variant"
+    },
+    {
+      "id": "talent.fate_refinement",
+      "name_key": "TALENT_FATE_REFINEMENT",
+      "cost_currency_id": "currency.dao_seals",
+      "cost": 12,
+      "max_rank": 1,
+      "requires": [
+        "talent.dao_resonance"
+      ],
+      "effect_id": "effect.unlock_specialized_reroll"
+    }
+  ],
+  "note": "Late talents unlock choices, not infinitely stacking global damage."
+}

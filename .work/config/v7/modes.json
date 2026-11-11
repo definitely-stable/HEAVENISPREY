@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "kind": "mode_profiles",
+  "status": "design-not-implemented",
+  "profiles": [
+    {
+      "id": "mode.normal",
+      "unlock_id": null,
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.hyper",
+      "unlock_id": "unlock.hyper",
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.hurry",
+      "unlock_id": "unlock.hurry",
+      "reward_eligible": true,
+      "excludes": []
+    },
+    {
+      "id": "mode.endless_limited",
+      "unlock_id": "unlock.endless",
+      "reward_eligible": true,
+      "excludes": [
+        "mode.training"
+      ]
+    },
+    {
+      "id": "mode.challenge_trials",
+      "unlock_id": "unlock.challenge_trials",
+      "reward_eligible": true,
+      "excludes": [
+        "mode.training",
+        "mode.custom_unranked"
+      ]
+    },
+    {
+      "id": "mode.training",
+      "unlock_id": null,
+      "reward_eligible": false,
+      "excludes": [
+        "mode.endless_limited",
+        "mode.challenge_trials",
+        "mode.ascetic"
+      ]
+    },
+    {
+      "id": "mode.custom_unranked",
+      "unlock_id": null,
+      "reward_eligible": false,
+      "excludes": [
+        "mode.challenge_trials",
+        "mode.ascetic"
+      ]
+    },
+    {
+      "id": "mode.ascetic",
+      "name_key": "MODE_ASCETIC_NAME",
+      "unlock_id": null,
+      "reward_eligible": true,
+      "excludes": [
+        "mode.training",
+        "mode.custom_unranked"
+      ],
+      "effect": {
+        "draft_choices_delta": -1,
+        "spirit_stones_reward_mult": 1.1
+      },
+      "availability": "design-only"
+    }
+  ],
+  "composition": "difficulty + stage + explicit compatible mutators -> immutable RunRulesHash",
+  "max_approved_reward_mult": 1.25,
+  "mode_semantics_note": "v6 mode.frenzy is not definition-equivalent to v7 mode.hyper; do not silently migrate existing run snapshots. See id_compatibility.json"
+}

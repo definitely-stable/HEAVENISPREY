@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "kind": "stage_catalog",
+  "status": "design-only-not-implemented",
+  "provenance": "v6-config-starter → canonical v7 normalization on 2026-11-11",
+  "stages": [
+    {
+      "id": "stage.jade_grove",
+      "name_key": "STAGE_JADE_NAME",
+      "duration_minutes": 5,
+      "allowed_class_ids": [
+        "class.sword",
+        "class.thunder",
+        "class.talisman",
+        "class.body"
+      ],
+      "supported_difficulties": [
+        "difficulty.apprentice",
+        "difficulty.standard",
+        "difficulty.hard",
+        "difficulty.tribulation",
+        "difficulty.abyss"
+      ],
+      "allowed_modes": [
+        "mode.normal",
+        "mode.hurry",
+        "mode.hyper",
+        "mode.endless_limited",
+        "mode.ascetic",
+        "mode.training",
+        "mode.custom_unranked",
+        "mode.challenge_trials"
+      ],
+      "boss_by_difficulty": {
+        "default": "boss.jade_warden",
+        "difficulty.tribulation": "boss.tribulation_avatar",
+        "difficulty.abyss": "boss.tribulation_avatar"
+      },
+      "availability": "design-only",
+      "enemy_roster_id": "roster.jade_grove"
+    },
+    {
+      "id": "stage.mist_cliffs",
+      "name_key": "STAGE_MIST_NAME",
+      "duration_minutes": 5,
+      "allowed_class_ids": [
+        "class.sword",
+        "class.thunder",
+        "class.talisman",
+        "class.body"
+      ],
+      "supported_difficulties": [
+        "difficulty.apprentice",
+        "difficulty.standard",
+        "difficulty.hard",
+        "difficulty.tribulation",
+        "difficulty.abyss"
+      ],
+      "allowed_modes": [
+        "mode.normal",
+        "mode.hurry",
+        "mode.hyper",
+        "mode.endless_limited",
+        "mode.ascetic",
+        "mode.training",
+        "mode.custom_unranked",
+        "mode.challenge_trials"
+      ],
+      "boss_by_difficulty": {
+        "default": "boss.mist_sentinel",
+        "difficulty.tribulation": "boss.tribulation_avatar",
+        "difficulty.abyss": "boss.tribulation_avatar"
+      },
+      "availability": "design-only",
+      "planned_slice": "M1-00",
+      "enemy_roster_id": "roster.mist_cliffs"
+    }
+  ]
+}
