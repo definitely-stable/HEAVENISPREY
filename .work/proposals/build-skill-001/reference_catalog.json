@@ -1,0 +1,394 @@
+{
+  "schema_version": 1,
+  "kind": "build_skill_architecture_fixture",
+  "status": "proposal-only-not-canonical",
+  "policy": {
+    "active_capacity": 6,
+    "passive_capacity": 6,
+    "gift_capacity": 1,
+    "offer_count": 3,
+    "max_proc_events_per_root": 128,
+    "replacement_enabled": false
+  },
+  "skills": [
+    {
+      "id": "sample.skill.spirit_sword",
+      "canonical_ref": "skill.spirit_sword",
+      "max_rank": 5,
+      "acquisition": "starter",
+      "school_tags": [
+        "sword"
+      ],
+      "element_tags": [
+        "metal"
+      ],
+      "geometry_kind": "projectile",
+      "status_ids": [
+        "status.mark"
+      ],
+      "target_policy": "priority_nearest"
+    },
+    {
+      "id": "sample.skill.thunder_chain",
+      "canonical_ref": "skill.thunder_chain",
+      "max_rank": 5,
+      "acquisition": "general",
+      "school_tags": [
+        "thunder"
+      ],
+      "element_tags": [
+        "lightning"
+      ],
+      "geometry_kind": "chain",
+      "status_ids": [
+        "status.shock"
+      ],
+      "target_policy": "chain_nearest"
+    },
+    {
+      "id": "sample.skill.thousand_swords",
+      "canonical_ref": null,
+      "max_rank": 1,
+      "acquisition": "transformation",
+      "school_tags": [
+        "sword"
+      ],
+      "element_tags": [
+        "metal"
+      ],
+      "geometry_kind": "orbit",
+      "status_ids": [
+        "status.mark"
+      ],
+      "target_policy": "area"
+    },
+    {
+      "id": "sample.skill.storm_blades",
+      "canonical_ref": null,
+      "max_rank": 1,
+      "acquisition": "transformation",
+      "school_tags": [
+        "sword",
+        "thunder"
+      ],
+      "element_tags": [
+        "metal",
+        "lightning"
+      ],
+      "geometry_kind": "chain",
+      "status_ids": [
+        "status.shock"
+      ],
+      "target_policy": "chain_nearest"
+    }
+  ],
+  "passives": [
+    {
+      "id": "sample.passive.sword_heart",
+      "max_rank": 3,
+      "school_tags": [
+        "sword"
+      ]
+    },
+    {
+      "id": "sample.passive.thunder_conduit",
+      "max_rank": 3,
+      "school_tags": [
+        "thunder"
+      ]
+    }
+  ],
+  "powers": [
+    {
+      "id": "sample.power.echo",
+      "max_stacks": 2,
+      "affects_tags": [
+        "projectile",
+        "chain"
+      ]
+    }
+  ],
+  "gifts": [
+    {
+      "id": "sample.gift.sword_echo",
+      "max_copies": 1
+    }
+  ],
+  "offers": [
+    {
+      "id": "sample.offer.sword_rank",
+      "kind": "rank_up_active",
+      "target_id": "sample.skill.spirit_sword",
+      "weight": 5
+    },
+    {
+      "id": "sample.offer.thunder_rank",
+      "kind": "rank_up_active",
+      "target_id": "sample.skill.thunder_chain",
+      "weight": 5
+    },
+    {
+      "id": "sample.offer.new_thunder",
+      "kind": "acquire_active",
+      "target_id": "sample.skill.thunder_chain",
+      "weight": 5
+    },
+    {
+      "id": "sample.offer.sword_heart",
+      "kind": "acquire_passive",
+      "target_id": "sample.passive.sword_heart",
+      "weight": 4
+    },
+    {
+      "id": "sample.offer.thunder_conduit",
+      "kind": "acquire_passive",
+      "target_id": "sample.passive.thunder_conduit",
+      "weight": 3
+    },
+    {
+      "id": "sample.offer.echo",
+      "kind": "add_power",
+      "target_id": "sample.power.echo",
+      "weight": 2
+    }
+  ],
+  "transformations": [
+    {
+      "id": "sample.evolution.thousand_swords",
+      "kind": "EVOLUTION",
+      "event_gate": "ritual_reward",
+      "required_skills": [
+        {
+          "id": "sample.skill.spirit_sword",
+          "min_rank": 5
+        }
+      ],
+      "required_passives": [
+        {
+          "id": "sample.passive.sword_heart",
+          "min_rank": 1
+        }
+      ],
+      "consumes_skill_ids": [
+        "sample.skill.spirit_sword"
+      ],
+      "preserves_passive_ids": [
+        "sample.passive.sword_heart"
+      ],
+      "grants": {
+        "kind": "active",
+        "id": "sample.skill.thousand_swords"
+      },
+      "slot_cost": 1,
+      "exclusive_group": "sword_primary"
+    },
+    {
+      "id": "sample.union.storm_blades",
+      "kind": "UNION",
+      "event_gate": "ritual_reward",
+      "required_skills": [
+        {
+          "id": "sample.skill.spirit_sword",
+          "min_rank": 5
+        },
+        {
+          "id": "sample.skill.thunder_chain",
+          "min_rank": 5
+        }
+      ],
+      "required_passives": [],
+      "consumes_skill_ids": [
+        "sample.skill.spirit_sword",
+        "sample.skill.thunder_chain"
+      ],
+      "preserves_passive_ids": [],
+      "grants": {
+        "kind": "active",
+        "id": "sample.skill.storm_blades"
+      },
+      "slot_cost": 1,
+      "exclusive_group": "sword_primary"
+    },
+    {
+      "id": "sample.gift.sword_echo_reward",
+      "kind": "GIFT",
+      "event_gate": "gift_event",
+      "required_skills": [
+        {
+          "id": "sample.skill.spirit_sword",
+          "min_rank": 3
+        }
+      ],
+      "required_passives": [],
+      "consumes_skill_ids": [],
+      "preserves_passive_ids": [],
+      "grants": {
+        "kind": "gift",
+        "id": "sample.gift.sword_echo"
+      },
+      "slot_cost": 1,
+      "exclusive_group": null
+    }
+  ],
+  "proc_rules": [
+    {
+      "source": "DIRECT_CAST",
+      "target": "ECHO_CAST",
+      "max_children": 2
+    },
+    {
+      "source": "DIRECT_CAST",
+      "target": "CHAIN_CAST",
+      "max_children": 1
+    },
+    {
+      "source": "DIRECT_CAST",
+      "target": "HIT",
+      "max_children": 2
+    },
+    {
+      "source": "ECHO_CAST",
+      "target": "HIT",
+      "max_children": 2
+    },
+    {
+      "source": "CHAIN_CAST",
+      "target": "HIT",
+      "max_children": 2
+    },
+    {
+      "source": "HIT",
+      "target": "STATUS_APPLIED",
+      "max_children": 1
+    },
+    {
+      "source": "STATUS_APPLIED",
+      "target": "REACTION",
+      "max_children": 1
+    },
+    {
+      "source": "REACTION",
+      "target": "DAMAGE",
+      "max_children": 1
+    }
+  ],
+  "witnesses": [
+    {
+      "id": "sample.witness.evolution",
+      "event_gate": "ritual_reward",
+      "build": {
+        "revision": 3,
+        "active": [
+          {
+            "id": "sample.skill.spirit_sword",
+            "rank": 5
+          }
+        ],
+        "passive": [
+          {
+            "id": "sample.passive.sword_heart",
+            "rank": 1
+          }
+        ],
+        "powers": [],
+        "gifts": []
+      },
+      "expected_recipes": [
+        "sample.evolution.thousand_swords"
+      ]
+    },
+    {
+      "id": "sample.witness.union",
+      "event_gate": "ritual_reward",
+      "build": {
+        "revision": 4,
+        "active": [
+          {
+            "id": "sample.skill.spirit_sword",
+            "rank": 5
+          },
+          {
+            "id": "sample.skill.thunder_chain",
+            "rank": 5
+          }
+        ],
+        "passive": [],
+        "powers": [],
+        "gifts": []
+      },
+      "expected_recipes": [
+        "sample.union.storm_blades"
+      ]
+    },
+    {
+      "id": "sample.witness.conflict",
+      "event_gate": "ritual_reward",
+      "build": {
+        "revision": 5,
+        "active": [
+          {
+            "id": "sample.skill.spirit_sword",
+            "rank": 5
+          },
+          {
+            "id": "sample.skill.thunder_chain",
+            "rank": 5
+          }
+        ],
+        "passive": [
+          {
+            "id": "sample.passive.sword_heart",
+            "rank": 1
+          }
+        ],
+        "powers": [],
+        "gifts": []
+      },
+      "expected_recipes": [
+        "sample.evolution.thousand_swords",
+        "sample.union.storm_blades"
+      ]
+    },
+    {
+      "id": "sample.witness.not_ready",
+      "event_gate": "ritual_reward",
+      "build": {
+        "revision": 6,
+        "active": [
+          {
+            "id": "sample.skill.spirit_sword",
+            "rank": 4
+          }
+        ],
+        "passive": [
+          {
+            "id": "sample.passive.sword_heart",
+            "rank": 1
+          }
+        ],
+        "powers": [],
+        "gifts": []
+      },
+      "expected_recipes": []
+    },
+    {
+      "id": "sample.witness.gift",
+      "event_gate": "gift_event",
+      "build": {
+        "revision": 7,
+        "active": [
+          {
+            "id": "sample.skill.spirit_sword",
+            "rank": 3
+          }
+        ],
+        "passive": [],
+        "powers": [],
+        "gifts": []
+      },
+      "expected_recipes": [
+        "sample.gift.sword_echo_reward"
+      ]
+    }
+  ]
+}
