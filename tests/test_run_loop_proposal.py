@@ -76,12 +76,12 @@ class RunLoopDesignTests(unittest.TestCase):
 
     def test_different_positions_are_not_consolidated(self):
         catalog = source()
-        catalog["pickups"][1]["x"] = 9
+        catalog["pickups"][1]["x"] = 10
         self.assertEqual(len(oracle.consolidate_pickups(catalog["pickups"])), 4)
 
     def test_different_regions_are_not_consolidated(self):
         catalog = source()
-        catalog["pickups"][1]["region_id"] = "sample.region.sealed"
+        catalog["pickups"][1]["region_id"] = "sample.region.third"
         self.assertEqual(len(oracle.consolidate_pickups(catalog["pickups"])), 4)
 
     def test_different_owner_not_consolidated(self):
