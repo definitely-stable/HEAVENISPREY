@@ -1,15 +1,15 @@
-# CURRENT_STATE — проверенный снимок
+# CURRENT_STATE — снимок проверки по репозиторию
 
-- **Last verified HEAD:** `main: 093346ecbd3d054a72bcdc95b1d3e849da375353` (после объединения двух архитектурных PR, до обновления этого снимка).
-- **Current milestone:** ARCH — только архитектура контента, контракты и ускорение будущей разработки. Godot/runtime/арт-производство не начинать без отдельного изменения scope.
-- **Current slice:** ARCH-01 — типизированная архитектура RunBuild/Skill/Passive/Power, гибкие политики, формальные фикстуры; продолжение ARCH-02 — достижимость трансформаций.
-- **Open PR:** нет среди двух исходных PR. [#1](https://github.com/definitely-stable/HEAVENISPREY/pull/1) — MERGED, merge `697bb9461693a9634350468229e5bd93504bb139`; [#2](https://github.com/definitely-stable/HEAVENISPREY/pull/2) — MERGED, merge `093346ecbd3d054a72bcdc95b1d3e849da375353`. Новые PR проверять в GitHub при следующем отчёте.
-- **Last CI:** [#43040620989](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/43040620989) — SUCCESS на Ubuntu и Windows-2022, на HEAD PR #2 `01f5e8a8fcf4ccc8941219886e6df581f8967274`; итоговый push на `main` этим результатом **не** подтверждён.
-- **Acceptance:** 51/51 дизайн-тестов, валидаторы миграции и контента, отдельные проверки ARCH-01 (24 теста билдов, 4 теста графа зависимостей). Это **статическая архитектура**, не работающая игра и не доказательство баланса/FPS.
-- **Known blockers:** формальные схемы ещё не завершены; независимые экземпляры навыков, N→M-трансформации, Limit Break, полный решатель достижимости рецептов и вероятностный DraftService остаются проектными задачами.
-- **Next allowed action:** ARCH-01 — формальные схемы и отрицательные фикстуры, затем ARCH-02. Обычные архитектурные PR после ревью и успешного CI интегрировать в `main` в рамках согласованной задачи без повторного запроса разрешения, не оставляя искусственно открытые цепочки. См. [WORKFLOW](guides/WORKFLOW.md).
+- **Last verified HEAD:** `main: e2b19d98a38fbdc090b3ad5d4a1e87c9a554ecb7` (до служебного обновления этого снимка).
+- **Current milestone:** ARCH — только архитектура геймплея, проверяемые контракты и ускорение будущей разработки. **Godot / game runtime / ассеты не создавались и не разрешены текущим scope.**
+- **Current slice:** [GAME-ARCH-00](spec/v7/game-arch-00-run-orchestration.md) и [GAME-ARCH-01](spec/v7/game-arch-01-xp-pickups.md) — новые проектные контракты событий/паузы/XP; [GAMEPLAY-GAP-001](spec/v7/gameplay-loop-gap-audit.md) — карта пробелов. ARCH-01/BUILD-SKILL остаётся параллельной архитектурной зависимостью.
+- **Open PR:** по текущему выполненному пакету нет: [#4](https://github.com/definitely-stable/HEAVENISPREY/pull/4) — MERGED `4280c9d7470ff2305fe22829bc88152a7686461c`; [#5](https://github.com/definitely-stable/HEAVENISPREY/pull/5) — MERGED `e2b19d98a38fbdc090b3ad5d4a1e87c9a554ecb7`. Новые PR проверяются отдельно, это исторический снимок.
+- **Last CI:** [#43048905916](https://github.com/definitely-stable/HEAVENISPREY/actions/runs/43048905916) — SUCCESS на Windows-2022 и Ubuntu для HEAD PR #5 `908180cb21420fef454b67f161a79908e56a12aa`. Push-commit `main` этим прогоном **не подтверждается**.
+- **Acceptance:** 93/93 Python design/static tests, в том числе 42 новых теста GAME-ARCH-00/01; эталонный пример: пять исходных предметов → три логических объекта без потери 52 XP-единиц, подбираются 40 XP, +3 уровня с остатком 3 XP, в очередь входят 5 решений, `build_revision` 1→6. Это **проверка проектной модели**, а не game/runtime.
+- **Known blockers:** нормативный приоритет конкурирующих источников наград, правила смерти/победы в том же тике, сохранение в паузе, точный этап XP-модификатора, мировая геометрия подбираемых объектов и интеграция с реальными DraftService/BuildTransaction. GAME-ARCH-02 (encounter/boss/stage) пока не специфицирован полностью.
+- **Next allowed action:** архитектурный GAME-ARCH-02 (режиссура волн, боссы, StageTopology, POI, reward gates) и закрытие открытых RLOOP-01/02/03 и XP-01/02/03; статические контракты/негативные фикстуры, **без** Godot/runtime.
 - **Last updated from repository:** 2026-11-11.
 
-**Принцип:** статусы PR и HEAD — исторический снимок. Перед отчётом об актуальном состоянии всегда перепроверять репозиторий и CI. Merge документа с меткой `design-proposal` не означает утверждения предложенного баланса или правил без соответствующего решения.
+**Правило CI-first:** обычные архитектурные PR после зелёного CI и проверки diff интегрировать в `main`, не оставлять открытыми по инерции. [Workflow](guides/WORKFLOW.md). Статус `DESIGN PROPOSAL` не превращается в `ACCEPTED DESIGN` от факта merge.
 
-[BUILD-SKILL-001](spec/v7/build-skill-architecture-proposal.md) · [ARCH-01](spec/v7/build-skill-type-contract.md) · [FLEXIBILITY-FIRST](spec/v7/flexibility-first-build-policies.md)
+[Reference fixtures](proposals/game-arch-00-01/README.md) · [Навигация](guides/START_HERE.md)
