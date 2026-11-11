@@ -88,7 +88,7 @@ For each XP receipt:
 2. While `xp_bank >= cost_for_next_level`: subtract cost, increment level, enqueue one `LevelUpChoice`.
 3. Never discard overflow. If a finite test cost ladder ends, retain XP; production policy must declare new tier, overflow conversion or terminal max-level behavior.
 4. The number of **visible menus** may be reduced via sequential batched UX, but the number of earned **choices** is not reduced.
-5. Once queue is active, world simulation pauses at deterministic tick boundary. Each choice re-evaluates current `RunBuild`.
+5. An **immediate** or mandatory choice opens a pause at the deterministic tick boundary. In optional [Bank Levels mode](game-ux-001-oct-2026.md), earned ordinary levels may remain queued while the world runs; each eventual selection re-evaluates current `RunBuild`.
 
 Fixture: starting `level=1, xp=0`; next-level incremental costs `5,12,20,30`; a collected 40 XP produces levels 2, 3, 4 (three choices), **3 XP overflow**, and leaves cost 30 for level 5. Neither 6-slot nor 5-rank caps are implied.
 
