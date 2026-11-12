@@ -36,7 +36,7 @@
 | SAVE-CONTRACT-001 | [Контракт и статическая проверка](../spec/v7/save-contract-001.md): версии, RulesHash, RNG policy, восстановление очереди и synthetic RunBuild | Reference JSON roundtrip, partial choice resume, v0 header migration, negative tests; **не настоящий Godot Save/Replay** |
 | CHOICE-VIEWMODEL-001 | [Контракт, статический hand, Focus, Reroll/Banish/Lock](../spec/v7/choice-viewmodel-001.md) | Проверяемые факты, no-charge no-alternative reroll, overlay replay, Select/Skip exactly-once; **не UI/runtime** |
 | DRAFT-CONTRACT-002 | [Версионированная RNG и драфт](../spec/v7/draft-contract-002.md): run-scoped bans, soft pity, anti-brick | Static seeded/rejection tests, 2-earned-choice replay/overlay; **не утверждённый runtime RNG** |
-| CHOICE-SAVE-002 | Интеграция draft hand в строго типизированный SAVE envelope | Schema migration, draw cursor parity, durable Focus и backup |
+| CHOICE-SAVE-002 | [SaveEnvelope v2](../spec/v7/choice-save-002.md): run + build + draft в одной записи, один offers cursor | **Design-оракул готов:** migration v1→v2, cursor parity, focus после загрузки, два слота, 28 тестов |
 | ARCH-02 | Граф достижимости N→M рецептов и развитие после max rank | Witness paths или объяснимые недостижимые рецепты |
 
 ### Аудит UX и связность существующей архитектуры (октябрь 2026)

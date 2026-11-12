@@ -165,7 +165,7 @@ RunBuild revision 10; 1 breakthrough choice remains; XP bank = 3
 
 **CHOICE-VIEWMODEL-001 integration note:** [проектная модель драфта](choice-viewmodel-001.md) добавляет source-grounded карточки, ручные Reroll/Banish/Lock/Skip, separate DraftCheckpointOverlay и safe held-input. Это ещё **не** внутренняя schema migration SaveEnvelope, не единый offers RNG cursor и не релизный DraftService.
 
-**DRAFT-CONTRACT-002 linkage:** [проверяемый run-scoped draft](draft-contract-002.md) теперь имеет собственный offers RNG counter и persistent bans, но **ещё не** обновляет строгую схему этого SAVE-CONTRACT. Требуется CHOICE-SAVE-002 с единым authoritative cursor и migration.
+**DRAFT-CONTRACT-002 linkage:** [проверяемый run-scoped draft](draft-contract-002.md) теперь имеет собственный offers RNG counter и persistent bans, но **ещё не** обновляет строгую схему этого SAVE-CONTRACT. Требуется CHOICE-SAVE-002 с единым authoritative cursor и migration. **Обновление:** предложение [CHOICE-SAVE-002](choice-save-002.md) задаёт SaveEnvelope v2 и migration v1→v2; эта v1-модель остаётся неизменной как вход миграции.
 
 ## 11. Следующий проектный шаг после этого среза
 
