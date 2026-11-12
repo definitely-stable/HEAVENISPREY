@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "kind": "mcp-lock",
+  "verified_on": "2026-11-12",
+  "policy": "The repository stores only *.example client configs without secrets. Servers are pinned to an exact package version or release tag; tokens come from environment variables named here. Write-capable or code-executing servers stay disabled until their phase and an explicit user permission. No server is assigned exclusively to a specific AI model.",
+  "servers": [
+    {
+      "id": "context7",
+      "priority": "P0",
+      "phase": "now",
+      "purpose": "Current Godot 4.7 / GDScript / tooling documentation lookup",
+      "source": "upstash/context7",
+      "license": "MIT",
+      "transport": "stdio",
+      "package": "npm:@upstash/context7-mcp",
+      "version": "4.6.0",
+      "pin_note": "4.7.0 was published on 2026-11-12; keep one release behind for a cooldown and bump through a PR",
+      "remote_alternative": "https://mcp.context7.com/mcp",
+      "access": "read-only",
+      "secrets_env": [
+        "CONTEXT7_API_KEY"
+      ],
+      "secret_required": false,
+      "default_enabled": true,
+      "verification": {
+        "status": "VERIFIED",
+        "evidence": "scripts/dev/mcp_smoke.py context7 -> PASS 4.6.0, tools query-docs, resolve-library-id (stdio, Windows, 2026-11-12); example config loads in Codex 0.167.0 (codex mcp list: enabled) and Claude Code 2.1.317 (project .mcp.json); OpenCode 2.2.6 connected context7 tools from opencode.example.json"
+      }
+    },
+    {
+      "id": "github",
+      "priority": "P0",
+      "phase": "now",
+      "purpose": "Read PRs, checks, issues and files; write operations stay with gh CLI under the merge rules in AGENTS.md",
+      "source": "github/github-mcp-server",
+      "license": "MIT",
+      "transport": "http",
+      "package": "remote",
+      "version": "v2.1.0",
+      "release_commit": "7c48164cb6a9bee7cdaf55ea1a48fa45bd80a654",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "toolsets": [
+        "repos",
+        "pull_requests",
+        "issues",
+        "actions"
+      ],
+      "access": "read-only",
+      "secrets_env": [
+        "GITHUB_MCP_PAT"
+      ],
+      "secret_required": true,
+      "token_scope": "fine-grained PAT, this repository only, read-only: contents, pull requests, issues, actions, metadata",
+      "default_enabled": true,
+      "verification": {
+        "status": "VERIFIED",
+        "evidence": "scripts/dev/mcp_smoke.py github -> PASS v2.1.0 readonly endpoint, 25 read-only tools, no write tools (token from GITHUB_MCP_PAT); example config loads in Codex (Bearer token env var) and Claude Code. OpenCode remote connection NOT VERIFIED.",
+        "known_issue": "user-level AIHub 'github' server on this machine answers 'Bad credentials' (stale token); fix is on the user side, the project example config is not affected"
+      }
+    },
+    {
+      "id": "godot-ai",
+      "priority": "P1",
+      "phase": "P0-00",
+      "purpose": "Editor/runtime inspection of the Godot project once it exists (scene tree, errors, screenshots)",
+      "source": "hi-godot/godot-ai",
+      "license": "MIT",
+      "transport": "stdio",
+      "package": "pypi:godot-ai",
+      "version": "4.4.1",
+      "release_commit": "643c64f3edf984a9668b3043f4d20ebb2bbec6b6",
+      "access": "read-write",
+      "risks": [
+        "editor_manage op=game_eval executes arbitrary GDScript in the running game",
+        "telemetry on by default: set GODOT_AI_DISABLE_TELEMETRY=true",
+        "installer defaults to user scope: use project scope only"
+      ],
+      "required_env": {
+        "GODOT_AI_DISABLE_TELEMETRY": "true"
+      },
+      "secrets_env": [],
+      "secret_required": false,
+      "default_enabled": false,
+      "enable_gate": "P0-00 project.godot merged + explicit user permission + evaluation slice DEV-MCP-GODOT",
+      "verification": {
+        "status": "NOT RUN",
+        "evidence": "no Godot project exists yet; audit only (GitHub/PyPI metadata, README, tool list)"
+      }
+    },
+    {
+      "id": "godot-mcp-hybridindie",
+      "priority": "P1",
+      "phase": "P0-00",
+      "purpose": "Alternative Godot MCP with inspection-only default toolset and dry-run/confirm for writes",
+      "source": "hybridindie/godot-mcp",
+      "license": "MIT",
+      "transport": "stdio",
+      "package": "git",
+      "version": "2026.11.04",
+      "release_commit": "d06145121ed4638aba47fd6b77bc3f25424b0cae",
+      "access": "read-only-default",
+      "risks": [
+        "58 stars, single maintainer",
+        "201 tools: enable the inspection toolset only"
+      ],
+      "secrets_env": [],
+      "secret_required": false,
+      "default_enabled": false,
+      "enable_gate": "P0-00 project.godot merged + explicit user permission + evaluation slice DEV-MCP-GODOT",
+      "verification": {
+        "status": "NOT RUN",
+        "evidence": "audit only; upstream states validation against Godot 4.7.2"
+      }
+    },
+    {
+      "id": "codebase-memory",
+      "priority": "P2",
+      "phase": "later",
+      "purpose": "Code graph search once the GDScript code base is large enough",
+      "source": "user-level tool on this machine",
+      "license": "n/a",
+      "transport": "stdio",
+      "package": "user-global",
+      "version": "user-managed",
+      "access": "read-only",
+      "secrets_env": [],
+      "secret_required": false,
+      "default_enabled": false,
+      "enable_gate": "measurable benefit on GDScript code after P0-02 (propose-probe-compose)",
+      "verification": {
+        "status": "NOT RUN",
+        "evidence": "present globally in Codex/Claude configs; not part of the project contract"
+      }
+    },
+    {
+      "id": "roslyn-codelens",
+      "priority": "REJECT",
+      "phase": "never",
+      "purpose": "C#/.NET analysis",
+      "source": "user-level tool on this machine",
+      "license": "n/a",
+      "transport": "stdio",
+      "package": "user-global",
+      "version": "user-managed",
+      "access": "read-only",
+      "secrets_env": [],
+      "secret_required": false,
+      "default_enabled": false,
+      "enable_gate": "not applicable: the stack is typed GDScript, no C#",
+      "verification": {
+        "status": "NOT RUN",
+        "evidence": "not relevant to the approved stack"
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "source": "Coding-Solo/godot-mcp (npm 0.1.1)",
+      "reason": "published package predates the RCE fix (PR #99)"
+    },
+    {
+      "source": "ee0pdt/Godot-MCP, bradypp/godot-mcp",
+      "reason": "unmaintained or unpinned, no security model for write tools"
+    },
+    {
+      "source": "@modelcontextprotocol/server-github",
+      "reason": "archived reference server; replaced by github/github-mcp-server"
+    }
+  ],
+  "clients": {
+    "claude-code": {
+      "project_file": ".mcp.json",
+      "example": ".work/tooling/mcp/claude.mcp.example.json"
+    },
+    "codex": {
+      "project_file": ".codex/config.toml",
+      "example": ".work/tooling/mcp/codex.config.example.toml"
+    },
+    "opencode": {
+      "project_file": "opencode.json",
+      "example": ".work/tooling/mcp/opencode.example.json"
+    }
+  }
+}
