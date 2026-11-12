@@ -61,7 +61,7 @@ def audit():
             fail("migrated content differs from v6 "+key)
     if exact+adapted!=63:fail("section coverage incomplete")
     active=[ROOT/"README.md",ROOT/"AGENTS.md",WORK/"INDEX.md",WORK/"README.md",WORK/"CURRENT_STATE.md"]
-    for sub in ("guides","templates","indexes","decisions","spec/v7","config/v7","roadmap"):
+    for sub in ("guides","templates","indexes","decisions","spec/v7","config/v7","roadmap","development"):
         active.extend((WORK/sub).glob("*.md"))
     for page in active:
         check_links(page,True)

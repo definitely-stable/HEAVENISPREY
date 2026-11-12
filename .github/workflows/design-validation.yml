@@ -50,5 +50,7 @@ jobs:
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
         run: python scripts/ref_catalog.py validate
+      - name: Verify DEV-ENV-002 agent skills, triggers and client adapters
+        run: python scripts/validate_agent_skills.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

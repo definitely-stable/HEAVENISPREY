@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "kind": "skill-trigger-cases",
+  "note": "Deterministic lexical routing check: each prompt must score highest on its expected skill description. A smoke for distinguishable triggers, not a model eval.",
+  "cases": [
+    {"prompt": "С чего начать, какое текущее состояние проекта и какой документ главный?", "expect": "hip-orientation"},
+    {"prompt": "Resuming work: check current state and which spec governs this subsystem", "expect": "hip-orientation"},
+    {"prompt": "Разбей этот запрос на срез: task spec, scope, non-goals и handoff", "expect": "hip-task-slice"},
+    {"prompt": "Write a handoff and task spec with scope for the next slice", "expect": "hip-task-slice"},
+    {"prompt": "Как автокаст выбирает цель и в каком порядке события тика, проки и мультикаст?", "expect": "hip-combat-contract"},
+    {"prompt": "Define DoT damage provenance, proc chains and targeting for auto-cast", "expect": "hip-combat-contract"},
+    {"prompt": "Добавить новую технику и пассив, эволюцию и Union рецепт для культивации", "expect": "hip-build-authoring"},
+    {"prompt": "Add a passive technique with an Evolution recipe and a Gift", "expect": "hip-build-authoring"},
+    {"prompt": "Переименовать ID в каталоге, миграция ID, schema и digest для ContentRegistry", "expect": "hip-content-registry"},
+    {"prompt": "Plan ContentRegistry schema_version change with parity and digest of generated .tres", "expect": "hip-content-registry"},
+    {"prompt": "Нужен детерминизм: seed, replay, сохранения и негативный контроль в тестах", "expect": "hip-deterministic-qa"},
+    {"prompt": "Add golden replay fixture with seed and property tests for Save restore", "expect": "hip-deterministic-qa"},
+    {"prompt": "Сделай ревью diff перед merge", "expect": "hip-code-review"},
+    {"prompt": "Review this PR diff for reward and RNG exactly-once regressions before merge", "expect": "hip-code-review"},
+    {"prompt": "Закрыть срез: дождаться CI, merge и обновить CURRENT_STATE", "expect": "hip-ci-closeout"},
+    {"prompt": "PR is waiting on CI; merge to main and record evidence in CURRENT_STATE", "expect": "hip-ci-closeout"}
+  ]
+}
