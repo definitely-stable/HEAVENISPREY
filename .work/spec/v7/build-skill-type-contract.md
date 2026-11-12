@@ -104,10 +104,10 @@ A formula with floats needs a documented quantization boundary and cross-platfor
 |---|---|---|
 | Known v7 skill/status references | Yes | Global authoring schema |
 | Rank and slot constraints | Yes, fixture examples | All production catalog combinations |
-| Evolution, Union and Gift witnesses | Yes | Arbitrary graph solver |
+| Evolution, Union and Gift witnesses | Yes; graph solver with replayed witnesses in [ARCH-02](arch-02-recipe-graph.md) | Weighted odds of reaching a recipe |
 | Conflicting recipes and stale revision | Yes, static projection | Concurrent runtime transactions |
 | Draft eligibility | Yes, unweighted | Seeded weighted draws / odds distribution |
-| Acyclic proc graph and conservative root bound | Yes | Nested bounded cycles / real perf |
+| Acyclic proc graph and conservative root bound | Yes; bounded cycles, typed ops and provenance in [ARCH-04](arch-04-effect-chains.md) | Real perf |
 | Reverse-ID impact | Yes, canonical v7 | Semantic/tag-based impact |
 | Import/render/replay/visual playtest | No | Deferred until user authorizes game |
 

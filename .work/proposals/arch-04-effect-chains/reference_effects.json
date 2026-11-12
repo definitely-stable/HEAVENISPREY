@@ -1,0 +1,201 @@
+{
+ "schema_version": 1,
+ "kind": "effect_chain_fixture",
+ "status": "proposal-only-not-canonical",
+ "note": "Fanouts, charges and capacities are test hypotheses, not balance. A capacity profile is a validation target, never a runtime discard rule.",
+ "resources": {
+  "sample.resource.resonance_charge": {
+   "scope": "per_root",
+   "initial": 6
+  }
+ },
+ "profiles": [
+  {
+   "id": "sample.profile.baseline",
+   "event_capacity": 128,
+   "max_generation": null
+  },
+  {
+   "id": "sample.profile.handheld",
+   "event_capacity": 64,
+   "max_generation": null
+  },
+  {
+   "id": "sample.profile.endless",
+   "event_capacity": 4096,
+   "max_generation": null
+  },
+  {
+   "id": "sample.profile.generation_3",
+   "event_capacity": 128,
+   "max_generation": 3
+  }
+ ],
+ "skills": [
+  {
+   "id": "sample.skill.thunder_chain",
+   "canonical_ref": "skill.thunder_chain",
+   "ops": [
+    {
+     "op": "CHAIN",
+     "id": "sample.op.thunder_chain.jump",
+     "jumps": 4,
+     "unique_targets": true,
+     "damage_ref": "sample.damage.thunder_chain"
+    },
+    {
+     "op": "APPLY_STATUS",
+     "id": "sample.op.thunder_chain.shock",
+     "status_id": "status.shock",
+     "stacks": 1,
+     "duration_ticks": 120
+    }
+   ]
+  },
+  {
+   "id": "sample.skill.spirit_sword",
+   "canonical_ref": "skill.spirit_sword",
+   "ops": [
+    {
+     "op": "PROJECTILE",
+     "id": "sample.op.spirit_sword.blades",
+     "count": 3,
+     "pierce": 1,
+     "damage_ref": "sample.damage.spirit_sword"
+    }
+   ]
+  },
+  {
+   "id": "sample.skill.talisman_seal",
+   "canonical_ref": "skill.talisman_seal",
+   "ops": [
+    {
+     "op": "ZONE",
+     "id": "sample.op.talisman_seal.zone",
+     "duration_ticks": 180,
+     "tick_interval_ticks": 30,
+     "max_targets_per_tick": 4,
+     "damage_ref": "sample.damage.talisman_seal"
+    },
+    {
+     "op": "APPLY_STATUS",
+     "id": "sample.op.talisman_seal.burn",
+     "status_id": "status.burn",
+     "stacks": 1,
+     "duration_ticks": 180
+    }
+   ]
+  },
+  {
+   "id": "sample.skill.wolf_spirit",
+   "canonical_ref": null,
+   "ops": [
+    {
+     "op": "SUMMON",
+     "id": "sample.op.wolf_spirit.summon",
+     "attacks": 5,
+     "targets_per_attack": 1,
+     "lifetime_ticks": 300,
+     "damage_ref": "sample.damage.wolf_spirit"
+    }
+   ]
+  }
+ ],
+ "triggers": [
+  {
+   "id": "sample.trigger.multicast",
+   "on": "CAST",
+   "accepts_origins": [
+    "primary"
+   ],
+   "emits": "CAST",
+   "origin": "echo",
+   "max_children": 2
+  },
+  {
+   "id": "sample.trigger.static_arc",
+   "on": "HIT",
+   "accepts_origins": [
+    "primary",
+    "echo"
+   ],
+   "emits": "HIT",
+   "origin": "proc",
+   "max_children": 1
+  },
+  {
+   "id": "sample.trigger.resonance",
+   "on": "HIT",
+   "accepts_origins": [
+    "proc"
+   ],
+   "emits": "HIT",
+   "origin": "proc",
+   "max_children": 2,
+   "consumes": {
+    "resource": "sample.resource.resonance_charge",
+    "amount": 1
+   }
+  },
+  {
+   "id": "sample.trigger.ignite",
+   "on": "STATUS_APPLIED",
+   "status_id": "status.shock",
+   "requires_status_on_target": "status.burn",
+   "accepts_origins": [
+    "primary",
+    "echo"
+   ],
+   "emits": "REACTION",
+   "origin": "reaction",
+   "max_children": 1,
+   "consumes_status": "status.burn"
+  }
+ ],
+ "expected": {
+  "sample.profile.baseline": {
+   "sample.skill.spirit_sword": {
+    "static_bound": 147,
+    "worst_case_events": 45,
+    "verdict": "BOUND_TOO_COARSE"
+   },
+   "sample.skill.talisman_seal": {
+    "static_bound": 96,
+    "worst_case_events": 96,
+    "verdict": "VALID_FOR_PROFILE"
+   },
+   "sample.skill.thunder_chain": {
+    "static_bound": 117,
+    "worst_case_events": 51,
+    "verdict": "VALID_FOR_PROFILE"
+   },
+   "sample.skill.wolf_spirit": {
+    "static_bound": 18,
+    "worst_case_events": 18,
+    "verdict": "VALID_FOR_PROFILE"
+   }
+  },
+  "sample.profile.handheld": {
+   "sample.skill.spirit_sword": {
+    "static_bound": 147,
+    "worst_case_events": 45,
+    "verdict": "BOUND_TOO_COARSE"
+   },
+   "sample.skill.talisman_seal": {
+    "static_bound": 96,
+    "worst_case_events": 96,
+    "verdict": "PROFILE_EXCEEDED"
+   },
+   "sample.skill.thunder_chain": {
+    "static_bound": 117,
+    "worst_case_events": 51,
+    "verdict": "BOUND_TOO_COARSE"
+   },
+   "sample.skill.wolf_spirit": {
+    "static_bound": 18,
+    "worst_case_events": 18,
+    "verdict": "VALID_FOR_PROFILE"
+   }
+  }
+ }
+}

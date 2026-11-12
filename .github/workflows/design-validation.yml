@@ -48,6 +48,10 @@ jobs:
         run: python scripts/validate_draft_contract_proposal.py
       - name: Verify CHOICE-SAVE-002 integrated SaveEnvelope v2 (design-only)
         run: python scripts/validate_choice_save_proposal.py
+      - name: Verify ARCH-02 recipe reachability graph (design-only)
+        run: python scripts/validate_recipe_graph_proposal.py
+      - name: Verify ARCH-04 effect ops, provenance and finite chains (design-only)
+        run: python scripts/validate_effect_chain_proposal.py
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
