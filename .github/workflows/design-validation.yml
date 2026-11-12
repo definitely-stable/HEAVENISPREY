@@ -54,5 +54,7 @@ jobs:
         run: python scripts/validate_agent_skills.py
       - name: Verify DEV-ENV-003 MCP registry and secret-free example configs
         run: python scripts/validate_mcp.py
+      - name: Verify DEV-ENV-004 system binding, gap register and schema coverage
+        run: python scripts/system_binding.py validate
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

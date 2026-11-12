@@ -1,0 +1,95 @@
+# SYSTEM_BINDING — игровая система → контракт → skill → проверка
+
+> Сгенерировано `python scripts/system_binding.py render` из [system_binding.json](../tooling/system_binding.json). Не редактировать вручную.
+
+- **Статус:** PROPOSAL: index that binds existing contracts; it does not approve gameplay rules or balance
+- **Срез / дата:** DEV-ENV-004b · 2026-11-12
+- **Интерфейсы:** [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md)
+
+## Системы
+
+| Система | Канон | Конфиг | Skill | Проверка | Интерфейсы | Срез | Пробелы |
+|---|---|---|---|---|---|---|---|
+| Combat | [ADR-002-combat.md](../../.work/decisions/ADR-002-combat.md)<br>[build-skill-architecture-proposal.md](../../.work/spec/v7/build-skill-architecture-proposal.md) | [skills.json](../../.work/config/v7/skills.json) | `hip-combat-contract` | [validate_build_proposal.py](../../scripts/validate_build_proposal.py)<br>[test_build_proposal.py](../../tests/test_build_proposal.py) | IC-05, IC-06 | P0-01 | GAP-ARCH-04, GAP-PRECEDENCE |
+| AutoCast | [ADR-002-combat.md](../../.work/decisions/ADR-002-combat.md)<br>[build-skill-type-contract.md](../../.work/spec/v7/build-skill-type-contract.md) | [skills.json](../../.work/config/v7/skills.json) | `hip-combat-contract` | [validate_build_proposal.py](../../scripts/validate_build_proposal.py)<br>[test_build_proposal.py](../../tests/test_build_proposal.py) | IC-06 | ARCH-04 | GAP-ARCH-04 |
+| Status | [build-skill-type-contract.md](../../.work/spec/v7/build-skill-type-contract.md) | [statuses.json](../../.work/config/v7/statuses.json) | `hip-combat-contract` | [validate_content.py](../../scripts/validate_content.py)<br>[validate_build_proposal.py](../../scripts/validate_build_proposal.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-05, IC-06 | ARCH-04 | GAP-ARCH-04 |
+| Build | [build-skill-architecture-proposal.md](../../.work/spec/v7/build-skill-architecture-proposal.md)<br>[build-skill-type-contract.md](../../.work/spec/v7/build-skill-type-contract.md)<br>[flexibility-first-build-policies.md](../../.work/spec/v7/flexibility-first-build-policies.md) | [skills.json](../../.work/config/v7/skills.json)<br>[classes.json](../../.work/config/v7/classes.json) | `hip-build-authoring` | [validate_build_proposal.py](../../scripts/validate_build_proposal.py)<br>[test_build_proposal.py](../../tests/test_build_proposal.py) | IC-07 | ARCH-01 | GAP-BLD-OPEN |
+| Draft | [draft-contract-002.md](../../.work/spec/v7/draft-contract-002.md)<br>[choice-viewmodel-001.md](../../.work/spec/v7/choice-viewmodel-001.md) | [skills.json](../../.work/config/v7/skills.json) | `hip-deterministic-qa` | [validate_draft_contract_proposal.py](../../scripts/validate_draft_contract_proposal.py)<br>[validate_choice_viewmodel_proposal.py](../../scripts/validate_choice_viewmodel_proposal.py)<br>[test_draft_contract_proposal.py](../../tests/test_draft_contract_proposal.py)<br>[test_choice_viewmodel_proposal.py](../../tests/test_choice_viewmodel_proposal.py) | IC-08 | CHOICE-SAVE-002 | GAP-CHOICE-SAVE |
+| Save | [save-contract-001.md](../../.work/spec/v7/save-contract-001.md) | [profile_fixtures.json](../../.work/config/v7/profile_fixtures.json) | `hip-deterministic-qa` | [validate_save_contract_proposal.py](../../scripts/validate_save_contract_proposal.py)<br>[test_save_contract_proposal.py](../../tests/test_save_contract_proposal.py) | IC-10 | CHOICE-SAVE-002 | GAP-CHOICE-SAVE, GAP-PRECEDENCE |
+| Replay | [ADR-002-combat.md](../../.work/decisions/ADR-002-combat.md)<br>[bot-acceptance.md](../../.work/spec/v7/bot-acceptance.md)<br>[save-contract-001.md](../../.work/spec/v7/save-contract-001.md) | [bot_scenarios.json](../../.work/config/v7/bot_scenarios.json) | `hip-deterministic-qa` | [validate_run_loop_proposal.py](../../scripts/validate_run_loop_proposal.py)<br>[validate_content.py](../../scripts/validate_content.py)<br>[test_run_loop_proposal.py](../../tests/test_run_loop_proposal.py) | IC-02, IC-03, IC-10 | P0-01 | GAP-PY-GD-PARITY |
+| XP | [game-arch-01-xp-pickups.md](../../.work/spec/v7/game-arch-01-xp-pickups.md) | [stages.json](../../.work/config/v7/stages.json) | `hip-deterministic-qa` | [validate_run_loop_proposal.py](../../scripts/validate_run_loop_proposal.py)<br>[test_run_loop_proposal.py](../../tests/test_run_loop_proposal.py) | IC-04, IC-09 | GAME-ARCH-01 | — |
+| Reward | [game-arch-00-run-orchestration.md](../../.work/spec/v7/game-arch-00-run-orchestration.md)<br>[economy-and-talent-sinks.md](../../.work/spec/v7/economy-and-talent-sinks.md) | [reward_contract.json](../../.work/config/v7/reward_contract.json)<br>[currencies.json](../../.work/config/v7/currencies.json)<br>[economy_milestones.json](../../.work/config/v7/economy_milestones.json) | `hip-deterministic-qa` | [validate_content.py](../../scripts/validate_content.py)<br>[test_design_contracts.py](../../tests/test_design_contracts.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-11 | GAME-ARCH-04 | GAP-SPECIAL-REWARDS |
+| Cultivation | [late-game-progression.md](../../.work/spec/v7/late-game-progression.md)<br>[ADR-003-late-game.md](../../.work/decisions/ADR-003-late-game.md)<br>[economy-and-talent-sinks.md](../../.work/spec/v7/economy-and-talent-sinks.md) | [talents.json](../../.work/config/v7/talents.json)<br>[late_talents.json](../../.work/config/v7/late_talents.json)<br>[unlock_rules.json](../../.work/config/v7/unlock_rules.json) | `hip-build-authoring` | [validate_content.py](../../scripts/validate_content.py)<br>[test_design_contracts.py](../../tests/test_design_contracts.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-11 | P0-03 | — |
+| Evolution / Union / Gift | [build-skill-architecture-proposal.md](../../.work/spec/v7/build-skill-architecture-proposal.md)<br>[flexibility-first-build-policies.md](../../.work/spec/v7/flexibility-first-build-policies.md) | [skills.json](../../.work/config/v7/skills.json) | `hip-build-authoring` | [validate_build_proposal.py](../../scripts/validate_build_proposal.py)<br>[test_build_proposal.py](../../tests/test_build_proposal.py) | IC-07, IC-08 | ARCH-02 | GAP-ARCH-02 |
+| Stage | [modes-and-compatibility.md](../../.work/spec/v7/modes-and-compatibility.md)<br>[enemy-threat-contract.md](../../.work/spec/v7/enemy-threat-contract.md) | [stages.json](../../.work/config/v7/stages.json)<br>[modes.json](../../.work/config/v7/modes.json)<br>[difficulty_profiles.json](../../.work/config/v7/difficulty_profiles.json)<br>[enemy_rosters.json](../../.work/config/v7/enemy_rosters.json) | `hip-combat-contract` | [validate_content.py](../../scripts/validate_content.py)<br>[test_enemy_catalog.py](../../tests/test_enemy_catalog.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-02 | GAME-ARCH-02 | GAP-GAME-ARCH-02, GAP-REF-CANON |
+| Enemy | [enemy-threat-contract.md](../../.work/spec/v7/enemy-threat-contract.md)<br>[ordinary-enemy-bestiary.md](../../.work/spec/v7/ordinary-enemy-bestiary.md) | [enemies.json](../../.work/config/v7/enemies.json)<br>[enemy_attacks.json](../../.work/config/v7/enemy_attacks.json)<br>[enemy_variants.json](../../.work/config/v7/enemy_variants.json) | `hip-combat-contract` | [validate_content.py](../../scripts/validate_content.py)<br>[test_enemy_catalog.py](../../tests/test_enemy_catalog.py) | IC-05 | P0-01E | — |
+| Boss | [enemy-threat-contract.md](../../.work/spec/v7/enemy-threat-contract.md) | [bosses.json](../../.work/config/v7/bosses.json) | `hip-combat-contract` | [validate_content.py](../../scripts/validate_content.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-05, IC-04 | GAME-ARCH-02 | GAP-GAME-ARCH-02 |
+| UX | [game-ux-001-oct-2026.md](../../.work/spec/v7/game-ux-001-oct-2026.md)<br>[choice-viewmodel-001.md](../../.work/spec/v7/choice-viewmodel-001.md)<br>[PLAYABILITY_GATES.md](../../.work/guides/PLAYABILITY_GATES.md) | [settings.example.cfg](../../.work/config/v7/settings.example.cfg) | `game-ui-ux` | [validate_choice_viewmodel_proposal.py](../../scripts/validate_choice_viewmodel_proposal.py)<br>[validate_choice_bridge_proposal.py](../../scripts/validate_choice_bridge_proposal.py)<br>[test_choice_viewmodel_proposal.py](../../tests/test_choice_viewmodel_proposal.py)<br>[test_choice_bridge_proposal.py](../../tests/test_choice_bridge_proposal.py) | IC-08, IC-12 | GAME-UX-001 | GAP-UX-INPUT |
+| Localization | [ADR-005-config-contract.md](../../.work/decisions/ADR-005-config-contract.md)<br>[README.md](../../.work/config/v7/README.md) | [translations.csv](../../.work/config/v7/translations.csv)<br>[localization_additions.csv](../../.work/config/v7/localization_additions.csv)<br>[localization_context.json](../../.work/config/v7/localization_context.json) | `hip-content-registry` | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py) | IC-01 | P0-02 | GAP-SCHEMA-COVERAGE |
+| Asset Pipeline | [ART_LOOKDEV.md](../../.work/guides/ART_LOOKDEV.md)<br>[s16.md](../../.work/spec/core/s16.md) | [catalog.json](../../ref/catalog.json) | `create-game-assets` | [ref_catalog.py](../../scripts/ref_catalog.py)<br>[test_ref_catalog.py](../../tests/test_ref_catalog.py) | IC-01, IC-12 | ART-REF-001 | GAP-ART-BIBLE, GAP-REF-BINARIES |
+| ContentRegistry (cross-cutting) | [content-registry-contract.md](../../.work/spec/v7/content-registry-contract.md)<br>[ADR-006-content-catalog.md](../../.work/decisions/ADR-006-content-catalog.md) | [id_compatibility.json](../../.work/config/v7/id_compatibility.json) | `hip-content-registry` | [validate_content.py](../../scripts/validate_content.py)<br>[content_impact.py](../../scripts/content_impact.py)<br>[test_content_catalog.py](../../tests/test_content_catalog.py)<br>[test_content_impact.py](../../tests/test_content_impact.py) | IC-01, IC-02, IC-03, IC-04 | P0-00 | GAP-REGISTRY-GEN |
+
+## Интерфейсы
+
+| ID | Контракт |
+|---|---|
+| IC-01 | ContentRegistry |
+| IC-02 | RunRulesSnapshot |
+| IC-03 | PlayerCommand |
+| IC-04 | RunEvent |
+| IC-05 | WorldState / CombatKernel |
+| IC-06 | AutoCastScheduler / Targeting / EffectEngine |
+| IC-07 | BuildTransaction |
+| IC-08 | ChoiceCoordinator / DraftState |
+| IC-09 | XP / Loot / SourceLedger |
+| IC-10 | SaveEnvelope / Replay |
+| IC-11 | RewardSettlement |
+| IC-12 | PresentationBridge |
+
+## Реестр пробелов
+
+| ID | Пробел | Владелец | Спецификация | Проверка / witness | Non-goals | Статус |
+|---|---|---|---|---|---|---|
+| GAP-CHOICE-SAVE | Draft RNG cursor, bans/charges, focus and choice UID inside one versioned SaveEnvelope | slice CHOICE-SAVE-002 | [save-contract-001.md](../../.work/spec/v7/save-contract-001.md) | snapshot -> reload -> same offers/history; stale action; crash while choosing | no pity/odds balance approval | **OPEN** |
+| GAP-ARCH-02 | Reachability graph of Evolution/Union/Gift recipes with time, slot, class, rarity and reward requirements | slice ARCH-02 | [build-skill-architecture-proposal.md](../../.work/spec/v7/build-skill-architecture-proposal.md) | positive witness path per recipe and negative counterexamples | no ban of strong builds by DPS alone | **OPEN** |
+| GAP-ARCH-04 | Typed effect ops, proc root/provenance, finite cycles and proc budget without hidden hit discard; DoT/summon/chain/zone source inheritance | slice ARCH-04 | [build-skill-type-contract.md](../../.work/spec/v7/build-skill-type-contract.md) | bounded proc graph fixtures; provenance golden events | EffectOp/TargetingPolicy/StatusStackPolicy/ProcOrigin/ProcBudget stay proposals until approved | **OPEN** |
+| GAP-BLD-OPEN | Open BUILD-SKILL-001 decisions: slot/power/rank/gift/proc/event ordering/fallback policies | user decision via ARCH-00 register | [build-skill-architecture-proposal.md](../../.work/spec/v7/build-skill-architecture-proposal.md) | validate_build_proposal.py decision register has no implicit choice | only explicitly accepted policies become normative | **OPEN** |
+| GAP-PRECEDENCE | Same-tick death vs level-up/revival/boss win precedence; pause vs pending choice; quit during choice; fail-closed restore | slice GAME-ARCH-05 | [game-arch-00-run-orchestration.md](../../.work/spec/v7/game-arch-00-run-orchestration.md) | ordered event fixtures with negative controls | no new gameplay rules without ADR | **OPEN** |
+| GAP-GAME-ARCH-02 | Stage topology, wave timelines, boss pattern grammar, telegraph windows, escape routes, POI and reward gates | slice GAME-ARCH-02 | [enemy-threat-contract.md](../../.work/spec/v7/enemy-threat-contract.md) | geometry/readability fixtures, bot scenarios | threat is not defined by an HP table alone | **OPEN** |
+| GAP-SPECIAL-REWARDS | Special reward sources and points of interest: once-only payout and event sequencing | slice GAME-ARCH-04 | [game-arch-00-run-orchestration.md](../../.work/spec/v7/game-arch-00-run-orchestration.md) | reward_event_id idempotency fixtures | no economy numbers | **OPEN** |
+| GAP-UX-INPUT | Gamepad, safe focus/input release, UI scale, contrast, reduced flashes, warnings above VFX, opt-in automation | slice GAME-UX-002 | [game-ux-001-oct-2026.md](../../.work/spec/v7/game-ux-001-oct-2026.md) | ChoiceViewModel and settings contract checks | no user-testing claims | **OPEN** |
+| GAP-PY-GD-PARITY | Python reference fixtures must become GDScript golden tests with identical results | slice P0-01 | [bot-acceptance.md](../../.work/spec/v7/bot-acceptance.md) | same seed -> same event hash in Python oracle and Godot | no runtime before P0-00 authorization | **BLOCKED-BY-RUNTIME** |
+| GAP-REGISTRY-GEN | ContentRegistry generator: v7 -> validated typed defs -> generated runtime artifacts with digest parity, fail-closed | slice P0-00 | [content-registry-contract.md](../../.work/spec/v7/content-registry-contract.md) | digest parity between v7 and generated .tres; no hand-edited numbers | no second source of truth | **BLOCKED-BY-RUNTIME** |
+| GAP-SCHEMA-COVERAGE | localization_context.json and settings.example.cfg have no validator | next content slice | [README.md](../../.work/config/v7/README.md) | validator checks context prefixes against translations.csv keys and settings keys against the UX settings contract | no new localization rules | **OPEN** |
+| GAP-ART-BIBLE | Style passport and art bible approval | user decision (ART-BIBLE-001) | [ART_LOOKDEV.md](../../.work/guides/ART_LOOKDEV.md) | metric thresholds recorded in passport | no production assets | **NEEDS-USER** |
+| GAP-REF-BINARIES | Storage of ref/ image binaries (162 MB): Git LFS, plain git or local-only | user decision | [README.md](../../ref/README.md) | ref_catalog.py validate checks sha256 when binaries are present | catalog metadata already versioned | **NEEDS-USER** |
+| GAP-REF-CANON | References show arenas, an Event mode, class specializations, equipment and quest screens absent from v7 | user decision | [catalog.json](../../ref/catalog.json) | content_ids in catalog resolve to v7 IDs once accepted | reference images are hypotheses, not approved rules | **NEEDS-USER** |
+
+## Покрытие схем `.work/config/v7`
+
+| Файл | Валидаторы |
+|---|---|
+| [bosses.json](../../.work/config/v7/bosses.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [bot_scenarios.json](../../.work/config/v7/bot_scenarios.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [classes.json](../../.work/config/v7/classes.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_build_proposal.py](../../scripts/validate_build_proposal.py) |
+| [currencies.json](../../.work/config/v7/currencies.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [difficulty_profiles.json](../../.work/config/v7/difficulty_profiles.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [economy_milestones.json](../../.work/config/v7/economy_milestones.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [enemies.json](../../.work/config/v7/enemies.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [enemy_attacks.json](../../.work/config/v7/enemy_attacks.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [enemy_rosters.json](../../.work/config/v7/enemy_rosters.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [enemy_variants.json](../../.work/config/v7/enemy_variants.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [id_compatibility.json](../../.work/config/v7/id_compatibility.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [late_talents.json](../../.work/config/v7/late_talents.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [localization_additions.csv](../../.work/config/v7/localization_additions.csv) | [validate_work.py](../../scripts/validate_work.py) |
+| [localization_context.json](../../.work/config/v7/localization_context.json) | **нет** → GAP-SCHEMA-COVERAGE |
+| [modes.json](../../.work/config/v7/modes.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [profile_fixtures.json](../../.work/config/v7/profile_fixtures.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [reward_contract.json](../../.work/config/v7/reward_contract.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [settings.example.cfg](../../.work/config/v7/settings.example.cfg) | **нет** → GAP-SCHEMA-COVERAGE |
+| [skills.json](../../.work/config/v7/skills.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_build_proposal.py](../../scripts/validate_build_proposal.py) |
+| [stages.json](../../.work/config/v7/stages.json) | [validate_content.py](../../scripts/validate_content.py) |
+| [statuses.json](../../.work/config/v7/statuses.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_build_proposal.py](../../scripts/validate_build_proposal.py) |
+| [talents.json](../../.work/config/v7/talents.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [translations.csv](../../.work/config/v7/translations.csv) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |
+| [unlock_rules.json](../../.work/config/v7/unlock_rules.json) | [validate_content.py](../../scripts/validate_content.py)<br>[validate_work.py](../../scripts/validate_work.py) |

@@ -25,6 +25,7 @@
 | **MCP-серверы (Context7, GitHub, Godot MCP), примеры конфигураций** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · `python scripts/validate_mcp.py` |
 | **Проверка «это игра»: game-ness gates, juice, ship gates** | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) |
 | **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
+| **Какая система к какому контракту, skill и проверке; открытые пробелы** | [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) | [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) · [system_binding.json](../tooling/system_binding.json) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |
 
 ## Контентные связи
