@@ -8,9 +8,9 @@
 |---|---|---|
 | ARCH-00 | Решения и реестр открытых вопросов для [BUILD-SKILL-001](../spec/v7/build-skill-architecture-proposal.md) | Нет неявных противоречащих политик |
 | ARCH-01 | [Контракт типов](../spec/v7/build-skill-type-contract.md), [FLEXIBILITY-FIRST](../spec/v7/flexibility-first-build-policies.md), архитектурные фикстуры | Параметризованные слоты/ранги, конечные циклические реакции, негативные тесты; **полные формальные схемы ещё открыты** |
-| ARCH-02 | Эволюции, Union, Gift, меридианы | Positive witness и negative counterexamples на граф рецептов |
+| ARCH-02 | [Эволюции, Union, Gift, меридианы](../spec/v7/arch-02-recipe-graph.md) | **Design-оракул готов:** witness с replay или одна из 6 причин недостижимости, 17 тестов |
 | ARCH-03 | DraftService: eligibility, rarity, fallback, RNG streams | Детерминированные списки допустимых предложений |
-| ARCH-04 | Реакции, Skill Chain, Multicast и static proc budget | Формально ограниченные цепочки без неявного discard |
+| ARCH-04 | [Реакции, Skill Chain, Multicast и static proc budget](../spec/v7/arch-04-effect-chains.md) | **Design-оракул готов:** 5 типов op, provenance, 3 способа доказать конечность, вердикты профиля без discard, 18 тестов |
 | ARCH-05 | [Авторский конвейер](../guides/CONTENT_AUTHORING_ACCELERATOR.md), traceability, impact graph, арт-паспорт | Никакого второго источника истины; проверяемые документы |
 
 ### Подготовка инженерной среды — DEV-ENV (2026-11-12, без runtime)
@@ -37,7 +37,7 @@
 | CHOICE-VIEWMODEL-001 | [Контракт, статический hand, Focus, Reroll/Banish/Lock](../spec/v7/choice-viewmodel-001.md) | Проверяемые факты, no-charge no-alternative reroll, overlay replay, Select/Skip exactly-once; **не UI/runtime** |
 | DRAFT-CONTRACT-002 | [Версионированная RNG и драфт](../spec/v7/draft-contract-002.md): run-scoped bans, soft pity, anti-brick | Static seeded/rejection tests, 2-earned-choice replay/overlay; **не утверждённый runtime RNG** |
 | CHOICE-SAVE-002 | [SaveEnvelope v2](../spec/v7/choice-save-002.md): run + build + draft в одной записи, один offers cursor | **Design-оракул готов:** migration v1→v2, cursor parity, focus после загрузки, два слота, 28 тестов |
-| ARCH-02 | Граф достижимости N→M рецептов и развитие после max rank | Witness paths или объяснимые недостижимые рецепты |
+| ARCH-02 | [Граф достижимости N→M рецептов и развитие после max rank](../spec/v7/arch-02-recipe-graph.md) | **Готово (design):** witness paths или объяснимые недостижимые рецепты |
 
 ### Аудит UX и связность существующей архитектуры (октябрь 2026)
 

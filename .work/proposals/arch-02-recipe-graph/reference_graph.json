@@ -1,0 +1,94 @@
+{
+ "schema_version": 1,
+ "kind": "recipe_graph_fixture",
+ "status": "proposal-only-not-canonical",
+ "note": "sample.* content and every number here are test hypotheses, not balance. Rarity changes odds, not possibility, so it is not a reachability input.",
+ "run": {
+  "duration_seconds": 300,
+  "pick_schedule": [[60, 4], [120, 8], [180, 12], [240, 15], [300, 18]]
+ },
+ "event_gates": {
+  "RITUAL": {"max_per_run": 3, "first_second": 90},
+  "BREAKTHROUGH": {"max_per_run": 2, "first_second": 120},
+  "BOSS_RELIC": {"max_per_run": 1, "first_second": 270}
+ },
+ "profiles": [
+  {"id": "sample.profile.standard", "class_id": "class.sword", "active_capacity": 6, "passive_capacity": 6, "gift_capacity": 1},
+  {"id": "sample.profile.minimalist", "class_id": "class.sword", "active_capacity": 1, "passive_capacity": 1, "gift_capacity": 1},
+  {"id": "sample.profile.thunder_ascendant", "class_id": "class.thunder", "active_capacity": 8, "passive_capacity": 6, "gift_capacity": 2}
+ ],
+ "skills": [
+  {"id": "sample.skill.flying_sword", "max_rank": 5, "sources": ["starter:class.sword", "draft"], "class_ids": ["*"], "growth": {"kind": "limit_break", "max_steps": 3}},
+  {"id": "sample.skill.thunder_chain", "max_rank": 5, "sources": ["starter:class.thunder", "draft"], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.talisman_ward", "max_rank": 5, "sources": ["draft"], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.iron_body", "max_rank": 5, "sources": ["draft"], "class_ids": ["class.body"], "growth": {"kind": "repeatable", "per_step": 5, "value_cap": 50}},
+  {"id": "sample.skill.void_needle", "max_rank": 3, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.yin_blade", "max_rank": 3, "sources": ["draft"], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.yang_blade", "max_rank": 3, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.sword_rain", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.sword_saint", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.storm_sword", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.heaven_prison", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.prison_sovereign", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.trinity_array", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.iron_storm", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.void_lance", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.overreach_ward", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}},
+  {"id": "sample.skill.grand_array", "max_rank": 5, "sources": [], "class_ids": ["*"], "growth": {"kind": "none"}}
+ ],
+ "passives": [
+  {"id": "sample.passive.sword_heart", "max_rank": 5, "sources": ["draft"], "class_ids": ["*"]},
+  {"id": "sample.passive.prison_seal", "max_rank": 3, "sources": [], "class_ids": ["*"]}
+ ],
+ "gifts": [{"id": "sample.gift.sky_tribute"}],
+ "recipes": [
+  {"id": "sample.recipe.sword_rain", "kind": "EVOLUTION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.flying_sword", "min_rank": 5}], "requires": [{"id": "sample.passive.sword_heart", "min_rank": 1}], "grants": [{"kind": "active", "id": "sample.skill.sword_rain"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.sword_saint", "kind": "EVOLUTION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.flying_sword", "min_rank": 8}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.sword_saint"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.storm_sword", "kind": "UNION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.sword_rain", "min_rank": 1}, {"id": "sample.skill.thunder_chain", "min_rank": 3}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.storm_sword"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.heaven_prison", "kind": "UNION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.storm_sword", "min_rank": 1}, {"id": "sample.skill.talisman_ward", "min_rank": 3}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.heaven_prison"}, {"kind": "passive", "id": "sample.passive.prison_seal"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.prison_ascension", "kind": "EVOLUTION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.heaven_prison", "min_rank": 1}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.prison_sovereign"}], "exclusive_group": "sample.group.prison"},
+  {"id": "sample.recipe.sky_tribute", "kind": "GIFT", "gate": "BOSS_RELIC", "consumes": [], "requires": [{"id": "sample.skill.heaven_prison", "min_rank": 1}], "grants": [{"kind": "gift", "id": "sample.gift.sky_tribute"}], "exclusive_group": null},
+  {"id": "sample.recipe.trinity_array", "kind": "UNION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.flying_sword", "min_rank": 2}, {"id": "sample.skill.thunder_chain", "min_rank": 2}, {"id": "sample.skill.talisman_ward", "min_rank": 2}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.trinity_array"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.iron_storm", "kind": "UNION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.iron_body", "min_rank": 3}, {"id": "sample.skill.thunder_chain", "min_rank": 3}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.iron_storm"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.void_lance", "kind": "EVOLUTION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.void_needle", "min_rank": 1}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.void_lance"}], "exclusive_group": "sample.group.void"},
+  {"id": "sample.recipe.overreach_ward", "kind": "EVOLUTION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.talisman_ward", "min_rank": 7}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.overreach_ward"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.grand_array", "kind": "UNION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.flying_sword", "min_rank": 5}, {"id": "sample.skill.thunder_chain", "min_rank": 5}, {"id": "sample.skill.talisman_ward", "min_rank": 5}], "requires": [{"id": "sample.passive.sword_heart", "min_rank": 5}], "grants": [{"kind": "active", "id": "sample.skill.grand_array"}], "exclusive_group": "sample.group.sword_thunder"},
+  {"id": "sample.recipe.yin_to_yang", "kind": "MUTATION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.yin_blade", "min_rank": 1}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.yang_blade"}], "exclusive_group": "sample.group.yin_yang", "allow_cycle": true},
+  {"id": "sample.recipe.yang_to_yin", "kind": "MUTATION", "gate": "RITUAL", "consumes": [{"id": "sample.skill.yang_blade", "min_rank": 1}], "requires": [], "grants": [{"kind": "active", "id": "sample.skill.yin_blade"}], "exclusive_group": "sample.group.yin_yang", "allow_cycle": true},
+  {"id": "sample.meridian.open_palm", "kind": "MERIDIAN", "gate": "BREAKTHROUGH", "consumes": [], "requires": [], "grants": [{"kind": "capacity", "slot": "active", "amount": 1}], "exclusive_group": null}
+ ],
+ "expected": {
+  "sample.profile.standard": {
+   "sample.recipe.sword_rain": {"picks": 5, "second": 120},
+   "sample.recipe.sword_saint": {"picks": 7, "second": 120},
+   "sample.recipe.storm_sword": {"picks": 8, "second": 120},
+   "sample.recipe.heaven_prison": {"picks": 11, "second": 180},
+   "sample.recipe.prison_ascension": "GATE_EXHAUSTED",
+   "sample.recipe.sky_tribute": {"picks": 11, "second": 270},
+   "sample.recipe.trinity_array": {"picks": 5, "second": 120},
+   "sample.recipe.iron_storm": "CLASS_LOCKED",
+   "sample.recipe.void_lance": "NO_SOURCE",
+   "sample.recipe.overreach_ward": "RANK_UNREACHABLE",
+   "sample.recipe.grand_array": "PICK_BUDGET",
+   "sample.recipe.yin_to_yang": {"picks": 1, "second": 90},
+   "sample.recipe.yang_to_yin": {"picks": 1, "second": 90},
+   "sample.meridian.open_palm": {"picks": 0, "second": 120}
+  },
+  "sample.profile.minimalist": {
+   "sample.recipe.sword_rain": {"picks": 5, "second": 120},
+   "sample.recipe.storm_sword": {"picks": 8, "second": 120},
+   "sample.recipe.heaven_prison": "CAPACITY",
+   "sample.recipe.trinity_array": "CAPACITY",
+   "sample.recipe.sky_tribute": "CAPACITY",
+   "sample.recipe.prison_ascension": "CAPACITY+GATE_EXHAUSTED",
+   "sample.recipe.yin_to_yang": {"picks": 1, "second": 120}
+  },
+  "sample.profile.thunder_ascendant": {
+   "sample.recipe.sword_rain": {"picks": 6, "second": 120},
+   "sample.recipe.storm_sword": {"picks": 8, "second": 120},
+   "sample.recipe.sword_saint": {"picks": 8, "second": 120},
+   "sample.recipe.iron_storm": "CLASS_LOCKED",
+   "sample.recipe.grand_array": "PICK_BUDGET"
+  }
+ }
+}
