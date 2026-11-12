@@ -1,0 +1,58 @@
+name: Toolchain smoke (DEV-ENV-001)
+
+on:
+  pull_request:
+    paths:
+      - '.work/tooling/**'
+      - 'scripts/dev/**'
+      - 'scripts/validate_toolchain.py'
+      - 'scripts/validate_agent_tooling.py'
+      - '.agents/**'
+      - '.claude/**'
+      - '.mcp.json'
+      - '.codex/**'
+      - '.github/workflows/toolchain-smoke.yml'
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: toolchain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  godot-headless:
+    name: Godot pinned smoke (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      HIP_TOOLS_ROOT: ${{ github.workspace }}/.tools
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Static toolchain lock validation
+        run: python scripts/validate_toolchain.py
+      - name: Cache pinned Godot (keyed by toolchain.lock.json)
+        uses: actions/cache@v6
+        with:
+          path: .tools/godot
+          key: godot-${{ runner.os }}-${{ hashFiles('.work/tooling/toolchain.lock.json') }}
+      - name: Install pinned Godot (SHA-512 verified)
+        run: python scripts/dev/godot_tool.py install
+      - name: Headless smoke (version, typed GDScript, negative control)
+        run: python scripts/dev/godot_tool.py smoke
+      - name: Environment doctor
+        run: python scripts/dev/doctor.py

@@ -13,6 +13,18 @@
 | ARCH-04 | Реакции, Skill Chain, Multicast и static proc budget | Формально ограниченные цепочки без неявного discard |
 | ARCH-05 | [Авторский конвейер](../guides/CONTENT_AUTHORING_ACCELERATOR.md), traceability, impact graph, арт-паспорт | Никакого второго источника истины; проверяемые документы |
 
+### Подготовка инженерной среды — DEV-ENV (2026-11-12, без runtime)
+
+[DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) делает воспроизводимыми инструменты, которые понадобятся P0-00, не создавая игру. Подсрезы выполняются по зависимостям и не смешиваются с runtime.
+
+| Slice | Результат | Gate |
+|---|---|---|
+| DEV-ENV-001 | Pinned toolchain lock, установка Godot 4.7.2 с SHA-512, headless smoke, doctor, hosted CI | validate_toolchain, unit tests, Ubuntu + Windows smoke |
+| DEV-ENV-002 | Агентские адаптеры и skills без второй системы инструкций | Проверяемые триггеры, ссылки на `.work`, pin/лицензия сторонних skills |
+| DEV-ENV-003 | MCP-стек и аудит Godot MCP (интеграция только с P0-00) | Без секретов, pin версий, editor MCP выключен до runtime |
+| DEV-ENV-004 | Связь контрактов/skills с системами игры, недостающие контракты | Каждая система имеет контракт, gate и маршрут |
+| ART-REF-001 | Каталог референсов `ref/` | Все файлы учтены; статус «референс, не production» |
+
 ### Foundation gates — 2026 best practices / research, **только архитектура**
 
 [FOUNDATION-2026](../spec/v7/foundation-research-2026.md): 15 приоритизированных требований (детерминированный replay, схемы/версии, источники эффектов, модельные/property tests, UX, будущее profiling, AI-agent workflow) и [машинный реестр](../proposals/foundation-2026/README.md). Этот срез **не начинает** ECS, Godot runtime, RL/PCG или GDExtension. Конкретные технологии производительности и баланс выбираются по будущим измерениям.

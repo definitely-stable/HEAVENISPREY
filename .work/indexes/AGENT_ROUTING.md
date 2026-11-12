@@ -19,6 +19,7 @@
 | Переводы, тексты, UI | [Локализация](../spec/v6/v6_i18n.md) · [UX](../spec/v5/v5_ux.md) | [Ключи RU/EN](../config/v7/localization_additions.csv) |
 | Графика/спрайты/эффекты | [2D презентация](../spec/core/s14.md) · [Визуальный QA](../spec/v5/v5_assets.md) | [Контракт ассетов](../spec/core/s17.md) |
 | Reverse engineering | [RE](../spec/core/s23.md) · [Доказательства](../spec/v5/v5_re.md) | [Реестр источников](../research/SOURCES.md) |
+| **Установка инструментов, версия Godot, диагностика окружения, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) · [DEV_ENVIRONMENT](../guides/DEV_ENVIRONMENT.md) | [toolchain.lock.json](../tooling/toolchain.lock.json) · [ADR-001](../decisions/ADR-001-stack.md) |
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 
