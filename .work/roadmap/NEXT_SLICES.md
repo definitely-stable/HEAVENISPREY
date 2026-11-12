@@ -23,6 +23,7 @@
 | DEV-ENV-002 | Агентские адаптеры и skills без второй системы инструкций | Проверяемые триггеры, ссылки на `.work`, pin/лицензия сторонних skills |
 | DEV-ENV-003 | MCP-стек и аудит Godot MCP (интеграция только с P0-00) | Без секретов, pin версий, editor MCP выключен до runtime |
 | DEV-ENV-004 | Связь контрактов/skills с системами игры, недостающие контракты | Каждая система имеет контракт, gate и маршрут |
+| DEV-ENV-005 | Readiness audit, tooling matrix, GO/NO-GO пакет P0-00 | `tooling_matrix.py validate`; P0-00 — NO-GO до решения пользователя |
 | ART-REF-001 | Каталог референсов `ref/` | Все файлы учтены; статус «референс, не production» |
 
 ### Foundation gates — 2026 best practices / research, **только архитектура**

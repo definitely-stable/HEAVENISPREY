@@ -56,5 +56,7 @@ jobs:
         run: python scripts/validate_mcp.py
       - name: Verify DEV-ENV-004 system binding, gap register and schema coverage
         run: python scripts/system_binding.py validate
+      - name: Verify DEV-ENV-005 tooling matrix parity with locks
+        run: python scripts/tooling_matrix.py validate
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

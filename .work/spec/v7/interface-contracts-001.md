@@ -31,4 +31,4 @@
 
 ## Порядок закрытия (по зависимостям, без runtime)
 
-IC-08 + IC-10 (CHOICE-SAVE-002) → IC-07 (ARCH-02) → IC-06 (ARCH-04) → IC-04 (GAME-ARCH-05: приоритеты одного тика) → IC-01 генератор, IC-03, IC-05, IC-12 — только после разрешения P0-00 (план — следующий срез DEV-ENV-005).
+IC-08 + IC-10 (CHOICE-SAVE-002) → IC-07 (ARCH-02) → IC-06 (ARCH-04) → IC-04 (GAME-ARCH-05: приоритеты одного тика) → IC-01 генератор, IC-03, IC-05, IC-12 — только после разрешения P0-00 (см. [RUNTIME_BOOTSTRAP_PLAN](../../development/RUNTIME_BOOTSTRAP_PLAN.md)).
