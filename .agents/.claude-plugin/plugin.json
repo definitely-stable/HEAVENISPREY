@@ -1,0 +1,8 @@
+{
+  "name": "hip",
+  "version": "0.1.0",
+  "description": "HEAVEN IS PREY project skills. Canonical source: .agents/skills (shared with Codex/OpenCode); this manifest only exposes them to Claude Code without copying.",
+  "author": { "name": "definitely-stable" },
+  "repository": "https://github.com/definitely-stable/HEAVENISPREY",
+  "license": "UNLICENSED"
+}

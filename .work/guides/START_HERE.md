@@ -20,6 +20,7 @@
 | RU/EN, интерфейс | [Локализация](../spec/v6/v6_i18n.md) | [UX](../spec/v5/v5_ux.md) |
 | Автоматическое тестирование | [BOT-QA v7](../spec/v7/bot-acceptance.md) | [Тесты](../spec/v5/v5_tests.md) · [Replay](../spec/core/s13.md) |
 | Reverse engineering | [RE pipeline](../spec/core/s23.md) | [RE evidence](../spec/v5/v5_re.md) |
+| **AI-агенты: skills `hip-*`, адаптеры клиентов, цикл среза, handoff** | [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) | [Аудит сторонних skills](../development/SKILLS_AUDIT.md) · [AGENT_HANDOFF](../templates/AGENT_HANDOFF.md) |
 | **Среда разработки, pinned Godot, doctor, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) | [Установка и диагностика](DEV_ENVIRONMENT.md) · [toolchain.lock.json](../tooling/toolchain.lock.json) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |
 

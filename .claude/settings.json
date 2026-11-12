@@ -1,0 +1,21 @@
+{
+  "extraKnownMarketplaces": {
+    "heavenisprey": {
+      "source": { "source": "github", "repo": "definitely-stable/HEAVENISPREY" }
+    }
+  },
+  "enabledPlugins": {
+    "hip@heavenisprey": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)"
+    ],
+    "ask": [
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)"
+    ]
+  }
+}

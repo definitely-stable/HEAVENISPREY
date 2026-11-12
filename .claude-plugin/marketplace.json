@@ -1,0 +1,12 @@
+{
+  "name": "heavenisprey",
+  "owner": { "name": "definitely-stable" },
+  "metadata": { "description": "Repo-local marketplace: exposes .agents/skills to Claude Code as plugin 'hip' (no duplicated skill files)." },
+  "plugins": [
+    {
+      "name": "hip",
+      "source": "./.agents",
+      "description": "HEAVEN IS PREY project skills (hip-*)"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "skills-lock",
+  "verified_on": "2026-11-12",
+  "policy": "Only vendored entries are installed into .agents/skills; candidates are audited but not installed. Pin by commit SHA, keep the upstream LICENSE next to the skill, verify tree_sha256 in CI. No curl|sh, no unpinned npx installers, no autopilot/permission-bypass scripts.",
+  "vendored": [],
+  "candidates": [
+    {
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "ref": "v2.0.0",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "license": "Apache-2.0",
+      "stars": 8498,
+      "godot_claim": "Godot 4.7 (4.7.2 stable) per docs/VERSION-SUPPORT.md, checked 2026-11-11",
+      "verdict": "ADOPT-SUBSET",
+      "subset": ["godot-gdscript", "godot-gdscript-headless-testing", "godot-resources", "godot-signals-groups", "godot-nodes-scenes", "godot-2d-movement", "godot-ui-control", "godot-animation", "godot-shaders", "godot-audio", "godot-export", "save-systems", "game-feel", "game-ui-ux", "performance-optimization", "input-systems", "create-game-assets"],
+      "rejected_subset": ["godot-csharp (C# not in stack)", "godot-3d-essentials (2D only)", "godot-multiplayer (single-player)", "steam-publish/itch-publish/game-jam (not current phase)"],
+      "install_phase": "DEV-ENV-002b vendoring of the subset with tree_sha256; activation useful from P0-00",
+      "security": "Markdown + stdlib read-only check scripts; maintainer eval script calls model CLIs (not vendored)"
+    },
+    {
+      "source": "Skyrant/gamedev-agent-skills",
+      "commit": "7eb1b53305fab881f4758e2eff2e371cd7869221",
+      "license": "Apache-2.0",
+      "stars": 0,
+      "verdict": "REJECT",
+      "reason": "Stale fork of gamedev-skills/awesome-gamedev-agent-skills (178 commits behind); use upstream pin"
+    },
+    {
+      "source": "revfactory/harness",
+      "commit": "92d9f1b29e7af81acebf51a9fcd1832e739a1414",
+      "license": "Apache-2.0",
+      "verdict": "ADAPT",
+      "reason": "Meta-skill that generates .claude/agents and skills itself; adopted ideas only (who=agent/how=skill, progressive disclosure, trigger evals, producer-reviewer, evolve step) into AGENT_EXECUTION"
+    },
+    {
+      "source": "google-research/harness2",
+      "commit": "6868817518876de8fd170c6a8354daca273b6191",
+      "license": "Apache-2.0",
+      "verdict": "REFERENCE-ONLY",
+      "reason": "Research framework (Linux, Vertex credentials, unrestricted executor network); adopted the propose-probe-compose evaluation discipline and evidence-backed lessons as process rules"
+    },
+    {
+      "source": "studioigor/studioigor-skill",
+      "commit": "14d9d09b9a36371a9f038cfe02d882ff8b11dc19",
+      "license": "MIT",
+      "verdict": "ADAPT",
+      "reason": "Checklists (game-ness gates, juice, ship gates, art bible, asset card) re-expressed as short project contracts; not installed: autopilot spawns agents with permission bypass and edits crontab"
+    },
+    {
+      "source": "studioigor/ref2game",
+      "commit": "da2978f8beb5d9f6fed48b1cf53184e952796081",
+      "license": "MIT",
+      "verdict": "REFERENCE-ONLY",
+      "reason": "Own WebGL2 runtime, not Godot; only the reference-comparison metrics (palette, tones, low-frequency layout) and style-passport idea apply to offline art look-dev"
+    },
+    {
+      "source": "haxqer/godot-skill",
+      "commit": "037c03e9858ae748bf66c010aeb9942dbe9b93d6",
+      "license": "MIT",
+      "verdict": "REFERENCE-ONLY",
+      "reason": "Single 82 KB skill with executable scene/asset generators; too heavy for the context budget"
+    }
+  ]
+}
