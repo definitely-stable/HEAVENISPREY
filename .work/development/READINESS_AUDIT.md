@@ -29,10 +29,10 @@
 
 | ID | Блокер | Владелец | Обход |
 |---|---|---|---|
-| B1 | ~~Защита `main` недоступна (private, Free → 403)~~ — репозиторий сделан публичным 2026-11-12; `main` пока не защищён (API → 404 Not protected) | пользователь: разрешить ruleset | правила [AGENTS.md](../../AGENTS.md) + зелёный CI перед merge |
+| B1 | ~~Защита `main`~~ — **закрыт 2026-11-12:** ruleset 27123627 «main: PR + CI» (active): только через PR, обязательны `Validate (ubuntu-latest)` и `Validate (windows-2022)`, запрет force-push и удаления. Toolchain smoke не обязателен (path-filter на PR), но идёт на каждый push в `main` | — | — |
 | B2 | Пользовательский GitHub MCP (AIHub) → `Bad credentials` | пользователь (обновить токен) | `gh` CLI; проектный пример с `GITHUB_MCP_PAT` проверен |
 | B3 | Codex skills discovery не проверен | ожидание лимита до 2026-11-14 | OpenCode/Claude проверены на тех же файлах |
-| B4 | Бинарники `ref/` (162 MB) не в git | пользователь: LFS / git / локально | метаданные и sha256 в `ref/catalog.json` |
+| B4 | ~~Бинарники `ref/` не в git~~ — **закрыт 2026-11-12:** 63 файла в Git LFS (PR #29); CI сверяет oid/size LFS-указателей с `ref/catalog.json` без скачивания (`lfs_pointers_checked: 63` на обеих ОС) | — | локально `git lfs pull` для просмотра |
 | B5 | Art bible | пользователь | ART-BIBLE-001; концепции с референсов оформлены как примеры: [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) |
 | B6 | Старт P0-00 | пользователь | [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) |
 
