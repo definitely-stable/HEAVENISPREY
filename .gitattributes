@@ -10,3 +10,7 @@
 *.tres text eol=lf
 *.cfg text eol=lf
 *.toml text eol=lf
+
+# Reference images (ART-REF-001) live in Git LFS; CI validates pointers against ref/catalog.json.
+ref/*.png filter=lfs diff=lfs merge=lfs -text
+ref/*.jpg filter=lfs diff=lfs merge=lfs -text

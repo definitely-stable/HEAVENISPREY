@@ -90,6 +90,27 @@ class RefCatalogTests(unittest.TestCase):
             with self.assertRaisesRegex(refcat.ContractError, "sha256 mismatch"):
                 self.check(cat, Path(tmp))
 
+    def test_lfs_pointer_is_checked_by_oid_and_size(self):
+        data = tiny_png(4, 3)
+        import hashlib
+        sha = hashlib.sha256(data).hexdigest()
+        cat = {"schema_version": 1, "kind": "reference-catalog", "findings": [], "usage_rules": [],
+               "entries": [{"id": "REF-901", "file": "p.png", "category": "ui-kit", "summary": "x",
+                            "width": 4, "height": 3, "has_alpha": True, "sha256": sha, "bytes": len(data),
+                            "content_ids": [], "systems": ["UX/HUD"], "readiness": "R0-reference"}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            pointer = Path(tmp) / "p.png"
+            pointer.write_bytes(("version https://git-lfs.github.com/spec/v1\noid sha256:%s\nsize %d\n"
+                                 % (sha, len(data))).encode("ascii"))
+            result = self.check(cat, Path(tmp))
+            self.assertEqual((result["lfs_pointers_checked"], result["binaries_checked"]), (1, 0))
+            pointer.write_bytes(("version https://git-lfs.github.com/spec/v1\noid sha256:%s\nsize %d\n"
+                                 % ("0" * 64, len(data))).encode("ascii"))
+            with self.assertRaisesRegex(refcat.ContractError, "LFS pointer"):
+                self.check(cat, Path(tmp))
+            pointer.write_bytes(data)
+            self.assertEqual(self.check(cat, Path(tmp))["binaries_checked"], 1)
+
     def test_png_header_size_parser(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "a.png"

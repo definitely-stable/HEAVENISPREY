@@ -2,10 +2,11 @@
 """ART-REF-001: reference image catalog for ref/ (validate | render | inventory).
 
 ref/catalog.json is the single source. ref/README.md is generated from it
-(`render`) and must stay byte-identical (`validate`). Image binaries may be
-absent (e.g. CI if they are not committed): then only structure, content-ID
-links and README parity are checked; when present, every file must be listed
-and its SHA-256/dimensions must match.
+(`render`) and must stay byte-identical (`validate`). Image binaries live in
+Git LFS: a checkout without LFS content (CI) holds pointer files, whose oid and
+size must equal the catalog's sha256/bytes. With real content, every file must
+be listed and its SHA-256/dimensions must match. With no images at all, only
+structure, content-ID links and README parity are checked.
 
 Stdlib only (PNG/JPEG header parsing, no Pillow).
 """
@@ -75,6 +76,23 @@ def image_size(path: Path) -> tuple[int, int]:
     raise ContractError("unsupported image header: " + path.name)
 
 
+LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
+
+
+def lfs_pointer(path: Path) -> tuple[str, int] | None:
+    """Return (sha256, size) for a Git LFS pointer file, None for real content."""
+    if path.stat().st_size > 1024:
+        return None
+    data = path.read_bytes()
+    if not data.startswith(LFS_HEADER):
+        return None
+    fields = dict(line.split(" ", 1) for line in data.decode("ascii").splitlines()[1:] if " " in line)
+    oid = fields.get("oid", "")
+    if not oid.startswith("sha256:") or not fields.get("size", "").isdigit():
+        raise ContractError(path.name + ": malformed Git LFS pointer")
+    return oid[len("sha256:"):], int(fields["size"])
+
+
 def load() -> dict:
     return json.loads(CATALOG.read_text(encoding="utf-8"))
 
@@ -113,7 +131,7 @@ def validate(catalog: dict, ref_dir: Path = REF, ids: set[str] | None = None, re
             raise ContractError(rid + ": undeclared duplicate of " + by_sha[e["sha256"]])
         by_sha.setdefault(e["sha256"], rid)
     present = sorted(p for p in ref_dir.iterdir() if p.suffix.lower() in IMAGE_EXT) if ref_dir.is_dir() else []
-    checked = 0
+    checked = pointers = 0
     if present:
         names = {p.name for p in present}
         if names != seen_files:
@@ -121,6 +139,13 @@ def validate(catalog: dict, ref_dir: Path = REF, ids: set[str] | None = None, re
                                 % (sorted(names - seen_files)[:5], sorted(seen_files - names)[:5]))
         for e in entries:
             path = ref_dir / e["file"]
+            pointer = lfs_pointer(path)
+            if pointer is not None:
+                # CI checks out Git LFS pointers only: verify identity without downloading.
+                if pointer != (e["sha256"], e["bytes"]):
+                    raise ContractError(e["id"] + ": LFS pointer oid/size differs from catalog")
+                pointers += 1
+                continue
             if hashlib.sha256(path.read_bytes()).hexdigest() != e["sha256"]:
                 raise ContractError(e["id"] + ": sha256 mismatch")
             if list(image_size(path)) != [e["width"], e["height"]]:
@@ -130,7 +155,7 @@ def validate(catalog: dict, ref_dir: Path = REF, ids: set[str] | None = None, re
     actual = README.read_text(encoding="utf-8") if readme is None else readme
     if actual != expected:
         raise ContractError("ref/README.md is stale: run python scripts/ref_catalog.py render")
-    return {"entries": len(entries), "binaries_checked": checked,
+    return {"entries": len(entries), "binaries_checked": checked, "lfs_pointers_checked": pointers,
             "categories": len({e["category"] for e in entries}),
             "duplicates": sum(1 for e in entries if e.get("duplicate_of"))}
 
