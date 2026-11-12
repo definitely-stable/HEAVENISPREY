@@ -1,0 +1,459 @@
+{
+ "schema_version": 1,
+ "kind": "stage_encounter_fixture",
+ "status": "proposal-only-not-canonical",
+ "note": "Geometry, speeds, radii and every threshold are hypotheses for static checks; canonical v7 attacks, rosters and bosses are read, never changed.",
+ "stage_id": "stage.jade_grove",
+ "assumptions": {
+  "ticks_per_second": 60,
+  "cell_in_player_radii": 2,
+  "player_speed_cells_per_tick": 0.1,
+  "hazard_base_radius_cells": 2,
+  "charge_lane_half_width_cells": 1,
+  "projectile_sidestep_cells": 1,
+  "min_telegraph_ticks": 18,
+  "min_contact_interval_ticks": 30,
+  "min_spawn_distance_cells": 8,
+  "max_corridor_length": 4,
+  "spike_min_gap_seconds": 20,
+  "poi_travel_share_of_window": 0.5
+ },
+ "topology": {
+  "legend": {
+   "S": "spawn lane (walkable)",
+   ".": "walkable",
+   "~": "soft brush (walkable, slows)",
+   "#": "solid"
+  },
+  "soft_speed_multiplier": 0.72,
+  "terrain": [
+   "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+   "S..............................S",
+   "S............~~~~~~............S",
+   "S...##....................##...S",
+   "S...##....................##...S",
+   "S..............................S",
+   "S.....####.............####....S",
+   "S..............................S",
+   "S..............................S",
+   "S..............................S",
+   "S..............................S",
+   "S..............................S",
+   "S..............................S",
+   "S.....####.............####....S",
+   "S..............................S",
+   "S...##....................##...S",
+   "S...##....................##...S",
+   "S............~~~~~~............S",
+   "S..............................S",
+   "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"
+  ],
+  "player_start": [
+   16,
+   12
+  ],
+  "boss_arena": {
+   "center": [
+    16,
+    10
+   ],
+   "radius_cells": 7
+  }
+ },
+ "pois": [
+  {
+   "id": "sample.poi.altar_west",
+   "kind": "ritual_altar",
+   "cell": [
+    3,
+    10
+   ],
+   "reveal_second": 90,
+   "expire_second": 150,
+   "channel_ticks": 120
+  },
+  {
+   "id": "sample.poi.altar_north",
+   "kind": "ritual_altar",
+   "cell": [
+    16,
+    1
+   ],
+   "reveal_second": 170,
+   "expire_second": 230,
+   "channel_ticks": 120
+  },
+  {
+   "id": "sample.poi.altar_east",
+   "kind": "ritual_altar",
+   "cell": [
+    28,
+    10
+   ],
+   "reveal_second": 240,
+   "expire_second": 295,
+   "channel_ticks": 120
+  }
+ ],
+ "timeline": [
+  {
+   "id": "sample.encounter.elite_wolf_pack",
+   "second": 120,
+   "kind": "elite",
+   "spike": true
+  },
+  {
+   "id": "sample.encounter.chest_carrier",
+   "second": 150,
+   "kind": "chest_carrier",
+   "spike": true,
+   "carrier_enemy_id": "enemy.ruined_jade_guardian"
+  },
+  {
+   "id": "sample.encounter.elite_mantis",
+   "second": 205,
+   "kind": "elite",
+   "spike": true
+  },
+  {
+   "id": "sample.encounter.boss_entry",
+   "second": 270,
+   "kind": "boss",
+   "spike": true
+  }
+ ],
+ "boss_pattern": {
+  "id": "sample.boss_pattern.jade_warden",
+  "boss_ref": "boss.jade_warden",
+  "min_telegraph_ticks": 30,
+  "min_punish_ticks": 40,
+  "max_transition_ticks": 120,
+  "immunities": [],
+  "control_policy": {
+   "kind": "diminishing",
+   "fallback": "control converts to stagger meter"
+  },
+  "attacks": [
+   {
+    "id": "sample.boss_attack.jade_slam",
+    "anchor": "boss",
+    "shape": "circle",
+    "radius": 3,
+    "telegraph_ticks": 54,
+    "active_ticks": 12,
+    "recovery_ticks": 45
+   },
+   {
+    "id": "sample.boss_attack.root_ring",
+    "anchor": "boss",
+    "shape": "ring",
+    "inner": 4,
+    "outer": 6,
+    "telegraph_ticks": 60,
+    "active_ticks": 90,
+    "recovery_ticks": 30
+   },
+   {
+    "id": "sample.boss_attack.jade_charge",
+    "anchor": "player_line",
+    "shape": "lane",
+    "half_width": 1,
+    "length": 9,
+    "telegraph_ticks": 42,
+    "active_ticks": 10,
+    "recovery_ticks": 50
+   },
+   {
+    "id": "sample.boss_attack.call_corpses",
+    "anchor": "spawn",
+    "shape": "summon",
+    "enemy_id": "enemy.yin_corpse",
+    "count": 4,
+    "telegraph_ticks": 45,
+    "active_ticks": 1,
+    "recovery_ticks": 30
+   }
+  ],
+  "phases": [
+   {
+    "id": "sample.boss_phase.stone",
+    "hp_from": 100,
+    "hp_to": 60,
+    "transition_ticks": 90,
+    "rotation": [
+     [
+      "sample.boss_attack.jade_slam",
+      0
+     ],
+     [
+      "sample.boss_attack.jade_charge",
+      150
+     ]
+    ],
+    "rotation_ticks": 300,
+    "overlaps": []
+   },
+   {
+    "id": "sample.boss_phase.roots",
+    "hp_from": 60,
+    "hp_to": 25,
+    "transition_ticks": 90,
+    "rotation": [
+     [
+      "sample.boss_attack.root_ring",
+      0
+     ],
+     [
+      "sample.boss_attack.jade_slam",
+      30
+     ],
+     [
+      "sample.boss_attack.call_corpses",
+      200
+     ],
+     [
+      "sample.boss_attack.jade_charge",
+      260
+     ]
+    ],
+    "rotation_ticks": 420,
+    "overlaps": [
+     [
+      "sample.boss_attack.jade_slam",
+      "sample.boss_attack.root_ring"
+     ]
+    ]
+   },
+   {
+    "id": "sample.boss_phase.wrath",
+    "hp_from": 25,
+    "hp_to": 0,
+    "transition_ticks": 60,
+    "rotation": [
+     [
+      "sample.boss_attack.jade_charge",
+      0
+     ],
+     [
+      "sample.boss_attack.root_ring",
+      110
+     ],
+     [
+      "sample.boss_attack.jade_slam",
+      140
+     ],
+     [
+      "sample.boss_attack.call_corpses",
+      280
+     ]
+    ],
+    "rotation_ticks": 380,
+    "overlaps": [
+     [
+      "sample.boss_attack.jade_slam",
+      "sample.boss_attack.root_ring"
+     ]
+    ]
+   }
+  ]
+ },
+ "reward_sources": [
+  {
+   "id": "sample.reward_source.altar_west",
+   "gate": "RITUAL",
+   "trigger": "POI_CHANNEL_COMPLETE",
+   "poi_id": "sample.poi.altar_west"
+  },
+  {
+   "id": "sample.reward_source.altar_north",
+   "gate": "RITUAL",
+   "trigger": "POI_CHANNEL_COMPLETE",
+   "poi_id": "sample.poi.altar_north"
+  },
+  {
+   "id": "sample.reward_source.altar_east",
+   "gate": "RITUAL",
+   "trigger": "POI_CHANNEL_COMPLETE",
+   "poi_id": "sample.poi.altar_east"
+  },
+  {
+   "id": "sample.reward_source.chest",
+   "gate": "CHEST",
+   "trigger": "PICKUP",
+   "encounter_id": "sample.encounter.chest_carrier"
+  },
+  {
+   "id": "sample.reward_source.boss_relic",
+   "gate": "BOSS_RELIC",
+   "trigger": "ENTITY_DIED",
+   "encounter_id": "sample.encounter.boss_entry"
+  }
+ ],
+ "event_phases": [
+  "combat",
+  "death",
+  "drop",
+  "pickup",
+  "poi",
+  "progression"
+ ],
+ "golden_log": {
+  "run_uid": "sample.run.0001",
+  "events": [
+   {
+    "uid": "e01",
+    "tick": 5400,
+    "phase": "poi",
+    "kind": "POI_REVEALED",
+    "poi_id": "sample.poi.altar_west"
+   },
+   {
+    "uid": "e02",
+    "tick": 6300,
+    "phase": "poi",
+    "kind": "POI_CHANNEL_COMPLETE",
+    "poi_id": "sample.poi.altar_west"
+   },
+   {
+    "uid": "e03",
+    "tick": 6300,
+    "phase": "progression",
+    "kind": "LEVEL_UP",
+    "level": 6
+   },
+   {
+    "uid": "e04",
+    "tick": 9300,
+    "phase": "death",
+    "kind": "ENTITY_DIED",
+    "entity_uid": "carrier0",
+    "encounter_id": "sample.encounter.chest_carrier"
+   },
+   {
+    "uid": "e05",
+    "tick": 9300,
+    "phase": "drop",
+    "kind": "DROP_SPAWNED",
+    "drop_uid": "chest0",
+    "from_entity_uid": "carrier0"
+   },
+   {
+    "uid": "e06",
+    "tick": 9420,
+    "phase": "pickup",
+    "kind": "PICKUP",
+    "drop_uid": "chest0"
+   },
+   {
+    "uid": "e07",
+    "tick": 9420,
+    "phase": "progression",
+    "kind": "LEVEL_UP",
+    "level": 9
+   },
+   {
+    "uid": "e08",
+    "tick": 10200,
+    "phase": "poi",
+    "kind": "POI_REVEALED",
+    "poi_id": "sample.poi.altar_north"
+   },
+   {
+    "uid": "e09",
+    "tick": 11000,
+    "phase": "poi",
+    "kind": "POI_CHANNEL_COMPLETE",
+    "poi_id": "sample.poi.altar_north"
+   },
+   {
+    "uid": "e10",
+    "tick": 14400,
+    "phase": "poi",
+    "kind": "POI_REVEALED",
+    "poi_id": "sample.poi.altar_east"
+   },
+   {
+    "uid": "e11",
+    "tick": 17300,
+    "phase": "poi",
+    "kind": "POI_CHANNEL_COMPLETE",
+    "poi_id": "sample.poi.altar_east"
+   },
+   {
+    "uid": "e12",
+    "tick": 17300,
+    "phase": "death",
+    "kind": "ENTITY_DIED",
+    "entity_uid": "boss1",
+    "encounter_id": "sample.encounter.boss_entry"
+   },
+   {
+    "uid": "e13",
+    "tick": 17300,
+    "phase": "progression",
+    "kind": "LEVEL_UP",
+    "level": 14
+   }
+  ],
+  "expected_rewards": [
+   "sample.reward_source.altar_west:sample.run.0001:sample.poi.altar_west",
+   "sample.reward_source.chest:sample.run.0001:chest0",
+   "sample.reward_source.altar_north:sample.run.0001:sample.poi.altar_north",
+   "sample.reward_source.boss_relic:sample.run.0001:boss1",
+   "sample.reward_source.altar_east:sample.run.0001:sample.poi.altar_east"
+  ],
+  "expected_choice_queue": [
+   "RITUAL",
+   "LEVEL_UP",
+   "CHEST",
+   "LEVEL_UP",
+   "RITUAL",
+   "BOSS_RELIC",
+   "RITUAL",
+   "LEVEL_UP"
+  ]
+ },
+ "expected": {
+  "max_corridor": 1,
+  "attack_escape_slack": {
+   "enemy_attack.crow_dive": 1.7,
+   "enemy_attack.cultivator_seal": 2.2,
+   "enemy_attack.cultivator_sword": 2.9,
+   "enemy_attack.disciple_cleave": 0.3,
+   "enemy_attack.jade_stomp": 1.6,
+   "enemy_attack.lantern_wisp": 2.6,
+   "enemy_attack.mantis_lunge": 2.3,
+   "enemy_attack.puppet_burst": 1.6,
+   "enemy_attack.root_growth": 2.5,
+   "enemy_attack.snake_bite": 0.0
+  },
+  "mixed_slow_slack": {
+   "jade_grove.w3:enemy_attack.jade_stomp": 0.256,
+   "jade_grove.w3:enemy_attack.root_growth": 0.904,
+   "jade_grove.w3:enemy_attack.mantis_lunge": 1.376
+  },
+  "boss": {
+   "escape_slack": {
+    "sample.boss_attack.jade_slam": 2.4,
+    "sample.boss_attack.jade_charge": 1.422,
+    "sample.boss_attack.root_ring": 4.0,
+    "sample.boss_attack.jade_slam+sample.boss_attack.root_ring": 2.4
+   },
+   "breather_ticks": {
+    "sample.boss_phase.stone": 98,
+    "sample.boss_phase.roots": 108,
+    "sample.boss_phase.wrath": 58
+   }
+  },
+  "gates": {
+   "RITUAL": {
+    "sources": 3,
+    "first_second": 90
+   },
+   "BOSS_RELIC": {
+    "sources": 1,
+    "first_second": 270
+   }
+  }
+ }
+}
