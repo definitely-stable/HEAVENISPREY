@@ -22,6 +22,7 @@
 | Reverse engineering | [RE](../spec/core/s23.md) · [Доказательства](../spec/v5/v5_re.md) | [Реестр источников](../research/SOURCES.md) |
 | **Skills агентов, адаптеры Claude/Codex/OpenCode, handoff** | [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) | [SKILLS_AUDIT](../development/SKILLS_AUDIT.md) · [skills.lock.json](../tooling/skills.lock.json) |
 | **Установка инструментов, версия Godot, диагностика окружения, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) · [DEV_ENVIRONMENT](../guides/DEV_ENVIRONMENT.md) | [toolchain.lock.json](../tooling/toolchain.lock.json) · [ADR-001](../decisions/ADR-001-stack.md) |
+| **Подключение MCP, токены, Godot MCP, проверка серверов** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) |
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 

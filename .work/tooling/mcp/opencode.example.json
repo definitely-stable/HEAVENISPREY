@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "context7": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/context7-mcp@4.6.0"],
+      "enabled": true
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_MCP_PAT}",
+        "X-MCP-Toolsets": "repos,pull_requests,issues,actions"
+      },
+      "enabled": true
+    }
+  }
+}

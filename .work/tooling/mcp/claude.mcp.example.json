@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@4.6.0"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_PAT}",
+        "X-MCP-Toolsets": "repos,pull_requests,issues,actions"
+      }
+    }
+  }
+}

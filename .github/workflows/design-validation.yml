@@ -52,5 +52,7 @@ jobs:
         run: python scripts/ref_catalog.py validate
       - name: Verify DEV-ENV-002 agent skills, triggers and client adapters
         run: python scripts/validate_agent_skills.py
+      - name: Verify DEV-ENV-003 MCP registry and secret-free example configs
+        run: python scripts/validate_mcp.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

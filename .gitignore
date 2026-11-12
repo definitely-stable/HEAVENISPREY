@@ -8,3 +8,8 @@ __pycache__/
 
 # Local developer toolchain (Godot binaries etc.), see .work/guides/DEV_ENVIRONMENT.md
 .tools/
+
+# Live MCP client configs stay local (copy from .work/tooling/mcp/*.example)
+/.mcp.json
+/.codex/config.toml
+/opencode.json

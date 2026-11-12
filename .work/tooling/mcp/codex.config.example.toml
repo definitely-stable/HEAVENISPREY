@@ -1,0 +1,11 @@
+# Copy the sections you need into .codex/config.toml (project, trusted) or ~/.codex/config.toml.
+# Tokens are read from the environment; never paste them here.
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@4.6.0"]
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/readonly"
+bearer_token_env_var = "GITHUB_MCP_PAT"
+http_headers = { "X-MCP-Toolsets" = "repos,pull_requests,issues,actions" }
