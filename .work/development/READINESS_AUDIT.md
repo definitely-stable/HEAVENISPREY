@@ -29,11 +29,11 @@
 
 | ID | Блокер | Владелец | Обход |
 |---|---|---|---|
-| B1 | Защита `main` недоступна: private repo на плане Free, API rulesets/branch protection → 403 | пользователь (GitHub Pro или public) | правила [AGENTS.md](../../AGENTS.md) + обязательный зелёный CI перед merge |
+| B1 | ~~Защита `main` недоступна (private, Free → 403)~~ — репозиторий сделан публичным 2026-11-12; `main` пока не защищён (API → 404 Not protected) | пользователь: разрешить ruleset | правила [AGENTS.md](../../AGENTS.md) + зелёный CI перед merge |
 | B2 | Пользовательский GitHub MCP (AIHub) → `Bad credentials` | пользователь (обновить токен) | `gh` CLI; проектный пример с `GITHUB_MCP_PAT` проверен |
 | B3 | Codex skills discovery не проверен | ожидание лимита до 2026-11-14 | OpenCode/Claude проверены на тех же файлах |
 | B4 | Бинарники `ref/` (162 MB) не в git | пользователь: LFS / git / локально | метаданные и sha256 в `ref/catalog.json` |
-| B5 | Art bible, канон арен/режима Event/специализаций из референсов | пользователь | гипотезы в каталоге, GAP-REF-CANON |
+| B5 | Art bible | пользователь | ART-BIBLE-001; концепции с референсов оформлены как примеры: [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) |
 | B6 | Старт P0-00 | пользователь | [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) |
 
 ## 4. Acceptance gates подготовки

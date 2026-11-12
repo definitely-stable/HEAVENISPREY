@@ -60,4 +60,4 @@ Headless import на Windows и Linux без ошибок ресурсов · GU
 
 ## 6. Ограничения, которые остаются
 
-Защита `main` недоступна (private repo на плане Free: API rulesets/branch protection → 403) — merge flow держится на правилах [AGENTS.md](../../AGENTS.md) и CI. Производительность, «fun» и восприятие не подтверждаются до exported build и плейтеста.
+Репозиторий публичный с 2026-11-12; ruleset для `main` (required checks) — по решению пользователя, до него merge flow держится на правилах [AGENTS.md](../../AGENTS.md) и CI. Производительность, «fun» и восприятие не подтверждаются до exported build и плейтеста.
