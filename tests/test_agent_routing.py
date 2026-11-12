@@ -68,7 +68,8 @@ class AgentRoutingTests(unittest.TestCase):
                     self.assertTrue((ROOT / script).exists())
 
     def test_routed_validators_run_in_ci(self):
-        ci = (ROOT / ".github/workflows/design-validation.yml").read_text(encoding="utf-8")
+        ci = "\n".join(p.read_text(encoding="utf-8")
+                       for p in sorted((ROOT / ".github/workflows").glob("*.yml")))
         for script in set(SCRIPT.findall(ROUTING.read_text(encoding="utf-8"))):
             with self.subTest(script=script):
                 self.assertIn(script, ci)

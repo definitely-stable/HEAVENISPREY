@@ -115,11 +115,19 @@
       "version": "9.7.1",
       "min_version": "9.7.1",
       "reason": "Godot unit/integration tests (s21 primary runner; gdUnit4 is the alternative, never both)",
-      "install": "vendored into game/addons/gut at P0-00 from a pinned release commit",
-      "integration_test": "intentionally failing GUT test must make CI exit non-zero",
+      "install": "python scripts/dev/godot_tool.py gut-install (extracts addons/gut into game/addons/gut, git-ignored, tree digest verified)",
+      "integration_test": "python scripts/dev/godot_tool.py test (GUT finds >0 tests; an intentionally failing test makes the run exit non-zero)",
       "removal_plan": "Switch to gdUnit4 only with an ADR",
       "ci_impact": "runs inside the Godot headless job after P0-00",
-      "agent_compat": "headless CLI"
+      "agent_compat": "headless CLI",
+      "source_repo": "bitwes/Gut",
+      "source_tag": "v9.7.1",
+      "source_commit": "aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605",
+      "archive_url": "https://codeload.github.com/bitwes/Gut/zip/aeb5d4f3f7f0a6c9b5e178876d6c99b791fda605",
+      "subtree": "addons/gut",
+      "tree_sha256": "3e24b39ef51e84f17531bd678a86a088c40c4ee415b27da9206cbeba9d26c91f",
+      "file_count": 259,
+      "tree_digest_policy": "sha256 over sorted lines '<path relative to subtree>\u0000<sha256 hex of file bytes>\n'; GitHub archive bytes are not a stable contract"
     }
   ]
 }

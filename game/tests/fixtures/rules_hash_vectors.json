@@ -1,0 +1,369 @@
+{
+  "cases": [
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.apprentice",
+        "mode_ids": [],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "0",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "no_modes_seed_zero",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f763100000000013100000040343131653137313234313931346437396263373032356635613633343331333765663032376135386461326339313332333437636338363531363866306530660000000a6869702d726e672d76310000001073746167652e6a6164655f67726f766500000015646966666963756c74792e61707072656e74696365000000000000000b636c6173732e73776f72640000000130",
+      "rules_hash": "6274b02b1fb57f506ad4b61cdc8f2ed79d17a54019d6ec2998658125b14aead8"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "280617",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "single_mode",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f763100000000013100000040343131653137313234313931346437396263373032356635613633343331333765663032376135386461326339313332333437636338363531363866306530660000000a6869702d726e672d76310000001073746167652e6a6164655f67726f766500000013646966666963756c74792e7374616e64617264000000010000000b6d6f64652e6e6f726d616c0000000b636c6173732e73776f726400000006323830363137",
+      "rules_hash": "9de4430b02fd986f3c48334d89f0208bab9e4fb89b65374aa4c5e7e6a3d601fa"
+    },
+    {
+      "input": {
+        "class_id": "class.thunder",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.tribulation",
+        "mode_ids": [
+          "mode.hyper",
+          "mode.ascetic",
+          "mode.hurry"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "9223372036854775808",
+        "sim_schema_version": 1,
+        "stage_id": "stage.mist_cliffs"
+      },
+      "name": "modes_given_unsorted",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f763100000000013100000040343131653137313234313931346437396263373032356635613633343331333765663032376135386461326339313332333437636338363531363866306530660000000a6869702d726e672d76310000001173746167652e6d6973745f636c6966667300000016646966666963756c74792e74726962756c6174696f6e000000030000000c6d6f64652e617363657469630000000a6d6f64652e68757272790000000a6d6f64652e68797065720000000d636c6173732e7468756e6465720000001339323233333732303336383534373735383038",
+      "rules_hash": "bd52dc6dcfd213d50cbf6a437551667a1db704025d50a71ce2dbf038088ff142"
+    },
+    {
+      "input": {
+        "class_id": "class.thunder",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.tribulation",
+        "mode_ids": [
+          "mode.ascetic",
+          "mode.hurry",
+          "mode.hyper"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "9223372036854775808",
+        "sim_schema_version": 1,
+        "stage_id": "stage.mist_cliffs"
+      },
+      "name": "modes_given_sorted_same_hash_as_unsorted",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f763100000000013100000040343131653137313234313931346437396263373032356635613633343331333765663032376135386461326339313332333437636338363531363866306530660000000a6869702d726e672d76310000001173746167652e6d6973745f636c6966667300000016646966666963756c74792e74726962756c6174696f6e000000030000000c6d6f64652e617363657469630000000a6d6f64652e68757272790000000a6d6f64652e68797065720000000d636c6173732e7468756e6465720000001339323233333732303336383534373735383038",
+      "rules_hash": "bd52dc6dcfd213d50cbf6a437551667a1db704025d50a71ce2dbf038088ff142"
+    },
+    {
+      "input": {
+        "class_id": "class.thunder",
+        "content_digest": "27c07f3f402dfc7f6100b9bf42af2fa515d40e35411c880b0164aa7ffc090e8b",
+        "difficulty_id": "difficulty.abyss",
+        "mode_ids": [
+          "mode.endless_limited"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "18446744073709551615",
+        "sim_schema_version": 4294967295,
+        "stage_id": "stage.mist_cliffs"
+      },
+      "name": "max_seed_other_content_and_schema",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f7631000000000a3432393439363732393500000040323763303766336634303264666337663631303062396266343261663266613531356434306533353431316338383062303136346161376666633039306538620000000a6869702d726e672d76310000001173746167652e6d6973745f636c6966667300000010646966666963756c74792e616279737300000001000000146d6f64652e656e646c6573735f6c696d697465640000000d636c6173732e7468756e646572000000143138343436373434303733373039353531363135",
+      "rules_hash": "082ddf9a7445e7c1e7093fed39e6ff395f1222107b5846cedc297d75631ecd05"
+    },
+    {
+      "input": {
+        "class_id": "class.body",
+        "content_digest": "27c07f3f402dfc7f6100b9bf42af2fa515d40e35411c880b0164aa7ffc090e8b",
+        "difficulty_id": "difficulty.hard",
+        "mode_ids": [
+          "mode.test_9",
+          "mode.test_10",
+          "mode.test.a",
+          "mode.test_a"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "bytewise_sort_not_natural_sort",
+      "preimage_hex": "48454156454e4953505245592f52554c45532d484153482f763100000000013100000040323763303766336634303264666337663631303062396266343261663266613531356434306533353431316338383062303136346161376666633039306538620000000a6869702d726e672d76310000001073746167652e6a6164655f67726f76650000000f646966666963756c74792e68617264000000040000000b6d6f64652e746573742e610000000c6d6f64652e746573745f31300000000b6d6f64652e746573745f390000000b6d6f64652e746573745f610000000a636c6173732e626f64790000000131",
+      "rules_hash": "5c997d3dce21833332a7dae0ea0b4972297fe03fd3d2df10b524c2246dba66fb"
+    }
+  ],
+  "domain_prefix": "HEAVENISPREY/RULES-HASH/v1",
+  "encoding_id": "hip-rules-hash-v1",
+  "field_order": [
+    "sim_schema_version",
+    "content_digest",
+    "rng_policy_id",
+    "stage_id",
+    "difficulty_id",
+    "mode_ids",
+    "class_id",
+    "seed"
+  ],
+  "generator": "tools/content/rules_identity.py",
+  "invalid": [
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "01",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "seed_leading_zero"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "18446744073709551616",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "seed_overflow"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "-1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "seed_negative"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "seed_empty"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal",
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "duplicate_mode"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.нефрит"
+      },
+      "name": "non_ascii_stage_id"
+    },
+    {
+      "input": {
+        "class_id": "class.Sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "uppercase_class_id"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "id_without_namespace"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411E171241914D79BC7025F5A6343137EF027A58DA2C9132347CC865168F0E0F",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "digest_uppercase"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "abc123",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "digest_short"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "empty_rng_policy"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": -1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "negative_schema_version"
+    },
+    {
+      "input": {
+        "class_id": "class.sword\n",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "class_id_trailing_newline"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal\n"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "mode_id_trailing_newline"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f\n",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "digest_trailing_newline"
+    },
+    {
+      "input": {
+        "class_id": "class.sword",
+        "content_digest": "411e171241914d79bc7025f5a6343137ef027a58da2c9132347cc865168f0e0f",
+        "difficulty_id": "difficulty.standard",
+        "mode_ids": [
+          "mode.normal"
+        ],
+        "rng_policy_id": "hip-rng-v1\n",
+        "seed": "1",
+        "sim_schema_version": 1,
+        "stage_id": "stage.jade_grove"
+      },
+      "name": "rng_policy_trailing_newline"
+    }
+  ],
+  "kind": "hip-rules-hash-vectors",
+  "schema_version": 1
+}

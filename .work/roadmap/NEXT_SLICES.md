@@ -68,7 +68,7 @@
 
 | Slice | Результат | Acceptance |
 |---|---|---|
-| P0-00 | Godot 4.7.2 2D bootstrap, typed GDScript, GUT, ContentRegistry v7 | headless import Windows/Linux + canonical content digest |
+| P0-00 | Godot 4.7.2 2D bootstrap, typed GDScript, GUT, ContentRegistry v7 | headless import Windows/Linux + canonical content digest; реализация — [ADR-007](../decisions/ADR-007-runtime-bootstrap.md), workflow `godot-tests.yml` |
 | P0-01 | Combat Kernel, PlayerCommand, RNG | golden tests для попаданий, DoT, replay |
 | P0-01E | Два простых обычных врага (Мертвец Инь + Волк), общие EnemyDef/AttackDef, один базовый состав волны | Godot spawn/damage/replay tests, нормальные tier, read-only content ID |
 | P0-02E | Телеграфируемые атаки богомола/фонаря, отложенная печать и мягкие корни | Пройденные bot-сценарии, нет неизбежных ловушек и скрытых ударов |

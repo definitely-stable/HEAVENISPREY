@@ -11,7 +11,7 @@
 | tool.gh | 2.60 | now | нет | python scripts/dev/doctor.py |
 | tool.godot | 4.7.2-stable | now | нет | python scripts/dev/godot_tool.py smoke |
 | tool.gdtoolkit | 4.5.0 | P0-00 | нет | gdlint --version; gdformat --check game/ |
-| tool.gut | 9.7.1 | P0-00 | нет | intentionally failing GUT test must make CI exit non-zero |
+| tool.gut | 9.7.1 | P0-00 | нет | python scripts/dev/godot_tool.py test (GUT finds >0 tests; an intentionally failing test makes the run exit non-zero) |
 
 ## Agent skills (vendored, pinned)
 

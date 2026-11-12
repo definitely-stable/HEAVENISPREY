@@ -1,5 +1,6 @@
 # RUNTIME_BOOTSTRAP_PLAN — GO/NO-GO пакет для P0-00 (DEV-ENV-005)
 
+- **Исполнение §3 (2026-11-12):** пункты 1–5 реализованы срезом P0-00 ([ADR-007](../decisions/ADR-007-runtime-bootstrap.md)); пункт 6 (placeholder-сцена) не выполнялся. Проверки: `generate_registry.py --check`, `godot_tool.py test` (headless import + GUT + негативный контроль), workflow `godot-tests.yml` на Ubuntu и Windows. Live-статус CI — [CURRENT_STATE](../CURRENT_STATE.md).
 - **Статус:** **GO для P0-00** (2026-11-12): пользователь делегировал решение («сам решай»), повторный readiness review — [READINESS_AUDIT §5](READINESS_AUDIT.md). GO относится только к первому runtime-срезу §3 и не разрешает геймплейные сцены и production-ассеты. Сам этот документ не создаёт `project.godot`.
 - **Дата:** 2026-11-12 · **Стек:** Godot 4.7.2 2D + typed GDScript ([ADR-001](../decisions/ADR-001-stack.md)) · **Инструменты:** [toolchain.lock.json](../tooling/toolchain.lock.json)
 - **Интерфейсы:** [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) · **Привязка систем:** [SYSTEM_BINDING](SYSTEM_BINDING.md)
@@ -49,7 +50,7 @@ tools/content/                  # генератор ContentRegistry (Python, st
 |---|---|---|---|
 | `design-validation` | есть | validators + unittest, Ubuntu + Windows-2022 | число тестов > 0 |
 | `toolchain-smoke` | есть | install/smoke Godot по lock, doctor | версия, sha512 |
-| `godot-import-and-tests` | P0-00 | `--headless --import`, GUT, проверка «найдено тестов > 0», ошибки ресурсов = fail | commit SHA, content digest, seed, логи как artifact при fail |
+| `godot-import-and-tests` (`godot-tests.yml`) | P0-00, **создан** | `--headless --import`, GUT, проверка «найдено тестов > 0», ошибки ресурсов = fail | commit SHA, content digest, seed, логи как artifact при fail |
 | `game-smoke` | P0-01 | headless запуск забега по bot-сценарию, golden replay hash | replay hash, event count |
 | `build-artifacts` | P0-02 | export templates из lock (sha512), экспорт Windows/Linux | артефакты с SHA в имени |
 | `perf-bench` | P0-02+ | exported build, сценарии из [s24](../spec/core/s24.md) | только измерения, без обещаний FPS |
