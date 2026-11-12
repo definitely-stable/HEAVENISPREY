@@ -5,3 +5,6 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+
+# Local developer toolchain (Godot binaries etc.), see .work/guides/DEV_ENVIRONMENT.md
+.tools/

@@ -46,5 +46,7 @@ jobs:
         run: python scripts/validate_choice_viewmodel_proposal.py
       - name: Verify DRAFT-CONTRACT-002 integer RNG and run-scoped draft replay
         run: python scripts/validate_draft_contract_proposal.py
+      - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
+        run: python scripts/validate_toolchain.py
       - name: Run design invariants
         run: python -m unittest discover -s tests -v
