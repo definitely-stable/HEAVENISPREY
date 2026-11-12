@@ -83,7 +83,7 @@ Test-policy задаёт protected offer IDs и порог pity_after. При о
 
 DraftOverlay связывается с конкретным **валидированным** базовым SaveSnapshot. При загрузке повторно применяются все OPEN/REROLL/BANISH/LOCK/SELECT/SKIP из журнала и сравниваются все поля: RunBuild, pending queue, RNG, banlist, charges и hand. Подмена курсора или hand даже с пересчитанным checksum должна отклоняться.
 
-**Честная граница:** старый SAVE-CONTRACT-001 хранит только synthetic offers seed/cursor 0. Новый поток фактически потребляет draws, но физически не встроен в прежнюю SaveEnvelope. Это архитектурный долг CHOICE-SAVE-002: требуются schema migration, единый authoritative cursor и atomically persisted Run/Build/Draft.
+**Честная граница:** старый SAVE-CONTRACT-001 хранит только synthetic offers seed/cursor 0. Новый поток фактически потребляет draws, но физически не встроен в прежнюю SaveEnvelope. Это архитектурный долг CHOICE-SAVE-002: требуются schema migration, единый authoritative cursor и atomically persisted Run/Build/Draft. **Обновление:** закрыт предложением [CHOICE-SAVE-002](choice-save-002.md) (SaveEnvelope v2, курсор только в `rng_policy.streams.offers`).
 
 ## 8. Что проверено и не проверено
 

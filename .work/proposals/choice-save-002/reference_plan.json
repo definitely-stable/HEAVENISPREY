@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "choice_save_002_architecture_fixture",
+  "status": "design-proposal-not-canonical",
+  "note": "Synthetic commands over the SAVE-CONTRACT-001 checkpoint and the DRAFT-CONTRACT-002 policy. Not balance, not odds.",
+  "before_checkpoint": [
+    {
+      "uid": "cs.open.1",
+      "kind": "OPEN",
+      "offer_id": null,
+      "expected_hand_revision": null
+    },
+    {
+      "uid": "cs.lock.1",
+      "kind": "LOCK",
+      "offer_id": "sample.offer.echo",
+      "expected_hand_revision": 1
+    },
+    {
+      "uid": "cs.reroll.1",
+      "kind": "REROLL",
+      "offer_id": null,
+      "expected_hand_revision": 2
+    }
+  ],
+  "confirm_uid": "cs.select.1",
+  "after_checkpoint": [
+    {
+      "uid": "cs.open.2",
+      "kind": "OPEN",
+      "offer_id": null,
+      "expected_hand_revision": null
+    },
+    {
+      "uid": "cs.banish.2",
+      "kind": "BANISH",
+      "offer_id": "sample.offer.thunder_conduit",
+      "expected_hand_revision": 1
+    },
+    {
+      "uid": "cs.select.2",
+      "kind": "SELECT",
+      "offer_id": "sample.offer.echo",
+      "expected_hand_revision": 2
+    },
+    {
+      "uid": "cs.ritual.1",
+      "kind": "RESOLVE",
+      "offer_id": "sample.evolution.thousand_swords",
+      "expected_hand_revision": null
+    }
+  ],
+  "expected": {
+    "checkpoint_cards": [
+      "sample.offer.echo",
+      "sample.offer.thunder_conduit"
+    ],
+    "checkpoint_lock": "sample.offer.echo",
+    "checkpoint_hand_revision": 3,
+    "checkpoint_offers_cursor": "3",
+    "final_offers_cursor": "6",
+    "final_build_revision": 10,
+    "final_banned_ids": [
+      "sample.offer.thunder_conduit"
+    ],
+    "final_pending_kinds": [
+      "BREAKTHROUGH"
+    ],
+    "final_state_digest": "f388a1d03fb3e1f21b88e312d0b31a7c04a9581767b5642391115b7def5904b9"
+  }
+}
