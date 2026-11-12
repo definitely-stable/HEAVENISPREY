@@ -25,6 +25,7 @@
 | **MCP-серверы (Context7, GitHub, Godot MCP), примеры конфигураций** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · `python scripts/validate_mcp.py` |
 | **Проверка «это игра»: game-ness gates, juice, ship gates** | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) |
 | **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
+| **Арены, режим «Событие», специализации, экипировка, квесты с референсов (только примеры)** | [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) | [ref/catalog.json](../../ref/catalog.json) |
 | **Какая система к какому контракту, skill и проверке; открытые пробелы** | [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) | [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) · [system_binding.json](../tooling/system_binding.json) |
 | **Готовность среды, блокеры, GO/NO-GO для Godot bootstrap** | [READINESS_AUDIT](../development/READINESS_AUDIT.md) | [RUNTIME_BOOTSTRAP_PLAN](../development/RUNTIME_BOOTSTRAP_PLAN.md) · [TOOLING_MATRIX](../development/TOOLING_MATRIX.md) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |

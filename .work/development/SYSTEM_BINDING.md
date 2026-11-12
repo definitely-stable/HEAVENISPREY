@@ -63,7 +63,7 @@
 | GAP-SCHEMA-COVERAGE | localization_context.json and settings.example.cfg have no validator | next content slice | [README.md](../../.work/config/v7/README.md) | validator checks context prefixes against translations.csv keys and settings keys against the UX settings contract | no new localization rules | **OPEN** |
 | GAP-ART-BIBLE | Style passport and art bible approval | user decision (ART-BIBLE-001) | [ART_LOOKDEV.md](../../.work/guides/ART_LOOKDEV.md) | metric thresholds recorded in passport | no production assets | **NEEDS-USER** |
 | GAP-REF-BINARIES | Storage of ref/ image binaries (162 MB): Git LFS, plain git or local-only | user decision | [README.md](../../ref/README.md) | ref_catalog.py validate checks sha256 when binaries are present | catalog metadata already versioned | **NEEDS-USER** |
-| GAP-REF-CANON | References show arenas, an Event mode, class specializations, equipment and quest screens absent from v7 | user decision | [catalog.json](../../ref/catalog.json) | content_ids in catalog resolve to v7 IDs once accepted | reference images are hypotheses, not approved rules | **NEEDS-USER** |
+| GAP-REF-CANON | References show arenas, an Event mode, class specializations, equipment and quest screens absent from v7 | user decision 2026-11-12: examples only | [reference-concept-examples.md](../../.work/spec/v7/reference-concept-examples.md) | REF-EXAMPLES-001 lists each concept with example.* names; no v7 IDs created | reference images are hypotheses, not approved rules | **CLOSED** |
 
 ## Покрытие схем `.work/config/v7`
 
