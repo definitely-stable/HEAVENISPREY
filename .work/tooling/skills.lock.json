@@ -3,7 +3,125 @@
   "kind": "skills-lock",
   "verified_on": "2026-11-12",
   "policy": "Only vendored entries are installed into .agents/skills; candidates are audited but not installed. Pin by commit SHA, keep the upstream LICENSE next to the skill, verify tree_sha256 in CI. No curl|sh, no unpinned npx installers, no autopilot/permission-bypass scripts.",
-  "vendored": [],
+  "vendored": [
+    {
+      "name": "create-game-assets",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/create-game-assets",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "28e725698caeed9f45e0bf584deac22e9107426c8c3e2e8339fc6249dc080e68"
+    },
+    {
+      "name": "game-feel",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/game-feel",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "de50ecc0ff539cde8a2561a89cf992d86140e7daffa6a0849bae825077d88dd0"
+    },
+    {
+      "name": "game-ui-ux",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/game-ui-ux",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "62a392b607dd4ccde86568c40dfcc21b1f48b9ef7375a7f8024637cbefd68bf4"
+    },
+    {
+      "name": "godot-2d-movement",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-2d-movement",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "a9bbdfdae69f768f1ebb28fd744363c3cbae07c61477198d29f111dd9e7f1ad7"
+    },
+    {
+      "name": "godot-gdscript",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-gdscript",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "2e7494e8000680ef3c313159e87e63251b86f3f0c2e31884afb862b7360c88f2"
+    },
+    {
+      "name": "godot-gdscript-headless-testing",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-gdscript-headless-testing",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "f8c408983717f9ee948311c59cfc3c9e35f23237f5bd032f9ed1737b0d4f1aeb"
+    },
+    {
+      "name": "godot-nodes-scenes",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-nodes-scenes",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "97b04f854c2948706261a5b62e0d769f2dd3658a8e4d3aa048cb4512d82d08d5"
+    },
+    {
+      "name": "godot-resources",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-resources",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "30845407c159133fac9e4d98cf2ed57b1efeafc70d1c80d734ed16521a6b3f33"
+    },
+    {
+      "name": "godot-signals-groups",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-signals-groups",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "00f1b7da725b6f7de43341da66b884607063473225bd9b65135bc5f6894320f9"
+    },
+    {
+      "name": "godot-ui-control",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/godot/godot-ui-control",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "e9fc15bf2a27057f70af8917ada0a2b6b2499124ac3decdfcf2d94d851e3e7cc"
+    },
+    {
+      "name": "input-systems",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/input-systems",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "5346158042edd44de4944c790b3642a934989963ccea7126d6b24ba1d860fab0"
+    },
+    {
+      "name": "performance-optimization",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/performance-optimization",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "495cb8fc1f473108f7825b0ec25a19844bbf76e0a64ce53dd1386b8e2d6c5de6"
+    },
+    {
+      "name": "save-systems",
+      "source": "gamedev-skills/awesome-gamedev-agent-skills",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "upstream_path": "skills/disciplines/save-systems",
+      "license": "Apache-2.0",
+      "license_file": "LICENSE",
+      "tree_sha256": "e5555abbe9e4fda16684cbb570739fae85d8d23bb7fa1bb41d6ed396384d3ece"
+    }
+  ],
   "candidates": [
     {
       "source": "gamedev-skills/awesome-gamedev-agent-skills",
@@ -13,8 +131,31 @@
       "stars": 8498,
       "godot_claim": "Godot 4.7 (4.7.2 stable) per docs/VERSION-SUPPORT.md, checked 2026-11-11",
       "verdict": "ADOPT-SUBSET",
-      "subset": ["godot-gdscript", "godot-gdscript-headless-testing", "godot-resources", "godot-signals-groups", "godot-nodes-scenes", "godot-2d-movement", "godot-ui-control", "godot-animation", "godot-shaders", "godot-audio", "godot-export", "save-systems", "game-feel", "game-ui-ux", "performance-optimization", "input-systems", "create-game-assets"],
-      "rejected_subset": ["godot-csharp (C# not in stack)", "godot-3d-essentials (2D only)", "godot-multiplayer (single-player)", "steam-publish/itch-publish/game-jam (not current phase)"],
+      "subset": [
+        "godot-gdscript",
+        "godot-gdscript-headless-testing",
+        "godot-resources",
+        "godot-signals-groups",
+        "godot-nodes-scenes",
+        "godot-2d-movement",
+        "godot-ui-control",
+        "godot-animation",
+        "godot-shaders",
+        "godot-audio",
+        "godot-export",
+        "save-systems",
+        "game-feel",
+        "game-ui-ux",
+        "performance-optimization",
+        "input-systems",
+        "create-game-assets"
+      ],
+      "rejected_subset": [
+        "godot-csharp (C# not in stack)",
+        "godot-3d-essentials (2D only)",
+        "godot-multiplayer (single-player)",
+        "steam-publish/itch-publish/game-jam (not current phase)"
+      ],
       "install_phase": "DEV-ENV-002b vendoring of the subset with tree_sha256; activation useful from P0-00",
       "security": "Markdown + stdlib read-only check scripts; maintainer eval script calls model CLIs (not vendored)"
     },
@@ -60,6 +201,33 @@
       "license": "MIT",
       "verdict": "REFERENCE-ONLY",
       "reason": "Single 82 KB skill with executable scene/asset generators; too heavy for the context budget"
+    }
+  ],
+  "vendor_sources": [
+    {
+      "repo": "gamedev-skills/awesome-gamedev-agent-skills",
+      "ref": "v2.0.0",
+      "commit": "2ee85183666929223cc8b1bdb53da5e7d3fb4804",
+      "license": "Apache-2.0",
+      "license_files": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "skills": [
+        "skills/godot/godot-gdscript",
+        "skills/godot/godot-gdscript-headless-testing",
+        "skills/godot/godot-resources",
+        "skills/godot/godot-signals-groups",
+        "skills/godot/godot-nodes-scenes",
+        "skills/godot/godot-2d-movement",
+        "skills/godot/godot-ui-control",
+        "skills/disciplines/save-systems",
+        "skills/disciplines/performance-optimization",
+        "skills/disciplines/game-ui-ux",
+        "skills/disciplines/input-systems",
+        "skills/disciplines/game-feel",
+        "skills/disciplines/create-game-assets"
+      ]
     }
   ]
 }

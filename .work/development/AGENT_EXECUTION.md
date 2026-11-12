@@ -31,8 +31,8 @@ acceptance: scripts/validate_agent_skills.py, tests/test_agent_skills.py, client
 
 | Клиент | Механизм | Состояние на 2026-11-12 |
 |---|---|---|
-| OpenCode 2.2.6 | читает `.agents/skills` нативно; требует **уникальные имена** во всех каталогах skills | **VERIFIED**: `opencode run` перечислил все 8 `hip-*` |
-| Claude Code 2.1.317 | читает только `.claude/skills` или плагины → `.agents` объявлен плагином `hip` ([plugin.json](../../.agents/.claude-plugin/plugin.json), [marketplace](../../.claude-plugin/marketplace.json), [settings](../../.claude/settings.json)) | **VERIFIED (load)**: `claude --plugin-dir ./.agents plugin details hip` → Skills (8), ~735 always-on токенов. Интерактивный вызов в новой сессии — **NOT VERIFIED** (CLI в этом окружении не авторизован) |
+| OpenCode 2.2.6 | читает `.agents/skills` нативно; требует **уникальные имена** во всех каталогах skills | **VERIFIED**: `opencode run` перечислил все `hip-*` (8) и vendored Godot skills |
+| Claude Code 2.1.317 | читает только `.claude/skills` или плагины → `.agents` объявлен плагином `hip` ([plugin.json](../../.agents/.claude-plugin/plugin.json), [marketplace](../../.claude-plugin/marketplace.json), [settings](../../.claude/settings.json)) | **VERIFIED (load)**: `claude --plugin-dir ./.agents plugin details hip` → Skills (21 = 8 `hip-*` + 13 vendored), ~2 019 always-on токенов. Интерактивный вызов в новой сессии — **NOT VERIFIED** (CLI в этом окружении не авторизован) |
 | Codex CLI 0.167.0 | читает `.agents/skills` нативно | **NOT VERIFIED**: `codex exec` остановлен лимитом подписки до 2026-11-14 |
 
 Почему не копия в `.claude/skills`: OpenCode загружает и `.claude/skills`, и `.agents/skills`, и при одинаковых именах skill может не загрузиться. Валидатор запрещает такие копии. `CLAUDE.md` содержит только `@AGENTS.md`.
