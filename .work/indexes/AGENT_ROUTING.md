@@ -26,6 +26,7 @@
 | **Ревью игрового опыта, отклик, читаемость, готовность билда** | [PLAYABILITY_GATES](../guides/PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) · [s15](../spec/core/s15.md) · [s24](../spec/core/s24.md) |
 | **Арт-референсы, стиль, генерация и приёмка ассетов** | [ART_LOOKDEV](../guides/ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) · [s16](../spec/core/s16.md) |
 | **Границы интерфейсов (ContentRegistry, RunEvent, CombatKernel, SaveEnvelope, PresentationBridge), реестр пробелов** | [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) | [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) · `python scripts/system_binding.py validate` |
+| **Старт P0-00, структура `game/`, будущие CI workflows, готовность инструментов** | [RUNTIME_BOOTSTRAP_PLAN](../development/RUNTIME_BOOTSTRAP_PLAN.md) | [READINESS_AUDIT](../development/READINESS_AUDIT.md) · [TOOLING_MATRIX](../development/TOOLING_MATRIX.md) |
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 
