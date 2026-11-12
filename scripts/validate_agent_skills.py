@@ -64,8 +64,11 @@ def load_lock(path: Path = LOCK) -> dict:
 
 def tree_digest(folder: Path) -> str:
     digest = hashlib.sha256()
-    for file in sorted(p for p in folder.rglob("*") if p.is_file()):
-        digest.update(file.relative_to(folder).as_posix().encode() + b"\0")
+    # Sort by the POSIX relative path string: Path ordering is case-insensitive on
+    # Windows and case-sensitive on Linux, which would give different digests.
+    files = sorted((p.relative_to(folder).as_posix(), p) for p in folder.rglob("*") if p.is_file())
+    for rel, file in files:
+        digest.update(rel.encode() + b"\0")
         digest.update(file.read_bytes().replace(b"\r\n", b"\n") + b"\0")
     return digest.hexdigest()
 

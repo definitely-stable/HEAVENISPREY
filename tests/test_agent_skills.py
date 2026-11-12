@@ -1,6 +1,7 @@
 """DEV-ENV-002: repo-local agent skills, Claude adapter and vendored-skill lock."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -107,8 +108,8 @@ class AgentSkillTests(unittest.TestCase):
         (folder / "LICENSE").write_text("MIT", encoding="utf-8")
         entry = {"name": "third-party-x", "commit": "a" * 40, "license": "MIT", "license_file": "LICENSE",
                  "tree_sha256": skills.tree_digest(folder)}
-        lock = dict(EMPTY_LOCK, vendored=[entry])
-        self.assertEqual(self.run_check(lock)["vendored"], 1)
+        lock = dict(self.lock, vendored=self.lock["vendored"] + [entry])
+        self.assertEqual(self.run_check(lock)["vendored"], len(self.lock["vendored"]) + 1)
         (folder / "SKILL.md").write_text("---\nname: third-party-x\ndescription: changed\n---\n", encoding="utf-8")
         with self.assertRaisesRegex(skills.ContractError, "drifted"):
             self.run_check(lock)
@@ -128,6 +129,22 @@ class AgentSkillTests(unittest.TestCase):
         closeout.write_text(text.replace(old["description"], meta["description"]), encoding="utf-8")
         with self.assertRaisesRegex(skills.ContractError, "ambiguous trigger"):
             self.run_check()
+
+    def test_vendored_skills_are_pinned_and_licensed(self):
+        for entry in self.lock["vendored"]:
+            self.assertRegex(entry["commit"], r"^[0-9a-f]{40}$")
+            self.assertTrue((self.dir / entry["name"] / entry["license_file"]).is_file())
+        self.assertGreaterEqual(self.run_check()["vendored"], 13)
+
+    def test_tree_digest_order_is_case_sensitive_and_platform_independent(self):
+        folder = self.tmp / "case"
+        folder.mkdir()
+        (folder / "b.md").write_text("b", encoding="utf-8")
+        (folder / "B2.md").write_text("B", encoding="utf-8")
+        expected = hashlib.sha256()
+        for rel, data in (("B2.md", b"B"), ("b.md", b"b")):
+            expected.update(rel.encode() + b"\0" + data + b"\0")
+        self.assertEqual(skills.tree_digest(folder), expected.hexdigest())
 
     def test_route_returns_none_on_tie_or_no_overlap(self):
         self.assertEqual(skills.route("zzz qqq", {"a": "alpha", "b": "beta"})[0], None)
