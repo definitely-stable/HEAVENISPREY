@@ -11,7 +11,7 @@
       "upstream_path": "skills/disciplines/create-game-assets",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "28e725698caeed9f45e0bf584deac22e9107426c8c3e2e8339fc6249dc080e68"
+      "tree_sha256": "f137993f80a64d49bc36bfc75db05e89975991244da21d2864317195b077ce52"
     },
     {
       "name": "game-feel",
@@ -20,7 +20,7 @@
       "upstream_path": "skills/disciplines/game-feel",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "de50ecc0ff539cde8a2561a89cf992d86140e7daffa6a0849bae825077d88dd0"
+      "tree_sha256": "ceb76bc9b90c203c1b932df491b8b80b4f05cf9be0ea9b27e784638ad99be6c4"
     },
     {
       "name": "game-ui-ux",
@@ -29,7 +29,7 @@
       "upstream_path": "skills/disciplines/game-ui-ux",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "62a392b607dd4ccde86568c40dfcc21b1f48b9ef7375a7f8024637cbefd68bf4"
+      "tree_sha256": "c39ae5c55e8dc6c63467bf0db06302aaf510c74fd0dfb2251eb4b065d141b0e7"
     },
     {
       "name": "godot-2d-movement",
@@ -38,7 +38,7 @@
       "upstream_path": "skills/godot/godot-2d-movement",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "a9bbdfdae69f768f1ebb28fd744363c3cbae07c61477198d29f111dd9e7f1ad7"
+      "tree_sha256": "042f824d2871de17db3db195c84de06bec438c7d2cd9918b83364718040a5773"
     },
     {
       "name": "godot-gdscript",
@@ -47,7 +47,7 @@
       "upstream_path": "skills/godot/godot-gdscript",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "2e7494e8000680ef3c313159e87e63251b86f3f0c2e31884afb862b7360c88f2"
+      "tree_sha256": "4886e7fd8d90a0f8bd5a0d498600249561b423fb0ffa3227c62f8908941385cb"
     },
     {
       "name": "godot-gdscript-headless-testing",
@@ -65,7 +65,7 @@
       "upstream_path": "skills/godot/godot-nodes-scenes",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "97b04f854c2948706261a5b62e0d769f2dd3658a8e4d3aa048cb4512d82d08d5"
+      "tree_sha256": "54fc190b353d0af341924197ae9ce96612ab9271816fc060101d825cab7d9ef0"
     },
     {
       "name": "godot-resources",
@@ -74,7 +74,7 @@
       "upstream_path": "skills/godot/godot-resources",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "30845407c159133fac9e4d98cf2ed57b1efeafc70d1c80d734ed16521a6b3f33"
+      "tree_sha256": "b8ea0588b3dbf89172c72a3550f31e90d4f00f2a83fb38f1cda5df571c42431b"
     },
     {
       "name": "godot-signals-groups",
@@ -83,7 +83,7 @@
       "upstream_path": "skills/godot/godot-signals-groups",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "00f1b7da725b6f7de43341da66b884607063473225bd9b65135bc5f6894320f9"
+      "tree_sha256": "9b919a3b89d94e2009a12587ad041b054bb25026c18958abc2f3686a35f43726"
     },
     {
       "name": "godot-ui-control",
@@ -92,7 +92,7 @@
       "upstream_path": "skills/godot/godot-ui-control",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "e9fc15bf2a27057f70af8917ada0a2b6b2499124ac3decdfcf2d94d851e3e7cc"
+      "tree_sha256": "7b9db6a4773762b4d8b805109d237e7cb4c9bb89271f9238f8cc9350e4b529eb"
     },
     {
       "name": "input-systems",
@@ -101,7 +101,7 @@
       "upstream_path": "skills/disciplines/input-systems",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "5346158042edd44de4944c790b3642a934989963ccea7126d6b24ba1d860fab0"
+      "tree_sha256": "53227e35b6f4539f32381805b63bbaf41ecfb41203f1aba3395d234e5d492b3e"
     },
     {
       "name": "performance-optimization",
@@ -110,7 +110,7 @@
       "upstream_path": "skills/disciplines/performance-optimization",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "495cb8fc1f473108f7825b0ec25a19844bbf76e0a64ce53dd1386b8e2d6c5de6"
+      "tree_sha256": "131204d02318dfdf62654215f061abf380285d11f2dad9ef2eb743601375e704"
     },
     {
       "name": "save-systems",
@@ -119,7 +119,7 @@
       "upstream_path": "skills/disciplines/save-systems",
       "license": "Apache-2.0",
       "license_file": "LICENSE",
-      "tree_sha256": "e5555abbe9e4fda16684cbb570739fae85d8d23bb7fa1bb41d6ed396384d3ece"
+      "tree_sha256": "c01dfd92a154a37a8a016d6d02a3f88f4334e476a1b688ab1eb5331b62f08642"
     }
   ],
   "candidates": [

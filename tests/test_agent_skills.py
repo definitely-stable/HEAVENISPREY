@@ -1,6 +1,7 @@
 """DEV-ENV-002: repo-local agent skills, Claude adapter and vendored-skill lock."""
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -134,6 +135,16 @@ class AgentSkillTests(unittest.TestCase):
             self.assertRegex(entry["commit"], r"^[0-9a-f]{40}$")
             self.assertTrue((self.dir / entry["name"] / entry["license_file"]).is_file())
         self.assertGreaterEqual(self.run_check()["vendored"], 13)
+
+    def test_tree_digest_order_is_case_sensitive_and_platform_independent(self):
+        folder = self.tmp / "case"
+        folder.mkdir()
+        (folder / "b.md").write_text("b", encoding="utf-8")
+        (folder / "B2.md").write_text("B", encoding="utf-8")
+        expected = hashlib.sha256()
+        for rel, data in (("B2.md", b"B"), ("b.md", b"b")):
+            expected.update(rel.encode() + b"\0" + data + b"\0")
+        self.assertEqual(skills.tree_digest(folder), expected.hexdigest())
 
     def test_route_returns_none_on_tie_or_no_overlap(self):
         self.assertEqual(skills.route("zzz qqq", {"a": "alpha", "b": "beta"})[0], None)
