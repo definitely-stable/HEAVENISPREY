@@ -7,5 +7,6 @@
 5. [ADR-005 — данные и локализация](ADR-005-config-contract.md)
 
 6. [ADR-006 — единственный источник контента](ADR-006-content-catalog.md)
+7. [ADR-007 — runtime bootstrap P0-00: renderer, контент, RNG, RulesHash, GUT](ADR-007-runtime-bootstrap.md)
 
 **Иерархия:** ADR + v7 > непересмотренные v6 > v5/core > архив. Изменения требуют ADR amendment, а не тихой правки исторического документа.

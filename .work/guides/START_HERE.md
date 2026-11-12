@@ -31,6 +31,7 @@
 | **Типы эффектов, атрибуция урона, конечность цепочек, multicast** | [ARCH-04](../spec/v7/arch-04-effect-chains.md) | [ARCH-01 §7](../spec/v7/build-skill-type-contract.md) · [statuses.json](../config/v7/statuses.json) |
 | **Арена, волны, телеграфы, паттерн босса, маршруты ухода, награды алтарей/сундука/босса** | [GAME-ARCH-02](../spec/v7/game-arch-02-encounters.md) | [контракт угроз](../spec/v7/enemy-threat-contract.md) · [GAME-ARCH-00](../spec/v7/game-arch-00-run-orchestration.md) |
 | **Какая система к какому контракту, skill и проверке; открытые пробелы** | [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) | [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) · [system_binding.json](../tooling/system_binding.json) |
+| **Godot-проект `game/`: generated ContentRegistry, digest, RNG `hip-rng-v1`, `rules_hash`, GUT-тесты** | [ADR-007](../decisions/ADR-007-runtime-bootstrap.md) | [DEV_ENVIRONMENT §2a](DEV_ENVIRONMENT.md) · `game/core/` · `game/tests/` |
 | **Готовность среды, блокеры, GO/NO-GO для Godot bootstrap** | [READINESS_AUDIT](../development/READINESS_AUDIT.md) | [RUNTIME_BOOTSTRAP_PLAN](../development/RUNTIME_BOOTSTRAP_PLAN.md) · [TOOLING_MATRIX](../development/TOOLING_MATRIX.md) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |
 
@@ -44,4 +45,4 @@
 
 [Что ещё не перенесено](MIGRATION_AUDIT.md) · [Правила актуальности](DOC_STANDARDS.md) · [Рабочий процесс без ролей по моделям](WORKFLOW.md).
 
-**Текущий статус (2026-11-12):** архитектурные пробелы до P0-00 закрыты, **P0-00 — GO** в границах [RUNTIME_BOOTSTRAP_PLAN §3](../development/RUNTIME_BOOTSTRAP_PLAN.md) ([обоснование](../development/READINESS_AUDIT.md)). BUILD-SKILL-001 остаётся design-proposal, а не утверждённым решением; геймплейные сцены и production-ассеты — отдельными срезами. [Архитектурные gates](../roadmap/NEXT_SLICES.md).
+**Текущий статус (2026-11-12):** архитектурные пробелы до P0-00 закрыты, **P0-00 — GO** в границах [RUNTIME_BOOTSTRAP_PLAN §3](../development/RUNTIME_BOOTSTRAP_PLAN.md) ([обоснование](../development/READINESS_AUDIT.md)). Первый runtime-срез P0-00 ([ADR-007](../decisions/ADR-007-runtime-bootstrap.md)): `game/project.godot`, генератор ContentRegistry, `HipRng`/`RulesHash`/`RunRulesSnapshot`, GUT-паритет с Python-оракулами. BUILD-SKILL-001 остаётся design-proposal, а не утверждённым решением; геймплейные сцены и production-ассеты — отдельными срезами. [Архитектурные gates](../roadmap/NEXT_SLICES.md).

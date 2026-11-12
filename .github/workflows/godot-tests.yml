@@ -1,0 +1,48 @@
+name: Godot import and tests (P0-00)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: godot-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  godot-tests:
+    name: Godot import and GUT (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-2022]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      HIP_TOOLS_ROOT: ${{ github.workspace }}/.tools
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Generated ContentRegistry matches v7 sources (fail-closed)
+        run: python tools/content/generate_registry.py --check
+      - name: Cache pinned Godot and GUT (keyed by toolchain.lock.json)
+        uses: actions/cache@v6
+        with:
+          path: |
+            .tools/godot
+            game/addons/gut
+          key: godot-gut-${{ runner.os }}-${{ hashFiles('.work/tooling/toolchain.lock.json') }}
+      - name: Install pinned Godot (SHA-512 verified)
+        run: python scripts/dev/godot_tool.py install
+      - name: Install pinned GUT (tree digest verified)
+        run: python scripts/dev/godot_tool.py gut-install
+      - name: Headless import, GUT suite and negative control
+        run: python scripts/dev/godot_tool.py test

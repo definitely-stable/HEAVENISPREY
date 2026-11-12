@@ -32,6 +32,7 @@
 | **StageTopology, EncounterDef, BossPatternDef, escape routes, reward_event_id, порядок событий в тике** | [GAME-ARCH-02](../spec/v7/game-arch-02-encounters.md) | `python scripts/validate_encounter_proposal.py --report` · [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) |
 | **Границы интерфейсов (ContentRegistry, RunEvent, CombatKernel, SaveEnvelope, PresentationBridge), реестр пробелов** | [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) | [SYSTEM_BINDING](../development/SYSTEM_BINDING.md) · `python scripts/system_binding.py validate` |
 | **Старт P0-00, структура `game/`, будущие CI workflows, готовность инструментов** | [RUNTIME_BOOTSTRAP_PLAN](../development/RUNTIME_BOOTSTRAP_PLAN.md) | [READINESS_AUDIT](../development/READINESS_AUDIT.md) · [TOOLING_MATRIX](../development/TOOLING_MATRIX.md) |
+| **Godot-проект `game/`: renderer, generated content и digest, RNG `hip-rng-v1`, `rules_hash`, GUT** | [ADR-007](../decisions/ADR-007-runtime-bootstrap.md) | `python tools/content/generate_registry.py --check` · `python scripts/dev/godot_tool.py test` · [DEV_ENVIRONMENT §2a](../guides/DEV_ENVIRONMENT.md) |
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 

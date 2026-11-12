@@ -54,6 +54,12 @@ jobs:
         run: python scripts/validate_effect_chain_proposal.py
       - name: Verify GAME-ARCH-02 arena, telegraphs, boss pattern and reward order (design-only)
         run: python scripts/validate_encounter_proposal.py
+      - name: Verify P0-00 generated ContentRegistry equals v7 sources (digest parity)
+        run: python tools/content/generate_registry.py --check
+      - name: Verify ADR-007 hip-rng-v1 and rules-hash golden vectors are reproducible
+        run: |
+          python tools/content/hip_rng.py --check
+          python tools/content/rules_identity.py --check
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
