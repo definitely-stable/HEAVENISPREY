@@ -10,8 +10,8 @@
 | Skyrant/gamedev-agent-skills | `7eb1b53` | Apache-2.0 | **REJECT** | форк upstream без изменений по сути, отстаёт на 178 коммитов; брать upstream |
 | revfactory/harness | `92d9f1b` | Apache-2.0 | **ADAPT** | генератор агентов/skills сам пишет в `.claude/`; перенесены идеи (см. [AGENT_EXECUTION §4](AGENT_EXECUTION.md)) |
 | google-research/harness2 | `6868817` | Apache-2.0 | **REFERENCE-ONLY** | исследовательский фреймворк (Linux, Vertex, executors с открытой сетью); перенесена дисциплина оценки harness |
-| studioigor/studioigor-skill | `14d9d09` | MIT | **ADAPT (checklists)** | полезные чеклисты; autopilot запускает агентов с обходом разрешений и меняет crontab — не устанавливать |
-| studioigor/ref2game | `da2978f` | MIT | **REFERENCE-ONLY** | собственный WebGL2 runtime; применимы только метрики сравнения референсов для look-dev |
+| studioigor/studioigor-skill | `14d9d09` | MIT | **ADAPT (checklists)** | перенесено в [PLAYABILITY_GATES](../guides/PLAYABILITY_GATES.md) и [ART_LOOKDEV](../guides/ART_LOOKDEV.md); autopilot запускает агентов с обходом разрешений и меняет crontab — не устанавливать |
+| studioigor/ref2game | `da2978f` | MIT | **REFERENCE-ONLY** | собственный WebGL2 runtime; метрики сравнения и паспорт стиля перенесены в [ART_LOOKDEV](../guides/ART_LOOKDEV.md) |
 | haxqer/godot-skill | `037c03e` | MIT | **REFERENCE-ONLY** | 82 KB одной skill + исполняемые генераторы: дорого по контексту |
 
 ## Подмножество upstream (DEV-ENV-002b, установлено)
