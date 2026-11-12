@@ -188,6 +188,50 @@ def validate_enemies(difficulty, stages, statuses, modes, scenarios, trs):
     print("Ordinary enemies:", len(enemies), "attacks:", len(attacks),
           "stage rosters:", len(rosters), "difficulty variants:", len(variants))
 
+SETTINGS_SCHEMA={
+    "localization":{"preferred_locale":("enum",("auto","en","ru"))},
+    "graphics":{"vfx_intensity":("unit",),"screenshake":("unit",)},
+    "accessibility":{"font_scale":("positive",)},
+}
+def check_localization_context(ctx,trs):
+    """localization_context.json: every hint names an existing key or a key prefix (ending with _)."""
+    out=[]
+    if ctx.get("kind")!="localization_hints":out.append("localization_context.json: unexpected kind")
+    if ctx.get("translation_file")!="translations.csv":out.append("localization_context.json: translation_file must be translations.csv")
+    for key,hint in ctx.get("contexts",{}).items():
+        hit=any(k.startswith(key) for k in trs) if key.endswith("_") else key in trs
+        if not hit:out.append("localization_context.json: no translation key for "+key)
+        if not isinstance(hint,str) or not hint.strip():out.append("localization_context.json: empty hint for "+key)
+    return out
+def check_settings(text):
+    """settings.example.cfg: Godot ConfigFile subset; known sections/keys only, typed values in range."""
+    out,seen,section=[],{},None
+    for n,raw in enumerate(text.splitlines(),1):
+        line=raw.strip()
+        if not line or line.startswith(";"):continue
+        if line.startswith("[") and line.endswith("]"):
+            section=line[1:-1]
+            if section not in SETTINGS_SCHEMA:out.append("settings.example.cfg:%d unknown section %s"%(n,section))
+            continue
+        key,_,value=line.partition("=")
+        rule=SETTINGS_SCHEMA.get(section,{}).get(key.strip())
+        if rule is None:
+            out.append("settings.example.cfg:%d unknown key %s.%s"%(n,section,key.strip()));continue
+        seen[(section,key.strip())]=True
+        value=value.strip()
+        if rule[0]=="enum":
+            if not (value.startswith('"') and value.endswith('"') and value[1:-1] in rule[1]):
+                out.append("settings.example.cfg:%d %s must be one of %s"%(n,key.strip(),rule[1]))
+            continue
+        try:number=float(value)
+        except ValueError:
+            out.append("settings.example.cfg:%d %s is not a number"%(n,key.strip()));continue
+        if rule[0]=="unit" and not 0<=number<=1:out.append("settings.example.cfg:%d %s outside 0..1"%(n,key.strip()))
+        if rule[0]=="positive" and not number>0:out.append("settings.example.cfg:%d %s must be > 0"%(n,key.strip()))
+    for section,keys in SETTINGS_SCHEMA.items():
+        for key in keys:
+            if (section,key) not in seen:out.append("settings.example.cfg: missing %s.%s"%(section,key))
+    return out
 def run():
     difficulty=catalog("difficulty_profiles.json","profiles")
     modes=catalog("modes.json","profiles")
@@ -327,6 +371,8 @@ def run():
     for required in ("unlock.tribulation","unlock.abyss"):
         if len(unlocks[required]["all"])<2:problem("late unlock diluted "+required)
     validate_enemies(difficulty, stages, statuses, modes, scenarios, trs)
+    for msg in check_localization_context(load("localization_context.json"),trs):problem(msg)
+    for msg in check_settings((DATA/"settings.example.cfg").read_text(encoding="utf-8")):problem(msg)
     print("Checked catalogs:",sum(map(len,(classes,skills,statuses,bosses,stages,talents,late,scenarios,profiles,unlocks,modes,difficulty))),"definitions")
     print("Checked RU/EN keys:",len(trs))
 def main():

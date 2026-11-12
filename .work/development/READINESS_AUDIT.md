@@ -30,11 +30,11 @@
 | ID | Блокер | Владелец | Обход |
 |---|---|---|---|
 | B1 | ~~Защита `main`~~ — **закрыт 2026-11-12:** ruleset 27123627 «main: PR + CI» (active): только через PR, обязательны `Validate (ubuntu-latest)` и `Validate (windows-2022)`, запрет force-push и удаления. Toolchain smoke не обязателен (path-filter на PR), но идёт на каждый push в `main` | — | — |
-| B2 | Пользовательский GitHub MCP (AIHub) → `Bad credentials` | пользователь (обновить токен) | `gh` CLI; проектный пример с `GITHUB_MCP_PAT` проверен |
-| B3 | Codex skills discovery не проверен | ожидание лимита до 2026-11-14 | OpenCode/Claude проверены на тех же файлах |
+| B2 | Пользовательский GitHub MCP (AIHub) → `Bad credentials` | пользователь (обновить токен), **не блокирует** | вся работа с GitHub идёт через `gh` CLI; замена токена — [MCP_REGISTRY](MCP_REGISTRY.md) §«Обновление токена GitHub» |
+| B3 | ~~Codex skills discovery~~ — **снят пользователем 2026-11-12** (WAIVED, Codex не используется) | — | OpenCode/Claude проверены на тех же файлах |
 | B4 | ~~Бинарники `ref/` не в git~~ — **закрыт 2026-11-12:** 63 файла в Git LFS (PR #29); CI сверяет oid/size LFS-указателей с `ref/catalog.json` без скачивания (`lfs_pointers_checked: 63` на обеих ОС) | — | локально `git lfs pull` для просмотра |
-| B5 | Art bible | пользователь | ART-BIBLE-001; концепции с референсов оформлены как примеры: [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) |
-| B6 | Старт P0-00 | пользователь | [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) |
+| B5 | ~~Art bible~~ — **закрыт 2026-11-12** по делегированию: [ART-BIBLE-001](../spec/v7/art-bible-001.md) (измеренные палитры, семантические цвета, пороги ART-REF-002) | — | концепции с референсов — только примеры: [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) |
+| B6 | ~~Старт P0-00~~ — **GO 2026-11-12** по делегированию (раздел 5) | — | [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) §3 |
 
 ## 4. Acceptance gates подготовки
 
@@ -51,3 +51,21 @@
 | Gap register и bootstrap plan привязаны к roadmap, без runtime | ✔ | [SYSTEM_BINDING](SYSTEM_BINDING.md), [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) |
 | Каждый PR: diff review → CI → merge → post-merge CI | ✔ | PR #17–#23 |
 | Нет игровых файлов, платных зависимостей, заявлений о perf/fun | ✔ | нет `game/`, `project.godot` |
+
+## 5. Повторный readiness review и GO/NO-GO P0-00 (2026-11-12)
+
+**Открытые пробелы после ARCH-02, ARCH-04, GAME-ARCH-02 и SCHEMA-COVERAGE** ([SYSTEM_BINDING](SYSTEM_BINDING.md)):
+
+| Пробел | Статус | Блокирует P0-00? | Почему |
+|---|---|---|---|
+| GAP-BLD-OPEN | OPEN, решения пользователя по BUILD-SKILL-001 | нет | P0-00 не содержит билдов; оракулы ARCH-01/02/04 держат политику параметрами, а не жёсткими правилами |
+| GAP-PRECEDENCE | OPEN → GAME-ARCH-05 | нет | нужен до P0-01 (смерть и level-up в одном тике); в P0-00 нет симуляции боя |
+| GAP-UX-INPUT | OPEN → GAME-UX-002 | нет | нужен до первого играбельного экрана |
+| GAP-REGISTRY-GEN | BLOCKED-BY-RUNTIME | — | закрывается самим P0-00 (п.3 §3 плана) |
+| GAP-PY-GD-PARITY | BLOCKED-BY-RUNTIME | — | первый шаг в P0-00, полностью в P0-01 |
+
+Конфигов без валидатора: 0 из 24 (`python scripts/system_binding.py validate`).
+
+**Маршрутизация агентов на реальных задачах.** Пять задач (новый рецепт Union, атака врага с замедлением, порядок наград босса в одном тике, proc-цепочка нового навыка, настройка интенсивности VFX) прошли по [START_HERE](../guides/START_HERE.md) → [AGENT_ROUTING](../indexes/AGENT_ROUTING.md) примерно за 4 документа каждая и пришли к правильной спецификации. Найдено 6 неточностей: строки «монстры/телеграфы», «цикл забега/боссы» и «автоатаки/proc» не вели к GAME-ARCH-02 и ARCH-04; строка RunBuild и START_HERE не вели к ARCH-02; AGENTS.md п.6 не упоминал валидаторы областей и статус P0-00. Все исправлены и закреплены регрессионным тестом [test_agent_routing.py](../../tests/test_agent_routing.py).
+
+**Решение: GO для P0-00.** Условия 1–8 [RUNTIME_BOOTSTRAP_PLAN](RUNTIME_BOOTSTRAP_PLAN.md) выполнены; решение о старте делегировано пользователем. Границы: только состав §3 плана (ADR-007, минимальный `project.godot`, генератор ContentRegistry, типы `game/core/`, GUT-паритет 2–3 оракулов), без геймплейных сцен и production-ассетов. Решение возвращается в NO-GO, если P0-00 потребует сменить стек, добавить платный сервис или изменить канонический баланс.

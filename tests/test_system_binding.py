@@ -86,8 +86,13 @@ class SystemBindingTests(unittest.TestCase):
 
     def test_uncovered_file_needs_open_gap(self):
         data = self.mutate()
-        gap = next(g for g in data["gaps"] if g["id"] == "GAP-SCHEMA-COVERAGE")
-        gap["status"] = "CLOSED"
+        entry = next(c for c in data["schema_coverage"]
+                     if c["file"].endswith("localization_context.json"))
+        entry["validators"] = []
+        entry["gap"] = "GAP-SCHEMA-COVERAGE"  # gap exists but is CLOSED
+        with self.assertRaisesRegex(binding.ContractError, "no validator and no open gap"):
+            binding.validate(data)
+        entry.pop("gap")
         with self.assertRaisesRegex(binding.ContractError, "no validator and no open gap"):
             binding.validate(data)
 

@@ -38,8 +38,18 @@
 ## Состояние на этой машине (не часть контракта)
 
 - В Codex и Claude Code уже настроены пользовательские серверы через `C:\AIHub\mcp\launchers\run.py` с теми же именами `context7` и `github`. Claude Code при копировании проектного `.mcp.json` предупреждает о дублировании имени в двух scope — на этой машине проектный пример копировать не нужно; он предназначен для чистой машины.
-- Пользовательский `github` (AIHub) отвечает `Bad credentials` — устаревший токен. **Владелец: пользователь** (обновить токен в AIHub или перейти на пример с `GITHUB_MCP_PAT`). Fallback — `gh` CLI.
+- Пользовательский `github` (AIHub) отвечает `Bad credentials` — устаревший токен. **Владелец: пользователь**, работу не блокирует: GitHub-операции идут через `gh` CLI. Порядок замены — ниже.
 - OpenCode: глобально MCP не настроены; проектный пример даёт context7.
+
+### Обновление токена GitHub
+
+1. Открыть <https://github.com/settings/personal-access-tokens/new> (fine-grained token).
+2. Repository access → *Only select repositories* → `HEAVENISPREY`. Permissions → Repository: Contents, Pull requests, Issues, Actions, Metadata — **Read-only**. Срок — 90 дней. Скопировать токен (`github_pat_…`) — он показывается один раз.
+3. Вариант А (AIHub, как сейчас): запустить `C:\AIHub\AIHub.cmd`, выбрать сервер `claude--github` и заменить секрет новым токеном; перезапустить Claude Code.
+4. Вариант Б (без AIHub): в PowerShell `setx GITHUB_MCP_PAT "github_pat_…"`, перезапустить терминал, скопировать проектный пример (шаг 3 ниже) и убрать пользовательский `github`, чтобы не было двух серверов с одним именем.
+5. Проверить: `python scripts/dev/mcp_smoke.py github` — ожидается список read-only tools без ошибки.
+
+Токен не вставлять в файлы репозитория и в чат.
 
 ## Установка на чистой машине
 
