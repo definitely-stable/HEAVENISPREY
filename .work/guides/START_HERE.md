@@ -23,6 +23,8 @@
 | **AI-агенты: skills `hip-*`, адаптеры клиентов, цикл среза, handoff** | [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) | [Аудит сторонних skills](../development/SKILLS_AUDIT.md) · [AGENT_HANDOFF](../templates/AGENT_HANDOFF.md) |
 | **Среда разработки, pinned Godot, doctor, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) | [Установка и диагностика](DEV_ENVIRONMENT.md) · [toolchain.lock.json](../tooling/toolchain.lock.json) |
 | **MCP-серверы (Context7, GitHub, Godot MCP), примеры конфигураций** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · `python scripts/validate_mcp.py` |
+| **Проверка «это игра»: game-ness gates, juice, ship gates** | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) |
+| **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
 | Инструменты, зависимости, CI | [Стек](../decisions/ADR-001-stack.md) | [Dependency tiers](../spec/core/s21.md) · [CI](../spec/core/s25.md) |
 
 ## Контентные связи

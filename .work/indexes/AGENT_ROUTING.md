@@ -23,6 +23,8 @@
 | **Skills агентов, адаптеры Claude/Codex/OpenCode, handoff** | [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) | [SKILLS_AUDIT](../development/SKILLS_AUDIT.md) · [skills.lock.json](../tooling/skills.lock.json) |
 | **Установка инструментов, версия Godot, диагностика окружения, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) · [DEV_ENVIRONMENT](../guides/DEV_ENVIRONMENT.md) | [toolchain.lock.json](../tooling/toolchain.lock.json) · [ADR-001](../decisions/ADR-001-stack.md) |
 | **Подключение MCP, токены, Godot MCP, проверка серверов** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) |
+| **Ревью игрового опыта, отклик, читаемость, готовность билда** | [PLAYABILITY_GATES](../guides/PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) · [s15](../spec/core/s15.md) · [s24](../spec/core/s24.md) |
+| **Арт-референсы, стиль, генерация и приёмка ассетов** | [ART_LOOKDEV](../guides/ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) · [s16](../spec/core/s16.md) |
 | Тестирование, CI, изменения инфраструктуры | [Порядок работы](../guides/WORKFLOW.md) · [Тесты](../spec/v5/v5_tests.md) | [CI](../spec/core/s25.md) · [Backlog](../roadmap/NEXT_SLICES.md) |
 | Изменение документации и конфигов | [Правила документов](../guides/DOC_STANDARDS.md) · [Аудит переноса](../guides/MIGRATION_AUDIT.md) | [Индекс](../INDEX.md) · [Манифест](../MANIFEST.json) |
 
