@@ -48,5 +48,7 @@ jobs:
         run: python scripts/validate_draft_contract_proposal.py
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
+      - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
+        run: python scripts/ref_catalog.py validate
       - name: Run design invariants
         run: python -m unittest discover -s tests -v

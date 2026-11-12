@@ -1,0 +1,1324 @@
+{
+ "schema_version": 1,
+ "kind": "reference-catalog",
+ "slice": "ART-REF-001",
+ "date": "2026-11-12",
+ "source": "local folder ref/ provided by the project owner; AI-generated concept images (generator is not recorded in file metadata)",
+ "entries": [
+  {
+   "id": "REF-001",
+   "file": "HEAVEN_IS_PREY_Environment_Only_Concept_Reference.png",
+   "category": "environment",
+   "summary": "Environment bible 01: 4 арены (двор секты, кладбище, болото, руины), модульный пол, пропсы, 4 варианта освещения",
+   "width": 3200,
+   "height": 2000,
+   "has_alpha": false,
+   "bytes": 3943251,
+   "sha256": "f27b5bec1fb066d095e74c6523d24ff857afe63cdc2c5aa6a8e4cffe2cde70d5",
+   "content_ids": [],
+   "hypotheses": [
+    "stage:ancient_sect_courtyard",
+    "stage:cultivator_graveyard",
+    "stage:tainted_swamp",
+    "stage:sect_ruins"
+   ],
+   "systems": [
+    "Stage",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-002",
+   "file": "HEAVEN_IS_PREY_bottom_nav_six_icons.png",
+   "category": "ui-kit",
+   "summary": "6 круглых иконок нижней навигации (персонаж, свиток, кристалл, кубок, рейтинг, почта)",
+   "width": 1792,
+   "height": 1216,
+   "has_alpha": true,
+   "bytes": 718573,
+   "sha256": "345410840c129a2cc95e13e92e78eb46f9230a66b021208c17eb1df2d6bfb1fe",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu",
+    "Asset Pipeline"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-003",
+   "file": "HEAVEN_IS_PREY_class_selection_assets_preview.png",
+   "category": "ui-kit",
+   "summary": "Превью ассетов экрана выбора класса (портреты, рамки, иконки), без прозрачности",
+   "width": 1300,
+   "height": 3246,
+   "has_alpha": false,
+   "bytes": 1725021,
+   "sha256": "2a36e189f0dc00fda6828065422ac8f8fccc7ad0711ffab8ebe719f362874428",
+   "content_ids": [
+    "class.sword",
+    "class.thunder",
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "UX/Class select",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-004",
+   "file": "HEAVEN_IS_PREY_ornaments_only_transparent.png",
+   "category": "ui-kit",
+   "summary": "Орнаменты-разделители, прозрачные",
+   "width": 2200,
+   "height": 450,
+   "has_alpha": true,
+   "bytes": 294321,
+   "sha256": "af823bc9a9979493bbedad91aadcee4a5e5e4c6234b9517b6136a3fca510e857",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "Asset Pipeline"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-005",
+   "file": "HEAVEN_IS_PREY_service_buttons_atlas.png",
+   "category": "ui-kit",
+   "summary": "Сервисные кнопки (Discord, Steam, Кодекс) — атлас",
+   "width": 1920,
+   "height": 640,
+   "has_alpha": true,
+   "bytes": 366376,
+   "sha256": "03b4f86dd5aae2fd8d0b2b824f07962e12b1dfc976c75431b7ced84a3e2c12c4",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-006",
+   "file": "HEAVEN_IS_PREY_service_buttons_preview.jpg",
+   "category": "ui-kit",
+   "summary": "Сервисные кнопки — превью на тёмном фоне",
+   "width": 1920,
+   "height": 760,
+   "has_alpha": false,
+   "bytes": 282485,
+   "sha256": "8151de93d2397d6686c583dc89028bda8c84033733b67a133b311e3069fb4e02",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-007",
+   "file": "a_highly_detailed_ornate_ui_asset_sheet_on_a_tran.png",
+   "category": "ui-kit",
+   "summary": "Панель ресурсов: полосы валют (кристалл, нефрит, слиток) и разделители",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2710090,
+   "sha256": "964c9b39d871a3101f9a4760131ca3cc44968e96f1a3160f3e3c8bd601319da2",
+   "content_ids": [],
+   "hypotheses": [
+    "currency visuals"
+   ],
+   "systems": [
+    "Reward",
+    "UX/HUD"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-008",
+   "file": "Атлас золотого интерфейса Heaven Is Prey.png",
+   "category": "ui-kit",
+   "summary": "Атлас золотого интерфейса: логотип, баннеры 4 классов, рамки, полосы HP/Ци, кнопки",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 3179832,
+   "sha256": "b352a3a5e56fffe9fc3f8c0059948b31017f923919aeaecfb03656eaa5a89db8",
+   "content_ids": [
+    "class.sword",
+    "class.thunder",
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "Asset Pipeline"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-009",
+   "file": "Атлас сияющих иконок навыков 马会.png",
+   "category": "skill-icons",
+   "summary": "Атлас иконок техник: стихии, эволюции (стрелки), рамки редкости, VFX-ленты",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": true,
+   "bytes": 3013314,
+   "sha256": "8fa6ef0142899b5442dad9fb4927ef35de4e401420300932bc194d04812a2acf",
+   "content_ids": [],
+   "hypotheses": [
+    "evolution icon chains"
+   ],
+   "systems": [
+    "Build",
+    "Evolution/Union/Gift",
+    "Draft"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-010",
+   "file": "Бестиарий «Мертвец Инь»_ окружение и анимации.png",
+   "category": "character-enemy",
+   "summary": "Бестиарий «Мертвец Инь»: разворот, анимации, окружение, VFX",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2901366,
+   "sha256": "a9651315f4b859e6e7c53c6b79ecaaab81bb547cc210be17eacd51fe99a593ee",
+   "content_ids": [
+    "enemy.yin_corpse"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Combat",
+    "Stage"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-011",
+   "file": "Выберите улучшение_ Небесный клинковый ливень.png",
+   "category": "screen-mockup",
+   "summary": "Экран выбора улучшения: 3 карточки с редкостью, Выбрать/Пропустить, HUD таймер и этап",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2634487,
+   "sha256": "c9b679bbb8a3454abb955815a583315b675e253826368aef3fe5e46096e2a45e",
+   "content_ids": [],
+   "hypotheses": [
+    "rarity labels on cards"
+   ],
+   "systems": [
+    "Draft",
+    "XP",
+    "UX/Choice",
+    "Build"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-012",
+   "file": "Даос Небесного Грома — Грозовой атлас.png",
+   "category": "character-player",
+   "summary": "Даос Небесного Грома: игровая модель, циклы анимаций, атаки, VFX молний",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2783397,
+   "sha256": "7b40ce84a1a157ec4c1ef1a4ce9daeae08d0a50f0c4ea303848892ee408b9dc4",
+   "content_ids": [
+    "class.thunder"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "AutoCast",
+    "Status"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-013",
+   "file": "Два класса Сянься_ Меч и Небесный Гром.png",
+   "category": "character-player",
+   "summary": "Разворот двух классов: Культиватор Меча и Даос Небесного Грома",
+   "width": 1774,
+   "height": 887,
+   "has_alpha": false,
+   "bytes": 2837538,
+   "sha256": "ef20e03cc0715ccf2b5982931a0feac00a5dfc249c7eb0ffc97c294f488e55d9",
+   "content_ids": [
+    "class.sword",
+    "class.thunder"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-014",
+   "file": "Дизайн персонажей_ талисманы и кулаки.png",
+   "category": "character-player",
+   "summary": "Разворот двух классов: Мастер Талисманов и Культиватор Тела",
+   "width": 1774,
+   "height": 887,
+   "has_alpha": false,
+   "bytes": 2806574,
+   "sha256": "cdd02bcc0bf69597b32b8f53f83827f68787accbf9dbe4e0f4aa96af61f096c0",
+   "content_ids": [
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-015",
+   "file": "Золотая восточная коллекция UI-элементов.png",
+   "category": "ui-kit",
+   "summary": "Коллекция рамок портретов, гербов и полос прогресса",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2287080,
+   "sha256": "cd9b7b013e20524839f1065c6fd429bc090501314b035ee442ca1ccc94ae93be",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-016",
+   "file": "Золотая панель ресурсов в азиатском стиле.png",
+   "category": "ui-kit",
+   "summary": "Панель ресурсов (идентична REF-007)",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2710090,
+   "sha256": "964c9b39d871a3101f9a4760131ca3cc44968e96f1a3160f3e3c8bd601319da2",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "Reward",
+    "UX/HUD"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false,
+   "duplicate_of": "REF-007"
+  },
+  {
+   "id": "REF-017",
+   "file": "Золотая эмблема «HEAVEN IS PREY».png",
+   "category": "branding",
+   "summary": "Логотип HEAVEN IS PREY (инь-ян, дракон)",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 1911630,
+   "sha256": "b4cb3380dc8d8f5e1745eedbf4c3973ecddb0fddb0fd7a78afffb1e1bdcbbb52",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-018",
+   "file": "Золотая эмблема небесного рока.png",
+   "category": "branding",
+   "summary": "Эмблема с подзаголовком «Rogue Cultivation Survivor», печать 仙劫",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": true,
+   "bytes": 2484033,
+   "sha256": "a5b6104563b9ce9bdc16d03a9dffab8af8520e3e3a3597fef78a3d0a425b4b1b",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu",
+    "Localization"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-019",
+   "file": "Золотой интерфейс экипировки культиватора.png",
+   "category": "ui-kit",
+   "summary": "Экран экипировки культиватора: слоты, инвентарь, полосы",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 2989001,
+   "sha256": "d703ddf785cfcb37793cd6102b25777fca73cd3ac98da7283d5e0407a88e2e4a",
+   "content_ids": [],
+   "hypotheses": [
+    "equipment/inventory screen"
+   ],
+   "systems": [
+    "Build",
+    "Cultivation",
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-020",
+   "file": "Золотой набор UI для фэнтези-RPG.png",
+   "category": "ui-kit",
+   "summary": "Набор UI: иконки техник, карточки, ползунки, кнопки управления, джойстик",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 3163379,
+   "sha256": "8283b728dceb8c85310578b7a81c7ee2d8e773f54b2ad07c6dbd5d4f8e409f55",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "UX/Choice"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-021",
+   "file": "Золотой набор иконок способностей大香线蕉.png",
+   "category": "skill-icons",
+   "summary": "24 золотые иконки способностей (медитация, лотос, меч, дракон, инь-ян, гром, талисман)",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 3462486,
+   "sha256": "ef6be6e11eb119195b692898cc0d15d397ca6e4179a4caaac1af52344b6dfb6f",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "Build",
+    "Draft",
+    "Cultivation"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-022",
+   "file": "Золотой набор интерфейса для сянься HUD.png",
+   "category": "ui-kit",
+   "summary": "Набор HUD: валюты, рамки уровня, счётчики, бейджи уведомлений",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2258184,
+   "sha256": "f346cac6dcc2ecc3be002ac9c48dae265b9695b4d1592f3b110a86f8ab3d6a0d",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "XP",
+    "Reward"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-023",
+   "file": "Золотой натиск Древней Секты.png",
+   "category": "screen-mockup",
+   "summary": "Игровой кадр «Двор Древней Секты — Этап 3»: HUD, орда, AoE-мечи, цифры урона",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3631288,
+   "sha256": "dd5923b04f7b636d063ecdde4f4188083ecc6a0c28394997859363ff0b5fc94f",
+   "content_ids": [],
+   "hypotheses": [
+    "stage:ancient_sect_courtyard"
+   ],
+   "systems": [
+    "Combat",
+    "AutoCast",
+    "Stage",
+    "Enemy",
+    "UX/HUD"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-024",
+   "file": "Золотой фэнтези-набор элементов интерфейса.png",
+   "category": "ui-kit",
+   "summary": "UI-элементы: полосы валют, рамки, вымпелы, разделители",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2331413,
+   "sha256": "b67a9d02d2a3d16da5de15e6cade1cbec7f2a25b23c5f66db3af92489b33faf4",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "Reward"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-025",
+   "file": "Золотые иконки способностей в стиле сянься.png",
+   "category": "skill-icons",
+   "summary": "Иконки способностей, ромбовидные иконки статусов и синергии (A+B→C)",
+   "width": 1774,
+   "height": 887,
+   "has_alpha": true,
+   "bytes": 3052945,
+   "sha256": "b2968a9648e3b41ab1d3ce0ebfd98b8d0d25a485c16da5b391b3d98c5a6a20b6",
+   "content_ids": [],
+   "hypotheses": [
+    "union/synergy icon"
+   ],
+   "systems": [
+    "Build",
+    "Status",
+    "Evolution/Union/Gift"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-026",
+   "file": "Золотые фэнтези-элементы интерфейса с магией.png",
+   "category": "ui-kit",
+   "summary": "UI с магией: портрет, баннеры, иконки ресурсов, сундук",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 3266106,
+   "sha256": "9a116a5822061f8ba51efbedca20ce0c408633942a42cf7bb65240c91ce95006",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "Reward",
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-027",
+   "file": "Золотые фэнтезийные карты режимов Абриент.png",
+   "category": "ui-kit",
+   "summary": "Карточки режимов/сложностей с замками",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2639419,
+   "sha256": "c5b2dbef36149ba3362b13dd5379e94fd07b80a5e897dc36b6cb127c1ea0a3ed",
+   "content_ids": [],
+   "hypotheses": [
+    "mode cards"
+   ],
+   "systems": [
+    "Stage",
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-028",
+   "file": "Иероглифическая печать «仙劫» с золотой кистью.png",
+   "category": "branding",
+   "summary": "Подвес-печать 仙劫",
+   "width": 1024,
+   "height": 1536,
+   "has_alpha": true,
+   "bytes": 1864289,
+   "sha256": "e7dd61af3309ebecab7df2230c8665e1f7ddb79204bee9732cf5ca82b63ff3db",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-029",
+   "file": "Изометрический набор арены сянься.png",
+   "category": "environment",
+   "summary": "Изометрический набор арены: тайлы, лестницы, ворота, деревья, пропсы",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3115061,
+   "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "Stage",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-030",
+   "file": "Кинематографичный лист культиватора с золотыми мечами.png",
+   "category": "character-player",
+   "summary": "Кинематографичный лист Культиватора Меча: портреты, ракурсы, атаки",
+   "width": 1199,
+   "height": 1312,
+   "has_alpha": false,
+   "bytes": 2756782,
+   "sha256": "2ceccd8003c0a363f1c22d31b5a4874906a0b011ac60f706c2f06d8d5be84be6",
+   "content_ids": [
+    "class.sword"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-031",
+   "file": "Концепт-артбук «Мертвец Инь».png",
+   "category": "character-enemy",
+   "summary": "Концепт-артбук «Мертвец Инь»",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2802642,
+   "sha256": "f5d112722c7cea5a59c99150726356f9a9bee05c5cd99339c932dd4c1e87af92",
+   "content_ids": [
+    "enemy.yin_corpse"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-032",
+   "file": "Концепт-борд Мертвеца Инь.png",
+   "category": "character-enemy",
+   "summary": "Концепт-борд Мертвеца Инь: варианты, анимации, окружение",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2963253,
+   "sha256": "5e81d0470ee8763203b331b86d255c37d1cb0899f53643c58cbdec3223d77583",
+   "content_ids": [
+    "enemy.yin_corpse"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Stage"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-033",
+   "file": "Концепт‑борд арены «Руины секты».png",
+   "category": "environment",
+   "summary": "Концепт-борд арены «Руины секты»: план, потоки движения, зоны, тайлы",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3462795,
+   "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1",
+   "content_ids": [],
+   "hypotheses": [
+    "stage:sect_ruins"
+   ],
+   "systems": [
+    "Stage",
+    "Enemy"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-034",
+   "file": "Кровавый демонический волк_ лист персонажа.png",
+   "category": "character-enemy",
+   "summary": "Лист «Кровавый демонический волк»: разворот, анимации, VFX",
+   "width": 1774,
+   "height": 887,
+   "has_alpha": false,
+   "bytes": 2487226,
+   "sha256": "7f9798537d30325a24ddd356850cc58716756be14ed310747c5a0359387411dc",
+   "content_ids": [
+    "enemy.blood_wolf"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-035",
+   "file": "Культиватор Меча_ лист игровых анимаций.png",
+   "category": "character-player",
+   "summary": "Культиватор Меча: лист игровых анимаций (2.5D)",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2738554,
+   "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901",
+   "content_ids": [
+    "class.sword"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "AutoCast"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-036",
+   "file": "Культиватор Тела_ Искусство Золотого Дракона.png",
+   "category": "character-player",
+   "summary": "Культиватор Тела «Искусство Золотого Дракона»: анимации, атаки",
+   "width": 1448,
+   "height": 1086,
+   "has_alpha": false,
+   "bytes": 2966799,
+   "sha256": "1e54922be695ff8a414a424bb55a8a3c421b3858f16f2916db69cacaeadddea8",
+   "content_ids": [
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "AutoCast"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-037",
+   "file": "Культиватор тела_ драконий удар.png",
+   "category": "character-player",
+   "summary": "Культиватор Тела «Драконий удар»: портрет, ракурсы, иконки",
+   "width": 1254,
+   "height": 1254,
+   "has_alpha": false,
+   "bytes": 2752599,
+   "sha256": "c688ef8ab3f6e70ad834efded5606d133bdbc715cf45c2f05c4bf5f35b9ae49d",
+   "content_ids": [
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "Build"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-038",
+   "file": "Культиваторы меча и небесного грома.png",
+   "category": "character-player",
+   "summary": "Культиваторы Меча и Небесного Грома: сдвоенный лист",
+   "width": 1199,
+   "height": 1312,
+   "has_alpha": false,
+   "bytes": 2788301,
+   "sha256": "e2f8736a4844ed8ac487d1c1689323e74d786436c01c910de446c2a315dab0a5",
+   "content_ids": [
+    "class.sword",
+    "class.thunder"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-039",
+   "file": "Лист персонажа_ Осквернённый культиватор.png",
+   "category": "character-enemy",
+   "summary": "Лист «Осквернённый культиватор»: разворот, детали, анимации, примеры в игре",
+   "width": 1448,
+   "height": 1086,
+   "has_alpha": false,
+   "bytes": 2734553,
+   "sha256": "f5462f18aa3043d7a4a6e881c138dd21968dbae320338afba94c3e1b2467dbaf",
+   "content_ids": [
+    "enemy.corrupted_cultivator"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-040",
+   "file": "Мастер Талисманов_ Искусство Печатей.png",
+   "category": "character-player",
+   "summary": "Мастер Талисманов «Искусство Печатей»",
+   "width": 1254,
+   "height": 1254,
+   "has_alpha": false,
+   "bytes": 2690949,
+   "sha256": "0bd5bea635fb6ad7bfc2b82bcd8e4b263ef3622c4ca92ccea6e92518dc49a01e",
+   "content_ids": [
+    "class.talisman"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "Status"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-041",
+   "file": "Мастер талисманов_ алый призыв.png",
+   "category": "character-player",
+   "summary": "Мастер Талисманов «Алый призыв»",
+   "width": 1086,
+   "height": 1448,
+   "has_alpha": false,
+   "bytes": 2931536,
+   "sha256": "ca4d86bafa4865bcec2ca5ecb65188a39b407090d09c83db922c773b2cf1be0f",
+   "content_ids": [
+    "class.talisman"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-042",
+   "file": "Мастер талисманов_ печати и пламя.png",
+   "category": "character-player",
+   "summary": "Мастер Талисманов «Печати и пламя»: анимации и VFX",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2739209,
+   "sha256": "a4d543c940d24c88d724dd7d2d7e7054e62a4410e2fc11bd27179342d514bed7",
+   "content_ids": [
+    "class.talisman"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "AutoCast",
+    "Status"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-043",
+   "file": "Мастер талисманов_ ритуал багряных печатей.png",
+   "category": "character-player",
+   "summary": "Мастер Талисманов «Ритуал багряных печатей»",
+   "width": 1086,
+   "height": 1448,
+   "has_alpha": false,
+   "bytes": 2990185,
+   "sha256": "ba1343056d0b64695cf0f098e05632dbe976cf344720e5ea99626bee4d8af1bf",
+   "content_ids": [
+    "class.talisman"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-044",
+   "file": "Мертвец Инь — лист персонажа HEAVEN IS PREY.png",
+   "category": "character-enemy",
+   "summary": "Лист «Мертвец Инь»: разворот, варианты, атаки",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2553788,
+   "sha256": "33890d8053361312f7a960b1b62576bb20d974dfdefbd9df16ed7fa3774cd9bc",
+   "content_ids": [
+    "enemy.yin_corpse"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Enemy",
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-045",
+   "file": "Молниеносный даос_ лист персонажа.png",
+   "category": "character-player",
+   "summary": "Молниеносный даос: лист персонажа",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 2829526,
+   "sha256": "74d0970416797fc7132833ef52afcf078a439d956f08f0207f0cc1f1f1f18bb9",
+   "content_ids": [
+    "class.thunder"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-046",
+   "file": "Набор меню культивации в стиле сянься.png",
+   "category": "ui-kit",
+   "summary": "Кнопки главного меню (4 состояния): Начать культивацию, Прогресс секты, Арсенал, Бестиарий, Кодекс, Настройки, Выход",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2882996,
+   "sha256": "2b645828fedc5fdbeb347aa9376413336b19c380b338637eab7e0cc654861c70",
+   "content_ids": [],
+   "hypotheses": [
+    "menu entries"
+   ],
+   "systems": [
+    "UX/Meta menu",
+    "Localization"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-047",
+   "file": "Небесная обитель_ меню культиватора.png",
+   "category": "screen-mockup",
+   "summary": "Главное меню: режимы Забег/Испытания/Бесконечный путь/Событие, валюты, нижняя навигация",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3179226,
+   "sha256": "c18ed52448a5842c51d93769ed09e5298e8445d0e80b8894ce5075e838309148",
+   "content_ids": [],
+   "hypotheses": [
+    "mode:event",
+    "menu: sect progress"
+   ],
+   "systems": [
+    "UX/Meta menu",
+    "Stage",
+    "Reward"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-048",
+   "file": "Небесный владыка в золотом тронном зале (1).png",
+   "category": "key-art",
+   "summary": "Небесный владыка в золотом тронном зале",
+   "width": 1122,
+   "height": 1402,
+   "has_alpha": false,
+   "bytes": 3171580,
+   "sha256": "3a16afaccf503e072766e44787b70b1c3fafedf99ff65cf0c9a108c5ff4cbd86",
+   "content_ids": [],
+   "hypotheses": [
+    "boss mood: heavenly lord"
+   ],
+   "systems": [
+    "Boss"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-049",
+   "file": "Небесный владыка в золотом тронном зале.png",
+   "category": "key-art",
+   "summary": "Небесный владыка в золотом тронном зале (идентичен REF-048)",
+   "width": 1122,
+   "height": 1402,
+   "has_alpha": false,
+   "bytes": 3171580,
+   "sha256": "3a16afaccf503e072766e44787b70b1c3fafedf99ff65cf0c9a108c5ff4cbd86",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "Boss"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false,
+   "duplicate_of": "REF-048"
+  },
+  {
+   "id": "REF-050",
+   "file": "Небесный разлом_ буря клинков.png",
+   "category": "key-art",
+   "summary": "«Небесный разлом: буря клинков» — культиватор против орды",
+   "width": 1086,
+   "height": 1448,
+   "has_alpha": false,
+   "bytes": 3206336,
+   "sha256": "5e4e42921679261fce881b187ed933464a541d23208af54ed56d0edf712bb557",
+   "content_ids": [
+    "class.sword"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Combat",
+    "UX/Meta menu"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-051",
+   "file": "Окно древних гор и золотых драконов.png",
+   "category": "ui-kit",
+   "summary": "Окно с вкладками и драконьей рамкой",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 2486809,
+   "sha256": "117201649837e054eb0a2dacf830cb97d874a063b311caba50735094b11d3a51",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-052",
+   "file": "Орнаментальный восточный фэнтези UI-спрайтшит.png",
+   "category": "ui-kit",
+   "summary": "Спрайтшит кнопок меню (состояния), замки, бейджи",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2901121,
+   "sha256": "136038f331a0688b681346f8941b720c93b1fb7e17575f16aa0da62964520166",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-053",
+   "file": "Орнаментальный набор UI квестов Сянься.png",
+   "category": "ui-kit",
+   "summary": "UI квестов: список заданий, сундуки наград, свитки, баннеры",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 3004070,
+   "sha256": "0c408e47a55195722b90a9eb350593dcc253e278000d1198f40336f844f27b92",
+   "content_ids": [],
+   "hypotheses": [
+    "quest/task system"
+   ],
+   "systems": [
+    "Reward",
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-054",
+   "file": "Орнаментальный набор интерфейса фэнтези-RPG.png",
+   "category": "ui-kit",
+   "summary": "Набор RPG UI: рамки, карточки классов, полосы, иконки",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 2987295,
+   "sha256": "3d6d25f8f0d50c0ebd47955b5e17a1ddfb7717119c7710c93759139929d8f26f",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "UX/Choice"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-055",
+   "file": "Орнаментальный набор профиля в стиле сянься.png",
+   "category": "ui-kit",
+   "summary": "Набор профиля: рамки аватара, полосы опыта, гербы",
+   "width": 1774,
+   "height": 887,
+   "has_alpha": true,
+   "bytes": 2691452,
+   "sha256": "884a719843331793fed02df61b59633521429c3669666e3189a45d5927de022b",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu",
+    "XP"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-056",
+   "file": "Панель арены заброшенного монастыря Иньян.png",
+   "category": "environment",
+   "summary": "Панель арены «Заброшенный монастырь Иньян»: карта, тайлы, пропсы, освещение",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3422845,
+   "sha256": "e685edac4188246e7c35c815a941336dd6c6a2ef8181ffaa23054f3feddb0933",
+   "content_ids": [],
+   "hypotheses": [
+    "stage:abandoned_yinyang_monastery"
+   ],
+   "systems": [
+    "Stage"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-057",
+   "file": "Премиальный атлас UI-элементов культивации.png",
+   "category": "ui-kit",
+   "summary": "Премиальный атлас: кнопки, панели с пейзажами, ползунки",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2709823,
+   "sha256": "337aaeed0e745217bb7b369454929af0c3ec4637be6edcc05d26825437684044",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-058",
+   "file": "Премиальный набор UI-ассетов в стиле сянься.png",
+   "category": "ui-kit",
+   "summary": "Премиальный набор: рамки аватара, полосы Ци, гербы, разделители",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": true,
+   "bytes": 2309556,
+   "sha256": "bec35f6a70109e2dbd36e42048ceeb20ec66c0aa2397ae54196128c972996b8b",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD",
+    "Cultivation"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-059",
+   "file": "Роскошный атлас интерфейса Сянься.png",
+   "category": "ui-kit",
+   "summary": "Роскошный атлас: рамки, полосы, гербы, ромбы",
+   "width": 2172,
+   "height": 724,
+   "has_alpha": true,
+   "bytes": 2722042,
+   "sha256": "7d35f48253652d4756a91c2b6ac73afa61fd4a21564bc65471aa1bb5b84458cd",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-060",
+   "file": "Фэнтезийные панели режимов и замков UI.png",
+   "category": "ui-kit",
+   "summary": "Панели режимов и замков: кнопки, огненные состояния, замки",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": true,
+   "bytes": 2664192,
+   "sha256": "273a3ac69200b2d4d80e5e8c918645bbce913b330338e610b476c9fb0b1ef617",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/Meta menu",
+    "Stage"
+   ],
+   "readiness": "R1-prototype-candidate",
+   "production_ready": false
+  },
+  {
+   "id": "REF-061",
+   "file": "Четыре мастера небесного пути.png",
+   "category": "character-player",
+   "summary": "Четыре мастера небесного пути: 4 класса в полный рост, прозрачный фон",
+   "width": 1983,
+   "height": 793,
+   "has_alpha": true,
+   "bytes": 3362079,
+   "sha256": "ba5c8ebe4ddde365bbf4da38952b5b4091274fd6b774710315955cbe6003792b",
+   "content_ids": [
+    "class.sword",
+    "class.thunder",
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "UX/Class select",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-062",
+   "file": "Экран выбора класса_ Мечник-культиватор.png",
+   "category": "screen-mockup",
+   "summary": "Экран выбора класса (Мечник): стартовая техника, черта, сложность, будущие специализации",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 3082934,
+   "sha256": "14f3cb19c141eb4a69b04a7013b6ef5536b617a93488c881357e1afa64c8a611",
+   "content_ids": [
+    "class.sword",
+    "class.thunder",
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [
+    "specializations: Sword Saint / Sky Cleaver / Voidblade"
+   ],
+   "systems": [
+    "UX/Class select",
+    "Build",
+    "Localization"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-063",
+   "file": "Экран выбора класса_ Небесная охота.png",
+   "category": "screen-mockup",
+   "summary": "Экран выбора класса — вариант логотипа (близок к REF-062)",
+   "width": 1672,
+   "height": 941,
+   "has_alpha": false,
+   "bytes": 2985047,
+   "sha256": "857c135766c54a6cbdd1fc202233ddc32bb00a7791396e8f612004c033935ac6",
+   "content_ids": [
+    "class.sword",
+    "class.thunder",
+    "class.talisman",
+    "class.body"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "UX/Class select"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  }
+ ],
+ "findings": [
+  "Точные дубликаты: REF-016 = REF-007, REF-049 = REF-048 (одинаковый SHA-256); REF-063 отличается от REF-062 только логотипом.",
+  "Арены на референсах (двор древней секты, кладбище культиваторов, заражённое болото, руины секты, монастырь Иньян) **отсутствуют** в каноническом [stages.json](../.work/config/v7/stages.json) (`stage.jade_grove`, `stage.mist_cliffs`). Это гипотезы для GAME-ARCH-02, не новые ID.",
+  "Главное меню (REF-047) показывает режимы «Испытания», «Бесконечный путь», «Событие» — сопоставить с [modes.json](../.work/config/v7/modes.json) (`mode.challenge_trials`, `mode.endless_limited`); «Событие» в каноне отсутствует.",
+  "Экран выбора класса (REF-062) показывает «будущие специализации» и рейтинг сложности класса — в v7 нет контракта специализаций; кандидат для BUILD-SKILL/GAME-ARCH-03, не правило.",
+  "Экран улучшения (REF-011) показывает редкость на карточках, Выбрать/Пропустить и реалм «Ци-Зарождение III» — согласуется с CHOICE-VIEWMODEL-001/DRAFT-CONTRACT-002 (Skip, редкость); отображение реалма требует ссылки на контракт Cultivation.",
+  "Экраны экипировки/инвентаря (REF-019) и квестов (REF-053) не имеют контрактов в v7; не начинать без решения о scope.",
+  "Листы есть для всех 4 классов и 3 из 13 обычных врагов (Мертвец Инь, Кровавый волк, Осквернённый культиватор); 10 врагов бестиария и 3 босса без визуальных референсов.",
+  "Все изображения содержат запечённый RU/EN/CN текст; для runtime UI действуют ключи локализации и Godot Control (ADR-005, v5_assets 32G.3)."
+ ],
+ "usage_rules": [
+  "R0 — только look-dev, брифы генерации и сравнение стиля; сравнение в духе ref2game допустимо лишь как offline look-dev, не как runtime pipeline.",
+  "R1 — нарезка в placeholder возможна только с P0-00 через asset manifest (asset_id, source sha256, processing version) и QA s17; оригиналы в `ref/` не изменяются.",
+  "Никакой референс не становится игровым правилом: числа, режимы, специализации и арены требуют контракта и ADR/спеки.",
+  "Новые файлы добавлять в catalog.json и перегенерировать README; валидатор сверяет SHA-256 и размеры."
+ ]
+}

@@ -17,6 +17,7 @@
 | Классы, мета-таланты, экономика | [Экономика v7](../spec/v7/economy-and-talent-sinks.md) · [Классы v6](../spec/v6/v6_classes.md) | [Rewards](../config/v7/reward_contract.json) |
 | Режимы, баланс, испытания | [Режимы v7](../spec/v7/modes-and-compatibility.md) | [Боты](../spec/v7/bot-acceptance.md) · [Design](../spec/v5/v5_design.md) |
 | Переводы, тексты, UI | [Локализация](../spec/v6/v6_i18n.md) · [UX](../spec/v5/v5_ux.md) | [Ключи RU/EN](../config/v7/localization_additions.csv) |
+| **Арт-референсы, look-dev, брифы генерации** | [Каталог `ref/`](../../ref/README.md) | [catalog.json](../../ref/catalog.json) · [v5_assets](../spec/v5/v5_assets.md) |
 | Графика/спрайты/эффекты | [2D презентация](../spec/core/s14.md) · [Визуальный QA](../spec/v5/v5_assets.md) | [Контракт ассетов](../spec/core/s17.md) |
 | Reverse engineering | [RE](../spec/core/s23.md) · [Доказательства](../spec/v5/v5_re.md) | [Реестр источников](../research/SOURCES.md) |
 | **Установка инструментов, версия Godot, диагностика окружения, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) · [DEV_ENVIRONMENT](../guides/DEV_ENVIRONMENT.md) | [toolchain.lock.json](../tooling/toolchain.lock.json) · [ADR-001](../decisions/ADR-001-stack.md) |
