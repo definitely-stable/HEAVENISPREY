@@ -12,7 +12,7 @@
 | Продукт, игровая цель | [Границы и критерии](../spec/core/s02.md) | [Прогрессия](../spec/v6/v6_classes.md) · [Roadmap](../roadmap/NEXT_SLICES.md) |
 | **Бестиарий и поведение обычных врагов** | [13 монстров](../spec/v7/ordinary-enemy-bestiary.md) | [Контракт угроз](../spec/v7/enemy-threat-contract.md) · [Волны](../config/v7/enemy_rosters.json) · [Атаки](../config/v7/enemy_attacks.json) |
 | Симуляция, автоатаки и статусы | [ADR-002](../decisions/ADR-002-combat.md) | [Combat](../spec/v5/v5_semantics.md) · [Event budget](../spec/v5/v5_budget.md) |
-| **BUILD-SKILL-001: активные/пассивные техники, Powers, эволюции, Union, драфт, культивация** | [Архитектурное предложение](../spec/v7/build-skill-architecture-proposal.md) · [FLEXIBILITY-FIRST](../spec/v7/flexibility-first-build-policies.md) · [Контракт типов](../spec/v7/build-skill-type-contract.md) | [Контентный pipeline](CONTENT_AUTHORING_ACCELERATOR.md) · [Шаблон техники](../templates/SKILL_SPEC.md) · [Классы v6](../spec/v6/v6_classes.md) |
+| **BUILD-SKILL-001: активные/пассивные техники, Powers, эволюции, Union, драфт, культивация** | [Архитектурное предложение](../spec/v7/build-skill-architecture-proposal.md) · [FLEXIBILITY-FIRST](../spec/v7/flexibility-first-build-policies.md) · [Контракт типов](../spec/v7/build-skill-type-contract.md) | новый рецепт — [ARCH-02](../spec/v7/arch-02-recipe-graph.md) · [Контентный pipeline](CONTENT_AUTHORING_ACCELERATOR.md) · [Шаблон техники](../templates/SKILL_SPEC.md) · [Классы v6](../spec/v6/v6_classes.md) |
 | Сложности, режимы, награды | [ADR-003](../decisions/ADR-003-late-game.md) | [v7 поздняя прогрессия](../spec/v7/late-game-progression.md) · [Режимы](../spec/v7/modes-and-compatibility.md) |
 | Экономика и сохранения | [Экономика v7](../spec/v7/economy-and-talent-sinks.md) | [Data](../config/v7/README.md) · [Сохранения](../spec/core/s20.md) |
 | **Визуальные референсы `ref/`: классификация, связь с контентом, готовность** | [Каталог ART-REF-001](../../ref/README.md) | [catalog.json](../../ref/catalog.json) · [Арт-контракт s17](../spec/core/s17.md) |
@@ -24,7 +24,7 @@
 | **Среда разработки, pinned Godot, doctor, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) | [Установка и диагностика](DEV_ENVIRONMENT.md) · [toolchain.lock.json](../tooling/toolchain.lock.json) |
 | **MCP-серверы (Context7, GitHub, Godot MCP), примеры конфигураций** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · `python scripts/validate_mcp.py` |
 | **Проверка «это игра»: game-ness gates, juice, ship gates** | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) |
-| **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
+| **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART-BIBLE-001](../spec/v7/art-bible-001.md) · [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
 | **Арены, режим «Событие», специализации, экипировка, квесты с референсов (только примеры)** | [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) | [ref/catalog.json](../../ref/catalog.json) |
 | **Сохранение посреди выбора, offers cursor, миграция сейвов, backup-слот** | [CHOICE-SAVE-002](../spec/v7/choice-save-002.md) | [SAVE-CONTRACT-001](../spec/v7/save-contract-001.md) · [DRAFT-CONTRACT-002](../spec/v7/draft-contract-002.md) |
 | **Достижимость эволюций/Union/Gift, рост после max rank, конфликт рецептов** | [ARCH-02](../spec/v7/arch-02-recipe-graph.md) | [ARCH-01](../spec/v7/build-skill-type-contract.md) · [FLEXIBILITY-FIRST](../spec/v7/flexibility-first-build-policies.md) |
@@ -44,4 +44,4 @@
 
 [Что ещё не перенесено](MIGRATION_AUDIT.md) · [Правила актуальности](DOC_STANDARDS.md) · [Рабочий процесс без ролей по моделям](WORKFLOW.md).
 
-**Текущий пользовательский scope — только архитектура и ускорение контентной разработки.** Новый BUILD-SKILL-001 имеет статус design-proposal, а не утверждённое решение; Godot runtime отложен до отдельного разрешения. [Архитектурные gates](../roadmap/NEXT_SLICES.md).
+**Текущий статус (2026-11-12):** архитектурные пробелы до P0-00 закрыты, **P0-00 — GO** в границах [RUNTIME_BOOTSTRAP_PLAN §3](../development/RUNTIME_BOOTSTRAP_PLAN.md) ([обоснование](../development/READINESS_AUDIT.md)). BUILD-SKILL-001 остаётся design-proposal, а не утверждённым решением; геймплейные сцены и production-ассеты — отдельными срезами. [Архитектурные gates](../roadmap/NEXT_SLICES.md).

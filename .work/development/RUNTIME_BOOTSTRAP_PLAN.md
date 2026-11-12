@@ -1,6 +1,6 @@
 # RUNTIME_BOOTSTRAP_PLAN — GO/NO-GO пакет для P0-00 (DEV-ENV-005)
 
-- **Статус:** **NO-GO до явного решения пользователя** начать разработку игры ([NEXT_SLICES](../roadmap/NEXT_SLICES.md): «Переход к P0-00 допустим только после отдельного решения»). Документ описывает первый runtime-срез; он не создаёт `project.godot`, сцены и ассеты.
+- **Статус:** **GO для P0-00** (2026-11-12): пользователь делегировал решение («сам решай»), повторный readiness review — [READINESS_AUDIT §5](READINESS_AUDIT.md). GO относится только к первому runtime-срезу §3 и не разрешает геймплейные сцены и production-ассеты. Сам этот документ не создаёт `project.godot`.
 - **Дата:** 2026-11-12 · **Стек:** Godot 4.7.2 2D + typed GDScript ([ADR-001](../decisions/ADR-001-stack.md)) · **Инструменты:** [toolchain.lock.json](../tooling/toolchain.lock.json)
 - **Интерфейсы:** [INTERFACE-CONTRACTS-001](../spec/v7/interface-contracts-001.md) · **Привязка систем:** [SYSTEM_BINDING](SYSTEM_BINDING.md)
 
@@ -8,14 +8,14 @@
 
 | # | Условие | Состояние на 2026-11-12 | Evidence |
 |---|---|---|---|
-| 1 | Явное решение пользователя начать P0-00 | **НЕТ** | — |
+| 1 | Явное решение пользователя начать P0-00 | **ДА** (делегировано 2026-11-12) | READINESS_AUDIT B6 |
 | 2 | Godot 4.7.2 воспроизводимо ставится и проходит headless typed-GDScript smoke на Windows и Linux | **ДА** | `toolchain-smoke.yml`, `godot_tool.py smoke` |
 | 3 | GUT 9.7.1 и gdtoolkit 4.5.0 закреплены (установка в P0-00) | ДА (pin), установка отложена | toolchain lock `phase: P0-00` |
 | 4 | Контракт ContentRegistry и canonical digest определены | ДА (контракт), генератора нет | [content-registry-contract](../spec/v7/content-registry-contract.md), GAP-REGISTRY-GEN |
 | 5 | Python-фикстуры, которые станут golden tests, существуют | ДА | `.work/proposals/*`, `tests/test_run_loop_proposal.py`, `tests/test_save_contract_proposal.py` |
 | 6 | Agent skills для Godot доступны и закреплены | ДА | 13 vendored + 8 `hip-*`, [SKILLS_AUDIT](SKILLS_AUDIT.md) |
 | 7 | Godot MCP оценён, но выключен | ДА | [MCP_REGISTRY](MCP_REGISTRY.md) |
-| 8 | Открытые пробелы, блокирующие P0-00 | нет блокирующих; GAP-CHOICE-SAVE и GAP-ARCH-04 желательно закрыть до P0-01 | [реестр](SYSTEM_BINDING.md) |
+| 8 | Открытые пробелы, блокирующие P0-00 | **нет**; GAP-CHOICE-SAVE, GAP-ARCH-02, GAP-ARCH-04, GAP-GAME-ARCH-02 закрыты; GAP-REGISTRY-GEN закрывается самим P0-00 | [реестр](SYSTEM_BINDING.md), READINESS_AUDIT §5 |
 
 ## 2. Структура (по [s26](../spec/core/s26.md), адаптировано к текущему repo)
 
@@ -36,7 +36,7 @@ tools/content/                  # генератор ContentRegistry (Python, st
 
 ## 3. Состав первого PR P0-00 (после GO)
 
-1. ADR-007: renderer backend и формат generated content (`.tres` vs JSON + typed loader) — решение пользователя.
+1. ADR-007: renderer backend и формат generated content (`.tres` vs JSON + typed loader) — принимается внутри среза P0-00 (решение делегировано) по измерению, а не по вкусу.
 2. `game/project.godot` минимальный, без сцен геймплея; `scripts/dev/godot_tool.py` получает `gut install` из lock.
 3. Генератор `tools/content/` → `game/content/generated/` + digest parity с `validate_content.py` (закрывает GAP-REGISTRY-GEN).
 4. `game/core/`: `RunRulesSnapshot`, `RulesHash`, seeded RNG adapter — только типы и тесты.
