@@ -3,6 +3,10 @@ extends RefCounted
 ## Runs SimKernel at a fixed 60 Hz from variable frame time and records player input as
 ## PlayerCommand entries. Frame timing decides only *when* ticks run; the command log alone
 ## decides *what* happens, so replaying the log reproduces the run bit for bit.
+##
+## Level-up pause (ADR-010 section 6): while the world waits for a choice, advance() neither
+## accumulates nor spends time and records no MOVE; choose() writes the CHOOSE into the same
+## log and resolves it with one paused step, so a replay sees the whole chain.
 
 ## Longest catch-up per frame; older backlog is dropped instead of spiralling.
 const MAX_TICKS_PER_FRAME: int = 8
@@ -35,6 +39,9 @@ static func create(p_config: SimConfig) -> FixedTickDriver:
 
 ## Advance by one rendered frame holding `move`; returns the number of ticks simulated.
 func advance(delta: float, move: Vector2i) -> int:
+	if world.is_paused():
+		_accumulator = 0.0
+		return 0
 	_accumulator += maxf(delta, 0.0)
 	var ticks: int = 0
 	while _accumulator >= TICK_SECONDS and ticks < MAX_TICKS_PER_FRAME:
@@ -44,9 +51,29 @@ func advance(delta: float, move: Vector2i) -> int:
 		SimKernel.step(config, world, commands)
 		_collect_events()
 		ticks += 1
+		if world.is_paused():
+			# The rest of the frame is dropped; the paused world is drawn as it is.
+			_accumulator = 0.0
+			previous = world.copy()
+			break
 	if ticks == MAX_TICKS_PER_FRAME:
 		_accumulator = minf(_accumulator, TICK_SECONDS)
 	return ticks
+
+
+## Picks card `index` of the shown hand: records CHOOSE for the current build_revision and
+## resolves it with one paused step. A card that does not exist is not recorded (false).
+func choose(index: int) -> bool:
+	if not world.is_paused() or index < 0 or index >= world.hand.size():
+		return false
+	var command: PlayerCommand = PlayerCommand.choose(world.tick, _sequence, index, world.build_revision)
+	if commands.append(command, world.tick) != CommandLog.OK:
+		return false
+	_sequence += 1
+	var done: int = world.choices_done
+	SimKernel.step(config, world, commands)
+	previous = world.copy()
+	return world.choices_done == done + 1
 
 
 ## Fraction of the next tick already elapsed, for interpolating between previous and world.

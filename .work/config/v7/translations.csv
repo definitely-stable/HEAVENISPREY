@@ -71,3 +71,22 @@ ATTACK_CULTIVATOR_SEAL_NAME,Qi Corruption Seal,Печать скверной ц�
 STATUS_VENOM_NAME,Venom,Яд
 STATUS_ROOT_SLOW_NAME,Entangling Roots,Опутывающие корни
 STATUS_QI_TAINT_NAME,Corrupted Qi,Осквернённая ци
+UI_LEVEL_UP_TITLE,Level up: choose an upgrade,Новый уровень: выберите улучшение
+UI_LEVEL_UP_MORE,More choices waiting: %d,Ещё выборов: %d
+UI_UPGRADE_RANK,Rank %d/%d,Ранг %d/%d
+UPGRADE_P0_HERO_SPEED_NAME,Swift Steps,Быстрый шаг
+UPGRADE_P0_HERO_SPEED_DESC,Move speed %s → %s,Скорость движения %s → %s
+UPGRADE_P0_HERO_VITALITY_NAME,Vital Qi,Жизненная ци
+UPGRADE_P0_HERO_VITALITY_DESC,Max health %s → %s and heal,Макс. здоровье %s → %s и лечение
+UPGRADE_P0_PICKUP_RADIUS_NAME,Qi Attraction,Притяжение ци
+UPGRADE_P0_PICKUP_RADIUS_DESC,Pickup radius %s → %s,Радиус подбора %s → %s
+UPGRADE_P0_SWORD_COUNT_NAME,Sword Formation,Строй мечей
+UPGRADE_P0_SWORD_COUNT_DESC,Swords per volley %s → %s,Мечей за залп %s → %s
+UPGRADE_P0_SWORD_DAMAGE_NAME,Honed Edge,Отточенный клинок
+UPGRADE_P0_SWORD_DAMAGE_DESC,Sword damage %s → %s,Урон меча %s → %s
+UPGRADE_P0_SWORD_HASTE_NAME,Flowing Strikes,Текучие удары
+UPGRADE_P0_SWORD_HASTE_DESC,Attacks per second %s → %s,Атак в секунду %s → %s
+UPGRADE_P0_SWORD_PIERCE_NAME,Piercing Intent,Пронзающее намерение
+UPGRADE_P0_SWORD_PIERCE_DESC,Enemies per sword %s → %s,Врагов на один меч %s → %s
+UPGRADE_P0_RECOVER_NAME,Breath of Recovery,Восстанавливающее дыхание
+UPGRADE_P0_RECOVER_DESC,Health %s → %s,Здоровье %s → %s

@@ -1,0 +1,375 @@
+{
+ "kind": "ui_strings",
+ "locales": [
+  "en",
+  "ru"
+ ],
+ "schema_version": 1,
+ "source": ".work/config/v7/translations.csv",
+ "strings": {
+  "ATTACK_CENTIPEDE_BITE_NAME": {
+   "en": "Centipede Bite",
+   "ru": "Укус многоножки"
+  },
+  "ATTACK_CROW_DIVE_NAME": {
+   "en": "Crow Dive",
+   "ru": "Пикирование ворона"
+  },
+  "ATTACK_CULTIVATOR_SEAL_NAME": {
+   "en": "Qi Corruption Seal",
+   "ru": "Печать скверной ци"
+  },
+  "ATTACK_CULTIVATOR_SWORD_NAME": {
+   "en": "Corrupted Sword",
+   "ru": "Осквернённый меч"
+  },
+  "ATTACK_DISCIPLE_CLEAVE_NAME": {
+   "en": "Fallen Cleave",
+   "ru": "Павший взмах"
+  },
+  "ATTACK_JADE_STOMP_NAME": {
+   "en": "Jade Stomp",
+   "ru": "Нефритовый удар"
+  },
+  "ATTACK_LANTERN_WISP_NAME": {
+   "en": "Lantern Wisp",
+   "ru": "Духовный сгусток"
+  },
+  "ATTACK_MANTIS_LUNGE_NAME": {
+   "en": "Sickle Lunge",
+   "ru": "Рывок серпа"
+  },
+  "ATTACK_PUPPET_BURST_NAME": {
+   "en": "Death Seal",
+   "ru": "Посмертная печать"
+  },
+  "ATTACK_ROOT_GROWTH_NAME": {
+   "en": "Corrupted Roots",
+   "ru": "Прорастание скверны"
+  },
+  "ATTACK_SNAKE_BITE_NAME": {
+   "en": "Venom Bite",
+   "ru": "Ядовитый укус"
+  },
+  "ATTACK_SPIRIT_TOUCH_NAME": {
+   "en": "Spectral Touch",
+   "ru": "Прикосновение духа"
+  },
+  "ATTACK_WOLF_BITE_NAME": {
+   "en": "Wolf Bite",
+   "ru": "Волчий укус"
+  },
+  "ATTACK_YIN_GRASP_NAME": {
+   "en": "Yin Grasp",
+   "ru": "Хватка Инь"
+  },
+  "BOSS_JADE_WARDEN_NAME": {
+   "en": "Jade Warden",
+   "ru": "Нефритовый хранитель"
+  },
+  "BOSS_MIST_SENTINEL_NAME": {
+   "en": "Mist Sentinel",
+   "ru": "Страж тумана"
+  },
+  "BOSS_TRIBULATION_AVATAR_NAME": {
+   "en": "Tribulation Avatar",
+   "ru": "Аватар Небесной кары"
+  },
+  "CLASS_BODY_NAME": {
+   "en": "Body Cultivator",
+   "ru": "Культиватор тела"
+  },
+  "CLASS_SWORD_NAME": {
+   "en": "Sword Cultivator",
+   "ru": "Культиватор меча"
+  },
+  "CLASS_TALISMAN_NAME": {
+   "en": "Talisman Master",
+   "ru": "Мастер талисманов"
+  },
+  "CLASS_THUNDER_NAME": {
+   "en": "Thunder Daoist",
+   "ru": "Даос грома"
+  },
+  "CURRENCY_DAO_SEALS": {
+   "en": "Dao Seals",
+   "ru": "Печати Дао"
+  },
+  "CURRENCY_SPIRIT_STONES": {
+   "en": "Spirit Stones",
+   "ru": "Духовные камни"
+  },
+  "DIFFICULTY_ABYSS_NAME": {
+   "en": "Abyss of Dao",
+   "ru": "Бездна Дао"
+  },
+  "DIFFICULTY_APPRENTICE_NAME": {
+   "en": "Path of the Apprentice",
+   "ru": "Путь ученика"
+  },
+  "DIFFICULTY_HARD_NAME": {
+   "en": "Sect Trial",
+   "ru": "Испытание секты"
+  },
+  "DIFFICULTY_STANDARD_NAME": {
+   "en": "Cultivator Path",
+   "ru": "Путь культиватора"
+  },
+  "DIFFICULTY_TRIBULATION_NAME": {
+   "en": "Heavenly Tribulation",
+   "ru": "Небесная кара"
+  },
+  "ENEMY_BLOOD_WOLF_NAME": {
+   "en": "Blood Demon Wolf",
+   "ru": "Кровавый демонический волк"
+  },
+  "ENEMY_CORRUPTED_CULTIVATOR_NAME": {
+   "en": "Corrupted Cultivator",
+   "ru": "Осквернённый культиватор"
+  },
+  "ENEMY_CORRUPTION_CENTIPEDE_NAME": {
+   "en": "Corruption Centipede",
+   "ru": "Многоножка Скверны"
+  },
+  "ENEMY_CURSED_SPIRIT_LANTERN_NAME": {
+   "en": "Cursed Spirit Lantern",
+   "ru": "Проклятый духовный фонарь"
+  },
+  "ENEMY_FALLEN_SWORD_DISCIPLE_NAME": {
+   "en": "Fallen Sword Disciple",
+   "ru": "Павший ученик меча"
+  },
+  "ENEMY_OMEN_CROW_NAME": {
+   "en": "Omen Crow",
+   "ru": "Ворон дурного знамения"
+  },
+  "ENEMY_PAPER_PUPPET_NAME": {
+   "en": "Paper Puppet",
+   "ru": "Бумажная марионетка"
+  },
+  "ENEMY_ROOT_ABOMINATION_NAME": {
+   "en": "Root Abomination",
+   "ru": "Корневая тварь"
+  },
+  "ENEMY_RUINED_JADE_GUARDIAN_NAME": {
+   "en": "Ruined Jade Guardian",
+   "ru": "Разрушенный нефритовый страж"
+  },
+  "ENEMY_SICKLE_MANTIS_NAME": {
+   "en": "Sickle Mantis",
+   "ru": "Серповидный богомол"
+  },
+  "ENEMY_VENOM_SPIRIT_SNAKE_NAME": {
+   "en": "Venom Spirit Snake",
+   "ru": "Ядовитая духовная змея"
+  },
+  "ENEMY_WANDERING_SPIRIT_NAME": {
+   "en": "Wandering Spirit",
+   "ru": "Блуждающий дух"
+  },
+  "ENEMY_YIN_CORPSE_NAME": {
+   "en": "Yin Corpse",
+   "ru": "Мертвец Инь"
+  },
+  "MODE_ASCETIC_NAME": {
+   "en": "Ascetic",
+   "ru": "Аскетический"
+  },
+  "MODE_CHALLENGE_TRIALS_NAME": {
+   "en": "Challenge Trials",
+   "ru": "Испытания"
+  },
+  "MODE_CUSTOM_UNRANKED_NAME": {
+   "en": "Custom (unranked)",
+   "ru": "Пользовательский (без наград)"
+  },
+  "MODE_ENDLESS_NAME": {
+   "en": "Endless",
+   "ru": "Бесконечный"
+  },
+  "MODE_HURRY_NAME": {
+   "en": "Hurry",
+   "ru": "Ускоренный"
+  },
+  "MODE_HYPER_NAME": {
+   "en": "Hyper",
+   "ru": "Гиперрежим"
+  },
+  "MODE_NORMAL_NAME": {
+   "en": "Normal",
+   "ru": "Обычный"
+  },
+  "MODE_TRAINING_NAME": {
+   "en": "Training",
+   "ru": "Тренировка"
+  },
+  "SKILL_BODY_NAME": {
+   "en": "Body Pulse",
+   "ru": "Импульс тела"
+  },
+  "SKILL_SEAL_NAME": {
+   "en": "Talisman Seal",
+   "ru": "Печать талисмана"
+  },
+  "SKILL_SWORD_NAME": {
+   "en": "Spirit Sword",
+   "ru": "Духовный меч"
+  },
+  "SKILL_THUNDER_NAME": {
+   "en": "Heavenly Lightning",
+   "ru": "Небесная молния"
+  },
+  "STAGE_JADE_NAME": {
+   "en": "Jade Grove",
+   "ru": "Нефритовая роща"
+  },
+  "STAGE_MIST_NAME": {
+   "en": "Misty Cliffs",
+   "ru": "Туманные утёсы"
+  },
+  "STATUS_BURN_NAME": {
+   "en": "Burn",
+   "ru": "Горение"
+  },
+  "STATUS_MARK_NAME": {
+   "en": "Sword Mark",
+   "ru": "Метка меча"
+  },
+  "STATUS_QI_TAINT_NAME": {
+   "en": "Corrupted Qi",
+   "ru": "Осквернённая ци"
+  },
+  "STATUS_ROOT_SLOW_NAME": {
+   "en": "Entangling Roots",
+   "ru": "Опутывающие корни"
+  },
+  "STATUS_SHOCK_NAME": {
+   "en": "Shock",
+   "ru": "Электрический разряд"
+  },
+  "STATUS_VENOM_NAME": {
+   "en": "Venom",
+   "ru": "Яд"
+  },
+  "STAT_CLASS_MASTERY": {
+   "en": "Class Mastery",
+   "ru": "Мастерство класса"
+  },
+  "TALENT_BANISH_NAME": {
+   "en": "Banishment",
+   "ru": "Изгнание техники"
+  },
+  "TALENT_DAO_RESONANCE": {
+   "en": "Dao Resonance",
+   "ru": "Резонанс Дао"
+  },
+  "TALENT_FATE_REFINEMENT": {
+   "en": "Fate Refinement",
+   "ru": "Переплетение судьбы"
+  },
+  "TALENT_HEALTH_NAME": {
+   "en": "Body Tempering",
+   "ru": "Закалка тела"
+  },
+  "TALENT_HEAVENLY_LIBRARY": {
+   "en": "Heavenly Library",
+   "ru": "Небесная библиотека"
+  },
+  "TALENT_REROLL_NAME": {
+   "en": "Dao Insight",
+   "ru": "Прозрение Дао"
+  },
+  "TALENT_SWORD_FOCUS_NAME": {
+   "en": "Sword Focus",
+   "ru": "Сосредоточение меча"
+  },
+  "TALENT_THUNDER_CHAIN_NAME": {
+   "en": "Extended Lightning",
+   "ru": "Длинная молния"
+  },
+  "UI_DIFFICULTY": {
+   "en": "Challenge level",
+   "ru": "Уровень испытания"
+  },
+  "UI_LEVEL_UP_MORE": {
+   "en": "More choices waiting: %d",
+   "ru": "Ещё выборов: %d"
+  },
+  "UI_LEVEL_UP_TITLE": {
+   "en": "Level up: choose an upgrade",
+   "ru": "Новый уровень: выберите улучшение"
+  },
+  "UI_START_RUN": {
+   "en": "Start run",
+   "ru": "Начать забег"
+  },
+  "UI_UPGRADE_RANK": {
+   "en": "Rank %d/%d",
+   "ru": "Ранг %d/%d"
+  },
+  "UPGRADE_P0_HERO_SPEED_DESC": {
+   "en": "Move speed %s → %s",
+   "ru": "Скорость движения %s → %s"
+  },
+  "UPGRADE_P0_HERO_SPEED_NAME": {
+   "en": "Swift Steps",
+   "ru": "Быстрый шаг"
+  },
+  "UPGRADE_P0_HERO_VITALITY_DESC": {
+   "en": "Max health %s → %s and heal",
+   "ru": "Макс. здоровье %s → %s и лечение"
+  },
+  "UPGRADE_P0_HERO_VITALITY_NAME": {
+   "en": "Vital Qi",
+   "ru": "Жизненная ци"
+  },
+  "UPGRADE_P0_PICKUP_RADIUS_DESC": {
+   "en": "Pickup radius %s → %s",
+   "ru": "Радиус подбора %s → %s"
+  },
+  "UPGRADE_P0_PICKUP_RADIUS_NAME": {
+   "en": "Qi Attraction",
+   "ru": "Притяжение ци"
+  },
+  "UPGRADE_P0_RECOVER_DESC": {
+   "en": "Health %s → %s",
+   "ru": "Здоровье %s → %s"
+  },
+  "UPGRADE_P0_RECOVER_NAME": {
+   "en": "Breath of Recovery",
+   "ru": "Восстанавливающее дыхание"
+  },
+  "UPGRADE_P0_SWORD_COUNT_DESC": {
+   "en": "Swords per volley %s → %s",
+   "ru": "Мечей за залп %s → %s"
+  },
+  "UPGRADE_P0_SWORD_COUNT_NAME": {
+   "en": "Sword Formation",
+   "ru": "Строй мечей"
+  },
+  "UPGRADE_P0_SWORD_DAMAGE_DESC": {
+   "en": "Sword damage %s → %s",
+   "ru": "Урон меча %s → %s"
+  },
+  "UPGRADE_P0_SWORD_DAMAGE_NAME": {
+   "en": "Honed Edge",
+   "ru": "Отточенный клинок"
+  },
+  "UPGRADE_P0_SWORD_HASTE_DESC": {
+   "en": "Attacks per second %s → %s",
+   "ru": "Атак в секунду %s → %s"
+  },
+  "UPGRADE_P0_SWORD_HASTE_NAME": {
+   "en": "Flowing Strikes",
+   "ru": "Текучие удары"
+  },
+  "UPGRADE_P0_SWORD_PIERCE_DESC": {
+   "en": "Enemies per sword %s → %s",
+   "ru": "Врагов на один меч %s → %s"
+  },
+  "UPGRADE_P0_SWORD_PIERCE_NAME": {
+   "en": "Piercing Intent",
+   "ru": "Пронзающее намерение"
+  }
+ }
+}
