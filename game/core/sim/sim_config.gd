@@ -1,11 +1,12 @@
 class_name SimConfig
 extends RefCounted
-## Integer parameters of one simulated run (hip-fx-v1 units: su, su/tick, mhp, ticks).
+## Integer parameters of one simulated run (hip-fx-v1 units: su, su/tick, mhp, ticks, mt).
 ##
 ## Movement (P0-01b): hero speed and radius, arena rectangle, start point.
-## Enemies (P0-01d, optional): enemy kinds, spawn cadence and cap, hero HP and the run seed of
-## the `enemy` RNG stream. With no kinds the run has no enemies and the hero cannot die.
-## Values come from typed content definitions in later slices; tests pass them directly.
+## Enemies (P0-01E, ADR-009 section 3): kinds, accumulator spawn with a linear rate ramp,
+## alive cap, minimum spawn distance, hero HP and the run seed of the `enemy` RNG stream.
+## Hero skill (ADR-009 section 1): accumulator cooldown, acquire range, projectile.
+## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
 ## contact_interval_ticks, spawn_weight].
@@ -17,6 +18,10 @@ const KIND_DAMAGE: int = 3
 const KIND_INTERVAL: int = 4
 const KIND_WEIGHT: int = 5
 const MAX_ENEMIES_LIMIT: int = 4096
+const MAX_PROJECTILES_LIMIT: int = 256
+const MAX_PIERCE: int = 7
+## Normal speed of an accumulator (ADR-008: rate_fx 1000 = x1).
+const RATE_ONE: int = 1000
 ## hip-rng-v1 below(n) accepts n <= 2^32.
 const BELOW_LIMIT: int = 4294967296
 
@@ -30,11 +35,23 @@ var start_x: int = 0
 var start_y: int = 0
 
 var hero_hp_mhp: int = 0
-var spawn_period_ticks: int = 0
+var spawn_period_mt: int = 0
+## Ticks for the spawn rate to grow by +1000 (0 = constant rate).
+var spawn_ramp_ticks: int = 0
+var spawn_rate_max_fx: int = RATE_ONE
 var max_enemies: int = 0
 var spawn_min_distance_su: int = 0
 var run_seed: String = "0"
 var kinds: PackedInt64Array = PackedInt64Array()
+
+var skill_period_mt: int = 0
+var skill_range_su: int = 0
+var skill_damage_mhp: int = 0
+var projectile_speed_su: int = 0
+var projectile_radius_su: int = 0
+var projectile_ttl_ticks: int = 0
+var projectile_pierce: int = 0
+var max_projectiles: int = 0
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -52,16 +69,33 @@ static func create(values: PackedInt64Array) -> SimConfig:
 	return config
 
 
-## Enables enemies: `p_values` = [hero_hp_mhp, spawn_period_ticks, max_enemies,
-## spawn_min_distance_su]; `p_kinds` = flat KIND_STRIDE records.
+## Enables enemies: `p_values` = [hero_hp_mhp, spawn_period_mt, spawn_ramp_ticks,
+## spawn_rate_max_fx, max_enemies, spawn_min_distance_su]; `p_kinds` = KIND_STRIDE records.
 func with_enemies(p_values: PackedInt64Array, p_kinds: PackedInt64Array, p_seed: String) -> SimConfig:
-	if p_values.size() == 4:
+	if p_values.size() == 6:
 		hero_hp_mhp = p_values[0]
-		spawn_period_ticks = p_values[1]
-		max_enemies = p_values[2]
-		spawn_min_distance_su = p_values[3]
+		spawn_period_mt = p_values[1]
+		spawn_ramp_ticks = p_values[2]
+		spawn_rate_max_fx = p_values[3]
+		max_enemies = p_values[4]
+		spawn_min_distance_su = p_values[5]
 	kinds = p_kinds.duplicate()
 	run_seed = p_seed
+	return self
+
+
+## Enables the hero skill: [period_mt, range_su, damage_mhp, projectile_speed_su,
+## projectile_radius_su, projectile_ttl_ticks, projectile_pierce, max_projectiles].
+func with_skill(p_values: PackedInt64Array) -> SimConfig:
+	if p_values.size() == 8:
+		skill_period_mt = p_values[0]
+		skill_range_su = p_values[1]
+		skill_damage_mhp = p_values[2]
+		projectile_speed_su = p_values[3]
+		projectile_radius_su = p_values[4]
+		projectile_ttl_ticks = p_values[5]
+		projectile_pierce = p_values[6]
+		max_projectiles = p_values[7]
 	return self
 
 
@@ -84,18 +118,37 @@ func has_enemies() -> bool:
 	return not kinds.is_empty()
 
 
+func has_skill() -> bool:
+	return skill_damage_mhp > 0
+
+
+## Ledger cells per projectile: one per target it may hit.
+func ledger_size() -> int:
+	return projectile_pierce + 1
+
+
+## Spawn accumulator rate at `tick`: 1000 rising by 1000 every `spawn_ramp_ticks`, capped.
+func spawn_rate(tick: int) -> int:
+	if spawn_ramp_ticks <= 0:
+		return RATE_ONE
+	return mini(spawn_rate_max_fx, RATE_ONE + Fx.floor_div(tick * RATE_ONE, spawn_ramp_ticks))
+
+
 func to_ints() -> PackedInt64Array:
 	var out: PackedInt64Array = PackedInt64Array([
 		speed_su_per_tick, player_radius_su, arena_min_x, arena_min_y,
 		arena_max_x, arena_max_y, start_x, start_y,
-		hero_hp_mhp, spawn_period_ticks, max_enemies, spawn_min_distance_su,
+		hero_hp_mhp, spawn_period_mt, spawn_ramp_ticks, spawn_rate_max_fx, max_enemies,
+		spawn_min_distance_su, skill_period_mt, skill_range_su, skill_damage_mhp,
+		projectile_speed_su, projectile_radius_su, projectile_ttl_ticks, projectile_pierce,
+		max_projectiles,
 	])
 	out.append_array(kinds)
 	return out
 
 
 ## Bounds stay inside hip-fx-v1 coordinate limits, the hero fits, the start is reachable,
-## and enemy settings (when present) are complete and drawable with hip-rng-v1.
+## and enemy and skill settings (when present) are complete and safe to simulate.
 func is_valid() -> bool:
 	for value: int in to_ints():
 		if absi(value) > Fx.COORD_MAX:
@@ -113,17 +166,19 @@ func is_valid() -> bool:
 	)
 	if not movement_ok:
 		return false
-	if not has_enemies():
-		return true
-	return _enemies_valid()
+	if has_enemies() and not _enemies_valid():
+		return false
+	if has_skill() and not _skill_valid():
+		return false
+	return true
 
 
 func _enemies_valid() -> bool:
 	if kinds.size() != kind_count() * KIND_STRIDE or HipRng.parse_u64(run_seed).is_empty():
 		return false
-	if hero_hp_mhp <= 0 or spawn_period_ticks <= 0 or spawn_min_distance_su < 0:
+	if hero_hp_mhp <= 0 or spawn_period_mt <= 0 or spawn_ramp_ticks < 0 or spawn_rate_max_fx < RATE_ONE:
 		return false
-	if max_enemies <= 0 or max_enemies > MAX_ENEMIES_LIMIT:
+	if spawn_min_distance_su < 0 or max_enemies <= 0 or max_enemies > MAX_ENEMIES_LIMIT:
 		return false
 	var total: int = total_weight()
 	if total <= 0 or total > BELOW_LIMIT:
@@ -145,3 +200,24 @@ func _enemies_valid() -> bool:
 		if not kind_ok:
 			return false
 	return true
+
+
+## A projectile must not step over the smallest enemy in one tick (no tunnelling).
+func _skill_valid() -> bool:
+	if not has_enemies():
+		return false
+	var min_radius: int = Fx.COORD_MAX
+	for kind: int in kind_count():
+		min_radius = mini(min_radius, kind_value(kind, KIND_RADIUS))
+	return (
+		skill_period_mt > 0
+		and skill_range_su >= 0
+		and projectile_speed_su > 0
+		and projectile_radius_su > 0
+		and projectile_speed_su <= projectile_radius_su + min_radius
+		and projectile_ttl_ticks > 0
+		and projectile_pierce >= 0
+		and projectile_pierce <= MAX_PIERCE
+		and max_projectiles > 0
+		and max_projectiles <= MAX_PROJECTILES_LIMIT
+	)

@@ -1,8 +1,9 @@
 class_name RunView
 extends Node2D
-## P0 placeholder run scene: hero movement, jade_grove w0 enemies and contact damage in an
-## empty arena, drawn with primitives. Reads simulation state only; input reaches the
-## simulation through FixedTickDriver. Tuning comes from P0Tuning (placeholder bases).
+## P0 placeholder run scene: hero movement and auto-attack, jade_grove w0 enemies, contact
+## damage and kills in an empty arena, drawn with primitives. Reads simulation state only;
+## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
+## (placeholder bases). Hit flashes and death puffs are presentation-only effects.
 
 const CELL_PX: int = P0Tuning.CELL_PX
 const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
@@ -10,6 +11,10 @@ const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
 ## Seconds the finished run stays on screen before a new one starts.
 const RESTART_DELAY: float = 2.0
 const HIT_FLASH: float = 0.15
+const ENEMY_HIT_FLASH: float = 0.1
+const PUFF_TIME: float = 0.35
+const HUD_FONT_SIZE: int = 22
+const HUD_MARGIN: Vector2 = Vector2(20, 34)
 
 const COLOR_FLOOR: Color = Color(0.09, 0.08, 0.11)
 const COLOR_GRID: Color = Color(0.16, 0.14, 0.19)
@@ -20,6 +25,11 @@ const COLOR_FACING: Color = Color(0.25, 0.2, 0.15)
 const COLOR_HP_BACK: Color = Color(0.0, 0.0, 0.0, 0.6)
 const COLOR_HP: Color = Color(0.85, 0.2, 0.2)
 const COLOR_OVER: Color = Color(0.0, 0.0, 0.0, 0.55)
+const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
+## Spirit sword (metal element) projectile.
+const COLOR_SWORD: Color = Color(0.78, 0.92, 1.0)
+const COLOR_SWORD_GLOW: Color = Color(0.7, 0.88, 1.0, 0.22)
+const COLOR_HUD: Color = Color(0.95, 0.92, 0.85)
 ## Placeholder enemy colours by kind index (yin corpse, blood wolf, then fallbacks).
 const ENEMY_COLORS: Array[Color] = [
 	Color(0.45, 0.55, 0.45), Color(0.6, 0.12, 0.14), Color(0.5, 0.45, 0.7), Color(0.7, 0.6, 0.3),
@@ -35,6 +45,12 @@ var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
 var _over_time: float = 0.0
+## Enemy uid -> seconds of hit flash left.
+var _enemy_flash: Dictionary = {}
+## Death puffs: [position px, kind, age seconds].
+var _puffs: Array[Array] = []
+## Screen-space layer for the HUD (not moved by the camera).
+var _hud: Node2D
 
 @onready var _camera: Camera2D = $Camera
 
@@ -46,6 +62,11 @@ static func placeholder_config() -> SimConfig:
 
 func _ready() -> void:
 	_registry = ContentRegistry.load_dir()
+	var layer: CanvasLayer = CanvasLayer.new()
+	add_child(layer)
+	_hud = Node2D.new()
+	layer.add_child(_hud)
+	_hud.draw.connect(_draw_hud)
 	var arena: Vector2i = ARENA_CELLS * CELL_PX
 	_camera.limit_left = 0
 	_camera.limit_top = 0
@@ -64,6 +85,8 @@ func start_run(seed_text: String) -> void:
 	runs_started += 1
 	_flash = 0.0
 	_over_time = 0.0
+	_enemy_flash.clear()
+	_puffs.clear()
 	_camera.position = driver.hero_position_px()
 	_camera.reset_smoothing()
 	queue_redraw()
@@ -79,6 +102,7 @@ func _process(delta: float) -> void:
 
 
 func advance_frame(delta: float, move: Vector2i) -> int:
+	_age_effects(delta)
 	if driver.world.is_over():
 		_over_time += delta
 		if _over_time >= RESTART_DELAY:
@@ -87,6 +111,11 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		return 0
 	var hp_before: int = driver.world.hero_hp
 	var ticks: int = driver.advance(delta, move)
+	var events: Dictionary = driver.take_events()
+	for uid: int in events["hit"]:
+		_enemy_flash[uid] = ENEMY_HIT_FLASH
+	for kill: Array in events["killed"]:
+		_puffs.append([kill[0], kill[1], 0.0])
 	if driver.world.hero_hp < hp_before:
 		_flash = HIT_FLASH
 	else:
@@ -106,21 +135,91 @@ func _draw() -> void:
 	for y: int in range(CELL_PX, int(arena.y), CELL_PX):
 		draw_line(Vector2(0, y), Vector2(arena.x, y), COLOR_GRID, 1.0)
 	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_WALL, false, 4.0)
+	_draw_puffs()
 	_draw_enemies()
+	_draw_projectiles()
 	_draw_hero()
 	if driver.world.is_over():
 		draw_rect(Rect2(Vector2.ZERO, arena), COLOR_OVER)
+	if _hud != null:
+		_hud.queue_redraw()
+
+
+func _age_effects(delta: float) -> void:
+	for uid: Variant in _enemy_flash.keys():
+		var left: float = _enemy_flash[uid] - delta
+		if left <= 0.0:
+			_enemy_flash.erase(uid)
+		else:
+			_enemy_flash[uid] = left
+	for puff: Array in _puffs:
+		puff[2] += delta
+	_puffs = _puffs.filter(func(puff: Array) -> bool: return puff[2] < PUFF_TIME)
 
 
 func _draw_enemies() -> void:
 	var world: WorldState = driver.world
-	for slot: int in world.enemy_count():
+	for slot: int in world.enemy_slots():
+		if world.enemy_uid[slot] == 0:
+			continue
 		var kind: int = world.enemy_kind[slot]
-		var radius: float = float(driver.config.kind_value(kind, SimConfig.KIND_RADIUS)) / Fx.FX_ONE
-		var color: Color = ENEMY_COLORS[mini(kind, ENEMY_COLORS.size() - 1)]
+		var color: Color = _enemy_color(kind)
+		if _enemy_flash.has(world.enemy_uid[slot]):
+			color = color.lerp(COLOR_ENEMY_HIT, 0.75)
+		var radius: float = _kind_radius_px(kind)
 		var at: Vector2 = driver.enemy_position_px(slot)
 		draw_circle(at, radius, color)
 		draw_circle(at, radius, color.darkened(0.45), false, 2.0)
+
+
+func _draw_projectiles() -> void:
+	var world: WorldState = driver.world
+	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
+	for slot: int in world.projectile_slots():
+		if world.proj_damage[slot] == 0:
+			continue
+		var at: Vector2 = driver.projectile_position_px(slot)
+		var heading: Vector2 = Vector2(world.proj_vx[slot], world.proj_vy[slot]).normalized()
+		draw_circle(at, radius * 1.3, COLOR_SWORD_GLOW)
+		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, COLOR_SWORD, radius * 0.6)
+		draw_circle(at + heading * radius * 1.2, radius * 0.35, COLOR_SWORD)
+
+
+func _draw_puffs() -> void:
+	for puff: Array in _puffs:
+		var share: float = puff[2] / PUFF_TIME
+		var radius: float = _kind_radius_px(puff[1]) * (1.0 + share)
+		var color: Color = _enemy_color(puff[1])
+		color.a = 1.0 - share
+		draw_circle(puff[0], radius, color, false, 3.0)
+		color.a *= 0.35
+		draw_circle(puff[0], radius * 0.6, color)
+
+
+## Run time and kills in the top-left screen corner (digits only, no text keys).
+func _draw_hud() -> void:
+	if driver == null:
+		return
+	var corner: Vector2 = HUD_MARGIN
+	var seconds: int = floori(driver.world.tick / float(Fx.TICKS_PER_SECOND))
+	var font: Font = ThemeDB.fallback_font
+	var clock: String = "%02d:%02d" % [floori(seconds / 60.0), seconds % 60]
+	_hud.draw_string(font, corner, clock, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
+	var icon: Vector2 = corner + Vector2(90, -HUD_FONT_SIZE * 0.35)
+	_hud.draw_circle(icon, 8.0, ENEMY_COLORS[1])
+	_hud.draw_circle(icon, 8.0, ENEMY_COLORS[1].darkened(0.45), false, 2.0)
+	var kills: String = str(driver.world.kills)
+	_hud.draw_string(font, corner + Vector2(104, 0), kills, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
+
+
+func _enemy_color(kind: int) -> Color:
+	return ENEMY_COLORS[mini(kind, ENEMY_COLORS.size() - 1)]
+
+
+func _kind_radius_px(kind: int) -> float:
+	if kind >= driver.config.kind_count():
+		return 0.0
+	return float(driver.config.kind_value(kind, SimConfig.KIND_RADIUS)) / Fx.FX_ONE
 
 
 func _draw_hero() -> void:

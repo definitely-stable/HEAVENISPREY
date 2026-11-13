@@ -1,5 +1,6 @@
 extends GutTest
-## P0-01c placeholder run scene: input quantization, fixed-tick driver, scene wiring.
+## P0-01 placeholder run scene: input quantization, fixed-tick driver, scene wiring, tuning
+## from content, enemies, auto-attack and restart.
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const TICK: float = 1.0 / 60.0
@@ -125,6 +126,13 @@ func test_tuning_reads_w0_roster_from_content() -> void:
 	]))
 	assert_eq(config.hero_hp_mhp, 100000)
 	assert_eq(config.spawn_min_distance_su, 384000)
+	assert_eq(tuning.skill_id, "skill.spirit_sword", "class.sword start skill")
+	assert_eq(config.skill_period_mt, 50000, "base_cooldown_ticks 50 from content")
+	# Equal to the P0_VALUES / P0_SKILL trace inputs of sim_core.py.
+	assert_eq(config.to_ints().slice(8, 22), PackedInt64Array([
+		100000, 90000, 10800, 2000, 48, 384000,
+		50000, 384000, 10000, 12000, 10000, 40, 1, 64,
+	]))
 
 
 func test_tuning_fails_closed_without_content() -> void:
@@ -140,15 +148,16 @@ func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.start_run("20261113")
-	for _i: int in 50:
+	for _i: int in 90:
 		view.advance_frame(TICK, Vector2i.ZERO)
-	assert_gt(view.driver.world.enemy_count(), 0, "first enemy after the spawn period")
+	assert_eq(view.driver.world.enemy_alive, 1, "first enemy at tick 89")
 	var guard: int = 0
 	while not view.driver.world.is_over() and guard < 3000:
 		view.advance_frame(TICK, Vector2i.ZERO)
 		guard += 1
 	assert_true(view.driver.world.is_over(), "a hero that never moves is caught")
 	assert_eq(view.driver.world.hero_hp, 0)
+	assert_gt(view.driver.world.kills, 0, "the auto-attack kills on its own")
 
 
 func test_finished_run_restarts_after_delay() -> void:
@@ -169,3 +178,29 @@ func test_finished_run_restarts_after_delay() -> void:
 	assert_eq(view.runs_started, runs + 1)
 	assert_false(view.driver.world.is_over())
 	assert_eq(view.driver.world.tick, 0)
+
+
+func test_driver_reports_hits_and_kills_once() -> void:
+	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var driver: FixedTickDriver = FixedTickDriver.create(config)
+	var hits: int = 0
+	var kills: Array = []
+	for _i: int in 1200:
+		driver.advance(TICK, Vector2i.ZERO)
+		var events: Dictionary = driver.take_events()
+		hits += (events["hit"] as PackedInt64Array).size()
+		kills.append_array(events["killed"])
+	assert_eq(kills.size(), driver.world.kills, "one death event per kill")
+	assert_gt(hits, 0)
+	assert_true((driver.take_events()["killed"] as Array).is_empty(), "events are cleared when taken")
+
+
+func test_enemy_in_a_reused_slot_is_not_interpolated() -> void:
+	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var driver: FixedTickDriver = FixedTickDriver.create(config)
+	for _i: int in 101:
+		driver.advance(TICK, Vector2i.ZERO)
+	driver.previous.enemy_uid[0] = 999
+	driver.previous.enemy_x[0] = 0
+	var at: Vector2 = driver.enemy_position_px(0)
+	assert_eq(at, Vector2(driver.world.enemy_x[0], driver.world.enemy_y[0]) / float(Fx.FX_ONE))

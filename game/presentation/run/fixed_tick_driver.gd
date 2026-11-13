@@ -12,6 +12,10 @@ var config: SimConfig
 var world: WorldState
 var previous: WorldState
 var commands: CommandLog = CommandLog.new()
+## Presentation events since the last take_events(), in tick order: enemies hit (uids) and
+## enemies killed ([position px, kind]). Read-only views of the simulation, never inputs.
+var hit_uids: PackedInt64Array = PackedInt64Array()
+var killed: Array[Array] = []
 
 var _accumulator: float = 0.0
 var _sequence: int = 0
@@ -35,6 +39,7 @@ func advance(delta: float, move: Vector2i) -> int:
 		_record(move)
 		previous = world.copy()
 		SimKernel.step(config, world, commands)
+		_collect_events()
 		ticks += 1
 	if ticks == MAX_TICKS_PER_FRAME:
 		_accumulator = minf(_accumulator, TICK_SECONDS)
@@ -53,13 +58,48 @@ func hero_position_px() -> Vector2:
 	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
 
 
-## Interpolated enemy position in pixels; an enemy spawned this tick is drawn where it is.
+## Interpolated enemy position in pixels. Only the same enemy (same uid in the slot on both
+## ticks) is interpolated; one spawned this tick is drawn where it is.
 func enemy_position_px(slot: int) -> Vector2:
 	var to: Vector2 = Vector2(world.enemy_x[slot], world.enemy_y[slot])
-	if slot >= previous.enemy_count():
+	if slot >= previous.enemy_slots() or previous.enemy_uid[slot] != world.enemy_uid[slot]:
 		return to / float(Fx.FX_ONE)
 	var from: Vector2 = Vector2(previous.enemy_x[slot], previous.enemy_y[slot])
 	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
+
+
+## Interpolated projectile position in pixels; one fired this tick is drawn where it is.
+func projectile_position_px(slot: int) -> Vector2:
+	var to: Vector2 = Vector2(world.proj_x[slot], world.proj_y[slot])
+	var same: bool = (
+		slot < previous.projectile_slots()
+		and previous.proj_damage[slot] != 0
+		and previous.proj_ttl[slot] == world.proj_ttl[slot] + 1
+	)
+	if not same:
+		return to / float(Fx.FX_ONE)
+	var from: Vector2 = Vector2(previous.proj_x[slot], previous.proj_y[slot])
+	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
+
+
+## Returns and clears the collected events: {"hit": PackedInt64Array, "killed": Array}.
+func take_events() -> Dictionary:
+	var events: Dictionary = {"hit": hit_uids, "killed": killed}
+	hit_uids = PackedInt64Array()
+	killed = []
+	return events
+
+
+func _collect_events() -> void:
+	for slot: int in previous.enemy_slots():
+		var uid: int = previous.enemy_uid[slot]
+		if uid == 0:
+			continue
+		if world.enemy_uid[slot] != uid:
+			var at: Vector2 = Vector2(previous.enemy_x[slot], previous.enemy_y[slot]) / float(Fx.FX_ONE)
+			killed.append([at, previous.enemy_kind[slot]])
+		elif world.enemy_hp[slot] < previous.enemy_hp[slot]:
+			hit_uids.append(uid)
 
 
 func _record(move: Vector2i) -> void:

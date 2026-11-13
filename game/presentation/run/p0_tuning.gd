@@ -4,9 +4,11 @@ extends RefCounted
 ##
 ## From content (read-only): the jade_grove roster window w0 (enemy IDs and spawn weights),
 ## each enemy's speed/radius/health multipliers and its CONTACT attack (damage multiplier,
-## hit interval). NOT canonical: the bases those multipliers scale (hero speed, radius and HP,
-## base enemy HP and contact damage), spawn cadence and cap, arena size. They are GAME-ARCH-02
-## hypotheses until the hero/arena tuning is agreed; nothing here writes content.
+## hit interval); the sword class start skill and its cooldown. NOT canonical (ADR-009
+## section 3): the bases those multipliers scale (hero speed, radius and HP, base enemy HP
+## and contact damage), spawn cadence, ramp and cap, arena size, and the skill's range,
+## damage and projectile. They are placeholders until combat bases enter content; nothing
+## here writes content.
 
 const CELL_PX: int = 48
 const ARENA_CELLS: Vector2i = Vector2i(32, 20)
@@ -15,15 +17,28 @@ const HERO_SPEED_SU_PER_TICK: int = 4800
 const HERO_HP_MHP: int = 100000
 const BASE_ENEMY_HP_MHP: int = 10000
 const BASE_CONTACT_DAMAGE_MHP: int = 10000
-const SPAWN_PERIOD_TICKS: int = 45
+## One spawn per 1.5 s at x1 rate; the rate grows by x1 every 3 min up to x2.
+const SPAWN_PERIOD_MT: int = 90000
+const SPAWN_RAMP_TICKS: int = 10800
+const SPAWN_RATE_MAX_FX: int = 2000
 const MAX_ENEMIES: int = 48
 const MIN_SPAWN_DISTANCE_CELLS: int = 8
 const ROSTER_ID: String = "roster.jade_grove"
 const WINDOW_ID: String = "jade_grove.w0"
+const CLASS_ID: String = "class.sword"
+const SKILL_RANGE_CELLS: int = 8
+const SKILL_DAMAGE_MHP: int = 10000
+const PROJECTILE_SPEED_SU: int = 12000
+const PROJECTILE_RADIUS_PX: int = 10
+const PROJECTILE_TTL_TICKS: int = 40
+const PROJECTILE_PIERCE: int = 1
+const MAX_PROJECTILES: int = 64
 
 var error: String = ""
 ## Enemy IDs in kind order (kind index = position).
 var enemy_ids: PackedStringArray = PackedStringArray()
+## The hero's auto-attack skill (the class start skill).
+var skill_id: String = ""
 
 
 ## Movement only: the hero in the empty arena.
@@ -35,7 +50,8 @@ static func movement_config() -> SimConfig:
 	]))
 
 
-## Movement plus the w0 enemies; null with `error` set when content is missing or invalid.
+## Movement, the w0 enemies and the class start skill; null with `error` set when content is
+## missing or invalid.
 func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	enemy_ids.clear()
 	if registry == null or not registry.is_valid():
@@ -53,10 +69,13 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 		kinds.append_array(record)
 		enemy_ids.append(enemy_id)
 	var values: PackedInt64Array = PackedInt64Array([
-		HERO_HP_MHP, SPAWN_PERIOD_TICKS, MAX_ENEMIES,
+		HERO_HP_MHP, SPAWN_PERIOD_MT, SPAWN_RAMP_TICKS, SPAWN_RATE_MAX_FX, MAX_ENEMIES,
 		MIN_SPAWN_DISTANCE_CELLS * CELL_PX * Fx.FX_ONE,
 	])
-	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text)
+	var skill: PackedInt64Array = _skill(registry)
+	if skill.is_empty():
+		return null
+	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
 	if not config.is_valid():
 		return _fail("assembled run config is not valid")
 	return config
@@ -95,6 +114,28 @@ func _kind(registry: ContentRegistry, enemy_id: String, weight: Variant) -> Pack
 		Fx.mul(BASE_CONTACT_DAMAGE_MHP, fx[3]),
 		fx[4],
 		fx[5],
+	])
+
+
+func _skill(registry: ContentRegistry) -> PackedInt64Array:
+	skill_id = str(registry.definition(CLASS_ID).get("start_skill_id", ""))
+	var skill: Dictionary = registry.definition(skill_id)
+	if skill.get("archetype") != "projectile":
+		_fail(CLASS_ID + ": the start skill must be a projectile skill in P0")
+		return PackedInt64Array()
+	var cooldown: Variant = ContentRegistry.integral(skill.get("base_cooldown_ticks"))
+	if cooldown == null or int(cooldown) <= 0:
+		_fail(skill_id + ": base_cooldown_ticks is not a positive integer")
+		return PackedInt64Array()
+	return PackedInt64Array([
+		int(cooldown) * SimConfig.RATE_ONE,
+		SKILL_RANGE_CELLS * CELL_PX * Fx.FX_ONE,
+		SKILL_DAMAGE_MHP,
+		PROJECTILE_SPEED_SU,
+		PROJECTILE_RADIUS_PX * Fx.FX_ONE,
+		PROJECTILE_TTL_TICKS,
+		PROJECTILE_PIERCE,
+		MAX_PROJECTILES,
 	])
 
 

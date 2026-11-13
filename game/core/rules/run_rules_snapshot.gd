@@ -18,7 +18,8 @@ extends RefCounted
 ##   (save restore, replay). Never use it to start a new run.
 
 ## 2 since P0-01E: the simulation changes combat state (ADR-008 section e).
-const SIM_SCHEMA_VERSION: int = 2
+## 3 since P0-01F: enemy slots with uids, spawn ramp, hero skill and projectiles (ADR-009).
+const SIM_SCHEMA_VERSION: int = 3
 
 var error: String:
 	get:
