@@ -46,12 +46,35 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(manifest["registry_bytes"], len(reg1))
         self.assertEqual(manifest["digest_policy"], "hip-canonical-json-v1")
 
-    def test_all_gameplay_catalogs_included_and_localization_excluded(self):
+    def test_only_runtime_catalogs_included(self):
         obj = json.loads(gen.build()[0])
-        expected = {p.stem for p in gen.SOURCE_DIR.glob("*.json")} - {"localization_context"}
+        expected = {Path(name).stem for name in gen.CONTENT_SOURCES}
         self.assertEqual(set(obj["catalogs"]), expected)
-        self.assertNotIn("translations", obj["catalogs"])
+        for excluded in ("localization_context", "translations", "bot_scenarios",
+                         "profile_fixtures", "id_compatibility"):
+            self.assertNotIn(excluded, obj["catalogs"])
         self.assertEqual(obj["index"]["classes"], "classes")
+
+    def test_every_source_is_classified_exactly_once(self):
+        names = {p.name for p in gen.SOURCE_DIR.glob("*.json")}
+        self.assertEqual(gen.CONTENT_SOURCES & set(gen.EXCLUDED_SOURCES), frozenset())
+        self.assertEqual(names, set(gen.CONTENT_SOURCES) | set(gen.EXCLUDED_SOURCES))
+
+    def test_unclassified_source_aborts_generation(self):
+        (self.src / "new_catalog.json").write_text('{"schema_version":2}', encoding="utf-8")
+        with self.assertRaises(gen.RegistryError) as ctx:
+            gen.build(self.src)
+        self.assertIn("unclassified source(s) new_catalog.json", str(ctx.exception))
+
+    def test_test_and_tooling_catalog_edits_do_not_change_digest(self):
+        before = gen.content_digest(self.src)
+        for name, key in (("bot_scenarios.json", "scenarios"), ("profile_fixtures.json", "profiles"),
+                          ("id_compatibility.json", "mappings")):
+            path = self.src / name
+            data = json.loads(path.read_text(encoding="utf-8"))
+            data[key] = data[key][:1]
+            path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertEqual(gen.content_digest(self.src), before)
 
     def test_localization_edit_does_not_change_digest(self):
         before = gen.content_digest(self.src)

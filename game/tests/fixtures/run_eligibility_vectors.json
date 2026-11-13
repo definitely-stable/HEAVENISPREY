@@ -1,0 +1,282 @@
+{
+  "cases": [
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "ok",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "clean_sword_standard_normal",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.apprentice",
+      "expected": "ok",
+      "granted_unlock_ids": [],
+      "mode_ids": [],
+      "name": "clean_apprentice_no_modes",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "ok",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.training"
+      ],
+      "name": "clean_training_needs_no_unlock",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.hard",
+      "expected": "difficulty_locked",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "clean_hard_locked",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.thunder",
+      "difficulty_id": "difficulty.standard",
+      "expected": "class_locked",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "clean_thunder_locked",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.apprentice",
+      "expected": "mode_locked",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.endless_limited"
+      ],
+      "name": "clean_endless_locked",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.thunder",
+      "difficulty_id": "difficulty.hard",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.thunder"
+      ],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "hard_thunder_hard_normal",
+      "profile_fixture_id": "profile.hard_unlocked"
+    },
+    {
+      "class_id": "class.thunder",
+      "difficulty_id": "difficulty.hard",
+      "expected": "mode_locked",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.thunder"
+      ],
+      "mode_ids": [
+        "mode.hyper"
+      ],
+      "name": "hard_profile_hyper_locked",
+      "profile_fixture_id": "profile.hard_unlocked"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.tribulation",
+      "expected": "difficulty_locked",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.thunder"
+      ],
+      "mode_ids": [],
+      "name": "hard_profile_tribulation_locked",
+      "profile_fixture_id": "profile.hard_unlocked"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.tribulation",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.thunder",
+        "unlock.tribulation"
+      ],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "tribulation_sword_tribulation",
+      "profile_fixture_id": "profile.tribulation_unlocked"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.abyss",
+      "expected": "difficulty_locked",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.thunder",
+        "unlock.tribulation"
+      ],
+      "mode_ids": [
+        "mode.normal"
+      ],
+      "name": "tribulation_profile_abyss_locked",
+      "profile_fixture_id": "profile.tribulation_unlocked"
+    },
+    {
+      "class_id": "class.thunder",
+      "difficulty_id": "difficulty.abyss",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.abyss",
+        "unlock.hard",
+        "unlock.thunder",
+        "unlock.tribulation"
+      ],
+      "mode_ids": [],
+      "name": "abyss_thunder_abyss",
+      "profile_fixture_id": "profile.abyss_unlocked"
+    },
+    {
+      "class_id": "class.talisman",
+      "difficulty_id": "difficulty.standard",
+      "expected": "class_locked",
+      "granted_unlock_ids": [
+        "unlock.abyss",
+        "unlock.hard",
+        "unlock.thunder",
+        "unlock.tribulation"
+      ],
+      "mode_ids": [],
+      "name": "abyss_profile_talisman_locked",
+      "profile_fixture_id": "profile.abyss_unlocked"
+    },
+    {
+      "class_id": "class.body",
+      "difficulty_id": "difficulty.abyss",
+      "expected": "class_locked",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "mode.hyper"
+      ],
+      "name": "class_checked_before_difficulty",
+      "profile_fixture_id": "profile.clean"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.hyper"
+      ],
+      "mode_ids": [
+        "mode.normal",
+        "mode.hyper"
+      ],
+      "name": "granted_hyper_with_normal"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "mode_locked",
+      "granted_unlock_ids": [
+        "unlock.hurry"
+      ],
+      "mode_ids": [
+        "mode.hyper",
+        "mode.hurry"
+      ],
+      "name": "second_mode_locked"
+    },
+    {
+      "class_id": "class.body",
+      "difficulty_id": "difficulty.abyss",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.abyss",
+        "unlock.body",
+        "unlock.challenge_trials",
+        "unlock.hurry",
+        "unlock.hyper"
+      ],
+      "mode_ids": [
+        "mode.challenge_trials",
+        "mode.hurry",
+        "mode.hyper"
+      ],
+      "name": "everything_granted"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.hard",
+      "expected": "ok",
+      "granted_unlock_ids": [
+        "unlock.hard",
+        "unlock.hard"
+      ],
+      "mode_ids": [],
+      "name": "duplicate_grant_is_a_set"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "unknown_unlock_in_profile",
+      "granted_unlock_ids": [
+        "unlock.unknown"
+      ],
+      "mode_ids": [],
+      "name": "unknown_unlock_in_profile"
+    },
+    {
+      "class_id": "class.thunder",
+      "difficulty_id": "difficulty.standard",
+      "expected": "unknown_unlock_in_profile",
+      "granted_unlock_ids": [
+        "class.thunder"
+      ],
+      "mode_ids": [],
+      "name": "definition_id_is_not_an_unlock"
+    },
+    {
+      "class_id": "class.unknown",
+      "difficulty_id": "difficulty.standard",
+      "expected": "unknown_definition",
+      "granted_unlock_ids": [],
+      "mode_ids": [],
+      "name": "unknown_class"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "difficulty.standard",
+      "expected": "unknown_definition",
+      "granted_unlock_ids": [],
+      "mode_ids": [
+        "difficulty.hard"
+      ],
+      "name": "difficulty_id_used_as_mode"
+    },
+    {
+      "class_id": "class.sword",
+      "difficulty_id": "class.sword",
+      "expected": "unknown_definition",
+      "granted_unlock_ids": [],
+      "mode_ids": [],
+      "name": "class_id_used_as_difficulty"
+    }
+  ],
+  "generator": "tools/content/run_eligibility.py",
+  "kind": "hip-run-eligibility-vectors",
+  "policy_id": "hip-run-eligibility-v1",
+  "schema_version": 1
+}
