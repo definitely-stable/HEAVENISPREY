@@ -40,7 +40,7 @@ class FxReferenceTests(unittest.TestCase):
         edges = [INT64_MIN, -fx.PRODUCT_LIMIT, -1, 0, 1, fx.PRODUCT_LIMIT, INT64_MAX]
         for a in edges:
             for b in edges:
-                for op in (fx.mul, fx.mul_sym, fx.div, fx.mul_hp):
+                for op in (fx.mul, fx.mul_sym, fx.mul_q14, fx.div, fx.mul_hp):
                     self.assertTrue(INT64_MIN <= op(a, b) <= INT64_MAX, (op.__name__, a, b))
                 x, y = fx.normalize_q14(a, b)
                 self.assertTrue(abs(x) <= 16384 and abs(y) <= 16384)

@@ -29,6 +29,8 @@ static func _call(op: String, a: PackedInt64Array) -> PackedInt64Array:
 			return PackedInt64Array([Fx.mul(a[0], a[1])])
 		"mul_sym":
 			return PackedInt64Array([Fx.mul_sym(a[0], a[1])])
+		"mul_q14":
+			return PackedInt64Array([Fx.mul_q14(a[0], a[1])])
 		"div":
 			return PackedInt64Array([Fx.div(a[0], a[1])])
 		"mul_hp":

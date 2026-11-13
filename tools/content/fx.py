@@ -93,6 +93,12 @@ def mul_sym(a: int, b: int) -> int:
     return sign(a) * sign(b) * floor_div(sat_product(abs(a), abs(b)), FX_ONE)
 
 
+def mul_q14(a: int, q: int) -> int:
+    """Signed value times a Q14 factor (unit-vector component), symmetric around zero."""
+    a, q = clamp62(a), clamp62(q)
+    return sign(a) * sign(q) * floor_div(sat_product(abs(a), abs(q)), Q14)
+
+
 def div(a: int, b: int) -> int:
     """floor(a * 1000 / b); b <= 0 yields 0."""
     return floor_div(sat_product(a, FX_ONE), b)
@@ -261,6 +267,9 @@ def build_vectors() -> dict:
             add("mul", [a, b], [mul(a, b)])
             add("mul_sym", [a, b], [mul_sym(a, b)])
             add("div", [a, b], [div(a, b)])
+    for a in _EDGE:
+        for q in (0, 1, -1, 11585, -11585, 16384, -16384, 16385):
+            add("mul_q14", [a, q], [mul_q14(a, q)])
     for value in (-5, 0, 1, 18500, HP_MAX - 1, HP_MAX, HP_MAX + 1, 1 << 62):
         for mult in (-1, 0, 1, 1000, 1850, MULT_MAX, MULT_MAX + 1):
             add("mul_hp", [value, mult], [mul_hp(value, mult)])

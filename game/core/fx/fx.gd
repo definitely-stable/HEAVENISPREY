@@ -5,7 +5,7 @@ extends RefCounted
 ## Exact port of tools/content/fx.py; vectors in res://tests/fixtures/fx_vectors.json.
 ## Scales: FX_ONE = 1000 (fx multipliers, su distances, mhp), Q14 = 16384 (unit vectors,
 ## sin/cos), BAM_TURN = 65536 (angles). Rounding rules: floor for non-negative scalars
-## (mul/div/floor_div), symmetric for signed values (mul_sym), nearest-half-up for catalog
+## (mul/div/floor_div), symmetric for signed values (mul_sym, mul_q14), nearest-half-up for catalog
 ## conversions. Products saturate at +/-2^62 in every build; nothing relies on assert.
 ## This is the only file of the simulation allowed to use `/`, `%` and a float (isqrt seed).
 
@@ -70,6 +70,13 @@ static func mul_sym(a: int, b: int) -> int:
 	a = clamp62(a)
 	b = clamp62(b)
 	return signi(a) * signi(b) * floor_div(sat_product(absi(a), absi(b)), FX_ONE)
+
+
+## Signed value times a Q14 factor (unit-vector component), symmetric around zero.
+static func mul_q14(a: int, q: int) -> int:
+	a = clamp62(a)
+	q = clamp62(q)
+	return signi(a) * signi(q) * floor_div(sat_product(absi(a), absi(q)), Q14)
 
 
 ## floor(a * 1000 / b); b <= 0 -> 0.
