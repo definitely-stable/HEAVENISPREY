@@ -44,7 +44,7 @@ python scripts/dev/godot_tool.py test              # headless --import, GUT по
 ```bash
 python -m venv .venv
 .venv/Scripts/python -m pip install gdtoolkit==4.5.0   # Linux/macOS: .venv/bin/...
-.venv/Scripts/gdlint game/core game/tests
+.venv/Scripts/gdlint game/core game/presentation game/tests
 ```
 
 - Конфигурация — `gdlintrc` в корне репозитория: `max-line-length: 120`, `max-returns: 12`, остальные правила по умолчанию. Лимит возвратов 12 нужен fail-closed валидаторам, которые выходят раньше на каждой проверке; 120 колонок соответствуют существующим typed-сигнатурам.

@@ -102,7 +102,7 @@
       "min_version": "4.5.0",
       "reason": "gdformat/gdlint for typed GDScript once game/ exists",
       "install": "python -m pip install gdtoolkit==4.5.0 (CI job gdlint in .github/workflows/godot-tests.yml; locally in a venv)",
-      "integration_test": "gdlint --version; gdlint game/core game/tests",
+      "integration_test": "gdlint --version; gdlint game/core game/presentation game/tests",
       "removal_plan": "Drop if Godot built-in formatter covers the same checks",
       "ci_impact": "CI job gdlint (ubuntu-latest) in godot-tests.yml; config gdlintrc at repo root; gdformat is not enforced yet",
       "agent_compat": "any agent with a shell"
