@@ -63,4 +63,4 @@ jobs:
       - name: gdlint version
         run: gdlint --version
       - name: Lint game/core and game/tests
-        run: gdlint game/core game/tests
+        run: gdlint game/core game/presentation game/tests

@@ -1,12 +1,13 @@
 ; HEAVENISPREY runtime project (P0-00 bootstrap, ADR-007).
-; No gameplay scenes yet: core types, generated ContentRegistry and GUT tests only.
+; P0-01c: placeholder run scene (hero movement in an empty arena); no production assets.
 
 config_version=5
 
 [application]
 
 config/name="HEAVENISPREY"
-config/description="2D survivor-like roguelite (P0-00 runtime bootstrap)"
+config/description="2D survivor-like roguelite (P0-01 runtime slice)"
+run/main_scene="res://presentation/run/run_view.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [debug]
@@ -17,6 +18,32 @@ gdscript/warnings/unsafe_method_access=1
 gdscript/warnings/unsafe_cast=1
 gdscript/warnings/unsafe_call_argument=1
 gdscript/warnings/exclude_addons=true
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[input]
+
+move_left={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":65), Object(InputEventKey,"device":-1,"physical_keycode":4194319), Object(InputEventJoypadButton,"device":-1,"button_index":13), Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":-1.0)]
+}
+move_right={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":68), Object(InputEventKey,"device":-1,"physical_keycode":4194321), Object(InputEventJoypadButton,"device":-1,"button_index":14), Object(InputEventJoypadMotion,"device":-1,"axis":0,"axis_value":1.0)]
+}
+move_up={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":87), Object(InputEventKey,"device":-1,"physical_keycode":4194320), Object(InputEventJoypadButton,"device":-1,"button_index":11), Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":-1.0)]
+}
+move_down={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":83), Object(InputEventKey,"device":-1,"physical_keycode":4194322), Object(InputEventJoypadButton,"device":-1,"button_index":12), Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":1.0)]
+}
 
 [rendering]
 
