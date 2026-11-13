@@ -5,14 +5,17 @@ extends RefCounted
 ## From content (read-only): the jade_grove roster window w0 (enemy IDs and spawn weights),
 ## each enemy's speed/radius/health multipliers and its attack: CONTACT (damage multiplier,
 ## hit interval), MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
-## radius multiplier of the danger radius H, arc degrees, status.venom) or CHARGE (the same
-## timings, dash length in hero radii, no retarget) with the venom values from the status
-## catalog (ADR-011); the sword class start skill and its cooldown. NOT canonical (ADR-009
-## section 3): the bases those multipliers scale (hero speed, radius and HP, base enemy HP
-## and contact damage), spawn cadence, ramp and cap, arena size, and the skill's range,
-## damage and projectile, and the XP settings of ADR-010 (pickup radius, gem cap, level
-## costs, XP per kind = XP_BASE + XP_PER_SPAWN_COST x the enemy's content spawn_cost). They
-## are placeholders until combat bases enter content; nothing here writes content.
+## radius multiplier of the danger radius H, arc degrees, status.venom), CHARGE (the same
+## timings, dash length in hero radii, no retarget) or PROJECTILE (the same timings, the
+## active ticks as the shot lifetime, shot speed in hero speeds; one shot, no homing, aim
+## locked at the end of tell) with the venom values from the status catalog (ADR-011); the
+## sword class start skill and its cooldown. NOT canonical (ADR-009 section 3): the bases
+## those multipliers scale (hero speed, radius and HP, base enemy HP and contact damage),
+## spawn cadence, ramp and cap, arena size, the skill's range, damage and projectile, the
+## enemy shot radius, launch range and keep distance (ADR-011 section 3), and the XP
+## settings of ADR-010 (pickup radius, gem cap, level costs, XP per kind = XP_BASE +
+## XP_PER_SPAWN_COST x the enemy's content spawn_cost). They are placeholders until combat
+## bases enter content; nothing here writes content.
 
 const CELL_PX: int = 48
 const ARENA_CELLS: Vector2i = Vector2i(32, 20)
@@ -34,6 +37,11 @@ const STAGE_ID: String = "stage.jade_grove"
 ## Base danger radius H = 2 cells (ADR-011 section 3, placeholder).
 const DANGER_RADIUS_SU: int = 2 * CELL_PX * Fx.FX_ONE
 const VENOM_ID: String = "status.venom"
+## Enemy shots (ADR-011 section 3, placeholders): a ranged kind launches within 8 cells,
+## stops chasing at 6 cells; the shot radius is 8 px.
+const RANGED_TRIGGER_CELLS: int = 8
+const KEEP_DISTANCE_CELLS: int = 6
+const ENEMY_SHOT_RADIUS_PX: int = 8
 const SKILL_RANGE_CELLS: int = 8
 const SKILL_DAMAGE_MHP: int = 10000
 const PROJECTILE_SPEED_SU: int = 12000
@@ -138,19 +146,25 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 	var attack: Dictionary = registry.definition(str(attack_ids[0]))
 	var params: Dictionary = attack.get("params", {})
 	var form: String = str(attack.get("kind", ""))
-	if form != "CONTACT" and form != "MELEE_ARC" and form != "CHARGE":
-		_fail(enemy_id + ": only CONTACT, MELEE_ARC and CHARGE attacks are simulated so far")
+	if not ["CONTACT", "MELEE_ARC", "CHARGE", "PROJECTILE"].has(form):
+		_fail(enemy_id + ": only CONTACT, MELEE_ARC, CHARGE and PROJECTILE attacks are simulated so far")
 		return PackedInt64Array()
 	var speed: Variant = Fx.from_catalog(stats.get("speed_mult"))
 	var radius: Variant = Fx.from_catalog(stats.get("collision_radius_mult"))
 	var health: Variant = Fx.from_catalog(stats.get("health_mult"))
 	var damage: Variant = Fx.from_catalog(attack.get("damage_mult"))
 	var interval: Variant = ContentRegistry.integral(params.get("hit_interval_ticks"))
-	var arc_record: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
+	var attack_record: PackedInt64Array = PackedInt64Array()
+	attack_record.resize(SimConfig.ATTACK_STRIDE)
 	if form != "CONTACT":
 		interval = ContentRegistry.integral(attack.get("cooldown_ticks"))
-		arc_record = _arc_record(enemy_id, attack) if form == "MELEE_ARC" else _charge_record(enemy_id, attack)
-		if arc_record.is_empty():
+		if form == "MELEE_ARC":
+			attack_record = _arc_record(enemy_id, attack)
+		elif form == "CHARGE":
+			attack_record = _charge_record(enemy_id, attack)
+		else:
+			attack_record = _projectile_record(enemy_id, attack)
+		if attack_record.is_empty():
 			return PackedInt64Array()
 	var spawn_weight: Variant = ContentRegistry.integral(weight)
 	var numbers: Array = [speed, radius, health, damage, interval, spawn_weight]
@@ -166,12 +180,12 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 		fx[4],
 		fx[5],
 	])
-	record.append_array(arc_record)
+	record.append_array(attack_record)
 	return record
 
 
 ## MELEE_ARC attack record: [FORM_ARC, telegraph, active, recovery, radius_mult x H, arc
-## degrees, 1 when it applies status.venom].
+## degrees, 1 when it applies status.venom, 0, 0, 0].
 func _arc_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
 	var params: Dictionary = attack.get("params", {})
 	var numbers: Array = [
@@ -187,12 +201,12 @@ func _arc_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
 		return PackedInt64Array()
 	return PackedInt64Array([
 		SimConfig.FORM_ARC, numbers[0], numbers[1], numbers[2],
-		Fx.mul(DANGER_RADIUS_SU, numbers[3]), numbers[4], 1 if status == VENOM_ID else 0,
+		Fx.mul(DANGER_RADIUS_SU, numbers[3]), numbers[4], 1 if status == VENOM_ID else 0, 0, 0, 0,
 	])
 
 
 ## CHARGE attack record: [FORM_CHARGE, telegraph, active, recovery, dash_player_radii x hero
-## radius, 0, 0]; a charge that may retarget is not simulated.
+## radius, 0, 0, 0, 0, 0]; a charge that may retarget is not simulated.
 func _charge_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
 	var params: Dictionary = attack.get("params", {})
 	var numbers: Array = [
@@ -206,7 +220,35 @@ func _charge_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
 		return PackedInt64Array()
 	return PackedInt64Array([
 		SimConfig.FORM_CHARGE, numbers[0], numbers[1], numbers[2],
-		Fx.mul(HERO_RADIUS_PX * Fx.FX_ONE, numbers[3]), 0, 0,
+		Fx.mul(HERO_RADIUS_PX * Fx.FX_ONE, numbers[3]), 0, 0, 0, 0, 0,
+	])
+
+
+## PROJECTILE attack record: [FORM_PROJECTILE, telegraph, shot lifetime (active_ticks),
+## recovery, launch range, 0, 0, shot speed (speed mult x hero speed), shot radius, keep
+## distance]; only one unguided shot per cast, aimed at the end of tell, is simulated.
+func _projectile_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
+	var params: Dictionary = attack.get("params", {})
+	var numbers: Array = [
+		ContentRegistry.integral(attack.get("telegraph_ticks")),
+		ContentRegistry.integral(attack.get("active_ticks")),
+		ContentRegistry.integral(attack.get("recovery_ticks")),
+		Fx.from_catalog(params.get("projectile_speed_as_player_mult")),
+	]
+	var shape_ok: bool = (
+		ContentRegistry.integral(params.get("projectiles_per_cast")) == 1
+		and params.get("homing") == false
+		and params.get("aim_lock") == "telegraph_end"
+		and attack.get("apply_status_id") == null
+	)
+	if numbers.has(null) or not shape_ok:
+		_fail(enemy_id + ": PROJECTILE timings, speed, shot count, homing, aim or status are not usable in P0")
+		return PackedInt64Array()
+	return PackedInt64Array([
+		SimConfig.FORM_PROJECTILE, numbers[0], numbers[1], numbers[2],
+		RANGED_TRIGGER_CELLS * CELL_PX * Fx.FX_ONE, 0, 0,
+		Fx.mul(HERO_SPEED_SU_PER_TICK, numbers[3]), ENEMY_SHOT_RADIUS_PX * Fx.FX_ONE,
+		KEEP_DISTANCE_CELLS * CELL_PX * Fx.FX_ONE,
 	])
 
 

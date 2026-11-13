@@ -118,6 +118,7 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.won, int(mark["won"]), label + " won")
 			assert_eq(world.next_attack_uid - 1, int(mark["attacks"]), label + " attacks")
 			assert_eq(world.venom_stacks, int(mark["venom"]), label + " venom")
+			assert_eq(world.live_shots(), int(mark["shots"]), label + " shots")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 

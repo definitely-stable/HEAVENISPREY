@@ -1,8 +1,8 @@
 extends GutTest
-## ADR-011 sections 2-4 (E2): the GDScript attack machine against the oracle rules: the 3R/4
+## ADR-011 sections 2-4 (E2-E3): the GDScript attack machine against the oracle rules: the 3R/4
 ## launch, the escape margin of each arc, the hit only in the first active tick, holding
 ## still through the attack, the cooldown from the start of `tell`, venom stacks and expiry.
-## The numbers equal tools/content/sim_core.py (ARC_KINDS, ARC_ATTACKS, P0_VENOM).
+## The numbers equal tools/content/sim_core.py (ARC_KINDS, ARC_ATTACKS, P0_VENOM, MANTIS_*).
 
 const BASE: Array[int] = [4800, 24000, 0, 0, 1536000, 960000, 768000, 480000]
 const TOUGH: int = 500000000
@@ -13,14 +13,14 @@ const ARC_KINDS: Array[int] = [
 	2592, 30720, 25000, 11800, 180, 1,
 ]
 const ARC_ATTACKS: Array[int] = [
-	1, 20, 6, 27, 96000, 85, 1,
-	1, 30, 10, 37, 129600, 125, 0,
-	1, 48, 12, 40, 153600, 130, 0,
+	1, 20, 6, 27, 96000, 85, 1, 0, 0, 0,
+	1, 30, 10, 37, 129600, 125, 0, 0, 0, 0,
+	1, 48, 12, 40, 153600, 130, 0, 0, 0, 0,
 ]
 const VENOM: Array[int] = [3, 240, 60, 1000]
 ## ADR-011 E3: the mantis CHARGE (= sim_core MANTIS_KIND, MANTIS_LUNGE).
 const MANTIS_KIND: Array[int] = [5280, 18720, 7200, 9500, 150, 2]
-const MANTIS_LUNGE: Array[int] = [2, 33, 10, 36, 108000, 0, 0]
+const MANTIS_LUNGE: Array[int] = [2, 33, 10, 36, 108000, 0, 0, 0, 0, 0]
 
 
 static func _config() -> SimConfig:
@@ -158,7 +158,8 @@ func test_tuning_builds_the_arc_kinds_from_content() -> void:
 		var record: PackedInt64Array = tuning.kind_record(registry, ids[kind], weights[kind])
 		assert_eq(tuning.error, "", ids[kind])
 		var expected: PackedInt64Array = PackedInt64Array(ARC_KINDS.slice(kind * 6, kind * 6 + 6))
-		expected.append_array(PackedInt64Array(ARC_ATTACKS.slice(kind * 7, kind * 7 + 7)))
+		var stride: int = SimConfig.ATTACK_STRIDE
+		expected.append_array(PackedInt64Array(ARC_ATTACKS.slice(kind * stride, (kind + 1) * stride)))
 		assert_eq(record, expected, ids[kind] + ": the oracle trace inputs are the content numbers")
 	assert_eq(tuning.venom_values(registry), PackedInt64Array(VENOM))
 

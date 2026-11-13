@@ -3,7 +3,9 @@ extends RefCounted
 ## Placeholder telegraphs of enemy attacks drawn with primitives (ADR-011 sections 2-3):
 ## a MELEE_ARC sector from the enemy in its fixed direction (E2); a CHARGE lane of the dash
 ## length and the enemy's width (E3), pointing at the hero during `tell` (the aim locks at its
-## end) and along the locked direction while dashing. During `tell` the outline shows the
+## end) and along the locked direction while dashing; a PROJECTILE lane of the launch range
+## and the shot's width (E4), following the hero the same way until the release. During
+## `tell` the outline shows the
 ## whole danger area and a fill grows with the time already spent in it; while active the
 ## shape flashes. Presentation only: the simulation decides every hit.
 
@@ -16,7 +18,7 @@ const ARC_POINTS: int = 24
 
 ## The telegraph of the attack in `slot`, empty when the enemy is not in tell or active:
 ## {form, center, radius (px: arc radius or dash length), angle (rad), half_arc (rad, arc) or
-## width (px, charge), progress (0..1 of the tell), active}.
+## width (px, charge or projectile lane), progress (0..1 of the tell), active}.
 static func shape(config: SimConfig, world: WorldState, slot: int) -> Dictionary:
 	if slot >= world.enemy_slots() or world.enemy_uid[slot] == 0:
 		return {}
@@ -25,7 +27,7 @@ static func shape(config: SimConfig, world: WorldState, slot: int) -> Dictionary
 		return {}
 	var kind: int = world.enemy_kind[slot]
 	var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
-	if form != SimConfig.FORM_ARC and form != SimConfig.FORM_CHARGE:
+	if form == SimConfig.FORM_CONTACT:
 		return {}
 	var telegraph: int = config.attack_value(kind, SimConfig.ATTACK_TELEGRAPH)
 	var progress: float = 1.0
@@ -33,18 +35,21 @@ static func shape(config: SimConfig, world: WorldState, slot: int) -> Dictionary
 		progress = clampf(float(telegraph - world.enemy_left[slot]) / float(telegraph), 0.0, 1.0)
 	var center: Vector2 = Vector2(world.enemy_x[slot], world.enemy_y[slot]) / Fx.FX_ONE
 	var angle: float = atan2(float(world.enemy_dir_y[slot]), float(world.enemy_dir_x[slot]))
-	if form == SimConfig.FORM_CHARGE and state == EnemyAttackSystem.ST_TELL:
+	if form != SimConfig.FORM_ARC and state == EnemyAttackSystem.ST_TELL:
 		# The aim is not locked yet: the lane follows the hero.
 		var hero: Vector2 = Vector2(world.player_x, world.player_y) / Fx.FX_ONE
 		if not hero.is_equal_approx(center):
 			angle = center.angle_to_point(hero)
+	var width: float = 2.0 * float(config.kind_value(kind, SimConfig.KIND_RADIUS)) / Fx.FX_ONE
+	if form == SimConfig.FORM_PROJECTILE:
+		width = 2.0 * float(config.attack_value(kind, SimConfig.ATTACK_SHOT_RADIUS)) / Fx.FX_ONE
 	return {
 		"form": form,
 		"center": center,
 		"radius": float(config.attack_value(kind, SimConfig.ATTACK_REACH)) / Fx.FX_ONE,
 		"angle": angle,
 		"half_arc": deg_to_rad(config.attack_value(kind, SimConfig.ATTACK_ARC) * 0.5),
-		"width": 2.0 * float(config.kind_value(kind, SimConfig.KIND_RADIUS)) / Fx.FX_ONE,
+		"width": width,
 		"progress": progress,
 		"active": state == EnemyAttackSystem.ST_ACTIVE,
 	}
@@ -54,22 +59,22 @@ static func shape(config: SimConfig, world: WorldState, slot: int) -> Dictionary
 static func draw(canvas: CanvasItem, telegraph: Dictionary, center: Vector2) -> void:
 	var radius: float = telegraph["radius"]
 	var angle: float = telegraph["angle"]
-	var charge: bool = telegraph["form"] == SimConfig.FORM_CHARGE
-	var outline: PackedVector2Array = _shape(telegraph, center, radius, angle, charge)
+	var lane_form: bool = telegraph["form"] != SimConfig.FORM_ARC
+	var outline: PackedVector2Array = _shape(telegraph, center, radius, angle, lane_form)
 	if telegraph["active"]:
 		canvas.draw_colored_polygon(outline, COLOR_ACTIVE)
 		return
 	canvas.draw_colored_polygon(outline, COLOR_TELL)
 	var grown: float = radius * float(telegraph["progress"])
 	if grown > 1.0:
-		canvas.draw_colored_polygon(_shape(telegraph, center, grown, angle, charge), COLOR_FILL)
+		canvas.draw_colored_polygon(_shape(telegraph, center, grown, angle, lane_form), COLOR_FILL)
 	canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_TELL_EDGE, 2.0)
 
 
 static func _shape(
-	telegraph: Dictionary, center: Vector2, radius: float, angle: float, charge: bool
+	telegraph: Dictionary, center: Vector2, radius: float, angle: float, lane_form: bool
 ) -> PackedVector2Array:
-	if charge:
+	if lane_form:
 		return lane(center, radius, angle, telegraph["width"])
 	return sector(center, radius, angle, telegraph["half_arc"])
 

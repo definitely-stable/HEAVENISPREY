@@ -42,6 +42,9 @@ const COLOR_GEM: Color = Color(0.36, 0.84, 0.78)
 const COLOR_XP_BACK: Color = Color(0.0, 0.0, 0.0, 0.55)
 ## status.venom on the hero: tint and one pip per stack above the HP bar.
 const COLOR_VENOM: Color = Color(0.45, 0.85, 0.3)
+## Enemy shot (lantern wisp): a pale ghost-fire orb with a glow.
+const COLOR_WISP: Color = Color(0.72, 1.0, 0.86)
+const COLOR_WISP_GLOW: Color = Color(0.45, 0.95, 0.75, 0.3)
 ## Placeholder enemy colours by kind index (yin corpse, blood wolf, then fallbacks).
 const ENEMY_COLORS: Array[Color] = [
 	Color(0.45, 0.55, 0.45), Color(0.6, 0.12, 0.14), Color(0.5, 0.45, 0.7), Color(0.7, 0.6, 0.3),
@@ -228,6 +231,7 @@ func _draw() -> void:
 	_draw_enemies()
 	_draw_projectiles()
 	_draw_hero()
+	_draw_shots()
 	_draw_pickups()
 	if driver.world.is_over():
 		draw_rect(Rect2(Vector2.ZERO, arena), COLOR_OVER)
@@ -277,6 +281,18 @@ func _draw_projectiles() -> void:
 		draw_circle(at, radius * 1.3, COLOR_SWORD_GLOW)
 		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, COLOR_SWORD, radius * 0.6)
 		draw_circle(at + heading * radius * 1.2, radius * 0.35, COLOR_SWORD)
+
+
+## Enemy shots, drawn over the hero so an incoming wisp stays visible.
+func _draw_shots() -> void:
+	var world: WorldState = driver.world
+	for slot: int in world.shot_slots():
+		if world.shot_damage[slot] == 0:
+			continue
+		var at: Vector2 = driver.shot_position_px(slot)
+		var radius: float = float(world.shot_radius[slot]) / Fx.FX_ONE
+		draw_circle(at, radius * 1.8, COLOR_WISP_GLOW)
+		draw_circle(at, radius, COLOR_WISP)
 
 
 func _draw_puffs() -> void:

@@ -25,11 +25,13 @@ const KIND_DAMAGE: int = 3
 const KIND_INTERVAL: int = 4
 const KIND_WEIGHT: int = 5
 ## Enemy attack record (ADR-011 sections 2-3): [form, telegraph_ticks, active_ticks,
-## recovery_ticks, reach_su, arc_degrees, venom]. FORM_CONTACT kinds hit by touch (all zeros);
-## FORM_ARC and FORM_CHARGE kinds run the attack machine with the kind damage, and the kind
-## interval as the cooldown from the start of `tell`. A charge has arc 0, no venom, and its
-## reach is the dash length.
-const ATTACK_STRIDE: int = 7
+## recovery_ticks, reach_su, arc_degrees, venom, shot_speed_su, shot_radius_su, keep_su].
+## FORM_CONTACT kinds hit by touch (all zeros); the other forms run the attack machine with
+## the kind damage, and the kind interval as the cooldown from the start of `tell`. A charge
+## has arc 0, no venom, and its reach is the dash length. A projectile kind launches within
+## reach, does not chase closer than keep_su, and its active_ticks is the shot lifetime (the
+## enemy itself is active for one tick, the release). The shot fields are 0 for other forms.
+const ATTACK_STRIDE: int = 10
 const ATTACK_FORM: int = 0
 const ATTACK_TELEGRAPH: int = 1
 const ATTACK_ACTIVE: int = 2
@@ -37,9 +39,15 @@ const ATTACK_RECOVERY: int = 3
 const ATTACK_REACH: int = 4
 const ATTACK_ARC: int = 5
 const ATTACK_VENOM: int = 6
+const ATTACK_SHOT_SPEED: int = 7
+const ATTACK_SHOT_RADIUS: int = 8
+const ATTACK_KEEP: int = 9
 const FORM_CONTACT: int = 0
 const FORM_ARC: int = 1
 const FORM_CHARGE: int = 2
+const FORM_PROJECTILE: int = 3
+## Enemy shot pool (ADR-011 section 3): a shot that finds no free slot is not fired.
+const ENEMY_SHOTS_LIMIT: int = 64
 ## Keeps the sector test inside int64 (su).
 const MAX_ATTACK_REACH: int = 4194304
 const MAX_ARC_DEGREES: int = 180
@@ -305,6 +313,30 @@ func _charge_valid(kind: int) -> bool:
 	)
 
 
+## A shot must deal damage and must not step over the hero in one tick (speed no more than the
+## hero and shot radii together); arc 0, no venom, keep distance within the reach.
+func _projectile_valid(kind: int) -> bool:
+	var reach: int = attack_value(kind, ATTACK_REACH)
+	var shot_radius: int = attack_value(kind, ATTACK_SHOT_RADIUS)
+	var speed: int = attack_value(kind, ATTACK_SHOT_SPEED)
+	var keep: int = attack_value(kind, ATTACK_KEEP)
+	if attack_value(kind, ATTACK_TELEGRAPH) < 1 or attack_value(kind, ATTACK_ACTIVE) < 1:
+		return false
+	if attack_value(kind, ATTACK_RECOVERY) < 0 or reach <= 0 or reach > MAX_ATTACK_REACH:
+		return false
+	return (
+		attack_value(kind, ATTACK_ARC) == 0
+		and attack_value(kind, ATTACK_VENOM) == 0
+		and shot_radius > 0
+		and shot_radius <= MAX_ATTACK_REACH
+		and speed > 0
+		and speed <= player_radius_su + shot_radius
+		and keep >= 0
+		and keep <= reach
+		and kind_value(kind, KIND_DAMAGE) > 0
+	)
+
+
 ## One record per kind; a contact record is all zeros; an arc needs whole phases, a reach up
 ## to MAX_ATTACK_REACH and an arc of 1..180 degrees; venom needs its status values.
 func _attacks_valid() -> bool:
@@ -321,6 +353,13 @@ func _attacks_valid() -> bool:
 		var reach: int = attack_value(kind, ATTACK_REACH)
 		var arc: int = attack_value(kind, ATTACK_ARC)
 		var flag: int = attack_value(kind, ATTACK_VENOM)
+		if form == FORM_PROJECTILE:
+			if not _projectile_valid(kind):
+				return false
+			continue
+		for field: int in [ATTACK_SHOT_SPEED, ATTACK_SHOT_RADIUS, ATTACK_KEEP]:
+			if attack_value(kind, field) != 0:
+				return false
 		if form == FORM_CHARGE:
 			if not _charge_valid(kind):
 				return false
