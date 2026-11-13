@@ -56,12 +56,13 @@ jobs:
         run: python scripts/validate_encounter_proposal.py
       - name: Verify P0-00 generated ContentRegistry equals v7 sources (digest parity)
         run: python tools/content/generate_registry.py --check
-      - name: Verify ADR-007/ADR-008 golden vectors (hip-rng-v1, rules hash, eligibility, hip-fx-v1) are reproducible
+      - name: Verify ADR-007/ADR-008 golden vectors (hip-rng-v1, rules hash, eligibility, hip-fx-v1, sim core) are reproducible
         run: |
           python tools/content/hip_rng.py --check
           python tools/content/rules_identity.py --check
           python tools/content/run_eligibility.py --check
           python tools/content/fx.py --check
+          python tools/content/sim_core.py --check
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
