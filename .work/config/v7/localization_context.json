@@ -15,7 +15,10 @@
     "STAGE_": "stage selector",
     "CURRENCY_": "persistent spendable resource",
     "TALENT_": "talent tooltip",
-    "STAT_": "progression metadata"
+    "STAT_": "progression metadata",
+    "UI_LEVEL_UP_": "level-up choice menu header (run paused)",
+    "UI_UPGRADE_RANK": "rank of an upgrade card: current/max after the pick",
+    "UPGRADE_": "level-up upgrade card: _NAME title, _DESC stat line with the value before and after the pick"
   },
   "translation_file": "translations.csv"
 }

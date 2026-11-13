@@ -59,8 +59,8 @@ static func movement_config() -> SimConfig:
 	]))
 
 
-## Movement, the w0 enemies, the class start skill and XP; null with `error` set when content is
-## missing or invalid.
+## Movement, the w0 enemies, the class start skill, XP and the immediate level-up choice;
+## null with `error` set when content is missing or invalid.
 func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	enemy_ids.clear()
 	if registry == null or not registry.is_valid():
@@ -93,6 +93,8 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	config.with_xp(
 		PackedInt64Array([PICKUP_RADIUS_PX * Fx.FX_ONE, MAX_GEMS]), kind_xp, PackedInt64Array(XP_COSTS)
 	)
+	# Immediate level-up choice: the run pauses on a pending choice (ADR-010 section 6).
+	config.with_choice_mode(SimConfig.CHOICE_IMMEDIATE)
 	if not config.is_valid():
 		return _fail("assembled run config is not valid")
 	return config

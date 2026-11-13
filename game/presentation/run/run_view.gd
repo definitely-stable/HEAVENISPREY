@@ -4,7 +4,8 @@ extends Node2D
 ## damage and kills in an empty arena, drawn with primitives. Reads simulation state only;
 ## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
 ## (placeholder bases). Hit flashes, death puffs, gem pickup flights and the level-up ring
-## are presentation-only effects (ADR-010 section 8).
+## are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
+## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
 
 const CELL_PX: int = P0Tuning.CELL_PX
 const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
@@ -64,6 +65,7 @@ var _pickups: Array[Array] = []
 var _level_ring: float = 0.0
 ## Screen-space layer for the HUD (not moved by the camera).
 var _hud: Node2D
+var _menu: ChoiceMenu
 
 @onready var _camera: Camera2D = $Camera
 
@@ -74,12 +76,16 @@ static func placeholder_config() -> SimConfig:
 
 
 func _ready() -> void:
+	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
 	var layer: CanvasLayer = CanvasLayer.new()
 	add_child(layer)
 	_hud = Node2D.new()
 	layer.add_child(_hud)
 	_hud.draw.connect(_draw_hud)
+	_menu = ChoiceMenu.new()
+	layer.add_child(_menu)
+	_menu.picked.connect(_on_card_picked)
 	var arena: Vector2i = ARENA_CELLS * CELL_PX
 	_camera.limit_left = 0
 	_camera.limit_top = 0
@@ -104,6 +110,7 @@ func start_run(seed_text: String) -> void:
 	_level_ring = 0.0
 	_camera.position = driver.hero_position_px()
 	_camera.reset_smoothing()
+	_sync_menu()
 	queue_redraw()
 
 
@@ -117,6 +124,11 @@ func _process(delta: float) -> void:
 
 
 func advance_frame(delta: float, move: Vector2i) -> int:
+	if driver.world.is_paused():
+		# The run waits for a card; effects freeze with it.
+		_sync_menu()
+		_menu.age(delta)
+		return 0
 	_age_effects(delta)
 	if driver.world.is_over():
 		_over_time += delta
@@ -142,8 +154,39 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	if move != Vector2i.ZERO:
 		_facing = Vector2(move).normalized()
 	_camera.position = driver.hero_position_px()
+	_sync_menu()
 	queue_redraw()
 	return ticks
+
+
+## Picks card `index` of the shown hand (the menu's `picked`, tests and replays); false when
+## the run is not paused or there is no such card.
+func choose(index: int) -> bool:
+	if not driver.choose(index):
+		return false
+	_sync_menu()
+	queue_redraw()
+	return true
+
+
+func is_menu_open() -> bool:
+	return _menu != null and _menu.visible
+
+
+func _on_card_picked(index: int) -> void:
+	choose(index)
+
+
+## Opens the menu for a new hand, closes it when the run goes on.
+func _sync_menu() -> void:
+	if _menu == null:
+		return
+	var world: WorldState = driver.world
+	if not world.is_paused():
+		if _menu.visible:
+			_menu.close()
+	elif not _menu.visible or _menu.revision != world.build_revision:
+		_menu.open(driver.config, world)
 
 
 func _draw() -> void:
@@ -302,7 +345,7 @@ func _draw_hero() -> void:
 	var color: Color = COLOR_HERO_HIT if _flash > 0.0 else COLOR_HERO
 	draw_circle(hero, HERO_RADIUS_PX, color)
 	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
-	var max_hp: int = driver.config.hero_hp_mhp
+	var max_hp: int = driver.world.hero_hp_max
 	if max_hp <= 0:
 		return
 	var bar: Rect2 = Rect2(hero + Vector2(-HERO_RADIUS_PX, -HERO_RADIUS_PX - 12), Vector2(HERO_RADIUS_PX * 2, 5))

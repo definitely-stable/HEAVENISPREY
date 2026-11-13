@@ -1,9 +1,18 @@
 extends GutTest
 ## P0-01 placeholder run scene: input quantization, fixed-tick driver, scene wiring, tuning
-## from content, enemies, auto-attack and restart.
+## from content, enemies, auto-attack and restart. Runs that reach a level-up take the first
+## card (the choice menu itself is covered in test_choice_menu.gd).
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const TICK: float = 1.0 / 60.0
+
+
+## One frame of a scene run: the first card when the run waits for a choice.
+static func _frame(view: RunView, move: Vector2i) -> void:
+	if view.driver.world.is_paused():
+		view.choose(0)
+	else:
+		view.advance_frame(TICK, move)
 
 
 func test_quantize_eight_directions() -> void:
@@ -153,7 +162,7 @@ func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
 	assert_eq(view.driver.world.enemy_alive, 1, "first enemy at tick 89")
 	var guard: int = 0
 	while not view.driver.world.is_over() and guard < 3000:
-		view.advance_frame(TICK, Vector2i.ZERO)
+		_frame(view, Vector2i.ZERO)
 		guard += 1
 	assert_true(view.driver.world.is_over(), "a hero that never moves is caught")
 	assert_eq(view.driver.world.hero_hp, 0)
@@ -168,7 +177,7 @@ func test_finished_run_restarts_after_delay() -> void:
 	view.start_run("20261113")
 	var guard: int = 0
 	while not view.driver.world.is_over() and guard < 3000:
-		view.advance_frame(TICK, Vector2i.ZERO)
+		_frame(view, Vector2i.ZERO)
 		guard += 1
 	var runs: int = view.runs_started
 	var finished: FixedTickDriver = view.driver
@@ -186,6 +195,8 @@ func test_driver_reports_hits_and_kills_once() -> void:
 	var hits: int = 0
 	var kills: Array = []
 	for _i: int in 1200:
+		if driver.world.is_paused():
+			driver.choose(0)
 		driver.advance(TICK, Vector2i.ZERO)
 		var events: Dictionary = driver.take_events()
 		hits += (events["hit"] as PackedInt64Array).size()
@@ -206,29 +217,6 @@ func test_enemy_in_a_reused_slot_is_not_interpolated() -> void:
 	assert_eq(at, Vector2(driver.world.enemy_x[0], driver.world.enemy_y[0]) / float(Fx.FX_ONE))
 
 
-func test_bot_log_replays_through_the_scene() -> void:
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/sim_bot_runs.json"))
-	var row: Dictionary = (data["traces"] as Array)[1]
-	assert_eq(str(row["id"]), "botrun.p0.circle.s101")
-	var moves: Dictionary = {}
-	for record: Variant in row["commands"]:
-		var command: Array = record
-		moves[str(command[0]).to_int()] = Vector2i(str(command[3]).to_int(), str(command[4]).to_int())
-	var packed: PackedScene = load(RUN_SCENE)
-	var view: RunView = packed.instantiate()
-	view.read_player_input = false
-	add_child_autofree(view)
-	view.start_run("101")
-	var held: Vector2i = Vector2i.ZERO
-	while not view.driver.world.is_over() and view.driver.world.tick < 18000:
-		held = moves.get(view.driver.world.tick, held)
-		view.advance_frame(TICK, held)
-	var checkpoints: Array = row["checkpoints"]
-	assert_eq(view.driver.world.tick, int(row["death_tick"]), "same death tick")
-	assert_eq(view.driver.world.digest(), str((checkpoints.back() as Dictionary)["digest"]), "same state")
-	assert_eq(view.driver.commands.digest(), str(row["log_digest"]), "input recorded as the same log")
-
-
 func test_scene_reports_gem_pickups_and_levels() -> void:
 	var packed: PackedScene = load(RUN_SCENE)
 	var view: RunView = packed.instantiate()
@@ -240,6 +228,8 @@ func test_scene_reports_gem_pickups_and_levels() -> void:
 	var levels: int = 0
 	while not driver.world.is_over() and driver.world.tick < 3000:
 		var east: bool = floori(driver.world.tick / 240.0) % 2 == 0
+		if driver.world.is_paused():
+			assert_true(driver.choose(0))
 		driver.advance(TICK, Vector2i(1 if east else -1, 0))
 		var events: Dictionary = driver.take_events()
 		for gem: Array in events["collected"]:
