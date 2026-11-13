@@ -7,13 +7,13 @@
  "policy_id": "hip-fx-v1",
  "rng_policy_id": "hip-rng-v1",
  "schema_version": 1,
- "sim_schema_version": 3,
+ "sim_schema_version": 4,
  "survey": [
   {
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1324,
-   "final_digest": "241c5ab25f8bb219a6d9f93a6ab8af8898d471510eecf319d018a7d9db2e2b0e",
+   "final_digest": "db61f735c98a81803e93212f6146a4d179a1de40a1827714a914d88550311c23",
    "id": "botrun.p0.idle.s101",
    "kills": 12,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -22,8 +22,8 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 2181,
-   "final_digest": "0ac8eb45767a16d105943cbbc1c4a2d147dc1b2329103b3948ceab2cd20ed3c4",
+   "death_tick": 2184,
+   "final_digest": "be2104caaa5f54ebc304d79cd823d8f5217331e64d2e4da1522310a774ad154a",
    "id": "botrun.p0.idle.s102",
    "kills": 22,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -32,20 +32,20 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1673,
-   "final_digest": "7b27035c9c8656259536879b83c466e8da05ac4c12de11369c695369248e3f51",
+   "death_tick": 1661,
+   "final_digest": "637df78b333147f69393c2bba4b48be5025d756a2b3f67579b1d2a1bda896769",
    "id": "botrun.p0.idle.s103",
-   "kills": 17,
+   "kills": 16,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "103"
   },
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1963,
-   "final_digest": "3c7802606dbcb61d795aa4fe037248aa11267265b44a28ae8537cd244b65e825",
+   "death_tick": 1678,
+   "final_digest": "65da9a15aeac6e24e08a21d78ca980cd8cef63f229e1f1273116f28a177ff946",
    "id": "botrun.p0.idle.s104",
-   "kills": 20,
+   "kills": 17,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "104"
   },
@@ -53,7 +53,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 2361,
-   "final_digest": "5242907e7beeb763a002cc0fac868f20b3bccdf1e14c5d6f7c0a9bd2e20d166c",
+   "final_digest": "e711e2ece5f33b6351ae4a570fd74fdb2cc583c9bd56ea0fbf0737fd440ab40c",
    "id": "botrun.p0.idle.s105",
    "kills": 26,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -63,7 +63,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1673,
-   "final_digest": "10110c139a30ba700e561f579cf1ae12c368d7d522872bd30346be69971fc76f",
+   "final_digest": "606634cd735a375f5290a241af0ac0d73fbf09ed7734ce0589bf17f45cee63e4",
    "id": "botrun.p0.idle.s106",
    "kills": 17,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -73,7 +73,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1992,
-   "final_digest": "49637152610380612a76abbfa31ef2e97216e7328e4b7cb201f1064e1a5de314",
+   "final_digest": "d51f113121f3ec518077029e73638646c07409f56364ae59b7d31d0ef80f9822",
    "id": "botrun.p0.idle.s107",
    "kills": 20,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -82,10 +82,10 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1163,
-   "final_digest": "0cd675c09b8e67fa334339be31f7f65d14d5e4a19c7ff4aa834028bf90beeec0",
+   "death_tick": 1251,
+   "final_digest": "6a8aaa8771a7041fdc73a832e74d7fac5b9758b29812b71711ff784a08c8854f",
    "id": "botrun.p0.idle.s108",
-   "kills": 10,
+   "kills": 11,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "108"
   },
@@ -93,7 +93,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 2610,
-   "final_digest": "fd5e55c3cc5dfee11f1a2d61dfd7932145bf44762bdd6c565128437cea69c310",
+   "final_digest": "dc7535a904fdfd18fd1f9648de1b428fa1aaa78bd7d777183b4d736433db8189",
    "id": "botrun.p0.idle.s109",
    "kills": 29,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -102,8 +102,8 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1271,
-   "final_digest": "60e62083a176785288a84d0ae2b8317737118e6bcfd55377a9b41f8d1352eaa1",
+   "death_tick": 1236,
+   "final_digest": "80dc5f03d41c47d767b6b41ee6fda16bcf20890cdb345fdace11ff2a6bbbfc3e",
    "id": "botrun.p0.idle.s110",
    "kills": 11,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -113,7 +113,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1323,
-   "final_digest": "e3daeda4c844272a1a0759fba946b8342d31c8806162dced4b26a2a4b6a6d447",
+   "final_digest": "646fe7528faf5c11f1b7ca8ddbdffd00008bacaba50d000139a81c09d9d8d961",
    "id": "botrun.p0.idle.s111",
    "kills": 12,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -122,10 +122,10 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 2065,
-   "final_digest": "e1df84b16682132948c8c1ae1923a16939887f29671921f35744bc977665060e",
+   "death_tick": 1650,
+   "final_digest": "1a822cc78ba7f42f601066a7fb0a8295e8542729a373ba3d1254e41ec9fc1213",
    "id": "botrun.p0.idle.s112",
-   "kills": 21,
+   "kills": 17,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "112"
   },
@@ -133,7 +133,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1888,
-   "final_digest": "a1d371b7e0ba467273c432a20ec54abe98cf81f87f1d7576907ca51897383e36",
+   "final_digest": "34a9d5b05339b7adf0d683638322235acd82e7662e98a5868d323e4a6714ae6d",
    "id": "botrun.p0.idle.s113",
    "kills": 20,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -142,8 +142,8 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1790,
-   "final_digest": "c2b81872872bf45b5d4ddbce6d660e8656166e4791b7e2cd7cfae4ffb9161431",
+   "death_tick": 1794,
+   "final_digest": "e805c20a092bfeeba7605b2a7057dabbf4343b15b8d29bebe0af29f5c07588de",
    "id": "botrun.p0.idle.s114",
    "kills": 17,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -153,7 +153,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1881,
-   "final_digest": "117e1e4a729f5e4a0cc89c7486f356acafd123c15d59fa7227c7875290a666af",
+   "final_digest": "1668cc78eb3c4ee3fb078c3e56e4c9b6b8bae6df4f40b1d773f14cd418536970",
    "id": "botrun.p0.idle.s115",
    "kills": 19,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -163,7 +163,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1534,
-   "final_digest": "8691611fed0e23ee0d1aa3f5071f814802d2e44aafbd0debc14be6fbcb7c2f1f",
+   "final_digest": "9a279e8b33b0c1ab0e60000c409008938519f3ca37682fc97af3bf5c6de60383",
    "id": "botrun.p0.idle.s116",
    "kills": 14,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -173,7 +173,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1590,
-   "final_digest": "ba348d5ace09ab2b92140120005efd4e49c7817a502dbe1097e153182d29dffc",
+   "final_digest": "b33840628ae1449b63d845b07b535eb946fedac96c360c8cd3f406ef998f2489",
    "id": "botrun.p0.idle.s117",
    "kills": 16,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -182,20 +182,20 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1267,
-   "final_digest": "b4edbc620bc11184d4c457f09fce0b9c9ce999b327dc06cecff9c524b6f6159e",
+   "death_tick": 1402,
+   "final_digest": "9b936ce09479aa61ca7d0f339683e2dba05f4e9555f15854d7b6017d733e62b4",
    "id": "botrun.p0.idle.s118",
-   "kills": 11,
+   "kills": 13,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "118"
   },
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1295,
-   "final_digest": "9c49fc1bae003db3d2422d35bb47792d60336caebb7f14f420cf5c9f64189c77",
+   "death_tick": 1244,
+   "final_digest": "e1738b723e0dcf853fa7ea5ed434082d7217077e891527c73e057f1073d243c8",
    "id": "botrun.p0.idle.s119",
-   "kills": 12,
+   "kills": 10,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "119"
   },
@@ -203,7 +203,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1554,
-   "final_digest": "eeafb54b5996c60a4c80e267ba2cb44b67509e8b0f49c88c904301c542f5c69f",
+   "final_digest": "12a2c4d330e9dc159674c913797fd9c385cf92fe9daf559e82626271be221801",
    "id": "botrun.p0.idle.s120",
    "kills": 15,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -213,7 +213,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 2422,
-   "final_digest": "d3582aa3f87e6155c52026a5539fcba434c6977163ccbf34018eac422629ea91",
+   "final_digest": "2b43107f8e58439232eddc7c8ab9006fdf888d808bf568db652b562943504ef1",
    "id": "botrun.p0.idle.s121",
    "kills": 27,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -223,7 +223,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1885,
-   "final_digest": "4f29ebbfeb93e20f168b0c2471c718fd8f09e7d2c8546dbe1b29054ee042a222",
+   "final_digest": "4a842e9a1c6ad34a14980733dd99fc47a2a08ce366d8433d75d63b5d9b891509",
    "id": "botrun.p0.idle.s122",
    "kills": 19,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -233,7 +233,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1238,
-   "final_digest": "66b884d9f0128db8975ee8d65306f6af19694d7df80e938485529970e24aaa82",
+   "final_digest": "249bab216fbdc280e7ca4fc13b23bd218bd8680e93cf765bc6d2dae117a9ce1f",
    "id": "botrun.p0.idle.s123",
    "kills": 11,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -243,9 +243,9 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1141,
-   "final_digest": "9895e7a4ca4a1e93438ca521ecdec457dfbf90d16cb25329504112f7c031419f",
+   "final_digest": "98534c7efc4101f00f5c54051a881a830c688020713962943afb788f4bedcba2",
    "id": "botrun.p0.idle.s124",
-   "kills": 11,
+   "kills": 10,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "124"
   },
@@ -253,7 +253,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1792,
-   "final_digest": "5779f52fda02eb309698912227ba6c445bb2c2175140b1b3fb8ef8904dcd1a7a",
+   "final_digest": "2e2e08d6cbeae2d562e16c18842c8fbda02122ee5eb0937a3fd962970aa01a50",
    "id": "botrun.p0.idle.s125",
    "kills": 18,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -263,7 +263,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1728,
-   "final_digest": "91605eb81587288d12bec08c9b8ca2b8a29cabc6c6a023ac09ea02788693ee46",
+   "final_digest": "2c29959c4aab616ae478477f4355dd1bb6d30353a4c2c999fc46b273b8970bb3",
    "id": "botrun.p0.idle.s126",
    "kills": 18,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -272,10 +272,10 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 2315,
-   "final_digest": "c855ae6e9f05f1daeba9e58f34a3c0b58f2e5383418faf75d5a1dd9a9cba44a8",
+   "death_tick": 2155,
+   "final_digest": "f3d03b96a7510dbcc356d9b26c649540b62d9894c04aef597b86378fcb96ea1f",
    "id": "botrun.p0.idle.s127",
-   "kills": 25,
+   "kills": 23,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "127"
   },
@@ -283,7 +283,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1746,
-   "final_digest": "3fed86433129477c31dbcaa8e6b439063ba9bf4d95490cc119b4bc8e3382f0cb",
+   "final_digest": "67c3f1414393665427306f6db3a729a0dfc165aae9aad977d062172214178e75",
    "id": "botrun.p0.idle.s128",
    "kills": 17,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -293,7 +293,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1997,
-   "final_digest": "2cf2c37389be0029a0d9a4ec9a108929a6c62f6fbf5921e52aa88cc82efa1f46",
+   "final_digest": "4a498546e073886e60878ca11b97152e9cec67eaa0045bba641529f3b553c606",
    "id": "botrun.p0.idle.s129",
    "kills": 21,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -302,20 +302,20 @@
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1639,
-   "final_digest": "daa71da5a40a473371fde411523527dde8d60515439ef509402724a4eb6253ab",
+   "death_tick": 1519,
+   "final_digest": "0a4da2526026209de72e5455ff3faad23da329eee692b899f6529f103010f9c4",
    "id": "botrun.p0.idle.s130",
-   "kills": 17,
+   "kills": 14,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "130"
   },
   {
    "bot_policy": "idle",
    "command_count": 0,
-   "death_tick": 1176,
-   "final_digest": "023c38398e1f93ebad4d47894e0caf317c1351c34da3e228feece17e325823f7",
+   "death_tick": 1239,
+   "final_digest": "b5f6409b8a3d3a8841a1fecec89a19f3dfe27d0e044f0f63d938dad265d7f961",
    "id": "botrun.p0.idle.s131",
-   "kills": 9,
+   "kills": 10,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "seed": "131"
   },
@@ -323,7 +323,7 @@
    "bot_policy": "idle",
    "command_count": 0,
    "death_tick": 1515,
-   "final_digest": "af83b75eb9e0b4bfd3f34ef372deca55714e156f07fbb3d2fd61a62080082864",
+   "final_digest": "d3bcd86fbd5473e5b4255277a3462b017bd1797b715b13df6ff83b98142ddb48",
    "id": "botrun.p0.idle.s132",
    "kills": 15,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -331,19 +331,19 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 77,
-   "death_tick": 3066,
-   "final_digest": "a43284aaa62705439af5176262ca98e0172030bc1ce5cca5adec46b69fa84cf5",
+   "command_count": 81,
+   "death_tick": 3209,
+   "final_digest": "b08e51c94275833b46fbc6f0be77c3563acc2a93665c69ad0d8700f1b67f2996",
    "id": "botrun.p0.circle.s101",
-   "kills": 36,
-   "log_digest": "52f8ef7cc79ddf4721bc05053d03fbcbee4b1c87d0897611f169066f4fd91706",
+   "kills": 38,
+   "log_digest": "5b679fd570272da41b56418feedd4fbc0f0405b8e00b920ebf41660b15541eb2",
    "seed": "101"
   },
   {
    "bot_policy": "circle",
    "command_count": 85,
    "death_tick": 3400,
-   "final_digest": "1e6f3ef8d29aaeae65c1288cb9f4d355e6051eda074076c21c5e1b9ddfa018b8",
+   "final_digest": "e577a1af83f6386a445d02ca0ed7ce2fb6bbf2a16f4607ba71420c4c7b9f1036",
    "id": "botrun.p0.circle.s102",
    "kills": 37,
    "log_digest": "33623105ee59ccb85eada6ed48b0195027bb330c0ce74edbcab1cc3a4b1bfe2d",
@@ -351,29 +351,29 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 88,
-   "death_tick": 3511,
-   "final_digest": "ff8e7b6d85bc73951e4e3d14b99b293dc782fef155e6191093a3de08beff5317",
+   "command_count": 87,
+   "death_tick": 3475,
+   "final_digest": "08ee0d9018239a6b82796ac4cb1b0f8eb70c9ab4116c2a75b7b7f45bdd485348",
    "id": "botrun.p0.circle.s103",
    "kills": 39,
-   "log_digest": "7c7228ece95bb53d58185832bb1137edf8788a84918c0cebe628f54d06788ab6",
+   "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
    "seed": "103"
   },
   {
    "bot_policy": "circle",
-   "command_count": 104,
-   "death_tick": 4126,
-   "final_digest": "84146009431ace7a8b1798b1ea4be7b2a6d276ffb6b0bca5831e79d7bb3e1841",
+   "command_count": 95,
+   "death_tick": 3791,
+   "final_digest": "111e4a416cc6527ccdf35c88b48f13ae259870d966d9a97ef55fb8c91d4efb4c",
    "id": "botrun.p0.circle.s104",
-   "kills": 51,
-   "log_digest": "e38780a7aa564eb42e391dae6d07caea9227995c3d10b7689907bb5d9c8a95ca",
+   "kills": 44,
+   "log_digest": "5b1f8f7226883707d4cc978b51925e7cc16ad30f19731dbc6158b8011dceeb28",
    "seed": "104"
   },
   {
    "bot_policy": "circle",
    "command_count": 68,
    "death_tick": 2712,
-   "final_digest": "7e13c94d523124382713b2ecf5c6652de5cf2565d117c7cec4c50daf8431d95c",
+   "final_digest": "da20d06c6ea51476eea5a3f03241db509a85f35e5e6b024017373c51f42d3294",
    "id": "botrun.p0.circle.s105",
    "kills": 30,
    "log_digest": "3d01331ca847cabed776388d5bf42fc3297576744580e6476c34746db85bf27e",
@@ -381,21 +381,21 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 67,
-   "death_tick": 2651,
-   "final_digest": "ba2496e16130e3bba59a58594ee5b0bba7dbc556e3a8e7de97edd0aec70fbe40",
+   "command_count": 70,
+   "death_tick": 2776,
+   "final_digest": "ddef7208f287e841585777c1cff12aab336542b707a0eacb6dcb7f860b10038f",
    "id": "botrun.p0.circle.s106",
-   "kills": 29,
-   "log_digest": "44b4829851cb3aa8c613abed42844da50d705ff4411b42571b253b440ef70132",
+   "kills": 32,
+   "log_digest": "57e6a938c4e9a3cbd8f2c9869fed6e26f98ea753a729db0e5dda84039382919d",
    "seed": "106"
   },
   {
    "bot_policy": "circle",
    "command_count": 80,
    "death_tick": 3163,
-   "final_digest": "186377e3a9c06f6147f7338b4c773d5ecfbfd0520d90e3641c0d0a31873369e1",
+   "final_digest": "b8eeb7374dbb543c76c358e1ffac73c858aa9c3572f486e924e9b29516703b5b",
    "id": "botrun.p0.circle.s107",
-   "kills": 33,
+   "kills": 34,
    "log_digest": "566635601beb62cd9de8227a095fceda6047d80573bc6ab0d7ae81674d92332f",
    "seed": "107"
   },
@@ -403,7 +403,7 @@
    "bot_policy": "circle",
    "command_count": 65,
    "death_tick": 2598,
-   "final_digest": "2f02e2c1acdbb709ce9fcbb9b8e2e1e1c41b9522626ad91aae07b7aabeaaf41a",
+   "final_digest": "7495abef17437ae93fcd2d1b189c6f7e7f6ca69b9a79aac147e0fcbf31ae0b1e",
    "id": "botrun.p0.circle.s108",
    "kills": 29,
    "log_digest": "504a6fb2d0de0c99e67a301aecbf1d3c5fbf210bfdbf624941914baa438d4e60",
@@ -413,7 +413,7 @@
    "bot_policy": "circle",
    "command_count": 71,
    "death_tick": 2826,
-   "final_digest": "72551cc7772607dea37c27dd2f00958df9b79bf4e95cdeaf37d5e1c0fb355def",
+   "final_digest": "57b837b75055e29f8cb4fb3ce70b88626eb52aae42c89b2116f6a43d29ecd90c",
    "id": "botrun.p0.circle.s109",
    "kills": 31,
    "log_digest": "34a8cd99997c9b32064f9761760a678635c8f58cf1b9d462a2ddb88b44025f19",
@@ -423,7 +423,7 @@
    "bot_policy": "circle",
    "command_count": 65,
    "death_tick": 2575,
-   "final_digest": "5ef6a0b6c89a8988e37d611ced918f968995246f6f44171af2b43672b90a397a",
+   "final_digest": "23459710e4177d7a187943456275ba19f3687833907cc888822dcd9a6e478a64",
    "id": "botrun.p0.circle.s110",
    "kills": 28,
    "log_digest": "504a6fb2d0de0c99e67a301aecbf1d3c5fbf210bfdbf624941914baa438d4e60",
@@ -433,7 +433,7 @@
    "bot_policy": "circle",
    "command_count": 71,
    "death_tick": 2826,
-   "final_digest": "c2181a640fc26797f582aa7afcc6e4c10b49077a89adf3b90224026c8089c84c",
+   "final_digest": "9cd6db40ce073e9012f9c710300dba47986d7626a1afb702130041e6a497cd51",
    "id": "botrun.p0.circle.s111",
    "kills": 30,
    "log_digest": "34a8cd99997c9b32064f9761760a678635c8f58cf1b9d462a2ddb88b44025f19",
@@ -441,19 +441,19 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 102,
-   "death_tick": 4065,
-   "final_digest": "5116cca1ab83784b6c8672e7f02ee5dfa37e5b67a6864533b9eb4c1123e3c9d0",
+   "command_count": 112,
+   "death_tick": 4451,
+   "final_digest": "fa024635c1ff92c9c2d1111afe0680c8708b5892b489123f1176c4d548dc91ee",
    "id": "botrun.p0.circle.s112",
-   "kills": 49,
-   "log_digest": "50a215db77ad90ffccebefb6ea5ba5050f9b2fcb4fbf1879083ea26698786f3d",
+   "kills": 55,
+   "log_digest": "2e3a21b519da0dab1f01fd745ad885382fb61a7c71e525aa8fac797653ff99b4",
    "seed": "112"
   },
   {
    "bot_policy": "circle",
    "command_count": 105,
    "death_tick": 4174,
-   "final_digest": "b148c4fbaf189209e27665c7410fe675d463f9806aed0a66b8e074a10280d4ee",
+   "final_digest": "f80663cb7b6746548b824e4341c0fa982f410c1673d97f034f8da033ff6c9bfa",
    "id": "botrun.p0.circle.s113",
    "kills": 50,
    "log_digest": "6aa9fda76349a43f62e29f27b3e303eacc35fc402632bb5a2b87f17e8bf15de7",
@@ -463,7 +463,7 @@
    "bot_policy": "circle",
    "command_count": 59,
    "death_tick": 2342,
-   "final_digest": "e7d215316c88b550cabffe80a71b963df30c0bc4473979fe8178a6da4fb345e1",
+   "final_digest": "e685a1ee5e6b83ffbb7e8753367bbd3e732a2def9125073c1c227e79b73150a1",
    "id": "botrun.p0.circle.s114",
    "kills": 25,
    "log_digest": "626a7f9c80491f6de6fefb4952d0b789c36f990ebeceeaeabcd8884e7df61058",
@@ -473,7 +473,7 @@
    "bot_policy": "circle",
    "command_count": 66,
    "death_tick": 2602,
-   "final_digest": "50abb3c850aa8dd98eaf9719cb7ca64071e122d8e9b4eb2ccbc0e1106673e255",
+   "final_digest": "9186d27879774af2b009867a2bfbe6e41e4a47921e618d8faac715f328fc97a7",
    "id": "botrun.p0.circle.s115",
    "kills": 29,
    "log_digest": "364abab50a611256f4d0049ade8d326c0bac3cf18ca00c57508d92206ae47331",
@@ -481,29 +481,29 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 94,
-   "death_tick": 3744,
-   "final_digest": "1b945cc18dfba797194ee796500afbadf66a58c068103545e8e638b9b7a60c73",
+   "command_count": 96,
+   "death_tick": 3811,
+   "final_digest": "3078b113ece5e61040ce513dfe9c5c341a56874c652cd7597de9fbff6908a662",
    "id": "botrun.p0.circle.s116",
-   "kills": 44,
-   "log_digest": "1aca1183f9288e36ca327ae71e3378a04686cf91c0b64e7504da29f411488cab",
+   "kills": 45,
+   "log_digest": "04d1ce7a966738a8c28d67fbb8446cba3e9c0e0f4ee483513fcf35821b364a0f",
    "seed": "116"
   },
   {
    "bot_policy": "circle",
-   "command_count": 97,
-   "death_tick": 3861,
-   "final_digest": "20bd29e5a9004ad49f96fa5380e4158dd3a4b12be89ed9492b52d4953c653a90",
+   "command_count": 90,
+   "death_tick": 3578,
+   "final_digest": "39b78082f82434e0ac16590213d3c984739115bc637cf85b795d8be27c1382e1",
    "id": "botrun.p0.circle.s117",
-   "kills": 46,
-   "log_digest": "efbda77739830435743ec447eeadfb6fc0749da84ae7408b4840dc5e8a3817c2",
+   "kills": 42,
+   "log_digest": "142ec935556014b37d4cc8708e7c0c1b0fb9b03428c425c504c455c5f0c2a55c",
    "seed": "117"
   },
   {
    "bot_policy": "circle",
    "command_count": 89,
-   "death_tick": 3538,
-   "final_digest": "a085d9fac9b0f0c5a942fd9348785e817a7dee2388e7393aeed08b8a6286a10f",
+   "death_tick": 3544,
+   "final_digest": "31ebfabe66500d298189defcefde02ca06419334526daf0989bd27379e37170b",
    "id": "botrun.p0.circle.s118",
    "kills": 41,
    "log_digest": "6bab9ad3200b21b300c36697d2a3c58e1fffa22bf9433b5aa32f21d2bed2d38c",
@@ -513,7 +513,7 @@
    "bot_policy": "circle",
    "command_count": 77,
    "death_tick": 3070,
-   "final_digest": "fbae081fb8244973904c9884072c6105c29e6bd1fc1e2ffee3a2656839c452df",
+   "final_digest": "da79c6a277de04fd339e2bdd651e86d8cf70966c500bb3bc43067771bafaa97a",
    "id": "botrun.p0.circle.s119",
    "kills": 35,
    "log_digest": "52f8ef7cc79ddf4721bc05053d03fbcbee4b1c87d0897611f169066f4fd91706",
@@ -521,19 +521,19 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 86,
-   "death_tick": 3426,
-   "final_digest": "59a2c08349d43d1f8245b567cc8bdcd42f671f23b6b5b7ed5dedbf67a4c0c594",
+   "command_count": 87,
+   "death_tick": 3469,
+   "final_digest": "db51f380dfb23a9ba38075f48736e2f11e5aee119c32b28696ee2abcaa99f459",
    "id": "botrun.p0.circle.s120",
-   "kills": 38,
-   "log_digest": "ddcada2ee9c8b05cdf0fca4d3374076c178f2e58c3772e82477dfaf395c84ab6",
+   "kills": 39,
+   "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
    "seed": "120"
   },
   {
    "bot_policy": "circle",
    "command_count": 80,
    "death_tick": 3168,
-   "final_digest": "528c5421b4579083531ce1ace0f5712a89638619009c64168343772acc6b5d00",
+   "final_digest": "d6551a8a84411080265d28f63f8467182155c0ea7b72bf5ccc3dc465312ceb65",
    "id": "botrun.p0.circle.s121",
    "kills": 36,
    "log_digest": "566635601beb62cd9de8227a095fceda6047d80573bc6ab0d7ae81674d92332f",
@@ -543,7 +543,7 @@
    "bot_policy": "circle",
    "command_count": 69,
    "death_tick": 2733,
-   "final_digest": "85c4582038cfd6329870c591f80edd799e7ecde86510e664fdaacf1b2f571857",
+   "final_digest": "84f7ab510eae1c30a3701b7240d4d243e40ae9a64d4f3b74409ee5663dbc55a2",
    "id": "botrun.p0.circle.s122",
    "kills": 31,
    "log_digest": "5597ddafe1333f44709cab5aa29c68942525fdd7f69de1f53238f1a4cf2c0e1e",
@@ -551,19 +551,19 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 79,
-   "death_tick": 3153,
-   "final_digest": "fd17a47d05c790a36467ca7c77bc845fe8b29e630bc6c85ee3d76af74fc040d5",
+   "command_count": 84,
+   "death_tick": 3350,
+   "final_digest": "edb23f784d89c4a32b77f714bb738ba1a89142621d5b89cc75987f78892febab",
    "id": "botrun.p0.circle.s123",
-   "kills": 35,
-   "log_digest": "2def32e3418ae4c34639686121ebc28b669411c64cc349446f1d61edee9d0c1a",
+   "kills": 37,
+   "log_digest": "b9b5b246f4b3e0a9b7dd1c522bc82e747e3c49452c1648ac3a2bfe5c319bc2e8",
    "seed": "123"
   },
   {
    "bot_policy": "circle",
    "command_count": 101,
    "death_tick": 4022,
-   "final_digest": "df1b5c45c4fc9f52cbab497e3946117309de71f6c45779dd2769b29be67727c1",
+   "final_digest": "3d1914aaf9b05bbf5f4696aa2a887199a4d1c58883fd14345f3be350765d9fc3",
    "id": "botrun.p0.circle.s124",
    "kills": 48,
    "log_digest": "71bf2da76acf923b7b9b3efd0ab130ef8fd9b065c50a4089ea7e0fd3cff2d8d3",
@@ -571,21 +571,21 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 96,
-   "death_tick": 3830,
-   "final_digest": "91524c2f5cb20f37a20a3e7f06b722a9f35bd44c4af85aa74d60e6c906d45479",
+   "command_count": 95,
+   "death_tick": 3788,
+   "final_digest": "7b27e6887e74b434c3e91a54ad54505288e9d6dfbb344021966c9c5d70ef9115",
    "id": "botrun.p0.circle.s125",
    "kills": 45,
-   "log_digest": "04d1ce7a966738a8c28d67fbb8446cba3e9c0e0f4ee483513fcf35821b364a0f",
+   "log_digest": "5b1f8f7226883707d4cc978b51925e7cc16ad30f19731dbc6158b8011dceeb28",
    "seed": "125"
   },
   {
    "bot_policy": "circle",
    "command_count": 89,
    "death_tick": 3531,
-   "final_digest": "7a32415db12bb142e03b586b4bae293ff22242cdf7275232a135527f23d33cbf",
+   "final_digest": "580961acc2dbcd28ad46177032f8c24ccbbac09bb75d4f350c11890ba02398e8",
    "id": "botrun.p0.circle.s126",
-   "kills": 40,
+   "kills": 39,
    "log_digest": "6bab9ad3200b21b300c36697d2a3c58e1fffa22bf9433b5aa32f21d2bed2d38c",
    "seed": "126"
   },
@@ -593,7 +593,7 @@
    "bot_policy": "circle",
    "command_count": 74,
    "death_tick": 2922,
-   "final_digest": "5b3969e51557c817395baa792a8f90e29102147de3b109f944920e6b28aca761",
+   "final_digest": "0691eb4a56910b040c485922e67298e057c71e55d9621b2ea19cfe62cc791cdb",
    "id": "botrun.p0.circle.s127",
    "kills": 31,
    "log_digest": "7e8219e6c04ace4caf895c4d80712bef3a7de819cc3a92146b4ecd5dcaa40ffa",
@@ -603,7 +603,7 @@
    "bot_policy": "circle",
    "command_count": 82,
    "death_tick": 3259,
-   "final_digest": "8753c40677688866c88f8cee8ab01a88b2852e0dd611cb2e4dc2504bdb56434f",
+   "final_digest": "79cb7b93a003b97ff699e9391ec421c11d9047647acd69e6da07b683f96fdc19",
    "id": "botrun.p0.circle.s128",
    "kills": 37,
    "log_digest": "b74f4f5a7e277e19f65e125c557562925c6c7dd58fe9a072778ecd61f02f3420",
@@ -611,19 +611,19 @@
   },
   {
    "bot_policy": "circle",
-   "command_count": 79,
-   "death_tick": 3158,
-   "final_digest": "fc25f224fc8e9c684249b2b06bc098d4f8f50f40304b80f76e694e267c0049df",
+   "command_count": 73,
+   "death_tick": 2911,
+   "final_digest": "0a4cc6f61ae74041135073d30373b8e0262af93473741e98fa8c787fa4856e1f",
    "id": "botrun.p0.circle.s129",
-   "kills": 35,
-   "log_digest": "2def32e3418ae4c34639686121ebc28b669411c64cc349446f1d61edee9d0c1a",
+   "kills": 32,
+   "log_digest": "0a4aa20ed18c33e46ba16317827823255b51719377f39d930e703b8a4c78f4aa",
    "seed": "129"
   },
   {
    "bot_policy": "circle",
    "command_count": 57,
    "death_tick": 2253,
-   "final_digest": "58d1dd45b942f19f2098843104199ee5d4c30ed2a0b10071bdd54c51da911369",
+   "final_digest": "e8eadca7e12b394adccdd24f0905722f1822a09be755332711291864dee55b2f",
    "id": "botrun.p0.circle.s130",
    "kills": 23,
    "log_digest": "7e3c421011b3155d543dddb7800f8e3c02ef6b85c55a05b37fc7de9e60780ebd",
@@ -633,9 +633,9 @@
    "bot_policy": "circle",
    "command_count": 63,
    "death_tick": 2503,
-   "final_digest": "bb04de2f0037b09fc0bd5b811b1c4bae2d4cfaa1b467961e7c5fdedcb5d4fe28",
+   "final_digest": "9a7f078fce01a5cf6254525f99d9935870e017d772fac6d68f8a4e3d0dde18ba",
    "id": "botrun.p0.circle.s131",
-   "kills": 26,
+   "kills": 27,
    "log_digest": "05e77cf82d6934d5b1e4f87512a6a834a048c00e36e9e41b06958d4945949ae6",
    "seed": "131"
   },
@@ -643,7 +643,7 @@
    "bot_policy": "circle",
    "command_count": 87,
    "death_tick": 3475,
-   "final_digest": "4c3fac9579ea4af6e6b6f87472aa936e5f31f957fa897c8d1baa40b6a7e59613",
+   "final_digest": "6774e19806c03941822b5efd2361ed664b90e9fc9b856e037b09236cb281bc74",
    "id": "botrun.p0.circle.s132",
    "kills": 41,
    "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
@@ -651,322 +651,322 @@
   },
   {
    "bot_policy": "kiter",
-   "command_count": 494,
-   "death_tick": 6211,
-   "final_digest": "44a4e7af6d61ec0534550896a11ce9ce87618acd3e70a1d52de788c60ae7fe71",
+   "command_count": 493,
+   "death_tick": 6456,
+   "final_digest": "de6c4e54cdbf0d3533f833e0e940b5e04c296b4c7d4333411b42a68f605e58b2",
    "id": "botrun.p0.kiter.s101",
-   "kills": 81,
-   "log_digest": "70093ab64ab92cbb2fca24b6aa14b84e4ff2f4131011f18592ad1ddc63fd09d5",
+   "kills": 85,
+   "log_digest": "96d21efea9b44ea92278855b44f1bd2294d92590ee967286764412bc5121de24",
    "seed": "101"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 480,
-   "death_tick": 6017,
-   "final_digest": "8fca877e455f2dccecefb1f07233ce773e7dd4d5e4ceec8ceada961a914f3d48",
+   "command_count": 415,
+   "death_tick": 5710,
+   "final_digest": "8cd6293d75ec74377774212923d963d8719234e4b457e4a9eff05708019d84c6",
    "id": "botrun.p0.kiter.s102",
-   "kills": 77,
-   "log_digest": "7969bd1df180c23c02dacf3004750ca069ddf1ad33985261b307767a14a459a3",
+   "kills": 72,
+   "log_digest": "947116aed1b0694b24b8bfe867e4c00ad74cee64aa6d3ff114ac261f82cc4853",
    "seed": "102"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 389,
-   "death_tick": 4971,
-   "final_digest": "5da1caee5e0c8133c5a28d7d127ede348b03d615279fda4e609c919f354e98fb",
+   "command_count": 291,
+   "death_tick": 4443,
+   "final_digest": "d45798fbd41fa02fd72a0be0600c68658d235a7cb3d3c781d4cf411b9247c71c",
    "id": "botrun.p0.kiter.s103",
-   "kills": 62,
-   "log_digest": "b24e01450b860f2426b5b4f856d3329e1d9a8a22dfad1ac6e7ac23a9880363e8",
+   "kills": 53,
+   "log_digest": "fe0c8b0197725f687ab529fec53f5976fee88a2782c4042a1ad1ed690a5c5528",
    "seed": "103"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 436,
-   "death_tick": 5119,
-   "final_digest": "8f23421acd735fa1604b6553f7ac94238cc69dc97b7d7246b5a1185071a550af",
+   "command_count": 503,
+   "death_tick": 6213,
+   "final_digest": "ce0df29d3fb667a385f49e74e660ccc80ec95a42a5b2e7524615b62eae75bc0a",
    "id": "botrun.p0.kiter.s104",
-   "kills": 62,
-   "log_digest": "2997eaa02e67df097557672b1cf6410d4a980a6d1976371806b9882583e632c9",
+   "kills": 82,
+   "log_digest": "65adcd0547f526af0f97dd9c7faa91a8a95914e58c95e12521d0600213da4ba5",
    "seed": "104"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 461,
-   "death_tick": 5811,
-   "final_digest": "5e9e166428fadbf92bc978f477f5121b4b06e0fdf8438177112ffe3b6cffc556",
+   "command_count": 404,
+   "death_tick": 5334,
+   "final_digest": "780954273c976fef99fbfffe9e27acc75d6cbe11aaa7c058142fa69804a2dac9",
    "id": "botrun.p0.kiter.s105",
-   "kills": 74,
-   "log_digest": "2931f0949e2d0c578e9bbdcf8ea80b8e5c2e835cfbfd90c8dae00c2c16990aa2",
+   "kills": 66,
+   "log_digest": "65fa506f621fa4e790384b8c4868c3a13f830648915672491bf3461cf6155d9a",
    "seed": "105"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 502,
-   "death_tick": 6347,
-   "final_digest": "7157ee7efebedb9b72d2f9ca89c17d41056887031429f48007e2051add568187",
+   "command_count": 344,
+   "death_tick": 4305,
+   "final_digest": "9bac22f88fec27dc83e23786598d84db94da59c11af5fafbe53bee979777801a",
    "id": "botrun.p0.kiter.s106",
-   "kills": 84,
-   "log_digest": "a429c557898d4875360e3772e8f642bf10de07223045ded649c9df7328763a63",
+   "kills": 51,
+   "log_digest": "d6e4e05f071da659a2dba89db7774a0509c10533d1b9e82e30204a9a6abce33c",
    "seed": "106"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 519,
-   "death_tick": 6696,
-   "final_digest": "ffc1f0739367ac9347cd5115a89cdc91ff62752fdaa927228a37f50aeb9dd26c",
+   "command_count": 457,
+   "death_tick": 5950,
+   "final_digest": "11c19c2f64ba0caf00124c71238c846e523610e80a32c5e0df9a9052d49274e3",
    "id": "botrun.p0.kiter.s107",
-   "kills": 89,
-   "log_digest": "e647aad22b0443dd93a72ccb46a095dce4e8df28a08d40bd9ea3864b4337423e",
+   "kills": 78,
+   "log_digest": "e64dfc766f434e5bfcf4a95cf85cd416c911e3d64da7d7489cec67b2edbe930e",
    "seed": "107"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 372,
-   "death_tick": 4295,
-   "final_digest": "ccfb2512b9ddac63c83c7a91ba967ff7b3f20f62fd79b642cbd49a2c71216854",
+   "command_count": 294,
+   "death_tick": 3595,
+   "final_digest": "724791f168f0aa1a256ebb8a4af1cf396c2dbe7f546baf5cc1be3af7afe73a0a",
    "id": "botrun.p0.kiter.s108",
-   "kills": 50,
-   "log_digest": "e2c5286df2a29971bc312c61ce105e029c50b6f49bc78120f316e53c60cf0733",
+   "kills": 41,
+   "log_digest": "852efdfddd1bfc27c53399a7798dbc8d93f3b7696359e05afee1b066d914a93e",
    "seed": "108"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 356,
-   "death_tick": 4798,
-   "final_digest": "10e6ecabdf5f6e6e15da23c77d47f1113d77e929a725cad4cc0e8ab2c90dface",
+   "command_count": 348,
+   "death_tick": 4904,
+   "final_digest": "aa727b0caac42f22b2bca85c61bbdcc08f36e657abdceec358d7c727833d4ba7",
    "id": "botrun.p0.kiter.s109",
-   "kills": 59,
-   "log_digest": "6c77db387ff89fe5236fe62feadf1f14f3c8fa1de0f34fd29972b8afc0458ad5",
+   "kills": 60,
+   "log_digest": "f934de3988a28823547e8db0a1594cee89b207aa57ea80a0ec3a9717d5607ad1",
    "seed": "109"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 361,
-   "death_tick": 4390,
-   "final_digest": "17ded247f637b1afce892f8b3e2a144317d39515d0bd6dcc33f364a038aa241b",
+   "command_count": 401,
+   "death_tick": 5294,
+   "final_digest": "8f544c68fbd2e63f815c9bf001323fd892e36fdc9c516ed1ee83caa04d2e313a",
    "id": "botrun.p0.kiter.s110",
-   "kills": 51,
-   "log_digest": "9b7c4b144345bb7d60a85a76f5aea164af38f595c699be35e33d2cdf16a38349",
+   "kills": 67,
+   "log_digest": "6c2e600bdfe520838738542fe5f0c3a7dcd6cd1d4c50290e6e790d8bce157bd0",
    "seed": "110"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 378,
-   "death_tick": 5322,
-   "final_digest": "5de3b08c4709bed89ed1786813a873bec4840e8915d158827f3de4a0bb957005",
+   "command_count": 370,
+   "death_tick": 5080,
+   "final_digest": "0f13c0782b0da593c3f7520462891b8cedb01bad9af0823eeda7d612bdf01ffd",
    "id": "botrun.p0.kiter.s111",
-   "kills": 68,
-   "log_digest": "fd44e63d5334909d1670f0b5476f47b8ac8b80c8c434ec43dd379352da6aea00",
+   "kills": 62,
+   "log_digest": "0efd12401209c3f8b1bfcd19ac7bc6fde92abf126266cfd566cfd5c05824b1f3",
    "seed": "111"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 453,
-   "death_tick": 5554,
-   "final_digest": "8262ced059cbbe17475c65d5ba24f6ebc47d769cd1cf01ce3b11c08b4b4d8719",
+   "command_count": 378,
+   "death_tick": 5181,
+   "final_digest": "4bd8727949f993e831c2cdf04e16e6fdf2bb6d99e56fd568d2be09836d2f0ad8",
    "id": "botrun.p0.kiter.s112",
-   "kills": 69,
-   "log_digest": "e9d4ded412f91047ae25c3377d76c614c40895b238f05c7a04d0684eccf9837c",
+   "kills": 63,
+   "log_digest": "2e5c2124af992ee4ea6119afc5f7b043275a5b6cd1cbc0d868c51c1f635fa328",
    "seed": "112"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 330,
-   "death_tick": 4503,
-   "final_digest": "51818e0ccafe9ae423be18045cfca2961113bc79507ecf82572b3d9ebd779a34",
+   "command_count": 371,
+   "death_tick": 4931,
+   "final_digest": "81ed47ecc50ede0c6da51b1ce832c077d409aa90283411bf73facd9b0137037b",
    "id": "botrun.p0.kiter.s113",
-   "kills": 54,
-   "log_digest": "05a3c87cf31b7c2c53c3e52d34f68a18e2ac4e831c2d9bf6f2df39718f61fd71",
+   "kills": 60,
+   "log_digest": "1d8a2e9d64459ae0cac3e8eed1a44bcee3b32a9fd916d69afcc983591050db14",
    "seed": "113"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 491,
-   "death_tick": 5694,
-   "final_digest": "43e512628ec2b46e987b2db20bb96839bae1f3df6d5b1db40d67caed1106a960",
+   "command_count": 409,
+   "death_tick": 4968,
+   "final_digest": "75a58af529ea9a8b56898f316511339afefb6231ee52b3084781dc98d1fc1892",
    "id": "botrun.p0.kiter.s114",
-   "kills": 73,
-   "log_digest": "242b9a0d22673a88862dbfbd2bbfdbe926a0bdfe6fb151476a8c3851aa4a1cb0",
+   "kills": 62,
+   "log_digest": "5ae840588c38896eb0c7eac83161c0b481f3041daa87be4eea5ed7a1a919bb25",
    "seed": "114"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 428,
-   "death_tick": 5536,
-   "final_digest": "ccb3e101b4257a2708381f93d912068273c6fe9f61d76e38585952c93b8ebece",
+   "command_count": 271,
+   "death_tick": 3781,
+   "final_digest": "bcd123c0e65bfc359dc97d781a9ae0215bebe44e8dedc7c98ca3341427734b23",
    "id": "botrun.p0.kiter.s115",
-   "kills": 69,
-   "log_digest": "2c6ee4c15c3ebe3be842008d185b61a405811b5947910c627fa8ec2cf202cc97",
+   "kills": 43,
+   "log_digest": "98efefcf6d5c747ce5cc6a3ddb1e8a5ffa00ce84436318496757d743306b6733",
    "seed": "115"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 373,
-   "death_tick": 4989,
-   "final_digest": "5cf61f32ca4ee2da23b674976ed0f7e2d63ec4ecfceb2b5df9227c178a9009f9",
+   "command_count": 324,
+   "death_tick": 4537,
+   "final_digest": "094d13026cad94c884bb71a1fc5a1cef04b1a26db75195e27bc8dcd4d7ec24b7",
    "id": "botrun.p0.kiter.s116",
-   "kills": 61,
-   "log_digest": "6d96736d028cd824f97f426dbddf43c0fa2368c8b004331e17c7df8cd0ba10e4",
+   "kills": 54,
+   "log_digest": "01945e5a9ae3ed09c21e39785c73c3bf958538d0e5a4c7ecf9872f446ef18b73",
    "seed": "116"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 297,
-   "death_tick": 4225,
-   "final_digest": "51d41ca8c10c52a02c9f023865ebb89a8680d464797f06142d8dd2796c51ed59",
+   "command_count": 482,
+   "death_tick": 6370,
+   "final_digest": "92820bcfd5a9c4003fe430847b2227f4c1faef1d55c9027fd90367bfb48d68e8",
    "id": "botrun.p0.kiter.s117",
-   "kills": 51,
-   "log_digest": "8ba91084d898e22719c996770df9c6028c5d18679a57c492a65dd3b628678ebe",
+   "kills": 83,
+   "log_digest": "d1f292d42698dd3c6ae667ac81173f2f4d2b9652835da17860f277883480f382",
    "seed": "117"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 332,
-   "death_tick": 4234,
-   "final_digest": "3ff305be7557f321f99e005832acb45bbb68bde042a4a32217b1e7f02aacfad9",
+   "command_count": 325,
+   "death_tick": 3898,
+   "final_digest": "ff445630a46f0f963ffd83045c58429b3a67d7130d605cdbaecb69f6346e68c8",
    "id": "botrun.p0.kiter.s118",
-   "kills": 52,
-   "log_digest": "6edf3e9d5e6bba7f87475206d5c930011e94f638f8d558bf0a683d29e0df6401",
+   "kills": 44,
+   "log_digest": "2d0b772cdc65b041a3a35297d4cb922a4bfb7e74c4b27806e1b9bb2c9ceacd31",
    "seed": "118"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 369,
-   "death_tick": 4527,
-   "final_digest": "361b08e2a4452950e86eec974563499485c475b1e15cdb61a7c6fa82137b10df",
+   "command_count": 367,
+   "death_tick": 4807,
+   "final_digest": "4e9e24eca1ffe4606e9149d967015a24d7f5f8f9ac48edb7f945d5c8100347af",
    "id": "botrun.p0.kiter.s119",
-   "kills": 56,
-   "log_digest": "e84dc9370e4b695dd4c10222a6dfb8ec5eb41bae4a9c5e672d21589e3afd1b83",
+   "kills": 60,
+   "log_digest": "3eed1974a07c2b5f1e16e9d1770c7b1bfaf80a72a978fe1275f06fee198ea152",
    "seed": "119"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 409,
-   "death_tick": 4491,
-   "final_digest": "53ae9df1796856e69f52d0b31c5d34eb67fd698d348fa3176d0b5829e84b0be4",
+   "command_count": 494,
+   "death_tick": 5922,
+   "final_digest": "c20b5611484877011b2e000033710b64a91207c1879c283b971a00022969cfb0",
    "id": "botrun.p0.kiter.s120",
-   "kills": 54,
-   "log_digest": "d284c37173754cd4ef902170bcf6472517b729ec16e8a3fd6130041a7b7af555",
+   "kills": 76,
+   "log_digest": "419736bbc5efab8d86bedad55633b6f61c1b58c43351ce028a6b24f979a96cb3",
    "seed": "120"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 398,
-   "death_tick": 4996,
-   "final_digest": "ed71829920d4819d4895edb5704a1aaf5ea87232809daa19b2b76030b5b41a6c",
+   "command_count": 389,
+   "death_tick": 4767,
+   "final_digest": "738883e7f2114178e2f40f9afdeffb7a1c48160f429db5ad81f95735a8291f35",
    "id": "botrun.p0.kiter.s121",
-   "kills": 65,
-   "log_digest": "7acffc4d246ff838498fd20302716041a1d7375a8ff88409f60e215d3caf145c",
+   "kills": 59,
+   "log_digest": "2b3728f7329c9354c9b9ab4c743fda5cddaf5127709500a7d6b481b260948c48",
    "seed": "121"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 332,
-   "death_tick": 4345,
-   "final_digest": "6be95f63a5ff385a6658b934dddd36f1559046203e5e2e85f74dae074a998893",
+   "command_count": 268,
+   "death_tick": 3535,
+   "final_digest": "1d35c183f1159660d42b8a5602f2ed940dae715166890c3d612585ae879f0ba0",
    "id": "botrun.p0.kiter.s122",
-   "kills": 50,
-   "log_digest": "ea2489c5494822055766a37fc03d891ab23bf7ad03e051f288028abb0ee3e959",
+   "kills": 39,
+   "log_digest": "368f8eec90122ca52d80db6e9c251ba0f2b55f81a38372c03f1c3721f08a9240",
    "seed": "122"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 372,
-   "death_tick": 4826,
-   "final_digest": "d97d9ddd4befc7cfdf66c02b78adfebe00fb3a9ca25c14d70bccb7e729da31bd",
+   "command_count": 368,
+   "death_tick": 5014,
+   "final_digest": "1906b0c78d5368de176ceaf4e7ce3144c476394c4414e4b62f85649138efd762",
    "id": "botrun.p0.kiter.s123",
-   "kills": 59,
-   "log_digest": "fc2f6626d2e7c6da69667956d93e0d394d8b7d03bcbe833fda2420c8e280a6c4",
+   "kills": 63,
+   "log_digest": "4d48507b47d5678e8825d399a4ea387eee6a692cdc064a185ce943ce1c6ef942",
    "seed": "123"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 554,
-   "death_tick": 6734,
-   "final_digest": "2c74fba8b5024d87df4bc7670ac88be573d2beb7a3234558b9ed3e77285955e5",
+   "command_count": 310,
+   "death_tick": 3917,
+   "final_digest": "ca7c30afbe3fb89937884f23cdefe500de7ff027ab0326c6b348bb7703326329",
    "id": "botrun.p0.kiter.s124",
-   "kills": 90,
-   "log_digest": "b77ded537812cb739fc2a032613d7e179f2892224d7bb8f008f048b024eef9af",
+   "kills": 47,
+   "log_digest": "63918562619619c2dc07a7cc4a621ad5c9f3a0b49fbabe6ac117de52ae5f1456",
    "seed": "124"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 479,
-   "death_tick": 5421,
-   "final_digest": "8f5e709af2309b90660692680001749096aab9c7159bccffe351e23150b53460",
+   "command_count": 414,
+   "death_tick": 5093,
+   "final_digest": "03a0e2224cb38089a4a7fe8af3dad8fa394d197d5717d31c1da7127a0e47fc74",
    "id": "botrun.p0.kiter.s125",
-   "kills": 69,
-   "log_digest": "8acde44b27fd1e0ea9884c2a331b9e8502a4733ec7e4ccaeded5780cf2eaec87",
+   "kills": 63,
+   "log_digest": "d17a08aea3a22e883fdfffaca26da9c6e1e9ad04a9f1f7ddeb7e54d5b167c72e",
    "seed": "125"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 580,
-   "death_tick": 7315,
-   "final_digest": "1e1ab08b7225ef42b505e81b3dc7edb19f4b0bec5a045b8be141958e4119fa04",
+   "command_count": 459,
+   "death_tick": 5881,
+   "final_digest": "ed27b8c4d2de209f4cdee7be4154576a59c9ebbd12d50a97936845c6f5325aea",
    "id": "botrun.p0.kiter.s126",
-   "kills": 101,
-   "log_digest": "dc9f1e03239f3155031fee4880b34adab93ab1192178db2fbb98ad1072846e1c",
+   "kills": 75,
+   "log_digest": "b02cf800d3dc46cbf2f9d3d0cf2c5309bc28d0c25d5f4c8cf97080a6ac780901",
    "seed": "126"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 421,
-   "death_tick": 5858,
-   "final_digest": "72ef5cce174e8234691a4f6f50dafb64a5b337bca500950c3d6aa5a9b8391f1d",
+   "command_count": 467,
+   "death_tick": 6299,
+   "final_digest": "ec990c2f7397b6cc57da4c31636bde0b891f9a5e4dcc805fb1454190e0a0d750",
    "id": "botrun.p0.kiter.s127",
-   "kills": 75,
-   "log_digest": "d2a4c1bf52ff5483d21d55112d365cb8656bb8dff45b249fa156d0bfec397218",
+   "kills": 82,
+   "log_digest": "f434bc59ff4f93aba3785157f3ef211d2d97ae7c860412bc6e7155a4b06ac3ee",
    "seed": "127"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 360,
-   "death_tick": 5016,
-   "final_digest": "63ca22b832f9d7fbbfd053ac5020a8bbaed47ce34217071a3e956e461b613ac3",
+   "command_count": 435,
+   "death_tick": 5435,
+   "final_digest": "cb6f2325b1461ec588dadd3fdc8e35099ab8cc58c067b9a7fecdc74400409823",
    "id": "botrun.p0.kiter.s128",
-   "kills": 63,
-   "log_digest": "8767bb21419a879f5659832ea87a439373931d2d700ce740f759d3f59fb0b804",
+   "kills": 69,
+   "log_digest": "f8d31583a03db14eec414565bb820a4560e6c01f08dba3a8d664797521802421",
    "seed": "128"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 498,
-   "death_tick": 6269,
-   "final_digest": "6ecd61013ffef41b1bf7f994cb8a20f955653bd2aec0d97d38861c9daee2553e",
+   "command_count": 299,
+   "death_tick": 3793,
+   "final_digest": "3069fe70fba12ecd0bb59734c02c4acf48057d0c49d82ddbd29d8527c0697996",
    "id": "botrun.p0.kiter.s129",
-   "kills": 82,
-   "log_digest": "62a742ec92fcd97ce83b5a3af870a4401f3bc00cda38e324ffe44710d70eaf66",
+   "kills": 43,
+   "log_digest": "73346b791d035bdbbfddefbb74598d0dc1f40465aab835a14e69fcc9baa2bdbc",
    "seed": "129"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 448,
-   "death_tick": 5538,
-   "final_digest": "3814eb45cf08d93837725713d2aae31446ef829ebc522bd2604edef20460c53d",
+   "command_count": 452,
+   "death_tick": 5526,
+   "final_digest": "4226ad8b624018f13a9636b8570f5e17d315724c4ab154ab703acf5c7868e53c",
    "id": "botrun.p0.kiter.s130",
-   "kills": 72,
-   "log_digest": "b88e095d182f39a2d224a8af1566729a1d71964b56ca80fbb34a7ab754e0a9dc",
+   "kills": 70,
+   "log_digest": "f8da307a2c5999c72803f2a3562c3d2a88c691f99dc8122fae7212f6e2063cae",
    "seed": "130"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 439,
-   "death_tick": 5399,
-   "final_digest": "acaa01836c44dcc40f0106f0fd0c83a52f94857d0ab91e494d938469e0a301dc",
+   "command_count": 375,
+   "death_tick": 4892,
+   "final_digest": "c765d0dae8592555285eff80e24b5aa338061b920c04185eb600837ff7b2ed15",
    "id": "botrun.p0.kiter.s131",
-   "kills": 67,
-   "log_digest": "2938cb9d6f2a98faa984f0768d8a18e9e7db3e7ed9225c45fc244ce643a6caeb",
+   "kills": 60,
+   "log_digest": "a9f669e27efa338972bf4aeb0ca624cd350c342ddf5dfcb845e840869a4e4558",
    "seed": "131"
   },
   {
    "bot_policy": "kiter",
-   "command_count": 455,
-   "death_tick": 5748,
-   "final_digest": "0df8b5dcf69cb260f6614a5be03a88bba5ac549ccd8f98a7f313b4b7d4e13f22",
+   "command_count": 442,
+   "death_tick": 5478,
+   "final_digest": "e46b0431dd4799889a4e7ec376f3cd071f6d9afe9e932fcdd6c7fc8474d6f51d",
    "id": "botrun.p0.kiter.s132",
-   "kills": 73,
-   "log_digest": "2e5e6a212174bcc52a60d1caee6737ffb55ebdd6cb17fff818c2c0e98c143b21",
+   "kills": 69,
+   "log_digest": "9a83c3a80733e27dcf854d26bad2422824086fd969ff959e6a2791678d8a2706",
    "seed": "132"
   }
  ],
@@ -976,7 +976,7 @@
    "bot_policy_version": 1,
    "checkpoints": [
     {
-     "digest": "47c4304cf3f9ea45554a4afd095479226183d00ce7154c38fd6b55ce5657bdc9",
+     "digest": "e35b2cf9dc5d6a03741903cbe1aa9f7e3f8769bb5e0962ac10624b271e968ecc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -988,7 +988,7 @@
      "tick": 1
     },
     {
-     "digest": "4d99a9a8483383d0f42e49124652310b431eb6ed4110f1894cafdc3652f3a795",
+     "digest": "3d68a528d1b1bdc5d0b5866724204891a413f8262d1443cb417c5f4d109b0fcb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1000,7 +1000,7 @@
      "tick": 2
     },
     {
-     "digest": "da444bee0a68592d93b4ce94f497db637acdd99fc20a2f62b8d115716323dfc0",
+     "digest": "c17e51c2eeb6a7f9ff4e8fbd83e74f14b26a5e1a72b95d683093dd6baeb2c799",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1012,7 +1012,7 @@
      "tick": 30
     },
     {
-     "digest": "a4e2ae82f8132e0824b12353a71af5a19977b64f5c3bbe50b1fb80528415a3f9",
+     "digest": "12a21ee74c5438f597878228a7deede04c9064c74b790337f091752ec7bed4b6",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1024,7 +1024,7 @@
      "tick": 60
     },
     {
-     "digest": "f9fc44f1407d6a20bf387a0f1bfd7c72d81d5cebb39e415c641b380498cefe22",
+     "digest": "ab6e87bbbbf0dd568974b27b8d5cc81363599afcd9bbea009a0b1d707dbf5139",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1036,7 +1036,7 @@
      "tick": 300
     },
     {
-     "digest": "f30fb499b1649824b09c763da465452e2100ffaf039cef18064114245504f681",
+     "digest": "73af08082e839b3a359fe170bd22278ad4e40ef1cb6a6814c681f25305c32c4c",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "87000",
@@ -1048,7 +1048,7 @@
      "tick": 600
     },
     {
-     "digest": "490323f25e8f94c1f49da4e8814e379811ae438b7a5869d7eb7a717689ef1695",
+     "digest": "96983270a00f2d494398b7f14a8c127cbe7d17f89b68b6663018ebcf59afc3af",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "74000",
@@ -1060,7 +1060,7 @@
      "tick": 900
     },
     {
-     "digest": "364c36d84090f01ba88b1d8de3ff84ab2d8af89ff95c524638ee72b36b810487",
+     "digest": "237d616a54d49b9a39689ac34ce03dee17bd05ec1858e81e45a0f6c5d8888bc1",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "33900",
@@ -1072,7 +1072,7 @@
      "tick": 1200
     },
     {
-     "digest": "241c5ab25f8bb219a6d9f93a6ab8af8898d471510eecf319d018a7d9db2e2b0e",
+     "digest": "db61f735c98a81803e93212f6146a4d179a1de40a1827714a914d88550311c23",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -1143,7 +1143,7 @@
    "bot_policy_version": 1,
    "checkpoints": [
     {
-     "digest": "e566a3c65700ebc7693e92de5d3247a4b2a803d640d7595f0afced7f58317c33",
+     "digest": "ba2bf60c14288c8fd3c1bb82dd80368f5c80046d8bf4eace250bd91f3092f270",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1155,7 +1155,7 @@
      "tick": 1
     },
     {
-     "digest": "0976eab99ee1be310da3a9ebeb2b59fcd7f7323ac53c81ca6785d113e9acd2c7",
+     "digest": "8641d0d89bc38f938e62ec1cb418933afe09bc3292d097fec6e644fb437de793",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1167,7 +1167,7 @@
      "tick": 2
     },
     {
-     "digest": "1de0026e3a3a60573721c2fdc84536a46d70a9f17af849fa8488812bae0e5924",
+     "digest": "5be450ba6051af0740fffb17fce48bdd5d7522386daa319c80345fbbbcf323d4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1179,7 +1179,7 @@
      "tick": 30
     },
     {
-     "digest": "51066ce69a145419a47abc949a116ad75ff7c66a6ae0990ae8959087f2c55c63",
+     "digest": "2c3c69074b7152c33228883ee73868a705a1c6e2a2e4c245cdbd7ce99f76c006",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1191,7 +1191,7 @@
      "tick": 60
     },
     {
-     "digest": "69124310db0820b7812fd4c8eebd102ca9b560e1ad05deb7d4b57fa3153919cf",
+     "digest": "1bfd67bd7e3ff85236eb8e4f5320271e5db91f2ac3d20d8fcd7ce77b499533e6",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1203,7 +1203,7 @@
      "tick": 300
     },
     {
-     "digest": "ebd29df9787f7575446dc1200c9637b3c1e3a5e1dca6d7b003609eb3bdced8e5",
+     "digest": "c4b544cb0c35ac8494fb58ab9b4654f60d8ba5b7c5daefabb89fe15c96e81b10",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "92400",
@@ -1215,7 +1215,7 @@
      "tick": 600
     },
     {
-     "digest": "e5525cdb7d60e5117f42443229a55b26fb73ce7f186ddeeb603c619eee056ecf",
+     "digest": "040b855fb86a9b4ef890d6c87380df761eea28be039a1f0370d94e9bc5fd98ea",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "85900",
@@ -1227,7 +1227,7 @@
      "tick": 900
     },
     {
-     "digest": "f0becf6ad9277b1788615bbc5f14bb484699e0ab3cc0e6f6926e0a773d6fbe26",
+     "digest": "226b595adb97bc157401e4546bec582552c9f05886c3e1b961beb247c89f6b07",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "78300",
@@ -1239,7 +1239,7 @@
      "tick": 1200
     },
     {
-     "digest": "f291b8718fb7c0355e0e8b3e0b63c3a03a1ae87ae6fd9d29d2b7dba402a79a0f",
+     "digest": "f271c50c22181e3e698f01bfa1c07575481db775c727c0489137302da7db7e5a",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "78300",
@@ -1251,7 +1251,7 @@
      "tick": 1500
     },
     {
-     "digest": "f2e2d8a003b47bbe99a27d1984a58faca82904e1449486b61092b4bcd9ea5731",
+     "digest": "0258fe282468bdbc26af7956f1f915db67930493b07270f125ba467af76e935f",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "65300",
@@ -1263,11 +1263,11 @@
      "tick": 1800
     },
     {
-     "digest": "96bc3dfd7e3d66859b51183095c1a0ec607433a2c2e5484a53291992c3f40edf",
-     "enemy_alive": 2,
+     "digest": "6b8f8f295c0566d7f2f58ad19c407bab6070e09005682b095c52d435707285f3",
+     "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "45800",
-     "kills": 23,
+     "kills": 22,
      "player_x": "864000",
      "player_y": "936000",
      "projectiles": 1,
@@ -1275,11 +1275,11 @@
      "tick": 2100
     },
     {
-     "digest": "26f15258505a3622e45b14d687be22c889c9a6a61fc58f0588db0fe37ac51bf6",
-     "enemy_alive": 4,
+     "digest": "9752fc6623714c3350035f3605aacf5db54525577cddc1cb6db98304ba85e586",
+     "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "32800",
-     "kills": 25,
+     "kills": 26,
      "player_x": "960000",
      "player_y": "936000",
      "projectiles": 0,
@@ -1287,23 +1287,23 @@
      "tick": 2400
     },
     {
-     "digest": "0cb80299cd320ba7d252adc67c3cd36ce2638480d254da24e7391ef6011d0481",
-     "enemy_alive": 1,
+     "digest": "8fb9ddf8053ce25e9fbf2734cd2e907adff0daba747399ae4e925b65a395e9fa",
+     "enemy_alive": 2,
      "hero_dead": 0,
-     "hero_hp": "18700",
-     "kills": 32,
+     "hero_hp": "26300",
+     "kills": 31,
      "player_x": "1027880",
      "player_y": "868120",
-     "projectiles": 0,
+     "projectiles": 1,
      "step": 2700,
      "tick": 2700
     },
     {
-     "digest": "ddcecaf08f1ddd659f02533cbfb9da48895ae8e8673088cc76892fe942bcdf41",
-     "enemy_alive": 2,
+     "digest": "7261241f50b3d71e8b758c340944cc870474015118270324ad9a62bc06a8723f",
+     "enemy_alive": 3,
      "hero_dead": 0,
-     "hero_hp": "5700",
-     "kills": 35,
+     "hero_hp": "13300",
+     "kills": 34,
      "player_x": "1095760",
      "player_y": "800240",
      "projectiles": 1,
@@ -1311,19 +1311,19 @@
      "tick": 3000
     },
     {
-     "digest": "a43284aaa62705439af5176262ca98e0172030bc1ce5cca5adec46b69fa84cf5",
+     "digest": "b08e51c94275833b46fbc6f0be77c3563acc2a93665c69ad0d8700f1b67f2996",
      "enemy_alive": 2,
      "hero_dead": 1,
      "hero_hp": "0",
-     "kills": 36,
-     "player_x": "835200",
-     "player_y": "936000",
+     "kills": 38,
+     "player_x": "811200",
+     "player_y": "472480",
      "projectiles": 1,
-     "step": 3066,
-     "tick": 3066
+     "step": 3209,
+     "tick": 3209
     }
    ],
-   "command_count": 77,
+   "command_count": 81,
    "commands": [
     [
      "0",
@@ -1786,6 +1786,30 @@
      "76",
      "-1",
      "0"
+    ],
+    [
+     "3080",
+     "77",
+     "-1",
+     "-1"
+    ],
+    [
+     "3120",
+     "78",
+     "0",
+     "-1"
+    ],
+    [
+     "3160",
+     "79",
+     "1",
+     "-1"
+    ],
+    [
+     "3200",
+     "80",
+     "1",
+     "0"
     ]
    ],
    "config": [
@@ -1798,7 +1822,7 @@
     "768000",
     "480000"
    ],
-   "death_tick": 3066,
+   "death_tick": 3209,
    "enemies": {
     "kinds": [
      "3264",
@@ -1825,8 +1849,8 @@
     ]
    },
    "id": "botrun.p0.circle.s101",
-   "kills": 36,
-   "log_digest": "52f8ef7cc79ddf4721bc05053d03fbcbee4b1c87d0897611f169066f4fd91706",
+   "kills": 38,
+   "log_digest": "5b679fd570272da41b56418feedd4fbc0f0405b8e00b920ebf41660b15541eb2",
    "name": "botrun.p0.circle.s101",
    "skill": [
     "50000",
@@ -1838,14 +1862,14 @@
     "1",
     "64"
    ],
-   "ticks": 3066
+   "ticks": 3209
   },
   {
    "bot_policy": "kiter",
    "bot_policy_version": 1,
    "checkpoints": [
     {
-     "digest": "47c4304cf3f9ea45554a4afd095479226183d00ce7154c38fd6b55ce5657bdc9",
+     "digest": "e35b2cf9dc5d6a03741903cbe1aa9f7e3f8769bb5e0962ac10624b271e968ecc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1857,7 +1881,7 @@
      "tick": 1
     },
     {
-     "digest": "4d99a9a8483383d0f42e49124652310b431eb6ed4110f1894cafdc3652f3a795",
+     "digest": "3d68a528d1b1bdc5d0b5866724204891a413f8262d1443cb417c5f4d109b0fcb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1869,7 +1893,7 @@
      "tick": 2
     },
     {
-     "digest": "da444bee0a68592d93b4ce94f497db637acdd99fc20a2f62b8d115716323dfc0",
+     "digest": "c17e51c2eeb6a7f9ff4e8fbd83e74f14b26a5e1a72b95d683093dd6baeb2c799",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1881,7 +1905,7 @@
      "tick": 30
     },
     {
-     "digest": "a4e2ae82f8132e0824b12353a71af5a19977b64f5c3bbe50b1fb80528415a3f9",
+     "digest": "12a21ee74c5438f597878228a7deede04c9064c74b790337f091752ec7bed4b6",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1893,7 +1917,7 @@
      "tick": 60
     },
     {
-     "digest": "37d989ae04990c683fac843f0202305072cee42287814999be42f3b7b3cd8d80",
+     "digest": "b097bad9371b465d8b134c1e7caf9be3a3776e66def033dc3854e2c9d5eeb894",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1905,7 +1929,7 @@
      "tick": 300
     },
     {
-     "digest": "379ae75853f0f1184dac864f132ab7b7475cbf308e3bc8fe49c959220e277a9f",
+     "digest": "3cce0db217c26670f6ce8bee521ee31278801c80b11f415011faab2e8001c48c",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1917,7 +1941,7 @@
      "tick": 600
     },
     {
-     "digest": "c1eb7e70c250ebd735b84f1d9fafd9f1146591d1f3059785b0382e42830e2d68",
+     "digest": "a9d13b51af3cd7b109e349eab029d66b8a9bc52a0817d6c013fd4c6b0fb09343",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1929,7 +1953,7 @@
      "tick": 900
     },
     {
-     "digest": "b486f108e4be6d5e6656b5dc0c7a7e47e53bb3b23d257dda205eca75ae4acb0d",
+     "digest": "3beff51ee503d391213892bb4907f3743a34d49d4d55d4d45d6ff708c25a7984",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1941,7 +1965,7 @@
      "tick": 1200
     },
     {
-     "digest": "52522f3d371657d58201f17d6ce00fe11903942ed3cb9a8da5d9a834e6f8ecb7",
+     "digest": "42471788ec88abef41f5ddc22fb7cac1b6efb6532d00065ec786df473d729bfa",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1953,7 +1977,7 @@
      "tick": 1500
     },
     {
-     "digest": "37019d60c668ef73d38860013af27c68c93c9b03ca17530d7e5509ea92247e95",
+     "digest": "4e0fd64525118759ece30b4023b20f40e167124df120f254ad9943a1f756e5e7",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1965,7 +1989,7 @@
      "tick": 1800
     },
     {
-     "digest": "b4ab6f2f2ded0b84138b75014bac54ba13429cd82d3955a70ce9fd06f358acca",
+     "digest": "7188c3b41242c061fac0f8e82bd5dc435312976ad8703b1222c2c1206a3a6a03",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1977,7 +2001,7 @@
      "tick": 2100
     },
     {
-     "digest": "654e3628b80380d2f423bf45b0dcd890d790e25ad5ca92b7a349648045fab0f7",
+     "digest": "8875120e50215a9c74cc68327d764702dde42da64588d0c3ffb976675337e933",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -1989,7 +2013,7 @@
      "tick": 2400
     },
     {
-     "digest": "f984ed096dd3620958fd11850ac81837f7fd43e0017d599b29505c2e28f42401",
+     "digest": "3eb6546429fce9ddc67150b44d2c34290b3956364147e1fb3592abf3ebfebaaa",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -2001,7 +2025,7 @@
      "tick": 2700
     },
     {
-     "digest": "6594bc018f2b18ff844826d4b08a9057cff6aeaa2d105d0792bc45c2737810c5",
+     "digest": "886a2031dd56e6a3010c0b52d79f469af81da6fa43823f1b5c6a23141078566d",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -2013,7 +2037,7 @@
      "tick": 3000
     },
     {
-     "digest": "87ed39abdcc44d764ecc552c668c2b566bc29eb47d88603cdc109fe2907ec7e5",
+     "digest": "76f80eb12307158ac8a29eeb6418e46dffd0780e0310be43758bb66e93295c41",
      "enemy_alive": 5,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -2025,7 +2049,7 @@
      "tick": 3300
     },
     {
-     "digest": "3b174fdb4262bb687d0fe411fbb8f7a495a7776adf5e5d4df5c63e671b0755a5",
+     "digest": "c72ac6012c5ec33bf518aa9e420112a0ab87d748d7dea81f2e0c223b324457f3",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "84800",
@@ -2037,7 +2061,7 @@
      "tick": 3600
     },
     {
-     "digest": "4bd050469ef5df610b8f7eb7e9c0c92b3b48eddab6033bd7364300f86bdcf709",
+     "digest": "3e72f19e7fdce719a25262e83f0f692f1927ff59a29c11a3284a0f79162aa4dc",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "84800",
@@ -2049,7 +2073,7 @@
      "tick": 3900
     },
     {
-     "digest": "3970ce17ff6c4c93203832c6f4ddd1db96d149bd016f817ee8e1cebed54b9afa",
+     "digest": "767729724aa8ff1f71198115d1d46c6efbacde80e350b3c4b9157d4c1881af29",
      "enemy_alive": 5,
      "hero_dead": 0,
      "hero_hp": "84800",
@@ -2061,7 +2085,7 @@
      "tick": 4200
     },
     {
-     "digest": "81450a0116a6f5a31c6dc6081a154bf003b9fc93f7c5f8c08e8fa5d7497f977f",
+     "digest": "414bfbe3dd915ea5a10795317644b1ca6d5129e1e78a4c8715ec3bed47486be5",
      "enemy_alive": 6,
      "hero_dead": 0,
      "hero_hp": "84800",
@@ -2073,79 +2097,91 @@
      "tick": 4500
     },
     {
-     "digest": "7a08af47af5051d4b6afc10630dd35c9501ead9f4146f8b0a6ca73f772c3f770",
-     "enemy_alive": 5,
+     "digest": "dec6f037e27d6e559acfb5c61418b7134b844e3293cfaa4b9665ea3970718aae",
+     "enemy_alive": 6,
      "hero_dead": 0,
-     "hero_hp": "44700",
-     "kills": 60,
-     "player_x": "1150980",
-     "player_y": "44364",
+     "hero_hp": "50100",
+     "kills": 59,
+     "player_x": "784428",
+     "player_y": "854844",
      "projectiles": 0,
      "step": 4800,
      "tick": 4800
     },
     {
-     "digest": "5366d838d90abbb901102655e225cd2a4c6826244b39a67d008e38af7c9c7eaa",
+     "digest": "e0e790d0e7205fec8ba70f7ab10898b7900c3135191265fc55d110c359c97d62",
      "enemy_alive": 6,
      "hero_dead": 0,
-     "hero_hp": "44700",
+     "hero_hp": "50100",
      "kills": 64,
-     "player_x": "1249308",
-     "player_y": "118836",
-     "projectiles": 1,
+     "player_x": "289296",
+     "player_y": "114480",
+     "projectiles": 0,
      "step": 5100,
      "tick": 5100
     },
     {
-     "digest": "5661de5ee8c144e198e7b13be1611157c16003bafb71fd9d5db15c97821cafdf",
-     "enemy_alive": 5,
+     "digest": "a4e7a5c981b5c1a6005985886674942594b51d3dcb15fc36bc7c7f8591d52703",
+     "enemy_alive": 6,
      "hero_dead": 0,
-     "hero_hp": "44700",
-     "kills": 69,
-     "player_x": "1512000",
-     "player_y": "69672",
-     "projectiles": 1,
+     "hero_hp": "50100",
+     "kills": 68,
+     "player_x": "357372",
+     "player_y": "621540",
+     "projectiles": 0,
      "step": 5400,
      "tick": 5400
     },
     {
-     "digest": "26844c0bf383b5697370c17c9cadabab68c4edd532d72deb8f7ab3d0da932de3",
-     "enemy_alive": 5,
+     "digest": "91a69d8702b0ceda6674e043606e956bbef364e9b9683583634ac98df1eab2b7",
+     "enemy_alive": 8,
      "hero_dead": 0,
-     "hero_hp": "17600",
-     "kills": 75,
-     "player_x": "1206540",
-     "player_y": "710844",
+     "hero_hp": "43600",
+     "kills": 72,
+     "player_x": "1298472",
+     "player_y": "813816",
      "projectiles": 0,
      "step": 5700,
      "tick": 5700
     },
     {
-     "digest": "a7df276a58840cde5a5248b3ff476c08acaa29ba8b3d84ad8e782e20fed121af",
-     "enemy_alive": 6,
+     "digest": "fab37468ba54b9f7330e864fc87975df0db8412617abc4ab7d57e55da05468f8",
+     "enemy_alive": 5,
      "hero_dead": 0,
-     "hero_hp": "17600",
-     "kills": 79,
-     "player_x": "1369452",
-     "player_y": "842916",
-     "projectiles": 1,
+     "hero_hp": "20800",
+     "kills": 80,
+     "player_x": "1410180",
+     "player_y": "629088",
+     "projectiles": 0,
      "step": 6000,
      "tick": 6000
     },
     {
-     "digest": "44a4e7af6d61ec0534550896a11ce9ce87618acd3e70a1d52de788c60ae7fe71",
-     "enemy_alive": 7,
+     "digest": "7266a07172d0b234055212fd51065a48ca4019dc7e972900ac3e9d8ea6774a00",
+     "enemy_alive": 6,
+     "hero_dead": 0,
+     "hero_hp": "20800",
+     "kills": 84,
+     "player_x": "1296432",
+     "player_y": "107196",
+     "projectiles": 1,
+     "step": 6300,
+     "tick": 6300
+    },
+    {
+     "digest": "de6c4e54cdbf0d3533f833e0e940b5e04c296b4c7d4333411b42a68f605e58b2",
+     "enemy_alive": 8,
      "hero_dead": 1,
      "hero_hp": "0",
-     "kills": 81,
-     "player_x": "1512000",
-     "player_y": "936000",
-     "projectiles": 1,
-     "step": 6211,
-     "tick": 6211
+     "kills": 85,
+     "player_x": "1447416",
+     "player_y": "24000",
+     "projectiles": 0,
+     "step": 6456,
+     "tick": 6456
     }
    ],
-   "command_count": 494,
+   "command_count": 493,
    "commands": [
     [
      "240",
@@ -4344,772 +4380,766 @@
      "-1"
     ],
     [
-     "4536",
+     "4524",
      "366",
-     "0",
-     "-1"
-    ],
-    [
-     "4572",
-     "367",
      "0",
      "1"
     ],
     [
-     "4590",
-     "368",
+     "4536",
+     "367",
      "-1",
      "1"
     ],
     [
-     "4626",
+     "4548",
+     "368",
+     "-1",
+     "0"
+    ],
+    [
+     "4572",
      "369",
-     "1",
+     "-1",
      "1"
     ],
     [
-     "4632",
+     "4590",
      "370",
      "0",
      "1"
     ],
     [
-     "4644",
+     "4638",
      "371",
      "-1",
-     "-1"
-    ],
-    [
-     "4650",
-     "372",
-     "1",
      "1"
-    ],
-    [
-     "4656",
-     "373",
-     "-1",
-     "-1"
-    ],
-    [
-     "4662",
-     "374",
-     "1",
-     "1"
-    ],
-    [
-     "4668",
-     "375",
-     "0",
-     "-1"
     ],
     [
      "4674",
-     "376",
-     "1",
-     "0"
-    ],
-    [
-     "4680",
-     "377",
-     "1",
-     "-1"
+     "372",
+     "0",
+     "1"
     ],
     [
      "4698",
-     "378",
-     "0",
-     "-1"
+     "373",
+     "-1",
+     "1"
     ],
     [
-     "4722",
-     "379",
+     "4764",
+     "374",
+     "-1",
+     "0"
+    ],
+    [
+     "4782",
+     "375",
      "-1",
      "-1"
     ],
     [
-     "4734",
+     "4788",
+     "376",
+     "-1",
+     "0"
+    ],
+    [
+     "4806",
+     "377",
+     "-1",
+     "1"
+    ],
+    [
+     "4818",
+     "378",
+     "-1",
+     "0"
+    ],
+    [
+     "4830",
+     "379",
+     "-1",
+     "1"
+    ],
+    [
+     "4836",
      "380",
      "-1",
      "0"
     ],
     [
-     "4776",
+     "4842",
      "381",
      "-1",
      "-1"
     ],
     [
-     "4782",
+     "4848",
      "382",
      "-1",
      "0"
     ],
     [
-     "4824",
+     "4854",
      "383",
      "-1",
-     "1"
-    ],
-    [
-     "4854",
-     "384",
-     "-1",
-     "0"
+     "-1"
     ],
     [
      "4860",
+     "384",
+     "0",
+     "-1"
+    ],
+    [
+     "4866",
      "385",
      "-1",
      "-1"
     ],
     [
-     "4884",
+     "4872",
      "386",
-     "-1",
-     "0"
-    ],
-    [
-     "4926",
-     "387",
      "0",
-     "1"
+     "-1"
     ],
     [
-     "4932",
+     "4890",
+     "387",
+     "-1",
+     "-1"
+    ],
+    [
+     "4896",
      "388",
-     "1",
-     "1"
+     "0",
+     "-1"
     ],
     [
-     "4938",
+     "5022",
      "389",
      "0",
      "1"
     ],
     [
-     "4944",
+     "5028",
      "390",
-     "1",
-     "1"
+     "0",
+     "-1"
     ],
     [
-     "4950",
+     "5034",
      "391",
      "0",
      "1"
     ],
     [
-     "4962",
-     "392",
-     "1",
-     "1"
-    ],
-    [
-     "4974",
-     "393",
-     "1",
-     "0"
-    ],
-    [
      "5040",
-     "394",
-     "1",
+     "392",
+     "0",
      "-1"
     ],
     [
-     "5082",
-     "395",
-     "1",
-     "0"
-    ],
-    [
-     "5130",
-     "396",
-     "1",
+     "5046",
+     "393",
+     "-1",
      "1"
     ],
     [
-     "5136",
+     "5052",
+     "394",
+     "-1",
+     "-1"
+    ],
+    [
+     "5064",
+     "395",
+     "-1",
+     "1"
+    ],
+    [
+     "5070",
+     "396",
+     "-1",
+     "-1"
+    ],
+    [
+     "5076",
      "397",
      "-1",
      "0"
     ],
     [
-     "5142",
+     "5088",
      "398",
-     "1",
-     "0"
+     "-1",
+     "1"
     ],
     [
-     "5148",
+     "5094",
      "399",
      "-1",
      "0"
     ],
     [
-     "5154",
+     "5124",
      "400",
-     "1",
-     "0"
+     "-1",
+     "1"
     ],
     [
-     "5166",
+     "5130",
      "401",
-     "-1",
-     "0"
+     "0",
+     "1"
     ],
     [
-     "5172",
+     "5136",
      "402",
-     "1",
-     "0"
+     "-1",
+     "-1"
     ],
     [
-     "5184",
+     "5142",
      "403",
-     "-1",
-     "0"
-    ],
-    [
-     "5196",
-     "404",
-     "1",
-     "0"
-    ],
-    [
-     "5208",
-     "405",
-     "-1",
-     "0"
-    ],
-    [
-     "5214",
-     "406",
-     "1",
-     "0"
-    ],
-    [
-     "5220",
-     "407",
      "0",
      "-1"
     ],
     [
-     "5226",
-     "408",
+     "5148",
+     "404",
      "-1",
+     "-1"
+    ],
+    [
+     "5154",
+     "405",
+     "1",
      "1"
     ],
     [
-     "5232",
-     "409",
+     "5160",
+     "406",
+     "-1",
+     "-1"
+    ],
+    [
+     "5172",
+     "407",
      "-1",
      "0"
     ],
     [
-     "5238",
-     "410",
+     "5178",
+     "408",
+     "1",
+     "1"
+    ],
+    [
+     "5190",
+     "409",
      "-1",
      "1"
     ],
     [
-     "5244",
+     "5196",
+     "410",
+     "1",
+     "1"
+    ],
+    [
+     "5202",
      "411",
      "-1",
      "0"
     ],
     [
-     "5250",
+     "5208",
      "412",
+     "0",
+     "1"
+    ],
+    [
+     "5226",
+     "413",
+     "1",
+     "0"
+    ],
+    [
+     "5238",
+     "414",
+     "0",
+     "1"
+    ],
+    [
+     "5244",
+     "415",
      "-1",
      "1"
     ],
     [
-     "5274",
-     "413",
-     "1",
-     "1"
-    ],
-    [
-     "5286",
-     "414",
-     "0",
-     "-1"
-    ],
-    [
-     "5292",
-     "415",
-     "1",
-     "-1"
-    ],
-    [
-     "5298",
+     "5250",
      "416",
      "1",
      "0"
     ],
     [
-     "5304",
+     "5256",
      "417",
-     "1",
-     "-1"
+     "-1",
+     "0"
     ],
     [
-     "5316",
+     "5262",
      "418",
      "-1",
      "-1"
     ],
     [
-     "5322",
+     "5274",
      "419",
-     "1",
-     "-1"
-    ],
-    [
-     "5334",
-     "420",
-     "-1",
-     "0"
-    ],
-    [
-     "5346",
-     "421",
      "0",
      "-1"
     ],
     [
-     "5352",
+     "5280",
+     "420",
+     "1",
+     "0"
+    ],
+    [
+     "5286",
+     "421",
+     "-1",
+     "0"
+    ],
+    [
+     "5292",
      "422",
      "0",
      "1"
     ],
     [
-     "5358",
+     "5316",
      "423",
      "1",
-     "-1"
+     "1"
     ],
     [
-     "5370",
+     "5466",
      "424",
      "1",
      "0"
     ],
     [
-     "5376",
+     "5508",
      "425",
-     "0",
-     "1"
+     "1",
+     "-1"
     ],
     [
-     "5382",
+     "5514",
      "426",
-     "1",
-     "-1"
-    ],
-    [
-     "5394",
-     "427",
-     "1",
-     "0"
-    ],
-    [
-     "5412",
-     "428",
-     "1",
-     "-1"
-    ],
-    [
-     "5424",
-     "429",
-     "-1",
-     "1"
-    ],
-    [
-     "5442",
-     "430",
-     "-1",
-     "0"
-    ],
-    [
-     "5448",
-     "431",
-     "1",
-     "0"
-    ],
-    [
-     "5454",
-     "432",
-     "1",
-     "-1"
-    ],
-    [
-     "5460",
-     "433",
-     "1",
-     "0"
-    ],
-    [
-     "5466",
-     "434",
-     "-1",
-     "0"
-    ],
-    [
-     "5472",
-     "435",
-     "1",
-     "-1"
-    ],
-    [
-     "5478",
-     "436",
      "1",
      "0"
     ],
     [
      "5520",
-     "437",
+     "427",
+     "-1",
+     "-1"
+    ],
+    [
+     "5526",
+     "428",
      "1",
      "1"
     ],
     [
+     "5532",
+     "429",
+     "0",
+     "1"
+    ],
+    [
      "5538",
-     "438",
+     "430",
+     "-1",
+     "0"
+    ],
+    [
+     "5544",
+     "431",
+     "1",
+     "1"
+    ],
+    [
+     "5550",
+     "432",
+     "-1",
+     "1"
+    ],
+    [
+     "5556",
+     "433",
      "0",
      "1"
     ],
     [
      "5574",
-     "439",
-     "-1",
-     "1"
-    ],
-    [
-     "5682",
-     "440",
+     "434",
      "1",
      "1"
     ],
     [
+     "5616",
+     "435",
+     "1",
+     "0"
+    ],
+    [
+     "5664",
+     "436",
+     "1",
+     "-1"
+    ],
+    [
+     "5700",
+     "437",
+     "1",
+     "0"
+    ],
+    [
      "5730",
-     "441",
+     "438",
      "-1",
      "-1"
     ],
     [
      "5736",
-     "442",
-     "0",
-     "1"
-    ],
-    [
-     "5742",
-     "443",
+     "439",
      "1",
-     "1"
+     "-1"
     ],
     [
      "5748",
-     "444",
-     "0",
+     "440",
+     "-1",
      "-1"
     ],
     [
      "5754",
-     "445",
-     "0",
-     "1"
-    ],
-    [
-     "5760",
-     "446",
+     "441",
      "1",
-     "1"
+     "0"
     ],
     [
      "5766",
-     "447",
+     "442",
      "0",
      "-1"
     ],
     [
      "5772",
-     "448",
-     "1",
-     "1"
-    ],
-    [
-     "5784",
-     "449",
+     "443",
      "1",
      "0"
     ],
     [
-     "5796",
-     "450",
-     "1",
-     "-1"
-    ],
-    [
-     "5802",
-     "451",
+     "5784",
+     "444",
      "0",
-     "1"
-    ],
-    [
-     "5808",
-     "452",
-     "1",
      "1"
     ],
     [
      "5814",
-     "453",
+     "445",
      "-1",
-     "-1"
-    ],
-    [
-     "5820",
-     "454",
-     "1",
      "1"
     ],
     [
-     "5826",
-     "455",
+     "5874",
+     "446",
      "0",
      "1"
     ],
     [
-     "5832",
-     "456",
-     "-1",
-     "-1"
-    ],
-    [
-     "5850",
-     "457",
-     "0",
-     "-1"
-    ],
-    [
-     "5856",
-     "458",
-     "-1",
-     "-1"
-    ],
-    [
-     "5862",
-     "459",
-     "0",
-     "-1"
-    ],
-    [
-     "5868",
-     "460",
-     "-1",
-     "-1"
-    ],
-    [
-     "5892",
-     "461",
+     "5880",
+     "447",
      "1",
-     "-1"
+     "1"
     ],
     [
-     "5898",
-     "462",
-     "-1",
+     "5886",
+     "448",
+     "1",
      "0"
-    ],
-    [
-     "5904",
-     "463",
-     "1",
-     "-1"
     ],
     [
      "5922",
-     "464",
-     "0",
-     "1"
-    ],
-    [
-     "5928",
-     "465",
+     "449",
      "1",
      "-1"
-    ],
-    [
-     "5934",
-     "466",
-     "1",
-     "1"
     ],
     [
      "5940",
-     "467",
-     "0",
-     "1"
-    ],
-    [
-     "5952",
-     "468",
-     "-1",
-     "1"
-    ],
-    [
-     "5958",
-     "469",
-     "0",
-     "1"
-    ],
-    [
-     "5976",
-     "470",
-     "-1",
-     "0"
-    ],
-    [
-     "5982",
-     "471",
-     "0",
-     "1"
-    ],
-    [
-     "5988",
-     "472",
+     "450",
      "0",
      "-1"
     ],
     [
-     "5994",
-     "473",
-     "1",
-     "1"
+     "5970",
+     "451",
+     "-1",
+     "-1"
     ],
     [
      "6006",
-     "474",
-     "1",
-     "0"
-    ],
-    [
-     "6012",
-     "475",
-     "-1",
-     "1"
-    ],
-    [
-     "6018",
-     "476",
-     "1",
-     "0"
-    ],
-    [
-     "6024",
-     "477",
-     "-1",
-     "0"
+     "452",
+     "0",
+     "-1"
     ],
     [
      "6030",
-     "478",
-     "1",
-     "1"
-    ],
-    [
-     "6036",
-     "479",
-     "0",
-     "-1"
-    ],
-    [
-     "6042",
-     "480",
-     "1",
-     "-1"
-    ],
-    [
-     "6054",
-     "481",
-     "0",
-     "-1"
+     "453",
+     "-1",
+     "0"
     ],
     [
      "6060",
-     "482",
+     "454",
      "1",
      "0"
     ],
     [
      "6066",
-     "483",
+     "455",
      "-1",
      "0"
     ],
     [
      "6072",
-     "484",
+     "456",
      "1",
      "0"
     ],
     [
-     "6078",
-     "485",
+     "6102",
+     "457",
+     "0",
+     "-1"
+    ],
+    [
+     "6108",
+     "458",
+     "1",
+     "0"
+    ],
+    [
+     "6114",
+     "459",
      "-1",
      "-1"
     ],
     [
-     "6084",
+     "6120",
+     "460",
+     "1",
+     "-1"
+    ],
+    [
+     "6126",
+     "461",
+     "0",
+     "-1"
+    ],
+    [
+     "6132",
+     "462",
+     "-1",
+     "0"
+    ],
+    [
+     "6138",
+     "463",
+     "0",
+     "-1"
+    ],
+    [
+     "6156",
+     "464",
+     "-1",
+     "0"
+    ],
+    [
+     "6162",
+     "465",
+     "0",
+     "-1"
+    ],
+    [
+     "6186",
+     "466",
+     "-1",
+     "1"
+    ],
+    [
+     "6192",
+     "467",
+     "0",
+     "-1"
+    ],
+    [
+     "6210",
+     "468",
+     "0",
+     "1"
+    ],
+    [
+     "6216",
+     "469",
+     "0",
+     "-1"
+    ],
+    [
+     "6228",
+     "470",
+     "0",
+     "1"
+    ],
+    [
+     "6234",
+     "471",
+     "0",
+     "-1"
+    ],
+    [
+     "6240",
+     "472",
+     "0",
+     "1"
+    ],
+    [
+     "6246",
+     "473",
+     "0",
+     "-1"
+    ],
+    [
+     "6252",
+     "474",
+     "-1",
+     "-1"
+    ],
+    [
+     "6258",
+     "475",
+     "-1",
+     "1"
+    ],
+    [
+     "6264",
+     "476",
+     "-1",
+     "-1"
+    ],
+    [
+     "6270",
+     "477",
+     "-1",
+     "1"
+    ],
+    [
+     "6276",
+     "478",
+     "-1",
+     "-1"
+    ],
+    [
+     "6282",
+     "479",
+     "0",
+     "1"
+    ],
+    [
+     "6288",
+     "480",
+     "1",
+     "0"
+    ],
+    [
+     "6312",
+     "481",
+     "1",
+     "1"
+    ],
+    [
+     "6318",
+     "482",
+     "1",
+     "0"
+    ],
+    [
+     "6324",
+     "483",
+     "1",
+     "-1"
+    ],
+    [
+     "6330",
+     "484",
+     "1",
+     "1"
+    ],
+    [
+     "6336",
+     "485",
+     "0",
+     "-1"
+    ],
+    [
+     "6342",
      "486",
      "1",
      "-1"
     ],
     [
-     "6090",
+     "6348",
      "487",
-     "0",
-     "-1"
-    ],
-    [
-     "6096",
-     "488",
      "-1",
+     "1"
+    ],
+    [
+     "6354",
+     "488",
+     "1",
      "-1"
     ],
     [
-     "6108",
+     "6366",
      "489",
      "-1",
      "0"
     ],
     [
-     "6126",
+     "6372",
      "490",
      "1",
+     "-1"
+    ],
+    [
+     "6378",
+     "491",
+     "-1",
      "0"
     ],
     [
-     "6132",
-     "491",
-     "0",
-     "1"
-    ],
-    [
-     "6138",
+     "6384",
      "492",
-     "1",
-     "1"
-    ],
-    [
-     "6180",
-     "493",
      "0",
-     "1"
+     "-1"
     ]
    ],
    "config": [
@@ -5122,7 +5152,7 @@
     "768000",
     "480000"
    ],
-   "death_tick": 6211,
+   "death_tick": 6456,
    "enemies": {
     "kinds": [
      "3264",
@@ -5149,8 +5179,8 @@
     ]
    },
    "id": "botrun.p0.kiter.s101",
-   "kills": 81,
-   "log_digest": "70093ab64ab92cbb2fca24b6aa14b84e4ff2f4131011f18592ad1ddc63fd09d5",
+   "kills": 85,
+   "log_digest": "96d21efea9b44ea92278855b44f1bd2294d92590ee967286764412bc5121de24",
    "name": "botrun.p0.kiter.s101",
    "skill": [
     "50000",
@@ -5162,7 +5192,7 @@
     "1",
     "64"
    ],
-   "ticks": 6211
+   "ticks": 6456
   }
  ]
 }

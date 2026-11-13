@@ -1,6 +1,6 @@
 """Reference of the P0-01 simulation core (ADR-008, ADR-009): PlayerCommand log and hero
 movement (P0-01b); enemy spawn, chase, contact damage and hero death (P0-01E); hero
-auto-attack with projectiles, enemy deaths and kills (P0-01F).
+auto-attack with projectiles, enemy deaths and kills (P0-01F); enemy separation (ADR-009 2).
 
 Oracle for game/core/sim/*.gd. Integers only (hip-fx-v1 via tools/content/fx.py, hip-rng-v1
 via tools/content/hip_rng.py). Golden traces:
@@ -12,13 +12,15 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import math
 import struct
 import sys
+from itertools import chain
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 3
+VECTORS_SCHEMA_VERSION = 4
 
 
 def _load(name: str, file: str):
@@ -30,6 +32,41 @@ def _load(name: str, file: str):
 
 fx = _load("hip_fx", "fx.py")
 hip_rng = _load("hip_rng", "hip_rng.py")
+
+_FAST_A = 1 << 30           # |a| * |q| <= 2^30 * 2^15 stays far below the 2^62 saturation
+_FAST_Q = 1 << 15
+
+
+def mul_q14(a: int, q: int) -> int:
+    """fx.mul_q14 without the saturation work when it cannot trigger (same result)."""
+    if -_FAST_A <= a <= _FAST_A and -_FAST_Q <= q <= _FAST_Q:
+        p = (abs(a) * abs(q)) >> 14
+        return p if (a ^ q) >= 0 else -p
+    return fx.mul_q14(a, q)
+
+
+def normalize_q14(x: int, y: int) -> tuple[int, int]:
+    """fx.normalize_q14 for vectors that need no halving (same result)."""
+    ax, ay = abs(x), abs(y)
+    big = ax if ax > ay else ay
+    if big > fx.NORM_MAX:
+        return fx.normalize_q14(x, y)
+    if big == 0:
+        return (0, 0)
+    if big < fx.NORM_UPSCALE_BELOW:
+        x, y, ax, ay = (x * fx.NORM_UPSCALE_BELOW, y * fx.NORM_UPSCALE_BELOW,
+                        ax * fx.NORM_UPSCALE_BELOW, ay * fx.NORM_UPSCALE_BELOW)
+    length = math.isqrt(x * x + y * y)
+    qx = (ax << 14) // length
+    qy = (ay << 14) // length
+    return (qx if x >= 0 else -qx, qy if y >= 0 else -qy)
+
+
+def isqrt(n: int) -> int:
+    """fx.isqrt (floor square root) for 0 <= n <= 2^62 (same result)."""
+    if 0 <= n <= fx.PRODUCT_LIMIT:
+        return math.isqrt(n)
+    return fx.isqrt(n)
 
 AXIS_Q14 = 16384
 DIAG_Q14 = 11585
@@ -208,6 +245,7 @@ class World:
         self.enemy_alive = 0
         self.kills = 0
         self.skill_acc = 0
+        self.sep_cursor = 0
         self.ledger_size = config.pierce + 1
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
@@ -216,7 +254,7 @@ class World:
         head = [self.tick, self.player_x, self.player_y, self.move_x, self.move_y,
                 self.command_cursor, self.hero_hp, self.hero_dead, self.spawn_acc,
                 self.rng_cursor, self.next_enemy_uid, self.enemy_alive, self.kills,
-                self.skill_acc, len(self.enemies), len(self.projectiles)]
+                self.skill_acc, self.sep_cursor, len(self.enemies), len(self.projectiles)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile]
 
@@ -299,16 +337,107 @@ def spawn(config: Config, world: World) -> None:
     world.enemy_alive += 1
 
 
-def chase(config: Config, world: World) -> None:
-    for enemy in world.enemies:
+SEP_MAX_CHECKS = 4096
+SEP_NEIGHBOURS = ((1, 0), (-1, 1), (0, 1), (1, 1))
+
+
+def cell_size(config: Config) -> int:
+    return 2 * max(kind[1] for kind in config.kinds)
+
+
+def separate(config: Config, world: World, push_x, push_y) -> None:
+    """ADR-009 section 2: grid over tick-N positions, pairs cell by cell (the cell's later
+    items, then neighbours (+1,0), (-1,+1), (0,+1), (+1,+1)), at most SEP_MAX_CHECKS checks
+    counted between cells; the next tick resumes at world.sep_cursor.
+
+    An overlapping pair (i, j) with dx = x_i - x_j pushes each enemy apart by half the overlap
+    (hx = sign(dx) * floor(|dx| * half / d)); coincident centres push along x, the larger slot
+    towards +x. Python // is floor division, the same as fx.floor_div for a positive divisor."""
+    cell = cell_size(config)
+    cols = (config.max_x - config.min_x) // cell + 1
+    rows = (config.max_y - config.min_y) // cell + 1
+    cells = cols * rows
+    min_x, min_y, kinds = config.min_x, config.min_y, config.kinds
+    buckets: list[list[tuple[int, int, int, int]]] = [[] for _ in range(cells)]
+    for slot, enemy in enumerate(world.enemies):
+        if enemy[E_UID] == 0:
+            continue
+        cx = min(max((enemy[E_X] - min_x) // cell, 0), cols - 1)
+        cy = min(max((enemy[E_Y] - min_y) // cell, 0), rows - 1)
+        buckets[cy * cols + cx].append((slot, enemy[E_X], enemy[E_Y], kinds[enemy[E_KIND]][1]))
+    checks = 0
+    index = world.sep_cursor if world.sep_cursor < cells else 0
+    while index < cells:
+        if checks >= SEP_MAX_CHECKS:
+            world.sep_cursor = index
+            return
+        items = buckets[index]
+        if not items:
+            index += 1
+            continue
+        cy, cx = divmod(index, cols)
+        near = [buckets[(cy + oy) * cols + cx + ox] for ox, oy in SEP_NEIGHBOURS
+                if 0 <= cx + ox < cols and cy + oy < rows]
+        near_count = sum(len(bucket) for bucket in near)
+        count = len(items)
+        for a, (i, xi, yi, ri) in enumerate(items):
+            checks += count - a - 1 + near_count
+            for j, xj, yj, rj in chain(items[a + 1:], *near):
+                dx, dy, reach = xi - xj, yi - yj, ri + rj
+                d2 = dx * dx + dy * dy
+                if d2 >= reach * reach:
+                    continue
+                if d2 == 0:
+                    h = reach >> 1
+                    if i > j:
+                        push_x[i] += h
+                        push_x[j] -= h
+                    else:
+                        push_x[j] += h
+                        push_x[i] -= h
+                    continue
+                d = math.isqrt(d2)
+                half = (reach - d) >> 1
+                hx = abs(dx) * half // d
+                hy = abs(dy) * half // d
+                if dx < 0:
+                    hx = -hx
+                if dy < 0:
+                    hy = -hy
+                push_x[i] += hx
+                push_y[i] += hy
+                push_x[j] -= hx
+                push_y[j] -= hy
+        index += 1
+    world.sep_cursor = 0
+
+
+def chase_and_separate(config: Config, world: World) -> None:
+    """Chase writes tentative positions (touching enemies stay), separation adds pushes from
+    tick-N positions, the move is capped at the kind speed and clamped into the arena."""
+    tx = [enemy[E_X] for enemy in world.enemies]
+    ty = [enemy[E_Y] for enemy in world.enemies]
+    for slot, enemy in enumerate(world.enemies):
         if enemy[E_UID] == 0 or _touching(config, world, enemy):
             continue
+        speed = config.kinds[enemy[E_KIND]][0]
+        qx, qy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
+        tx[slot] += mul_q14(speed, qx)
+        ty[slot] += mul_q14(speed, qy)
+    push_x = [0] * len(world.enemies)
+    push_y = [0] * len(world.enemies)
+    separate(config, world, push_x, push_y)
+    for slot, enemy in enumerate(world.enemies):
+        if enemy[E_UID] == 0:
+            continue
         speed, r = config.kinds[enemy[E_KIND]][0], config.kinds[enemy[E_KIND]][1]
-        qx, qy = fx.normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
-        enemy[E_X] = min(max(enemy[E_X] + fx.mul_q14(speed, qx), config.min_x + r),
-                         config.max_x - r)
-        enemy[E_Y] = min(max(enemy[E_Y] + fx.mul_q14(speed, qy), config.min_y + r),
-                         config.max_y - r)
+        mx = tx[slot] - enemy[E_X] + push_x[slot]
+        my = ty[slot] - enemy[E_Y] + push_y[slot]
+        if mx * mx + my * my > speed * speed:
+            qx, qy = normalize_q14(mx, my)
+            mx, my = mul_q14(speed, qx), mul_q14(speed, qy)
+        enemy[E_X] = min(max(enemy[E_X] + mx, config.min_x + r), config.max_x - r)
+        enemy[E_Y] = min(max(enemy[E_Y] + my, config.min_y + r), config.max_y - r)
 
 
 def nearest_in_range(config: Config, world: World) -> int:
@@ -334,11 +463,11 @@ def cast(config: Config, world: World) -> None:
         return
     world.skill_acc -= config.skill_period
     enemy = world.enemies[target]
-    qx, qy = fx.normalize_q14(enemy[E_X] - world.player_x, enemy[E_Y] - world.player_y)
+    qx, qy = normalize_q14(enemy[E_X] - world.player_x, enemy[E_Y] - world.player_y)
     if qx == 0 and qy == 0:
         qx = fx.Q14
-    record = [world.player_x, world.player_y, fx.mul_q14(config.proj_speed, qx),
-              fx.mul_q14(config.proj_speed, qy), config.proj_ttl, config.pierce,
+    record = [world.player_x, world.player_y, mul_q14(config.proj_speed, qx),
+              mul_q14(config.proj_speed, qy), config.proj_ttl, config.pierce,
               max(1, config.skill_damage)] + [0] * world.ledger_size
     if slot < 0:
         world.projectiles.append(record)
@@ -421,13 +550,13 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         world.command_cursor += 1
     qx, qy = direction_q14(world.move_x, world.move_y)
     r = config.radius
-    world.player_x = min(max(world.player_x + fx.mul_q14(config.speed, qx), config.min_x + r),
+    world.player_x = min(max(world.player_x + mul_q14(config.speed, qx), config.min_x + r),
                          config.max_x - r)
-    world.player_y = min(max(world.player_y + fx.mul_q14(config.speed, qy), config.min_y + r),
+    world.player_y = min(max(world.player_y + mul_q14(config.speed, qy), config.min_y + r),
                          config.max_y - r)
     if config.has_enemies():
         spawn(config, world)
-        chase(config, world)
+        chase_and_separate(config, world)
         if config.has_skill():
             cast(config, world)
             fly_and_hit(config, world)
@@ -464,6 +593,7 @@ def _circle(period: int, ticks: int) -> list[tuple[int, int, int, int]]:
 
 
 TOUGH = 500000000
+STRESS_VALUES = [500000000, 6000, 0, 1000, 150, 384000]
 MAX_SEED = "18446744073709551615"
 
 SCENARIOS = [
@@ -498,6 +628,9 @@ SCENARIOS = [
     ("combat_ramp_five_minutes",
      Config(BASE, [TOUGH, 30000, 3600, 4000, 64, 384000], W0_KINDS, MAX_SEED,
             [30000, 480000, 6000, 12000, 10000, 40, 2, 64]), _circle(25, 18000), 18000),
+    # ADR-009 section 2 stress fixture: 150 enemies alive within ~15 s, 10000 ticks.
+    ("stress_150_separation", Config(BASE, STRESS_VALUES, W0_KINDS, SEED, P0_SKILL),
+     _circle(30, 10000), 10000),
 ]
 
 APPEND_CASES = [

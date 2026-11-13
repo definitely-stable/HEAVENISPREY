@@ -8,7 +8,7 @@ extends RefCounted
 ## then up to SPAWN_ATTEMPTS points on the arena perimeter (inset by the enemy radius) until
 ## one is at least `spawn_min_distance_su` from the hero; else the inset corner farthest from
 ## the hero (first in corner order on ties).
-## Chase: each live enemy steps toward the hero (Q14 unit vector x speed) unless touching.
+## Chase and separation: SeparationSystem.
 ## Contact: per live enemy in slot order the cooldown counts down; a touching enemy with a
 ## ready cooldown hits the hero and restarts it. Deaths: dead enemies free their slot.
 
@@ -84,22 +84,6 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 	world.enemy_cooldown[slot] = 0
 	world.next_enemy_uid += 1
 	world.enemy_alive += 1
-
-
-static func chase(config: SimConfig, world: WorldState) -> void:
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] == 0 or touching(config, world, slot):
-			continue
-		var kind: int = world.enemy_kind[slot]
-		var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
-		var ex: int = world.enemy_x[slot]
-		var ey: int = world.enemy_y[slot]
-		var direction: PackedInt64Array = Fx.normalize_q14(world.player_x - ex, world.player_y - ey)
-		var speed: int = config.kind_value(kind, SimConfig.KIND_SPEED)
-		ex += Fx.mul_q14(speed, direction[0])
-		ey += Fx.mul_q14(speed, direction[1])
-		world.enemy_x[slot] = clampi(ex, config.arena_min_x + r, config.arena_max_x - r)
-		world.enemy_y[slot] = clampi(ey, config.arena_min_y + r, config.arena_max_y - r)
 
 
 static func contact(config: SimConfig, world: WorldState) -> void:

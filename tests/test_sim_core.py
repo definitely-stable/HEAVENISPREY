@@ -3,6 +3,7 @@ rules checked against independent expectations."""
 import hashlib
 import importlib.util
 import math
+import random
 import unittest
 from pathlib import Path
 
@@ -388,6 +389,133 @@ class SimCombatReferenceTests(unittest.TestCase):
             self.assertLessEqual(world.skill_acc, config.skill_period)
         self.assertGreater(world.kills, 50)
         self.assertEqual(world.next_enemy_uid - 1, world.kills + world.enemy_alive)
+
+
+# Separation (ADR-009 section 2): two kinds that move, radius 24000 and 21600 (cell 48000).
+MOVING_KINDS = [3264, 24000, 1000000, 0, 36, 1, 6144, 21600, 1000000, 0, 42, 1]
+
+
+def brute_push(config, world):
+    """Independent all-pairs reference of one complete separation pass."""
+    n = len(world.enemies)
+    push_x, push_y = [0] * n, [0] * n
+    live = [slot for slot, e in enumerate(world.enemies) if e[sim.E_UID]]
+    for a, i in enumerate(live):
+        for j in live[a + 1:]:
+            ei, ej = world.enemies[i], world.enemies[j]
+            reach = config.kinds[ei[sim.E_KIND]][1] + config.kinds[ej[sim.E_KIND]][1]
+            dx, dy = ei[sim.E_X] - ej[sim.E_X], ei[sim.E_Y] - ej[sim.E_Y]
+            d2 = dx * dx + dy * dy
+            if d2 >= reach * reach:
+                continue
+            if d2 == 0:
+                push_x[j] += reach // 2  # j > i: the larger slot goes towards +x
+                push_x[i] -= reach // 2
+                continue
+            d = math.isqrt(d2)
+            half = (reach - d) // 2
+            hx = int(math.copysign(abs(dx) * half // d, dx))
+            hy = int(math.copysign(abs(dy) * half // d, dy))
+            push_x[i], push_y[i] = push_x[i] + hx, push_y[i] + hy
+            push_x[j], push_y[j] = push_x[j] - hx, push_y[j] - hy
+    return push_x, push_y
+
+
+def crowd(count=80, spread=400000, seed=7):
+    """Enemies scattered around the arena centre (overlaps across cell borders), one
+    coincident pair, kinds alternating."""
+    rnd = random.Random(seed)
+    enemies = [(k % 2, CX + rnd.randrange(-spread, spread), CY + rnd.randrange(-spread, spread),
+                1000000) for k in range(count)]
+    enemies.append((0, enemies[0][1], enemies[0][2], 1000000))
+    return arena(enemies, skill=(0,) * 8, kinds=MOVING_KINDS)
+
+
+def one_pass(config, world):
+    n = len(world.enemies)
+    push_x, push_y = [0] * n, [0] * n
+    sim.separate(config, world, push_x, push_y)
+    return push_x, push_y
+
+
+class SimSeparationReferenceTests(unittest.TestCase):
+    def test_half_overlap_push(self):
+        config, world = arena([(0, CX, CY, 1), (0, CX + 30000, CY, 1)], skill=(0,) * 8,
+                              kinds=MOVING_KINDS)
+        # reach 48000, distance 30000: each goes half of the 18000 overlap.
+        self.assertEqual(one_pass(config, world), ([-9000, 9000], [0, 0]))
+
+    def test_touching_pair_is_not_pushed(self):
+        config, world = arena([(0, CX, CY, 1), (1, CX, CY + 45600, 1)], skill=(0,) * 8,
+                              kinds=MOVING_KINDS)
+        self.assertEqual(one_pass(config, world), ([0, 0], [0, 0]))
+
+    def test_coincident_centres_push_the_larger_slot_towards_plus_x(self):
+        config, world = arena([(0, CX, CY, 1), (0, CX + 900000, CY, 1), (1, CX, CY, 1)],
+                              skill=(0,) * 8, kinds=MOVING_KINDS)
+        # reach 45600: slot 2 (larger) +22800, slot 0 -22800; slot 1 is far away.
+        self.assertEqual(one_pass(config, world), ([-22800, 0, 22800], [0, 0, 0]))
+
+    def test_every_pair_once_matches_all_pairs_reference(self):
+        for seed in (7, 8, 9):
+            config, world = crowd(seed=seed)
+            self.assertEqual(one_pass(config, world), brute_push(config, world), seed)
+            self.assertEqual(world.sep_cursor, 0)
+
+    def test_budget_splits_the_pass_and_resumes_at_the_cursor(self):
+        config, world = crowd()
+        expected = brute_push(config, world)
+        original = sim.SEP_MAX_CHECKS
+        self.addCleanup(setattr, sim, "SEP_MAX_CHECKS", original)
+        sim.SEP_MAX_CHECKS = 40
+        total_x, total_y = [0] * len(world.enemies), [0] * len(world.enemies)
+        cursors = []
+        while True:
+            push_x, push_y = one_pass(config, world)
+            total_x = [a + b for a, b in zip(total_x, push_x)]
+            total_y = [a + b for a, b in zip(total_y, push_y)]
+            cursors.append(world.sep_cursor)
+            if world.sep_cursor == 0:
+                break
+            self.assertLess(len(cursors), 1000)
+        self.assertGreater(len(cursors), 2, "the budget must split the pass")
+        self.assertEqual(cursors[:-1], sorted(cursors[:-1]), "the cursor only moves forward")
+        self.assertEqual((total_x, total_y), expected, "split passes add up to one full pass")
+
+    def test_move_never_exceeds_the_kind_speed(self):
+        config, world = crowd()
+        before = [(e[sim.E_X], e[sim.E_Y]) for e in world.enemies]
+        sim.chase_and_separate(config, world)
+        capped = 0
+        for (x, y), e in zip(before, world.enemies):
+            speed = config.kinds[e[sim.E_KIND]][0]
+            dx, dy = e[sim.E_X] - x, e[sim.E_Y] - y
+            self.assertLessEqual(dx * dx + dy * dy, speed * speed)
+            capped += dx * dx + dy * dy > (speed - 2) * (speed - 2)
+        self.assertGreater(capped, 0)
+
+    def test_touching_enemy_stays_unless_pushed(self):
+        config, world = arena([(0, CX + 48000, CY, 1)], skill=(0,) * 8, kinds=MOVING_KINDS)
+        sim.chase_and_separate(config, world)
+        self.assertEqual(world.enemies[0][sim.E_X:sim.E_Y + 1], [CX + 48000, CY])
+        place(world, 0, CX + 58000, CY, 1)
+        sim.chase_and_separate(config, world)
+        # Push -19000 along x, capped at the speed 3264; no chase towards the hero.
+        self.assertEqual(world.enemies[0][sim.E_X:sim.E_Y + 1], [CX + 48000 - 3264, CY])
+
+    def test_fast_helpers_equal_fx(self):
+        fx, rnd = sim.fx, random.Random(5)
+        edges = [0, 1, -1, 2, (1 << 15) - 1, 1 << 15, (1 << 15) + 1, (1 << 30) - 1, 1 << 30,
+                 (1 << 30) + 1, fx.NORM_MAX, fx.NORM_MAX + 1, fx.NORM_UPSCALE_BELOW - 1,
+                 fx.NORM_UPSCALE_BELOW, 1 << 40, (1 << 62) - 1]
+        values = edges + [-v for v in edges] + [rnd.randrange(-(1 << 44), 1 << 44)
+                                                for _ in range(300)]
+        for a in values:
+            for q in values[:40]:
+                self.assertEqual(sim.mul_q14(a, q), fx.mul_q14(a, q), (a, q))
+                self.assertEqual(sim.normalize_q14(a, q), fx.normalize_q14(a, q), (a, q))
+        for n in [abs(v) for v in values] + [fx.PRODUCT_LIMIT, fx.PRODUCT_LIMIT + 1]:
+            self.assertEqual(sim.isqrt(n), fx.isqrt(n), n)
 
 
 if __name__ == "__main__":
