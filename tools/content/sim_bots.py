@@ -50,12 +50,14 @@ MAX_FILE_BYTES = 150 * 1024
 
 
 class Observation:
-    """What a bot may see: hero position, enemies (x, y, radius) in slot order, arena."""
+    """What a bot may see: hero position, enemies (x, y, radius) and gems (x, y) in slot order,
+    arena. The bots of policy version 1 do not read the gems."""
 
     def __init__(self, config, world):
         self.hero_x, self.hero_y = world.player_x, world.player_y
         self.enemies = [(e[sim.E_X], e[sim.E_Y], config.kinds[e[sim.E_KIND]][1])
                         for e in world.enemies if e[sim.E_UID] != 0]
+        self.gems = [(g[sim.G_X], g[sim.G_Y]) for g in world.gems if g[sim.G_UID] != 0]
         self.min_x, self.min_y, self.max_x, self.max_y = (
             config.min_x, config.min_y, config.max_x, config.max_y)
 
@@ -112,11 +114,12 @@ DECIDE_EVERY = {"idle": 1, "circle": 1, "kiter": 6}
 
 def p0_config(seed: str):
     """The P0 placeholder run (equal to P0Tuning in the game)."""
-    return sim.Config(sim.BASE, sim.P0_VALUES, sim.W0_KINDS, seed, sim.P0_SKILL)
+    return sim.Config(sim.BASE, sim.P0_VALUES, sim.W0_KINDS, seed, sim.P0_SKILL, sim.P0_XP)
 
 
-def play(name: str, config, max_ticks: int = MAX_TICKS):
-    """Runs bot `name` until the hero dies or `max_ticks` ticks; returns (world, log)."""
+def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = None):
+    """Runs bot `name` until the hero dies or `max_ticks` ticks; returns (world, log). With
+    `stats` it records the peak number of gems on the ground."""
     policy, every = POLICIES[name], DECIDE_EVERY[name]
     world, log = sim.World(config), sim.CommandLog()
     held, sequence = (0, 0), 0
@@ -128,6 +131,8 @@ def play(name: str, config, max_ticks: int = MAX_TICKS):
                 sequence += 1
                 held = move
         sim.step(config, world, log)
+        if stats is not None:
+            stats["gems_ground_peak"] = max(stats.get("gems_ground_peak", 0), world.gems_alive)
     return world, log
 
 
@@ -151,6 +156,9 @@ def _exact(name: str) -> dict:
             "enemies": {"values": [str(v) for v in config.enemy_values()],
                         "kinds": [str(v) for v in config.raw_kinds], "seed": config.seed},
             "skill": [str(v) for v in config.skill_values()],
+            "xp": {"values": [str(v) for v in config.xp_values()],
+                   "kind_xp": [str(v) for v in config.kind_xp],
+                   "costs": [str(v) for v in config.xp_costs]},
             "commands": [[str(v) for v in c] for c in log.records], "ticks": world.tick,
             "log_digest": log.digest(), "death_tick": world.tick if world.hero_dead else -1,
             "kills": world.kills, "command_count": len(log.records),
@@ -161,12 +169,17 @@ def survey() -> list[dict]:
     rows = []
     for name in POLICIES:
         for seed in SURVEY_SEEDS:
-            world, log = play(name, p0_config(seed))
+            stats: dict = {}
+            world, log = play(name, p0_config(seed), stats=stats)
             assert len(log.records) <= MAX_COMMANDS, (name, seed, len(log.records))
             rows.append({"id": run_id(name, seed), "bot_policy": name, "seed": seed,
                          "death_tick": world.tick if world.hero_dead else -1,
                          "kills": world.kills, "command_count": len(log.records),
-                         "log_digest": log.digest(), "final_digest": world.digest()})
+                         "log_digest": log.digest(), "final_digest": world.digest(),
+                         "xp_dropped": world.xp_dropped_total,
+                         "xp_collected": world.xp_collected_total, "level": world.level,
+                         "gems_ground_end": world.gems_alive,
+                         "gems_ground_peak": stats.get("gems_ground_peak", 0)})
     return rows
 
 
@@ -175,7 +188,7 @@ def build_runs() -> dict:
             "sim_schema_version": sim_schema_version(), "bot_policy_version": BOT_POLICY_VERSION,
             "policy_id": fx.POLICY_ID, "rng_policy_id": sim.hip_rng.POLICY_ID,
             "generator": "tools/content/sim_bots.py", "max_ticks": MAX_TICKS,
-            "note": "P0 placeholder tuning (ADR-009 section 3); bots are test instruments",
+            "note": "P0 placeholder tuning (ADR-009 section 3, ADR-010); bots are test instruments",
             "traces": [_exact(name) for name in POLICIES], "survey": survey()}
 
 

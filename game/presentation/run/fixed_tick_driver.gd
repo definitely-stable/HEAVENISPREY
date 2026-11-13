@@ -12,10 +12,13 @@ var config: SimConfig
 var world: WorldState
 var previous: WorldState
 var commands: CommandLog = CommandLog.new()
-## Presentation events since the last take_events(), in tick order: enemies hit (uids) and
-## enemies killed ([position px, kind]). Read-only views of the simulation, never inputs.
+## Presentation events since the last take_events(), in tick order: enemies hit (uids),
+## enemies killed ([position px, kind]), gems collected ([position px, value]) and levels
+## gained. Read-only views of the simulation, never inputs.
 var hit_uids: PackedInt64Array = PackedInt64Array()
 var killed: Array[Array] = []
+var collected: Array[Array] = []
+var levels_gained: int = 0
 
 var _accumulator: float = 0.0
 var _sequence: int = 0
@@ -82,11 +85,21 @@ func projectile_position_px(slot: int) -> Vector2:
 	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
 
 
-## Returns and clears the collected events: {"hit": PackedInt64Array, "killed": Array}.
+## Gem position in pixels (gems do not move).
+func gem_position_px(slot: int) -> Vector2:
+	return Vector2(world.gem_x[slot], world.gem_y[slot]) / float(Fx.FX_ONE)
+
+
+## Returns and clears the collected events: {"hit": PackedInt64Array, "killed": Array,
+## "collected": Array, "levels": int}.
 func take_events() -> Dictionary:
-	var events: Dictionary = {"hit": hit_uids, "killed": killed}
+	var events: Dictionary = {
+		"hit": hit_uids, "killed": killed, "collected": collected, "levels": levels_gained,
+	}
 	hit_uids = PackedInt64Array()
 	killed = []
+	collected = []
+	levels_gained = 0
 	return events
 
 
@@ -100,6 +113,14 @@ func _collect_events() -> void:
 			killed.append([at, previous.enemy_kind[slot]])
 		elif world.enemy_hp[slot] < previous.enemy_hp[slot]:
 			hit_uids.append(uid)
+	# A gem collected this tick: its uid is gone from the slot (a gem dropped and collected in
+	# the same tick never shows up on the ground, so it is not animated).
+	for slot: int in previous.gem_slots():
+		var gem: int = previous.gem_uid[slot]
+		if gem != 0 and world.gem_uid[slot] != gem:
+			var at: Vector2 = Vector2(previous.gem_x[slot], previous.gem_y[slot]) / float(Fx.FX_ONE)
+			collected.append([at, previous.gem_value[slot]])
+	levels_gained += world.level - previous.level
 
 
 func _record(move: Vector2i) -> void:

@@ -63,8 +63,8 @@ class SimBotExactTests(unittest.TestCase):
         config = bots.p0_config("101")
         world, _ = bots.play("idle", config, 400)
         seen = bots.Observation(config, world)
-        self.assertEqual(set(vars(seen)), {"hero_x", "hero_y", "enemies", "min_x", "min_y",
-                                           "max_x", "max_y"})
+        self.assertEqual(set(vars(seen)), {"hero_x", "hero_y", "enemies", "gems", "min_x",
+                                           "min_y", "max_x", "max_y"})
         self.assertEqual(len(seen.enemies), world.enemy_alive)
         kiter_move = bots.kiter(seen, world.tick)
         world.rng_cursor, world.spawn_acc, world.skill_acc = 0, 0, 0

@@ -10,7 +10,8 @@ extends RefCounted
 ## the hero (first in corner order on ties).
 ## Chase and separation: SeparationSystem.
 ## Contact: per live enemy in slot order the cooldown counts down; a touching enemy with a
-## ready cooldown hits the hero and restarts it. Deaths: dead enemies free their slot.
+## ready cooldown hits the hero and restarts it. Deaths: per dead enemy in slot order its XP
+## gem drops (XpSystem.drop), then its slot is freed and the kill counted.
 
 const SPAWN_ATTEMPTS: int = 4
 const RNG_STREAM: String = "enemy"
@@ -99,10 +100,13 @@ static func contact(config: SimConfig, world: WorldState) -> void:
 
 
 ## Death phase, enemies: every occupied slot with HP 0 is freed (all fields 0), in slot order.
-static func clear_dead(world: WorldState) -> void:
+static func clear_dead(config: SimConfig, world: WorldState) -> void:
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] == 0 or world.enemy_hp[slot] > 0:
 			continue
+		if config.has_xp() and config.kind_xp[world.enemy_kind[slot]] > 0:
+			var value: int = config.kind_xp[world.enemy_kind[slot]]
+			XpSystem.drop(config, world, world.enemy_x[slot], world.enemy_y[slot], value)
 		world.enemy_uid[slot] = 0
 		world.enemy_kind[slot] = 0
 		world.enemy_x[slot] = 0

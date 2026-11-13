@@ -23,9 +23,10 @@ static func _ints(values: Array) -> PackedInt64Array:
 ## Config of a bot trace (same layout as sim_core_vectors.json traces).
 static func config_of(row: Dictionary) -> SimConfig:
 	var spec: Dictionary = row["enemies"]
+	var xp: Dictionary = row["xp"]
 	return SimConfig.create(_ints(row["config"])).with_enemies(
 		_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"])
-	).with_skill(_ints(row["skill"]))
+	).with_skill(_ints(row["skill"])).with_xp(_ints(xp["values"]), _ints(xp["kind_xp"]), _ints(xp["costs"]))
 
 
 static func log_of(row: Dictionary) -> CommandLog:

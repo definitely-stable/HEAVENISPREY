@@ -227,3 +227,25 @@ func test_bot_log_replays_through_the_scene() -> void:
 	assert_eq(view.driver.world.tick, int(row["death_tick"]), "same death tick")
 	assert_eq(view.driver.world.digest(), str((checkpoints.back() as Dictionary)["digest"]), "same state")
 	assert_eq(view.driver.commands.digest(), str(row["log_digest"]), "input recorded as the same log")
+
+
+func test_scene_reports_gem_pickups_and_levels() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("101")
+	var driver: FixedTickDriver = view.driver
+	var picked: int = 0
+	var levels: int = 0
+	while not driver.world.is_over() and driver.world.tick < 3000:
+		var east: bool = floori(driver.world.tick / 240.0) % 2 == 0
+		driver.advance(TICK, Vector2i(1 if east else -1, 0))
+		var events: Dictionary = driver.take_events()
+		for gem: Array in events["collected"]:
+			picked += int(gem[1])
+		levels += int(events["levels"])
+	assert_gt(picked, 0, "pickups of gems seen on the ground are reported")
+	assert_lte(picked, driver.world.xp_collected_total, "never more than was credited")
+	assert_gt(driver.world.level, 1)
+	assert_eq(levels, driver.world.level - 1, "every level gained is reported once")

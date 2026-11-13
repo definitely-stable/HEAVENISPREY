@@ -6,6 +6,7 @@ extends RefCounted
 ## Enemies (P0-01E, ADR-009 section 3): kinds, accumulator spawn with a linear rate ramp,
 ## alive cap, minimum spawn distance, hero HP and the run seed of the `enemy` RNG stream.
 ## Hero skill (ADR-009 section 1): accumulator cooldown, acquire range, projectile.
+## XP (ADR-010): pickup radius, gem slot cap, XP per kind (kind order), level costs.
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -20,6 +21,9 @@ const KIND_WEIGHT: int = 5
 const MAX_ENEMIES_LIMIT: int = 4096
 const MAX_PROJECTILES_LIMIT: int = 256
 const MAX_PIERCE: int = 7
+const MAX_GEMS_LIMIT: int = 4096
+const MAX_XP_COSTS: int = 64
+const MAX_KIND_XP: int = 1000000
 ## Normal speed of an accumulator (ADR-008: rate_fx 1000 = x1).
 const RATE_ONE: int = 1000
 ## hip-rng-v1 below(n) accepts n <= 2^32.
@@ -52,6 +56,13 @@ var projectile_radius_su: int = 0
 var projectile_ttl_ticks: int = 0
 var projectile_pierce: int = 0
 var max_projectiles: int = 0
+
+var pickup_radius_su: int = 0
+var max_gems: int = 0
+## XP value of each kind's drop, in kind order (0 = drops nothing).
+var kind_xp: PackedInt64Array = PackedInt64Array()
+## Incremental XP cost of level L -> L + 1 from level 1; the last cost repeats.
+var xp_costs: PackedInt64Array = PackedInt64Array()
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -99,6 +110,17 @@ func with_skill(p_values: PackedInt64Array) -> SimConfig:
 	return self
 
 
+## Enables XP: `p_values` = [pickup_radius_su, max_gems]; `p_kind_xp` one value per kind;
+## `p_costs` incremental level costs.
+func with_xp(p_values: PackedInt64Array, p_kind_xp: PackedInt64Array, p_costs: PackedInt64Array) -> SimConfig:
+	if p_values.size() == 2:
+		pickup_radius_su = p_values[0]
+		max_gems = p_values[1]
+	kind_xp = p_kind_xp.duplicate()
+	xp_costs = p_costs.duplicate()
+	return self
+
+
 func kind_count() -> int:
 	return Fx.floor_div(kinds.size(), KIND_STRIDE)
 
@@ -120,6 +142,16 @@ func has_enemies() -> bool:
 
 func has_skill() -> bool:
 	return skill_damage_mhp > 0
+
+
+
+func has_xp() -> bool:
+	return not xp_costs.is_empty()
+
+
+## XP to go from `level` to `level + 1`; the last listed cost repeats.
+func xp_cost(level: int) -> int:
+	return xp_costs[mini(level - 1, xp_costs.size() - 1)]
 
 
 ## Ledger cells per projectile: one per target it may hit.
@@ -144,6 +176,9 @@ func to_ints() -> PackedInt64Array:
 		max_projectiles,
 	])
 	out.append_array(kinds)
+	out.append_array(PackedInt64Array([pickup_radius_su, max_gems]))
+	out.append_array(kind_xp)
+	out.append_array(xp_costs)
 	return out
 
 
@@ -169,6 +204,8 @@ func is_valid() -> bool:
 	if has_enemies() and not _enemies_valid():
 		return false
 	if has_skill() and not _skill_valid():
+		return false
+	if (has_xp() or not kind_xp.is_empty()) and not _xp_valid():
 		return false
 	return true
 
@@ -220,4 +257,26 @@ func _skill_valid() -> bool:
 		and projectile_pierce <= MAX_PIERCE
 		and max_projectiles > 0
 		and max_projectiles <= MAX_PROJECTILES_LIMIT
+	)
+
+
+## A gem falls where its enemy died: one dropped by an enemy touching the hero must be in
+## reach, so the pickup radius is at least the hero radius minus the smallest kind radius.
+func _xp_valid() -> bool:
+	if not has_enemies() or kind_xp.size() != kind_count():
+		return false
+	if xp_costs.is_empty() or xp_costs.size() > MAX_XP_COSTS:
+		return false
+	for cost: int in xp_costs:
+		if cost <= 0:
+			return false
+	var min_radius: int = Fx.COORD_MAX
+	for kind: int in kind_count():
+		min_radius = mini(min_radius, kind_value(kind, KIND_RADIUS))
+		if kind_xp[kind] < 0 or kind_xp[kind] > MAX_KIND_XP:
+			return false
+	return (
+		pickup_radius_su >= maxi(0, player_radius_su - min_radius)
+		and max_gems > 0
+		and max_gems <= MAX_GEMS_LIMIT
 	)
