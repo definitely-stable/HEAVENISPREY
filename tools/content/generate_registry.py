@@ -33,6 +33,7 @@ import hashlib
 import json
 import math
 import subprocess
+from decimal import Decimal
 import sys
 from pathlib import Path
 
@@ -64,6 +65,9 @@ EXCLUDED_SOURCES = {
 GENERATOR = "tools/content/generate_registry.py"
 # Godot parses every JSON number as a double: integers beyond this lose exactness.
 MAX_SAFE_INTEGER = 2**53 - 1
+# hip-fx-v1 (ADR-008): catalog fractions must convert exactly to x1000 integers.
+MAX_FRACTION_DECIMALS = 3
+MAX_FRACTION_ABS = 10**6
 
 
 class RegistryError(ValueError):
@@ -112,6 +116,12 @@ def check_numbers(value, where: str) -> None:
     elif type(value) is float:
         if not math.isfinite(value):
             raise RegistryError("%s: non-finite number" % where)
+        # ADR-008 section d: fractions become exact fx (x1000) integers at load time.
+        if abs(value) > MAX_FRACTION_ABS:
+            raise RegistryError("%s: fraction beyond +/-10^6: %r" % (where, value))
+        if Decimal(repr(value)).as_tuple().exponent < -MAX_FRACTION_DECIMALS:
+            raise RegistryError("%s: fraction with more than %d decimals: %r"
+                                % (where, MAX_FRACTION_DECIMALS, value))
     elif type(value) is dict:
         for key, item in value.items():
             check_numbers(item, where + "." + key)
