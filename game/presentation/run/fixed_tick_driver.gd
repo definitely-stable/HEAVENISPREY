@@ -53,6 +53,15 @@ func hero_position_px() -> Vector2:
 	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
 
 
+## Interpolated enemy position in pixels; an enemy spawned this tick is drawn where it is.
+func enemy_position_px(slot: int) -> Vector2:
+	var to: Vector2 = Vector2(world.enemy_x[slot], world.enemy_y[slot])
+	if slot >= previous.enemy_count():
+		return to / float(Fx.FX_ONE)
+	var from: Vector2 = Vector2(previous.enemy_x[slot], previous.enemy_y[slot])
+	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
+
+
 func _record(move: Vector2i) -> void:
 	if move == _held:
 		return

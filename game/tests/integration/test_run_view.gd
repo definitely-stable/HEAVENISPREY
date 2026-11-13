@@ -21,6 +21,8 @@ func test_input_actions_are_bound() -> void:
 	for action: String in ["move_left", "move_right", "move_up", "move_down"]:
 		assert_true(InputMap.has_action(action), action)
 		assert_eq(InputMap.action_get_events(action).size(), 4, action)
+	assert_true(InputMap.has_action("restart"))
+	assert_eq(InputMap.action_get_events("restart").size(), 2)
 
 
 func test_driver_runs_sixty_ticks_per_second() -> void:
@@ -103,7 +105,67 @@ func test_hero_cannot_leave_arena() -> void:
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
+	view.driver = FixedTickDriver.create(RunView.placeholder_config())
 	for _i: int in 600:
 		view.advance_frame(TICK, Vector2i(-1, -1))
 	assert_eq(view.driver.world.player_x, 24000)
 	assert_eq(view.driver.world.player_y, 24000)
+
+
+func test_tuning_reads_w0_roster_from_content() -> void:
+	var tuning: P0Tuning = P0Tuning.new()
+	var config: SimConfig = tuning.run_config(ContentRegistry.load_dir(), "20261113")
+	assert_not_null(config, tuning.error)
+	assert_true(config.is_valid())
+	assert_eq(tuning.enemy_ids, PackedStringArray(["enemy.yin_corpse", "enemy.blood_wolf"]))
+	# Catalog multipliers x placeholder bases; equal to the W0_KINDS trace input of sim_core.py.
+	assert_eq(config.kinds, PackedInt64Array([
+		3264, 24000, 12800, 6500, 36, 8,
+		6144, 21600, 7800, 7600, 42, 2,
+	]))
+	assert_eq(config.hero_hp_mhp, 100000)
+	assert_eq(config.spawn_min_distance_su, 384000)
+
+
+func test_tuning_fails_closed_without_content() -> void:
+	var tuning: P0Tuning = P0Tuning.new()
+	assert_null(tuning.run_config(ContentRegistry.load_dir("res://does_not_exist"), "1"))
+	assert_ne(tuning.error, "")
+	assert_null(P0Tuning.new().run_config(ContentRegistry.load_dir(), "not-a-seed"))
+
+
+func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("20261113")
+	for _i: int in 50:
+		view.advance_frame(TICK, Vector2i.ZERO)
+	assert_gt(view.driver.world.enemy_count(), 0, "first enemy after the spawn period")
+	var guard: int = 0
+	while not view.driver.world.is_over() and guard < 3000:
+		view.advance_frame(TICK, Vector2i.ZERO)
+		guard += 1
+	assert_true(view.driver.world.is_over(), "a hero that never moves is caught")
+	assert_eq(view.driver.world.hero_hp, 0)
+
+
+func test_finished_run_restarts_after_delay() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("20261113")
+	var guard: int = 0
+	while not view.driver.world.is_over() and guard < 3000:
+		view.advance_frame(TICK, Vector2i.ZERO)
+		guard += 1
+	var runs: int = view.runs_started
+	var finished: FixedTickDriver = view.driver
+	view.advance_frame(RunView.RESTART_DELAY * 0.5, Vector2i.ZERO)
+	assert_eq(view.driver, finished, "the result stays on screen first")
+	view.advance_frame(RunView.RESTART_DELAY, Vector2i.ZERO)
+	assert_eq(view.runs_started, runs + 1)
+	assert_false(view.driver.world.is_over())
+	assert_eq(view.driver.world.tick, 0)

@@ -15,6 +15,8 @@ BASE = sim.BASE
 
 
 def run(config, commands, ticks):
+    if not isinstance(config, sim.Config):
+        config = sim.Config(config)
     log, world = sim.CommandLog(), sim.World(config)
     for command in commands:
         assert log.append(command, 0) == sim.OK
@@ -82,7 +84,7 @@ class SimCoreReferenceTests(unittest.TestCase):
         self.assertEqual(len(log.records), 1)
 
     def test_digest_is_sha256_of_int64_le(self):
-        world = sim.World(BASE)
+        world = sim.World(sim.Config(BASE))
         raw = b"".join(v.to_bytes(8, "little", signed=True) for v in world.ints())
         self.assertEqual(world.digest(), hashlib.sha256(raw).hexdigest())
         self.assertEqual(sim.CommandLog().digest(), hashlib.sha256(b"").hexdigest())
@@ -92,6 +94,87 @@ class SimCoreReferenceTests(unittest.TestCase):
         self.assertFalse(sim.config_valid([1, 0, 0, 0, 10, 10, 5, 5]))
         self.assertFalse(sim.config_valid([1, 2, 0, 0, 10, 10, 0, 5]))
         self.assertFalse(sim.config_valid([1, 2, 0, 0, 1 << 30, 10, 5, 5]))
+
+
+ENEMY_CONFIG = sim.Config(BASE, sim.W0_VALUES, sim.W0_KINDS, sim.SEED)
+# Same kinds frozen in place and harmless: spawn points stay observable.
+STILL_KINDS = [0, 24000, 12800, 0, 36, 8, 0, 21600, 7800, 0, 42, 2]
+
+
+class SimEnemyReferenceTests(unittest.TestCase):
+    def test_first_spawn_waits_one_period(self):
+        world = run(ENEMY_CONFIG, [], sim.W0_VALUES[1])
+        self.assertEqual(len(world.enemies), 0)
+        world = run(ENEMY_CONFIG, [], sim.W0_VALUES[1] + 1)
+        self.assertEqual(len(world.enemies), 1)
+
+    def test_spawns_respect_min_distance_and_arena(self):
+        config = sim.Config(BASE, [500000000, 5, 200, 384000], STILL_KINDS, "3")
+        log, world = sim.CommandLog(), sim.World(config)
+        seen = 0
+        for _ in range(1000):
+            hero = (world.player_x, world.player_y)
+            sim.step(config, world, log)
+            if len(world.enemies) > seen:
+                kind, x, y = world.enemies[-1][:3]
+                r = config.kinds[kind][1]
+                self.assertGreaterEqual((x - hero[0]) ** 2 + (y - hero[1]) ** 2, 384000 ** 2)
+                self.assertTrue(r <= x <= BASE[4] - r and r <= y <= BASE[5] - r)
+                seen = len(world.enemies)
+        self.assertEqual(seen, 199, "spawns at ticks 5, 10, ..., 995")
+
+    def test_spawn_weights_follow_roster(self):
+        config = sim.Config(BASE, [500000000, 1, 1000, 0], STILL_KINDS, "11")
+        world = run(config, [], 1001)
+        wolves = sum(1 for enemy in world.enemies if enemy[0] == 1)
+        self.assertEqual(len(world.enemies), 1000)
+        self.assertAlmostEqual(wolves / 1000, 0.2, delta=0.05)
+
+    def test_corner_fallback_when_no_point_is_far_enough(self):
+        config = sim.Config([4800, 24000, 0, 0, 300000, 300000, 150000, 150000],
+                            [500000000, 1, 4, 1000000], STILL_KINDS, "99")
+        world = run(config, [], 3)
+        for kind, x, y, _, _ in world.enemies:
+            r = config.kinds[kind][1]
+            self.assertIn((x, y), [(r, r), (300000 - r, r), (300000 - r, 300000 - r), (r, 300000 - r)])
+
+    def test_enemies_close_in_and_hit_on_interval(self):
+        config = sim.Config(BASE, [100000, 1, 1, 0], [6000, 24000, 1000, 1000, 30, 1], "1")
+        log, world = sim.CommandLog(), sim.World(config)
+        hits = []
+        for _ in range(2000):
+            before = world.hero_hp
+            sim.step(config, world, log)
+            if world.hero_hp < before:
+                hits.append(world.tick)
+        self.assertGreaterEqual(len(hits), 3)
+        self.assertEqual({b - a for a, b in zip(hits, hits[1:])}, {30})
+
+    def test_death_freezes_state(self):
+        config = sim.Config(BASE, [1000, 1, 2, 0], [8000, 24000, 1000, 600, 5, 1], "2")
+        log, world = sim.CommandLog(), sim.World(config)
+        while not world.hero_dead:
+            sim.step(config, world, log)
+        self.assertEqual(world.hero_hp, 0)
+        frozen = world.ints()
+        for _ in range(50):
+            sim.step(config, world, log)
+        self.assertEqual(world.ints(), frozen)
+
+    def test_enemy_digest_covers_rng_cursor(self):
+        world = run(ENEMY_CONFIG, [], 200)
+        self.assertGreater(world.rng_cursor, 0)
+        self.assertEqual(world.ints()[9], world.rng_cursor)
+
+    def test_invalid_enemy_configs(self):
+        self.assertTrue(ENEMY_CONFIG.valid())
+        bad = [sim.Config(BASE, sim.W0_VALUES, sim.W0_KINDS, "-1"),
+               sim.Config(BASE, [0, 45, 48, 0], sim.W0_KINDS, "1"),
+               sim.Config(BASE, sim.W0_VALUES, [3264, 24000, 12800, 6500, 36, 0], "1"),
+               sim.Config(BASE, [1, 45, 0, 0], sim.W0_KINDS, "1"),
+               sim.Config(BASE, sim.W0_VALUES, [3264, 480000, 12800, 6500, 36, 1], "1")]
+        for config in bad:
+            self.assertFalse(config.valid())
 
 
 if __name__ == "__main__":

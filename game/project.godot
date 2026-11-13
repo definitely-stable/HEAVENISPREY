@@ -1,5 +1,5 @@
 ; HEAVENISPREY runtime project (P0-00 bootstrap, ADR-007).
-; P0-01c: placeholder run scene (hero movement in an empty arena); no production assets.
+; P0-01: placeholder run scene (hero movement, w0 enemies, contact damage); no production assets.
 
 config_version=5
 
@@ -43,6 +43,10 @@ move_up={
 move_down={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"device":-1,"physical_keycode":83), Object(InputEventKey,"device":-1,"physical_keycode":4194322), Object(InputEventJoypadButton,"device":-1,"button_index":12), Object(InputEventJoypadMotion,"device":-1,"axis":1,"axis_value":1.0)]
+}
+restart={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"device":-1,"physical_keycode":82), Object(InputEventJoypadButton,"device":-1,"button_index":6)]
 }
 
 [rendering]

@@ -2,11 +2,16 @@ class_name SimKernel
 extends RefCounted
 ## Fixed 60 Hz simulation step (s04, ADR-008). Exact port of tools/content/sim_core.py.
 ##
-## Phase order inside one tick (P0-01b subset of s04):
-##   0. apply every logged command whose tick <= world.tick, in log order (last one wins);
-##   1. move the hero by the held direction (Q14 unit vector x speed, symmetric rounding);
-##   2. clamp the hero inside the arena rectangle (radius-aware);
-##   3. advance the tick.
+## Phase order inside one tick (P0-01 subset of s04):
+##   0. a finished run (hero dead) does not step;
+##   1. apply every logged command whose tick <= world.tick, in log order (last one wins);
+##   2. move the hero by the held direction (Q14 unit vector x speed, symmetric rounding)
+##      and clamp inside the arena rectangle (radius-aware);
+##   3. spawn at most one enemy (EnemySystem.spawn);
+##   4. move enemies toward the hero (EnemySystem.chase);
+##   5. resolve contact hits in slot order (EnemySystem.contact);
+##   6. hero HP <= 0 -> HP 0, run over;
+##   7. advance the tick.
 ## No float, no Input, no delta: the same log and config give the same state everywhere.
 
 const AXIS_Q14: int = 16384
@@ -21,6 +26,8 @@ static func direction_q14(move_x: int, move_y: int) -> PackedInt64Array:
 
 
 static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> void:
+	if world.is_over():
+		return
 	while world.command_cursor < commands.size() and commands.tick_at(world.command_cursor) <= world.tick:
 		world.move_x = commands.move_x_at(world.command_cursor)
 		world.move_y = commands.move_y_at(world.command_cursor)
@@ -31,6 +38,13 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 	var next_y: int = world.player_y + Fx.mul_q14(config.speed_su_per_tick, direction[1])
 	world.player_x = clampi(next_x, config.arena_min_x + r, config.arena_max_x - r)
 	world.player_y = clampi(next_y, config.arena_min_y + r, config.arena_max_y - r)
+	if config.has_enemies():
+		EnemySystem.spawn(config, world)
+		EnemySystem.chase(config, world)
+		EnemySystem.contact(config, world)
+		if world.hero_hp <= 0:
+			world.hero_hp = 0
+			world.hero_dead = 1
 	world.tick += 1
 
 

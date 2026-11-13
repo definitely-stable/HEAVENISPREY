@@ -17,7 +17,8 @@ extends RefCounted
 ## - `create` — rules validity only; rebuilds the snapshot of an ALREADY authorized run
 ##   (save restore, replay). Never use it to start a new run.
 
-const SIM_SCHEMA_VERSION: int = 1
+## 2 since P0-01E: the simulation changes combat state (ADR-008 section e).
+const SIM_SCHEMA_VERSION: int = 2
 
 var error: String:
 	get:
