@@ -117,3 +117,57 @@ func test_snapshot_requires_valid_registry() -> void:
 		"difficulty.standard", PackedStringArray(), "1")
 	assert_false(snapshot.is_valid())
 	assert_eq(snapshot.rules_hash, "")
+
+
+func _valid_snapshot() -> RunRulesSnapshot:
+	return RunRulesSnapshot.create(
+		ContentRegistry.load_dir(),
+		"class.sword",
+		"stage.jade_grove",
+		"difficulty.standard",
+		PackedStringArray(["mode.normal", "mode.training"]),
+		"42"
+	)
+
+
+func test_public_fields_are_read_only() -> void:
+	var writes: Array[Callable] = [
+		func(s: RunRulesSnapshot) -> void: s.class_id = "class.body",
+		func(s: RunRulesSnapshot) -> void: s.stage_id = "stage.mist_cliffs",
+		func(s: RunRulesSnapshot) -> void: s.difficulty_id = "difficulty.abyss",
+		func(s: RunRulesSnapshot) -> void: s.mode_ids = PackedStringArray(),
+		func(s: RunRulesSnapshot) -> void: s.run_seed = "43",
+		func(s: RunRulesSnapshot) -> void: s.content_digest = "0".repeat(64),
+		func(s: RunRulesSnapshot) -> void: s.rules_hash = "0".repeat(64),
+		func(s: RunRulesSnapshot) -> void: s.error = "",
+	]
+	for write: Callable in writes:
+		var snapshot: RunRulesSnapshot = _valid_snapshot()
+		assert_true(snapshot.is_valid(), snapshot.error)
+		var before: String = snapshot.class_id + snapshot.stage_id + snapshot.run_seed
+		write.call(snapshot)
+		assert_false(snapshot.is_valid(), "write must invalidate")
+		assert_eq(snapshot.rules_hash, "")
+		assert_string_contains(snapshot.error, "rules snapshot is immutable")
+		assert_eq(snapshot.class_id + snapshot.stage_id + snapshot.run_seed, before)
+
+
+func test_mode_ids_getter_returns_a_copy() -> void:
+	var snapshot: RunRulesSnapshot = _valid_snapshot()
+	var modes: PackedStringArray = snapshot.mode_ids
+	modes.append("mode.hyper")
+	modes[0] = "mode.hurry"
+	assert_eq(snapshot.mode_ids, PackedStringArray(["mode.normal", "mode.training"]))
+	assert_true(snapshot.is_valid(), snapshot.error)
+
+
+func test_backing_field_tampering_is_detected() -> void:
+	var snapshot: RunRulesSnapshot = _valid_snapshot()
+	var hash_before: String = snapshot.rules_hash
+	snapshot._class_id = "class.body"
+	assert_false(snapshot.is_valid(), "stored fields no longer hash to rules_hash")
+	assert_eq(snapshot.rules_hash, "")
+	snapshot._class_id = "class.sword"
+	snapshot._mode_ids.append("mode.hyper")
+	assert_false(snapshot.is_valid())
+	assert_ne(hash_before, "")

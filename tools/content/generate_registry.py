@@ -16,8 +16,9 @@ parser returns every number as float, so re-serialization cannot be byte-exact).
 
 Fail-closed: `scripts/validate_content.py` must pass first; duplicate JSON keys,
 NaN/Infinity, wrong schema_version, duplicate IDs (also across catalogs) abort.
-Localization (translations.csv, localization_context.json) is not content and
-never changes the digest.
+Only CONTENT_SOURCES enter the digest; localization, test fixtures, BOT-QA data
+and migration metadata (EXCLUDED_SOURCES) never change it, and an unclassified
+catalog aborts generation.
 
 Usage:
   python tools/content/generate_registry.py           # write artifacts
@@ -43,8 +44,23 @@ MANIFEST_FILE = "manifest.json"
 DIGEST_POLICY = "hip-canonical-json-v1"
 REGISTRY_SCHEMA_VERSION = 1
 SOURCE_SCHEMA_VERSION = 2
-# Localization-only sources: presentation, never part of the content digest.
-EXCLUDED_SOURCES = frozenset({"localization_context.json"})
+# Every `.work/config/v7/*.json` must be classified explicitly (fail-closed): a new
+# catalog is rejected until it is listed in exactly one of the two tables below.
+# Runtime content: enters registry.json and therefore content_digest and rules_hash.
+CONTENT_SOURCES = frozenset({
+    "bosses.json", "classes.json", "currencies.json", "difficulty_profiles.json",
+    "economy_milestones.json", "enemies.json", "enemy_attacks.json", "enemy_rosters.json",
+    "enemy_variants.json", "late_talents.json", "modes.json", "reward_contract.json",
+    "skills.json", "stages.json", "statuses.json", "talents.json", "unlock_rules.json",
+})
+# Not runtime content: presentation, test data and tooling metadata never change the
+# digest, so editing them cannot invalidate rules or saves (ADR-007 section b, 2026-11-13).
+EXCLUDED_SOURCES = {
+    "localization_context.json": "localization context (presentation)",
+    "bot_scenarios.json": "BOT-QA scenarios (test data)",
+    "profile_fixtures.json": "test profile fixtures",
+    "id_compatibility.json": "v6->v7 migration metadata (tooling)",
+}
 GENERATOR = "tools/content/generate_registry.py"
 # Godot parses every JSON number as a double: integers beyond this lose exactness.
 MAX_SAFE_INTEGER = 2**53 - 1
@@ -116,8 +132,14 @@ def definition_list_key(stem: str, obj: dict) -> str | None:
 
 
 def source_paths(source_dir: Path = SOURCE_DIR) -> list[Path]:
-    return sorted((p for p in source_dir.glob("*.json") if p.name not in EXCLUDED_SOURCES),
-                  key=lambda p: p.name)
+    """Content sources in byte order of the name; unclassified files abort the build."""
+    paths = sorted(source_dir.glob("*.json"), key=lambda p: p.name)
+    unclassified = [p.name for p in paths
+                    if p.name not in CONTENT_SOURCES and p.name not in EXCLUDED_SOURCES]
+    if unclassified:
+        raise RegistryError("unclassified source(s) %s: add to CONTENT_SOURCES or "
+                            "EXCLUDED_SOURCES in %s" % (", ".join(unclassified), GENERATOR))
+    return [p for p in paths if p.name in CONTENT_SOURCES]
 
 
 def build(source_dir: Path = SOURCE_DIR) -> tuple[bytes, bytes]:

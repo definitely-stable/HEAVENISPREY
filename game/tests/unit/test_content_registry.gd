@@ -115,3 +115,11 @@ func test_missing_manifest_is_rejected() -> void:
 	var registry: ContentRegistry = ContentRegistry.from_bytes(_bytes(ContentRegistry.REGISTRY_FILE), PackedByteArray())
 	assert_false(registry.is_valid())
 	assert_eq(registry.definition_count(), 0)
+
+
+func test_test_data_and_tooling_catalogs_are_not_content() -> void:
+	var registry: ContentRegistry = ContentRegistry.load_dir()
+	for stem: String in ["bot_scenarios", "profile_fixtures", "id_compatibility"]:
+		assert_false(registry.catalog_names().has(stem), stem + " must not enter content_digest")
+	assert_true(registry.catalog_names().has("unlock_rules"))
+	assert_true(registry.has_definition("unlock.hard"))

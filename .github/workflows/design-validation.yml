@@ -60,6 +60,7 @@ jobs:
         run: |
           python tools/content/hip_rng.py --check
           python tools/content/rules_identity.py --check
+          python tools/content/run_eligibility.py --check
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
