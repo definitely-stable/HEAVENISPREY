@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 6
+VECTORS_SCHEMA_VERSION = 7
 
 
 def _load(name: str, file: str):
@@ -174,11 +174,14 @@ class Config:
     damage_mhp, projectile_speed_su, projectile_radius_su, projectile_ttl_ticks,
     projectile_pierce, max_projectiles). choice_mode (ADR-010 section 6): 0 = level-ups never
     stop the run (the choices stay pending), 1 = Immediate (the run pauses for each choice).
+    run_ticks (ADR-011 section 1): the stage duration; the hero who is not dead after the tick
+    that reaches it wins. 0 = no time limit.
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
-                 skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0):
+                 skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0):
         self.choice_mode = choice_mode
+        self.run_ticks = run_ticks
         (self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
          self.start_x, self.start_y) = movement
         (self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
@@ -207,7 +210,7 @@ class Config:
         return [self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
-            + [self.choice_mode]
+            + [self.choice_mode, self.run_ticks]
 
     def ledger_size(self) -> int:
         """Ledger cells of every projectile slot: enough for the largest pierce an upgrade can
@@ -254,7 +257,7 @@ class Config:
             return False
         if self.choice_mode == 1 and not (self.has_xp() and self.has_skill()):
             return False
-        return True
+        return self.run_ticks >= 0
 
     def _enemies_valid(self) -> bool:
         if len(self.raw_kinds) % KIND_STRIDE != 0:
@@ -334,6 +337,7 @@ class World:
         self.command_cursor = 0
         self.hero_hp = config.hero_hp
         self.hero_dead = 0
+        self.won = 0
         self.spawn_acc = 0
         self.rng_cursor = 0
         self.next_enemy_uid = 1
@@ -361,6 +365,10 @@ class World:
         self.projectiles: list[list[int]] = []
         self.gems: list[list[int]] = []
 
+    def over(self) -> bool:
+        """Terminal: the hero died or the run was won (ADR-011 section 1)."""
+        return bool(self.hero_dead or self.won)
+
     def paused(self) -> bool:
         """The run waits for a CHOOSE: no tick is simulated while a hand is offered."""
         return bool(self.hand)
@@ -368,7 +376,7 @@ class World:
     def ints(self) -> list[int]:
         hand = self.hand + [NO_CARD] * (HAND_SIZE - len(self.hand))
         head = [self.tick, self.player_x, self.player_y, self.move_x, self.move_y,
-                self.command_cursor, self.hero_hp, self.hero_dead, self.spawn_acc,
+                self.command_cursor, self.hero_hp, self.hero_dead, self.won, self.spawn_acc,
                 self.rng_cursor, self.next_enemy_uid, self.enemy_alive, self.kills,
                 self.skill_acc, self.sep_cursor, self.next_gem_uid, self.gems_alive,
                 self.gems_merged, self.xp_dropped_total, self.xp_collected_total, self.xp_bank,
@@ -819,8 +827,10 @@ def step(config: Config, world: World, log: CommandLog) -> None:
     """One simulation step. A paused run (a hand is offered) only reads the log: records with
     tick <= world.tick in sequence order up to and including the first accepted CHOOSE (a MOVE
     only sets the held direction, a rejected CHOOSE is skipped); the tick does not advance and
-    nothing else changes. One step resolves at most one choice, live and in replay alike."""
-    if world.hero_dead:
+    nothing else changes. One step resolves at most one choice, live and in replay alike.
+    The tick that reaches config.run_ticks is terminal: victory beats defeat (ADR-009 section 4,
+    ADR-011 section 1), and neither pickup nor progression runs in it."""
+    if world.over():
         return
     records = log.records
     if world.paused():
@@ -849,17 +859,26 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         clear_dead(config, world)
         if config.has_skill():
             clear_expired(world)
-        if world.hero_hp <= 0:
-            world.hero_hp = 0
-            world.hero_dead = 1
-            world.choices_voided += world.pending_level_choices
-            world.pending_level_choices = 0
-        elif config.has_xp():
-            pickup(config, world)
-            progress(config, world)
-            if config.choice_mode == 1 and world.pending_level_choices > 0:
-                build_hand(config, world)
+    if config.run_ticks > 0 and world.tick + 1 == config.run_ticks:
+        world.won = 1
+        world.hero_hp = max(world.hero_hp, 0)
+        _void_choices(world)
+    elif config.has_enemies() and world.hero_hp <= 0:
+        world.hero_hp = 0
+        world.hero_dead = 1
+        _void_choices(world)
+    elif config.has_enemies() and config.has_xp():
+        pickup(config, world)
+        progress(config, world)
+        if config.choice_mode == 1 and world.pending_level_choices > 0:
+            build_hand(config, world)
     world.tick += 1
+
+
+def _void_choices(world: World) -> None:
+    """A terminal tick cancels the pending choices without drawing offers (ADR-009 section 4)."""
+    world.choices_voided += world.pending_level_choices
+    world.pending_level_choices = 0
 
 
 # Movement hypothesis for traces only (not canon): 0.1 cell/tick with cell = 2 radii
@@ -957,7 +976,7 @@ def scripted_choices(config: Config, moves, max_ticks: int, pick, junk: bool = F
         assert log.append((world.tick, sequence, kind, a, b), world.tick) == OK
         sequence += 1
 
-    while world.tick < max_ticks and not world.hero_dead:
+    while world.tick < max_ticks and not world.over():
         if world.paused():
             revision, noisy = world.build_revision, junk and world.choices_done % 4 == 1
             if noisy:
@@ -1009,6 +1028,36 @@ def _choice_scenarios():
 
 
 CHOICE_SCENARIOS = _choice_scenarios()
+
+
+def _death_tick(config: Config, moves) -> int:
+    world, log = World(config), CommandLog()
+    for record in migrate_v1(moves):
+        assert log.append(record, 0) == OK
+    while not world.over():
+        step(config, world, log)
+    return world.tick
+
+
+def _run_end_scenarios():
+    """ADR-011 section 1: a won run with choices on the way; a lethal hit in the last tick
+    (victory beats defeat); choices still pending at the end are voided."""
+    out = []
+    with_choices = Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP, choice_mode=1,
+                          run_ticks=2400)
+    records, steps = scripted_choices(with_choices, _circle(40, 2400), 2400, _first)
+    out.append(("run_end_victory_with_choices", with_choices, records, steps))
+    standing = Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP)
+    last = _death_tick(standing, [])
+    lethal = Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP, run_ticks=last)
+    out.append(("run_end_lethal_last_tick", lethal, [], last + 5))
+    pending = Config(BASE, [TOUGH, 30000, 3600, 4000, 64, 384000], W0_KINDS, MAX_SEED, P0_SKILL,
+                     P0_XP, run_ticks=3000)
+    out.append(("run_end_voids_pending", pending, migrate_v1(_circle(25, 3000)), 3010))
+    return out
+
+
+RUN_END_SCENARIOS = _run_end_scenarios()
 
 # Golden hands (ADR-010 section 6): (name, seed, ranks, offers cursor) -> hand, cursor after.
 _MAX_RANKS = [top for _, top in UPGRADES]
@@ -1088,7 +1137,7 @@ def run_trace(config: Config, commands, steps: int):
                 "hero_dead": world.hero_dead, "enemy_alive": world.enemy_alive,
                 "kills": world.kills, "projectiles": world.live_projectiles(),
                 "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
-                "choices": world.choices_done, "paused": int(world.paused()),
+                "choices": world.choices_done, "paused": int(world.paused()), "won": world.won,
                 "digest": world.digest()})
     return log, world, checkpoints
 
@@ -1106,12 +1155,12 @@ def config_json(config: Config) -> dict:
               "kind_xp": [str(v) for v in config.kind_xp],
               "costs": [str(v) for v in config.xp_costs]}
     return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
-            "xp": xp, "choice_mode": config.choice_mode}
+            "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks}
 
 
 def build_vectors() -> dict:
     traces = []
-    for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS:
+    for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS + RUN_END_SCENARIOS:
         assert config.valid(), name
         log, _, checkpoints = run_trace(config, commands, steps)
         traces.append({"name": name, **config_json(config),

@@ -6,12 +6,12 @@ extends Node2D
 ## (placeholder bases). Hit flashes, death puffs, gem pickup flights and the level-up ring
 ## are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
 ## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
+## A finished run (victory after the stage duration or defeat) stays under RunResults until
+## the player starts a new one (ADR-011 section 1).
 
 const CELL_PX: int = P0Tuning.CELL_PX
 const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
 const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
-## Seconds the finished run stays on screen before a new one starts.
-const RESTART_DELAY: float = 2.0
 const HIT_FLASH: float = 0.15
 const ENEMY_HIT_FLASH: float = 0.1
 const PUFF_TIME: float = 0.35
@@ -54,7 +54,6 @@ var runs_started: int = 0
 var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
-var _over_time: float = 0.0
 ## Enemy uid -> seconds of hit flash left.
 var _enemy_flash: Dictionary = {}
 ## Death puffs: [position px, kind, age seconds].
@@ -66,6 +65,7 @@ var _level_ring: float = 0.0
 ## Screen-space layer for the HUD (not moved by the camera).
 var _hud: Node2D
 var _menu: ChoiceMenu
+var _results: RunResults
 
 @onready var _camera: Camera2D = $Camera
 
@@ -86,6 +86,8 @@ func _ready() -> void:
 	_menu = ChoiceMenu.new()
 	layer.add_child(_menu)
 	_menu.picked.connect(_on_card_picked)
+	_results = RunResults.new()
+	layer.add_child(_results)
 	var arena: Vector2i = ARENA_CELLS * CELL_PX
 	_camera.limit_left = 0
 	_camera.limit_top = 0
@@ -103,7 +105,8 @@ func start_run(seed_text: String) -> void:
 	driver = FixedTickDriver.create(config)
 	runs_started += 1
 	_flash = 0.0
-	_over_time = 0.0
+	if _results != null:
+		_results.close()
 	_enemy_flash.clear()
 	_puffs.clear()
 	_pickups.clear()
@@ -120,7 +123,21 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		start_run(str(randi()))
 		return
+	if Input.is_action_just_pressed("ui_accept") and confirm_results():
+		return
 	advance_frame(delta, MoveInput.read())
+
+
+## Starts a new run from the results screen once it is armed; false otherwise.
+func confirm_results() -> bool:
+	if _results == null or not _results.is_armed():
+		return false
+	start_run(str(randi()))
+	return true
+
+
+func is_results_open() -> bool:
+	return _results != null and _results.visible
 
 
 func advance_frame(delta: float, move: Vector2i) -> int:
@@ -131,9 +148,8 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		return 0
 	_age_effects(delta)
 	if driver.world.is_over():
-		_over_time += delta
-		if _over_time >= RESTART_DELAY:
-			start_run(str(randi()))
+		_show_results()
+		_results.age(delta)
 		queue_redraw()
 		return 0
 	var hp_before: int = driver.world.hero_hp
@@ -155,8 +171,15 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		_facing = Vector2(move).normalized()
 	_camera.position = driver.hero_position_px()
 	_sync_menu()
+	if driver.world.is_over():
+		_show_results()
 	queue_redraw()
 	return ticks
+
+
+func _show_results() -> void:
+	if _results != null and not _results.visible:
+		_results.open(driver.world)
 
 
 ## Picks card `index` of the shown hand (the menu's `picked`, tests and replays); false when
@@ -315,9 +338,8 @@ func _draw_hud() -> void:
 		var share: float = clampf(float(driver.world.xp_bank) / float(cost), 0.0, 1.0)
 		_hud.draw_rect(Rect2(0, 0, width * share, XP_BAR_HEIGHT), COLOR_GEM)
 	var corner: Vector2 = HUD_MARGIN
-	var seconds: int = floori(driver.world.tick / float(Fx.TICKS_PER_SECOND))
 	var font: Font = ThemeDB.fallback_font
-	var clock: String = "%02d:%02d" % [floori(seconds / 60.0), seconds % 60]
+	var clock: String = RunResults.clock(driver.world.tick)
 	_hud.draw_string(font, corner, clock, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
 	var icon: Vector2 = corner + Vector2(90, -HUD_FONT_SIZE * 0.35)
 	_hud.draw_circle(icon, 8.0, ENEMY_COLORS[1])

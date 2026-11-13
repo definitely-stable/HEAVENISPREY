@@ -27,6 +27,7 @@ const MIN_SPAWN_DISTANCE_CELLS: int = 8
 const ROSTER_ID: String = "roster.jade_grove"
 const WINDOW_ID: String = "jade_grove.w0"
 const CLASS_ID: String = "class.sword"
+const STAGE_ID: String = "stage.jade_grove"
 const SKILL_RANGE_CELLS: int = 8
 const SKILL_DAMAGE_MHP: int = 10000
 const PROJECTILE_SPEED_SU: int = 12000
@@ -59,8 +60,8 @@ static func movement_config() -> SimConfig:
 	]))
 
 
-## Movement, the w0 enemies, the class start skill, XP and the immediate level-up choice;
-## null with `error` set when content is missing or invalid.
+## Movement, the w0 enemies, the class start skill, XP, the immediate level-up choice and the
+## stage duration; null with `error` set when content is missing or invalid.
 func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	enemy_ids.clear()
 	if registry == null or not registry.is_valid():
@@ -95,6 +96,11 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	)
 	# Immediate level-up choice: the run pauses on a pending choice (ADR-010 section 6).
 	config.with_choice_mode(SimConfig.CHOICE_IMMEDIATE)
+	# Victory after the stage duration from content (ADR-011 section 1).
+	var minutes: Variant = ContentRegistry.integral(registry.definition(STAGE_ID).get("duration_minutes"))
+	if minutes == null or int(minutes) <= 0:
+		return _fail(STAGE_ID + ": duration_minutes is not a positive integer")
+	config.with_run_ticks(int(minutes) * 60 * Fx.TICKS_PER_SECOND)
 	if not config.is_valid():
 		return _fail("assembled run config is not valid")
 	return config

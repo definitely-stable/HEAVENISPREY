@@ -299,6 +299,34 @@
    "en": "Level up: choose an upgrade",
    "ru": "Новый уровень: выберите улучшение"
   },
+  "UI_RUN_DEFEAT": {
+   "en": "Defeat",
+   "ru": "Поражение"
+  },
+  "UI_RUN_KILLS": {
+   "en": "Enemies slain: %d",
+   "ru": "Убито врагов: %d"
+  },
+  "UI_RUN_LEVEL": {
+   "en": "Level: %d",
+   "ru": "Уровень: %d"
+  },
+  "UI_RUN_RESTART": {
+   "en": "R or Enter: new run",
+   "ru": "R или Enter — новый забег"
+  },
+  "UI_RUN_TIME": {
+   "en": "Time %s",
+   "ru": "Время %s"
+  },
+  "UI_RUN_VICTORY": {
+   "en": "Victory: the grove is held",
+   "ru": "Победа: роща выстояла"
+  },
+  "UI_RUN_XP": {
+   "en": "Experience gathered: %d",
+   "ru": "Собрано опыта: %d"
+  },
   "UI_START_RUN": {
    "en": "Start run",
    "ru": "Начать забег"

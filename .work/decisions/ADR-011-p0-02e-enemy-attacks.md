@@ -68,6 +68,14 @@
 
 Каждый срез — паритет Python = GDScript, golden-трассы, мутации, обновление `CURRENT_STATE` и `system_binding`.
 
+## 8. Уточнения реализации E1 (2026-11-13)
+
+- `run_ticks` — последнее число `SimConfig.to_ints()` (после `choice_mode`); `won` в digest сразу после `hero_dead`. `P0Tuning` берёт `duration_minutes` стадии из `ContentRegistry` и падает fail-closed, если поля нет.
+- Проверки конца тика вынесены из ветки врагов: прогон без врагов с `run_ticks` тоже заканчивается победой; смерть по-прежнему возможна только при врагах.
+- Победа с HP ≤ 0 в последнем тике записывает HP 0 и `hero_dead = 0`.
+- Экран итогов: `restart` начинает новый забег сразу, `ui_accept` — после 1 с. В тестах язык задаётся после `_ready` сцены: `RunView` переключает его по языку ОС.
+- Боты: `p0_config` получает `run_ticks = 18000`; в прогонах ботов добавлено поле `won` (`runs schema` 3). Якоря и `kiter_upgrades` по `death_tick`, `kills`, `command_count`, XP и уровню не изменились; `kiter_upgrades` побеждает на 32/32.
+
 ## Будущие поля контента
 
 `enemy_attacks[].trigger_range_cells`, `enemy_attacks[].projectile_radius_px`, `enemies[].keep_distance_cells`, `stages[].victory_rule` — пока placeholder в `P0Tuning`; переносятся в каталоги отдельным решением после плейтеста.

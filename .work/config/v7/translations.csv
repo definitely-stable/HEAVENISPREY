@@ -90,3 +90,10 @@ UPGRADE_P0_SWORD_PIERCE_NAME,Piercing Intent,Пронзающее намерен
 UPGRADE_P0_SWORD_PIERCE_DESC,Enemies per sword %s → %s,Врагов на один меч %s → %s
 UPGRADE_P0_RECOVER_NAME,Breath of Recovery,Восстанавливающее дыхание
 UPGRADE_P0_RECOVER_DESC,Health %s → %s,Здоровье %s → %s
+UI_RUN_VICTORY,Victory: the grove is held,Победа: роща выстояла
+UI_RUN_DEFEAT,Defeat,Поражение
+UI_RUN_TIME,Time %s,Время %s
+UI_RUN_KILLS,Enemies slain: %d,Убито врагов: %d
+UI_RUN_LEVEL,Level: %d,Уровень: %d
+UI_RUN_XP,Experience gathered: %d,Собрано опыта: %d
+UI_RUN_RESTART,R or Enter: new run,R или Enter — новый забег

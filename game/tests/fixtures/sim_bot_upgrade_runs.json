@@ -7,8 +7,8 @@
  "note": "P0 placeholder tuning with level-up choices (ADR-010 sections 6-7), choice_mode 1; kiter_upgrades is a smoke test, diag_* are baselines",
  "policy_id": "hip-fx-v1",
  "rng_policy_id": "hip-rng-v1",
- "schema_version": 2,
- "sim_schema_version": 6,
+ "schema_version": 3,
+ "sim_schema_version": 7,
  "smoke": {
   "bot_policy": "kiter_upgrades",
   "min_survivors": 28,
@@ -20,7 +20,7 @@
    "choices": 14,
    "command_count": 1428,
    "death_tick": -1,
-   "final_digest": "bba234ff446d85b2491c40e590214ad0fa19316e8397bdf70f2e89286dc608cd",
+   "final_digest": "5e7993d944c451f71f06634fea84aa66b88a9c82e006609afee78700fa8b1862",
    "gems_ground_end": 3,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -38,6 +38,7 @@
     2
    ],
    "seed": "101",
+   "won": 1,
    "xp_collected": 3725,
    "xp_dropped": 3760
   },
@@ -46,7 +47,7 @@
    "choices": 14,
    "command_count": 1430,
    "death_tick": -1,
-   "final_digest": "eec3fd482f75a5b2b30cdc76c7bdff4e668bca759cbd863fa43f2898b123bfc1",
+   "final_digest": "20ca2c25701317a2c644904b60fabad8bf7aba741c2e35af7daddaeb2100ea26",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -64,6 +65,7 @@
     2
    ],
    "seed": "102",
+   "won": 1,
    "xp_collected": 3600,
    "xp_dropped": 3640
   },
@@ -72,7 +74,7 @@
    "choices": 14,
    "command_count": 1470,
    "death_tick": -1,
-   "final_digest": "4650bcc305e0f906c5ebdf7648aed1f25734ac23e99d4c8bce78669ed6a567be",
+   "final_digest": "98f85fceefbb585b82f71eae6de661dcffc7b6ab5c4c0808e1128a37bf513deb",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -90,6 +92,7 @@
     2
    ],
    "seed": "103",
+   "won": 1,
    "xp_collected": 3685,
    "xp_dropped": 3730
   },
@@ -98,7 +101,7 @@
    "choices": 14,
    "command_count": 1372,
    "death_tick": -1,
-   "final_digest": "2edf9c09cfd88df95d2dd674dab27bd85f888c67093bb89d2f3743b960600368",
+   "final_digest": "cc00df5ce7241b93ee6f9f4f3590d51e88a7e00fdcd51db73b3fb6808fb40975",
    "gems_ground_end": 2,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -116,6 +119,7 @@
     2
    ],
    "seed": "104",
+   "won": 1,
    "xp_collected": 3645,
    "xp_dropped": 3665
   },
@@ -124,7 +128,7 @@
    "choices": 14,
    "command_count": 1358,
    "death_tick": -1,
-   "final_digest": "de121f7243069484bb2f889680877d8b189fa7bb424c9031ec76d588073fa8cf",
+   "final_digest": "df61a7b2b4c3cc6b9fc0bf061ff1a22c1b94db71c1bbcf6352b306d321c7149a",
    "gems_ground_end": 7,
    "gems_ground_peak": 8,
    "hp_min": 100000,
@@ -142,6 +146,7 @@
     2
    ],
    "seed": "105",
+   "won": 1,
    "xp_collected": 3665,
    "xp_dropped": 3735
   },
@@ -150,7 +155,7 @@
    "choices": 14,
    "command_count": 1493,
    "death_tick": -1,
-   "final_digest": "1e74fe2d31ffc0428f388d14fc0dac271cda70f32d05a10f12e820cb68c46d1b",
+   "final_digest": "3d82c8067a0e0519db53f3fefa4e7fc8ad4402be9c92ba55e3e29109089c6c7a",
    "gems_ground_end": 2,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -168,6 +173,7 @@
     2
    ],
    "seed": "106",
+   "won": 1,
    "xp_collected": 3660,
    "xp_dropped": 3685
   },
@@ -176,7 +182,7 @@
    "choices": 14,
    "command_count": 1470,
    "death_tick": -1,
-   "final_digest": "d915aa0f52ff5be52f10bfa5bf49cfff15eb2cf038ffdf9b374b81fc14a79715",
+   "final_digest": "e651d409d2dfb9f23fadd097d45a8aa29e90a2bc45f10ac87cbebb17e5e06d18",
    "gems_ground_end": 0,
    "gems_ground_peak": 8,
    "hp_min": 100000,
@@ -194,6 +200,7 @@
     2
    ],
    "seed": "107",
+   "won": 1,
    "xp_collected": 3670,
    "xp_dropped": 3670
   },
@@ -202,7 +209,7 @@
    "choices": 14,
    "command_count": 1432,
    "death_tick": -1,
-   "final_digest": "be9e1bbea9b7ccd14c2521b67ab212d85950731c4d37c0a1fa4ce7757567ab65",
+   "final_digest": "b9b9bc1631dc3df048e5dffcdb13ad3508398ff9e60a82d7900643f1a02ef54e",
    "gems_ground_end": 4,
    "gems_ground_peak": 8,
    "hp_min": 100000,
@@ -220,6 +227,7 @@
     2
    ],
    "seed": "108",
+   "won": 1,
    "xp_collected": 3640,
    "xp_dropped": 3685
   },
@@ -228,7 +236,7 @@
    "choices": 14,
    "command_count": 1506,
    "death_tick": -1,
-   "final_digest": "728668d8a203b3f4828a7d23c35d78f12e9a5cf0a8036a0a7b943c017c669051",
+   "final_digest": "bbb6abbbc5acfc0385b8c007a65f59b26d3cbeaec5e6682e5be3e8e98e542190",
    "gems_ground_end": 5,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -246,6 +254,7 @@
     2
    ],
    "seed": "109",
+   "won": 1,
    "xp_collected": 3690,
    "xp_dropped": 3740
   },
@@ -254,8 +263,8 @@
    "choices": 14,
    "command_count": 1457,
    "death_tick": -1,
-   "final_digest": "2e7d64fc2936a2caea948f31ee80831a0861d2a7d8998ad0f1f83d8c2711100f",
-   "gems_ground_end": 2,
+   "final_digest": "000face2c68a55c7d9019999cc3771524c29545ec000122b96ea6c1976627c7e",
+   "gems_ground_end": 3,
    "gems_ground_peak": 6,
    "hp_min": 100000,
    "id": "botrun.p0.kiter_upgrades.s110",
@@ -272,7 +281,8 @@
     2
    ],
    "seed": "110",
-   "xp_collected": 3655,
+   "won": 1,
+   "xp_collected": 3645,
    "xp_dropped": 3675
   },
   {
@@ -280,7 +290,7 @@
    "choices": 14,
    "command_count": 1477,
    "death_tick": -1,
-   "final_digest": "c04cd8359721e23d3321a3f30b76b34040cb1dc200f33f26be38127905c8bd76",
+   "final_digest": "87d991fd356cb33254ea6bd68d06b389a047f2a3e5dbda924e2c00488afff1d4",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -298,6 +308,7 @@
     2
    ],
    "seed": "111",
+   "won": 1,
    "xp_collected": 3730,
    "xp_dropped": 3770
   },
@@ -306,7 +317,7 @@
    "choices": 14,
    "command_count": 1450,
    "death_tick": -1,
-   "final_digest": "7cee2c0b7f9ff553c9cb818774362f442a9b60a238703b761fe1eb8bf5972837",
+   "final_digest": "052266591c771a76e7671b0ade16cfba60e9a0cb661944a80406dddcf713bff6",
    "gems_ground_end": 2,
    "gems_ground_peak": 6,
    "hp_min": 92400,
@@ -324,6 +335,7 @@
     2
    ],
    "seed": "112",
+   "won": 1,
    "xp_collected": 3685,
    "xp_dropped": 3705
   },
@@ -332,7 +344,7 @@
    "choices": 14,
    "command_count": 1405,
    "death_tick": -1,
-   "final_digest": "edece8027b81995e084220d5dffaedc21b49a6efce5cb2422f6e3aed790bdc1e",
+   "final_digest": "73a7db7e45b1028c4aaec73e070168701925464eb61fcd2af7ab8e0479eb6057",
    "gems_ground_end": 1,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -350,6 +362,7 @@
     2
    ],
    "seed": "113",
+   "won": 1,
    "xp_collected": 3745,
    "xp_dropped": 3755
   },
@@ -358,7 +371,7 @@
    "choices": 14,
    "command_count": 1472,
    "death_tick": -1,
-   "final_digest": "f0f941f98ea8f6f4763cf3c1de8df52a8be7f099b1e833d31d651ac5d4cce8d0",
+   "final_digest": "c2c2f0478f82c8863c8af9fc9b230f629e732bbe1201884faae82748e655d194",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -376,6 +389,7 @@
     2
    ],
    "seed": "114",
+   "won": 1,
    "xp_collected": 3670,
    "xp_dropped": 3715
   },
@@ -384,7 +398,7 @@
    "choices": 14,
    "command_count": 1438,
    "death_tick": -1,
-   "final_digest": "2572e0751a96bc965abdb9fffcf4f71c6cc7b0c6ba029a5f8bf1e712c857d1b6",
+   "final_digest": "493a1cff7d118ffdc310111d05bbc464b9fe334592ac15df88bdde6092abadc0",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -402,6 +416,7 @@
     2
    ],
    "seed": "115",
+   "won": 1,
    "xp_collected": 3680,
    "xp_dropped": 3725
   },
@@ -410,7 +425,7 @@
    "choices": 14,
    "command_count": 1418,
    "death_tick": -1,
-   "final_digest": "c18eac5828414e4f617d3bd4b7821c34f837e5f80f9487a3d624c8915d68cba5",
+   "final_digest": "8c8945ad25ff5e60f6c1354d45e6d37de15585980118f2b9479c3ecbdefa7f6c",
    "gems_ground_end": 4,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -428,6 +443,7 @@
     2
    ],
    "seed": "116",
+   "won": 1,
    "xp_collected": 3670,
    "xp_dropped": 3715
   },
@@ -436,7 +452,7 @@
    "choices": 14,
    "command_count": 1383,
    "death_tick": -1,
-   "final_digest": "767b00776538d692e384f4d47450b76ab23641a800614929be4cd2841a650c19",
+   "final_digest": "d34bc1dc262b4e976866345004116e92da6681e96c483f72ed47e12f4103d9e9",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -454,6 +470,7 @@
     2
    ],
    "seed": "117",
+   "won": 1,
    "xp_collected": 3670,
    "xp_dropped": 3715
   },
@@ -462,7 +479,7 @@
    "choices": 14,
    "command_count": 1539,
    "death_tick": -1,
-   "final_digest": "3910bd5685b14d0b6542f7466ab5ebf1faebde106de98a9f33fcebf58bd1f891",
+   "final_digest": "8ae49c006374db3579b2229d59d6c57b9b921cfbe220be85a52bad231d11b81d",
    "gems_ground_end": 4,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -480,6 +497,7 @@
     2
    ],
    "seed": "118",
+   "won": 1,
    "xp_collected": 3595,
    "xp_dropped": 3640
   },
@@ -488,7 +506,7 @@
    "choices": 14,
    "command_count": 1388,
    "death_tick": -1,
-   "final_digest": "00d7aa915252d32445027fca635a40a81063f58bed1d1a3648b21d94f1308885",
+   "final_digest": "c8f4707a4e0ff09622f9345ce63d5673a140932acc2c76aa4c199fcd500c311c",
    "gems_ground_end": 2,
    "gems_ground_peak": 8,
    "hp_min": 100000,
@@ -506,6 +524,7 @@
     2
    ],
    "seed": "119",
+   "won": 1,
    "xp_collected": 3725,
    "xp_dropped": 3745
   },
@@ -514,7 +533,7 @@
    "choices": 14,
    "command_count": 1399,
    "death_tick": -1,
-   "final_digest": "e6c0ff1cec657bfa8cd0e2f7faa5c87e551e32d8a385e83c5548c5bfcde8e83d",
+   "final_digest": "4bda01b1b8a2af9db676f32736a9ad2bc1ae608185f28575a2cdcfe8b0717c91",
    "gems_ground_end": 2,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -532,6 +551,7 @@
     2
    ],
    "seed": "120",
+   "won": 1,
    "xp_collected": 3635,
    "xp_dropped": 3655
   },
@@ -540,7 +560,7 @@
    "choices": 14,
    "command_count": 1437,
    "death_tick": -1,
-   "final_digest": "2b829cb9a1c732f09acf3b103e09825ad2a6e88578bf9273a534c8c7cc684c77",
+   "final_digest": "9ed0b4562cba99dce9194871646a2584332e90a6a09f8a082514292a4b0961cf",
    "gems_ground_end": 3,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -558,6 +578,7 @@
     2
    ],
    "seed": "121",
+   "won": 1,
    "xp_collected": 3750,
    "xp_dropped": 3780
   },
@@ -566,7 +587,7 @@
    "choices": 14,
    "command_count": 1427,
    "death_tick": -1,
-   "final_digest": "7f174f3b046d7395b56b6c4f08549054af8b122358c3f019d0c8f799c20c9405",
+   "final_digest": "b64898d707b72c44f76018a8caf959c6415eecf80195789651a49db4d730700d",
    "gems_ground_end": 4,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -584,6 +605,7 @@
     2
    ],
    "seed": "122",
+   "won": 1,
    "xp_collected": 3675,
    "xp_dropped": 3715
   },
@@ -592,7 +614,7 @@
    "choices": 14,
    "command_count": 1510,
    "death_tick": -1,
-   "final_digest": "7c09d721a5f66ea5c7ff704c2a7df1e2c650b2e26c9205074aa5287959727759",
+   "final_digest": "7fdcdcf0a15fc2b192f151dbfaff590c3a804f086fc314ba6491c1e0994982cc",
    "gems_ground_end": 2,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -610,6 +632,7 @@
     2
    ],
    "seed": "123",
+   "won": 1,
    "xp_collected": 3740,
    "xp_dropped": 3760
   },
@@ -618,7 +641,7 @@
    "choices": 14,
    "command_count": 1498,
    "death_tick": -1,
-   "final_digest": "3846421d84be7989ba9d66912b944fc19bcb64422785f2a8943cc16286d5ab24",
+   "final_digest": "c75ee1f40991b14179d234a45fe219c72aa7defd5593e41e5f30f3b720c2ba17",
    "gems_ground_end": 1,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -636,6 +659,7 @@
     2
    ],
    "seed": "124",
+   "won": 1,
    "xp_collected": 3640,
    "xp_dropped": 3650
   },
@@ -644,7 +668,7 @@
    "choices": 14,
    "command_count": 1426,
    "death_tick": -1,
-   "final_digest": "c6943c54a35eb4900b72c28250b1125223b9f032f7b3a25c049547d6f92bac27",
+   "final_digest": "e371329950661ea378476149c72b8a43223e6b429026fe3db14de6f602127a3d",
    "gems_ground_end": 3,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -662,6 +686,7 @@
     2
    ],
    "seed": "125",
+   "won": 1,
    "xp_collected": 3675,
    "xp_dropped": 3705
   },
@@ -670,7 +695,7 @@
    "choices": 14,
    "command_count": 1458,
    "death_tick": -1,
-   "final_digest": "142f03866847fdab987eb7888bad1aed7749b62b9bc5ce323af40a934bfe4b29",
+   "final_digest": "520dc563936910e4f593759810bea665279a1f64bf702f56b7b56d521bab8de1",
    "gems_ground_end": 1,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -688,6 +713,7 @@
     2
    ],
    "seed": "126",
+   "won": 1,
    "xp_collected": 3615,
    "xp_dropped": 3625
   },
@@ -696,7 +722,7 @@
    "choices": 14,
    "command_count": 1405,
    "death_tick": -1,
-   "final_digest": "ff91895487e22f8699361b66dcd002061cb604c4565c56454c897b6bc721c213",
+   "final_digest": "f3c642ac74203da0421cc19957d0a75145171055bdbe6737c259fa9967dce7e2",
    "gems_ground_end": 3,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -714,6 +740,7 @@
     2
    ],
    "seed": "127",
+   "won": 1,
    "xp_collected": 3665,
    "xp_dropped": 3700
   },
@@ -722,7 +749,7 @@
    "choices": 14,
    "command_count": 1461,
    "death_tick": -1,
-   "final_digest": "6f7256565a4ddf7baeac11f8f7127f53ade6495a1196e94d94a0f48a353dd91c",
+   "final_digest": "06e67b4eb3367894b5eee975eadcfbcc7fa76f7d8b59a271db86f5202c036ab4",
    "gems_ground_end": 6,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -740,6 +767,7 @@
     2
    ],
    "seed": "128",
+   "won": 1,
    "xp_collected": 3595,
    "xp_dropped": 3660
   },
@@ -748,7 +776,7 @@
    "choices": 14,
    "command_count": 1487,
    "death_tick": -1,
-   "final_digest": "07006571d1dbfb2c0b08a1bcc24452c3b1e883afd18efaf061c17a941f66fcaf",
+   "final_digest": "3f54a42f98facbb56fd214fd3e3298589e354232310cf571305b6e71e581ad74",
    "gems_ground_end": 3,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -766,6 +794,7 @@
     2
    ],
    "seed": "129",
+   "won": 1,
    "xp_collected": 3680,
    "xp_dropped": 3710
   },
@@ -774,7 +803,7 @@
    "choices": 14,
    "command_count": 1371,
    "death_tick": -1,
-   "final_digest": "4d594a95938773925b2b04248b545c006c5274c47e8e923f0902b8496b39c65d",
+   "final_digest": "513d6702b7c4c5947136116e781661275439a5c1d3866b16283ca66060569133",
    "gems_ground_end": 2,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -792,6 +821,7 @@
     2
    ],
    "seed": "130",
+   "won": 1,
    "xp_collected": 3720,
    "xp_dropped": 3745
   },
@@ -800,7 +830,7 @@
    "choices": 14,
    "command_count": 1444,
    "death_tick": -1,
-   "final_digest": "79d778e138a2e06af1828f5bdb3fcfc9347acdeacebef887471f0f80a3bbcc12",
+   "final_digest": "1f3b6d1d9043d544065b7208a6df26bb3636ff4be332000772745eb7871a6a38",
    "gems_ground_end": 2,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -818,6 +848,7 @@
     2
    ],
    "seed": "131",
+   "won": 1,
    "xp_collected": 3645,
    "xp_dropped": 3670
   },
@@ -826,7 +857,7 @@
    "choices": 14,
    "command_count": 1396,
    "death_tick": -1,
-   "final_digest": "3315573d6afa2e5cbbacec447adb813938b1022b58e4cbaa3166d536bc480906",
+   "final_digest": "6941caf95eb36704987931363636ab93ef14e24deb1cb03311b789f20d3b071d",
    "gems_ground_end": 3,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -844,6 +875,7 @@
     2
    ],
    "seed": "132",
+   "won": 1,
    "xp_collected": 3660,
    "xp_dropped": 3695
   },
@@ -852,8 +884,8 @@
    "choices": 14,
    "command_count": 1359,
    "death_tick": -1,
-   "final_digest": "257f13782da7136429204a1250aba9c60cfb6fcd7c3b56e0f2a2931fad6754a2",
-   "gems_ground_end": 0,
+   "final_digest": "026625e6d23feb1527619044a6b6ae0cf822919bfcc21079fb5dd13d38979c17",
+   "gems_ground_end": 1,
    "gems_ground_peak": 6,
    "hp_min": 92400,
    "id": "botrun.p0.diag_first_id.s101",
@@ -870,7 +902,8 @@
     0
    ],
    "seed": "101",
-   "xp_collected": 3695,
+   "won": 1,
+   "xp_collected": 3685,
    "xp_dropped": 3695
   },
   {
@@ -878,7 +911,7 @@
    "choices": 7,
    "command_count": 561,
    "death_tick": 6870,
-   "final_digest": "45fdfdcc39d06fa2a2ac732a2b6460ebce53898cde2899a6bd4c1b372ba7b113",
+   "final_digest": "5d7b0245aaac062209c7c2a69ce36992d83762725c12183ddc581ba50f8c4b76",
    "gems_ground_end": 16,
    "gems_ground_peak": 16,
    "hp_min": 0,
@@ -896,6 +929,7 @@
     0
    ],
    "seed": "102",
+   "won": 0,
    "xp_collected": 855,
    "xp_dropped": 1015
   },
@@ -904,7 +938,7 @@
    "choices": 8,
    "command_count": 607,
    "death_tick": 7696,
-   "final_digest": "5626102a97bf2ac2cbdfc8070a60e459f18256b9ff8396997f26be919568d6b8",
+   "final_digest": "ba7dfbb83c961c51cc4b5188fcb2e66c2e861408a355f162f53094c1cfcfe747",
    "gems_ground_end": 9,
    "gems_ground_peak": 13,
    "hp_min": 0,
@@ -922,6 +956,7 @@
     0
    ],
    "seed": "103",
+   "won": 0,
    "xp_collected": 1105,
    "xp_dropped": 1200
   },
@@ -930,7 +965,7 @@
    "choices": 14,
    "command_count": 1416,
    "death_tick": -1,
-   "final_digest": "b9f5f705e967460741eac911879daa27d85458409c1d9be01a8fe552bde69e8c",
+   "final_digest": "0a74a9803a9718cb595161149ce41d5a9af67cfa6ed49d7ea630510262c77f20",
    "gems_ground_end": 0,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -948,6 +983,7 @@
     0
    ],
    "seed": "104",
+   "won": 1,
    "xp_collected": 3655,
    "xp_dropped": 3655
   },
@@ -956,7 +992,7 @@
    "choices": 8,
    "command_count": 635,
    "death_tick": 8059,
-   "final_digest": "61a8d20ce13cd822a8c83348de5df737ccd2a881eaa7b9de8243522a1ffedc79",
+   "final_digest": "a578998969f9249d9f783fb0157b9a7a5e74bfa9a783fa77e75d5f1fc2bf3ad8",
    "gems_ground_end": 15,
    "gems_ground_peak": 24,
    "hp_min": 0,
@@ -974,6 +1010,7 @@
     0
    ],
    "seed": "105",
+   "won": 0,
    "xp_collected": 1125,
    "xp_dropped": 1285
   },
@@ -982,7 +1019,7 @@
    "choices": 14,
    "command_count": 1442,
    "death_tick": -1,
-   "final_digest": "4eef9893c059e9fad991220e8efad6982b0b85ff644e4924bb3a7f375c7db82b",
+   "final_digest": "c7e47a695e73c2e309a4d1a728febe04d8188df6dcce791e596c7bd60cf868ee",
    "gems_ground_end": 2,
    "gems_ground_peak": 23,
    "hp_min": 400,
@@ -1000,6 +1037,7 @@
     0
    ],
    "seed": "106",
+   "won": 1,
    "xp_collected": 3760,
    "xp_dropped": 3785
   },
@@ -1008,7 +1046,7 @@
    "choices": 14,
    "command_count": 1486,
    "death_tick": -1,
-   "final_digest": "245d5b1bcfe939f2196872fc43ba124f0cf369063ee2fc601f01da41e75ac872",
+   "final_digest": "5922ea38105fd7add1447ef498b00b2b6ab6a472523d3fd48560650d2e2de886",
    "gems_ground_end": 0,
    "gems_ground_peak": 16,
    "hp_min": 62900,
@@ -1026,6 +1064,7 @@
     0
    ],
    "seed": "107",
+   "won": 1,
    "xp_collected": 3740,
    "xp_dropped": 3740
   },
@@ -1034,7 +1073,7 @@
    "choices": 14,
    "command_count": 1415,
    "death_tick": -1,
-   "final_digest": "291f214502c5a09427d658baf61298227ec59e89da0aa35d6a0be614c23a36d8",
+   "final_digest": "25149f9079ee14b43ba43fa588564811c0b95a6f2eb4e3255cbe6b3221832a77",
    "gems_ground_end": 1,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -1052,6 +1091,7 @@
     0
    ],
    "seed": "108",
+   "won": 1,
    "xp_collected": 3640,
    "xp_dropped": 3650
   },
@@ -1060,7 +1100,7 @@
    "choices": 8,
    "command_count": 614,
    "death_tick": 8230,
-   "final_digest": "1ca93501cb366fe545c66a4f441c3b40e82bf9e8aa31a264694aa9a646f6ee27",
+   "final_digest": "4c8d5fb9cabe607f1618ce81f39d93d8f1d442b0adda37f9b740e9a7bd6c8b78",
    "gems_ground_end": 15,
    "gems_ground_peak": 15,
    "hp_min": 0,
@@ -1078,6 +1118,7 @@
     0
    ],
    "seed": "109",
+   "won": 0,
    "xp_collected": 1105,
    "xp_dropped": 1255
   },
@@ -1086,7 +1127,7 @@
    "choices": 14,
    "command_count": 1303,
    "death_tick": -1,
-   "final_digest": "3d3f8cc98172beba2a3c737bc908ced2f3067c8f68857820c72cf0b6a8fb83e5",
+   "final_digest": "aae787ebf2fad0271b3f262dc65162760b27fd9fb940f0d796ddeb2bf1f41b6a",
    "gems_ground_end": 1,
    "gems_ground_peak": 4,
    "hp_min": 100000,
@@ -1104,6 +1145,7 @@
     0
    ],
    "seed": "110",
+   "won": 1,
    "xp_collected": 3660,
    "xp_dropped": 3670
   },
@@ -1112,7 +1154,7 @@
    "choices": 14,
    "command_count": 1384,
    "death_tick": -1,
-   "final_digest": "1a6da7b91509f0193ee1b22ea0922525cb79411d60e96c0b70755bb4aeaaa7bb",
+   "final_digest": "2195e71da55b0467cbb5de4607bedbf2b188d221adaaeb8ba6b9148d55cad286",
    "gems_ground_end": 0,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -1130,6 +1172,7 @@
     0
    ],
    "seed": "111",
+   "won": 1,
    "xp_collected": 3740,
    "xp_dropped": 3740
   },
@@ -1138,7 +1181,7 @@
    "choices": 14,
    "command_count": 1418,
    "death_tick": -1,
-   "final_digest": "492dd338e8fdb001c13fc7dc5a8ef4fcf766155f973beab5aacea1059eff9cfc",
+   "final_digest": "a1394509399749a507bdfe04072345df51e3225f53b8911e264bba9c2b39e9ff",
    "gems_ground_end": 1,
    "gems_ground_peak": 6,
    "hp_min": 92400,
@@ -1156,6 +1199,7 @@
     0
    ],
    "seed": "112",
+   "won": 1,
    "xp_collected": 3745,
    "xp_dropped": 3755
   },
@@ -1164,7 +1208,7 @@
    "choices": 9,
    "command_count": 683,
    "death_tick": 8314,
-   "final_digest": "222704fa271c0e84167c6a92889785e073e66431ec019a718cf04c652336be3a",
+   "final_digest": "0ef0bac93a81db9bd3276b2eaa443912dcf56b58f8bc7a8c85b59eba343b50d6",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
    "hp_min": 0,
@@ -1182,6 +1226,7 @@
     0
    ],
    "seed": "113",
+   "won": 0,
    "xp_collected": 1200,
    "xp_dropped": 1325
   },
@@ -1190,7 +1235,7 @@
    "choices": 14,
    "command_count": 1412,
    "death_tick": -1,
-   "final_digest": "ea377f2fbf6dd07d80e1f616f10118cf524aef797a714ec843051fa73a659573",
+   "final_digest": "c106ad3176f3489f854d124498e59d977b03f807da67e7a7e5d26dca22863de0",
    "gems_ground_end": 0,
    "gems_ground_peak": 5,
    "hp_min": 100000,
@@ -1208,6 +1253,7 @@
     0
    ],
    "seed": "114",
+   "won": 1,
    "xp_collected": 3725,
    "xp_dropped": 3725
   },
@@ -1216,7 +1262,7 @@
    "choices": 14,
    "command_count": 1368,
    "death_tick": -1,
-   "final_digest": "2d19d8c4a08348ef77d1e6dd00e600f7b27946c7f34adda14654bc5b37e9a274",
+   "final_digest": "1b09a579e9bd49d1ce55c987107a44f0309d28d41b28212ca7de68594fba18d8",
    "gems_ground_end": 1,
    "gems_ground_peak": 5,
    "hp_min": 100000,
@@ -1234,6 +1280,7 @@
     0
    ],
    "seed": "115",
+   "won": 1,
    "xp_collected": 3645,
    "xp_dropped": 3655
   },
@@ -1242,7 +1289,7 @@
    "choices": 14,
    "command_count": 1415,
    "death_tick": -1,
-   "final_digest": "3add9c4b81ffe1eb42c7c8927279f1c33751530a46662fc54888f55c547a92cb",
+   "final_digest": "0488a9f8945ba98330e8e4b8ce8ac21c128474beed38ce1c9aec65f1bcdde69c",
    "gems_ground_end": 0,
    "gems_ground_peak": 9,
    "hp_min": 100000,
@@ -1260,6 +1307,7 @@
     0
    ],
    "seed": "116",
+   "won": 1,
    "xp_collected": 3635,
    "xp_dropped": 3635
   },
@@ -1268,7 +1316,7 @@
    "choices": 8,
    "command_count": 532,
    "death_tick": 7624,
-   "final_digest": "62cc22760171e111e0c9012cd31eb720ec506be267127ac091466d0add91cc8b",
+   "final_digest": "c96889907e8270f6d3ae018a52a0be424a50f2d1c9532dbc05fc2be1baa3de89",
    "gems_ground_end": 24,
    "gems_ground_peak": 24,
    "hp_min": 0,
@@ -1286,6 +1334,7 @@
     0
    ],
    "seed": "117",
+   "won": 0,
    "xp_collected": 915,
    "xp_dropped": 1165
   },
@@ -1294,7 +1343,7 @@
    "choices": 6,
    "command_count": 395,
    "death_tick": 4986,
-   "final_digest": "0e834897412049e3682f535bc1ef7fabe94d70de73f0e52ad5f3b3daaf6c0259",
+   "final_digest": "32e94addd05f9a71b149c65c16599675e0972f4306b145fdeef1b7b97c1a19d3",
    "gems_ground_end": 14,
    "gems_ground_peak": 14,
    "hp_min": 0,
@@ -1312,6 +1361,7 @@
     0
    ],
    "seed": "118",
+   "won": 0,
    "xp_collected": 500,
    "xp_dropped": 645
   },
@@ -1320,7 +1370,7 @@
    "choices": 8,
    "command_count": 542,
    "death_tick": 6870,
-   "final_digest": "4ee8c8eb5630da0f8f2c093b6c2a72e4b2b1a924ab5531e93129e3e2cdd09757",
+   "final_digest": "d92064789658fcc7eb0d348c8d058c77141448582fe55b209d6dd6615fa21ae6",
    "gems_ground_end": 10,
    "gems_ground_peak": 15,
    "hp_min": 0,
@@ -1338,6 +1388,7 @@
     0
    ],
    "seed": "119",
+   "won": 0,
    "xp_collected": 905,
    "xp_dropped": 1005
   },
@@ -1346,7 +1397,7 @@
    "choices": 5,
    "command_count": 279,
    "death_tick": 3364,
-   "final_digest": "a9980f0b66c1ccd25658687bcfdeb0e6b68d0a16527829048c5268360f6f9cfc",
+   "final_digest": "89e01a6544f36246ec6fb53845cdfb94bcab6d439acfc7f156637f86dd485c05",
    "gems_ground_end": 1,
    "gems_ground_peak": 3,
    "hp_min": 0,
@@ -1364,6 +1415,7 @@
     0
    ],
    "seed": "120",
+   "won": 0,
    "xp_collected": 375,
    "xp_dropped": 390
   },
@@ -1372,7 +1424,7 @@
    "choices": 8,
    "command_count": 587,
    "death_tick": 7486,
-   "final_digest": "eebc47c87f0927651716204f66b6b22522165db979da292656bcd43ee6e29c82",
+   "final_digest": "3bcc1663e61388e42dc8e08be8f55a5611412e5ae9702d7dba2c6a85b293c309",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
    "hp_min": 0,
@@ -1390,6 +1442,7 @@
     0
    ],
    "seed": "121",
+   "won": 0,
    "xp_collected": 990,
    "xp_dropped": 1115
   },
@@ -1398,7 +1451,7 @@
    "choices": 14,
    "command_count": 1521,
    "death_tick": -1,
-   "final_digest": "d6ce18abb149883027c948885e0d880f1956d1e8805fd4aa127a5d928b9d4edd",
+   "final_digest": "e5e08175ea892befcbc6af15ee3f1691afd7de8bb367da54fa579b3307d077d6",
    "gems_ground_end": 2,
    "gems_ground_peak": 18,
    "hp_min": 31000,
@@ -1416,6 +1469,7 @@
     0
    ],
    "seed": "122",
+   "won": 1,
    "xp_collected": 3670,
    "xp_dropped": 3690
   },
@@ -1424,7 +1478,7 @@
    "choices": 6,
    "command_count": 446,
    "death_tick": 5522,
-   "final_digest": "aa5061f99e07c924387a3e230002446fc7b37e33b90bb1a98d6e643da1c72e87",
+   "final_digest": "23afe95bee8dc2d0e4a360de4573a1a5068be79e4aa4fd5c191f9e80500a1029",
    "gems_ground_end": 11,
    "gems_ground_peak": 16,
    "hp_min": 0,
@@ -1442,6 +1496,7 @@
     0
    ],
    "seed": "123",
+   "won": 0,
    "xp_collected": 625,
    "xp_dropped": 750
   },
@@ -1450,7 +1505,7 @@
    "choices": 14,
    "command_count": 1352,
    "death_tick": -1,
-   "final_digest": "f989b298ce2a081d356de74aa3684edd62920d19f54c5e8bc6c9590ba8710502",
+   "final_digest": "a0071362cea6d6f30198ae8747d6f1826f8fd76cff6010144eb658a0d9cc20fe",
    "gems_ground_end": 0,
    "gems_ground_peak": 4,
    "hp_min": 100000,
@@ -1468,6 +1523,7 @@
     0
    ],
    "seed": "124",
+   "won": 1,
    "xp_collected": 3635,
    "xp_dropped": 3635
   },
@@ -1476,7 +1532,7 @@
    "choices": 14,
    "command_count": 1435,
    "death_tick": -1,
-   "final_digest": "7ed35c3492d41491c7e5d654c471f4c274acd968ec1b4f427ffb62d68a491495",
+   "final_digest": "63dd45618acd603457e07a3d75be67094fd9280a7837a2040cad8113a2410f05",
    "gems_ground_end": 1,
    "gems_ground_peak": 4,
    "hp_min": 100000,
@@ -1494,6 +1550,7 @@
     0
    ],
    "seed": "125",
+   "won": 1,
    "xp_collected": 3730,
    "xp_dropped": 3740
   },
@@ -1502,7 +1559,7 @@
    "choices": 14,
    "command_count": 1473,
    "death_tick": -1,
-   "final_digest": "57d0cfbd8fafd222d9db750920a1fae9c152f3a1d4c5c9a65d3f71bdfdb54fc6",
+   "final_digest": "12a392a28fecb96965e07f76e8c7edf690b21a7c42142e106f8a8c4413adc0fe",
    "gems_ground_end": 0,
    "gems_ground_peak": 6,
    "hp_min": 100000,
@@ -1520,6 +1577,7 @@
     0
    ],
    "seed": "126",
+   "won": 1,
    "xp_collected": 3605,
    "xp_dropped": 3605
   },
@@ -1528,7 +1586,7 @@
    "choices": 8,
    "command_count": 564,
    "death_tick": 7246,
-   "final_digest": "1e893df66759b0a9ab1981d09771d7b7c4394f4e55db44dad20a2dd50614d5c6",
+   "final_digest": "fbf29fcec3dd9e752ecc35f7baa1fc8a9a432c50af728c513e6701243284f959",
    "gems_ground_end": 5,
    "gems_ground_peak": 9,
    "hp_min": 0,
@@ -1546,6 +1604,7 @@
     0
    ],
    "seed": "127",
+   "won": 0,
    "xp_collected": 1000,
    "xp_dropped": 1050
   },
@@ -1554,7 +1613,7 @@
    "choices": 8,
    "command_count": 538,
    "death_tick": 7181,
-   "final_digest": "b8758e0af1dbca1867cdfac7ef8d55cb0b1db60e09d39de4e31bd05007fab8b7",
+   "final_digest": "b6d90f30ab3f6441d198812c5d380bf73676c4ca2f2020fbcbcb0bf1a869c0a0",
    "gems_ground_end": 16,
    "gems_ground_peak": 16,
    "hp_min": 0,
@@ -1572,6 +1631,7 @@
     0
    ],
    "seed": "128",
+   "won": 0,
    "xp_collected": 885,
    "xp_dropped": 1050
   },
@@ -1580,7 +1640,7 @@
    "choices": 8,
    "command_count": 588,
    "death_tick": 6974,
-   "final_digest": "fb658d69ca9355dc075a7cdb5fbe000d263b3465fefc62c9fb78170109bc5ac2",
+   "final_digest": "ed3ac8efee0045758e6cc35a45c61007e6954e3a075e55a099c12fa81fe90dff",
    "gems_ground_end": 10,
    "gems_ground_peak": 12,
    "hp_min": 0,
@@ -1598,6 +1658,7 @@
     0
    ],
    "seed": "129",
+   "won": 0,
    "xp_collected": 940,
    "xp_dropped": 1045
   },
@@ -1606,7 +1667,7 @@
    "choices": 14,
    "command_count": 1406,
    "death_tick": -1,
-   "final_digest": "9794bf77ca7c87b0b89952d87f56823e003440836919394a64ebb45a0854965e",
+   "final_digest": "36cb1c665dda69255bb8748383895a9d88dfac4e38c57d5117184516884b40e2",
    "gems_ground_end": 1,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -1624,6 +1685,7 @@
     0
    ],
    "seed": "130",
+   "won": 1,
    "xp_collected": 3680,
    "xp_dropped": 3695
   },
@@ -1632,7 +1694,7 @@
    "choices": 14,
    "command_count": 1464,
    "death_tick": -1,
-   "final_digest": "490bcf9c39a962d2845fcc05bef69127c1c3f1f64bd527a685d3dad1a58199d2",
+   "final_digest": "7e007fa1f243a76acb89d91ee064840841c9bb0547221c0c16b0902a96405e74",
    "gems_ground_end": 0,
    "gems_ground_peak": 9,
    "hp_min": 100000,
@@ -1650,6 +1712,7 @@
     0
    ],
    "seed": "131",
+   "won": 1,
    "xp_collected": 3710,
    "xp_dropped": 3710
   },
@@ -1658,7 +1721,7 @@
    "choices": 14,
    "command_count": 1379,
    "death_tick": -1,
-   "final_digest": "e21e51bcaeaf8134b6662f6167082d2d662648e41a58e6cee8a6187123b7185a",
+   "final_digest": "516788b626243b19ecf9ca1ac5b1da48a0e40719ade4f226c277ef35a8dca98a",
    "gems_ground_end": 1,
    "gems_ground_peak": 7,
    "hp_min": 100000,
@@ -1676,6 +1739,7 @@
     0
    ],
    "seed": "132",
+   "won": 1,
    "xp_collected": 3735,
    "xp_dropped": 3745
   },
@@ -1684,7 +1748,7 @@
    "choices": 8,
    "command_count": 483,
    "death_tick": 6988,
-   "final_digest": "f290290f0ea0c86a6c5a37feb66257db325519b2b56bf1124fccfeb26bb2ff46",
+   "final_digest": "be0237246b49e8e3cad6e3f3f0eccfa542a615347113f56b2204408f358c7e04",
    "gems_ground_end": 7,
    "gems_ground_peak": 10,
    "hp_min": 0,
@@ -1702,6 +1766,7 @@
     1
    ],
    "seed": "101",
+   "won": 0,
    "xp_collected": 1020,
    "xp_dropped": 1095
   },
@@ -1710,7 +1775,7 @@
    "choices": 7,
    "command_count": 520,
    "death_tick": 6625,
-   "final_digest": "9437a492b22362b82560fbc5465d89bcc8074c732b512699f957e9d2b89ba09d",
+   "final_digest": "12121b6dd3ffe372527842c52d4194eaf92aaf40c1bb1f7925ab31c76d03d8f0",
    "gems_ground_end": 9,
    "gems_ground_peak": 11,
    "hp_min": 0,
@@ -1728,6 +1793,7 @@
     0
    ],
    "seed": "102",
+   "won": 0,
    "xp_collected": 850,
    "xp_dropped": 940
   },
@@ -1736,7 +1802,7 @@
    "choices": 7,
    "command_count": 395,
    "death_tick": 5197,
-   "final_digest": "4fc33f3fc0228875b625c8fb71d061bd562fd55f407c57f2fc399e7db5361f8a",
+   "final_digest": "98660225cbdd2b40e44b9537cd780469944074bca1d6740f50d60ec66d2663b8",
    "gems_ground_end": 2,
    "gems_ground_peak": 5,
    "hp_min": 0,
@@ -1754,6 +1820,7 @@
     0
    ],
    "seed": "103",
+   "won": 0,
    "xp_collected": 695,
    "xp_dropped": 720
   },
@@ -1762,7 +1829,7 @@
    "choices": 8,
    "command_count": 548,
    "death_tick": 7009,
-   "final_digest": "3715b0082b62607f3feb76f568fc679589758db69cea37c4025d11aefc0ac59a",
+   "final_digest": "531f7287e6ac417b633392da57d6c2ce817362ef165abdbde536e6e6c6c36a22",
    "gems_ground_end": 7,
    "gems_ground_peak": 11,
    "hp_min": 0,
@@ -1780,6 +1847,7 @@
     1
    ],
    "seed": "104",
+   "won": 0,
    "xp_collected": 990,
    "xp_dropped": 1060
   },
@@ -1788,7 +1856,7 @@
    "choices": 8,
    "command_count": 583,
    "death_tick": 7557,
-   "final_digest": "317d1f86a445be512eacc2cd793a4760234708aea14e1367b4c330e4eafe8ed5",
+   "final_digest": "25c5730425d1b127011d1a4e6b80bc6fbf6f728238075a34525e7e7a5cce4623",
    "gems_ground_end": 15,
    "gems_ground_peak": 24,
    "hp_min": 0,
@@ -1806,6 +1874,7 @@
     0
    ],
    "seed": "105",
+   "won": 0,
    "xp_collected": 1015,
    "xp_dropped": 1180
   },
@@ -1814,7 +1883,7 @@
    "choices": 8,
    "command_count": 473,
    "death_tick": 6766,
-   "final_digest": "f58343a6f58829feb68ae4cfc461f6113307db09e3193c779e28d398e0bd5321",
+   "final_digest": "9d7253059498cebf0b52a7b21ac76f3b2c198be93771dd36ee29476912f35df3",
    "gems_ground_end": 5,
    "gems_ground_peak": 6,
    "hp_min": 0,
@@ -1832,6 +1901,7 @@
     1
    ],
    "seed": "106",
+   "won": 0,
    "xp_collected": 930,
    "xp_dropped": 980
   },
@@ -1840,7 +1910,7 @@
    "choices": 8,
    "command_count": 601,
    "death_tick": 7595,
-   "final_digest": "234187f500f6bd4aae0be16d14da430d5d7749b9f1abdda55595c870991f5ee7",
+   "final_digest": "27b7943621db1db82bef950d9ef33f3c836a8658a9ee9ed657c864cb1168ad90",
    "gems_ground_end": 9,
    "gems_ground_peak": 13,
    "hp_min": 0,
@@ -1858,6 +1928,7 @@
     1
    ],
    "seed": "107",
+   "won": 0,
    "xp_collected": 1095,
    "xp_dropped": 1195
   },
@@ -1866,7 +1937,7 @@
    "choices": 10,
    "command_count": 914,
    "death_tick": 10968,
-   "final_digest": "fa64c21f8f0685ef309fdb5f2182e149e8b04ba4d627363a06762370c5a162f9",
+   "final_digest": "5336536f830c220a224e5135a5baa6b7d3b877d1c419ea2cadd756c44a48fae8",
    "gems_ground_end": 4,
    "gems_ground_peak": 8,
    "hp_min": 0,
@@ -1884,6 +1955,7 @@
     1
    ],
    "seed": "108",
+   "won": 0,
    "xp_collected": 1820,
    "xp_dropped": 1865
   },
@@ -1892,7 +1964,7 @@
    "choices": 8,
    "command_count": 531,
    "death_tick": 7045,
-   "final_digest": "9d6085abb857074ee7bf102ae57f9e8e3dc10019b449862dd5a1b383473901fc",
+   "final_digest": "d07a4b9005adda91564ca4e419687754a53296ca3329edb6f5948ccbcf2da724",
    "gems_ground_end": 11,
    "gems_ground_peak": 13,
    "hp_min": 0,
@@ -1910,6 +1982,7 @@
     0
    ],
    "seed": "109",
+   "won": 0,
    "xp_collected": 930,
    "xp_dropped": 1050
   },
@@ -1918,7 +1991,7 @@
    "choices": 8,
    "command_count": 522,
    "death_tick": 6996,
-   "final_digest": "4c530529e1e064a27f98412b60ba465d8b0c85d2217ab12f6ec90b6da7ca99bd",
+   "final_digest": "c43f62baa816804bb39eb6796f6ae160ce8b2bae83a33e06122117261d039494",
    "gems_ground_end": 9,
    "gems_ground_peak": 9,
    "hp_min": 0,
@@ -1936,6 +2009,7 @@
     2
    ],
    "seed": "110",
+   "won": 0,
    "xp_collected": 945,
    "xp_dropped": 1040
   },
@@ -1944,7 +2018,7 @@
    "choices": 8,
    "command_count": 548,
    "death_tick": 6804,
-   "final_digest": "93836e50f6bf51d68e0e8a14cb631e7b83235060774f3ed577f1518a5dbd314f",
+   "final_digest": "b5bc5559b191c0a42215ce8611beab776ba23f3cd34bbdd1e3608be378c4d400",
    "gems_ground_end": 0,
    "gems_ground_peak": 7,
    "hp_min": 0,
@@ -1962,6 +2036,7 @@
     1
    ],
    "seed": "111",
+   "won": 0,
    "xp_collected": 1010,
    "xp_dropped": 1010
   },
@@ -1970,7 +2045,7 @@
    "choices": 8,
    "command_count": 522,
    "death_tick": 7132,
-   "final_digest": "85db27d049c1cc1f9410934ac177aaba73bce976377cb686b70834cdcd27cb45",
+   "final_digest": "8f2991095168f4d74821b6725d56152398a1c8704430d50992d4f5bc9dce2fe5",
    "gems_ground_end": 14,
    "gems_ground_peak": 17,
    "hp_min": 0,
@@ -1988,6 +2063,7 @@
     1
    ],
    "seed": "112",
+   "won": 0,
    "xp_collected": 915,
    "xp_dropped": 1060
   },
@@ -1996,7 +2072,7 @@
    "choices": 7,
    "command_count": 396,
    "death_tick": 5379,
-   "final_digest": "7e3528dbd8ddfa3f70abddce74ff157d67253ef5ed4010199bc9b87e34e43ad1",
+   "final_digest": "5e5f0a2455cffe3d9bda24f8608aa618a19cc8a7e919b659c59c62a1d0fcbb67",
    "gems_ground_end": 8,
    "gems_ground_peak": 8,
    "hp_min": 0,
@@ -2014,6 +2090,7 @@
     0
    ],
    "seed": "113",
+   "won": 0,
    "xp_collected": 670,
    "xp_dropped": 750
   },
@@ -2022,7 +2099,7 @@
    "choices": 8,
    "command_count": 576,
    "death_tick": 7852,
-   "final_digest": "9f36cae0d02ae5592175cfa9bbc6ff4d2e693774ddd0cb787d0afeccb91580c0",
+   "final_digest": "de1c7c3e2f994c21362299c43f0dda988c56d6d8d9b0dda5674c2a91cfaeb790",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
    "hp_min": 0,
@@ -2040,6 +2117,7 @@
     2
    ],
    "seed": "114",
+   "won": 0,
    "xp_collected": 1065,
    "xp_dropped": 1200
   },
@@ -2048,7 +2126,7 @@
    "choices": 12,
    "command_count": 1177,
    "death_tick": 14466,
-   "final_digest": "ab1f8d154ef18d572dc58cf1b842c2a87ccd3f584eed7ab32b578e110d1d49dc",
+   "final_digest": "1a4faee9ca96327ecc8f143ed4208e2b7d326fc8cf0ce5a3ad3539295581f36f",
    "gems_ground_end": 8,
    "gems_ground_peak": 14,
    "hp_min": 0,
@@ -2066,6 +2144,7 @@
     2
    ],
    "seed": "115",
+   "won": 0,
    "xp_collected": 2765,
    "xp_dropped": 2850
   },
@@ -2074,7 +2153,7 @@
    "choices": 9,
    "command_count": 589,
    "death_tick": 8328,
-   "final_digest": "65b6e75608ca676f572051b85835827399164e77f6d2a27fdd39e443bf89ecbb",
+   "final_digest": "e6677ba3e32407c74db2e8051b3af347af810d62ac67285887d8fc027b9c7d9b",
    "gems_ground_end": 8,
    "gems_ground_peak": 13,
    "hp_min": 0,
@@ -2092,6 +2171,7 @@
     1
    ],
    "seed": "116",
+   "won": 0,
    "xp_collected": 1260,
    "xp_dropped": 1345
   },
@@ -2100,7 +2180,7 @@
    "choices": 6,
    "command_count": 287,
    "death_tick": 4553,
-   "final_digest": "122efe8312f70429062441344ecc5bdf0dc0c78030b0c036dd655617ba1d8dc3",
+   "final_digest": "a9d749976346a34f66a87e8f064e488dae095317ddd2f8f3d90f4b5d8194bb82",
    "gems_ground_end": 10,
    "gems_ground_peak": 11,
    "hp_min": 0,
@@ -2118,6 +2198,7 @@
     0
    ],
    "seed": "117",
+   "won": 0,
    "xp_collected": 510,
    "xp_dropped": 615
   },
@@ -2126,7 +2207,7 @@
    "choices": 7,
    "command_count": 335,
    "death_tick": 5309,
-   "final_digest": "f0267cb246ef17a4375146bb09992567322f44ab50b247d92dc7d6f3ac973261",
+   "final_digest": "1d5b41d253fc44e67a83631bf360cdaff2b7728b10343de8fd7b71038650fd1a",
    "gems_ground_end": 5,
    "gems_ground_peak": 6,
    "hp_min": 0,
@@ -2144,6 +2225,7 @@
     0
    ],
    "seed": "118",
+   "won": 0,
    "xp_collected": 640,
    "xp_dropped": 690
   },
@@ -2152,7 +2234,7 @@
    "choices": 8,
    "command_count": 505,
    "death_tick": 7205,
-   "final_digest": "1e9a35bc7426d17ac6d5bffc8b583720a73e439586537cee9f80cacbff47fc18",
+   "final_digest": "95f0545126dd561353554f51ce0ae8d3fd5fdce47a76834c8709c8f230f5034e",
    "gems_ground_end": 2,
    "gems_ground_peak": 7,
    "hp_min": 0,
@@ -2170,6 +2252,7 @@
     0
    ],
    "seed": "119",
+   "won": 0,
    "xp_collected": 1045,
    "xp_dropped": 1065
   },
@@ -2178,7 +2261,7 @@
    "choices": 7,
    "command_count": 435,
    "death_tick": 5518,
-   "final_digest": "fa492fa16103cf4f7482148cd97b214bcc05198bea222f5f4d197ff404307237",
+   "final_digest": "2d07fd4856a2d1cfaf4c8749f3f9df163664f33827ad450f4c1ca67525b80cf1",
    "gems_ground_end": 1,
    "gems_ground_peak": 4,
    "hp_min": 0,
@@ -2196,6 +2279,7 @@
     0
    ],
    "seed": "120",
+   "won": 0,
    "xp_collected": 725,
    "xp_dropped": 735
   },
@@ -2204,7 +2288,7 @@
    "choices": 7,
    "command_count": 459,
    "death_tick": 6396,
-   "final_digest": "ad8842bfaff3e0e903d8566a46ceea7a686f902b6d6157fe5d25391256de0b3c",
+   "final_digest": "448d75e734e7d624f17f5d7ab2ec8b011e1f8f3df1467c6cc2f2d1b83264dbf4",
    "gems_ground_end": 11,
    "gems_ground_peak": 15,
    "hp_min": 0,
@@ -2222,6 +2306,7 @@
     0
    ],
    "seed": "121",
+   "won": 0,
    "xp_collected": 785,
    "xp_dropped": 900
   },
@@ -2230,7 +2315,7 @@
    "choices": 9,
    "command_count": 708,
    "death_tick": 8347,
-   "final_digest": "9a2e61ff3e5feeb4543135d2905ffb38b7ef52f62553924ec4fc285545bc9d57",
+   "final_digest": "e2e8b9d633c576350c52bd024225dae4febf73ea46bc6c3ce136ceac3d538158",
    "gems_ground_end": 17,
    "gems_ground_peak": 22,
    "hp_min": 0,
@@ -2248,6 +2333,7 @@
     0
    ],
    "seed": "122",
+   "won": 0,
    "xp_collected": 1155,
    "xp_dropped": 1345
   },
@@ -2256,7 +2342,7 @@
    "choices": 7,
    "command_count": 579,
    "death_tick": 7124,
-   "final_digest": "32114ff47358fd6b89da5663485b663556f54b4e980243f4528d1657e02ca5b8",
+   "final_digest": "e18191ef1bf1a03e776b3273030dc7955b652e61b74da8d211e526cb40623d4e",
    "gems_ground_end": 18,
    "gems_ground_peak": 20,
    "hp_min": 0,
@@ -2274,6 +2360,7 @@
     0
    ],
    "seed": "123",
+   "won": 0,
    "xp_collected": 850,
    "xp_dropped": 1035
   },
@@ -2282,7 +2369,7 @@
    "choices": 9,
    "command_count": 715,
    "death_tick": 8875,
-   "final_digest": "b9a548bd8d711d9fea489ab3a8bd8a4cabe18b1278a17e71ca81cdbd071b8d73",
+   "final_digest": "1fbf09b57d11171ee00a3292319569710100e7c4e42b8aa7fe27cb46a9820eb7",
    "gems_ground_end": 1,
    "gems_ground_peak": 6,
    "hp_min": 0,
@@ -2300,6 +2387,7 @@
     2
    ],
    "seed": "124",
+   "won": 0,
    "xp_collected": 1425,
    "xp_dropped": 1440
   },
@@ -2308,7 +2396,7 @@
    "choices": 10,
    "command_count": 796,
    "death_tick": 9931,
-   "final_digest": "8f529249b58ad948a4197a7dd59e26f88682825daab2215c8f4986c166d4aee7",
+   "final_digest": "cc86ee818fc77862ec53bee4463cefbdaaa410461bc36a51cfe3dea3c5447b46",
    "gems_ground_end": 1,
    "gems_ground_peak": 10,
    "hp_min": 0,
@@ -2326,6 +2414,7 @@
     1
    ],
    "seed": "125",
+   "won": 0,
    "xp_collected": 1655,
    "xp_dropped": 1665
   },
@@ -2334,7 +2423,7 @@
    "choices": 10,
    "command_count": 833,
    "death_tick": 10569,
-   "final_digest": "aa7fa900fdee7d7d2497c070c8197b71c90c7f0dd2439a6c7c152f42af0dff5a",
+   "final_digest": "b08129562ea8113787b8805b1a5d16478142679bf33a5326c2db60ae769e8d65",
    "gems_ground_end": 7,
    "gems_ground_peak": 17,
    "hp_min": 0,
@@ -2352,6 +2441,7 @@
     2
    ],
    "seed": "126",
+   "won": 0,
    "xp_collected": 1775,
    "xp_dropped": 1855
   },
@@ -2360,7 +2450,7 @@
    "choices": 8,
    "command_count": 458,
    "death_tick": 6421,
-   "final_digest": "253317fe1450c08f73fbc97ff89e4c99208ff527676f9be0fd9a9f50d8770edf",
+   "final_digest": "f45c6c0723dbfa901b229ff9b33a867e8c6cddc7d9442988bae39642469c2a5a",
    "gems_ground_end": 6,
    "gems_ground_peak": 7,
    "hp_min": 0,
@@ -2378,6 +2468,7 @@
     0
    ],
    "seed": "127",
+   "won": 0,
    "xp_collected": 900,
    "xp_dropped": 960
   },
@@ -2386,7 +2477,7 @@
    "choices": 9,
    "command_count": 604,
    "death_tick": 8722,
-   "final_digest": "c8599467a86d54e393861e7d266779fa698ea423b2831e1607e84b78828e3289",
+   "final_digest": "440c1350f1d89f79f679e045580ce4b2c948ae0f271dfca797bda1ca4919bf5a",
    "gems_ground_end": 2,
    "gems_ground_peak": 8,
    "hp_min": 0,
@@ -2404,6 +2495,7 @@
     1
    ],
    "seed": "128",
+   "won": 0,
    "xp_collected": 1375,
    "xp_dropped": 1395
   },
@@ -2412,7 +2504,7 @@
    "choices": 8,
    "command_count": 532,
    "death_tick": 6365,
-   "final_digest": "29ba00a222ec5ad850cec99dbd07ba2075239122853f1d9fdb872d22f487b2a8",
+   "final_digest": "20d56c0c28e3173b245ae0ec10323cb41a1c5e9c9d274d5704d08fc16a441894",
    "gems_ground_end": 2,
    "gems_ground_peak": 4,
    "hp_min": 0,
@@ -2430,6 +2522,7 @@
     0
    ],
    "seed": "129",
+   "won": 0,
    "xp_collected": 925,
    "xp_dropped": 945
   },
@@ -2438,7 +2531,7 @@
    "choices": 6,
    "command_count": 440,
    "death_tick": 5580,
-   "final_digest": "dbcb548e865bb6b976f39c9b55ba5a9734418b0f272c0f8840c296a86e973d41",
+   "final_digest": "a0c38457244f7d0341769dad0283b597cfb48378827858b3d37485756a777407",
    "gems_ground_end": 21,
    "gems_ground_peak": 21,
    "hp_min": 0,
@@ -2456,6 +2549,7 @@
     2
    ],
    "seed": "130",
+   "won": 0,
    "xp_collected": 535,
    "xp_dropped": 755
   },
@@ -2464,7 +2558,7 @@
    "choices": 7,
    "command_count": 518,
    "death_tick": 6331,
-   "final_digest": "667d925e80a214b82e726980161d3ba0d15454b91932187fc6aa51c305ae2845",
+   "final_digest": "5426f1487d352ac6a0ec030c0df4c87a187f9486b17b17ae53e26e43c0a8df48",
    "gems_ground_end": 11,
    "gems_ground_peak": 11,
    "hp_min": 0,
@@ -2482,6 +2576,7 @@
     1
    ],
    "seed": "131",
+   "won": 0,
    "xp_collected": 755,
    "xp_dropped": 875
   },
@@ -2490,7 +2585,7 @@
    "choices": 8,
    "command_count": 496,
    "death_tick": 7011,
-   "final_digest": "88531bb6af54419a84d81a59857ac4a8f0149c8cc329930cdf0d00a9d74bd929",
+   "final_digest": "0d30a4b1da5228f78ccd4b926151b220133349e9cb42683cf31312eb2cbec18c",
    "gems_ground_end": 0,
    "gems_ground_peak": 5,
    "hp_min": 0,
@@ -2508,6 +2603,7 @@
     1
    ],
    "seed": "132",
+   "won": 0,
    "xp_collected": 1060,
    "xp_dropped": 1060
   }
@@ -2519,7 +2615,7 @@
    "checkpoints": [
     {
      "choices": 0,
-     "digest": "53b7586ba1c705388978c268b2c12d8daebc7cd6d09d7a01d64c63c881fcfeb1",
+     "digest": "4c961a2f02bc3a4eaf13275e324939d0f0370906155b656478b60d23da80ae03",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -2532,11 +2628,12 @@
      "projectiles": 0,
      "step": 1,
      "tick": 1,
+     "won": 0,
      "xp": 0
     },
     {
      "choices": 0,
-     "digest": "2550b92fbaaf9a38e6d10225ee077a00d2aabeb20c92e8345e58ca8912d8ba86",
+     "digest": "2083ca64a62923c2550cd1d5e02689dc58b8d7d384175fb5f31af37ffa55bfcd",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -2549,11 +2646,12 @@
      "projectiles": 0,
      "step": 2,
      "tick": 2,
+     "won": 0,
      "xp": 0
     },
     {
      "choices": 0,
-     "digest": "5586392a101777799da5b0cc229edc4dfe7960cba94d1afeb568d284f83b698b",
+     "digest": "292d3e2f9bd68a7e10666ad188f3e02ba188c77d5db90d8da7ba810ee7a8e15b",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -2566,11 +2664,12 @@
      "projectiles": 0,
      "step": 30,
      "tick": 30,
+     "won": 0,
      "xp": 0
     },
     {
      "choices": 0,
-     "digest": "fc41c83b4d72934de02a4b2513e159c5e3c212503a6cbb867461da08f1107915",
+     "digest": "d271e097491f6a16f332ccfd645ec84393bcab81c85dcb5f7aff0aa805147b03",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -2583,11 +2682,12 @@
      "projectiles": 0,
      "step": 60,
      "tick": 60,
+     "won": 0,
      "xp": 0
     },
     {
      "choices": 0,
-     "digest": "4234f035a2ad593351584863b0ce45cfec851caecf369eba097c8465153374cc",
+     "digest": "7b566ba7d6ce24c3b8d2d3870a2384b85812480e24fde3d0cd880aa019ea0fc7",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2600,11 +2700,12 @@
      "projectiles": 0,
      "step": 300,
      "tick": 300,
+     "won": 0,
      "xp": 0
     },
     {
      "choices": 1,
-     "digest": "7c8f4264b5129865aa38f2099b725607b1614d7cff44c20fd5e7da88c34e6879",
+     "digest": "fe7dd5b4b22b64b5f13afc4ae822ea772f86e0d4062fe54a3c3c6ef9168dfd22",
      "enemy_alive": 2,
      "gems": 0,
      "hero_dead": 0,
@@ -2617,11 +2718,12 @@
      "projectiles": 1,
      "step": 600,
      "tick": 599,
+     "won": 0,
      "xp": 45
     },
     {
      "choices": 2,
-     "digest": "d0fb170703fafda94f49b482474940e8a98a4c8d8389de7dc2f837b6c3957ae6",
+     "digest": "b5af98011e2415b602f70e1f9413e18499698e8296c6e596cf8f2812386c29ef",
      "enemy_alive": 3,
      "gems": 1,
      "hero_dead": 0,
@@ -2634,11 +2736,12 @@
      "projectiles": 1,
      "step": 900,
      "tick": 898,
+     "won": 0,
      "xp": 65
     },
     {
      "choices": 3,
-     "digest": "18623ab1a6b1d440c16e08f86f69894cf0c855501888dc07709edcdbb1ffbfa3",
+     "digest": "38375c1f5704597103195459f341e35aa6ede894604e0f4871c2fcbaf314c9e3",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2651,11 +2754,12 @@
      "projectiles": 1,
      "step": 1200,
      "tick": 1197,
+     "won": 0,
      "xp": 120
     },
     {
      "choices": 3,
-     "digest": "489c9a37c73a8046c7a37c043b56447a6d5429ab4374588da1958d3792b35dbd",
+     "digest": "83734583779fca3b1624a3ad203578b194b05d43e3c935667e40cdd8cd9e5056",
      "enemy_alive": 1,
      "gems": 2,
      "hero_dead": 0,
@@ -2668,11 +2772,12 @@
      "projectiles": 1,
      "step": 1500,
      "tick": 1497,
+     "won": 0,
      "xp": 155
     },
     {
      "choices": 4,
-     "digest": "729ed880a8ca171b0cba32fe4e9c154838f282c7575a4446b3d2f08816e69131",
+     "digest": "ade22ec3b462722c85952d74b1c31c5092741157d584b20287125b44180cd440",
      "enemy_alive": 1,
      "gems": 1,
      "hero_dead": 0,
@@ -2685,11 +2790,12 @@
      "projectiles": 0,
      "step": 1800,
      "tick": 1796,
+     "won": 0,
      "xp": 210
     },
     {
      "choices": 4,
-     "digest": "4015f15d04cd43b9164c78ae8789cd7d67f96860f7980be1373d02d48eeb0aab",
+     "digest": "574d4086d42dc4829d58f00bbacf50d123a0e245e7d480cde80d94b60a8d18d8",
      "enemy_alive": 1,
      "gems": 0,
      "hero_dead": 0,
@@ -2702,11 +2808,12 @@
      "projectiles": 0,
      "step": 2100,
      "tick": 2096,
+     "won": 0,
      "xp": 275
     },
     {
      "choices": 4,
-     "digest": "8daf6fe8768f1a88d6bab4b79fd5f12e732f508bb5376ac3e1ddf64c65b17eab",
+     "digest": "62bb4b00da0d61abaa3003492b0b0a1717d6ed0dc8ce688b388b8fa8ecdd0cd6",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2719,11 +2826,12 @@
      "projectiles": 1,
      "step": 2400,
      "tick": 2396,
+     "won": 0,
      "xp": 295
     },
     {
      "choices": 5,
-     "digest": "a037cfa8839d2b37a3505a79fc7f1d3b9f1b7e7556b4016b581eba535a84f6a5",
+     "digest": "afe45050700dbfdba6b505436b5216fbea45ee97017ee720dc93f82449006f1b",
      "enemy_alive": 1,
      "gems": 2,
      "hero_dead": 0,
@@ -2736,11 +2844,12 @@
      "projectiles": 0,
      "step": 2700,
      "tick": 2695,
+     "won": 0,
      "xp": 335
     },
     {
      "choices": 5,
-     "digest": "843c6887866e5ee711ba9e89e71a06e4aaf619bbdc9000a417273027c1f1b650",
+     "digest": "b5df67957f9abcc362e7f2a2bbcc360890f66f61e50759d45b3747517beb1173",
      "enemy_alive": 1,
      "gems": 1,
      "hero_dead": 0,
@@ -2753,11 +2862,12 @@
      "projectiles": 1,
      "step": 3000,
      "tick": 2995,
+     "won": 0,
      "xp": 395
     },
     {
      "choices": 6,
-     "digest": "df22a80ba12382ba93b108c8d316e2185f948712845b781261ac9c1bf8440895",
+     "digest": "66db86141b51fbc759d1cd0c850f1862f45a5bad970349c01190ca518f136a6e",
      "enemy_alive": 2,
      "gems": 0,
      "hero_dead": 0,
@@ -2770,11 +2880,12 @@
      "projectiles": 1,
      "step": 3300,
      "tick": 3294,
+     "won": 0,
      "xp": 450
     },
     {
      "choices": 6,
-     "digest": "e120a4140531e31a950fa318346b9999ab68be2886f8be6537e411c63a4f8c89",
+     "digest": "3716e0963bc0c3135cb5ea7f426a822a7e2d7abe1e1d8bae9289b181a2c20324",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2787,11 +2898,12 @@
      "projectiles": 1,
      "step": 3600,
      "tick": 3594,
+     "won": 0,
      "xp": 490
     },
     {
      "choices": 6,
-     "digest": "edb38265f2c97b830c968060df21a94514f318f72608127116193cea1a693766",
+     "digest": "121f9443c0f3bd0a02060210ea7b2943eac83b94d0003bdafb50e6787b38ae09",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2804,11 +2916,12 @@
      "projectiles": 0,
      "step": 3900,
      "tick": 3894,
+     "won": 0,
      "xp": 550
     },
     {
      "choices": 6,
-     "digest": "56ad1db685216184a4987556aa901be03d6485e2be47e14e662162e8090b03f2",
+     "digest": "e65cc86a6283d6dba1b6558dc1cdd3fe85432244d4b152af7c8ce8f3da9d5198",
      "enemy_alive": 2,
      "gems": 0,
      "hero_dead": 0,
@@ -2821,11 +2934,12 @@
      "projectiles": 0,
      "step": 4200,
      "tick": 4194,
+     "won": 0,
      "xp": 605
     },
     {
      "choices": 7,
-     "digest": "fc4edde9e8234936e32dd6bd122e865dae8e9722aac4301e5407142e1602e915",
+     "digest": "6feab7de6d68298fdf39b0ed7da816eeed5827851339e0a24ef707db47ebe830",
      "enemy_alive": 1,
      "gems": 2,
      "hero_dead": 0,
@@ -2838,11 +2952,12 @@
      "projectiles": 0,
      "step": 4500,
      "tick": 4493,
+     "won": 0,
      "xp": 655
     },
     {
      "choices": 7,
-     "digest": "6609b40780d6012820e70897f5de3c0588c6e31dbdb613542bf13239663e5b64",
+     "digest": "a02a6a468287b8b639f5f98da5710529c7c329e0faddad07b952322b5f9240d9",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2855,11 +2970,12 @@
      "projectiles": 0,
      "step": 4800,
      "tick": 4793,
+     "won": 0,
      "xp": 710
     },
     {
      "choices": 7,
-     "digest": "87e3c212281848b58d19647fe343f15cb274eb69d8c112b3027548057b44b9db",
+     "digest": "b9c63001ee760dfa3568f3d0394f3323cf86492ffc0900567cf7e847b874455e",
      "enemy_alive": 1,
      "gems": 2,
      "hero_dead": 0,
@@ -2872,11 +2988,12 @@
      "projectiles": 1,
      "step": 5100,
      "tick": 5093,
+     "won": 0,
      "xp": 755
     },
     {
      "choices": 7,
-     "digest": "75794ab260768d642517bec1b94a0f505b66768dd73addd68cd10065f9f1a84b",
+     "digest": "2fdf6791f2fca6da11511e0eac18468e77150e0f9cb5d9e2a79957c0fe793604",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2889,11 +3006,12 @@
      "projectiles": 0,
      "step": 5400,
      "tick": 5393,
+     "won": 0,
      "xp": 810
     },
     {
      "choices": 8,
-     "digest": "0e743bf456f99d8ad48fdba335a6806a6910d1d6bf8700ea07724a9cab10b93a",
+     "digest": "6749414dd7b87ce4a09d846393b8ce430ee15576c58fe3b0617391c2f9f4923e",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -2906,11 +3024,12 @@
      "projectiles": 0,
      "step": 5700,
      "tick": 5692,
+     "won": 0,
      "xp": 865
     },
     {
      "choices": 8,
-     "digest": "609966a55308cda900a7059fb6f0dc0834b99e2adbe3a9a52814c66c8373792b",
+     "digest": "57067494bed2d97dcd6348c882cddf2803b280f62405b0d0ebfeaaebf928f820",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -2923,11 +3042,12 @@
      "projectiles": 1,
      "step": 6000,
      "tick": 5992,
+     "won": 0,
      "xp": 925
     },
     {
      "choices": 8,
-     "digest": "85bab4cca4b2f6836fff658ed1e201b30ab1e5288e770e8d82fccdd1a978b7e9",
+     "digest": "bbef875caa0d8800bf8a410fed3b40aaa9671fdbeb2ede2c24562606c7b69795",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -2940,11 +3060,12 @@
      "projectiles": 1,
      "step": 6300,
      "tick": 6292,
+     "won": 0,
      "xp": 980
     },
     {
      "choices": 8,
-     "digest": "c84bc06c9f1e03cb1e2c775c4ef333a6707964cc19982f00be8a1dbe27c48ec6",
+     "digest": "cb1197f2ea22dd9ea63a323cb53f3b76a2bd75ea76fc6f66bc4588a093500882",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -2957,11 +3078,12 @@
      "projectiles": 0,
      "step": 6600,
      "tick": 6592,
+     "won": 0,
      "xp": 1040
     },
     {
      "choices": 8,
-     "digest": "f7212197864f9f4ad90a7c14171be62632a8fe62d370df8762828b65c939d91a",
+     "digest": "fedec0f97b72b4a1534fbd4cb576f1d221cbe68d7d09c8b00029befd2f0f50f3",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -2974,11 +3096,12 @@
      "projectiles": 1,
      "step": 6900,
      "tick": 6892,
+     "won": 0,
      "xp": 1090
     },
     {
      "choices": 9,
-     "digest": "d395d93134904cd7e7020301d236c56a2a05971515ef85b3c79dab51dc06e23a",
+     "digest": "29e98cc3a8c9ac89f058f367aeb8497b6fcdc2c3a366571366f3693e0d8d8c5b",
      "enemy_alive": 3,
      "gems": 0,
      "hero_dead": 0,
@@ -2991,11 +3114,12 @@
      "projectiles": 0,
      "step": 7200,
      "tick": 7191,
+     "won": 0,
      "xp": 1170
     },
     {
      "choices": 9,
-     "digest": "11bfe32792260878b0e56f23503993469a938e0e78e6c962c0bd4108412947d9",
+     "digest": "c46fa0a30ae8b3f21125a6c02d321cec6c41c361179fd9e4301b5ecb1ce27652",
      "enemy_alive": 3,
      "gems": 1,
      "hero_dead": 0,
@@ -3008,11 +3132,12 @@
      "projectiles": 0,
      "step": 7500,
      "tick": 7491,
+     "won": 0,
      "xp": 1235
     },
     {
      "choices": 9,
-     "digest": "11e0df486810e41bb216a26ffd6c93ded30489d5310f16e85d4a4b4d65ef1800",
+     "digest": "bc8f5a9a1fc725077745db291a1075054c76f18db0c08554fc3ff5a4b81c7ca4",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
@@ -3025,11 +3150,12 @@
      "projectiles": 1,
      "step": 7800,
      "tick": 7791,
+     "won": 0,
      "xp": 1295
     },
     {
      "choices": 9,
-     "digest": "15a45c04f27f3604cfefabe10d996d1d6667e2a9df5d0d733a488bdb207f2d97",
+     "digest": "fdb706e3a8b544ef523c9fec02b78e0488ed013c6882bde927b2e46e754bde15",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -3042,11 +3168,12 @@
      "projectiles": 1,
      "step": 8100,
      "tick": 8091,
+     "won": 0,
      "xp": 1355
     },
     {
      "choices": 9,
-     "digest": "34c9a119fc35806b6f7115bc462e5d89d838541d7d9ea4f91a04e76ddd9b4f32",
+     "digest": "52f8a00363ca4474b5a5d0b4d31300237b88160f0a672f06b2de76c4ee07f6b0",
      "enemy_alive": 3,
      "gems": 1,
      "hero_dead": 0,
@@ -3059,11 +3186,12 @@
      "projectiles": 1,
      "step": 8400,
      "tick": 8391,
+     "won": 0,
      "xp": 1420
     },
     {
      "choices": 10,
-     "digest": "0bd4a0853166a03891bc5d3ff1a4660706f0d542ffd00d7c099df158e9ffccaa",
+     "digest": "ef8d45ca164ab9084683f6803f40342da004f29ebce5376a85c6436179f5d4b3",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
@@ -3076,11 +3204,12 @@
      "projectiles": 1,
      "step": 8700,
      "tick": 8690,
+     "won": 0,
      "xp": 1480
     },
     {
      "choices": 10,
-     "digest": "082cb90db0559947b50157e50f398467fdc5f336892438c14442fa791ebd07e1",
+     "digest": "9aad6af712a6cf4c78288958789ee4f3ba8fbc901e4a892239c1234647905b0f",
      "enemy_alive": 2,
      "gems": 4,
      "hero_dead": 0,
@@ -3093,11 +3222,12 @@
      "projectiles": 1,
      "step": 9000,
      "tick": 8990,
+     "won": 0,
      "xp": 1535
     },
     {
      "choices": 10,
-     "digest": "e6bb0b3eebf4d5211243ddf3ebd3ee3e1ee90abb3580930196494de1531e4c0a",
+     "digest": "86a2f5e2804412e9125a865d9d82594f87d217f32795b5bbb43ae50f2164489e",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
@@ -3110,11 +3240,12 @@
      "projectiles": 1,
      "step": 9300,
      "tick": 9290,
+     "won": 0,
      "xp": 1605
     },
     {
      "choices": 10,
-     "digest": "18fc8a833f9c9014ba2e61f4325f6a6c183c358f87f1e5270dc6b1485c5feb6f",
+     "digest": "5f7079bfbac8314a9725ac7253b968ba729925f188377663845fefc36e36146d",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
@@ -3127,11 +3258,12 @@
      "projectiles": 1,
      "step": 9600,
      "tick": 9590,
+     "won": 0,
      "xp": 1665
     },
     {
      "choices": 10,
-     "digest": "17f6b08fe8ee74ee438f48897797db454440320d34bddd0c9a788103e7dcefde",
+     "digest": "ed8375ca08ef5667b580a0cd99119a4badbb2e8ee9f1f53d4b88d5b2412445ad",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3144,11 +3276,12 @@
      "projectiles": 2,
      "step": 9900,
      "tick": 9890,
+     "won": 0,
      "xp": 1745
     },
     {
      "choices": 10,
-     "digest": "7e4a7489d7efd2a6c9721e2545020e154f8e25b0a06e4dcf7a94d01a94023718",
+     "digest": "7b385ca334481fb5ea7e2283567e720c5a171f4d62f3ff005f055741e30d958b",
      "enemy_alive": 3,
      "gems": 1,
      "hero_dead": 0,
@@ -3161,11 +3294,12 @@
      "projectiles": 1,
      "step": 10200,
      "tick": 10190,
+     "won": 0,
      "xp": 1820
     },
     {
      "choices": 10,
-     "digest": "ed8f3a0436830696f80c78f5f409684bd428657ecffb1763ba8fa1f71431427e",
+     "digest": "34fee078542cfdbe66277b4816d8adf2e091739a203543232c649e5fae7ba22a",
      "enemy_alive": 3,
      "gems": 4,
      "hero_dead": 0,
@@ -3178,11 +3312,12 @@
      "projectiles": 1,
      "step": 10500,
      "tick": 10490,
+     "won": 0,
      "xp": 1865
     },
     {
      "choices": 11,
-     "digest": "1fb27963f595323171559b9165aac9039b936ceb2aef570838f13d30d59ae817",
+     "digest": "89563be8e771fdc56592370c4d989f8d2f53b8742da8b2eb413e0257e374bc63",
      "enemy_alive": 3,
      "gems": 3,
      "hero_dead": 0,
@@ -3195,11 +3330,12 @@
      "projectiles": 0,
      "step": 10800,
      "tick": 10789,
+     "won": 0,
      "xp": 1940
     },
     {
      "choices": 11,
-     "digest": "48bc1d52fc9ce5a03ac99deeeab59ba1138da13d16b8eecd57fe792bab8c4c48",
+     "digest": "fe429b94a1a3aa57d333856a6343d77a0f62f921f62ce341f95f04749a14f8f8",
      "enemy_alive": 4,
      "gems": 3,
      "hero_dead": 0,
@@ -3212,11 +3348,12 @@
      "projectiles": 1,
      "step": 11100,
      "tick": 11089,
+     "won": 0,
      "xp": 2005
     },
     {
      "choices": 11,
-     "digest": "c71ea64ec3d5f1ec6d30d7cad44e17bccc72e94f825f9eb0429b8e20f995f264",
+     "digest": "1253461f19a78fe60449ad02ef6bbc44f828818548b50e6367e52afd1aa4b6ec",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3229,11 +3366,12 @@
      "projectiles": 0,
      "step": 11400,
      "tick": 11389,
+     "won": 0,
      "xp": 2105
     },
     {
      "choices": 11,
-     "digest": "09a74988cb7769cc08800b46bc4fb207f5fae63f4189f0cd8c64f6171ba98df2",
+     "digest": "cf1e10a623e4d788d66597a69657378452bb5c97bf83ceba396bfb12d6adeb27",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -3246,11 +3384,12 @@
      "projectiles": 2,
      "step": 11700,
      "tick": 11689,
+     "won": 0,
      "xp": 2180
     },
     {
      "choices": 11,
-     "digest": "0020786d4a78a62e08f65b98af489a760da95323cc99f4968795bb1b26fa844c",
+     "digest": "5007b2e6427dc684580900f67edc78790fae6de18aa4c5f187da7be718499446",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3263,11 +3402,12 @@
      "projectiles": 1,
      "step": 12000,
      "tick": 11989,
+     "won": 0,
      "xp": 2245
     },
     {
      "choices": 11,
-     "digest": "07881918da5640ab321f1ccfde4337738cbe8b47e4d5c072d5332b53c419f1e2",
+     "digest": "970eecd9fc18fe7abd39b01634810ffee62a1be4ba2e4936b65621ab238be420",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3280,11 +3420,12 @@
      "projectiles": 1,
      "step": 12300,
      "tick": 12289,
+     "won": 0,
      "xp": 2320
     },
     {
      "choices": 12,
-     "digest": "7190c8cee9a16ef4fa60e5c861a12cc70a6e3df6ee19ba4b2f88a36d5eced0f7",
+     "digest": "fc675a2fa4aa832b8681fae97e24251988ed954e6a75accbded131334cd54212",
      "enemy_alive": 2,
      "gems": 4,
      "hero_dead": 0,
@@ -3297,11 +3438,12 @@
      "projectiles": 1,
      "step": 12600,
      "tick": 12588,
+     "won": 0,
      "xp": 2380
     },
     {
      "choices": 12,
-     "digest": "c1c31cf9a5f6759e49bb04c309470dc2f843fcec7141d644de91442074693f8e",
+     "digest": "4461c5702f50ba2b154b1756735276851e61ac7748849b78abaf700330bb8b87",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3314,11 +3456,12 @@
      "projectiles": 0,
      "step": 12900,
      "tick": 12888,
+     "won": 0,
      "xp": 2470
     },
     {
      "choices": 12,
-     "digest": "8dd9b0c8234431b283409b8f37a30a1be646d5c483bce802e2ddcee0707807ec",
+     "digest": "cd12a9986ba0055c08f76c95337cacc0cab119ff51fc0f3531f1386bdc81b68b",
      "enemy_alive": 3,
      "gems": 3,
      "hero_dead": 0,
@@ -3331,11 +3474,12 @@
      "projectiles": 1,
      "step": 13200,
      "tick": 13188,
+     "won": 0,
      "xp": 2540
     },
     {
      "choices": 12,
-     "digest": "ca16a4e267a53cb7d74ebc8dedad031c669f8807ede50fc5cac7dda70043a471",
+     "digest": "e31704ec7a3b8f969b5ebc33aea3fe8f7b90669bc0126f3266821180a34273cb",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3348,11 +3492,12 @@
      "projectiles": 1,
      "step": 13500,
      "tick": 13488,
+     "won": 0,
      "xp": 2620
     },
     {
      "choices": 12,
-     "digest": "328f8726f35d4f03f25dfd23712f787b69774998c37e200db987d1c4d3ce870c",
+     "digest": "ae5c6a30b9d70985266af6989039006a1bea816cca8870ac8647add626ea851a",
      "enemy_alive": 5,
      "gems": 1,
      "hero_dead": 0,
@@ -3365,11 +3510,12 @@
      "projectiles": 0,
      "step": 13800,
      "tick": 13788,
+     "won": 0,
      "xp": 2680
     },
     {
      "choices": 12,
-     "digest": "2ec8dad57a400598fb3d59d7d63fec39151f6e484ed61b04092bbc3db7b111a3",
+     "digest": "ca5d62bbfea5b7ff88bf4ce8727904b92a320ee427212d8ba98a7b873e2682e5",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
@@ -3382,11 +3528,12 @@
      "projectiles": 0,
      "step": 14100,
      "tick": 14088,
+     "won": 0,
      "xp": 2760
     },
     {
      "choices": 12,
-     "digest": "6dd08a749b170498e472fe57f72fb2b06e7c7ea26b529505115ab622061a6b4c",
+     "digest": "12420b746036b58bfb480d14ce7cfe9e164fc8736a00f67d4c9090cf47e5deb1",
      "enemy_alive": 1,
      "gems": 4,
      "hero_dead": 0,
@@ -3399,11 +3546,12 @@
      "projectiles": 0,
      "step": 14400,
      "tick": 14388,
+     "won": 0,
      "xp": 2830
     },
     {
      "choices": 13,
-     "digest": "89cb0ea9dce51c6209c423fd2e0a8ff28cd3f04c705143adcd54c3f8b80f424b",
+     "digest": "3817f4e46d3a3e5f6f439db16ed66a98d72b7820789cddd78adcd5e878a9ed31",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3416,11 +3564,12 @@
      "projectiles": 2,
      "step": 14700,
      "tick": 14687,
+     "won": 0,
      "xp": 2905
     },
     {
      "choices": 13,
-     "digest": "d98a05ebf1a9ecf723755c3e4e3f8e12ba585eeeada424943936892695e05839",
+     "digest": "2386e1691ad19181c0e4c322081a4929e08c9bb9a00e34a2deb8263030b6e689",
      "enemy_alive": 3,
      "gems": 1,
      "hero_dead": 0,
@@ -3433,11 +3582,12 @@
      "projectiles": 0,
      "step": 15000,
      "tick": 14987,
+     "won": 0,
      "xp": 2985
     },
     {
      "choices": 13,
-     "digest": "1af9924b6cc87e7b17056bc4306ce22874465ae21cc4b070f875daada938d0b5",
+     "digest": "28914ef36c4d0b84bbbcfc3a89e1c19df2be3c6f513b17b831291151144a13ba",
      "enemy_alive": 2,
      "gems": 2,
      "hero_dead": 0,
@@ -3450,11 +3600,12 @@
      "projectiles": 0,
      "step": 15300,
      "tick": 15287,
+     "won": 0,
      "xp": 3070
     },
     {
      "choices": 13,
-     "digest": "1134f2506b9c35c2d94817b98d2adbbf66d2631224a12a7318efb4457462ee91",
+     "digest": "c08cbb27e7ef4f034029b4edb58339a7a32d1870ad12a86eec551f03f9f67ce3",
      "enemy_alive": 3,
      "gems": 3,
      "hero_dead": 0,
@@ -3467,11 +3618,12 @@
      "projectiles": 1,
      "step": 15600,
      "tick": 15587,
+     "won": 0,
      "xp": 3125
     },
     {
      "choices": 13,
-     "digest": "a1a16d3bd9a6dfd860dbeee03b8f0444fbc64da02770edbbc794b2aaefa664d4",
+     "digest": "36a28298afb261caf91d76c2655ae1339cca598bee3bb3467ff816a8ee8a15b5",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3484,11 +3636,12 @@
      "projectiles": 0,
      "step": 15900,
      "tick": 15887,
+     "won": 0,
      "xp": 3200
     },
     {
      "choices": 13,
-     "digest": "d7de2c8e6212de06a27e3e3c0d7a3472be1c7301edf2e4fe4e0f66ee5652a3de",
+     "digest": "0f2d175e7663bfeb7d46261d7d1abca23ab7137a4db0af3f4c2a1ea0676d1a16",
      "enemy_alive": 2,
      "gems": 4,
      "hero_dead": 0,
@@ -3501,11 +3654,12 @@
      "projectiles": 0,
      "step": 16200,
      "tick": 16187,
+     "won": 0,
      "xp": 3260
     },
     {
      "choices": 13,
-     "digest": "a5203b6c1e143f89d81488e63a89b520f87783fe998b05a6b17d328bb23b844c",
+     "digest": "fe995026d2db880e46af44b7a39b8d5972cc682a62ba935693508bb490c37fa9",
      "enemy_alive": 3,
      "gems": 3,
      "hero_dead": 0,
@@ -3518,11 +3672,12 @@
      "projectiles": 2,
      "step": 16500,
      "tick": 16487,
+     "won": 0,
      "xp": 3330
     },
     {
      "choices": 13,
-     "digest": "43c42dcb0dd3ce30a6e45812d4f87950e86cca3623e7c61d9d646b558fe66220",
+     "digest": "20b550f13b9b471afb4a40360316ecb29b4e5f9d61753ef6d95c31fabc50e587",
      "enemy_alive": 3,
      "gems": 3,
      "hero_dead": 0,
@@ -3535,11 +3690,12 @@
      "projectiles": 0,
      "step": 16800,
      "tick": 16787,
+     "won": 0,
      "xp": 3400
     },
     {
      "choices": 14,
-     "digest": "ab766504274ddadaaae117a38e714f922ba477dc3f6d6f8104a93b6e9ebe4acb",
+     "digest": "f8c2cbb8c00048be5f11a416c04b6390bc518be01d4a47ca3e0a121d532a1c3b",
      "enemy_alive": 3,
      "gems": 4,
      "hero_dead": 0,
@@ -3552,11 +3708,12 @@
      "projectiles": 0,
      "step": 17100,
      "tick": 17086,
+     "won": 0,
      "xp": 3470
     },
     {
      "choices": 14,
-     "digest": "fb56e97ce83290f66eaf20e74c840a087ded6178241e94349791e8aa3904c1e5",
+     "digest": "60036d6fb4e224a6a2888a1b9942793c093a01b4b5fd727a1de8a32483bef066",
      "enemy_alive": 3,
      "gems": 4,
      "hero_dead": 0,
@@ -3569,11 +3726,12 @@
      "projectiles": 0,
      "step": 17400,
      "tick": 17386,
+     "won": 0,
      "xp": 3545
     },
     {
      "choices": 14,
-     "digest": "d295acb522c1f8b58d603bd9ae69b4558d933ad91db01cfa1072c7a6fae2a4fb",
+     "digest": "8ca7af1e4d8de22b7545ca06a057f6bb55c717dae9f14b74accfd0b74c5f0be9",
      "enemy_alive": 3,
      "gems": 2,
      "hero_dead": 0,
@@ -3586,11 +3744,12 @@
      "projectiles": 0,
      "step": 17700,
      "tick": 17686,
+     "won": 0,
      "xp": 3630
     },
     {
      "choices": 14,
-     "digest": "97167c0bbac4b4fc36f99ac57cf1050117d7a9cc4b7982727dd5fa6d46998b31",
+     "digest": "afaa516fc2c8edb0377e4f06a7603aaccaffed3f94e777f7105e58788ecd654e",
      "enemy_alive": 1,
      "gems": 4,
      "hero_dead": 0,
@@ -3603,11 +3762,12 @@
      "projectiles": 2,
      "step": 18000,
      "tick": 17986,
+     "won": 0,
      "xp": 3710
     },
     {
      "choices": 14,
-     "digest": "bba234ff446d85b2491c40e590214ad0fa19316e8397bdf70f2e89286dc608cd",
+     "digest": "5e7993d944c451f71f06634fea84aa66b88a9c82e006609afee78700fa8b1862",
      "enemy_alive": 1,
      "gems": 3,
      "hero_dead": 0,
@@ -3620,6 +3780,7 @@
      "projectiles": 0,
      "step": 18014,
      "tick": 18000,
+     "won": 1,
      "xp": 3725
     }
    ],
@@ -13665,6 +13826,7 @@
    "kills": 338,
    "log_digest": "319e515b4468f17565c31e549e4dd79ace6e566076a7cb2d7633eacd6d7083d5",
    "name": "botrun.p0.kiter_upgrades.s101",
+   "run_ticks": 18000,
    "skill": [
     "50000",
     "384000",
@@ -13676,6 +13838,7 @@
     "64"
    ],
    "ticks": 18014,
+   "won": 1,
    "xp": {
     "costs": [
      "20",
