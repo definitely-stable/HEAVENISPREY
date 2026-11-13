@@ -1,17 +1,20 @@
 class_name SimKernel
 extends RefCounted
-## Fixed 60 Hz simulation step (s04, ADR-008). Exact port of tools/content/sim_core.py.
+## Fixed 60 Hz simulation step (s04, ADR-008, ADR-009 section 1). Exact port of
+## tools/content/sim_core.py.
 ##
 ## Phase order inside one tick (P0-01 subset of s04):
 ##   0. a finished run (hero dead) does not step;
 ##   1. apply every logged command whose tick <= world.tick, in log order (last one wins);
 ##   2. move the hero by the held direction (Q14 unit vector x speed, symmetric rounding)
 ##      and clamp inside the arena rectangle (radius-aware);
-##   3. spawn at most one enemy (EnemySystem.spawn);
+##   3. spawn at most one enemy into the lowest free slot (EnemySystem.spawn);
 ##   4. move enemies toward the hero (EnemySystem.chase);
-##   5. resolve contact hits in slot order (EnemySystem.contact);
-##   6. hero HP <= 0 -> HP 0, run over;
-##   7. advance the tick.
+##   5. hero skill: cooldown, target, cast (CombatSystem.cast);
+##   6-7a. projectiles fly and hit enemies, slot order (CombatSystem.fly_and_hit);
+##   7b. enemy contact hits, slot order, enemies at 0 HP do not hit (EnemySystem.contact);
+##   8. deaths: enemies (slots freed, kills counted), expired projectiles, then the hero;
+##   9. advance the tick.
 ## No float, no Input, no delta: the same log and config give the same state everywhere.
 
 const AXIS_Q14: int = 16384
@@ -41,7 +44,13 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 	if config.has_enemies():
 		EnemySystem.spawn(config, world)
 		EnemySystem.chase(config, world)
+		if config.has_skill():
+			CombatSystem.cast(config, world)
+			CombatSystem.fly_and_hit(config, world)
 		EnemySystem.contact(config, world)
+		EnemySystem.clear_dead(world)
+		if config.has_skill():
+			CombatSystem.clear_expired(world)
 		if world.hero_hp <= 0:
 			world.hero_hp = 0
 			world.hero_dead = 1

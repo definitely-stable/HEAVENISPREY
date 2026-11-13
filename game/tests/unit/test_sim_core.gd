@@ -1,8 +1,12 @@
 extends GutTest
-## P0-01b simulation core parity with tools/content/sim_core.py: command log rules and
-## hero movement traces must match the Python reference bit for bit.
+## P0-01 simulation core parity with tools/content/sim_core.py: command log rules, hero
+## movement, enemies and the hero auto-attack must match the Python reference bit for bit.
 
 const VECTORS: String = "res://tests/fixtures/sim_core_vectors.json"
+const BASE: Array[int] = [4800, 24000, 0, 0, 1536000, 960000, 768000, 480000]
+const P0_SKILL: Array[int] = [50000, 384000, 10000, 12000, 10000, 40, 1, 64]
+## Frozen, harmless targets with plenty of HP; no spawn for ~536870 ticks.
+const TARGET_KINDS: Array[int] = [0, 24000, 1000000, 0, 36, 1]
 
 var _data: Dictionary = {}
 
@@ -46,7 +50,14 @@ static func _config(row: Dictionary) -> SimConfig:
 	if typeof(enemies) == TYPE_DICTIONARY:
 		var spec: Dictionary = enemies
 		config.with_enemies(_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"]))
+	var skill: Variant = row.get("skill")
+	if typeof(skill) == TYPE_ARRAY:
+		config.with_skill(_ints(skill))
 	return config
+
+
+static func _live_projectiles(world: WorldState) -> int:
+	return world.projectile_slots() - world.proj_damage.count(0)
 
 
 func test_traces_match_reference() -> void:
@@ -71,7 +82,9 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.player_y, str(mark["player_y"]).to_int(), label + " y")
 			assert_eq(world.hero_hp, str(mark["hero_hp"]).to_int(), label + " hp")
 			assert_eq(world.hero_dead, int(mark["hero_dead"]), label + " dead")
-			assert_eq(world.enemy_count(), int(mark["enemy_count"]), label + " enemies")
+			assert_eq(world.enemy_alive, int(mark["enemy_alive"]), label + " enemies")
+			assert_eq(world.kills, int(mark["kills"]), label + " kills")
+			assert_eq(_live_projectiles(world), int(mark["projectiles"]), label + " projectiles")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 
@@ -79,10 +92,10 @@ func test_replay_from_log_is_identical() -> void:
 	var config: SimConfig = SimConfig.create(
 		PackedInt64Array([4800, 24000, 0, 0, 1536000, 960000, 768000, 480000])
 	).with_enemies(
-		PackedInt64Array([500000000, 20, 32, 384000]),
+		PackedInt64Array([500000000, 20000, 300, 3000, 32, 384000]),
 		PackedInt64Array([3264, 24000, 12800, 6500, 36, 8, 6144, 21600, 7800, 7600, 42, 2]),
 		"42"
-	)
+	).with_skill(PackedInt64Array([30000, 480000, 6000, 12000, 10000, 40, 2, 8]))
 	var commands: CommandLog = CommandLog.new()
 	for t: int in range(0, 600, 37):
 		commands.append(PlayerCommand.create(t, t, (t % 3) - 1, ((t + 1) % 3) - 1), 0)
@@ -116,7 +129,7 @@ func test_invalid_config_is_rejected() -> void:
 func test_invalid_enemy_settings_are_rejected() -> void:
 	var movement: PackedInt64Array = PackedInt64Array([4800, 24000, 0, 0, 1536000, 960000, 768000, 480000])
 	var kinds: PackedInt64Array = PackedInt64Array([3264, 24000, 12800, 6500, 36, 8])
-	var values: PackedInt64Array = PackedInt64Array([100000, 45, 48, 384000])
+	var values: PackedInt64Array = PackedInt64Array([100000, 90000, 10800, 2000, 48, 384000])
 	assert_true(SimConfig.create(movement).with_enemies(values, kinds, "1").is_valid())
 	assert_false(SimConfig.create(movement).with_enemies(values, kinds, "-1").is_valid(), "seed")
 	assert_false(SimConfig.create(movement).with_enemies(values, kinds, "01").is_valid(), "seed form")
@@ -124,8 +137,11 @@ func test_invalid_enemy_settings_are_rejected() -> void:
 	assert_false(SimConfig.create(movement).with_enemies(values, zero_weight, "1").is_valid(), "weight")
 	var partial: PackedInt64Array = PackedInt64Array([3264, 24000, 12800])
 	assert_false(SimConfig.create(movement).with_enemies(values, partial, "1").is_valid(), "stride")
-	var no_hp: PackedInt64Array = PackedInt64Array([0, 45, 48, 384000])
+	var no_hp: PackedInt64Array = PackedInt64Array([0, 90000, 10800, 2000, 48, 384000])
 	assert_false(SimConfig.create(movement).with_enemies(no_hp, kinds, "1").is_valid(), "hero hp")
+	var slow_cap: PackedInt64Array = PackedInt64Array([100000, 90000, 10800, 999, 48, 384000])
+	assert_false(SimConfig.create(movement).with_enemies(slow_cap, kinds, "1").is_valid(), "rate cap")
+	assert_false(SimConfig.create(movement).with_enemies(values.slice(0, 4), kinds, "1").is_valid(), "values")
 	var too_wide: PackedInt64Array = PackedInt64Array([3264, 480000, 12800, 6500, 36, 8])
 	assert_false(SimConfig.create(movement).with_enemies(values, too_wide, "1").is_valid(), "radius")
 
@@ -134,7 +150,7 @@ func test_dead_hero_freezes_the_run() -> void:
 	var movement: PackedInt64Array = PackedInt64Array([4800, 24000, 0, 0, 300000, 300000, 150000, 150000])
 	var kinds: PackedInt64Array = PackedInt64Array([6000, 24000, 1000, 50000, 10, 1])
 	var config: SimConfig = SimConfig.create(movement).with_enemies(
-		PackedInt64Array([100000, 1, 1, 0]), kinds, "5")
+		PackedInt64Array([100000, 1000, 0, 1000, 1, 0]), kinds, "5")
 	var world: WorldState = WorldState.initial(config)
 	var commands: CommandLog = CommandLog.new()
 	var guard: int = 0
@@ -151,3 +167,89 @@ func test_dead_hero_freezes_the_run() -> void:
 func test_empty_digest_is_sha256_of_nothing() -> void:
 	var expected: String = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 	assert_eq(CommandLog.new().digest(), expected)
+
+
+static func _arena(skill: Array[int]) -> SimConfig:
+	return SimConfig.create(PackedInt64Array(BASE)).with_enemies(
+		PackedInt64Array([500000000, 536870912, 0, 1000, 64, 0]), PackedInt64Array(TARGET_KINDS), "1"
+	).with_skill(PackedInt64Array(skill))
+
+
+static func _place(world: WorldState, x: int, y: int, hp: int) -> void:
+	world.enemy_uid.append(world.next_enemy_uid)
+	world.enemy_kind.append(0)
+	world.enemy_x.append(x)
+	world.enemy_y.append(y)
+	world.enemy_hp.append(hp)
+	world.enemy_cooldown.append(0)
+	world.next_enemy_uid += 1
+	world.enemy_alive += 1
+
+
+static func _cast_ticks(config: SimConfig, world: WorldState, ticks: int) -> Array[int]:
+	var out: Array[int] = []
+	var commands: CommandLog = CommandLog.new()
+	for _i: int in ticks:
+		var acc: int = world.skill_acc
+		SimKernel.step(config, world, commands)
+		if world.skill_acc < acc:
+			out.append(world.tick - 1)
+	return out
+
+
+func test_skill_casts_every_period_and_holds_without_target() -> void:
+	var config: SimConfig = _arena(P0_SKILL)
+	assert_true(config.is_valid())
+	var world: WorldState = WorldState.initial(config)
+	_place(world, 968000, 480000, 1000000)
+	assert_eq(_cast_ticks(config, world, 160), [49, 99, 149] as Array[int])
+	var idle: WorldState = WorldState.initial(config)
+	assert_eq(_cast_ticks(config, idle, 200), [] as Array[int])
+	assert_eq(idle.skill_acc, 49000, "a blocked tick does not advance the cooldown")
+	_place(idle, 968000, 480000, 1000000)
+	assert_eq(_cast_ticks(config, idle, 60), [200, 250] as Array[int])
+
+
+func test_projectile_hits_each_enemy_once_and_reused_slot_is_new() -> void:
+	var config: SimConfig = _arena(P0_SKILL)
+	var world: WorldState = WorldState.initial(config)
+	_place(world, 968000, 480000, 25000)
+	world.proj_x.append(960000)
+	world.proj_y.append(480000)
+	world.proj_vx.append(0)
+	world.proj_vy.append(0)
+	world.proj_ttl.append(40)
+	world.proj_pierce_left.append(1)
+	world.proj_damage.append(10000)
+	world.proj_ledger.append_array(PackedInt64Array([0, 0]))
+	CombatSystem.fly_and_hit(config, world)
+	CombatSystem.fly_and_hit(config, world)
+	assert_eq(world.enemy_hp[0], 15000, "the same enemy is hit once per projectile")
+	assert_eq(world.proj_ledger[0], 1)
+	world.enemy_uid[0] = world.next_enemy_uid
+	world.next_enemy_uid += 1
+	CombatSystem.fly_and_hit(config, world)
+	assert_eq(world.enemy_hp[0], 5000, "uid 2 in a reused slot is a new target")
+	assert_eq(world.proj_damage[0], 0, "pierce used up: slot freed")
+
+
+func test_invalid_skill_settings_are_rejected() -> void:
+	assert_true(_arena(P0_SKILL).is_valid())
+	assert_false(SimConfig.create(PackedInt64Array(BASE)).with_skill(PackedInt64Array(P0_SKILL)).is_valid())
+	for change: Array in [[0, 0], [3, 0], [3, 34001], [4, 0], [5, 0], [6, 8], [7, 0], [7, 257]]:
+		var skill: Array[int] = P0_SKILL.duplicate()
+		skill[change[0]] = change[1]
+		assert_false(_arena(skill).is_valid(), str(change))
+
+
+func test_acquire_range_is_inclusive() -> void:
+	var config: SimConfig = _arena(P0_SKILL)
+	var world: WorldState = WorldState.initial(config)
+	_place(world, 768000 + 384000, 480000, 1000000)
+	world.skill_acc = 49000
+	SimKernel.step(config, world, CommandLog.new())
+	assert_eq(world.skill_acc, 0, "a target exactly at range is acquired")
+	world.enemy_x[0] += 1
+	world.skill_acc = 49000
+	SimKernel.step(config, world, CommandLog.new())
+	assert_eq(world.skill_acc, 49000, "one su further is out of range")

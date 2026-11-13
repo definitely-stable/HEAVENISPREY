@@ -1,5 +1,6 @@
-"""Reference of the P0-01 simulation core (ADR-008): PlayerCommand log and hero movement
-(P0-01b); enemy spawn, chase, contact damage and hero death (P0-01d).
+"""Reference of the P0-01 simulation core (ADR-008, ADR-009): PlayerCommand log and hero
+movement (P0-01b); enemy spawn, chase, contact damage and hero death (P0-01E); hero
+auto-attack with projectiles, enemy deaths and kills (P0-01F).
 
 Oracle for game/core/sim/*.gd. Integers only (hip-fx-v1 via tools/content/fx.py, hip-rng-v1
 via tools/content/hip_rng.py). Golden traces:
@@ -17,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 2
+VECTORS_SCHEMA_VERSION = 3
 
 
 def _load(name: str, file: str):
@@ -35,6 +36,9 @@ DIAG_Q14 = 11585
 KIND_STRIDE = 6
 SPAWN_ATTEMPTS = 4
 MAX_ENEMIES_LIMIT = 4096
+MAX_PROJECTILES_LIMIT = 256
+MAX_PIERCE = 7
+RATE_ONE = 1000
 BELOW_LIMIT = 1 << 32
 
 OK = "ok"
@@ -72,26 +76,55 @@ class CommandLog:
 
 
 class Config:
-    """Mirror of SimConfig: 8 movement values; optional enemies = 4 values, kinds, seed.
+    """Mirror of SimConfig: 8 movement values; optional enemies (6 values, kinds, seed);
+    optional hero skill (8 values).
 
-    Kind record: (speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
-    contact_interval_ticks, spawn_weight).
+    enemy_values: (hero_hp_mhp, spawn_period_mt, spawn_ramp_ticks, spawn_rate_max_fx,
+    max_enemies, spawn_min_distance_su). Kind record: (speed_su_per_tick, radius_su, hp_mhp,
+    contact_damage_mhp, contact_interval_ticks, spawn_weight). skill: (period_mt, range_su,
+    damage_mhp, projectile_speed_su, projectile_radius_su, projectile_ttl_ticks,
+    projectile_pierce, max_projectiles).
     """
 
-    def __init__(self, movement, enemy_values=(0, 0, 0, 0), kinds=(), seed="0"):
+    def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
+                 skill=(0,) * 8):
         (self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
          self.start_x, self.start_y) = movement
-        self.hero_hp, self.spawn_period, self.max_enemies, self.spawn_min_distance = enemy_values
-        self.kinds = [tuple(kinds[i:i + KIND_STRIDE]) for i in range(0, len(kinds), KIND_STRIDE)]
+        (self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
+         self.max_enemies, self.spawn_min_distance) = enemy_values
+        (self.skill_period, self.skill_range, self.skill_damage, self.proj_speed,
+         self.proj_radius, self.proj_ttl, self.pierce, self.max_projectiles) = skill
+        self.raw_kinds = list(kinds)
+        self.kinds = [tuple(kinds[i:i + KIND_STRIDE])
+                      for i in range(0, len(kinds) - KIND_STRIDE + 1, KIND_STRIDE)]
         self.seed = seed
+
+    def enemy_values(self) -> list[int]:
+        return [self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
+                self.max_enemies, self.spawn_min_distance]
+
+    def skill_values(self) -> list[int]:
+        return [self.skill_period, self.skill_range, self.skill_damage, self.proj_speed,
+                self.proj_radius, self.proj_ttl, self.pierce, self.max_projectiles]
 
     def ints(self) -> list[int]:
         return [self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
-                self.start_x, self.start_y, self.hero_hp, self.spawn_period, self.max_enemies,
-                self.spawn_min_distance] + [v for kind in self.kinds for v in kind]
+                self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
+            + self.raw_kinds
+
+    def has_enemies(self) -> bool:
+        return bool(self.raw_kinds)
+
+    def has_skill(self) -> bool:
+        return self.skill_damage > 0
 
     def total_weight(self) -> int:
         return sum(kind[5] for kind in self.kinds)
+
+    def spawn_rate(self, tick: int) -> int:
+        if self.spawn_ramp <= 0:
+            return RATE_ONE
+        return min(self.spawn_rate_max, RATE_ONE + fx.floor_div(tick * RATE_ONE, self.spawn_ramp))
 
     def valid(self) -> bool:
         if any(abs(v) > fx.COORD_MAX for v in self.ints()):
@@ -102,15 +135,23 @@ class Config:
                 and self.min_x + r <= self.start_x <= self.max_x - r
                 and self.min_y + r <= self.start_y <= self.max_y - r):
             return False
-        if not self.kinds:
-            return True
+        if self.has_enemies() and not self._enemies_valid():
+            return False
+        if self.has_skill() and not self._skill_valid():
+            return False
+        return True
+
+    def _enemies_valid(self) -> bool:
+        if len(self.raw_kinds) % KIND_STRIDE != 0:
+            return False
         try:
             hip_rng.parse_u64(self.seed)
         except ValueError:
             return False
-        if self.hero_hp <= 0 or self.spawn_period <= 0 or self.spawn_min_distance < 0:
+        if self.hero_hp <= 0 or self.spawn_period <= 0 or self.spawn_ramp < 0 \
+                or self.spawn_rate_max < RATE_ONE:
             return False
-        if not 0 < self.max_enemies <= MAX_ENEMIES_LIMIT:
+        if self.spawn_min_distance < 0 or not 0 < self.max_enemies <= MAX_ENEMIES_LIMIT:
             return False
         if not 0 < self.total_weight() <= BELOW_LIMIT:
             return False
@@ -121,6 +162,16 @@ class Config:
                     and hp > 0 and damage >= 0 and interval > 0 and weight > 0):
                 return False
         return True
+
+    def _skill_valid(self) -> bool:
+        """A projectile must not step over the smallest enemy in one tick (no tunnelling)."""
+        if not self.has_enemies():
+            return False
+        min_radius = min([fx.COORD_MAX] + [kind[1] for kind in self.kinds])
+        return (self.skill_period > 0 and self.skill_range >= 0 and self.proj_speed > 0
+                and self.proj_radius > 0 and self.proj_speed <= self.proj_radius + min_radius
+                and self.proj_ttl > 0 and 0 <= self.pierce <= MAX_PIERCE
+                and 0 < self.max_projectiles <= MAX_PROJECTILES_LIMIT)
 
 
 def config_valid(movement: list[int]) -> bool:
@@ -133,7 +184,17 @@ def direction_q14(move_x: int, move_y: int) -> tuple[int, int]:
     return (fx.sign(move_x) * AXIS_Q14, fx.sign(move_y) * AXIS_Q14)
 
 
+# Slot field indexes.
+E_UID, E_KIND, E_X, E_Y, E_HP, E_CD = range(6)
+P_X, P_Y, P_VX, P_VY, P_TTL, P_PIERCE, P_DAMAGE = range(7)
+P_LEDGER = 7
+
+
 class World:
+    """Enemy slot: [uid, kind, x, y, hp, cooldown], free when uid == 0 (all fields 0).
+    Projectile slot: [x, y, vx, vy, ttl, pierce_left, damage] + ledger of pierce + 1 enemy
+    uids, free when damage == 0. Lists never shrink; spawns take the lowest free slot."""
+
     def __init__(self, config: Config):
         self.tick = 0
         self.player_x, self.player_y = config.start_x, config.start_y
@@ -141,33 +202,60 @@ class World:
         self.command_cursor = 0
         self.hero_hp = config.hero_hp
         self.hero_dead = 0
-        self.next_spawn_tick = config.spawn_period
+        self.spawn_acc = 0
         self.rng_cursor = 0
-        self.enemies: list[list[int]] = []  # [kind, x, y, hp, cooldown] in slot order
+        self.next_enemy_uid = 1
+        self.enemy_alive = 0
+        self.kills = 0
+        self.skill_acc = 0
+        self.ledger_size = config.pierce + 1
+        self.enemies: list[list[int]] = []
+        self.projectiles: list[list[int]] = []
 
     def ints(self) -> list[int]:
         head = [self.tick, self.player_x, self.player_y, self.move_x, self.move_y,
-                self.command_cursor, self.hero_hp, self.hero_dead, self.next_spawn_tick,
-                self.rng_cursor, len(self.enemies)]
-        return head + [v for enemy in self.enemies for v in enemy]
+                self.command_cursor, self.hero_hp, self.hero_dead, self.spawn_acc,
+                self.rng_cursor, self.next_enemy_uid, self.enemy_alive, self.kills,
+                self.skill_acc, len(self.enemies), len(self.projectiles)]
+        return head + [v for enemy in self.enemies for v in enemy] \
+            + [v for projectile in self.projectiles for v in projectile]
 
     def digest(self) -> str:
         return ints_digest(self.ints())
+
+    def live_projectiles(self) -> int:
+        return sum(1 for p in self.projectiles if p[P_DAMAGE] != 0)
 
 
 def _dist2(ax: int, ay: int, bx: int, by: int) -> int:
     return (ax - bx) ** 2 + (ay - by) ** 2
 
 
+def _live(enemy: list[int]) -> bool:
+    return enemy[E_UID] != 0 and enemy[E_HP] > 0
+
+
 def _touching(config: Config, world: World, enemy: list[int]) -> bool:
-    reach = config.radius + config.kinds[enemy[0]][1]
-    return _dist2(enemy[1], enemy[2], world.player_x, world.player_y) <= reach * reach
+    reach = config.radius + config.kinds[enemy[E_KIND]][1]
+    return _dist2(enemy[E_X], enemy[E_Y], world.player_x, world.player_y) <= reach * reach
+
+
+def _lowest_free(slots: list[list[int]], field: int) -> int:
+    for index, slot in enumerate(slots):
+        if slot[field] == 0:
+            return index
+    return -1
 
 
 def spawn(config: Config, world: World) -> None:
-    if world.tick < world.next_spawn_tick or len(world.enemies) >= config.max_enemies:
+    rate = config.spawn_rate(world.tick)
+    world.spawn_acc += rate
+    if world.spawn_acc < config.spawn_period:
         return
-    world.next_spawn_tick = world.tick + config.spawn_period
+    if world.enemy_alive >= config.max_enemies:
+        world.spawn_acc -= rate  # a blocked accumulator does not advance
+        return
+    world.spawn_acc -= config.spawn_period
     rng = hip_rng.HipRng(hip_rng.parse_u64(config.seed), "enemy", world.rng_cursor)
     roll = rng.below(config.total_weight())
     kind = len(config.kinds) - 1
@@ -201,26 +289,127 @@ def spawn(config: Config, world: World) -> None:
             if d2 > best:
                 best, spot = d2, corner
     world.rng_cursor = rng.cursor
-    world.enemies.append([kind, spot[0], spot[1], config.kinds[kind][2], 0])
+    record = [world.next_enemy_uid, kind, spot[0], spot[1], config.kinds[kind][2], 0]
+    slot = _lowest_free(world.enemies, E_UID)
+    if slot < 0:
+        world.enemies.append(record)
+    else:
+        world.enemies[slot] = record
+    world.next_enemy_uid += 1
+    world.enemy_alive += 1
 
 
 def chase(config: Config, world: World) -> None:
     for enemy in world.enemies:
-        if _touching(config, world, enemy):
+        if enemy[E_UID] == 0 or _touching(config, world, enemy):
             continue
-        speed, r = config.kinds[enemy[0]][0], config.kinds[enemy[0]][1]
-        qx, qy = fx.normalize_q14(world.player_x - enemy[1], world.player_y - enemy[2])
-        enemy[1] = min(max(enemy[1] + fx.mul_q14(speed, qx), config.min_x + r), config.max_x - r)
-        enemy[2] = min(max(enemy[2] + fx.mul_q14(speed, qy), config.min_y + r), config.max_y - r)
+        speed, r = config.kinds[enemy[E_KIND]][0], config.kinds[enemy[E_KIND]][1]
+        qx, qy = fx.normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
+        enemy[E_X] = min(max(enemy[E_X] + fx.mul_q14(speed, qx), config.min_x + r),
+                         config.max_x - r)
+        enemy[E_Y] = min(max(enemy[E_Y] + fx.mul_q14(speed, qy), config.min_y + r),
+                         config.max_y - r)
+
+
+def nearest_in_range(config: Config, world: World) -> int:
+    best, best_d2 = -1, 0
+    range2 = config.skill_range * config.skill_range
+    for slot, enemy in enumerate(world.enemies):
+        if not _live(enemy):
+            continue
+        d2 = _dist2(enemy[E_X], enemy[E_Y], world.player_x, world.player_y)
+        if d2 <= range2 and (best < 0 or d2 < best_d2):
+            best, best_d2 = slot, d2
+    return best
+
+
+def cast(config: Config, world: World) -> None:
+    world.skill_acc += RATE_ONE
+    if world.skill_acc < config.skill_period:
+        return
+    target = nearest_in_range(config, world)
+    slot = _lowest_free(world.projectiles, P_DAMAGE)
+    if target < 0 or (slot < 0 and len(world.projectiles) >= config.max_projectiles):
+        world.skill_acc -= RATE_ONE  # a blocked accumulator does not advance
+        return
+    world.skill_acc -= config.skill_period
+    enemy = world.enemies[target]
+    qx, qy = fx.normalize_q14(enemy[E_X] - world.player_x, enemy[E_Y] - world.player_y)
+    if qx == 0 and qy == 0:
+        qx = fx.Q14
+    record = [world.player_x, world.player_y, fx.mul_q14(config.proj_speed, qx),
+              fx.mul_q14(config.proj_speed, qy), config.proj_ttl, config.pierce,
+              max(1, config.skill_damage)] + [0] * world.ledger_size
+    if slot < 0:
+        world.projectiles.append(record)
+    else:
+        world.projectiles[slot] = record
+
+
+def _free_projectile(world: World, slot: int) -> None:
+    world.projectiles[slot] = [0] * (P_LEDGER + world.ledger_size)
+
+
+def _resolve_hits(config: Config, world: World, slot: int) -> None:
+    projectile = world.projectiles[slot]
+    while True:
+        ledger = projectile[P_LEDGER:]
+        best, best_d2 = -1, 0
+        for index, enemy in enumerate(world.enemies):
+            if not _live(enemy) or enemy[E_UID] in ledger:
+                continue
+            reach = config.proj_radius + config.kinds[enemy[E_KIND]][1]
+            d2 = _dist2(enemy[E_X], enemy[E_Y], projectile[P_X], projectile[P_Y])
+            if d2 <= reach * reach and (best < 0 or d2 < best_d2):
+                best, best_d2 = index, d2
+        if best < 0:
+            return
+        enemy = world.enemies[best]
+        enemy[E_HP] = max(0, enemy[E_HP] - projectile[P_DAMAGE])
+        projectile[P_LEDGER + config.pierce - projectile[P_PIERCE]] = enemy[E_UID]
+        if projectile[P_PIERCE] == 0:
+            _free_projectile(world, slot)
+            return
+        projectile[P_PIERCE] -= 1
+
+
+def fly_and_hit(config: Config, world: World) -> None:
+    for slot, projectile in enumerate(world.projectiles):
+        if projectile[P_DAMAGE] == 0:
+            continue
+        x, y = projectile[P_X] + projectile[P_VX], projectile[P_Y] + projectile[P_VY]
+        projectile[P_TTL] -= 1
+        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y:
+            _free_projectile(world, slot)
+            continue
+        projectile[P_X], projectile[P_Y] = x, y
+        _resolve_hits(config, world, slot)
 
 
 def contact(config: Config, world: World) -> None:
     for enemy in world.enemies:
-        if enemy[4] > 0:
-            enemy[4] -= 1
-        if enemy[4] == 0 and _touching(config, world, enemy):
-            world.hero_hp -= config.kinds[enemy[0]][3]
-            enemy[4] = config.kinds[enemy[0]][4]
+        if not _live(enemy):
+            continue
+        if enemy[E_CD] > 0:
+            enemy[E_CD] -= 1
+        if enemy[E_CD] == 0 and _touching(config, world, enemy):
+            world.hero_hp -= config.kinds[enemy[E_KIND]][3]
+            enemy[E_CD] = config.kinds[enemy[E_KIND]][4]
+
+
+def clear_dead(world: World) -> None:
+    for slot, enemy in enumerate(world.enemies):
+        if enemy[E_UID] == 0 or enemy[E_HP] > 0:
+            continue
+        world.enemies[slot] = [0] * 6
+        world.enemy_alive -= 1
+        world.kills += 1
+
+
+def clear_expired(world: World) -> None:
+    for slot, projectile in enumerate(world.projectiles):
+        if projectile[P_DAMAGE] != 0 and projectile[P_TTL] <= 0:
+            _free_projectile(world, slot)
 
 
 def step(config: Config, world: World, log: CommandLog) -> None:
@@ -236,10 +425,16 @@ def step(config: Config, world: World, log: CommandLog) -> None:
                          config.max_x - r)
     world.player_y = min(max(world.player_y + fx.mul_q14(config.speed, qy), config.min_y + r),
                          config.max_y - r)
-    if config.kinds:
+    if config.has_enemies():
         spawn(config, world)
         chase(config, world)
+        if config.has_skill():
+            cast(config, world)
+            fly_and_hit(config, world)
         contact(config, world)
+        clear_dead(world)
+        if config.has_skill():
+            clear_expired(world)
         if world.hero_hp <= 0:
             world.hero_hp = 0
             world.hero_dead = 1
@@ -254,7 +449,12 @@ BASE = [4800, 24000, 0, 0, 1536000, 960000, 768000, 480000]
 #   yin_corpse: speed 0.68, radius 1.0, hp 1.28, damage 0.65, interval 36, weight 8
 #   blood_wolf: speed 1.28, radius 0.9, hp 0.78, damage 0.76, interval 42, weight 2
 W0_KINDS = [3264, 24000, 12800, 6500, 36, 8, 6144, 21600, 7800, 7600, 42, 2]
-W0_VALUES = [100000, 45, 48, 384000]
+# ADR-009 section 3 placeholder spawn: hero 100 HP, one spawn per 1.5 s at x1 rate, rate
+# rising by x1 every 3 min up to x2, 48 alive, 8 cells minimum distance.
+P0_VALUES = [100000, 90000, 10800, 2000, 48, 384000]
+# ADR-009 section 3 placeholder skill (`skill.spirit_sword`): 50 tick cooldown, 8 cells
+# range, 10 HP damage, 12 px/tick, 10 px radius, 40 ticks, pierce 1, 64 projectile slots.
+P0_SKILL = [50000, 384000, 10000, 12000, 10000, 40, 1, 64]
 SEED = "20261113"
 
 
@@ -262,6 +462,9 @@ def _circle(period: int, ticks: int) -> list[tuple[int, int, int, int]]:
     dirs = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
     return [(t, i, *dirs[i % 8]) for i, t in enumerate(range(0, ticks, period))]
 
+
+TOUGH = 500000000
+MAX_SEED = "18446744073709551615"
 
 SCENARIOS = [
     ("idle", Config(BASE), [], 120),
@@ -277,14 +480,24 @@ SCENARIOS = [
      [(0, 0, 1, 1), (100, 1, -1, -1)], 200),
     ("five_minutes", Config(BASE), [(t, t // 90, ((t // 90) % 3) - 1, ((t // 270) % 3) - 1)
                                     for t in range(0, 18000, 90)], 18000),
-    ("enemies_hero_stands_still", Config(BASE, W0_VALUES, W0_KINDS, SEED), [], 3000),
-    ("enemies_hero_circles", Config(BASE, W0_VALUES, W0_KINDS, SEED), _circle(40, 3600), 3600),
-    ("enemies_spawn_cap", Config(BASE, [500000000, 10, 3, 384000], W0_KINDS, "7"), [], 600),
+    ("enemies_hero_stands_still", Config(BASE, P0_VALUES, W0_KINDS, SEED), [], 3000),
+    ("enemies_hero_circles", Config(BASE, P0_VALUES, W0_KINDS, SEED), _circle(40, 3600), 3600),
+    ("enemies_spawn_cap", Config(BASE, [TOUGH, 10000, 0, 1000, 3, 384000], W0_KINDS, "7"),
+     [], 600),
     ("enemies_corner_fallback",
-     Config([4800, 24000, 0, 0, 300000, 300000, 150000, 150000], [500000000, 20, 6, 1000000],
-            W0_KINDS, "99"), [(0, 0, 1, 1)], 400),
-    ("enemies_five_minutes", Config(BASE, [500000000, 30, 64, 384000], W0_KINDS,
-                                    "18446744073709551615"), _circle(25, 18000), 18000),
+     Config([4800, 24000, 0, 0, 300000, 300000, 150000, 150000],
+            [TOUGH, 20000, 0, 1000, 6, 1000000], W0_KINDS, "99"), [(0, 0, 1, 1)], 400),
+    ("enemies_five_minutes", Config(BASE, [TOUGH, 30000, 0, 1000, 64, 384000], W0_KINDS,
+                                    MAX_SEED), _circle(25, 18000), 18000),
+    ("combat_hero_stands_still", Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL), [], 3600),
+    ("combat_hero_circles", Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL),
+     _circle(40, 18000), 18000),
+    ("combat_pierce_crowd",
+     Config(BASE, [TOUGH, 6000, 0, 1000, 64, 200000], W0_KINDS, "123",
+            [10000, 600000, 5000, 20000, 12000, 60, 3, 4]), _circle(25, 6000), 6000),
+    ("combat_ramp_five_minutes",
+     Config(BASE, [TOUGH, 30000, 3600, 4000, 64, 384000], W0_KINDS, MAX_SEED,
+            [30000, 480000, 6000, 12000, 10000, 40, 2, 64]), _circle(25, 18000), 18000),
 ]
 
 APPEND_CASES = [
@@ -315,7 +528,8 @@ def run_trace(config: Config, commands, ticks: int):
             checkpoints.append({
                 "step": t, "tick": world.tick, "player_x": str(world.player_x),
                 "player_y": str(world.player_y), "hero_hp": str(world.hero_hp),
-                "hero_dead": world.hero_dead, "enemy_count": len(world.enemies),
+                "hero_dead": world.hero_dead, "enemy_alive": world.enemy_alive,
+                "kills": world.kills, "projectiles": world.live_projectiles(),
                 "digest": world.digest()})
     return log, world, checkpoints
 
@@ -326,13 +540,12 @@ def build_vectors() -> dict:
         assert config.valid(), name
         log, _, checkpoints = run_trace(config, commands, ticks)
         enemies = None
-        if config.kinds:
-            enemies = {"values": [str(v) for v in (config.hero_hp, config.spawn_period,
-                                                    config.max_enemies, config.spawn_min_distance)],
-                       "kinds": [str(v) for kind in config.kinds for v in kind],
-                       "seed": config.seed}
+        if config.has_enemies():
+            enemies = {"values": [str(v) for v in config.enemy_values()],
+                       "kinds": [str(v) for v in config.raw_kinds], "seed": config.seed}
+        skill = [str(v) for v in config.skill_values()] if config.has_skill() else None
         traces.append({"name": name, "config": [str(v) for v in config.ints()[:8]],
-                       "enemies": enemies,
+                       "enemies": enemies, "skill": skill,
                        "commands": [[str(v) for v in c] for c in commands], "ticks": ticks,
                        "log_digest": log.digest(), "checkpoints": checkpoints})
     appends = []
@@ -347,7 +560,7 @@ def build_vectors() -> dict:
     return {"schema_version": VECTORS_SCHEMA_VERSION, "kind": "hip-sim-core-vectors",
             "policy_id": fx.POLICY_ID, "rng_policy_id": hip_rng.POLICY_ID,
             "generator": "tools/content/sim_core.py",
-            "note": "movement and enemy constants here are trace inputs, not canonical tuning",
+            "note": "movement, enemy and skill constants here are trace inputs, not canonical tuning",
             "traces": traces, "append_cases": appends}
 
 
