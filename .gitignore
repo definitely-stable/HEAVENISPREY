@@ -14,3 +14,6 @@ __pycache__/
 /.codex/config.toml
 /opencode.json
 game/addons/gut/
+
+# Local Python virtualenv (gdtoolkit and other dev tools)
+.venv/
