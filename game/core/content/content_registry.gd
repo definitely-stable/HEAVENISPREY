@@ -55,7 +55,8 @@ static func from_bytes(registry_bytes: PackedByteArray, manifest_bytes: PackedBy
 static func sha256_hex(data: PackedByteArray) -> String:
 	var ctx: HashingContext = HashingContext.new()
 	ctx.start(HashingContext.HASH_SHA256)
-	ctx.update(data)
+	if not data.is_empty():  # HashingContext.update rejects empty input
+		ctx.update(data)
 	return ctx.finish().hex_encode()
 
 
