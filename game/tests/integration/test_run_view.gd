@@ -204,3 +204,26 @@ func test_enemy_in_a_reused_slot_is_not_interpolated() -> void:
 	driver.previous.enemy_x[0] = 0
 	var at: Vector2 = driver.enemy_position_px(0)
 	assert_eq(at, Vector2(driver.world.enemy_x[0], driver.world.enemy_y[0]) / float(Fx.FX_ONE))
+
+
+func test_bot_log_replays_through_the_scene() -> void:
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/sim_bot_runs.json"))
+	var row: Dictionary = (data["traces"] as Array)[1]
+	assert_eq(str(row["id"]), "botrun.p0.circle.s101")
+	var moves: Dictionary = {}
+	for record: Variant in row["commands"]:
+		var command: Array = record
+		moves[str(command[0]).to_int()] = Vector2i(str(command[2]).to_int(), str(command[3]).to_int())
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("101")
+	var held: Vector2i = Vector2i.ZERO
+	while not view.driver.world.is_over() and view.driver.world.tick < 18000:
+		held = moves.get(view.driver.world.tick, held)
+		view.advance_frame(TICK, held)
+	var checkpoints: Array = row["checkpoints"]
+	assert_eq(view.driver.world.tick, int(row["death_tick"]), "same death tick")
+	assert_eq(view.driver.world.digest(), str((checkpoints.back() as Dictionary)["digest"]), "same state")
+	assert_eq(view.driver.commands.digest(), str(row["log_digest"]), "input recorded as the same log")
