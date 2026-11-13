@@ -28,6 +28,23 @@ static func _command(values: Array) -> PlayerCommand:
 	return PlayerCommand.from_ints(_ints(values))
 
 
+func test_cos_table_matches_reference() -> void:
+	var expected: Array = _data.get("cos_q14", [])
+	assert_eq(expected.size(), 181)
+	for k: int in expected.size():
+		assert_eq(EnemyAttackSystem.COS_Q14[k], int(expected[k]), "cos %d" % k)
+
+
+func test_sector_and_launch_cases_match_reference() -> void:
+	for entry: Variant in _data.get("sector_cases", []):
+		var c: PackedInt64Array = _ints(entry)
+		var got: bool = EnemyAttackSystem.in_sector(c[0], c[1], c[2], c[3], c[4], c[5])
+		assert_eq(int(got), c[6], "sector " + str(c))
+	for entry: Variant in _data.get("launch_cases", []):
+		var c: PackedInt64Array = _ints(entry)
+		assert_eq(int(EnemyAttackSystem.in_launch_range(c[0], c[1], c[2])), c[3], "launch " + str(c))
+
+
 func test_vectors_header() -> void:
 	assert_eq(str(_data.get("policy_id")), Fx.POLICY_ID)
 	assert_eq(int(_data.get("log_schema_version", 0)), CommandLog.SCHEMA_VERSION)
@@ -57,6 +74,10 @@ static func _config(row: Dictionary) -> SimConfig:
 	if typeof(xp) == TYPE_DICTIONARY:
 		var spec_xp: Dictionary = xp
 		config.with_xp(_ints(spec_xp["values"]), _ints(spec_xp["kind_xp"]), _ints(spec_xp["costs"]))
+	var attacks: Variant = row.get("attacks")
+	if typeof(attacks) == TYPE_DICTIONARY:
+		var spec_attacks: Dictionary = attacks
+		config.with_attacks(_ints(spec_attacks["records"]), _ints(spec_attacks["venom"]))
 	return config.with_choice_mode(int(row.get("choice_mode", 0))).with_run_ticks(int(row.get("run_ticks", 0)))
 
 
@@ -95,6 +116,8 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.choices_done, int(mark["choices"]), label + " choices")
 			assert_eq(int(world.is_paused()), int(mark["paused"]), label + " paused")
 			assert_eq(world.won, int(mark["won"]), label + " won")
+			assert_eq(world.next_attack_uid - 1, int(mark["attacks"]), label + " attacks")
+			assert_eq(world.venom_stacks, int(mark["venom"]), label + " venom")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 
@@ -194,12 +217,11 @@ static func _arena(skill: Array[int]) -> SimConfig:
 
 
 static func _place(world: WorldState, x: int, y: int, hp: int) -> void:
-	world.enemy_uid.append(world.next_enemy_uid)
-	world.enemy_kind.append(0)
-	world.enemy_x.append(x)
-	world.enemy_y.append(y)
-	world.enemy_hp.append(hp)
-	world.enemy_cooldown.append(0)
+	var slot: int = world.append_enemy_slot()
+	world.enemy_uid[slot] = world.next_enemy_uid
+	world.enemy_x[slot] = x
+	world.enemy_y[slot] = y
+	world.enemy_hp[slot] = hp
 	world.next_enemy_uid += 1
 	world.enemy_alive += 1
 

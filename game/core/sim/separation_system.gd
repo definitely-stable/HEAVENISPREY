@@ -4,7 +4,8 @@ extends RefCounted
 ## tools/content/sim_core.py.
 ##
 ## 1. Chase writes tentative positions (tx, ty) without clamping; an enemy touching the hero
-##    stays where it is.
+##    stays where it is. An enemy in an attack (state other than approach, ADR-011 section 2)
+##    neither moves nor takes part in the separation.
 ## 2. A uniform grid (cell = 2 x the largest kind radius, index clamped to the grid) is built
 ##    from the positions of tick N by counting sort over slots (cell_start, cell_items).
 ## 3. Pairs are visited cell by cell, row-major: the cell itself (later items only), then the
@@ -28,7 +29,9 @@ static func chase_and_separate(config: SimConfig, world: WorldState) -> void:
 	var tx: PackedInt64Array = world.enemy_x.duplicate()
 	var ty: PackedInt64Array = world.enemy_y.duplicate()
 	for slot: int in slots:
-		if world.enemy_uid[slot] == 0 or EnemySystem.touching(config, world, slot):
+		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
+			continue
+		if EnemySystem.touching(config, world, slot):
 			continue
 		var direction: PackedInt64Array = Fx.normalize_q14(
 			world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot]
@@ -44,7 +47,7 @@ static func chase_and_separate(config: SimConfig, world: WorldState) -> void:
 	push_y.fill(0)
 	_separate(config, world, push_x, push_y)
 	for slot: int in slots:
-		if world.enemy_uid[slot] == 0:
+		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
 			continue
 		var kind: int = world.enemy_kind[slot]
 		var speed: int = config.kind_value(kind, SimConfig.KIND_SPEED)
@@ -80,7 +83,7 @@ static func _separate(
 	cell_start.fill(0)
 	var live: int = 0
 	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] == 0:
+		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
 			continue
 		var cx: int = clampi(Fx.floor_div(world.enemy_x[slot] - config.arena_min_x, cell), 0, cols - 1)
 		var cy: int = clampi(Fx.floor_div(world.enemy_y[slot] - config.arena_min_y, cell), 0, rows - 1)
@@ -100,7 +103,7 @@ static func _separate(
 	item_r.resize(live)
 	var fill: PackedInt64Array = cell_start.slice(0, cells)
 	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] == 0:
+		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
 			continue
 		var at: int = fill[home[slot]]
 		cell_items[at] = slot

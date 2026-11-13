@@ -24,7 +24,8 @@ extends RefCounted
 ## 6: level-up choices: command log schema 2, offers hand, upgrade ranks, projectile snapshot
 ##    (ADR-010 section 6).
 ## 7: victory after the stage duration, `won` in the state (ADR-011 section 1).
-const SIM_SCHEMA_VERSION: int = 7
+## 8: enemy attack states and instances, the attack table and status.venom (ADR-011 E2).
+const SIM_SCHEMA_VERSION: int = 8
 
 var error: String:
 	get:

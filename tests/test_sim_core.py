@@ -162,7 +162,7 @@ class SimEnemyReferenceTests(unittest.TestCase):
                             every_tick(4, 1000000), STILL_KINDS, "99")
         world = run(config, [], 3)
         self.assertEqual(world.enemy_alive, 3)
-        for _, kind, x, y, _, _ in world.enemies:
+        for _, kind, x, y, *_ in world.enemies:
             r = config.kinds[kind][1]
             self.assertIn((x, y), [(r, r), (300000 - r, r), (300000 - r, 300000 - r), (r, 300000 - r)])
 
@@ -238,7 +238,7 @@ def arena(enemies, skill=sim.P0_SKILL, kinds=TARGET_KINDS, hero_hp=TOUGH):
 
 
 def place(world, kind, x, y, hp, slot=None):
-    record = [world.next_enemy_uid, kind, x, y, hp, 0]
+    record = [world.next_enemy_uid, kind, x, y, hp] + [0] * (sim.ENEMY_FIELDS - sim.E_CD)
     if slot is None:
         world.enemies.append(record)
     else:
@@ -279,7 +279,7 @@ class SimCombatReferenceTests(unittest.TestCase):
         config, world = arena([(0, CX + 300000, CY, 1000000), (0, CX - 200000, CY, 1000000),
                                (0, CX + 200000, CY, 1000000)])
         self.assertEqual(sim.nearest_in_range(config, world), 1, "equal distance: lower slot")
-        world.enemies[1] = [0] * 6
+        world.enemies[1] = [0] * sim.ENEMY_FIELDS
         world.enemy_alive -= 1
         self.assertEqual(sim.nearest_in_range(config, world), 2)
         place(world, 0, CX, CY - 200000, 1000000, slot=1)
@@ -315,7 +315,7 @@ class SimCombatReferenceTests(unittest.TestCase):
         self.assertEqual(world.projectiles[0][sim.P_HITS], 1)
         sim.clear_dead(config, world)
         self.assertEqual((world.kills, world.enemy_alive), (1, 0))
-        self.assertEqual(world.enemies[0], [0] * 6)
+        self.assertEqual(world.enemies[0], [0] * sim.ENEMY_FIELDS)
 
     def test_projectile_kill_prevents_same_tick_contact(self):
         kinds = [0, 24000, 5000, 9000, 1, 1]
@@ -340,7 +340,7 @@ class SimCombatReferenceTests(unittest.TestCase):
         config, world = arena([(0, CX + 200000, CY, 5000)])
         world.projectiles.append(proj(world, CX + 200000, CY, 0, 0))
         world.projectiles[0][sim.P_LEDGER] = 1
-        world.enemies[0] = [0] * 6
+        world.enemies[0] = [0] * sim.ENEMY_FIELDS
         world.enemy_alive = 0
         place(world, 0, CX + 200000, CY, 5000, slot=0)
         self.assertEqual(world.enemies[0][sim.E_UID], 2)
@@ -646,7 +646,8 @@ class SimXpReferenceTests(unittest.TestCase):
         check_invariants(self, config, world, xp_kills=4)
 
     def test_invariants_hold_on_every_tick(self):
-        scenarios = sim.SCENARIOS + sim.CHOICE_SCENARIOS + sim.RUN_END_SCENARIOS
+        scenarios = sim.SCENARIOS + sim.CHOICE_SCENARIOS + sim.RUN_END_SCENARIOS \
+            + sim.ATTACK_SCENARIOS
         for name, config, commands, ticks in scenarios:
             if not config.has_xp() or name.startswith("stress"):
                 continue
@@ -1009,9 +1010,10 @@ class SimRunEndReferenceTests(unittest.TestCase):
     """ADR-011 section 1: victory after the stage duration, victory over defeat in the last
     tick, the terminal tick skips pickup and progression and voids pending choices."""
 
-    def test_run_ticks_is_the_last_config_value(self):
+    def test_run_ticks_follows_the_choice_mode(self):
         config = p0(run_ticks=18000)
-        self.assertEqual(config.ints()[-2:], [0, 18000])
+        # choice_mode, run_ticks, then the attack table (empty) and the venom values.
+        self.assertEqual(config.ints()[-7:], [0, 18000, 0, 0, 0, 0, 0])
         self.assertTrue(config.valid())
         self.assertFalse(p0(run_ticks=-1).valid())
 
@@ -1076,6 +1078,209 @@ class SimRunEndReferenceTests(unittest.TestCase):
         config = sim.Config(BASE, run_ticks=120)
         world, _ = play(config, v2([(0, 0, 1, 0)]))
         self.assertEqual((world.tick, world.won, world.hero_dead), (120, 1, 0))
+
+
+# ADR-011 E2 helpers: one arc kind of ARC_KINDS (0 snake, 1 disciple, 2 guardian) placed on
+# the hero's +x side so that its first chase step ends exactly at the 3R/4 launch range.
+ARC_KIND_STRIDE = sim.KIND_STRIDE
+
+
+def arc_world(kind, hp=1000000, extra=0):
+    config = sim.Config(BASE, NO_SPAWN, sim.ARC_KINDS, "1", attacks=sim.ARC_ATTACKS,
+                        venom=sim.P0_VENOM)
+    assert config.valid()
+    world = sim.World(config)
+    reach = config.attack(kind)[4]
+    speed = config.kinds[kind][0]
+    place(world, kind, CX + reach * 3 // 4 + speed + extra, CY, hp)
+    return config, world
+
+
+def run_moves(config, world, moves, ticks):
+    """Steps `ticks` ticks; `moves` = {tick: (move_x, move_y)} held from that tick on."""
+    log, sequence = sim.CommandLog(), 0
+    for tick in sorted(moves):
+        assert log.append((tick, sequence, sim.MOVE, *moves[tick]), 0) == sim.OK
+        sequence += 1
+    for _ in range(ticks):
+        sim.step(config, world, log)
+    return world
+
+
+class SimEnemyAttackReferenceTests(unittest.TestCase):
+    """ADR-011 sections 2-4 (E2): the attack machine, MELEE_ARC hits and escapes, venom."""
+
+    def test_cos_table_is_rounded_cosine(self):
+        self.assertEqual(len(sim.COS_Q14), 181)
+        for k, value in enumerate(sim.COS_Q14):
+            self.assertEqual(value, math.floor(16384 * math.cos(math.radians(k)) + 0.5), k)
+
+    def test_arc_launches_at_three_quarters_of_the_reach(self):
+        for kind in range(3):
+            config, world = arc_world(kind)
+            sim.step(config, world, sim.CommandLog())
+            enemy = world.enemies[0]
+            self.assertEqual(world.player_x + config.attack(kind)[4] * 3 // 4, enemy[sim.E_X])
+            self.assertEqual(enemy[sim.E_STATE], sim.ST_TELL, kind)
+            self.assertEqual((enemy[sim.E_DX], enemy[sim.E_DY]), (-16384, 0))
+            self.assertEqual((enemy[sim.E_ATK], world.next_attack_uid), (1, 2))
+            config, world = arc_world(kind, extra=1)
+            sim.step(config, world, sim.CommandLog())
+            self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_APPROACH, "1 su too far")
+
+    def test_escape_margin_of_each_arc(self):
+        """ESCAPE (ADR-011 section 3): moving straight away from tick `t` on escapes the hit
+        in tick `telegraph` only when it adds more than R/4: snake 24 px in 20 ticks, disciple
+        32.4 px in 30, guardian 38.4 px in 48."""
+        for kind, last_safe in ((0, 15), (1, 24), (2, 40)):
+            telegraph = sim.ARC_ATTACKS[kind * sim.ATTACK_STRIDE + 1]
+            damage = sim.ARC_KINDS[kind * ARC_KIND_STRIDE + 3]
+            config, world = arc_world(kind)
+            run_moves(config, world, {last_safe: (-1, 0)}, telegraph + 1)
+            self.assertEqual(world.hero_hp, TOUGH, (kind, "escaped"))
+            config, world = arc_world(kind)
+            run_moves(config, world, {last_safe + 1: (-1, 0)}, telegraph + 1)
+            self.assertEqual(world.hero_hp, TOUGH - damage, (kind, "one tick late"))
+
+    def test_hit_lands_in_the_first_active_tick_only(self):
+        config, world = arc_world(1)
+        run_moves(config, world, {}, 30)
+        self.assertEqual((world.hero_hp, world.enemies[0][sim.E_STATE]), (TOUGH, sim.ST_TELL))
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.hero_hp, TOUGH - 9000)
+        self.assertEqual((world.enemies[0][sim.E_STATE], world.enemies[0][sim.E_LEFT]),
+                         (sim.ST_ACTIVE, 10))
+        run_moves(config, world, {}, 9)
+        self.assertEqual(world.hero_hp, TOUGH - 9000, "once per attack instance")
+
+    def test_enemy_holds_still_through_the_attack_then_chases(self):
+        config, world = arc_world(2)
+        sim.step(config, world, sim.CommandLog())
+        x = world.enemies[0][sim.E_X]
+        states = []
+        for _ in range(48 + 12 + 40):
+            sim.step(config, world, sim.CommandLog())
+            states.append(world.enemies[0][sim.E_STATE])
+            if states[-1] != sim.ST_APPROACH:
+                self.assertEqual(world.enemies[0][sim.E_X], x)
+        self.assertEqual(states.count(sim.ST_TELL), 47)
+        self.assertEqual(states.count(sim.ST_ACTIVE), 12)
+        self.assertEqual(states.count(sim.ST_RECOVER), 40)
+        self.assertEqual(states[-1], sim.ST_APPROACH)
+        self.assertEqual(world.enemies[0][sim.E_ATK], 0)
+        sim.step(config, world, sim.CommandLog())
+        self.assertLess(world.enemies[0][sim.E_X], x, "chases again after recover")
+
+    def test_cooldown_runs_from_the_start_of_tell(self):
+        config, world = arc_world(0)
+        starts = []
+        for tick in range(400):
+            before = world.next_attack_uid
+            sim.step(config, world, sim.CommandLog())
+            if world.next_attack_uid != before:
+                starts.append(tick)
+        self.assertEqual(starts, [0, 96, 192, 288, 384])
+
+    def test_arc_kinds_do_not_hit_by_contact(self):
+        config, world = arc_world(0)
+        world.enemies[0][sim.E_X] = CX + 30000
+        world.enemies[0][sim.E_CD] = 50
+        run_moves(config, world, {}, 40)
+        self.assertEqual(world.hero_hp, TOUGH)
+
+    def test_kill_in_tell_cancels_the_hit(self):
+        config, world = arc_world(0, hp=5000)
+        run_moves(config, world, {}, 10)
+        world.projectiles.append(proj(world, world.enemies[0][sim.E_X], CY, 0, 0))
+        config_skill = sim.Config(BASE, NO_SPAWN, sim.ARC_KINDS, "1", sim.P0_SKILL,
+                                  attacks=sim.ARC_ATTACKS, venom=sim.P0_VENOM)
+        sim.fly_and_hit(config_skill, world)
+        sim.clear_dead(config, world)
+        run_moves(config, world, {}, 30)
+        self.assertEqual((world.kills, world.hero_hp), (1, TOUGH))
+
+    def test_bites_stack_venom_up_to_three(self):
+        config, world = arc_world(0)
+        stacks = []
+        for _ in range(420):
+            sim.step(config, world, sim.CommandLog())
+            stacks.append(world.venom_stacks)
+        self.assertEqual([stacks[t] for t in (19, 20, 115, 116, 212, 308)], [0, 1, 1, 2, 3, 3])
+        self.assertLessEqual(max(stacks), 3)
+
+    def test_venom_damage_period_and_expiry(self):
+        config, world = arc_world(0)
+        world.venom_stacks = 0
+        damage_ticks, hp = [], world.hero_hp
+        sim.add_venom(config, world)
+        for tick in range(300):
+            if tick == 100:
+                sim.add_venom(config, world)
+            sim.tick_statuses(config, world)
+            if world.hero_hp != hp:
+                damage_ticks.append((tick, hp - world.hero_hp))
+                hp = world.hero_hp
+        self.assertEqual(damage_ticks, [(59, 1000), (119, 2000), (179, 2000), (239, 2000),
+                                        (299, 2000)])
+        for _ in range(39):
+            sim.tick_statuses(config, world)
+        self.assertEqual((world.venom_stacks, world.venom_left, world.venom_phase), (2, 1, 21))
+        sim.tick_statuses(config, world)
+        self.assertEqual((world.venom_stacks, world.venom_left, world.venom_phase), (0, 0, 0))
+
+    def test_single_stack_deals_its_last_damage_in_the_expiry_tick(self):
+        config, world = arc_world(0)
+        sim.add_venom(config, world)
+        damage_ticks, hp = [], world.hero_hp
+        for tick in range(300):
+            sim.tick_statuses(config, world)
+            if world.hero_hp != hp:
+                damage_ticks.append(tick)
+                hp = world.hero_hp
+            if tick == 239:
+                self.assertEqual(world.venom_stacks, 0, "expired in tick 239")
+        self.assertEqual(damage_ticks, [59, 119, 179, 239])
+        self.assertEqual(TOUGH - world.hero_hp, 4000)
+
+    def test_poison_can_kill_without_an_enemy_hit(self):
+        config, world = arc_world(0)
+        world.enemies[0] = [0] * sim.ENEMY_FIELDS
+        world.enemy_alive = 0
+        world.hero_hp = 2000
+        for _ in range(3):
+            sim.add_venom(config, world)
+        run_moves(config, world, {}, 60)
+        self.assertEqual((world.hero_dead, world.tick), (1, 60))
+
+    def test_attack_tables_are_validated(self):
+        def valid(attacks, venom=sim.P0_VENOM, kinds=sim.ARC_KINDS):
+            return sim.Config(BASE, NO_SPAWN, kinds, "1", attacks=attacks, venom=venom).valid()
+        self.assertTrue(valid(sim.ARC_ATTACKS))
+        self.assertTrue(valid([]), "no table: every kind hits by contact")
+        self.assertFalse(valid(sim.ARC_ATTACKS[:-1]))
+        self.assertFalse(valid(sim.ARC_ATTACKS, venom=[0, 240, 60, 1000]))
+        self.assertTrue(valid(sim.DISCIPLE_CLEAVE, venom=[0] * 4, kinds=sim.ARC_KINDS[6:12]))
+        for field, value in ((0, 2), (1, 0), (2, 0), (3, -1), (4, 0),
+                             (4, sim.MAX_ATTACK_REACH + 1), (5, 0), (5, 181), (6, 2)):
+            record = list(sim.SNAKE_BITE)
+            record[field] = value
+            self.assertFalse(valid(record, kinds=sim.ARC_KINDS[:6]), (field, value))
+        contact = list(sim.CONTACT_ATTACK)
+        contact[4] = 1
+        self.assertFalse(valid(contact, kinds=sim.W0_KINDS[:6]), "contact record must be zero")
+
+    def test_recovery_zero_returns_to_approach(self):
+        attack = list(sim.SNAKE_BITE)
+        attack[3] = 0
+        config = sim.Config(BASE, NO_SPAWN, sim.ARC_KINDS[:6], "1", attacks=attack,
+                            venom=sim.P0_VENOM)
+        world = sim.World(config)
+        place(world, 0, CX + 72000 + 5856, CY, 1000000)
+        states = []
+        for _ in range(27):
+            sim.step(config, world, sim.CommandLog())
+            states.append(world.enemies[0][sim.E_STATE])
+        self.assertEqual(states[25:], [sim.ST_ACTIVE, sim.ST_APPROACH])
 
 
 

@@ -43,12 +43,11 @@ static func _arena(skill: Array[int]) -> SimConfig:
 
 
 static func _place(world: WorldState, x: int, y: int, hp: int) -> void:
-	world.enemy_uid.append(world.next_enemy_uid)
-	world.enemy_kind.append(0)
-	world.enemy_x.append(x)
-	world.enemy_y.append(y)
-	world.enemy_hp.append(hp)
-	world.enemy_cooldown.append(0)
+	var slot: int = world.append_enemy_slot()
+	world.enemy_uid[slot] = world.next_enemy_uid
+	world.enemy_x[slot] = x
+	world.enemy_y[slot] = y
+	world.enemy_hp[slot] = hp
 	world.next_enemy_uid += 1
 	world.enemy_alive += 1
 
