@@ -123,6 +123,14 @@ class GeneratorTests(unittest.TestCase):
             '{"schema_version":2,"classes":[{"id":"class.z","n":9007199254740991}]}', encoding="utf-8")
         gen.build(self.src)
 
+    def test_rejects_fractions_fx_cannot_represent(self):
+        self._expect_error('{"schema_version":2,"x":[1.2345]}', "more than 3 decimals")
+        self._expect_error('{"schema_version":2,"x":1000000.5}', "beyond +/-10^6")
+        (self.src / "classes.json").write_text(
+            '{"schema_version":2,"classes":[{"id":"class.z","m":1.125,"n":-999999.999}]}',
+            encoding="utf-8")
+        gen.build(self.src)
+
     def test_check_detects_stray_generated_file(self):
         out = self.tmp / "out"
         out.mkdir()
