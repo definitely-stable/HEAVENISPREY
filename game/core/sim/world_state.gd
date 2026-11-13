@@ -25,6 +25,8 @@ var command_cursor: int = 0
 var hero_hp: int = 0
 ## 1 once the hero's HP reached 0; the run is over and further steps do nothing.
 var hero_dead: int = 0
+## 1 once the hero survived the stage duration (ADR-011 section 1); the run is over.
+var won: int = 0
 ## Spawn accumulator in milli-ticks (ADR-008 periodic processes).
 var spawn_acc: int = 0
 ## Words consumed from the hip-rng-v1 `enemy` stream of the run seed.
@@ -111,7 +113,7 @@ func gem_slots() -> int:
 
 
 func is_over() -> bool:
-	return hero_dead != 0
+	return hero_dead != 0 or won != 0
 
 
 ## The run waits for a CHOOSE: no tick is simulated while a hand is offered.
@@ -126,7 +128,7 @@ func is_enemy_live(slot: int) -> bool:
 func to_ints() -> PackedInt64Array:
 	var out: PackedInt64Array = PackedInt64Array([
 		tick, player_x, player_y, move_x, move_y, command_cursor,
-		hero_hp, hero_dead, spawn_acc, enemy_rng_cursor, next_enemy_uid, enemy_alive, kills,
+		hero_hp, hero_dead, won, spawn_acc, enemy_rng_cursor, next_enemy_uid, enemy_alive, kills,
 		skill_acc, sep_cursor, next_gem_uid, gems_alive, gems_merged, xp_dropped_total,
 		xp_collected_total, xp_bank, level, pending_level_choices, choices_voided,
 		choices_done, build_revision, offers_rng_cursor,
@@ -165,6 +167,7 @@ func copy() -> WorldState:
 	other.command_cursor = command_cursor
 	other.hero_hp = hero_hp
 	other.hero_dead = hero_dead
+	other.won = won
 	other.spawn_acc = spawn_acc
 	other.enemy_rng_cursor = enemy_rng_cursor
 	other.next_enemy_uid = next_enemy_uid

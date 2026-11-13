@@ -169,7 +169,7 @@ func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
 	assert_gt(view.driver.world.kills, 0, "the auto-attack kills on its own")
 
 
-func test_finished_run_restarts_after_delay() -> void:
+func test_finished_run_waits_for_the_player() -> void:
 	var packed: PackedScene = load(RUN_SCENE)
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false
@@ -181,10 +181,14 @@ func test_finished_run_restarts_after_delay() -> void:
 		guard += 1
 	var runs: int = view.runs_started
 	var finished: FixedTickDriver = view.driver
-	view.advance_frame(RunView.RESTART_DELAY * 0.5, Vector2i.ZERO)
-	assert_eq(view.driver, finished, "the result stays on screen first")
-	view.advance_frame(RunView.RESTART_DELAY, Vector2i.ZERO)
+	assert_true(view.is_results_open())
+	assert_false(view.confirm_results(), "the results are not skipped by a held button")
+	for _i: int in 600:
+		view.advance_frame(TICK, Vector2i.ZERO)
+	assert_eq(view.driver, finished, "no automatic restart")
+	assert_true(view.confirm_results())
 	assert_eq(view.runs_started, runs + 1)
+	assert_false(view.is_results_open())
 	assert_false(view.driver.world.is_over())
 	assert_eq(view.driver.world.tick, 0)
 

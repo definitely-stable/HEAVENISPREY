@@ -28,7 +28,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_runs.json"
 UPGRADE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_upgrade_runs.json"
-RUNS_SCHEMA_VERSION = 2
+RUNS_SCHEMA_VERSION = 3
 BOT_POLICY_VERSION = 2
 
 
@@ -185,9 +185,10 @@ UPGRADE_BOTS = ["kiter_upgrades", "diag_first_id", "diag_utility_first"]
 
 
 def p0_config(seed: str, choice_mode: int = 0):
-    """The P0 placeholder run (equal to P0Tuning in the game, choice_mode aside)."""
+    """The P0 placeholder run, ending in victory after MAX_TICKS (equal to P0Tuning in the
+    game, choice_mode aside)."""
     return sim.Config(sim.BASE, sim.P0_VALUES, sim.W0_KINDS, seed, sim.P0_SKILL, sim.P0_XP,
-                      choice_mode=choice_mode)
+                      choice_mode=choice_mode, run_ticks=MAX_TICKS)
 
 
 def config_for(name: str, seed: str):
@@ -201,7 +202,7 @@ def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = Non
     policy, every, chooser = POLICIES[name]
     world, log = sim.World(config), sim.CommandLog()
     held, sequence, steps = (0, 0), 0, 0
-    while world.tick < max_ticks and not world.hero_dead:
+    while world.tick < max_ticks and not world.over():
         if world.paused():
             seen = Observation(config, world)
             record = (world.tick, sequence, sim.CHOOSE, chooser(seen), seen.build_revision)
@@ -240,6 +241,7 @@ def _exact(name: str, max_commands: int) -> dict:
             **sim.config_json(config),
             "commands": [[str(v) for v in c] for c in log.records], "ticks": steps,
             "log_digest": log.digest(), "death_tick": world.tick if world.hero_dead else -1,
+            "won": world.won,
             "end_tick": world.tick, "kills": world.kills, "command_count": len(log.records),
             "choices": world.choices_done, "checkpoints": checkpoints}
 
@@ -249,7 +251,7 @@ def survey_row(name: str, seed: str, max_commands: int) -> dict:
     world, log, _steps = play(name, config_for(name, seed), stats=stats)
     assert len(log.records) <= max_commands, (name, seed, len(log.records))
     return {"id": run_id(name, seed), "bot_policy": name, "seed": seed,
-            "death_tick": world.tick if world.hero_dead else -1,
+            "death_tick": world.tick if world.hero_dead else -1, "won": world.won,
             "kills": world.kills, "command_count": len(log.records),
             "log_digest": log.digest(), "final_digest": world.digest(),
             "xp_dropped": world.xp_dropped_total,

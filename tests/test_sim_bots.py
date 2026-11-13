@@ -153,6 +153,13 @@ class SimBotUpgradeTests(unittest.TestCase):
         self.assertEqual(self.runs["bot_policy_version"], bots.BOT_POLICY_VERSION)
         self.assertEqual([t["id"] for t in self.runs["traces"]], ["botrun.p0.kiter_upgrades.s101"])
         self.assertEqual(len(self.runs["survey"]), 32 * len(bots.UPGRADE_BOTS))
+
+    def test_survivors_win_at_the_stage_end(self):
+        """ADR-011 section 1: a bot that is alive after 18000 ticks has won; the dead have not."""
+        for row in self.runs["survey"] + load_runs()["survey"]:
+            self.assertEqual(row["won"], int(row["death_tick"] == -1), row["id"])
+        trace = self.runs["traces"][0]
+        self.assertEqual((trace["won"], trace["end_tick"], trace["run_ticks"]), (1, 18000, 18000))
         self.assertLessEqual(bots.UPGRADE_RUNS_PATH.stat().st_size, bots.MAX_UPGRADE_FILE_BYTES)
 
     def test_exact_trace_replays(self):

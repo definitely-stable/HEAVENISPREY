@@ -23,7 +23,8 @@ extends RefCounted
 ## 5: XP gems, pickup and level progression (ADR-010).
 ## 6: level-up choices: command log schema 2, offers hand, upgrade ranks, projectile snapshot
 ##    (ADR-010 section 6).
-const SIM_SCHEMA_VERSION: int = 6
+## 7: victory after the stage duration, `won` in the state (ADR-011 section 1).
+const SIM_SCHEMA_VERSION: int = 7
 
 var error: String:
 	get:

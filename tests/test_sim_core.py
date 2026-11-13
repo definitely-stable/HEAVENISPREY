@@ -204,7 +204,7 @@ class SimEnemyReferenceTests(unittest.TestCase):
     def test_enemy_digest_covers_rng_cursor(self):
         world = run(ENEMY_CONFIG, [], 200)
         self.assertGreater(world.rng_cursor, 0)
-        self.assertEqual(world.ints()[9], world.rng_cursor)
+        self.assertEqual(world.ints()[10], world.rng_cursor)
 
     def test_invalid_enemy_configs(self):
         self.assertTrue(ENEMY_CONFIG.valid())
@@ -646,7 +646,8 @@ class SimXpReferenceTests(unittest.TestCase):
         check_invariants(self, config, world, xp_kills=4)
 
     def test_invariants_hold_on_every_tick(self):
-        for name, config, commands, ticks in sim.SCENARIOS + sim.CHOICE_SCENARIOS:
+        scenarios = sim.SCENARIOS + sim.CHOICE_SCENARIOS + sim.RUN_END_SCENARIOS
+        for name, config, commands, ticks in scenarios:
             if not config.has_xp() or name.startswith("stress"):
                 continue
             log, world = sim.CommandLog(), sim.World(config)
@@ -986,6 +987,96 @@ class SimChoiceReferenceTests(unittest.TestCase):
             sim.step(with_menu, a, log)
             sim.step(without, b, log)
         self.fail("no pause in 3600 ticks")
+
+
+def p0(run_ticks=0, choice_mode=0, values=sim.P0_VALUES, seed=sim.SEED):
+    return sim.Config(BASE, values, sim.W0_KINDS, seed, sim.P0_SKILL, sim.P0_XP,
+                      choice_mode=choice_mode, run_ticks=run_ticks)
+
+
+def play(config, commands=(), limit=40000):
+    log, world = sim.CommandLog(), sim.World(config)
+    for command in commands:
+        log.append(command, 0)
+    steps = 0
+    while not world.over() and steps < limit:
+        sim.step(config, world, log)
+        steps += 1
+    return world, log
+
+
+class SimRunEndReferenceTests(unittest.TestCase):
+    """ADR-011 section 1: victory after the stage duration, victory over defeat in the last
+    tick, the terminal tick skips pickup and progression and voids pending choices."""
+
+    def test_run_ticks_is_the_last_config_value(self):
+        config = p0(run_ticks=18000)
+        self.assertEqual(config.ints()[-2:], [0, 18000])
+        self.assertTrue(config.valid())
+        self.assertFalse(p0(run_ticks=-1).valid())
+
+    def test_survivor_wins_on_the_last_tick(self):
+        tough = [sim.TOUGH] + list(sim.P0_VALUES[1:])
+        world, _ = play(p0(run_ticks=900, values=tough), v2(sim._circle(40, 900)))
+        self.assertEqual((world.tick, world.won, world.hero_dead), (900, 1, 0))
+        self.assertTrue(world.over())
+        frozen = world.digest()
+        sim.step(p0(run_ticks=900, values=tough), world, sim.CommandLog())
+        self.assertEqual(world.digest(), frozen, "a won run does not step")
+
+    def test_no_limit_means_no_victory(self):
+        world, _ = play(p0())
+        self.assertEqual((world.won, world.hero_dead), (0, 1))
+
+    def test_death_before_the_end_is_a_defeat(self):
+        death = play(p0())[0].tick
+        world, _ = play(p0(run_ticks=death + 1))
+        self.assertEqual((world.tick, world.won, world.hero_dead), (death, 0, 1))
+
+    def test_lethal_hit_in_the_last_tick_still_wins(self):
+        death = play(p0())[0].tick
+        world, _ = play(p0(run_ticks=death))
+        self.assertEqual((world.tick, world.won, world.hero_dead, world.hero_hp), (death, 1, 0, 0))
+
+    def test_terminal_tick_skips_pickup_and_progression(self):
+        tough = [sim.TOUGH] + list(sim.P0_VALUES[1:])
+        moves = v2(sim._circle(40, 3000))
+        endless, log = sim.World(p0(values=tough)), sim.CommandLog()
+        for command in moves:
+            log.append(command, 0)
+        collected = []
+        for _ in range(3000):
+            collected.append(endless.xp_collected_total)
+            sim.step(p0(values=tough), endless, log)
+        collected.append(endless.xp_collected_total)
+        # The last tick of a run that ends on a pickup tick.
+        last = next(t for t in range(2999, 0, -1) if collected[t + 1] > collected[t])
+        world, _ = play(p0(run_ticks=last + 1, values=tough), moves)
+        self.assertEqual(world.won, 1)
+        self.assertEqual(world.xp_collected_total, collected[last], "no pickup in the last tick")
+
+    def test_victory_voids_pending_choices(self):
+        tough = [sim.TOUGH] + list(sim.P0_VALUES[1:])
+        world, _ = play(p0(run_ticks=3000, values=tough), v2(sim._circle(40, 3000)))
+        self.assertEqual(world.won, 1)
+        self.assertGreater(world.choices_voided, 0)
+        self.assertEqual((world.pending_level_choices, world.hand), (0, []))
+        self.assertEqual(world.level - 1, world.choices_done + world.choices_voided)
+
+    def test_victory_while_choices_are_answered(self):
+        name, config, records, steps = sim.RUN_END_SCENARIOS[0]
+        self.assertEqual(name, "run_end_victory_with_choices")
+        log, world, _ = sim.run_trace(config, records, steps)
+        self.assertEqual((world.won, world.tick), (1, config.run_ticks))
+        self.assertGreater(world.choices_done, 0)
+        self.assertEqual(world.level - 1, world.choices_done + world.choices_voided)
+        self.assertFalse(world.paused())
+
+    def test_movement_only_run_ends_by_time(self):
+        config = sim.Config(BASE, run_ticks=120)
+        world, _ = play(config, v2([(0, 0, 1, 0)]))
+        self.assertEqual((world.tick, world.won, world.hero_dead), (120, 1, 0))
+
 
 
 if __name__ == "__main__":

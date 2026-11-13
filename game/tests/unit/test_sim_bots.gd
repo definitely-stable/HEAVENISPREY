@@ -34,7 +34,7 @@ static func config_of(row: Dictionary) -> SimConfig:
 		_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"])
 	).with_skill(_ints(row["skill"])).with_xp(
 		_ints(xp["values"]), _ints(xp["kind_xp"]), _ints(xp["costs"])
-	).with_choice_mode(int(row["choice_mode"]))
+	).with_choice_mode(int(row["choice_mode"])).with_run_ticks(int(row["run_ticks"]))
 
 
 static func log_of(row: Dictionary) -> CommandLog:
@@ -90,8 +90,10 @@ func test_kiter_upgrades_log_replays_with_its_choices() -> void:
 		assert_eq(world.digest(), str(mark["digest"]), name + " @" + str(steps))
 	assert_eq(world.tick, int(row["end_tick"]), name + " end tick")
 	assert_eq(world.choices_done, int(row["choices"]), name + " choices")
+	assert_eq(world.won, int(row["won"]), name + " won at the stage end")
 	assert_eq(world.level - 1, world.choices_done, "every earned choice was made")
-	assert_false(world.is_over(), name + " survives")
+	assert_eq(world.hero_dead, 0, name + " survives")
+	assert_true(world.is_over(), name + " the run is over after the stage duration")
 
 
 func test_the_game_tuning_is_the_bot_config() -> void:
@@ -100,5 +102,5 @@ func test_the_game_tuning_is_the_bot_config() -> void:
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
 	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
 	var ints: PackedInt64Array = tuned.to_ints()
-	ints[ints.size() - 1] = SimConfig.CHOICE_NONE
+	ints[ints.size() - 2] = SimConfig.CHOICE_NONE
 	assert_eq(ints, config_of(anchor).to_ints(), "anchors play it without the choice")

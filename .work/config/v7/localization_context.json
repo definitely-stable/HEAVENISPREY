@@ -18,7 +18,8 @@
     "STAT_": "progression metadata",
     "UI_LEVEL_UP_": "level-up choice menu header (run paused)",
     "UI_UPGRADE_RANK": "rank of an upgrade card: current/max after the pick",
-    "UPGRADE_": "level-up upgrade card: _NAME title, _DESC stat line with the value before and after the pick"
+    "UPGRADE_": "level-up upgrade card: _NAME title, _DESC stat line with the value before and after the pick",
+    "UI_RUN_": "run results screen after victory or defeat"
   },
   "translation_file": "translations.csv"
 }

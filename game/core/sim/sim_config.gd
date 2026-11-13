@@ -9,6 +9,8 @@ extends RefCounted
 ## XP (ADR-010): pickup radius, gem slot cap, XP per kind (kind order), level costs.
 ## Level-up choice (ADR-010 section 6): choice_mode 0 never stops the run (choices stay
 ## pending), 1 = Immediate (the run pauses for each choice; needs XP and the skill).
+## Run end (ADR-011 section 1): run_ticks is the stage duration; a hero who is not dead after
+## the tick that reaches it wins. 0 = no time limit.
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -68,6 +70,7 @@ var kind_xp: PackedInt64Array = PackedInt64Array()
 ## Incremental XP cost of level L -> L + 1 from level 1; the last cost repeats.
 var xp_costs: PackedInt64Array = PackedInt64Array()
 var choice_mode: int = CHOICE_NONE
+var run_ticks: int = 0
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -132,6 +135,12 @@ func with_choice_mode(p_mode: int) -> SimConfig:
 	return self
 
 
+## Sets the stage duration in ticks (0 = no time limit).
+func with_run_ticks(p_ticks: int) -> SimConfig:
+	run_ticks = p_ticks
+	return self
+
+
 func kind_count() -> int:
 	return Fx.floor_div(kinds.size(), KIND_STRIDE)
 
@@ -191,6 +200,7 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(kind_xp)
 	out.append_array(xp_costs)
 	out.append(choice_mode)
+	out.append(run_ticks)
 	return out
 
 
@@ -223,7 +233,7 @@ func is_valid() -> bool:
 		return false
 	if choice_mode == CHOICE_IMMEDIATE and not (has_xp() and has_skill()):
 		return false
-	return true
+	return run_ticks >= 0
 
 
 func _enemies_valid() -> bool:

@@ -68,17 +68,28 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 		EnemySystem.clear_dead(config, world)
 		if config.has_skill():
 			CombatSystem.clear_expired(world)
-		if world.hero_hp <= 0:
-			world.hero_hp = 0
-			world.hero_dead = 1
-			world.choices_voided += world.pending_level_choices
-			world.pending_level_choices = 0
-		elif config.has_xp():
-			XpSystem.pickup(config, world)
-			XpSystem.progress(config, world)
-			if config.choice_mode == SimConfig.CHOICE_IMMEDIATE and world.pending_level_choices > 0:
-				UpgradeSystem.build_hand(config, world)
+	# Terminal checks (ADR-009 section 4, ADR-011 section 1): victory beats defeat; a terminal
+	# tick runs neither pickup nor progression and voids the pending choices.
+	if config.run_ticks > 0 and world.tick + 1 == config.run_ticks:
+		world.won = 1
+		world.hero_hp = maxi(world.hero_hp, 0)
+		_void_choices(world)
+	elif config.has_enemies() and world.hero_hp <= 0:
+		world.hero_hp = 0
+		world.hero_dead = 1
+		_void_choices(world)
+	elif config.has_enemies() and config.has_xp():
+		XpSystem.pickup(config, world)
+		XpSystem.progress(config, world)
+		if config.choice_mode == SimConfig.CHOICE_IMMEDIATE and world.pending_level_choices > 0:
+			UpgradeSystem.build_hand(config, world)
 	world.tick += 1
+
+
+## A terminal tick cancels the pending choices without drawing offers (ADR-009 section 4).
+static func _void_choices(world: WorldState) -> void:
+	world.choices_voided += world.pending_level_choices
+	world.pending_level_choices = 0
 
 
 ## The next unread log record is for this tick or an earlier one.

@@ -57,7 +57,7 @@ static func _config(row: Dictionary) -> SimConfig:
 	if typeof(xp) == TYPE_DICTIONARY:
 		var spec_xp: Dictionary = xp
 		config.with_xp(_ints(spec_xp["values"]), _ints(spec_xp["kind_xp"]), _ints(spec_xp["costs"]))
-	return config.with_choice_mode(int(row.get("choice_mode", 0)))
+	return config.with_choice_mode(int(row.get("choice_mode", 0))).with_run_ticks(int(row.get("run_ticks", 0)))
 
 
 static func _live_projectiles(world: WorldState) -> int:
@@ -94,6 +94,7 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.level, int(mark["level"]), label + " level")
 			assert_eq(world.choices_done, int(mark["choices"]), label + " choices")
 			assert_eq(int(world.is_paused()), int(mark["paused"]), label + " paused")
+			assert_eq(world.won, int(mark["won"]), label + " won")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 
