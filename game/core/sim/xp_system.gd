@@ -6,8 +6,9 @@ extends RefCounted
 ## takes the lowest free slot with a fresh uid from `next_gem_uid`. With all `max_gems` slots
 ## taken the value joins the gem nearest to the death point (d2, then the lower slot) and
 ## `gems_merged` counts it: game rule OVERFLOW_POLICY_ID, not a neutral consolidation.
-## Pickup (phase 9, skipped in the tick the hero dies): every gem whose centre is within
-## `pickup_radius_su` of the hero centre (inclusive), slot order, each credited once.
+## Pickup (phase 9, skipped in the tick the hero dies): every gem whose centre is within the
+## pickup radius (config base + upgrade ranks) of the hero centre (inclusive), slot order,
+## each credited once.
 ## Progression (phase 10): every crossed threshold is paid from the bank and earns one
 ## pending choice; the remainder stays in the bank.
 ## P0 guarantee: XP has one path (death -> drop -> pickup) and a gem uid identifies the item,
@@ -60,7 +61,8 @@ static func collect(world: WorldState, slot: int, uid: int) -> bool:
 
 
 static func pickup(config: SimConfig, world: WorldState) -> void:
-	var reach: int = config.pickup_radius_su * config.pickup_radius_su
+	var radius: int = UpgradeSystem.pickup_radius(config, world)
+	var reach: int = radius * radius
 	for slot: int in world.gem_slots():
 		var uid: int = world.gem_uid[slot]
 		if uid != 0 and EnemySystem.dist2(world.gem_x[slot], world.gem_y[slot], world.player_x, world.player_y) <= reach:

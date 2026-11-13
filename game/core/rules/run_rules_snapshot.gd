@@ -21,7 +21,9 @@ extends RefCounted
 ## 3 since P0-01F: enemy slots with uids, spawn ramp, hero skill and projectiles (ADR-009).
 ## 4: enemy separation (ADR-009 section 2).
 ## 5: XP gems, pickup and level progression (ADR-010).
-const SIM_SCHEMA_VERSION: int = 5
+## 6: level-up choices: command log schema 2, offers hand, upgrade ranks, projectile snapshot
+##    (ADR-010 section 6).
+const SIM_SCHEMA_VERSION: int = 6
 
 var error: String:
 	get:

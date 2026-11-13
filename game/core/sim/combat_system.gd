@@ -3,41 +3,50 @@ extends RefCounted
 ## Hero skill phases of SimKernel (ADR-009 section 1, `skill.spirit_sword` damage part).
 ## Exact port of tools/content/sim_core.py.
 ##
-## Cast: the cooldown accumulator gains 1000 per tick; when it reaches the period and a live
-## enemy is within range, one projectile is fired at the nearest one (min distance^2, then
-## lower slot) and the period is subtracted. With no target, or no free projectile slot, the
-## tick does not advance the accumulator: it stays ready, no charges are stored, and the next
-## cast after a hold comes exactly one period after it. Projectiles fly in the direction
+## Cast (ADR-010 section 6): the cooldown accumulator gains the skill rate (1000 + haste)
+## per tick; when it reaches the period, one projectile is fired at each of up to `count`
+## distinct live enemies within range, nearest first (min distance^2, then lower slot), and
+## the period is subtracted. With no target, or fewer free projectile slots than projectiles
+## to fire, the whole cast is held: the tick does not advance the accumulator, no charges are
+## stored, and the next cast after a hold comes exactly one period after it. A projectile
+## keeps the damage and capacity (pierce + 1) of its cast. Projectiles fly in the direction
 ## locked at cast; leaving the arena removes them before they can hit. Hits: each projectile
-## (slot order) repeatedly hits the nearest live overlapping enemy not in its ledger, once
-## per enemy, until its pierce is used up; an enemy at 0 HP is out of every later check.
+## (slot order) repeatedly hits the nearest live overlapping enemy not in its own ledger,
+## once per enemy, until it has used its capacity; an enemy at 0 HP is out of every later
+## check.
 
 
 static func cast(config: SimConfig, world: WorldState) -> void:
-	world.skill_acc += SimConfig.RATE_ONE
+	var rate: int = UpgradeSystem.skill_rate(world)
+	world.skill_acc += rate
 	if world.skill_acc < config.skill_period_mt:
 		return
-	var target: int = _nearest_in_range(config, world)
-	var slot: int = world.proj_damage.find(0)
-	if target < 0 or (slot < 0 and world.projectile_slots() >= config.max_projectiles):
-		world.skill_acc -= SimConfig.RATE_ONE
+	var targets: PackedInt64Array = _targets_in_range(config, world, UpgradeSystem.projectile_count(world))
+	var room: int = world.proj_damage.count(0) + config.max_projectiles - world.projectile_slots()
+	if targets.is_empty() or room < targets.size():
+		world.skill_acc -= rate
 		return
-	if slot < 0:
-		slot = world.projectile_slots()
-		_append_projectile_slot(world)
 	world.skill_acc -= config.skill_period_mt
-	var direction: PackedInt64Array = Fx.normalize_q14(
-		world.enemy_x[target] - world.player_x, world.enemy_y[target] - world.player_y
-	)
-	if direction[0] == 0 and direction[1] == 0:
-		direction = PackedInt64Array([Fx.Q14, 0])
-	world.proj_x[slot] = world.player_x
-	world.proj_y[slot] = world.player_y
-	world.proj_vx[slot] = Fx.mul_q14(config.projectile_speed_su, direction[0])
-	world.proj_vy[slot] = Fx.mul_q14(config.projectile_speed_su, direction[1])
-	world.proj_ttl[slot] = config.projectile_ttl_ticks
-	world.proj_pierce_left[slot] = config.projectile_pierce
-	world.proj_damage[slot] = maxi(1, config.skill_damage_mhp)
+	var damage: int = UpgradeSystem.skill_damage(config, world)
+	var capacity: int = UpgradeSystem.projectile_pierce(config, world) + 1
+	for target: int in targets:
+		var slot: int = world.proj_damage.find(0)
+		if slot < 0:
+			slot = world.projectile_slots()
+			_append_projectile_slot(world)
+		var direction: PackedInt64Array = Fx.normalize_q14(
+			world.enemy_x[target] - world.player_x, world.enemy_y[target] - world.player_y
+		)
+		if direction[0] == 0 and direction[1] == 0:
+			direction = PackedInt64Array([Fx.Q14, 0])
+		world.proj_x[slot] = world.player_x
+		world.proj_y[slot] = world.player_y
+		world.proj_vx[slot] = Fx.mul_q14(config.projectile_speed_su, direction[0])
+		world.proj_vy[slot] = Fx.mul_q14(config.projectile_speed_su, direction[1])
+		world.proj_ttl[slot] = config.projectile_ttl_ticks
+		world.proj_damage[slot] = damage
+		world.proj_hits[slot] = 0
+		world.proj_capacity[slot] = capacity
 
 
 ## Steps every live projectile and resolves its hits (phases 6 and 7a; enemies do not move
@@ -80,25 +89,36 @@ static func _resolve_hits(config: SimConfig, world: WorldState, slot: int) -> vo
 		if best < 0:
 			return
 		world.enemy_hp[best] = maxi(0, world.enemy_hp[best] - world.proj_damage[slot])
-		world.proj_ledger[base + config.projectile_pierce - world.proj_pierce_left[slot]] = world.enemy_uid[best]
-		if world.proj_pierce_left[slot] == 0:
+		world.proj_ledger[base + world.proj_hits[slot]] = world.enemy_uid[best]
+		world.proj_hits[slot] += 1
+		if world.proj_hits[slot] >= world.proj_capacity[slot]:
 			_free_projectile(world, slot)
 			return
-		world.proj_pierce_left[slot] -= 1
 
 
-static func _nearest_in_range(config: SimConfig, world: WorldState) -> int:
-	var best: int = -1
-	var best_d2: int = 0
+## Up to `count` distinct live enemies within the skill range, nearest first (distance^2,
+## then the lower slot): a stable insertion into a list kept sorted by (d2, slot).
+static func _targets_in_range(config: SimConfig, world: WorldState, count: int) -> PackedInt64Array:
+	var slots: PackedInt64Array = PackedInt64Array()
+	var dists: PackedInt64Array = PackedInt64Array()
 	var range2: int = config.skill_range_su * config.skill_range_su
 	for enemy: int in world.enemy_slots():
 		if not world.is_enemy_live(enemy):
 			continue
 		var d2: int = EnemySystem.dist2(world.enemy_x[enemy], world.enemy_y[enemy], world.player_x, world.player_y)
-		if d2 <= range2 and (best < 0 or d2 < best_d2):
-			best = enemy
-			best_d2 = d2
-	return best
+		if d2 > range2:
+			continue
+		var at: int = dists.size()
+		while at > 0 and dists[at - 1] > d2:
+			at -= 1
+		if at >= count:
+			continue
+		dists.insert(at, d2)
+		slots.insert(at, enemy)
+		if dists.size() > count:
+			dists.resize(count)
+			slots.resize(count)
+	return slots
 
 
 static func _in_ledger(world: WorldState, base: int, uid: int) -> bool:
@@ -114,8 +134,9 @@ static func _append_projectile_slot(world: WorldState) -> void:
 	world.proj_vx.append(0)
 	world.proj_vy.append(0)
 	world.proj_ttl.append(0)
-	world.proj_pierce_left.append(0)
 	world.proj_damage.append(0)
+	world.proj_hits.append(0)
+	world.proj_capacity.append(0)
 	for _cell: int in world.ledger_stride:
 		world.proj_ledger.append(0)
 
@@ -126,7 +147,8 @@ static func _free_projectile(world: WorldState, slot: int) -> void:
 	world.proj_vx[slot] = 0
 	world.proj_vy[slot] = 0
 	world.proj_ttl[slot] = 0
-	world.proj_pierce_left[slot] = 0
 	world.proj_damage[slot] = 0
+	world.proj_hits[slot] = 0
+	world.proj_capacity[slot] = 0
 	for cell: int in world.ledger_stride:
 		world.proj_ledger[slot * world.ledger_stride + cell] = 0

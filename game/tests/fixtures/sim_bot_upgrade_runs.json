@@ -1,0 +1,13713 @@
+{
+ "bot_policy_version": 2,
+ "generator": "tools/content/sim_bots.py",
+ "kind": "hip-sim-bot-runs",
+ "log_schema_version": 2,
+ "max_ticks": 18000,
+ "note": "P0 placeholder tuning with level-up choices (ADR-010 sections 6-7), choice_mode 1; kiter_upgrades is a smoke test, diag_* are baselines",
+ "policy_id": "hip-fx-v1",
+ "rng_policy_id": "hip-rng-v1",
+ "schema_version": 2,
+ "sim_schema_version": 6,
+ "smoke": {
+  "bot_policy": "kiter_upgrades",
+  "min_survivors": 28,
+  "seeds": 32
+ },
+ "survey": [
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1428,
+   "death_tick": -1,
+   "final_digest": "bba234ff446d85b2491c40e590214ad0fa19316e8397bdf70f2e89286dc608cd",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s101",
+   "kills": 338,
+   "level": 15,
+   "log_digest": "319e515b4468f17565c31e549e4dd79ace6e566076a7cb2d7633eacd6d7083d5",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "101",
+   "xp_collected": 3725,
+   "xp_dropped": 3760
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1430,
+   "death_tick": -1,
+   "final_digest": "eec3fd482f75a5b2b30cdc76c7bdff4e668bca759cbd863fa43f2898b123bfc1",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s102",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "b4c39d82f67b787e292e0a590491943f965ca6fe27cf8fc341a8a76255e82923",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "102",
+   "xp_collected": 3600,
+   "xp_dropped": 3640
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1470,
+   "death_tick": -1,
+   "final_digest": "4650bcc305e0f906c5ebdf7648aed1f25734ac23e99d4c8bce78669ed6a567be",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s103",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "4e6bde6f6ec9bd2c49b5f5f578f6fd4dc4828f6dd70b368a317b8ec9fbc207da",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "103",
+   "xp_collected": 3685,
+   "xp_dropped": 3730
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1372,
+   "death_tick": -1,
+   "final_digest": "2edf9c09cfd88df95d2dd674dab27bd85f888c67093bb89d2f3743b960600368",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s104",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "07056aaf1453ee53d6bf375af96df812ef1fb9bb2eb0b16abd9708b4f4c7d928",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "104",
+   "xp_collected": 3645,
+   "xp_dropped": 3665
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1358,
+   "death_tick": -1,
+   "final_digest": "de121f7243069484bb2f889680877d8b189fa7bb424c9031ec76d588073fa8cf",
+   "gems_ground_end": 7,
+   "gems_ground_peak": 8,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s105",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "0bfd77261c41c73560fc4a49d814887fbcc64baef7ce3ee43b112e963b0edfd7",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "105",
+   "xp_collected": 3665,
+   "xp_dropped": 3735
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1493,
+   "death_tick": -1,
+   "final_digest": "1e74fe2d31ffc0428f388d14fc0dac271cda70f32d05a10f12e820cb68c46d1b",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s106",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "14452578aa48ba0ec8083e27f2a3b93aa3a6e310c77becd6f3b1f6c58a7b24d2",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "106",
+   "xp_collected": 3660,
+   "xp_dropped": 3685
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1470,
+   "death_tick": -1,
+   "final_digest": "d915aa0f52ff5be52f10bfa5bf49cfff15eb2cf038ffdf9b374b81fc14a79715",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 8,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s107",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "89df851f63609265bf436fcee5ab6491344927bdb8924efd7d49790977664925",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "107",
+   "xp_collected": 3670,
+   "xp_dropped": 3670
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1432,
+   "death_tick": -1,
+   "final_digest": "be9e1bbea9b7ccd14c2521b67ab212d85950731c4d37c0a1fa4ce7757567ab65",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 8,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s108",
+   "kills": 338,
+   "level": 15,
+   "log_digest": "96e680e32a9dcab106378015dac40013733bea878065fb8bb2f9b0c42a8b6f5a",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "108",
+   "xp_collected": 3640,
+   "xp_dropped": 3685
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1506,
+   "death_tick": -1,
+   "final_digest": "728668d8a203b3f4828a7d23c35d78f12e9a5cf0a8036a0a7b943c017c669051",
+   "gems_ground_end": 5,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s109",
+   "kills": 338,
+   "level": 15,
+   "log_digest": "b5a2f3b7c56d148945ae1c99ab14230e8beeca0839dfececdce0cf37c3ddbe55",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "109",
+   "xp_collected": 3690,
+   "xp_dropped": 3740
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1457,
+   "death_tick": -1,
+   "final_digest": "2e7d64fc2936a2caea948f31ee80831a0861d2a7d8998ad0f1f83d8c2711100f",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s110",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "19dad4315c3ad6ebd4f5d99b68639dad522ab7d27f59c115c6eaa01f92083e9c",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "110",
+   "xp_collected": 3655,
+   "xp_dropped": 3675
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1477,
+   "death_tick": -1,
+   "final_digest": "c04cd8359721e23d3321a3f30b76b34040cb1dc200f33f26be38127905c8bd76",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s111",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "b17e80e7b3cf789be53f8d1caf078a856f96529ffee643956fcfe0c5bc6bc43b",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "111",
+   "xp_collected": 3730,
+   "xp_dropped": 3770
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1450,
+   "death_tick": -1,
+   "final_digest": "7cee2c0b7f9ff553c9cb818774362f442a9b60a238703b761fe1eb8bf5972837",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 6,
+   "hp_min": 92400,
+   "id": "botrun.p0.kiter_upgrades.s112",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "cb4b2ed2049dbd4a33b90faf68b69c57649dbf3a69ffb545dc11cec41b07c748",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "112",
+   "xp_collected": 3685,
+   "xp_dropped": 3705
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1405,
+   "death_tick": -1,
+   "final_digest": "edece8027b81995e084220d5dffaedc21b49a6efce5cb2422f6e3aed790bdc1e",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s113",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "b4942ac592910822fdc50259e25b7fadf42b0209b2b1e4358aaa1ac653e92239",
+   "ranks": [
+    0,
+    4,
+    0,
+    2,
+    2,
+    4,
+    2
+   ],
+   "seed": "113",
+   "xp_collected": 3745,
+   "xp_dropped": 3755
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1472,
+   "death_tick": -1,
+   "final_digest": "f0f941f98ea8f6f4763cf3c1de8df52a8be7f099b1e833d31d651ac5d4cce8d0",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s114",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "c23164125cb47e822d5c6f51fdd7e4e46f03a071e970a791133686ff5e20b078",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "114",
+   "xp_collected": 3670,
+   "xp_dropped": 3715
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1438,
+   "death_tick": -1,
+   "final_digest": "2572e0751a96bc965abdb9fffcf4f71c6cc7b0c6ba029a5f8bf1e712c857d1b6",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s115",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "ccd01cd4438a186a67ea6673fc41e91994eb62d4fddb514584e4a03edd846f0c",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "115",
+   "xp_collected": 3680,
+   "xp_dropped": 3725
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1418,
+   "death_tick": -1,
+   "final_digest": "c18eac5828414e4f617d3bd4b7821c34f837e5f80f9487a3d624c8915d68cba5",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s116",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "07051a0c392d6047c79b576a6f06d56658fe141f2d6935912d069b70115e7f6f",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "116",
+   "xp_collected": 3670,
+   "xp_dropped": 3715
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1383,
+   "death_tick": -1,
+   "final_digest": "767b00776538d692e384f4d47450b76ab23641a800614929be4cd2841a650c19",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s117",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "d0623c90db6ac997e96c03fd06a884ab24558644646858363ebda7deff171be2",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "117",
+   "xp_collected": 3670,
+   "xp_dropped": 3715
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1539,
+   "death_tick": -1,
+   "final_digest": "3910bd5685b14d0b6542f7466ab5ebf1faebde106de98a9f33fcebf58bd1f891",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s118",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "ca981b0b706e033e1c46370081a82f630d1605748a2aabf607fae3f3a217457c",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "118",
+   "xp_collected": 3595,
+   "xp_dropped": 3640
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1388,
+   "death_tick": -1,
+   "final_digest": "00d7aa915252d32445027fca635a40a81063f58bed1d1a3648b21d94f1308885",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 8,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s119",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "c010c8507ecb667f9a2e46ff7115e2ff875799df6e9195ea02c2e67d878a0ce8",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "119",
+   "xp_collected": 3725,
+   "xp_dropped": 3745
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1399,
+   "death_tick": -1,
+   "final_digest": "e6c0ff1cec657bfa8cd0e2f7faa5c87e551e32d8a385e83c5548c5bfcde8e83d",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s120",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "f304fc089465720881ed707b7688068022be79a9c7ef8d6e71ff3587a693e514",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "120",
+   "xp_collected": 3635,
+   "xp_dropped": 3655
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1437,
+   "death_tick": -1,
+   "final_digest": "2b829cb9a1c732f09acf3b103e09825ad2a6e88578bf9273a534c8c7cc684c77",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s121",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "aedad07d5a8dbbc5ab5d1f9f1dbfc016fc947df598b5afbc2febe16035db885d",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "121",
+   "xp_collected": 3750,
+   "xp_dropped": 3780
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1427,
+   "death_tick": -1,
+   "final_digest": "7f174f3b046d7395b56b6c4f08549054af8b122358c3f019d0c8f799c20c9405",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s122",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "f6471cd71caaa595dc603ecc87fa30a7119b55d697c7ff249b3c50a13d4600a8",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "122",
+   "xp_collected": 3675,
+   "xp_dropped": 3715
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1510,
+   "death_tick": -1,
+   "final_digest": "7c09d721a5f66ea5c7ff704c2a7df1e2c650b2e26c9205074aa5287959727759",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s123",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "2a8a00752916376bbf27860a654f7297781cec27146bf93bac632cc1cefd11c4",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "123",
+   "xp_collected": 3740,
+   "xp_dropped": 3760
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1498,
+   "death_tick": -1,
+   "final_digest": "3846421d84be7989ba9d66912b944fc19bcb64422785f2a8943cc16286d5ab24",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s124",
+   "kills": 335,
+   "level": 15,
+   "log_digest": "0aba30346988d1410306ff587d590ea9d2c75f225143f0eb76cde5315a37f862",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "124",
+   "xp_collected": 3640,
+   "xp_dropped": 3650
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1426,
+   "death_tick": -1,
+   "final_digest": "c6943c54a35eb4900b72c28250b1125223b9f032f7b3a25c049547d6f92bac27",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s125",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "d6de8a917d55543f1c9e1de244bcdd6fae6e552ddab9156d70a68c8bb0744e31",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "125",
+   "xp_collected": 3675,
+   "xp_dropped": 3705
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1458,
+   "death_tick": -1,
+   "final_digest": "142f03866847fdab987eb7888bad1aed7749b62b9bc5ce323af40a934bfe4b29",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s126",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "d325e7e604252cfdf9d2e7aa1258d9217c6d9155719b06d36d4c1f87bccb478b",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "126",
+   "xp_collected": 3615,
+   "xp_dropped": 3625
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1405,
+   "death_tick": -1,
+   "final_digest": "ff91895487e22f8699361b66dcd002061cb604c4565c56454c897b6bc721c213",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s127",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "c113092d6241c5f3b7dec345ce4d15c560a67697059cb853cdcd0ca97dcc3143",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "127",
+   "xp_collected": 3665,
+   "xp_dropped": 3700
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1461,
+   "death_tick": -1,
+   "final_digest": "6f7256565a4ddf7baeac11f8f7127f53ade6495a1196e94d94a0f48a353dd91c",
+   "gems_ground_end": 6,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s128",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "37d6e89fe79c31ba6877eaf52275efd40da232a85cb0f7ad2dd6f5000577de4f",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "128",
+   "xp_collected": 3595,
+   "xp_dropped": 3660
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1487,
+   "death_tick": -1,
+   "final_digest": "07006571d1dbfb2c0b08a1bcc24452c3b1e883afd18efaf061c17a941f66fcaf",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s129",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "8ed4b770ad7efb119eb6707b8492538ae8bbf35f3101629e57a26aec9e8f68da",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "129",
+   "xp_collected": 3680,
+   "xp_dropped": 3710
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1371,
+   "death_tick": -1,
+   "final_digest": "4d594a95938773925b2b04248b545c006c5274c47e8e923f0902b8496b39c65d",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s130",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "96ac2d89ef9ce99c294501d568bfc344b2761a47183b73357091d7d62d299368",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "130",
+   "xp_collected": 3720,
+   "xp_dropped": 3745
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1444,
+   "death_tick": -1,
+   "final_digest": "79d778e138a2e06af1828f5bdb3fcfc9347acdeacebef887471f0f80a3bbcc12",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s131",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "2838314066fb870826cfcd5a341a39cadc6762d15bccc51deba215f0d855355f",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "131",
+   "xp_collected": 3645,
+   "xp_dropped": 3670
+  },
+  {
+   "bot_policy": "kiter_upgrades",
+   "choices": 14,
+   "command_count": 1396,
+   "death_tick": -1,
+   "final_digest": "3315573d6afa2e5cbbacec447adb813938b1022b58e4cbaa3166d536bc480906",
+   "gems_ground_end": 3,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.kiter_upgrades.s132",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "319b3727bbaa639bc2adc94c6a0d0aff2a7462298c8a9fd1a8763a1ad4f1ebbc",
+   "ranks": [
+    0,
+    3,
+    0,
+    2,
+    2,
+    5,
+    2
+   ],
+   "seed": "132",
+   "xp_collected": 3660,
+   "xp_dropped": 3695
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1359,
+   "death_tick": -1,
+   "final_digest": "257f13782da7136429204a1250aba9c60cfb6fcd7c3b56e0f2a2931fad6754a2",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 6,
+   "hp_min": 92400,
+   "id": "botrun.p0.diag_first_id.s101",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "eec149b11c0aaf31a43017711ba6d807745b8f83d091ddafad672cbd6b50dd97",
+   "ranks": [
+    3,
+    5,
+    3,
+    1,
+    2,
+    0,
+    0
+   ],
+   "seed": "101",
+   "xp_collected": 3695,
+   "xp_dropped": 3695
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 7,
+   "command_count": 561,
+   "death_tick": 6870,
+   "final_digest": "45fdfdcc39d06fa2a2ac732a2b6460ebce53898cde2899a6bd4c1b372ba7b113",
+   "gems_ground_end": 16,
+   "gems_ground_peak": 16,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s102",
+   "kills": 92,
+   "level": 8,
+   "log_digest": "d11a2d6e1d3d32be5063c77e84b8ff02244ad1a44e430add0f1065087491531b",
+   "ranks": [
+    3,
+    3,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "102",
+   "xp_collected": 855,
+   "xp_dropped": 1015
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 607,
+   "death_tick": 7696,
+   "final_digest": "5626102a97bf2ac2cbdfc8070a60e459f18256b9ff8396997f26be919568d6b8",
+   "gems_ground_end": 9,
+   "gems_ground_peak": 13,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s103",
+   "kills": 108,
+   "level": 9,
+   "log_digest": "8ae4193da37314063cdcf1ef3c3e04acffd2677aa8223c1f74ea744c85b2ade3",
+   "ranks": [
+    3,
+    4,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "103",
+   "xp_collected": 1105,
+   "xp_dropped": 1200
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1416,
+   "death_tick": -1,
+   "final_digest": "b9f5f705e967460741eac911879daa27d85458409c1d9be01a8fe552bde69e8c",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s104",
+   "kills": 335,
+   "level": 15,
+   "log_digest": "e3b2f4c17fdfb8a70aef450a15ef0e64fed6279a9a527ed058ae7987104333be",
+   "ranks": [
+    3,
+    5,
+    3,
+    1,
+    2,
+    0,
+    0
+   ],
+   "seed": "104",
+   "xp_collected": 3655,
+   "xp_dropped": 3655
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 635,
+   "death_tick": 8059,
+   "final_digest": "61a8d20ce13cd822a8c83348de5df737ccd2a881eaa7b9de8243522a1ffedc79",
+   "gems_ground_end": 15,
+   "gems_ground_peak": 24,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s105",
+   "kills": 114,
+   "level": 9,
+   "log_digest": "b28094807eb44d0afe3d7f0ed4c140f39e3039709ffcda0ebd7076fe3fa60c8b",
+   "ranks": [
+    3,
+    4,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "105",
+   "xp_collected": 1125,
+   "xp_dropped": 1285
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1442,
+   "death_tick": -1,
+   "final_digest": "4eef9893c059e9fad991220e8efad6982b0b85ff644e4924bb3a7f375c7db82b",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 23,
+   "hp_min": 400,
+   "id": "botrun.p0.diag_first_id.s106",
+   "kills": 338,
+   "level": 15,
+   "log_digest": "3694375a5ee0280467cfa4a9fc3b6912609a20496309fdef412f4bd7c7427a08",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "106",
+   "xp_collected": 3760,
+   "xp_dropped": 3785
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1486,
+   "death_tick": -1,
+   "final_digest": "245d5b1bcfe939f2196872fc43ba124f0cf369063ee2fc601f01da41e75ac872",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 16,
+   "hp_min": 62900,
+   "id": "botrun.p0.diag_first_id.s107",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "3c27fba8c2d003a7d91d2bd8c1028916223783c80c3cf53105987e71a3002ef7",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "107",
+   "xp_collected": 3740,
+   "xp_dropped": 3740
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1415,
+   "death_tick": -1,
+   "final_digest": "291f214502c5a09427d658baf61298227ec59e89da0aa35d6a0be614c23a36d8",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s108",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "b5589fbe5eabc6d81540d7324de756e1d084f55749c32a17fd1e6660d430b4d1",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "108",
+   "xp_collected": 3640,
+   "xp_dropped": 3650
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 614,
+   "death_tick": 8230,
+   "final_digest": "1ca93501cb366fe545c66a4f441c3b40e82bf9e8aa31a264694aa9a646f6ee27",
+   "gems_ground_end": 15,
+   "gems_ground_peak": 15,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s109",
+   "kills": 114,
+   "level": 9,
+   "log_digest": "95cd88f51bf6d1b3c559d338dc7c0e20ad9dc703a2ffa40a3b1159b4c54f7d93",
+   "ranks": [
+    3,
+    4,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "109",
+   "xp_collected": 1105,
+   "xp_dropped": 1255
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1303,
+   "death_tick": -1,
+   "final_digest": "3d3f8cc98172beba2a3c737bc908ced2f3067c8f68857820c72cf0b6a8fb83e5",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 4,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s110",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "707cb02316470086174e927f71b8af17c55f55e5d8c9a4a2048fd10917baf19f",
+   "ranks": [
+    3,
+    4,
+    3,
+    2,
+    2,
+    0,
+    0
+   ],
+   "seed": "110",
+   "xp_collected": 3660,
+   "xp_dropped": 3670
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1384,
+   "death_tick": -1,
+   "final_digest": "1a6da7b91509f0193ee1b22ea0922525cb79411d60e96c0b70755bb4aeaaa7bb",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s111",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "35f4d7fb9fb41707eb154cc0cb967f09417ea2d2648b18e848df47da96df3c0a",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "111",
+   "xp_collected": 3740,
+   "xp_dropped": 3740
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1418,
+   "death_tick": -1,
+   "final_digest": "492dd338e8fdb001c13fc7dc5a8ef4fcf766155f973beab5aacea1059eff9cfc",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 6,
+   "hp_min": 92400,
+   "id": "botrun.p0.diag_first_id.s112",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "a53ad36c86dcea281edda57289326af507e3abf6de94afe5cb035ffc8d8436c1",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "112",
+   "xp_collected": 3745,
+   "xp_dropped": 3755
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 9,
+   "command_count": 683,
+   "death_tick": 8314,
+   "final_digest": "222704fa271c0e84167c6a92889785e073e66431ec019a718cf04c652336be3a",
+   "gems_ground_end": 12,
+   "gems_ground_peak": 12,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s113",
+   "kills": 120,
+   "level": 10,
+   "log_digest": "28bd3f8d21f937a5d2ca38d10a5f9a708211d0e7584c4711f8f70ff96875f290",
+   "ranks": [
+    3,
+    3,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "113",
+   "xp_collected": 1200,
+   "xp_dropped": 1325
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1412,
+   "death_tick": -1,
+   "final_digest": "ea377f2fbf6dd07d80e1f616f10118cf524aef797a714ec843051fa73a659573",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 5,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s114",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "5782da05c3755b80f2cb4bbff3890451c5422d1488bc1d6d718dccad1845cf90",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "114",
+   "xp_collected": 3725,
+   "xp_dropped": 3725
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1368,
+   "death_tick": -1,
+   "final_digest": "2d19d8c4a08348ef77d1e6dd00e600f7b27946c7f34adda14654bc5b37e9a274",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 5,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s115",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "86274f0a387e29225330d6a9a2c6836c35fa97321af6263e7ea84324790e41e8",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "115",
+   "xp_collected": 3645,
+   "xp_dropped": 3655
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1415,
+   "death_tick": -1,
+   "final_digest": "3add9c4b81ffe1eb42c7c8927279f1c33751530a46662fc54888f55c547a92cb",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 9,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s116",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "7cf308a942619293e62062838e29e293b0103722ac1432dc797f95c6f543cf9f",
+   "ranks": [
+    3,
+    5,
+    2,
+    2,
+    2,
+    0,
+    0
+   ],
+   "seed": "116",
+   "xp_collected": 3635,
+   "xp_dropped": 3635
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 532,
+   "death_tick": 7624,
+   "final_digest": "62cc22760171e111e0c9012cd31eb720ec506be267127ac091466d0add91cc8b",
+   "gems_ground_end": 24,
+   "gems_ground_peak": 24,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s117",
+   "kills": 105,
+   "level": 9,
+   "log_digest": "2e1f84b0b2797f7e6618c38d1984f9192be6060243f2eb206568fe785fd211ac",
+   "ranks": [
+    2,
+    5,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "117",
+   "xp_collected": 915,
+   "xp_dropped": 1165
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 6,
+   "command_count": 395,
+   "death_tick": 4986,
+   "final_digest": "0e834897412049e3682f535bc1ef7fabe94d70de73f0e52ad5f3b3daaf6c0259",
+   "gems_ground_end": 14,
+   "gems_ground_peak": 14,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s118",
+   "kills": 62,
+   "level": 7,
+   "log_digest": "75856fac4218b8c36039630667f5d3f5b6502bec1d6ba032d387db7c81f45ff8",
+   "ranks": [
+    2,
+    3,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "118",
+   "xp_collected": 500,
+   "xp_dropped": 645
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 542,
+   "death_tick": 6870,
+   "final_digest": "4ee8c8eb5630da0f8f2c093b6c2a72e4b2b1a924ab5531e93129e3e2cdd09757",
+   "gems_ground_end": 10,
+   "gems_ground_peak": 15,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s119",
+   "kills": 92,
+   "level": 9,
+   "log_digest": "81c2ca65670d05de2d7b9baea3a4466cf7d2afc96929f782c8bb5b644598e065",
+   "ranks": [
+    2,
+    4,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "119",
+   "xp_collected": 905,
+   "xp_dropped": 1005
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 5,
+   "command_count": 279,
+   "death_tick": 3364,
+   "final_digest": "a9980f0b66c1ccd25658687bcfdeb0e6b68d0a16527829048c5268360f6f9cfc",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 3,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s120",
+   "kills": 38,
+   "level": 6,
+   "log_digest": "54bedc3c25652f5a7fe19cf94b94f52d850b51a8e53286d85693e9434c1a47e9",
+   "ranks": [
+    3,
+    0,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "120",
+   "xp_collected": 375,
+   "xp_dropped": 390
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 587,
+   "death_tick": 7486,
+   "final_digest": "eebc47c87f0927651716204f66b6b22522165db979da292656bcd43ee6e29c82",
+   "gems_ground_end": 12,
+   "gems_ground_peak": 12,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s121",
+   "kills": 102,
+   "level": 9,
+   "log_digest": "ad753fb1c0a1fffdfba56536ff86c2359c52a7a127cec5403572d602a4e83e8e",
+   "ranks": [
+    3,
+    4,
+    1,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "121",
+   "xp_collected": 990,
+   "xp_dropped": 1115
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1521,
+   "death_tick": -1,
+   "final_digest": "d6ce18abb149883027c948885e0d880f1956d1e8805fd4aa127a5d928b9d4edd",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 18,
+   "hp_min": 31000,
+   "id": "botrun.p0.diag_first_id.s122",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "c92bd6aa0335b0e957a74c75e5e9d9c589759c0bdd71f01c57ceb17029c22236",
+   "ranks": [
+    3,
+    5,
+    2,
+    2,
+    2,
+    0,
+    0
+   ],
+   "seed": "122",
+   "xp_collected": 3670,
+   "xp_dropped": 3690
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 6,
+   "command_count": 446,
+   "death_tick": 5522,
+   "final_digest": "aa5061f99e07c924387a3e230002446fc7b37e33b90bb1a98d6e643da1c72e87",
+   "gems_ground_end": 11,
+   "gems_ground_peak": 16,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s123",
+   "kills": 68,
+   "level": 7,
+   "log_digest": "e5b66928d0b5aae088f7b82248631f4999f7dc3e3569ce7435a42f84036857ca",
+   "ranks": [
+    3,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "123",
+   "xp_collected": 625,
+   "xp_dropped": 750
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1352,
+   "death_tick": -1,
+   "final_digest": "f989b298ce2a081d356de74aa3684edd62920d19f54c5e8bc6c9590ba8710502",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 4,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s124",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "e2e28948320bbb52d2b6da64370093df6c0c2892a142e15fb9b5af7ca47dea02",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "124",
+   "xp_collected": 3635,
+   "xp_dropped": 3635
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1435,
+   "death_tick": -1,
+   "final_digest": "7ed35c3492d41491c7e5d654c471f4c274acd968ec1b4f427ffb62d68a491495",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 4,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s125",
+   "kills": 338,
+   "level": 15,
+   "log_digest": "92c3409e3ffeafdb591a94e39c0c76f1db54de9463d7fa6e9ac44169c37b8790",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "125",
+   "xp_collected": 3730,
+   "xp_dropped": 3740
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1473,
+   "death_tick": -1,
+   "final_digest": "57d0cfbd8fafd222d9db750920a1fae9c152f3a1d4c5c9a65d3f71bdfdb54fc6",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 6,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s126",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "b79a342a8fe6052201b14342afe40aa398e59e5beb6fc038661e347579bc66e9",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "126",
+   "xp_collected": 3605,
+   "xp_dropped": 3605
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 564,
+   "death_tick": 7246,
+   "final_digest": "1e893df66759b0a9ab1981d09771d7b7c4394f4e55db44dad20a2dd50614d5c6",
+   "gems_ground_end": 5,
+   "gems_ground_peak": 9,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s127",
+   "kills": 96,
+   "level": 9,
+   "log_digest": "23e47accfe30a2799d6a9e6180a92ff90fb774f1396748358cc44b502d2bbafb",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "127",
+   "xp_collected": 1000,
+   "xp_dropped": 1050
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 538,
+   "death_tick": 7181,
+   "final_digest": "b8758e0af1dbca1867cdfac7ef8d55cb0b1db60e09d39de4e31bd05007fab8b7",
+   "gems_ground_end": 16,
+   "gems_ground_peak": 16,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s128",
+   "kills": 96,
+   "level": 9,
+   "log_digest": "76ef83509a75944655e62775146a636c006766978bd97f2128c4e9f9e3bcabf4",
+   "ranks": [
+    2,
+    4,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "128",
+   "xp_collected": 885,
+   "xp_dropped": 1050
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 8,
+   "command_count": 588,
+   "death_tick": 6974,
+   "final_digest": "fb658d69ca9355dc075a7cdb5fbe000d263b3465fefc62c9fb78170109bc5ac2",
+   "gems_ground_end": 10,
+   "gems_ground_peak": 12,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_first_id.s129",
+   "kills": 94,
+   "level": 9,
+   "log_digest": "35e47ad345cd5dc3ae6b01809162468c253aee3ad036a83fe71d5aa602cd4b9d",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "129",
+   "xp_collected": 940,
+   "xp_dropped": 1045
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1406,
+   "death_tick": -1,
+   "final_digest": "9794bf77ca7c87b0b89952d87f56823e003440836919394a64ebb45a0854965e",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s130",
+   "kills": 337,
+   "level": 15,
+   "log_digest": "6a897957d7059293e9f53414196e25d949b8ec3ee883bc721c8bb72750482342",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "130",
+   "xp_collected": 3680,
+   "xp_dropped": 3695
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1464,
+   "death_tick": -1,
+   "final_digest": "490bcf9c39a962d2845fcc05bef69127c1c3f1f64bd527a685d3dad1a58199d2",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 9,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s131",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "412f2054f61e5cb86aaf9047b55707f9136779d81a302e0065b352c81ff4173b",
+   "ranks": [
+    3,
+    4,
+    3,
+    2,
+    2,
+    0,
+    0
+   ],
+   "seed": "131",
+   "xp_collected": 3710,
+   "xp_dropped": 3710
+  },
+  {
+   "bot_policy": "diag_first_id",
+   "choices": 14,
+   "command_count": 1379,
+   "death_tick": -1,
+   "final_digest": "e21e51bcaeaf8134b6662f6167082d2d662648e41a58e6cee8a6187123b7185a",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 7,
+   "hp_min": 100000,
+   "id": "botrun.p0.diag_first_id.s132",
+   "kills": 336,
+   "level": 15,
+   "log_digest": "8f714eb5af5853b41ee2c498d4e1e796f59f98c14b83023e5d724de3e5155283",
+   "ranks": [
+    3,
+    5,
+    3,
+    2,
+    1,
+    0,
+    0
+   ],
+   "seed": "132",
+   "xp_collected": 3735,
+   "xp_dropped": 3745
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 483,
+   "death_tick": 6988,
+   "final_digest": "f290290f0ea0c86a6c5a37feb66257db325519b2b56bf1124fccfeb26bb2ff46",
+   "gems_ground_end": 7,
+   "gems_ground_peak": 10,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s101",
+   "kills": 98,
+   "level": 9,
+   "log_digest": "b837726774da110b52ea7ad11c961f2658b663a02d0127ac42ec2bd701c42687",
+   "ranks": [
+    2,
+    1,
+    3,
+    0,
+    0,
+    1,
+    1
+   ],
+   "seed": "101",
+   "xp_collected": 1020,
+   "xp_dropped": 1095
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 520,
+   "death_tick": 6625,
+   "final_digest": "9437a492b22362b82560fbc5465d89bcc8074c732b512699f957e9d2b89ba09d",
+   "gems_ground_end": 9,
+   "gems_ground_peak": 11,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s102",
+   "kills": 88,
+   "level": 8,
+   "log_digest": "e9d7c6efe27f097e08d2d91f8acb26114c5b51c0da0b9a8b3c43b6900bae8532",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "102",
+   "xp_collected": 850,
+   "xp_dropped": 940
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 395,
+   "death_tick": 5197,
+   "final_digest": "4fc33f3fc0228875b625c8fb71d061bd562fd55f407c57f2fc399e7db5361f8a",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 5,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s103",
+   "kills": 65,
+   "level": 8,
+   "log_digest": "f451ef678025c9a8484e7feb2f2037abbbe289c6951f9ba6ecd0aa7c6456d06a",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "103",
+   "xp_collected": 695,
+   "xp_dropped": 720
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 548,
+   "death_tick": 7009,
+   "final_digest": "3715b0082b62607f3feb76f568fc679589758db69cea37c4025d11aefc0ac59a",
+   "gems_ground_end": 7,
+   "gems_ground_peak": 11,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s104",
+   "kills": 94,
+   "level": 9,
+   "log_digest": "cbe6a72b59fa81203d7906bec263ec1cc2de6a3c74759b256b7a8850535f7925",
+   "ranks": [
+    2,
+    3,
+    2,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "104",
+   "xp_collected": 990,
+   "xp_dropped": 1060
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 583,
+   "death_tick": 7557,
+   "final_digest": "317d1f86a445be512eacc2cd793a4760234708aea14e1367b4c330e4eafe8ed5",
+   "gems_ground_end": 15,
+   "gems_ground_peak": 24,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s105",
+   "kills": 105,
+   "level": 9,
+   "log_digest": "e05601c7f23d7e9c46ac4b3da6994242f2c81e646a6fe89fffd714305faea060",
+   "ranks": [
+    3,
+    3,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "105",
+   "xp_collected": 1015,
+   "xp_dropped": 1180
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 473,
+   "death_tick": 6766,
+   "final_digest": "f58343a6f58829feb68ae4cfc461f6113307db09e3193c779e28d398e0bd5321",
+   "gems_ground_end": 5,
+   "gems_ground_peak": 6,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s106",
+   "kills": 91,
+   "level": 9,
+   "log_digest": "1e2bb1fb99eb5d58055b613db807c40cde4a853b915401cc815787ff9ff2de7c",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "106",
+   "xp_collected": 930,
+   "xp_dropped": 980
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 601,
+   "death_tick": 7595,
+   "final_digest": "234187f500f6bd4aae0be16d14da430d5d7749b9f1abdda55595c870991f5ee7",
+   "gems_ground_end": 9,
+   "gems_ground_peak": 13,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s107",
+   "kills": 107,
+   "level": 9,
+   "log_digest": "0af1a4004a9838e572dde19c0dee6ec8395717bbbeb385d45638dbd8f1fc4b19",
+   "ranks": [
+    2,
+    2,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "107",
+   "xp_collected": 1095,
+   "xp_dropped": 1195
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 10,
+   "command_count": 914,
+   "death_tick": 10968,
+   "final_digest": "fa64c21f8f0685ef309fdb5f2182e149e8b04ba4d627363a06762370c5a162f9",
+   "gems_ground_end": 4,
+   "gems_ground_peak": 8,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s108",
+   "kills": 174,
+   "level": 11,
+   "log_digest": "a593b12b9469b9436715ebd037c7a7b3badfd303dd6abee0baf9ab76fb96426c",
+   "ranks": [
+    1,
+    3,
+    3,
+    0,
+    0,
+    2,
+    1
+   ],
+   "seed": "108",
+   "xp_collected": 1820,
+   "xp_dropped": 1865
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 531,
+   "death_tick": 7045,
+   "final_digest": "9d6085abb857074ee7bf102ae57f9e8e3dc10019b449862dd5a1b383473901fc",
+   "gems_ground_end": 11,
+   "gems_ground_peak": 13,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s109",
+   "kills": 95,
+   "level": 9,
+   "log_digest": "87a0761003fda0087968531b702a234edfeb063117090078d5585e6ac6a283bc",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "109",
+   "xp_collected": 930,
+   "xp_dropped": 1050
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 522,
+   "death_tick": 6996,
+   "final_digest": "4c530529e1e064a27f98412b60ba465d8b0c85d2217ab12f6ec90b6da7ca99bd",
+   "gems_ground_end": 9,
+   "gems_ground_peak": 9,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s110",
+   "kills": 95,
+   "level": 9,
+   "log_digest": "14c79849da475df041c1a8f39c2a928088da70f3072d0918132fbac2b311d932",
+   "ranks": [
+    2,
+    1,
+    3,
+    0,
+    0,
+    0,
+    2
+   ],
+   "seed": "110",
+   "xp_collected": 945,
+   "xp_dropped": 1040
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 548,
+   "death_tick": 6804,
+   "final_digest": "93836e50f6bf51d68e0e8a14cb631e7b83235060774f3ed577f1518a5dbd314f",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 7,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s111",
+   "kills": 92,
+   "level": 9,
+   "log_digest": "fcbe1751424c92e21e781dcdd72c39ad873e10aaf7f904af5e6d68c0f2c13028",
+   "ranks": [
+    2,
+    2,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "111",
+   "xp_collected": 1010,
+   "xp_dropped": 1010
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 522,
+   "death_tick": 7132,
+   "final_digest": "85db27d049c1cc1f9410934ac177aaba73bce976377cb686b70834cdcd27cb45",
+   "gems_ground_end": 14,
+   "gems_ground_peak": 17,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s112",
+   "kills": 98,
+   "level": 9,
+   "log_digest": "7d479074b4d10c9ec2fd6c534460fbb2b1fc09800a5365f9a978cdc1f163a3e3",
+   "ranks": [
+    1,
+    4,
+    2,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "112",
+   "xp_collected": 915,
+   "xp_dropped": 1060
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 396,
+   "death_tick": 5379,
+   "final_digest": "7e3528dbd8ddfa3f70abddce74ff157d67253ef5ed4010199bc9b87e34e43ad1",
+   "gems_ground_end": 8,
+   "gems_ground_peak": 8,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s113",
+   "kills": 68,
+   "level": 8,
+   "log_digest": "a7bad1ee3db36a98a88f9a5e48d3fdbf99110e7d6d4643aaa5ba6636d0a48307",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "113",
+   "xp_collected": 670,
+   "xp_dropped": 750
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 576,
+   "death_tick": 7852,
+   "final_digest": "9f36cae0d02ae5592175cfa9bbc6ff4d2e693774ddd0cb787d0afeccb91580c0",
+   "gems_ground_end": 12,
+   "gems_ground_peak": 12,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s114",
+   "kills": 111,
+   "level": 9,
+   "log_digest": "c06a2654be4b67b933fa50403246a6a593971985ee9e1ddac4154550cc83ec09",
+   "ranks": [
+    3,
+    0,
+    3,
+    0,
+    0,
+    0,
+    2
+   ],
+   "seed": "114",
+   "xp_collected": 1065,
+   "xp_dropped": 1200
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 12,
+   "command_count": 1177,
+   "death_tick": 14466,
+   "final_digest": "ab1f8d154ef18d572dc58cf1b842c2a87ccd3f584eed7ab32b578e110d1d49dc",
+   "gems_ground_end": 8,
+   "gems_ground_peak": 14,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s115",
+   "kills": 254,
+   "level": 13,
+   "log_digest": "9e11485ac1439fb7370d13426bd8e251c2d45b989a2d6aad7b87f9a12a5d70a3",
+   "ranks": [
+    2,
+    3,
+    3,
+    0,
+    0,
+    2,
+    2
+   ],
+   "seed": "115",
+   "xp_collected": 2765,
+   "xp_dropped": 2850
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 9,
+   "command_count": 589,
+   "death_tick": 8328,
+   "final_digest": "65b6e75608ca676f572051b85835827399164e77f6d2a27fdd39e443bf89ecbb",
+   "gems_ground_end": 8,
+   "gems_ground_peak": 13,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s116",
+   "kills": 120,
+   "level": 10,
+   "log_digest": "f2189152412ad6d9b3d964c76f15bc7431cf47f53db094268f84e0b0c9212725",
+   "ranks": [
+    1,
+    4,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "116",
+   "xp_collected": 1260,
+   "xp_dropped": 1345
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 6,
+   "command_count": 287,
+   "death_tick": 4553,
+   "final_digest": "122efe8312f70429062441344ecc5bdf0dc0c78030b0c036dd655617ba1d8dc3",
+   "gems_ground_end": 10,
+   "gems_ground_peak": 11,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s117",
+   "kills": 55,
+   "level": 7,
+   "log_digest": "8f82185ce78d049e509a9b22f67369836edd4b97eb41a8161c7bc9179692661a",
+   "ranks": [
+    0,
+    4,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "117",
+   "xp_collected": 510,
+   "xp_dropped": 615
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 335,
+   "death_tick": 5309,
+   "final_digest": "f0267cb246ef17a4375146bb09992567322f44ab50b247d92dc7d6f3ac973261",
+   "gems_ground_end": 5,
+   "gems_ground_peak": 6,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s118",
+   "kills": 66,
+   "level": 8,
+   "log_digest": "a15ad55bf69e1abe2c2bfdcb853c7368916e05a3dea8b7a39e78b6823dd9084b",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "118",
+   "xp_collected": 640,
+   "xp_dropped": 690
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 505,
+   "death_tick": 7205,
+   "final_digest": "1e9a35bc7426d17ac6d5bffc8b583720a73e439586537cee9f80cacbff47fc18",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 7,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s119",
+   "kills": 97,
+   "level": 9,
+   "log_digest": "268f918c51ee73c6cd17ec11a77cf3572acb8e1e5fb9d6e9a9a38157aaad098a",
+   "ranks": [
+    2,
+    3,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "119",
+   "xp_collected": 1045,
+   "xp_dropped": 1065
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 435,
+   "death_tick": 5518,
+   "final_digest": "fa492fa16103cf4f7482148cd97b214bcc05198bea222f5f4d197ff404307237",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 4,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s120",
+   "kills": 70,
+   "level": 8,
+   "log_digest": "3869f1a62a28341dbf3edcf4b72823f35c76533f1f1da93c14c36b2c0e3af45a",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "120",
+   "xp_collected": 725,
+   "xp_dropped": 735
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 459,
+   "death_tick": 6396,
+   "final_digest": "ad8842bfaff3e0e903d8566a46ceea7a686f902b6d6157fe5d25391256de0b3c",
+   "gems_ground_end": 11,
+   "gems_ground_peak": 15,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s121",
+   "kills": 83,
+   "level": 8,
+   "log_digest": "a07e529d617a2e3a2e7b1568c35d6224a8bb9a5d71fc49f661aa8ea604ac1397",
+   "ranks": [
+    2,
+    3,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "121",
+   "xp_collected": 785,
+   "xp_dropped": 900
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 9,
+   "command_count": 708,
+   "death_tick": 8347,
+   "final_digest": "9a2e61ff3e5feeb4543135d2905ffb38b7ef52f62553924ec4fc285545bc9d57",
+   "gems_ground_end": 17,
+   "gems_ground_peak": 22,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s122",
+   "kills": 121,
+   "level": 10,
+   "log_digest": "e29e7323f2e3d341e2f0a56cdce45e55166e736289e39c645f5a5383f9511f83",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    1,
+    0
+   ],
+   "seed": "122",
+   "xp_collected": 1155,
+   "xp_dropped": 1345
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 579,
+   "death_tick": 7124,
+   "final_digest": "32114ff47358fd6b89da5663485b663556f54b4e980243f4528d1657e02ca5b8",
+   "gems_ground_end": 18,
+   "gems_ground_peak": 20,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s123",
+   "kills": 94,
+   "level": 8,
+   "log_digest": "821ae636556bbdfe1b752bd413262095f94e3256b6434ebf5f6201bdc430d3d0",
+   "ranks": [
+    3,
+    2,
+    2,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "123",
+   "xp_collected": 850,
+   "xp_dropped": 1035
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 9,
+   "command_count": 715,
+   "death_tick": 8875,
+   "final_digest": "b9a548bd8d711d9fea489ab3a8bd8a4cabe18b1278a17e71ca81cdbd071b8d73",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 6,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s124",
+   "kills": 130,
+   "level": 10,
+   "log_digest": "c0d1b91a4f27cbf7781cc8ee83200acb60a2d7aa35f65cec217c6353f0c76018",
+   "ranks": [
+    2,
+    1,
+    3,
+    0,
+    0,
+    1,
+    2
+   ],
+   "seed": "124",
+   "xp_collected": 1425,
+   "xp_dropped": 1440
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 10,
+   "command_count": 796,
+   "death_tick": 9931,
+   "final_digest": "8f529249b58ad948a4197a7dd59e26f88682825daab2215c8f4986c166d4aee7",
+   "gems_ground_end": 1,
+   "gems_ground_peak": 10,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s125",
+   "kills": 152,
+   "level": 11,
+   "log_digest": "55c9507aabb5041ed01b9f145b9aa9ef523d43287819e9ba6ff82a13c76907bf",
+   "ranks": [
+    3,
+    1,
+    3,
+    0,
+    0,
+    2,
+    1
+   ],
+   "seed": "125",
+   "xp_collected": 1655,
+   "xp_dropped": 1665
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 10,
+   "command_count": 833,
+   "death_tick": 10569,
+   "final_digest": "aa7fa900fdee7d7d2497c070c8197b71c90c7f0dd2439a6c7c152f42af0dff5a",
+   "gems_ground_end": 7,
+   "gems_ground_peak": 17,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s126",
+   "kills": 168,
+   "level": 11,
+   "log_digest": "1a823b3ca63da9fb473cbf7425d103c9371cf7bf1b8b4996541c60de101ff4f8",
+   "ranks": [
+    1,
+    3,
+    3,
+    0,
+    0,
+    1,
+    2
+   ],
+   "seed": "126",
+   "xp_collected": 1775,
+   "xp_dropped": 1855
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 458,
+   "death_tick": 6421,
+   "final_digest": "253317fe1450c08f73fbc97ff89e4c99208ff527676f9be0fd9a9f50d8770edf",
+   "gems_ground_end": 6,
+   "gems_ground_peak": 7,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s127",
+   "kills": 85,
+   "level": 9,
+   "log_digest": "b1b0bd0133b450d5a350436477e899a9ad055187890e089489b9e3f98799927d",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "127",
+   "xp_collected": 900,
+   "xp_dropped": 960
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 9,
+   "command_count": 604,
+   "death_tick": 8722,
+   "final_digest": "c8599467a86d54e393861e7d266779fa698ea423b2831e1607e84b78828e3289",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 8,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s128",
+   "kills": 127,
+   "level": 10,
+   "log_digest": "6fba47c4175635181e7a31e860ee973a53c44b7adaf5d86667180ef8ceaa1b90",
+   "ranks": [
+    1,
+    4,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "128",
+   "xp_collected": 1375,
+   "xp_dropped": 1395
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 532,
+   "death_tick": 6365,
+   "final_digest": "29ba00a222ec5ad850cec99dbd07ba2075239122853f1d9fdb872d22f487b2a8",
+   "gems_ground_end": 2,
+   "gems_ground_peak": 4,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s129",
+   "kills": 83,
+   "level": 9,
+   "log_digest": "4bfb28731ca2297ca77240d6028b88e3f712bc7de350905a1c618a1334178654",
+   "ranks": [
+    3,
+    2,
+    3,
+    0,
+    0,
+    0,
+    0
+   ],
+   "seed": "129",
+   "xp_collected": 925,
+   "xp_dropped": 945
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 6,
+   "command_count": 440,
+   "death_tick": 5580,
+   "final_digest": "dbcb548e865bb6b976f39c9b55ba5a9734418b0f272c0f8840c296a86e973d41",
+   "gems_ground_end": 21,
+   "gems_ground_peak": 21,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s130",
+   "kills": 70,
+   "level": 7,
+   "log_digest": "8fc6c58e7f77015adb1638c98e2d67c26214ea6ca9a236645d8267c278b89867",
+   "ranks": [
+    3,
+    1,
+    0,
+    0,
+    0,
+    0,
+    2
+   ],
+   "seed": "130",
+   "xp_collected": 535,
+   "xp_dropped": 755
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 7,
+   "command_count": 518,
+   "death_tick": 6331,
+   "final_digest": "667d925e80a214b82e726980161d3ba0d15454b91932187fc6aa51c305ae2845",
+   "gems_ground_end": 11,
+   "gems_ground_peak": 11,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s131",
+   "kills": 82,
+   "level": 8,
+   "log_digest": "4f48355c379b0f860782ef43937fd436e7ab0c65eba59af527c38e75869db97e",
+   "ranks": [
+    3,
+    1,
+    2,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "131",
+   "xp_collected": 755,
+   "xp_dropped": 875
+  },
+  {
+   "bot_policy": "diag_utility_first",
+   "choices": 8,
+   "command_count": 496,
+   "death_tick": 7011,
+   "final_digest": "88531bb6af54419a84d81a59857ac4a8f0149c8cc329930cdf0d00a9d74bd929",
+   "gems_ground_end": 0,
+   "gems_ground_peak": 5,
+   "hp_min": 0,
+   "id": "botrun.p0.diag_utility_first.s132",
+   "kills": 94,
+   "level": 9,
+   "log_digest": "8d1b5d2b529bfaac9ed3fe7e29db4e77aadaaf3e4cc0eeeefe7a012dfd56d472",
+   "ranks": [
+    1,
+    3,
+    3,
+    0,
+    0,
+    0,
+    1
+   ],
+   "seed": "132",
+   "xp_collected": 1060,
+   "xp_dropped": 1060
+  }
+ ],
+ "traces": [
+  {
+   "bot_policy": "kiter_upgrades",
+   "bot_policy_version": 2,
+   "checkpoints": [
+    {
+     "choices": 0,
+     "digest": "53b7586ba1c705388978c268b2c12d8daebc7cd6d09d7a01d64c63c881fcfeb1",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 1,
+     "tick": 1,
+     "xp": 0
+    },
+    {
+     "choices": 0,
+     "digest": "2550b92fbaaf9a38e6d10225ee077a00d2aabeb20c92e8345e58ca8912d8ba86",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 2,
+     "tick": 2,
+     "xp": 0
+    },
+    {
+     "choices": 0,
+     "digest": "5586392a101777799da5b0cc229edc4dfe7960cba94d1afeb568d284f83b698b",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 30,
+     "tick": 30,
+     "xp": 0
+    },
+    {
+     "choices": 0,
+     "digest": "fc41c83b4d72934de02a4b2513e159c5e3c212503a6cbb867461da08f1107915",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 60,
+     "tick": 60,
+     "xp": 0
+    },
+    {
+     "choices": 0,
+     "digest": "4234f035a2ad593351584863b0ce45cfec851caecf369eba097c8465153374cc",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 1,
+     "level": 1,
+     "paused": 0,
+     "player_x": "878256",
+     "player_y": "484944",
+     "projectiles": 0,
+     "step": 300,
+     "tick": 300,
+     "xp": 0
+    },
+    {
+     "choices": 1,
+     "digest": "7c8f4264b5129865aa38f2099b725607b1614d7cff44c20fd5e7da88c34e6879",
+     "enemy_alive": 2,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 4,
+     "level": 2,
+     "paused": 0,
+     "player_x": "730862",
+     "player_y": "488338",
+     "projectiles": 1,
+     "step": 600,
+     "tick": 599,
+     "xp": 45
+    },
+    {
+     "choices": 2,
+     "digest": "d0fb170703fafda94f49b482474940e8a98a4c8d8389de7dc2f837b6c3957ae6",
+     "enemy_alive": 3,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 7,
+     "level": 3,
+     "paused": 0,
+     "player_x": "786912",
+     "player_y": "693816",
+     "projectiles": 1,
+     "step": 900,
+     "tick": 898,
+     "xp": 65
+    },
+    {
+     "choices": 3,
+     "digest": "18623ab1a6b1d440c16e08f86f69894cf0c855501888dc07709edcdbb1ffbfa3",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 12,
+     "level": 4,
+     "paused": 0,
+     "player_x": "853242",
+     "player_y": "462834",
+     "projectiles": 1,
+     "step": 1200,
+     "tick": 1197,
+     "xp": 120
+    },
+    {
+     "choices": 3,
+     "digest": "489c9a37c73a8046c7a37c043b56447a6d5429ab4374588da1958d3792b35dbd",
+     "enemy_alive": 1,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 16,
+     "level": 4,
+     "paused": 0,
+     "player_x": "526692",
+     "player_y": "399996",
+     "projectiles": 1,
+     "step": 1500,
+     "tick": 1497,
+     "xp": 155
+    },
+    {
+     "choices": 4,
+     "digest": "729ed880a8ca171b0cba32fe4e9c154838f282c7575a4446b3d2f08816e69131",
+     "enemy_alive": 1,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 20,
+     "level": 5,
+     "paused": 0,
+     "player_x": "328728",
+     "player_y": "379632",
+     "projectiles": 0,
+     "step": 1800,
+     "tick": 1796,
+     "xp": 210
+    },
+    {
+     "choices": 4,
+     "digest": "4015f15d04cd43b9164c78ae8789cd7d67f96860f7980be1373d02d48eeb0aab",
+     "enemy_alive": 1,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 24,
+     "level": 5,
+     "paused": 0,
+     "player_x": "377892",
+     "player_y": "644364",
+     "projectiles": 0,
+     "step": 2100,
+     "tick": 2096,
+     "xp": 275
+    },
+    {
+     "choices": 4,
+     "digest": "8daf6fe8768f1a88d6bab4b79fd5f12e732f508bb5376ac3e1ddf64c65b17eab",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 27,
+     "level": 5,
+     "paused": 0,
+     "player_x": "719228",
+     "player_y": "449356",
+     "projectiles": 1,
+     "step": 2400,
+     "tick": 2396,
+     "xp": 295
+    },
+    {
+     "choices": 5,
+     "digest": "a037cfa8839d2b37a3505a79fc7f1d3b9f1b7e7556b4016b581eba535a84f6a5",
+     "enemy_alive": 1,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 32,
+     "level": 6,
+     "paused": 0,
+     "player_x": "435060",
+     "player_y": "596652",
+     "projectiles": 0,
+     "step": 2700,
+     "tick": 2695,
+     "xp": 335
+    },
+    {
+     "choices": 5,
+     "digest": "843c6887866e5ee711ba9e89e71a06e4aaf619bbdc9000a417273027c1f1b650",
+     "enemy_alive": 1,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 36,
+     "level": 6,
+     "paused": 0,
+     "player_x": "514430",
+     "player_y": "584626",
+     "projectiles": 1,
+     "step": 3000,
+     "tick": 2995,
+     "xp": 395
+    },
+    {
+     "choices": 6,
+     "digest": "df22a80ba12382ba93b108c8d316e2185f948712845b781261ac9c1bf8440895",
+     "enemy_alive": 2,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 40,
+     "level": 7,
+     "paused": 0,
+     "player_x": "729900",
+     "player_y": "584724",
+     "projectiles": 1,
+     "step": 3300,
+     "tick": 3294,
+     "xp": 450
+    },
+    {
+     "choices": 6,
+     "digest": "e120a4140531e31a950fa318346b9999ab68be2886f8be6537e411c63a4f8c89",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 44,
+     "level": 7,
+     "paused": 0,
+     "player_x": "928008",
+     "player_y": "581232",
+     "projectiles": 1,
+     "step": 3600,
+     "tick": 3594,
+     "xp": 490
+    },
+    {
+     "choices": 6,
+     "digest": "edb38265f2c97b830c968060df21a94514f318f72608127116193cea1a693766",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 49,
+     "level": 7,
+     "paused": 0,
+     "player_x": "805824",
+     "player_y": "466032",
+     "projectiles": 0,
+     "step": 3900,
+     "tick": 3894,
+     "xp": 550
+    },
+    {
+     "choices": 6,
+     "digest": "56ad1db685216184a4987556aa901be03d6485e2be47e14e662162e8090b03f2",
+     "enemy_alive": 2,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 53,
+     "level": 7,
+     "paused": 0,
+     "player_x": "492516",
+     "player_y": "364212",
+     "projectiles": 0,
+     "step": 4200,
+     "tick": 4194,
+     "xp": 605
+    },
+    {
+     "choices": 7,
+     "digest": "fc4edde9e8234936e32dd6bd122e865dae8e9722aac4301e5407142e1602e915",
+     "enemy_alive": 1,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 59,
+     "level": 8,
+     "paused": 0,
+     "player_x": "902798",
+     "player_y": "613426",
+     "projectiles": 0,
+     "step": 4500,
+     "tick": 4493,
+     "xp": 655
+    },
+    {
+     "choices": 7,
+     "digest": "6609b40780d6012820e70897f5de3c0588c6e31dbdb613542bf13239663e5b64",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 63,
+     "level": 8,
+     "paused": 0,
+     "player_x": "1319966",
+     "player_y": "769550",
+     "projectiles": 0,
+     "step": 4800,
+     "tick": 4793,
+     "xp": 710
+    },
+    {
+     "choices": 7,
+     "digest": "87e3c212281848b58d19647fe343f15cb274eb69d8c112b3027548057b44b9db",
+     "enemy_alive": 1,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 68,
+     "level": 8,
+     "paused": 0,
+     "player_x": "1178870",
+     "player_y": "340454",
+     "projectiles": 1,
+     "step": 5100,
+     "tick": 5093,
+     "xp": 755
+    },
+    {
+     "choices": 7,
+     "digest": "75794ab260768d642517bec1b94a0f505b66768dd73addd68cd10065f9f1a84b",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 72,
+     "level": 8,
+     "paused": 0,
+     "player_x": "684130",
+     "player_y": "635438",
+     "projectiles": 0,
+     "step": 5400,
+     "tick": 5393,
+     "xp": 810
+    },
+    {
+     "choices": 8,
+     "digest": "0e743bf456f99d8ad48fdba335a6806a6910d1d6bf8700ea07724a9cab10b93a",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 77,
+     "level": 9,
+     "paused": 0,
+     "player_x": "873612",
+     "player_y": "508212",
+     "projectiles": 0,
+     "step": 5700,
+     "tick": 5692,
+     "xp": 865
+    },
+    {
+     "choices": 8,
+     "digest": "609966a55308cda900a7059fb6f0dc0834b99e2adbe3a9a52814c66c8373792b",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 83,
+     "level": 9,
+     "paused": 0,
+     "player_x": "876136",
+     "player_y": "554080",
+     "projectiles": 1,
+     "step": 6000,
+     "tick": 5992,
+     "xp": 925
+    },
+    {
+     "choices": 8,
+     "digest": "85bab4cca4b2f6836fff658ed1e201b30ab1e5288e770e8d82fccdd1a978b7e9",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 88,
+     "level": 9,
+     "paused": 0,
+     "player_x": "1048164",
+     "player_y": "572796",
+     "projectiles": 1,
+     "step": 6300,
+     "tick": 6292,
+     "xp": 980
+    },
+    {
+     "choices": 8,
+     "digest": "c84bc06c9f1e03cb1e2c775c4ef333a6707964cc19982f00be8a1dbe27c48ec6",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 93,
+     "level": 9,
+     "paused": 0,
+     "player_x": "920356",
+     "player_y": "440332",
+     "projectiles": 0,
+     "step": 6600,
+     "tick": 6592,
+     "xp": 1040
+    },
+    {
+     "choices": 8,
+     "digest": "f7212197864f9f4ad90a7c14171be62632a8fe62d370df8762828b65c939d91a",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 98,
+     "level": 9,
+     "paused": 0,
+     "player_x": "1001616",
+     "player_y": "593448",
+     "projectiles": 1,
+     "step": 6900,
+     "tick": 6892,
+     "xp": 1090
+    },
+    {
+     "choices": 9,
+     "digest": "d395d93134904cd7e7020301d236c56a2a05971515ef85b3c79dab51dc06e23a",
+     "enemy_alive": 3,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 103,
+     "level": 10,
+     "paused": 0,
+     "player_x": "346632",
+     "player_y": "406392",
+     "projectiles": 0,
+     "step": 7200,
+     "tick": 7191,
+     "xp": 1170
+    },
+    {
+     "choices": 9,
+     "digest": "11bfe32792260878b0e56f23503993469a938e0e78e6c962c0bd4108412947d9",
+     "enemy_alive": 3,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 109,
+     "level": 10,
+     "paused": 0,
+     "player_x": "577758",
+     "player_y": "475626",
+     "projectiles": 0,
+     "step": 7500,
+     "tick": 7491,
+     "xp": 1235
+    },
+    {
+     "choices": 9,
+     "digest": "11e0df486810e41bb216a26ffd6c93ded30489d5310f16e85d4a4b4d65ef1800",
+     "enemy_alive": 2,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 115,
+     "level": 10,
+     "paused": 0,
+     "player_x": "923220",
+     "player_y": "326388",
+     "projectiles": 1,
+     "step": 7800,
+     "tick": 7791,
+     "xp": 1295
+    },
+    {
+     "choices": 9,
+     "digest": "15a45c04f27f3604cfefabe10d996d1d6667e2a9df5d0d733a488bdb207f2d97",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 121,
+     "level": 10,
+     "paused": 0,
+     "player_x": "925986",
+     "player_y": "463698",
+     "projectiles": 1,
+     "step": 8100,
+     "tick": 8091,
+     "xp": 1355
+    },
+    {
+     "choices": 9,
+     "digest": "34c9a119fc35806b6f7115bc462e5d89d838541d7d9ea4f91a04e76ddd9b4f32",
+     "enemy_alive": 3,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 126,
+     "level": 10,
+     "paused": 0,
+     "player_x": "796818",
+     "player_y": "295842",
+     "projectiles": 1,
+     "step": 8400,
+     "tick": 8391,
+     "xp": 1420
+    },
+    {
+     "choices": 10,
+     "digest": "0bd4a0853166a03891bc5d3ff1a4660706f0d542ffd00d7c099df158e9ffccaa",
+     "enemy_alive": 2,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 133,
+     "level": 11,
+     "paused": 0,
+     "player_x": "621108",
+     "player_y": "350244",
+     "projectiles": 1,
+     "step": 8700,
+     "tick": 8690,
+     "xp": 1480
+    },
+    {
+     "choices": 10,
+     "digest": "082cb90db0559947b50157e50f398467fdc5f336892438c14442fa791ebd07e1",
+     "enemy_alive": 2,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 139,
+     "level": 11,
+     "paused": 0,
+     "player_x": "454612",
+     "player_y": "416084",
+     "projectiles": 1,
+     "step": 9000,
+     "tick": 8990,
+     "xp": 1535
+    },
+    {
+     "choices": 10,
+     "digest": "e6bb0b3eebf4d5211243ddf3ebd3ee3e1ee90abb3580930196494de1531e4c0a",
+     "enemy_alive": 2,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 145,
+     "level": 11,
+     "paused": 0,
+     "player_x": "919100",
+     "player_y": "663356",
+     "projectiles": 1,
+     "step": 9300,
+     "tick": 9290,
+     "xp": 1605
+    },
+    {
+     "choices": 10,
+     "digest": "18fc8a833f9c9014ba2e61f4325f6a6c183c358f87f1e5270dc6b1485c5feb6f",
+     "enemy_alive": 2,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 151,
+     "level": 11,
+     "paused": 0,
+     "player_x": "885356",
+     "player_y": "283228",
+     "projectiles": 1,
+     "step": 9600,
+     "tick": 9590,
+     "xp": 1665
+    },
+    {
+     "choices": 10,
+     "digest": "17f6b08fe8ee74ee438f48897797db454440320d34bddd0c9a788103e7dcefde",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 157,
+     "level": 11,
+     "paused": 0,
+     "player_x": "519000",
+     "player_y": "626016",
+     "projectiles": 2,
+     "step": 9900,
+     "tick": 9890,
+     "xp": 1745
+    },
+    {
+     "choices": 10,
+     "digest": "7e4a7489d7efd2a6c9721e2545020e154f8e25b0a06e4dcf7a94d01a94023718",
+     "enemy_alive": 3,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 163,
+     "level": 11,
+     "paused": 0,
+     "player_x": "423968",
+     "player_y": "620392",
+     "projectiles": 1,
+     "step": 10200,
+     "tick": 10190,
+     "xp": 1820
+    },
+    {
+     "choices": 10,
+     "digest": "ed8f3a0436830696f80c78f5f409684bd428657ecffb1763ba8fa1f71431427e",
+     "enemy_alive": 3,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 170,
+     "level": 11,
+     "paused": 0,
+     "player_x": "1136120",
+     "player_y": "454184",
+     "projectiles": 1,
+     "step": 10500,
+     "tick": 10490,
+     "xp": 1865
+    },
+    {
+     "choices": 11,
+     "digest": "1fb27963f595323171559b9165aac9039b936ceb2aef570838f13d30d59ae817",
+     "enemy_alive": 3,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 176,
+     "level": 12,
+     "paused": 0,
+     "player_x": "310560",
+     "player_y": "479688",
+     "projectiles": 0,
+     "step": 10800,
+     "tick": 10789,
+     "xp": 1940
+    },
+    {
+     "choices": 11,
+     "digest": "48bc1d52fc9ce5a03ac99deeeab59ba1138da13d16b8eecd57fe792bab8c4c48",
+     "enemy_alive": 4,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 182,
+     "level": 12,
+     "paused": 0,
+     "player_x": "865332",
+     "player_y": "591396",
+     "projectiles": 1,
+     "step": 11100,
+     "tick": 11089,
+     "xp": 2005
+    },
+    {
+     "choices": 11,
+     "digest": "c71ea64ec3d5f1ec6d30d7cad44e17bccc72e94f825f9eb0429b8e20f995f264",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 190,
+     "level": 12,
+     "paused": 0,
+     "player_x": "609036",
+     "player_y": "406668",
+     "projectiles": 0,
+     "step": 11400,
+     "tick": 11389,
+     "xp": 2105
+    },
+    {
+     "choices": 11,
+     "digest": "09a74988cb7769cc08800b46bc4fb207f5fae63f4189f0cd8c64f6171ba98df2",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 197,
+     "level": 12,
+     "paused": 0,
+     "player_x": "932532",
+     "player_y": "221940",
+     "projectiles": 2,
+     "step": 11700,
+     "tick": 11689,
+     "xp": 2180
+    },
+    {
+     "choices": 11,
+     "digest": "0020786d4a78a62e08f65b98af489a760da95323cc99f4968795bb1b26fa844c",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 203,
+     "level": 12,
+     "paused": 0,
+     "player_x": "523846",
+     "player_y": "167734",
+     "projectiles": 1,
+     "step": 12000,
+     "tick": 11989,
+     "xp": 2245
+    },
+    {
+     "choices": 11,
+     "digest": "07881918da5640ab321f1ccfde4337738cbe8b47e4d5c072d5332b53c419f1e2",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 210,
+     "level": 12,
+     "paused": 0,
+     "player_x": "417180",
+     "player_y": "598236",
+     "projectiles": 1,
+     "step": 12300,
+     "tick": 12289,
+     "xp": 2320
+    },
+    {
+     "choices": 12,
+     "digest": "7190c8cee9a16ef4fa60e5c861a12cc70a6e3df6ee19ba4b2f88a36d5eced0f7",
+     "enemy_alive": 2,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 217,
+     "level": 13,
+     "paused": 0,
+     "player_x": "693840",
+     "player_y": "532344",
+     "projectiles": 1,
+     "step": 12600,
+     "tick": 12588,
+     "xp": 2380
+    },
+    {
+     "choices": 12,
+     "digest": "c1c31cf9a5f6759e49bb04c309470dc2f843fcec7141d644de91442074693f8e",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 223,
+     "level": 13,
+     "paused": 0,
+     "player_x": "493692",
+     "player_y": "425580",
+     "projectiles": 0,
+     "step": 12900,
+     "tick": 12888,
+     "xp": 2470
+    },
+    {
+     "choices": 12,
+     "digest": "8dd9b0c8234431b283409b8f37a30a1be646d5c483bce802e2ddcee0707807ec",
+     "enemy_alive": 3,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 230,
+     "level": 13,
+     "paused": 0,
+     "player_x": "998712",
+     "player_y": "603912",
+     "projectiles": 1,
+     "step": 13200,
+     "tick": 13188,
+     "xp": 2540
+    },
+    {
+     "choices": 12,
+     "digest": "ca16a4e267a53cb7d74ebc8dedad031c669f8807ede50fc5cac7dda70043a471",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 236,
+     "level": 13,
+     "paused": 0,
+     "player_x": "620820",
+     "player_y": "478236",
+     "projectiles": 1,
+     "step": 13500,
+     "tick": 13488,
+     "xp": 2620
+    },
+    {
+     "choices": 12,
+     "digest": "328f8726f35d4f03f25dfd23712f787b69774998c37e200db987d1c4d3ce870c",
+     "enemy_alive": 5,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 241,
+     "level": 13,
+     "paused": 0,
+     "player_x": "1233192",
+     "player_y": "189648",
+     "projectiles": 0,
+     "step": 13800,
+     "tick": 13788,
+     "xp": 2680
+    },
+    {
+     "choices": 12,
+     "digest": "2ec8dad57a400598fb3d59d7d63fec39151f6e484ed61b04092bbc3db7b111a3",
+     "enemy_alive": 2,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 251,
+     "level": 13,
+     "paused": 0,
+     "player_x": "1285848",
+     "player_y": "585000",
+     "projectiles": 0,
+     "step": 14100,
+     "tick": 14088,
+     "xp": 2760
+    },
+    {
+     "choices": 12,
+     "digest": "6dd08a749b170498e472fe57f72fb2b06e7c7ea26b529505115ab622061a6b4c",
+     "enemy_alive": 1,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "120000",
+     "kills": 258,
+     "level": 13,
+     "paused": 0,
+     "player_x": "885552",
+     "player_y": "587904",
+     "projectiles": 0,
+     "step": 14400,
+     "tick": 14388,
+     "xp": 2830
+    },
+    {
+     "choices": 13,
+     "digest": "89cb0ea9dce51c6209c423fd2e0a8ff28cd3f04c705143adcd54c3f8b80f424b",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 263,
+     "level": 14,
+     "paused": 0,
+     "player_x": "719004",
+     "player_y": "316188",
+     "projectiles": 2,
+     "step": 14700,
+     "tick": 14687,
+     "xp": 2905
+    },
+    {
+     "choices": 13,
+     "digest": "d98a05ebf1a9ecf723755c3e4e3f8e12ba585eeeada424943936892695e05839",
+     "enemy_alive": 3,
+     "gems": 1,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 269,
+     "level": 14,
+     "paused": 0,
+     "player_x": "938352",
+     "player_y": "408120",
+     "projectiles": 0,
+     "step": 15000,
+     "tick": 14987,
+     "xp": 2985
+    },
+    {
+     "choices": 13,
+     "digest": "1af9924b6cc87e7b17056bc4306ce22874465ae21cc4b070f875daada938d0b5",
+     "enemy_alive": 2,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 277,
+     "level": 14,
+     "paused": 0,
+     "player_x": "246322",
+     "player_y": "677894",
+     "projectiles": 0,
+     "step": 15300,
+     "tick": 15287,
+     "xp": 3070
+    },
+    {
+     "choices": 13,
+     "digest": "1134f2506b9c35c2d94817b98d2adbbf66d2631224a12a7318efb4457462ee91",
+     "enemy_alive": 3,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 283,
+     "level": 14,
+     "paused": 0,
+     "player_x": "536558",
+     "player_y": "476098",
+     "projectiles": 1,
+     "step": 15600,
+     "tick": 15587,
+     "xp": 3125
+    },
+    {
+     "choices": 13,
+     "digest": "a1a16d3bd9a6dfd860dbeee03b8f0444fbc64da02770edbbc794b2aaefa664d4",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 289,
+     "level": 14,
+     "paused": 0,
+     "player_x": "536316",
+     "player_y": "720564",
+     "projectiles": 0,
+     "step": 15900,
+     "tick": 15887,
+     "xp": 3200
+    },
+    {
+     "choices": 13,
+     "digest": "d7de2c8e6212de06a27e3e3c0d7a3472be1c7301edf2e4fe4e0f66ee5652a3de",
+     "enemy_alive": 2,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 297,
+     "level": 14,
+     "paused": 0,
+     "player_x": "731808",
+     "player_y": "798528",
+     "projectiles": 0,
+     "step": 16200,
+     "tick": 16187,
+     "xp": 3260
+    },
+    {
+     "choices": 13,
+     "digest": "a5203b6c1e143f89d81488e63a89b520f87783fe998b05a6b17d328bb23b844c",
+     "enemy_alive": 3,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 303,
+     "level": 14,
+     "paused": 0,
+     "player_x": "677458",
+     "player_y": "386990",
+     "projectiles": 2,
+     "step": 16500,
+     "tick": 16487,
+     "xp": 3330
+    },
+    {
+     "choices": 13,
+     "digest": "43c42dcb0dd3ce30a6e45812d4f87950e86cca3623e7c61d9d646b558fe66220",
+     "enemy_alive": 3,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "140000",
+     "kills": 309,
+     "level": 14,
+     "paused": 0,
+     "player_x": "328320",
+     "player_y": "754896",
+     "projectiles": 0,
+     "step": 16800,
+     "tick": 16787,
+     "xp": 3400
+    },
+    {
+     "choices": 14,
+     "digest": "ab766504274ddadaaae117a38e714f922ba477dc3f6d6f8104a93b6e9ebe4acb",
+     "enemy_alive": 3,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "160000",
+     "kills": 316,
+     "level": 15,
+     "paused": 0,
+     "player_x": "535988",
+     "player_y": "437900",
+     "projectiles": 0,
+     "step": 17100,
+     "tick": 17086,
+     "xp": 3470
+    },
+    {
+     "choices": 14,
+     "digest": "fb56e97ce83290f66eaf20e74c840a087ded6178241e94349791e8aa3904c1e5",
+     "enemy_alive": 3,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "160000",
+     "kills": 323,
+     "level": 15,
+     "paused": 0,
+     "player_x": "592032",
+     "player_y": "656568",
+     "projectiles": 0,
+     "step": 17400,
+     "tick": 17386,
+     "xp": 3545
+    },
+    {
+     "choices": 14,
+     "digest": "d295acb522c1f8b58d603bd9ae69b4558d933ad91db01cfa1072c7a6fae2a4fb",
+     "enemy_alive": 3,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "160000",
+     "kills": 329,
+     "level": 15,
+     "paused": 0,
+     "player_x": "684252",
+     "player_y": "341220",
+     "projectiles": 0,
+     "step": 17700,
+     "tick": 17686,
+     "xp": 3630
+    },
+    {
+     "choices": 14,
+     "digest": "97167c0bbac4b4fc36f99ac57cf1050117d7a9cc4b7982727dd5fa6d46998b31",
+     "enemy_alive": 1,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "160000",
+     "kills": 338,
+     "level": 15,
+     "paused": 0,
+     "player_x": "740884",
+     "player_y": "690508",
+     "projectiles": 2,
+     "step": 18000,
+     "tick": 17986,
+     "xp": 3710
+    },
+    {
+     "choices": 14,
+     "digest": "bba234ff446d85b2491c40e590214ad0fa19316e8397bdf70f2e89286dc608cd",
+     "enemy_alive": 1,
+     "gems": 3,
+     "hero_dead": 0,
+     "hero_hp": "160000",
+     "kills": 338,
+     "level": 15,
+     "paused": 0,
+     "player_x": "788400",
+     "player_y": "656568",
+     "projectiles": 0,
+     "step": 18014,
+     "tick": 18000,
+     "xp": 3725
+    }
+   ],
+   "choice_mode": 1,
+   "choices": 14,
+   "command_count": 1428,
+   "commands": [
+    [
+     "240",
+     "0",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "246",
+     "1",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "252",
+     "2",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "270",
+     "3",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "312",
+     "4",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "318",
+     "5",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "324",
+     "6",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "342",
+     "7",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "348",
+     "8",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "354",
+     "9",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "360",
+     "10",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "361",
+     "11",
+     "1",
+     "0",
+     "0"
+    ],
+    [
+     "366",
+     "12",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "414",
+     "13",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "426",
+     "14",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "432",
+     "15",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "450",
+     "16",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "468",
+     "17",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "474",
+     "18",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "480",
+     "19",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "486",
+     "20",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "492",
+     "21",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "516",
+     "22",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "522",
+     "23",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "528",
+     "24",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "534",
+     "25",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "540",
+     "26",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "546",
+     "27",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "594",
+     "28",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "606",
+     "29",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "612",
+     "30",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "618",
+     "31",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "624",
+     "32",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "630",
+     "33",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "654",
+     "34",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "675",
+     "35",
+     "1",
+     "0",
+     "1"
+    ],
+    [
+     "678",
+     "36",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "720",
+     "37",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "726",
+     "38",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "798",
+     "39",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "810",
+     "40",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "816",
+     "41",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "828",
+     "42",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "852",
+     "43",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "906",
+     "44",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "918",
+     "45",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "924",
+     "46",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "936",
+     "47",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "942",
+     "48",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "972",
+     "49",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "978",
+     "50",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "990",
+     "51",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1002",
+     "52",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1014",
+     "53",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1032",
+     "54",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1056",
+     "55",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1068",
+     "56",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1074",
+     "57",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1080",
+     "58",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1082",
+     "59",
+     "1",
+     "0",
+     "2"
+    ],
+    [
+     "1086",
+     "60",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1110",
+     "61",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1116",
+     "62",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1134",
+     "63",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1182",
+     "64",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1188",
+     "65",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1206",
+     "66",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1212",
+     "67",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1218",
+     "68",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1224",
+     "69",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1230",
+     "70",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1236",
+     "71",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1284",
+     "72",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1296",
+     "73",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1302",
+     "74",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1308",
+     "75",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1314",
+     "76",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1320",
+     "77",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1338",
+     "78",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1344",
+     "79",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "1440",
+     "80",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1470",
+     "81",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1476",
+     "82",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1482",
+     "83",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1488",
+     "84",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1494",
+     "85",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1500",
+     "86",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1512",
+     "87",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1536",
+     "88",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1560",
+     "89",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1566",
+     "90",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1578",
+     "91",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1584",
+     "92",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1590",
+     "93",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1596",
+     "94",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1602",
+     "95",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1608",
+     "96",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1614",
+     "97",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1620",
+     "98",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1626",
+     "99",
+     "1",
+     "0",
+     "3"
+    ],
+    [
+     "1626",
+     "100",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1662",
+     "101",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1686",
+     "102",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1692",
+     "103",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1698",
+     "104",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1704",
+     "105",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1710",
+     "106",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1716",
+     "107",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1728",
+     "108",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1740",
+     "109",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1752",
+     "110",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1788",
+     "111",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1794",
+     "112",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1800",
+     "113",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1824",
+     "114",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1836",
+     "115",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1866",
+     "116",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1890",
+     "117",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1896",
+     "118",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1926",
+     "119",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1932",
+     "120",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1938",
+     "121",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1944",
+     "122",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1950",
+     "123",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1956",
+     "124",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1968",
+     "125",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1980",
+     "126",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1992",
+     "127",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1998",
+     "128",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2004",
+     "129",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2010",
+     "130",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2016",
+     "131",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2040",
+     "132",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2046",
+     "133",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2082",
+     "134",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2088",
+     "135",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2094",
+     "136",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2100",
+     "137",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2106",
+     "138",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2112",
+     "139",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2118",
+     "140",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2124",
+     "141",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2130",
+     "142",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2136",
+     "143",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2142",
+     "144",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2148",
+     "145",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2154",
+     "146",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2160",
+     "147",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2166",
+     "148",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2172",
+     "149",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2178",
+     "150",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2214",
+     "151",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2220",
+     "152",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2226",
+     "153",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2232",
+     "154",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2238",
+     "155",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2256",
+     "156",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2262",
+     "157",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2268",
+     "158",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2274",
+     "159",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2280",
+     "160",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "2286",
+     "161",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2292",
+     "162",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2328",
+     "163",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2334",
+     "164",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2340",
+     "165",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2346",
+     "166",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2352",
+     "167",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2364",
+     "168",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2370",
+     "169",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2376",
+     "170",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2382",
+     "171",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2388",
+     "172",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2406",
+     "173",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2412",
+     "174",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2418",
+     "175",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2424",
+     "176",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2436",
+     "177",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2440",
+     "178",
+     "1",
+     "0",
+     "4"
+    ],
+    [
+     "2442",
+     "179",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2484",
+     "180",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2496",
+     "181",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2508",
+     "182",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2514",
+     "183",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2520",
+     "184",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2526",
+     "185",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2532",
+     "186",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2580",
+     "187",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2586",
+     "188",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "2592",
+     "189",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2598",
+     "190",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2628",
+     "191",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2634",
+     "192",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2640",
+     "193",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2646",
+     "194",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2652",
+     "195",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2658",
+     "196",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2676",
+     "197",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2682",
+     "198",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2688",
+     "199",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2694",
+     "200",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2700",
+     "201",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2724",
+     "202",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2736",
+     "203",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2742",
+     "204",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2766",
+     "205",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2772",
+     "206",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2778",
+     "207",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2784",
+     "208",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2790",
+     "209",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2796",
+     "210",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2802",
+     "211",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2808",
+     "212",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2814",
+     "213",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2820",
+     "214",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2826",
+     "215",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2832",
+     "216",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2838",
+     "217",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2850",
+     "218",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2856",
+     "219",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2862",
+     "220",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2868",
+     "221",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2874",
+     "222",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2880",
+     "223",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2922",
+     "224",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2928",
+     "225",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2934",
+     "226",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2946",
+     "227",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2952",
+     "228",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2958",
+     "229",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2964",
+     "230",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2970",
+     "231",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2976",
+     "232",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2982",
+     "233",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2988",
+     "234",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2994",
+     "235",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3036",
+     "236",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3078",
+     "237",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3084",
+     "238",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3090",
+     "239",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3096",
+     "240",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3102",
+     "241",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3138",
+     "242",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3144",
+     "243",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3150",
+     "244",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3156",
+     "245",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3174",
+     "246",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3186",
+     "247",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3210",
+     "248",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3228",
+     "249",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3246",
+     "250",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3258",
+     "251",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3264",
+     "252",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3265",
+     "253",
+     "1",
+     "1",
+     "5"
+    ],
+    [
+     "3270",
+     "254",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3282",
+     "255",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3288",
+     "256",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3294",
+     "257",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3300",
+     "258",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3306",
+     "259",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3336",
+     "260",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3342",
+     "261",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3354",
+     "262",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3372",
+     "263",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3378",
+     "264",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3390",
+     "265",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3420",
+     "266",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3426",
+     "267",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3492",
+     "268",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "3564",
+     "269",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3576",
+     "270",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3582",
+     "271",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3588",
+     "272",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3594",
+     "273",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3600",
+     "274",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3606",
+     "275",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3612",
+     "276",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3618",
+     "277",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3624",
+     "278",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3648",
+     "279",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3654",
+     "280",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3660",
+     "281",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3666",
+     "282",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3672",
+     "283",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3678",
+     "284",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3684",
+     "285",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3690",
+     "286",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3696",
+     "287",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3702",
+     "288",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3750",
+     "289",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3756",
+     "290",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3762",
+     "291",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3768",
+     "292",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3810",
+     "293",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3828",
+     "294",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3834",
+     "295",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3840",
+     "296",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3846",
+     "297",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3852",
+     "298",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3858",
+     "299",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3864",
+     "300",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3870",
+     "301",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3876",
+     "302",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3882",
+     "303",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3930",
+     "304",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3936",
+     "305",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3942",
+     "306",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3948",
+     "307",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3954",
+     "308",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3990",
+     "309",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "4014",
+     "310",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4026",
+     "311",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4032",
+     "312",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4056",
+     "313",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4074",
+     "314",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4086",
+     "315",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4134",
+     "316",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4140",
+     "317",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4146",
+     "318",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4158",
+     "319",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4194",
+     "320",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4200",
+     "321",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4206",
+     "322",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4218",
+     "323",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4248",
+     "324",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4260",
+     "325",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4278",
+     "326",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4293",
+     "327",
+     "1",
+     "0",
+     "6"
+    ],
+    [
+     "4296",
+     "328",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4302",
+     "329",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4314",
+     "330",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4338",
+     "331",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4344",
+     "332",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4350",
+     "333",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4356",
+     "334",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4362",
+     "335",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4368",
+     "336",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "4392",
+     "337",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4398",
+     "338",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "4404",
+     "339",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4410",
+     "340",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "4416",
+     "341",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "4428",
+     "342",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4434",
+     "343",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4440",
+     "344",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4464",
+     "345",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4482",
+     "346",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4500",
+     "347",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4506",
+     "348",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "4512",
+     "349",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4560",
+     "350",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4578",
+     "351",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4584",
+     "352",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4590",
+     "353",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4596",
+     "354",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4602",
+     "355",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4608",
+     "356",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4614",
+     "357",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4620",
+     "358",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4626",
+     "359",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4632",
+     "360",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4638",
+     "361",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4644",
+     "362",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4650",
+     "363",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4698",
+     "364",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4704",
+     "365",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4710",
+     "366",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4716",
+     "367",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4722",
+     "368",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4734",
+     "369",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4758",
+     "370",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4764",
+     "371",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4770",
+     "372",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4776",
+     "373",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4782",
+     "374",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4788",
+     "375",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4794",
+     "376",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "4800",
+     "377",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4806",
+     "378",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4842",
+     "379",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4848",
+     "380",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4854",
+     "381",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "4860",
+     "382",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4890",
+     "383",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4896",
+     "384",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4902",
+     "385",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4932",
+     "386",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4938",
+     "387",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "4944",
+     "388",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4950",
+     "389",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "4956",
+     "390",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4974",
+     "391",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4980",
+     "392",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4986",
+     "393",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4998",
+     "394",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5010",
+     "395",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5058",
+     "396",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5064",
+     "397",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5088",
+     "398",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5094",
+     "399",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5100",
+     "400",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5106",
+     "401",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5112",
+     "402",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5160",
+     "403",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "5166",
+     "404",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5172",
+     "405",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5184",
+     "406",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5190",
+     "407",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "5238",
+     "408",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5262",
+     "409",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5340",
+     "410",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5346",
+     "411",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5352",
+     "412",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5358",
+     "413",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5364",
+     "414",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5376",
+     "415",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5406",
+     "416",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "5412",
+     "417",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5424",
+     "418",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5430",
+     "419",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5436",
+     "420",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5460",
+     "421",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5466",
+     "422",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5496",
+     "423",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5502",
+     "424",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5508",
+     "425",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5514",
+     "426",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5538",
+     "427",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5544",
+     "428",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5550",
+     "429",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5556",
+     "430",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5562",
+     "431",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5568",
+     "432",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5598",
+     "433",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5604",
+     "434",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5610",
+     "435",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5616",
+     "436",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5648",
+     "437",
+     "1",
+     "1",
+     "7"
+    ],
+    [
+     "5652",
+     "438",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5682",
+     "439",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5688",
+     "440",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5694",
+     "441",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5700",
+     "442",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5706",
+     "443",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5712",
+     "444",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5718",
+     "445",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "5724",
+     "446",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5730",
+     "447",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5748",
+     "448",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5754",
+     "449",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5760",
+     "450",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5766",
+     "451",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5772",
+     "452",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5778",
+     "453",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5784",
+     "454",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5796",
+     "455",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5802",
+     "456",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5808",
+     "457",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5814",
+     "458",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5820",
+     "459",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "5826",
+     "460",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "5874",
+     "461",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "5880",
+     "462",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5892",
+     "463",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "5898",
+     "464",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5910",
+     "465",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5922",
+     "466",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "5928",
+     "467",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "5934",
+     "468",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "5970",
+     "469",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6006",
+     "470",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6012",
+     "471",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6018",
+     "472",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6066",
+     "473",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6072",
+     "474",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6096",
+     "475",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6102",
+     "476",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6132",
+     "477",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6138",
+     "478",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6144",
+     "479",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6180",
+     "480",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6186",
+     "481",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6192",
+     "482",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6198",
+     "483",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6210",
+     "484",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6216",
+     "485",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6222",
+     "486",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6228",
+     "487",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6234",
+     "488",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6240",
+     "489",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6246",
+     "490",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6252",
+     "491",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6264",
+     "492",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6270",
+     "493",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6276",
+     "494",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6282",
+     "495",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6294",
+     "496",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6330",
+     "497",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6342",
+     "498",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6348",
+     "499",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6390",
+     "500",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6396",
+     "501",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6402",
+     "502",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6408",
+     "503",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6450",
+     "504",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6456",
+     "505",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6462",
+     "506",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6468",
+     "507",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6474",
+     "508",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6480",
+     "509",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6510",
+     "510",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6516",
+     "511",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6522",
+     "512",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6528",
+     "513",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6570",
+     "514",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6606",
+     "515",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6612",
+     "516",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6618",
+     "517",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6624",
+     "518",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6630",
+     "519",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6636",
+     "520",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6654",
+     "521",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6660",
+     "522",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6666",
+     "523",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6672",
+     "524",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "6678",
+     "525",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6684",
+     "526",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6702",
+     "527",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6708",
+     "528",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6714",
+     "529",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6720",
+     "530",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6726",
+     "531",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6738",
+     "532",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6756",
+     "533",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6762",
+     "534",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6768",
+     "535",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6774",
+     "536",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "6798",
+     "537",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6840",
+     "538",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6846",
+     "539",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6852",
+     "540",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6858",
+     "541",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6864",
+     "542",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6870",
+     "543",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6876",
+     "544",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6882",
+     "545",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "6888",
+     "546",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "6894",
+     "547",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6906",
+     "548",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6912",
+     "549",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6918",
+     "550",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6924",
+     "551",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6930",
+     "552",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6936",
+     "553",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "6942",
+     "554",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "6948",
+     "555",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "6966",
+     "556",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "6972",
+     "557",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7014",
+     "558",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7038",
+     "559",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7050",
+     "560",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7086",
+     "561",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "7102",
+     "562",
+     "1",
+     "1",
+     "8"
+    ],
+    [
+     "7116",
+     "563",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7122",
+     "564",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7128",
+     "565",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7170",
+     "566",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7176",
+     "567",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7230",
+     "568",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7236",
+     "569",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7248",
+     "570",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7254",
+     "571",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7260",
+     "572",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7296",
+     "573",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7308",
+     "574",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7356",
+     "575",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7362",
+     "576",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "7392",
+     "577",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7422",
+     "578",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7440",
+     "579",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7446",
+     "580",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7506",
+     "581",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7512",
+     "582",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7518",
+     "583",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7530",
+     "584",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7542",
+     "585",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7572",
+     "586",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7584",
+     "587",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7620",
+     "588",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "7638",
+     "589",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7686",
+     "590",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7698",
+     "591",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7710",
+     "592",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "7722",
+     "593",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7746",
+     "594",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7794",
+     "595",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "7800",
+     "596",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7830",
+     "597",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7836",
+     "598",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7842",
+     "599",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7848",
+     "600",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7854",
+     "601",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7860",
+     "602",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7866",
+     "603",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "7872",
+     "604",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "7878",
+     "605",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7884",
+     "606",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7890",
+     "607",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7896",
+     "608",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7902",
+     "609",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7908",
+     "610",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7914",
+     "611",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7920",
+     "612",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7926",
+     "613",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7932",
+     "614",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7938",
+     "615",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7944",
+     "616",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7950",
+     "617",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "7956",
+     "618",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "7962",
+     "619",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7980",
+     "620",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7986",
+     "621",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "7992",
+     "622",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "7998",
+     "623",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8004",
+     "624",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8010",
+     "625",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8034",
+     "626",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8046",
+     "627",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8052",
+     "628",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8088",
+     "629",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8118",
+     "630",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8160",
+     "631",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8166",
+     "632",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8184",
+     "633",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8202",
+     "634",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8208",
+     "635",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8214",
+     "636",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8220",
+     "637",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8274",
+     "638",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8280",
+     "639",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8304",
+     "640",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8316",
+     "641",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8358",
+     "642",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8364",
+     "643",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8370",
+     "644",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8376",
+     "645",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8394",
+     "646",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8406",
+     "647",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8430",
+     "648",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8436",
+     "649",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8442",
+     "650",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8448",
+     "651",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8454",
+     "652",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8460",
+     "653",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8466",
+     "654",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8472",
+     "655",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8484",
+     "656",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8490",
+     "657",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8514",
+     "658",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8520",
+     "659",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8526",
+     "660",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8532",
+     "661",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8538",
+     "662",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8544",
+     "663",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8550",
+     "664",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8556",
+     "665",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8562",
+     "666",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8568",
+     "667",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "8573",
+     "668",
+     "1",
+     "1",
+     "9"
+    ],
+    [
+     "8574",
+     "669",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8598",
+     "670",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8604",
+     "671",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8610",
+     "672",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8616",
+     "673",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8622",
+     "674",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "8640",
+     "675",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8652",
+     "676",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8658",
+     "677",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8664",
+     "678",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8670",
+     "679",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8676",
+     "680",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8682",
+     "681",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8688",
+     "682",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8694",
+     "683",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8700",
+     "684",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8724",
+     "685",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8742",
+     "686",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8748",
+     "687",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8754",
+     "688",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8760",
+     "689",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8766",
+     "690",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8814",
+     "691",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8820",
+     "692",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8826",
+     "693",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8832",
+     "694",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8838",
+     "695",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "8844",
+     "696",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "8850",
+     "697",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8856",
+     "698",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8862",
+     "699",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8868",
+     "700",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8874",
+     "701",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8886",
+     "702",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "8904",
+     "703",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8916",
+     "704",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8922",
+     "705",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "8928",
+     "706",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "8946",
+     "707",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8958",
+     "708",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8964",
+     "709",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8970",
+     "710",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8976",
+     "711",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8982",
+     "712",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "8988",
+     "713",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "8994",
+     "714",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9036",
+     "715",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9102",
+     "716",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9108",
+     "717",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9144",
+     "718",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9156",
+     "719",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9162",
+     "720",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9192",
+     "721",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9198",
+     "722",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9210",
+     "723",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9276",
+     "724",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "9282",
+     "725",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9288",
+     "726",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9294",
+     "727",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9300",
+     "728",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9306",
+     "729",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9312",
+     "730",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9330",
+     "731",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9336",
+     "732",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9342",
+     "733",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9348",
+     "734",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9354",
+     "735",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9360",
+     "736",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9366",
+     "737",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9372",
+     "738",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9378",
+     "739",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9384",
+     "740",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9390",
+     "741",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9396",
+     "742",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9420",
+     "743",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9426",
+     "744",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9432",
+     "745",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9444",
+     "746",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9450",
+     "747",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9456",
+     "748",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9462",
+     "749",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9468",
+     "750",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9474",
+     "751",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9480",
+     "752",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9486",
+     "753",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9492",
+     "754",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9504",
+     "755",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9510",
+     "756",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9516",
+     "757",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9522",
+     "758",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9528",
+     "759",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9552",
+     "760",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9558",
+     "761",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9576",
+     "762",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9582",
+     "763",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9594",
+     "764",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9606",
+     "765",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9624",
+     "766",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "9648",
+     "767",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "9672",
+     "768",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9678",
+     "769",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9720",
+     "770",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9726",
+     "771",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9804",
+     "772",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "9810",
+     "773",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9816",
+     "774",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "9822",
+     "775",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9840",
+     "776",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9846",
+     "777",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9870",
+     "778",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "9876",
+     "779",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "9888",
+     "780",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9924",
+     "781",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "9936",
+     "782",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "9954",
+     "783",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9966",
+     "784",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "9978",
+     "785",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "9990",
+     "786",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "9996",
+     "787",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10002",
+     "788",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10038",
+     "789",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10044",
+     "790",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10056",
+     "791",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10062",
+     "792",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10080",
+     "793",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10086",
+     "794",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10092",
+     "795",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10098",
+     "796",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10104",
+     "797",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10128",
+     "798",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10134",
+     "799",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10140",
+     "800",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10152",
+     "801",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10158",
+     "802",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10164",
+     "803",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10170",
+     "804",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10176",
+     "805",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10182",
+     "806",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10188",
+     "807",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10194",
+     "808",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10200",
+     "809",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10206",
+     "810",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10212",
+     "811",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10230",
+     "812",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10236",
+     "813",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10242",
+     "814",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10248",
+     "815",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10254",
+     "816",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10260",
+     "817",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10266",
+     "818",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10272",
+     "819",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10278",
+     "820",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10284",
+     "821",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10290",
+     "822",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10296",
+     "823",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10302",
+     "824",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10308",
+     "825",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10314",
+     "826",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10320",
+     "827",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10326",
+     "828",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10338",
+     "829",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10344",
+     "830",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10362",
+     "831",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10368",
+     "832",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10380",
+     "833",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10386",
+     "834",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10392",
+     "835",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10398",
+     "836",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10404",
+     "837",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10422",
+     "838",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10428",
+     "839",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10434",
+     "840",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10440",
+     "841",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10446",
+     "842",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10452",
+     "843",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10458",
+     "844",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10464",
+     "845",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10494",
+     "846",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10500",
+     "847",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10506",
+     "848",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10508",
+     "849",
+     "1",
+     "1",
+     "10"
+    ],
+    [
+     "10512",
+     "850",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10518",
+     "851",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10524",
+     "852",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10530",
+     "853",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10536",
+     "854",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10542",
+     "855",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10548",
+     "856",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10554",
+     "857",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10602",
+     "858",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10608",
+     "859",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10644",
+     "860",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10650",
+     "861",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10656",
+     "862",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10662",
+     "863",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10722",
+     "864",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10728",
+     "865",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10734",
+     "866",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10746",
+     "867",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10758",
+     "868",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10764",
+     "869",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10776",
+     "870",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10782",
+     "871",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10788",
+     "872",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10794",
+     "873",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "10800",
+     "874",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "10806",
+     "875",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10842",
+     "876",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10848",
+     "877",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10854",
+     "878",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10860",
+     "879",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10866",
+     "880",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10872",
+     "881",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "10884",
+     "882",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10896",
+     "883",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10920",
+     "884",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "10926",
+     "885",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "10932",
+     "886",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "10956",
+     "887",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "10968",
+     "888",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "10980",
+     "889",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11040",
+     "890",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11088",
+     "891",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11094",
+     "892",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11100",
+     "893",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "11106",
+     "894",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11124",
+     "895",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11172",
+     "896",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11190",
+     "897",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11196",
+     "898",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11202",
+     "899",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "11214",
+     "900",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11232",
+     "901",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11268",
+     "902",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11274",
+     "903",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11280",
+     "904",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11316",
+     "905",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11328",
+     "906",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11334",
+     "907",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11340",
+     "908",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11352",
+     "909",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11358",
+     "910",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11364",
+     "911",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11376",
+     "912",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11388",
+     "913",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11394",
+     "914",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11400",
+     "915",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11406",
+     "916",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11418",
+     "917",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11424",
+     "918",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11430",
+     "919",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11436",
+     "920",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11442",
+     "921",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11478",
+     "922",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "11484",
+     "923",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11490",
+     "924",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11496",
+     "925",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "11502",
+     "926",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11526",
+     "927",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11538",
+     "928",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11550",
+     "929",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11556",
+     "930",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11562",
+     "931",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11568",
+     "932",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11634",
+     "933",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11646",
+     "934",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11652",
+     "935",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11664",
+     "936",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "11694",
+     "937",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11700",
+     "938",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11706",
+     "939",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11718",
+     "940",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "11760",
+     "941",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11832",
+     "942",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11844",
+     "943",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11862",
+     "944",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11880",
+     "945",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11886",
+     "946",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11892",
+     "947",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "11898",
+     "948",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "11928",
+     "949",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "11970",
+     "950",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "11976",
+     "951",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "11988",
+     "952",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "11994",
+     "953",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12000",
+     "954",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12006",
+     "955",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12012",
+     "956",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12030",
+     "957",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12042",
+     "958",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12054",
+     "959",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12078",
+     "960",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12084",
+     "961",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12102",
+     "962",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "12132",
+     "963",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12138",
+     "964",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12144",
+     "965",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12150",
+     "966",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12156",
+     "967",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12162",
+     "968",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12168",
+     "969",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12174",
+     "970",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12180",
+     "971",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12186",
+     "972",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12192",
+     "973",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12198",
+     "974",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12240",
+     "975",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12246",
+     "976",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12252",
+     "977",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12258",
+     "978",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12264",
+     "979",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12270",
+     "980",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12295",
+     "981",
+     "1",
+     "1",
+     "11"
+    ],
+    [
+     "12300",
+     "982",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12312",
+     "983",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12324",
+     "984",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12330",
+     "985",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12336",
+     "986",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12342",
+     "987",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12348",
+     "988",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12354",
+     "989",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12360",
+     "990",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12366",
+     "991",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12372",
+     "992",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12384",
+     "993",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12420",
+     "994",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12426",
+     "995",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12432",
+     "996",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12462",
+     "997",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12468",
+     "998",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12474",
+     "999",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12480",
+     "1000",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "12492",
+     "1001",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12504",
+     "1002",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12546",
+     "1003",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12552",
+     "1004",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12558",
+     "1005",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "12576",
+     "1006",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12582",
+     "1007",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12606",
+     "1008",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "12618",
+     "1009",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12624",
+     "1010",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12666",
+     "1011",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12672",
+     "1012",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12678",
+     "1013",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12696",
+     "1014",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "12720",
+     "1015",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "12738",
+     "1016",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12792",
+     "1017",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12810",
+     "1018",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12822",
+     "1019",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12834",
+     "1020",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12846",
+     "1021",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12852",
+     "1022",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12858",
+     "1023",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "12864",
+     "1024",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "12870",
+     "1025",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "12954",
+     "1026",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12972",
+     "1027",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12978",
+     "1028",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "12984",
+     "1029",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "12990",
+     "1030",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "12996",
+     "1031",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13002",
+     "1032",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13008",
+     "1033",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13014",
+     "1034",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13026",
+     "1035",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13038",
+     "1036",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13044",
+     "1037",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13050",
+     "1038",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13080",
+     "1039",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13092",
+     "1040",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13098",
+     "1041",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13104",
+     "1042",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13110",
+     "1043",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13116",
+     "1044",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13122",
+     "1045",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13128",
+     "1046",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13152",
+     "1047",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13158",
+     "1048",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13164",
+     "1049",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13170",
+     "1050",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13176",
+     "1051",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13182",
+     "1052",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13188",
+     "1053",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13194",
+     "1054",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13200",
+     "1055",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13206",
+     "1056",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13212",
+     "1057",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13218",
+     "1058",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13224",
+     "1059",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13230",
+     "1060",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13236",
+     "1061",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13242",
+     "1062",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13248",
+     "1063",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13254",
+     "1064",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13260",
+     "1065",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13266",
+     "1066",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13272",
+     "1067",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13320",
+     "1068",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13332",
+     "1069",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13338",
+     "1070",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13374",
+     "1071",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13380",
+     "1072",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13386",
+     "1073",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13410",
+     "1074",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "13416",
+     "1075",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13422",
+     "1076",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13434",
+     "1077",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13440",
+     "1078",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13464",
+     "1079",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13488",
+     "1080",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13524",
+     "1081",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13572",
+     "1082",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13578",
+     "1083",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13608",
+     "1084",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13614",
+     "1085",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "13620",
+     "1086",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13638",
+     "1087",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13680",
+     "1088",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13686",
+     "1089",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13722",
+     "1090",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13728",
+     "1091",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13734",
+     "1092",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13740",
+     "1093",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "13782",
+     "1094",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "13806",
+     "1095",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13824",
+     "1096",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "13842",
+     "1097",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13848",
+     "1098",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "13854",
+     "1099",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13860",
+     "1100",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13866",
+     "1101",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "13872",
+     "1102",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13890",
+     "1103",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13896",
+     "1104",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "13902",
+     "1105",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "13908",
+     "1106",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "13932",
+     "1107",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13980",
+     "1108",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "13986",
+     "1109",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "13998",
+     "1110",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "14004",
+     "1111",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "14010",
+     "1112",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14040",
+     "1113",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14070",
+     "1114",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "14106",
+     "1115",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14112",
+     "1116",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14148",
+     "1117",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14154",
+     "1118",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14160",
+     "1119",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14166",
+     "1120",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14238",
+     "1121",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14244",
+     "1122",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14250",
+     "1123",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14256",
+     "1124",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14280",
+     "1125",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "14286",
+     "1126",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14292",
+     "1127",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "14298",
+     "1128",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14310",
+     "1129",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14316",
+     "1130",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14328",
+     "1131",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14334",
+     "1132",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14340",
+     "1133",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "14346",
+     "1134",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14358",
+     "1135",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14376",
+     "1136",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14406",
+     "1137",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14460",
+     "1138",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14478",
+     "1139",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "14484",
+     "1140",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14505",
+     "1141",
+     "1",
+     "2",
+     "12"
+    ],
+    [
+     "14508",
+     "1142",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "14520",
+     "1143",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14562",
+     "1144",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "14592",
+     "1145",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14598",
+     "1146",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14610",
+     "1147",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14622",
+     "1148",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14628",
+     "1149",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14634",
+     "1150",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14640",
+     "1151",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14646",
+     "1152",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "14670",
+     "1153",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14718",
+     "1154",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14724",
+     "1155",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "14730",
+     "1156",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "14772",
+     "1157",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14802",
+     "1158",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "14832",
+     "1159",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14838",
+     "1160",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "14844",
+     "1161",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "14856",
+     "1162",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "14880",
+     "1163",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14886",
+     "1164",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14922",
+     "1165",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14934",
+     "1166",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14982",
+     "1167",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "14988",
+     "1168",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "14994",
+     "1169",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15000",
+     "1170",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15024",
+     "1171",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15030",
+     "1172",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15042",
+     "1173",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15054",
+     "1174",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15060",
+     "1175",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15078",
+     "1176",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15084",
+     "1177",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15090",
+     "1178",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15102",
+     "1179",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15108",
+     "1180",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15114",
+     "1181",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15120",
+     "1182",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15126",
+     "1183",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15132",
+     "1184",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15156",
+     "1185",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15168",
+     "1186",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15180",
+     "1187",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15186",
+     "1188",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15192",
+     "1189",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15198",
+     "1190",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15204",
+     "1191",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15222",
+     "1192",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15246",
+     "1193",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15252",
+     "1194",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15258",
+     "1195",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15264",
+     "1196",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15270",
+     "1197",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15276",
+     "1198",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15282",
+     "1199",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15288",
+     "1200",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15294",
+     "1201",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15300",
+     "1202",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15306",
+     "1203",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15312",
+     "1204",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15318",
+     "1205",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15366",
+     "1206",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15372",
+     "1207",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15378",
+     "1208",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15396",
+     "1209",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15402",
+     "1210",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15408",
+     "1211",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15426",
+     "1212",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15432",
+     "1213",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15438",
+     "1214",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "15450",
+     "1215",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15474",
+     "1216",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15498",
+     "1217",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15504",
+     "1218",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15510",
+     "1219",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15516",
+     "1220",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15522",
+     "1221",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15528",
+     "1222",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15534",
+     "1223",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15540",
+     "1224",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15546",
+     "1225",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15552",
+     "1226",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15558",
+     "1227",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15564",
+     "1228",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15576",
+     "1229",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15612",
+     "1230",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15618",
+     "1231",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15630",
+     "1232",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15642",
+     "1233",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15648",
+     "1234",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15654",
+     "1235",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15660",
+     "1236",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15666",
+     "1237",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15672",
+     "1238",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15684",
+     "1239",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "15690",
+     "1240",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "15702",
+     "1241",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "15732",
+     "1242",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15774",
+     "1243",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15780",
+     "1244",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15786",
+     "1245",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15792",
+     "1246",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15798",
+     "1247",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "15810",
+     "1248",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "15882",
+     "1249",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15930",
+     "1250",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15936",
+     "1251",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15942",
+     "1252",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15948",
+     "1253",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15954",
+     "1254",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15960",
+     "1255",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15966",
+     "1256",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "15972",
+     "1257",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "15978",
+     "1258",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16026",
+     "1259",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16038",
+     "1260",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16068",
+     "1261",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16074",
+     "1262",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16086",
+     "1263",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16092",
+     "1264",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16104",
+     "1265",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16110",
+     "1266",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16116",
+     "1267",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "16122",
+     "1268",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16134",
+     "1269",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16140",
+     "1270",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16146",
+     "1271",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16158",
+     "1272",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16170",
+     "1273",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16188",
+     "1274",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16206",
+     "1275",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16218",
+     "1276",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16224",
+     "1277",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16230",
+     "1278",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16236",
+     "1279",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16242",
+     "1280",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16248",
+     "1281",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16290",
+     "1282",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16296",
+     "1283",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16302",
+     "1284",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16308",
+     "1285",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16350",
+     "1286",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16356",
+     "1287",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16374",
+     "1288",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16410",
+     "1289",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16416",
+     "1290",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16422",
+     "1291",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16434",
+     "1292",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "16458",
+     "1293",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16476",
+     "1294",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16482",
+     "1295",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16488",
+     "1296",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16494",
+     "1297",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16500",
+     "1298",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16506",
+     "1299",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16536",
+     "1300",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16572",
+     "1301",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16578",
+     "1302",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16584",
+     "1303",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16590",
+     "1304",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "16602",
+     "1305",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16608",
+     "1306",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "16614",
+     "1307",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16620",
+     "1308",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "16626",
+     "1309",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16638",
+     "1310",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16644",
+     "1311",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16650",
+     "1312",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16656",
+     "1313",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16662",
+     "1314",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16668",
+     "1315",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "16674",
+     "1316",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16680",
+     "1317",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16698",
+     "1318",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16704",
+     "1319",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16710",
+     "1320",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16716",
+     "1321",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16764",
+     "1322",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16770",
+     "1323",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16776",
+     "1324",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16782",
+     "1325",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16788",
+     "1326",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16794",
+     "1327",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16800",
+     "1328",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "16806",
+     "1329",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "16812",
+     "1330",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16842",
+     "1331",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "16848",
+     "1332",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16884",
+     "1333",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16890",
+     "1334",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16896",
+     "1335",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16902",
+     "1336",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "16908",
+     "1337",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16944",
+     "1338",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "16956",
+     "1339",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "16986",
+     "1340",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17040",
+     "1341",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17041",
+     "1342",
+     "1",
+     "2",
+     "13"
+    ],
+    [
+     "17046",
+     "1343",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17082",
+     "1344",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17088",
+     "1345",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17094",
+     "1346",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17100",
+     "1347",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17106",
+     "1348",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17112",
+     "1349",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17124",
+     "1350",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17136",
+     "1351",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17142",
+     "1352",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17148",
+     "1353",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17154",
+     "1354",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17160",
+     "1355",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17166",
+     "1356",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17172",
+     "1357",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17190",
+     "1358",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17196",
+     "1359",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17214",
+     "1360",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17220",
+     "1361",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17226",
+     "1362",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17232",
+     "1363",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17250",
+     "1364",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17256",
+     "1365",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17298",
+     "1366",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17304",
+     "1367",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17328",
+     "1368",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17346",
+     "1369",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17352",
+     "1370",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17376",
+     "1371",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17412",
+     "1372",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17424",
+     "1373",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17430",
+     "1374",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17436",
+     "1375",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17442",
+     "1376",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17460",
+     "1377",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17472",
+     "1378",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17478",
+     "1379",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17490",
+     "1380",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17496",
+     "1381",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17502",
+     "1382",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17514",
+     "1383",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17520",
+     "1384",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17526",
+     "1385",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17532",
+     "1386",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17550",
+     "1387",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17568",
+     "1388",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17574",
+     "1389",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17580",
+     "1390",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17604",
+     "1391",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17616",
+     "1392",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17622",
+     "1393",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17628",
+     "1394",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17634",
+     "1395",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17640",
+     "1396",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17646",
+     "1397",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17664",
+     "1398",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17682",
+     "1399",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17688",
+     "1400",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17700",
+     "1401",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17706",
+     "1402",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17712",
+     "1403",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17718",
+     "1404",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17724",
+     "1405",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17742",
+     "1406",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "17748",
+     "1407",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17778",
+     "1408",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17802",
+     "1409",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "17808",
+     "1410",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17814",
+     "1411",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17844",
+     "1412",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "17856",
+     "1413",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17874",
+     "1414",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17880",
+     "1415",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17886",
+     "1416",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17892",
+     "1417",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "17898",
+     "1418",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17916",
+     "1419",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "17922",
+     "1420",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17928",
+     "1421",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17934",
+     "1422",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17940",
+     "1423",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17946",
+     "1424",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "17952",
+     "1425",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "17958",
+     "1426",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "17988",
+     "1427",
+     "0",
+     "1",
+     "-1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "death_tick": -1,
+   "end_tick": 18000,
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "101",
+    "values": [
+     "100000",
+     "90000",
+     "10800",
+     "2000",
+     "48",
+     "384000"
+    ]
+   },
+   "id": "botrun.p0.kiter_upgrades.s101",
+   "kills": 338,
+   "log_digest": "319e515b4468f17565c31e549e4dd79ace6e566076a7cb2d7633eacd6d7083d5",
+   "name": "botrun.p0.kiter_upgrades.s101",
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 18014,
+   "xp": {
+    "costs": [
+     "20",
+     "35",
+     "55",
+     "80",
+     "110",
+     "145",
+     "185",
+     "230",
+     "280",
+     "335",
+     "395",
+     "460",
+     "530",
+     "605",
+     "685",
+     "770",
+     "860",
+     "955",
+     "1055",
+     "1160"
+    ],
+    "kind_xp": [
+     "10",
+     "15"
+    ],
+    "values": [
+     "48000",
+     "512"
+    ]
+   }
+  }
+ ]
+}

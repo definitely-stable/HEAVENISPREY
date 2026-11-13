@@ -1,7 +1,9 @@
 """Reference of the P0-01 simulation core (ADR-008, ADR-009): PlayerCommand log and hero
 movement (P0-01b); enemy spawn, chase, contact damage and hero death (P0-01E); hero
 auto-attack with projectiles, enemy deaths and kills (P0-01F); enemy separation (ADR-009 2);
-XP gems, pickup and level progression (ADR-010).
+XP gems, pickup and level progression (ADR-010); level-up choice: command log schema 2
+(MOVE / CHOOSE), the pause at the tick boundary, the offers hand and the seven P0 upgrades
+(ADR-010 section 6).
 
 Oracle for game/core/sim/*.gd. Integers only (hip-fx-v1 via tools/content/fx.py, hip-rng-v1
 via tools/content/hip_rng.py). Golden traces:
@@ -21,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 5
+VECTORS_SCHEMA_VERSION = 6
 
 
 def _load(name: str, file: str):
@@ -88,20 +90,65 @@ PAST_TICK = "past_tick"
 TICK_NOT_MONOTONIC = "tick_not_monotonic"
 SEQUENCE_NOT_INCREASING = "sequence_not_increasing"
 
+# Command log schema 2 (ADR-010 section 6): record (tick, sequence, kind, a, b).
+LOG_SCHEMA_VERSION = 2
+MOVE = 0     # a = move_x, b = move_y in -1..1: the held direction from `tick` on
+CHOOSE = 1   # a = card index in the hand, b = build_revision the hand was built for
+
+# ADR-010 section 6, P0 policy (not engine limits): the seven upgrades in ASCII ID order with
+# their maximum rank; the code of an upgrade is its position. RECOVER is offered alone when
+# every upgrade is at its maximum rank; it has no rank.
+UPGRADES = (("upgrade.p0.hero_speed", 3), ("upgrade.p0.hero_vitality", 5),
+            ("upgrade.p0.pickup_radius", 3), ("upgrade.p0.sword_count", 2),
+            ("upgrade.p0.sword_damage", 2), ("upgrade.p0.sword_haste", 5),
+            ("upgrade.p0.sword_pierce", 2))
+U_SPEED, U_VITALITY, U_PICKUP, U_COUNT, U_DAMAGE, U_HASTE, U_PIERCE = range(7)
+U_RECOVER = 7
+RECOVER_ID = "upgrade.p0.recover"
+HAND_SIZE = 3
+NO_CARD = -1
+SPEED_PER_RANK = 240          # su/tick
+VITALITY_PER_RANK = 20000     # mhp of maximum HP, healed at once
+RECOVER_HEAL = 20000          # mhp, up to the maximum
+PICKUP_PER_RANK = 24000       # su
+DAMAGE_PER_RANK = 3000        # mhp
+HASTE_PER_RANK = 150          # rate_fx of the skill cooldown accumulator
+OFFERS_STREAM = "offers"
+
+
+def upgrade_id(code: int) -> str:
+    return RECOVER_ID if code == U_RECOVER else UPGRADES[code][0]
+
 
 def ints_digest(values: list[int]) -> str:
     """SHA-256 of little-endian int64 bytes (PackedInt64Array.to_byte_array())."""
     return hashlib.sha256(struct.pack("<%dq" % len(values), *values)).hexdigest()
 
 
+def command_valid(command) -> bool:
+    if len(command) != 5:
+        return False
+    tick, sequence, kind, a, b = command
+    if tick < 0 or sequence < 0:
+        return False
+    if kind == MOVE:
+        return abs(a) <= 1 and abs(b) <= 1
+    return kind == CHOOSE and a >= 0 and b >= 0
+
+
+def migrate_v1(records) -> list[tuple[int, int, int, int, int]]:
+    """Schema 1 records (tick, sequence, move_x, move_y) become MOVE records of schema 2."""
+    return [(tick, sequence, MOVE, move_x, move_y) for tick, sequence, move_x, move_y in records]
+
+
 class CommandLog:
     def __init__(self):
-        self.records: list[tuple[int, int, int, int]] = []
+        self.records: list[tuple[int, int, int, int, int]] = []
 
-    def append(self, command: tuple[int, int, int, int], next_tick: int) -> str:
-        tick, sequence, move_x, move_y = command
-        if tick < 0 or sequence < 0 or abs(move_x) > 1 or abs(move_y) > 1:
+    def append(self, command: tuple[int, int, int, int, int], next_tick: int) -> str:
+        if not command_valid(command):
             return INVALID
+        tick, sequence = command[0], command[1]
         if tick < next_tick:
             return PAST_TICK
         if self.records:
@@ -125,11 +172,13 @@ class Config:
     max_enemies, spawn_min_distance_su). Kind record: (speed_su_per_tick, radius_su, hp_mhp,
     contact_damage_mhp, contact_interval_ticks, spawn_weight). skill: (period_mt, range_su,
     damage_mhp, projectile_speed_su, projectile_radius_su, projectile_ttl_ticks,
-    projectile_pierce, max_projectiles).
+    projectile_pierce, max_projectiles). choice_mode (ADR-010 section 6): 0 = level-ups never
+    stop the run (the choices stay pending), 1 = Immediate (the run pauses for each choice).
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
-                 skill=(0,) * 8, xp=((0, 0), (), ())):
+                 skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0):
+        self.choice_mode = choice_mode
         (self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
          self.start_x, self.start_y) = movement
         (self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
@@ -157,7 +206,13 @@ class Config:
     def ints(self) -> list[int]:
         return [self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
-            + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs
+            + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
+            + [self.choice_mode]
+
+    def ledger_size(self) -> int:
+        """Ledger cells of every projectile slot: enough for the largest pierce an upgrade can
+        reach; a projectile uses `pierce at cast + 1` of them (its capacity)."""
+        return min(MAX_PIERCE, self.pierce + UPGRADES[U_PIERCE][1]) + 1
 
     def has_enemies(self) -> bool:
         return bool(self.raw_kinds)
@@ -194,6 +249,10 @@ class Config:
         if self.has_skill() and not self._skill_valid():
             return False
         if (self.has_xp() or self.kind_xp) and not self._xp_valid():
+            return False
+        if self.choice_mode not in (0, 1):
+            return False
+        if self.choice_mode == 1 and not (self.has_xp() and self.has_skill()):
             return False
         return True
 
@@ -253,16 +312,20 @@ def direction_q14(move_x: int, move_y: int) -> tuple[int, int]:
 
 # Slot field indexes.
 E_UID, E_KIND, E_X, E_Y, E_HP, E_CD = range(6)
-P_X, P_Y, P_VX, P_VY, P_TTL, P_PIERCE, P_DAMAGE = range(7)
-P_LEDGER = 7
+P_X, P_Y, P_VX, P_VY, P_TTL, P_DAMAGE, P_HITS, P_CAP = range(8)
+P_LEDGER = 8
 G_UID, G_X, G_Y, G_VALUE = range(4)
 
 
 class World:
     """Enemy slot: [uid, kind, x, y, hp, cooldown], free when uid == 0 (all fields 0).
-    Projectile slot: [x, y, vx, vy, ttl, pierce_left, damage] + ledger of pierce + 1 enemy
-    uids, free when damage == 0. Gem slot: [uid, x, y, value], free when uid == 0. Lists
-    never shrink; spawns and drops take the lowest free slot."""
+    Projectile slot: [x, y, vx, vy, ttl, damage, hit_count, capacity] + config.ledger_size()
+    ledger cells (enemy uids, the first hit_count used), free when damage == 0; damage and
+    capacity (pierce + 1) are a snapshot taken at the cast. Gem slot: [uid, x, y, value], free
+    when uid == 0. Lists never shrink; spawns and drops take the lowest free slot.
+
+    Build (ADR-010 section 6): upgrade ranks in code order, the maximum hero HP, the current
+    hand of upgrade codes (non-empty only while the run is paused for a choice)."""
 
     def __init__(self, config: Config):
         self.tick = 0
@@ -287,19 +350,32 @@ class World:
         self.level = 1
         self.pending_level_choices = 0
         self.choices_voided = 0
-        self.ledger_size = config.pierce + 1
+        self.choices_done = 0
+        self.build_revision = 0
+        self.offers_rng_cursor = 0
+        self.hand: list[int] = []
+        self.ranks = [0] * len(UPGRADES)
+        self.hero_hp_max = config.hero_hp
+        self.ledger_size = config.ledger_size()
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
         self.gems: list[list[int]] = []
 
+    def paused(self) -> bool:
+        """The run waits for a CHOOSE: no tick is simulated while a hand is offered."""
+        return bool(self.hand)
+
     def ints(self) -> list[int]:
+        hand = self.hand + [NO_CARD] * (HAND_SIZE - len(self.hand))
         head = [self.tick, self.player_x, self.player_y, self.move_x, self.move_y,
                 self.command_cursor, self.hero_hp, self.hero_dead, self.spawn_acc,
                 self.rng_cursor, self.next_enemy_uid, self.enemy_alive, self.kills,
                 self.skill_acc, self.sep_cursor, self.next_gem_uid, self.gems_alive,
                 self.gems_merged, self.xp_dropped_total, self.xp_collected_total, self.xp_bank,
-                self.level, self.pending_level_choices, self.choices_voided, len(self.enemies),
-                len(self.projectiles), len(self.gems)]
+                self.level, self.pending_level_choices, self.choices_voided,
+                self.choices_done, self.build_revision, self.offers_rng_cursor] + hand \
+            + self.ranks + [self.hero_hp_max, len(self.enemies), len(self.projectiles),
+                            len(self.gems)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile] \
             + [v for gem in self.gems for v in gem]
@@ -486,39 +562,79 @@ def chase_and_separate(config: Config, world: World) -> None:
         enemy[E_Y] = min(max(enemy[E_Y] + my, config.min_y + r), config.max_y - r)
 
 
-def nearest_in_range(config: Config, world: World) -> int:
-    best, best_d2 = -1, 0
+# Derived stats of the build (ADR-010 section 6): config base + rank x step.
+def hero_speed(config: Config, world: World) -> int:
+    return config.speed + SPEED_PER_RANK * world.ranks[U_SPEED]
+
+
+def pickup_radius(config: Config, world: World) -> int:
+    return config.pickup_radius + PICKUP_PER_RANK * world.ranks[U_PICKUP]
+
+
+def skill_rate(world: World) -> int:
+    return RATE_ONE + HASTE_PER_RANK * world.ranks[U_HASTE]
+
+
+def skill_damage(config: Config, world: World) -> int:
+    return max(1, config.skill_damage + DAMAGE_PER_RANK * world.ranks[U_DAMAGE])
+
+
+def projectile_count(world: World) -> int:
+    return 1 + world.ranks[U_COUNT]
+
+
+def projectile_pierce(config: Config, world: World) -> int:
+    return min(MAX_PIERCE, config.pierce + world.ranks[U_PIERCE])
+
+
+def targets_in_range(config: Config, world: World, count: int) -> list[int]:
+    """Up to `count` distinct live enemies within the skill range, nearest first (distance^2,
+    then the lower slot)."""
     range2 = config.skill_range * config.skill_range
+    found = []
     for slot, enemy in enumerate(world.enemies):
-        if not _live(enemy):
-            continue
-        d2 = _dist2(enemy[E_X], enemy[E_Y], world.player_x, world.player_y)
-        if d2 <= range2 and (best < 0 or d2 < best_d2):
-            best, best_d2 = slot, d2
-    return best
+        if _live(enemy):
+            d2 = _dist2(enemy[E_X], enemy[E_Y], world.player_x, world.player_y)
+            if d2 <= range2:
+                found.append((d2, slot))
+    found.sort()
+    return [slot for _, slot in found[:count]]
+
+
+def nearest_in_range(config: Config, world: World) -> int:
+    targets = targets_in_range(config, world, 1)
+    return targets[0] if targets else -1
 
 
 def cast(config: Config, world: World) -> None:
-    world.skill_acc += RATE_ONE
+    """One cast fires a projectile at each of up to `count` targets. With no target, or fewer
+    free projectile slots than projectiles to fire, the whole cast is held and the tick does not
+    advance the accumulator."""
+    rate = skill_rate(world)
+    world.skill_acc += rate
     if world.skill_acc < config.skill_period:
         return
-    target = nearest_in_range(config, world)
-    slot = _lowest_free(world.projectiles, P_DAMAGE)
-    if target < 0 or (slot < 0 and len(world.projectiles) >= config.max_projectiles):
-        world.skill_acc -= RATE_ONE  # a blocked accumulator does not advance
+    targets = targets_in_range(config, world, projectile_count(world))
+    free = sum(1 for p in world.projectiles if p[P_DAMAGE] == 0)
+    room = free + config.max_projectiles - len(world.projectiles)
+    if not targets or room < len(targets):
+        world.skill_acc -= rate  # a blocked accumulator does not advance
         return
     world.skill_acc -= config.skill_period
-    enemy = world.enemies[target]
-    qx, qy = normalize_q14(enemy[E_X] - world.player_x, enemy[E_Y] - world.player_y)
-    if qx == 0 and qy == 0:
-        qx = fx.Q14
-    record = [world.player_x, world.player_y, mul_q14(config.proj_speed, qx),
-              mul_q14(config.proj_speed, qy), config.proj_ttl, config.pierce,
-              max(1, config.skill_damage)] + [0] * world.ledger_size
-    if slot < 0:
-        world.projectiles.append(record)
-    else:
-        world.projectiles[slot] = record
+    damage, capacity = skill_damage(config, world), projectile_pierce(config, world) + 1
+    for target in targets:
+        enemy = world.enemies[target]
+        qx, qy = normalize_q14(enemy[E_X] - world.player_x, enemy[E_Y] - world.player_y)
+        if qx == 0 and qy == 0:
+            qx = fx.Q14
+        record = [world.player_x, world.player_y, mul_q14(config.proj_speed, qx),
+                  mul_q14(config.proj_speed, qy), config.proj_ttl, damage, 0,
+                  capacity] + [0] * world.ledger_size
+        slot = _lowest_free(world.projectiles, P_DAMAGE)
+        if slot < 0:
+            world.projectiles.append(record)
+        else:
+            world.projectiles[slot] = record
 
 
 def _free_projectile(world: World, slot: int) -> None:
@@ -526,6 +642,8 @@ def _free_projectile(world: World, slot: int) -> None:
 
 
 def _resolve_hits(config: Config, world: World, slot: int) -> None:
+    """Hits the nearest live overlapping enemy not in this projectile's ledger until the
+    projectile has used its own capacity (pierce at cast + 1)."""
     projectile = world.projectiles[slot]
     while True:
         ledger = projectile[P_LEDGER:]
@@ -541,11 +659,11 @@ def _resolve_hits(config: Config, world: World, slot: int) -> None:
             return
         enemy = world.enemies[best]
         enemy[E_HP] = max(0, enemy[E_HP] - projectile[P_DAMAGE])
-        projectile[P_LEDGER + config.pierce - projectile[P_PIERCE]] = enemy[E_UID]
-        if projectile[P_PIERCE] == 0:
+        projectile[P_LEDGER + projectile[P_HITS]] = enemy[E_UID]
+        projectile[P_HITS] += 1
+        if projectile[P_HITS] >= projectile[P_CAP]:
             _free_projectile(world, slot)
             return
-        projectile[P_PIERCE] -= 1
 
 
 def fly_and_hit(config: Config, world: World) -> None:
@@ -625,7 +743,8 @@ def collect(world: World, slot: int, uid: int) -> bool:
 
 def pickup(config: Config, world: World) -> None:
     """Phase 9: every gem whose centre is within pickup_radius of the hero centre, slot order."""
-    reach = config.pickup_radius * config.pickup_radius
+    radius = pickup_radius(config, world)
+    reach = radius * radius
     for slot, gem in enumerate(world.gems):
         if gem[G_UID] != 0 and _dist2(gem[G_X], gem[G_Y], world.player_x, world.player_y) <= reach:
             collect(world, slot, gem[G_UID])
@@ -645,18 +764,80 @@ def clear_expired(world: World) -> None:
             _free_projectile(world, slot)
 
 
+def build_hand(config: Config, world: World) -> None:
+    """ADR-010 section 6: candidates are the upgrades below their maximum rank in ID order;
+    for i in 0..k-1 with k = min(HAND_SIZE, n) the card j = below(n - i) of the `offers`
+    stream is removed from the candidates into the hand (remove-at, the rest keep their
+    order). With no candidate the hand is RECOVER alone and no word is drawn."""
+    candidates = [code for code, (_, top) in enumerate(UPGRADES) if world.ranks[code] < top]
+    if not candidates:
+        world.hand = [U_RECOVER]
+        return
+    rng = hip_rng.HipRng(hip_rng.parse_u64(config.seed), OFFERS_STREAM, world.offers_rng_cursor)
+    hand = []
+    for _ in range(min(HAND_SIZE, len(candidates))):
+        hand.append(candidates.pop(rng.below(len(candidates))))
+    world.hand = hand
+    world.offers_rng_cursor = rng.cursor
+
+
+def apply_upgrade(world: World, code: int) -> None:
+    if code == U_RECOVER:
+        world.hero_hp = min(world.hero_hp_max, world.hero_hp + RECOVER_HEAL)
+        return
+    world.ranks[code] += 1
+    if code == U_VITALITY:
+        world.hero_hp_max += VITALITY_PER_RANK
+        world.hero_hp += VITALITY_PER_RANK
+
+
+def choose(config: Config, world: World, index: int, revision: int) -> bool:
+    """Resolves one earned choice atomically; a CHOOSE outside a pause, with an index outside
+    the hand or for another build_revision (stale, repeated) is rejected without changes."""
+    if not world.hand or not 0 <= index < len(world.hand) or revision != world.build_revision:
+        return False
+    apply_upgrade(world, world.hand[index])
+    world.pending_level_choices -= 1
+    world.choices_done += 1
+    world.build_revision += 1
+    world.hand = []
+    if world.pending_level_choices > 0:
+        build_hand(config, world)
+    return True
+
+
+def _apply_command(config: Config, world: World, record) -> bool:
+    """Applies one log record; True only for an accepted CHOOSE."""
+    _, _, kind, a, b = record
+    if kind == MOVE:
+        world.move_x, world.move_y = a, b
+        return False
+    return choose(config, world, a, b)
+
+
 def step(config: Config, world: World, log: CommandLog) -> None:
+    """One simulation step. A paused run (a hand is offered) only reads the log: records with
+    tick <= world.tick in sequence order up to and including the first accepted CHOOSE (a MOVE
+    only sets the held direction, a rejected CHOOSE is skipped); the tick does not advance and
+    nothing else changes. One step resolves at most one choice, live and in replay alike."""
     if world.hero_dead:
         return
-    while world.command_cursor < len(log.records) and \
-            log.records[world.command_cursor][0] <= world.tick:
-        _, _, world.move_x, world.move_y = log.records[world.command_cursor]
+    records = log.records
+    if world.paused():
+        accepted = False
+        while not accepted and world.command_cursor < len(records) and \
+                records[world.command_cursor][0] <= world.tick:
+            accepted = _apply_command(config, world, records[world.command_cursor])
+            world.command_cursor += 1
+        return
+    while world.command_cursor < len(records) and records[world.command_cursor][0] <= world.tick:
+        _apply_command(config, world, records[world.command_cursor])
         world.command_cursor += 1
     qx, qy = direction_q14(world.move_x, world.move_y)
-    r = config.radius
-    world.player_x = min(max(world.player_x + mul_q14(config.speed, qx), config.min_x + r),
+    r, speed = config.radius, hero_speed(config, world)
+    world.player_x = min(max(world.player_x + mul_q14(speed, qx), config.min_x + r),
                          config.max_x - r)
-    world.player_y = min(max(world.player_y + mul_q14(config.speed, qy), config.min_y + r),
+    world.player_y = min(max(world.player_y + mul_q14(speed, qy), config.min_y + r),
                          config.max_y - r)
     if config.has_enemies():
         spawn(config, world)
@@ -676,6 +857,8 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         elif config.has_xp():
             pickup(config, world)
             progress(config, world)
+            if config.choice_mode == 1 and world.pending_level_choices > 0:
+                build_hand(config, world)
     world.tick += 1
 
 
@@ -756,14 +939,130 @@ SCENARIOS = [
      _circle(25, 6000), 6000),
 ]
 
+# Scenarios above are written as schema 1 records (tick, sequence, move_x, move_y).
+SCENARIOS = [(name, config, migrate_v1(commands), ticks)
+             for name, config, commands, ticks in SCENARIOS]
+
+
+def scripted_choices(config: Config, moves, max_ticks: int, pick, junk: bool = False):
+    """Plays schema 1 `moves` (logged when their tick comes and the run is not paused) and
+    answers every offered hand with CHOOSE pick(world). With `junk` some answers are preceded
+    by an out-of-range index and a future build_revision and followed by a repeat, and a
+    CHOOSE is sent outside a pause: all of them must be skipped. Returns (records, steps)."""
+    log, world = CommandLog(), World(config)
+    queue, sequence, steps = list(moves), 0, 0
+
+    def add(kind: int, a: int, b: int) -> None:
+        nonlocal sequence
+        assert log.append((world.tick, sequence, kind, a, b), world.tick) == OK
+        sequence += 1
+
+    while world.tick < max_ticks and not world.hero_dead:
+        if world.paused():
+            revision, noisy = world.build_revision, junk and world.choices_done % 4 == 1
+            if noisy:
+                add(CHOOSE, len(world.hand), revision)
+                add(CHOOSE, 0, revision + 1)
+            add(CHOOSE, pick(world), revision)
+            if noisy:
+                add(CHOOSE, 0, revision)
+        else:
+            while queue and queue[0][0] <= world.tick:
+                _, _, move_x, move_y = queue.pop(0)
+                add(MOVE, move_x, move_y)
+            if junk and world.tick == 100:
+                add(CHOOSE, 0, world.build_revision)
+        step(config, world, log)
+        steps += 1
+    return log.records, steps
+
+
+def _first(world: World) -> int:
+    return 0
+
+
+def _cycle(world: World) -> int:
+    return world.choices_done % len(world.hand)
+
+
+def _last(world: World) -> int:
+    return len(world.hand) - 1
+
+
+P0_CHOICE = Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP, choice_mode=1)
+TOUGH_CHOICE = Config(BASE, [TOUGH, 30000, 3600, 4000, 64, 384000], W0_KINDS, MAX_SEED,
+                      P0_SKILL, P0_XP, choice_mode=1)
+# Cheap levels in a dense crowd: several levels per tick, every rank maxed, then RECOVER.
+CROWD_CHOICE = Config(BASE, [TOUGH, 6000, 0, 1000, 64, 200000], W0_KINDS, "123", P0_SKILL,
+                      ((48000, 512), (10, 15), [5, 40]), choice_mode=1)
+
+
+def _choice_scenarios():
+    out = []
+    for name, config, moves, ticks, pick, junk in (
+            ("choice_circle_first_card", P0_CHOICE, _circle(40, 3600), 3600, _first, False),
+            ("choice_tough_cycle_junk", TOUGH_CHOICE, _circle(25, 18000), 18000, _cycle, True),
+            ("choice_crowd_all_ranks", CROWD_CHOICE, _circle(25, 3000), 3000, _last, True)):
+        records, steps = scripted_choices(config, moves, ticks, pick, junk)
+        out.append((name, config, records, steps))
+    return out
+
+
+CHOICE_SCENARIOS = _choice_scenarios()
+
+# Golden hands (ADR-010 section 6): (name, seed, ranks, offers cursor) -> hand, cursor after.
+_MAX_RANKS = [top for _, top in UPGRADES]
+HAND_CASES = [
+    ("n7_fresh", SEED, [0] * 7, 0),
+    ("n7_cursor_5", SEED, [0] * 7, 5),
+    ("n7_max_seed", MAX_SEED, [0] * 7, 0),
+    ("n7_some_ranks", "7", [2, 1, 0, 1, 1, 4, 1], 3),
+    ("n3", SEED, [3, 5, 3, 2, 0, 0, 0], 0),
+    ("n2", SEED, [3, 5, 3, 2, 2, 0, 0], 0),
+    ("n1", SEED, _MAX_RANKS[:6] + [1], 2),
+    ("n0_recover", SEED, _MAX_RANKS, 9),
+]
+# A chain of four pending choices answered with card 0: every hand is built from the build the
+# previous answer produced.
+CHAIN_PENDING = 4
+
+
+def hand_vectors() -> dict:
+    cases = []
+    for name, seed, ranks, cursor in HAND_CASES:
+        config = Config(BASE, P0_VALUES, W0_KINDS, seed, P0_SKILL, P0_XP, choice_mode=1)
+        world = World(config)
+        world.ranks, world.offers_rng_cursor = list(ranks), cursor
+        build_hand(config, world)
+        cases.append({"name": name, "seed": seed, "ranks": list(ranks), "cursor": cursor,
+                      "hand": [upgrade_id(code) for code in world.hand],
+                      "cursor_after": world.offers_rng_cursor})
+    world = World(P0_CHOICE)
+    world.pending_level_choices = CHAIN_PENDING
+    build_hand(P0_CHOICE, world)
+    chain = []
+    while world.paused():
+        chain.append({"hand": [upgrade_id(code) for code in world.hand],
+                      "cursor": world.offers_rng_cursor, "revision": world.build_revision})
+        assert choose(P0_CHOICE, world, 0, world.build_revision)
+    return {"cases": cases, "chain": {"seed": P0_CHOICE.seed, "pending": CHAIN_PENDING,
+                                      "steps": chain, "ranks": list(world.ranks),
+                                      "cursor": world.offers_rng_cursor}}
+
+
 APPEND_CASES = [
-    ("accepts_first", [], (0, 0, 1, 0), 0, OK),
-    ("rejects_past_tick", [], (4, 0, 1, 0), 5, PAST_TICK),
-    ("rejects_bad_axis", [], (0, 0, 2, 0), 0, INVALID),
-    ("rejects_negative_tick", [], (-1, 0, 0, 0), 0, INVALID),
-    ("rejects_older_tick", [(10, 0, 1, 0)], (9, 1, 0, 0), 0, TICK_NOT_MONOTONIC),
-    ("rejects_repeated_sequence", [(10, 3, 1, 0)], (11, 3, 0, 0), 0, SEQUENCE_NOT_INCREASING),
-    ("accepts_same_tick_next_sequence", [(10, 3, 1, 0)], (10, 4, 0, 1), 0, OK),
+    ("accepts_first", [], (0, 0, MOVE, 1, 0), 0, OK),
+    ("rejects_past_tick", [], (4, 0, MOVE, 1, 0), 5, PAST_TICK),
+    ("rejects_bad_axis", [], (0, 0, MOVE, 2, 0), 0, INVALID),
+    ("rejects_negative_tick", [], (-1, 0, MOVE, 0, 0), 0, INVALID),
+    ("rejects_older_tick", [(10, 0, MOVE, 1, 0)], (9, 1, MOVE, 0, 0), 0, TICK_NOT_MONOTONIC),
+    ("rejects_repeated_sequence", [(10, 3, MOVE, 1, 0)], (11, 3, MOVE, 0, 0), 0,
+     SEQUENCE_NOT_INCREASING),
+    ("accepts_same_tick_next_sequence", [(10, 3, MOVE, 1, 0)], (10, 4, MOVE, 0, 1), 0, OK),
+    ("accepts_choose", [(10, 3, MOVE, 1, 0)], (10, 4, CHOOSE, 2, 7), 0, OK),
+    ("rejects_negative_choice_index", [], (0, 0, CHOOSE, -1, 0), 0, INVALID),
+    ("rejects_negative_revision", [], (0, 0, CHOOSE, 0, -1), 0, INVALID),
+    ("rejects_unknown_kind", [], (0, 0, 2, 0, 0), 0, INVALID),
 ]
 
 
@@ -773,12 +1072,14 @@ def _checkpoints(ticks: int) -> list[int]:
     return sorted(m for m in marks if m <= ticks)
 
 
-def run_trace(config: Config, commands, ticks: int):
+def run_trace(config: Config, commands, steps: int):
+    """Replays schema 2 `commands` for `steps` steps (a paused step does not advance the
+    tick); checkpoints are taken after given step counts."""
     log, world = CommandLog(), World(config)
     for command in commands:
         assert log.append(command, 0) == OK, command
-    marks, checkpoints = set(_checkpoints(ticks)), []
-    for t in range(1, ticks + 1):
+    marks, checkpoints = set(_checkpoints(steps)), []
+    for t in range(1, steps + 1):
         step(config, world, log)
         if t in marks:
             checkpoints.append({
@@ -787,28 +1088,34 @@ def run_trace(config: Config, commands, ticks: int):
                 "hero_dead": world.hero_dead, "enemy_alive": world.enemy_alive,
                 "kills": world.kills, "projectiles": world.live_projectiles(),
                 "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
+                "choices": world.choices_done, "paused": int(world.paused()),
                 "digest": world.digest()})
     return log, world, checkpoints
 
 
+def config_json(config: Config) -> dict:
+    """The trace fields of a config (sim_core_vectors.json and sim_bot_runs.json)."""
+    enemies = skill = xp = None
+    if config.has_enemies():
+        enemies = {"values": [str(v) for v in config.enemy_values()],
+                   "kinds": [str(v) for v in config.raw_kinds], "seed": config.seed}
+    if config.has_skill():
+        skill = [str(v) for v in config.skill_values()]
+    if config.has_xp():
+        xp = {"values": [str(v) for v in config.xp_values()],
+              "kind_xp": [str(v) for v in config.kind_xp],
+              "costs": [str(v) for v in config.xp_costs]}
+    return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
+            "xp": xp, "choice_mode": config.choice_mode}
+
+
 def build_vectors() -> dict:
     traces = []
-    for name, config, commands, ticks in SCENARIOS:
+    for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS:
         assert config.valid(), name
-        log, _, checkpoints = run_trace(config, commands, ticks)
-        enemies = None
-        if config.has_enemies():
-            enemies = {"values": [str(v) for v in config.enemy_values()],
-                       "kinds": [str(v) for v in config.raw_kinds], "seed": config.seed}
-        skill = [str(v) for v in config.skill_values()] if config.has_skill() else None
-        xp = None
-        if config.has_xp():
-            xp = {"values": [str(v) for v in config.xp_values()],
-                  "kind_xp": [str(v) for v in config.kind_xp],
-                  "costs": [str(v) for v in config.xp_costs]}
-        traces.append({"name": name, "config": [str(v) for v in config.ints()[:8]],
-                       "enemies": enemies, "skill": skill, "xp": xp,
-                       "commands": [[str(v) for v in c] for c in commands], "ticks": ticks,
+        log, _, checkpoints = run_trace(config, commands, steps)
+        traces.append({"name": name, **config_json(config),
+                       "commands": [[str(v) for v in c] for c in commands], "ticks": steps,
                        "log_digest": log.digest(), "checkpoints": checkpoints})
     appends = []
     for name, existing, command, next_tick, expected in APPEND_CASES:
@@ -821,9 +1128,12 @@ def build_vectors() -> dict:
                         "command": list(command), "next_tick": next_tick, "expected": expected})
     return {"schema_version": VECTORS_SCHEMA_VERSION, "kind": "hip-sim-core-vectors",
             "policy_id": fx.POLICY_ID, "rng_policy_id": hip_rng.POLICY_ID,
+            "log_schema_version": LOG_SCHEMA_VERSION,
+            "upgrades": [{"id": uid, "max_rank": top} for uid, top in UPGRADES],
+            "recover_id": RECOVER_ID,
             "generator": "tools/content/sim_core.py",
             "note": "movement, enemy and skill constants here are trace inputs, not canonical tuning",
-            "traces": traces, "append_cases": appends}
+            "traces": traces, "append_cases": appends, "hands": hand_vectors()}
 
 
 def vectors_bytes() -> bytes:

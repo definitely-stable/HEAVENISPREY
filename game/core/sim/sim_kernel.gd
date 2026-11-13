@@ -3,11 +3,17 @@ extends RefCounted
 ## Fixed 60 Hz simulation step (s04, ADR-008, ADR-009 section 1, ADR-010). Exact port of
 ## tools/content/sim_core.py.
 ##
+## A paused run (a level-up hand is offered, ADR-010 section 6) only reads the log: records
+## with tick <= world.tick in sequence order up to and including the first accepted CHOOSE (a
+## MOVE only sets the held direction, a rejected CHOOSE is skipped); the tick does not advance
+## and nothing else changes. One step resolves at most one choice, live and in replay alike.
+##
 ## Phase order inside one tick (P0-01 subset of s04):
 ##   0. a finished run (hero dead) does not step;
-##   1. apply every logged command whose tick <= world.tick, in log order (last one wins);
-##   2. move the hero by the held direction (Q14 unit vector x speed, symmetric rounding)
-##      and clamp inside the arena rectangle (radius-aware);
+##   1. apply every logged command whose tick <= world.tick, in log order (last MOVE wins; a
+##      CHOOSE outside a pause is skipped);
+##   2. move the hero by the held direction (Q14 unit vector x speed with upgrades, symmetric
+##      rounding) and clamp inside the arena rectangle (radius-aware);
 ##   3. spawn at most one enemy into the lowest free slot (EnemySystem.spawn);
 ##   4. move enemies toward the hero with separation, capped at their speed
 ##      (SeparationSystem.chase_and_separate);
@@ -17,7 +23,8 @@ extends RefCounted
 ##   8. deaths: enemies in slot order (XP gem drop, slot freed, kill counted), expired
 ##      projectiles, then the hero (pending level choices are voided when the run ends);
 ##   9. XP pickup within the pickup radius (XpSystem.pickup), not in the tick the hero dies;
-##   10. level progression from the XP bank (XpSystem.progress), same condition;
+##   10. level progression from the XP bank (XpSystem.progress), same condition; with
+##       choice_mode Immediate and choices pending the first hand is built (the run pauses);
 ##   11. advance the tick.
 ## No float, no Input, no delta: the same log and config give the same state everywhere.
 
@@ -35,14 +42,20 @@ static func direction_q14(move_x: int, move_y: int) -> PackedInt64Array:
 static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> void:
 	if world.is_over():
 		return
-	while world.command_cursor < commands.size() and commands.tick_at(world.command_cursor) <= world.tick:
-		world.move_x = commands.move_x_at(world.command_cursor)
-		world.move_y = commands.move_y_at(world.command_cursor)
+	if world.is_paused():
+		var accepted: bool = false
+		while not accepted and _has_due_command(world, commands):
+			accepted = _apply_command(config, world, commands, world.command_cursor)
+			world.command_cursor += 1
+		return
+	while _has_due_command(world, commands):
+		_apply_command(config, world, commands, world.command_cursor)
 		world.command_cursor += 1
 	var direction: PackedInt64Array = direction_q14(world.move_x, world.move_y)
 	var r: int = config.player_radius_su
-	var next_x: int = world.player_x + Fx.mul_q14(config.speed_su_per_tick, direction[0])
-	var next_y: int = world.player_y + Fx.mul_q14(config.speed_su_per_tick, direction[1])
+	var speed: int = UpgradeSystem.hero_speed(config, world)
+	var next_x: int = world.player_x + Fx.mul_q14(speed, direction[0])
+	var next_y: int = world.player_y + Fx.mul_q14(speed, direction[1])
 	world.player_x = clampi(next_x, config.arena_min_x + r, config.arena_max_x - r)
 	world.player_y = clampi(next_y, config.arena_min_y + r, config.arena_max_y - r)
 	if config.has_enemies():
@@ -63,7 +76,23 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 		elif config.has_xp():
 			XpSystem.pickup(config, world)
 			XpSystem.progress(config, world)
+			if config.choice_mode == SimConfig.CHOICE_IMMEDIATE and world.pending_level_choices > 0:
+				UpgradeSystem.build_hand(config, world)
 	world.tick += 1
+
+
+## The next unread log record is for this tick or an earlier one.
+static func _has_due_command(world: WorldState, commands: CommandLog) -> bool:
+	return world.command_cursor < commands.size() and commands.tick_at(world.command_cursor) <= world.tick
+
+
+## Applies one log record; true only for an accepted CHOOSE.
+static func _apply_command(config: SimConfig, world: WorldState, commands: CommandLog, index: int) -> bool:
+	if commands.kind_at(index) == PlayerCommand.MOVE:
+		world.move_x = commands.move_x_at(index)
+		world.move_y = commands.move_y_at(index)
+		return false
+	return UpgradeSystem.choose(config, world, commands.a_at(index), commands.b_at(index))
 
 
 static func run(config: SimConfig, world: WorldState, commands: CommandLog, ticks: int) -> void:
