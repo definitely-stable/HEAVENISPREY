@@ -7,8 +7,12 @@ extends RefCounted
 ## indexed by slot. A slot is free when its enemy uid is 0 (projectile: damage 0) and then
 ## all its fields are 0 (gem: uid 0); spawns and drops take the lowest free slot, arrays
 ## never shrink, so slot
-## order (= iteration order) stays deterministic. The state digest is SHA-256 over the
-## little-endian bytes of `to_ints()`, never `hash()` or `var_to_bytes`.
+## order (= iteration order) stays deterministic. A projectile keeps the damage and capacity
+## (pierce + 1) of its cast and counts its hits; its first hit_count ledger cells are used.
+## The build (ADR-010 section 6): upgrade ranks in UpgradeSystem code order, the maximum hero
+## HP and the offered hand (non-empty only while the run is paused for a choice). The state
+## digest is SHA-256 over the little-endian bytes of `to_ints()`, never `hash()` or
+## `var_to_bytes`.
 
 var tick: int = 0
 var player_x: int = 0
@@ -45,6 +49,16 @@ var level: int = 1
 var pending_level_choices: int = 0
 ## Earned choices cancelled when the run ended.
 var choices_voided: int = 0
+var choices_done: int = 0
+## Number of choices applied to the build; a CHOOSE names the revision its hand was built for.
+var build_revision: int = 0
+## Words consumed from the hip-rng-v1 `offers` stream of the run seed.
+var offers_rng_cursor: int = 0
+## Offered upgrade codes; the run is paused while it is not empty.
+var hand: PackedInt64Array = PackedInt64Array()
+## Upgrade ranks in UpgradeSystem code order.
+var ranks: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
+var hero_hp_max: int = 0
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -59,9 +73,11 @@ var proj_y: PackedInt64Array = PackedInt64Array()
 var proj_vx: PackedInt64Array = PackedInt64Array()
 var proj_vy: PackedInt64Array = PackedInt64Array()
 var proj_ttl: PackedInt64Array = PackedInt64Array()
-var proj_pierce_left: PackedInt64Array = PackedInt64Array()
-## Damage per hit; > 0 marks a live projectile.
+## Damage per hit, fixed at the cast; > 0 marks a live projectile.
 var proj_damage: PackedInt64Array = PackedInt64Array()
+var proj_hits: PackedInt64Array = PackedInt64Array()
+## Targets the projectile may hit (pierce at the cast + 1); it is freed after that many hits.
+var proj_capacity: PackedInt64Array = PackedInt64Array()
 ## Enemy uids already hit, `ledger_stride` cells per projectile slot (0 = empty).
 var proj_ledger: PackedInt64Array = PackedInt64Array()
 var ledger_stride: int = 1
@@ -77,6 +93,7 @@ static func initial(config: SimConfig) -> WorldState:
 	world.player_x = config.start_x
 	world.player_y = config.start_y
 	world.hero_hp = config.hero_hp_mhp
+	world.hero_hp_max = config.hero_hp_mhp
 	world.ledger_stride = config.ledger_size()
 	return world
 
@@ -97,6 +114,11 @@ func is_over() -> bool:
 	return hero_dead != 0
 
 
+## The run waits for a CHOOSE: no tick is simulated while a hand is offered.
+func is_paused() -> bool:
+	return not hand.is_empty()
+
+
 func is_enemy_live(slot: int) -> bool:
 	return enemy_uid[slot] != 0 and enemy_hp[slot] > 0
 
@@ -107,8 +129,12 @@ func to_ints() -> PackedInt64Array:
 		hero_hp, hero_dead, spawn_acc, enemy_rng_cursor, next_enemy_uid, enemy_alive, kills,
 		skill_acc, sep_cursor, next_gem_uid, gems_alive, gems_merged, xp_dropped_total,
 		xp_collected_total, xp_bank, level, pending_level_choices, choices_voided,
-		enemy_slots(), projectile_slots(), gem_slots(),
+		choices_done, build_revision, offers_rng_cursor,
 	])
+	for card: int in UpgradeSystem.HAND_SIZE:
+		out.append(hand[card] if card < hand.size() else UpgradeSystem.NO_CARD)
+	out.append_array(ranks)
+	out.append_array(PackedInt64Array([hero_hp_max, enemy_slots(), projectile_slots(), gem_slots()]))
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
 			enemy_uid[slot], enemy_kind[slot], enemy_x[slot], enemy_y[slot], enemy_hp[slot],
@@ -117,7 +143,7 @@ func to_ints() -> PackedInt64Array:
 	for slot: int in projectile_slots():
 		out.append_array(PackedInt64Array([
 			proj_x[slot], proj_y[slot], proj_vx[slot], proj_vy[slot], proj_ttl[slot],
-			proj_pierce_left[slot], proj_damage[slot],
+			proj_damage[slot], proj_hits[slot], proj_capacity[slot],
 		]))
 		out.append_array(proj_ledger.slice(slot * ledger_stride, (slot + 1) * ledger_stride))
 	for slot: int in gem_slots():
@@ -155,6 +181,12 @@ func copy() -> WorldState:
 	other.level = level
 	other.pending_level_choices = pending_level_choices
 	other.choices_voided = choices_voided
+	other.choices_done = choices_done
+	other.build_revision = build_revision
+	other.offers_rng_cursor = offers_rng_cursor
+	other.hand = hand.duplicate()
+	other.ranks = ranks.duplicate()
+	other.hero_hp_max = hero_hp_max
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
@@ -166,8 +198,9 @@ func copy() -> WorldState:
 	other.proj_vx = proj_vx.duplicate()
 	other.proj_vy = proj_vy.duplicate()
 	other.proj_ttl = proj_ttl.duplicate()
-	other.proj_pierce_left = proj_pierce_left.duplicate()
 	other.proj_damage = proj_damage.duplicate()
+	other.proj_hits = proj_hits.duplicate()
+	other.proj_capacity = proj_capacity.duplicate()
 	other.proj_ledger = proj_ledger.duplicate()
 	other.ledger_stride = ledger_stride
 	other.gem_uid = gem_uid.duplicate()

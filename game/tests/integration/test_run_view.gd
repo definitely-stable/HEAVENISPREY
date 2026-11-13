@@ -213,7 +213,7 @@ func test_bot_log_replays_through_the_scene() -> void:
 	var moves: Dictionary = {}
 	for record: Variant in row["commands"]:
 		var command: Array = record
-		moves[str(command[0]).to_int()] = Vector2i(str(command[2]).to_int(), str(command[3]).to_int())
+		moves[str(command[0]).to_int()] = Vector2i(str(command[3]).to_int(), str(command[4]).to_int())
 	var packed: PackedScene = load(RUN_SCENE)
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false

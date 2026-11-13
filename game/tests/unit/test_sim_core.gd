@@ -25,12 +25,12 @@ static func _ints(values: Array) -> PackedInt64Array:
 
 
 static func _command(values: Array) -> PlayerCommand:
-	var v: PackedInt64Array = _ints(values)
-	return PlayerCommand.create(v[0], v[1], v[2], v[3])
+	return PlayerCommand.from_ints(_ints(values))
 
 
 func test_vectors_header() -> void:
 	assert_eq(str(_data.get("policy_id")), Fx.POLICY_ID)
+	assert_eq(int(_data.get("log_schema_version", 0)), CommandLog.SCHEMA_VERSION)
 	assert_gt((_data.get("traces", []) as Array).size(), 0)
 
 
@@ -57,7 +57,7 @@ static func _config(row: Dictionary) -> SimConfig:
 	if typeof(xp) == TYPE_DICTIONARY:
 		var spec_xp: Dictionary = xp
 		config.with_xp(_ints(spec_xp["values"]), _ints(spec_xp["kind_xp"]), _ints(spec_xp["costs"]))
-	return config
+	return config.with_choice_mode(int(row.get("choice_mode", 0)))
 
 
 static func _live_projectiles(world: WorldState) -> int:
@@ -92,6 +92,8 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.gems_alive, int(mark["gems"]), label + " gems")
 			assert_eq(world.xp_collected_total, int(mark["xp"]), label + " xp")
 			assert_eq(world.level, int(mark["level"]), label + " level")
+			assert_eq(world.choices_done, int(mark["choices"]), label + " choices")
+			assert_eq(int(world.is_paused()), int(mark["paused"]), label + " paused")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 
@@ -171,6 +173,14 @@ func test_dead_hero_freezes_the_run() -> void:
 	assert_eq(world.digest(), frozen, "no step after death")
 
 
+func test_schema_one_log_migrates_to_moves() -> void:
+	var migrated: CommandLog = CommandLog.from_v1(PackedInt64Array([0, 0, 1, -1, 5, 3, 0, 0]))
+	assert_eq(migrated.records(), PackedInt64Array([0, 0, 0, 1, -1, 5, 3, 0, 0, 0]))
+	assert_null(CommandLog.from_v1(PackedInt64Array([0, 0, 1])), "partial record")
+	assert_null(CommandLog.from_v1(PackedInt64Array([0, 0, 2, 0])), "bad axis")
+	assert_null(CommandLog.from_v1(PackedInt64Array([5, 1, 0, 0, 4, 2, 0, 0])), "order")
+
+
 func test_empty_digest_is_sha256_of_nothing() -> void:
 	var expected: String = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 	assert_eq(CommandLog.new().digest(), expected)
@@ -226,9 +236,11 @@ func test_projectile_hits_each_enemy_once_and_reused_slot_is_new() -> void:
 	world.proj_vx.append(0)
 	world.proj_vy.append(0)
 	world.proj_ttl.append(40)
-	world.proj_pierce_left.append(1)
 	world.proj_damage.append(10000)
-	world.proj_ledger.append_array(PackedInt64Array([0, 0]))
+	world.proj_hits.append(0)
+	world.proj_capacity.append(2)
+	for _cell: int in world.ledger_stride:
+		world.proj_ledger.append(0)
 	CombatSystem.fly_and_hit(config, world)
 	CombatSystem.fly_and_hit(config, world)
 	assert_eq(world.enemy_hp[0], 15000, "the same enemy is hit once per projectile")

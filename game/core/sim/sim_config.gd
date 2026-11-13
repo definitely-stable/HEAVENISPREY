@@ -7,6 +7,8 @@ extends RefCounted
 ## alive cap, minimum spawn distance, hero HP and the run seed of the `enemy` RNG stream.
 ## Hero skill (ADR-009 section 1): accumulator cooldown, acquire range, projectile.
 ## XP (ADR-010): pickup radius, gem slot cap, XP per kind (kind order), level costs.
+## Level-up choice (ADR-010 section 6): choice_mode 0 never stops the run (choices stay
+## pending), 1 = Immediate (the run pauses for each choice; needs XP and the skill).
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -24,6 +26,8 @@ const MAX_PIERCE: int = 7
 const MAX_GEMS_LIMIT: int = 4096
 const MAX_XP_COSTS: int = 64
 const MAX_KIND_XP: int = 1000000
+const CHOICE_NONE: int = 0
+const CHOICE_IMMEDIATE: int = 1
 ## Normal speed of an accumulator (ADR-008: rate_fx 1000 = x1).
 const RATE_ONE: int = 1000
 ## hip-rng-v1 below(n) accepts n <= 2^32.
@@ -63,6 +67,7 @@ var max_gems: int = 0
 var kind_xp: PackedInt64Array = PackedInt64Array()
 ## Incremental XP cost of level L -> L + 1 from level 1; the last cost repeats.
 var xp_costs: PackedInt64Array = PackedInt64Array()
+var choice_mode: int = CHOICE_NONE
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -121,6 +126,12 @@ func with_xp(p_values: PackedInt64Array, p_kind_xp: PackedInt64Array, p_costs: P
 	return self
 
 
+## Sets the level-up choice mode (CHOICE_NONE or CHOICE_IMMEDIATE).
+func with_choice_mode(p_mode: int) -> SimConfig:
+	choice_mode = p_mode
+	return self
+
+
 func kind_count() -> int:
 	return Fx.floor_div(kinds.size(), KIND_STRIDE)
 
@@ -144,7 +155,6 @@ func has_skill() -> bool:
 	return skill_damage_mhp > 0
 
 
-
 func has_xp() -> bool:
 	return not xp_costs.is_empty()
 
@@ -154,9 +164,10 @@ func xp_cost(level: int) -> int:
 	return xp_costs[mini(level - 1, xp_costs.size() - 1)]
 
 
-## Ledger cells per projectile: one per target it may hit.
+## Ledger cells of every projectile slot: enough for the largest pierce an upgrade can reach;
+## a projectile uses `pierce at cast + 1` of them (its capacity).
 func ledger_size() -> int:
-	return projectile_pierce + 1
+	return mini(MAX_PIERCE, projectile_pierce + UpgradeSystem.MAX_RANKS[UpgradeSystem.PIERCE]) + 1
 
 
 ## Spawn accumulator rate at `tick`: 1000 rising by 1000 every `spawn_ramp_ticks`, capped.
@@ -179,6 +190,7 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(PackedInt64Array([pickup_radius_su, max_gems]))
 	out.append_array(kind_xp)
 	out.append_array(xp_costs)
+	out.append(choice_mode)
 	return out
 
 
@@ -206,6 +218,10 @@ func is_valid() -> bool:
 	if has_skill() and not _skill_valid():
 		return false
 	if (has_xp() or not kind_xp.is_empty()) and not _xp_valid():
+		return false
+	if choice_mode != CHOICE_NONE and choice_mode != CHOICE_IMMEDIATE:
+		return false
+	if choice_mode == CHOICE_IMMEDIATE and not (has_xp() and has_skill()):
 		return false
 	return true
 

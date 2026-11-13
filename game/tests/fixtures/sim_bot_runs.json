@@ -1,1450 +1,2507 @@
 {
- "bot_policy_version": 1,
+ "bot_policy_version": 2,
  "generator": "tools/content/sim_bots.py",
  "kind": "hip-sim-bot-runs",
+ "log_schema_version": 2,
  "max_ticks": 18000,
- "note": "P0 placeholder tuning (ADR-009 section 3, ADR-010); bots are test instruments",
+ "note": "P0 placeholder tuning (ADR-009 section 3, ADR-010), choice_mode 0; bots are test instruments",
  "policy_id": "hip-fx-v1",
  "rng_policy_id": "hip-rng-v1",
- "schema_version": 1,
- "sim_schema_version": 5,
+ "schema_version": 2,
+ "sim_schema_version": 6,
  "survey": [
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1324,
-   "final_digest": "58d57296d42054bb41adbec673b9c2b9be83ff1e0e70e8c2b7dd25dfd62a968c",
+   "final_digest": "ed71819700998ad49b4e97e69a16e3b54271ef759dea30d7f16a53c97ef4a470",
    "gems_ground_end": 5,
    "gems_ground_peak": 5,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s101",
    "kills": 12,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "101",
    "xp_collected": 80,
    "xp_dropped": 135
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 2184,
-   "final_digest": "0ac8b93c2d2bb40bb78044d1ff4811949a7f33b12044d42ac71120f21909c4d2",
+   "final_digest": "df355477bc1e19407ed05636e01558e23a3648f06574766c3f2abec094965e92",
    "gems_ground_end": 15,
    "gems_ground_peak": 15,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s102",
    "kills": 22,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "102",
    "xp_collected": 75,
    "xp_dropped": 250
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1661,
-   "final_digest": "7e2522770707df9567885149d7165692f328ef3722899483c29f60dd036b2945",
+   "final_digest": "843f27a6587aca3b15dcc8bb4dc4f6cf02c22a7e42085733062c1f9698314732",
    "gems_ground_end": 9,
    "gems_ground_peak": 9,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s103",
    "kills": 16,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "103",
    "xp_collected": 75,
    "xp_dropped": 175
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1678,
-   "final_digest": "c88c717df4a7b6d3a7b79f16845708c4bc355bfe1c0068fda2948e705c5428a9",
+   "final_digest": "b0e4f07f26f2876cdcb3e1c81915a1b1d43320b7dcf6558dd7caeaca804edcbe",
    "gems_ground_end": 9,
    "gems_ground_peak": 9,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s104",
    "kills": 17,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "104",
    "xp_collected": 95,
    "xp_dropped": 195
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 2361,
-   "final_digest": "567ffe83d54bbe59f0d609df0ff14141c9d3caa5284e86b285cb2d604eb4ba8b",
+   "final_digest": "1f785ce97c9fbfde0d896bce40022d6f48fd734b3153413758e78c671cabf4a9",
    "gems_ground_end": 14,
    "gems_ground_peak": 14,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s105",
    "kills": 26,
    "level": 4,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "105",
    "xp_collected": 145,
    "xp_dropped": 300
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1673,
-   "final_digest": "5bd44f1e15f3c447eb76bbca0c238fcfdc9d24dcdc774f0d10cfd9b00a26035a",
+   "final_digest": "4fedc330e6f4b782f020c7bfa89abeaf1effef6d9a709bd2106eff084816d4c4",
    "gems_ground_end": 10,
    "gems_ground_peak": 10,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s106",
    "kills": 17,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "106",
    "xp_collected": 80,
    "xp_dropped": 190
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1992,
-   "final_digest": "e567da399e693eaafb8b2192acb6a965e268b64817974164b678883b9aa20db7",
+   "final_digest": "5dd53287634fbebbf7b7e3a3e0eb774d98816a411ed996b04572bc11b0177483",
    "gems_ground_end": 13,
    "gems_ground_peak": 13,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s107",
    "kills": 20,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "107",
    "xp_collected": 85,
    "xp_dropped": 230
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1251,
-   "final_digest": "c6a3a56418fe1bd5bcfcc999196ab1c5ef8f7f74af8769dbc1b8337d9ce6a423",
+   "final_digest": "b8259fad1f9b2ed9c7eafa19fae5f7ad1fe867262cd6b878cc11b301623fa843",
    "gems_ground_end": 5,
    "gems_ground_peak": 5,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s108",
    "kills": 11,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "108",
    "xp_collected": 60,
    "xp_dropped": 115
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 2610,
-   "final_digest": "19c96127eec37294b12e4dce930154938455239ee2e8efc2142b81119674c9c1",
+   "final_digest": "038b8b4809d9516b6128c6575d410c8abc8229298b31c64b1c50a343d5086d2d",
    "gems_ground_end": 18,
    "gems_ground_peak": 18,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s109",
    "kills": 29,
    "level": 4,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "109",
    "xp_collected": 125,
    "xp_dropped": 320
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1236,
-   "final_digest": "eb7740e2ed63362f575ed28ca42b7853ec5aa82508f27235a9f89fbbba7680fb",
+   "final_digest": "85de614f45bd98e4e78fe6403aaeeb9386ac149661b0c33c0f7abd78e4f4befc",
    "gems_ground_end": 6,
    "gems_ground_peak": 6,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s110",
    "kills": 11,
    "level": 2,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "110",
    "xp_collected": 50,
    "xp_dropped": 110
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1323,
-   "final_digest": "9a66c91511f3bbb045ae3a1ab5f969d645fda6bc6364d3b8fc391a85803829d6",
+   "final_digest": "a99f08a59040b09a2c18d8b317f809a2f061294c11d044173878225d98594fce",
    "gems_ground_end": 5,
    "gems_ground_peak": 5,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s111",
    "kills": 12,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "111",
    "xp_collected": 80,
    "xp_dropped": 140
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1650,
-   "final_digest": "53dc5d09c8dd92314f1d580bdc99a3de6b4a70d19d4ad98e4cbbd097dedc941c",
+   "final_digest": "21c51a4943876f4dbb6245ab9483146139ce2a50842874bf3131d208b481a11e",
    "gems_ground_end": 8,
    "gems_ground_peak": 8,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s112",
    "kills": 17,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "112",
    "xp_collected": 105,
    "xp_dropped": 200
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1888,
-   "final_digest": "e36eef278d7cc0576ada8d42611f65142aab07d5f83411b63cde38ab21b489b9",
+   "final_digest": "26a33ea5f947de998eb2d11626a6fe03bd50b07c0bf9c7ab4ed645d7565d3119",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s113",
    "kills": 20,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "113",
    "xp_collected": 105,
    "xp_dropped": 235
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1794,
-   "final_digest": "6becc1bb569147d8ba5ddba4742c1e802c15f1ef52b932ba0b8b184dbfc5934d",
+   "final_digest": "2fb70aa673808da037b6ff25e03afcd43bd8d308dcf01aece4537324edccce16",
    "gems_ground_end": 9,
    "gems_ground_peak": 9,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s114",
    "kills": 17,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "114",
    "xp_collected": 80,
    "xp_dropped": 175
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1881,
-   "final_digest": "f22dfc29276dc5e248c2c1b2e7782515d225d005b6176e8516b0006c69f856e9",
+   "final_digest": "a22141fa8f5e4e0ed81607fc0ad7f8c47d2d394f1998c6f2c19237e06866e86f",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s115",
    "kills": 19,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "115",
    "xp_collected": 85,
    "xp_dropped": 225
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1534,
-   "final_digest": "67faa65f3497b6a3e09122bd3495f61d7e5b68b005b921040fc137a8abe6de10",
+   "final_digest": "10203981c0ee8d1f9888746aee02de7649f5b0edcf49851cdaf46374e1a391f8",
    "gems_ground_end": 7,
    "gems_ground_peak": 7,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s116",
    "kills": 14,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "116",
    "xp_collected": 70,
    "xp_dropped": 150
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1590,
-   "final_digest": "96acba9e33dee0acda9b643e13891e9a18af5dd442f908760dee2addc0d9ae2e",
+   "final_digest": "c0331d56c55d66f6bc4a6c69fac9589e0ad6b2680d8a8841adc1930536b16cf6",
    "gems_ground_end": 6,
    "gems_ground_peak": 6,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s117",
    "kills": 16,
    "level": 4,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "117",
    "xp_collected": 110,
    "xp_dropped": 175
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1402,
-   "final_digest": "1bdd394bf32678dfd05a66116801f6ae4dde3424281cf605c3c7627ace1ee461",
+   "final_digest": "6ce2ac428da24d098654c2d2dc3ac4b39dae0218f97dfe55f2632b6375d68d7d",
    "gems_ground_end": 6,
    "gems_ground_peak": 6,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s118",
    "kills": 13,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "118",
    "xp_collected": 75,
    "xp_dropped": 135
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1244,
-   "final_digest": "cc642df12d161d599b6d0fc89011c4beea3826817fc4e994319a50492cec1ba2",
+   "final_digest": "226727fb2ae4e500be8edceb7dc688989c4555f6dc25831c158c0360f14f4aa3",
    "gems_ground_end": 5,
    "gems_ground_peak": 5,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s119",
    "kills": 10,
    "level": 2,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "119",
    "xp_collected": 50,
    "xp_dropped": 100
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1554,
-   "final_digest": "ced43727d78375da198181b9d7b4c9b0b5071f3610129251a1ac81478ec018ac",
+   "final_digest": "a3d391304f2e2028413dd5e888e90028c4e5aec77e0c7b95ee6d37b8c69964da",
    "gems_ground_end": 7,
    "gems_ground_peak": 7,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s120",
    "kills": 15,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "120",
    "xp_collected": 85,
    "xp_dropped": 155
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 2422,
-   "final_digest": "82eb5fbc263529537b2896788e503bdb8ba4b07c07f46f2d40bfc2c4dd588c57",
+   "final_digest": "b9dc1bbcfc09ca643950e0a575600a141826dabc7d8ed7fd5cbfec049d2c0008",
    "gems_ground_end": 18,
    "gems_ground_peak": 18,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s121",
    "kills": 27,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "121",
    "xp_collected": 100,
    "xp_dropped": 300
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1885,
-   "final_digest": "9a8ea9a412654e121bf2f224de5acd0e1a9ddb7d31d75a649544ad77683612c1",
+   "final_digest": "e27d73df2a13b29f1140b4f2c535dc4fb73d5f27805ba46b08691d0d424fe130",
    "gems_ground_end": 13,
    "gems_ground_peak": 13,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s122",
    "kills": 19,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "122",
    "xp_collected": 65,
    "xp_dropped": 215
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1238,
-   "final_digest": "9576c1d7beafbc4c5fe80d35f3a2bae949921921a6038910f56fda5dc9186430",
+   "final_digest": "07490420f5e270047458a314f62867cc37613e506112a5dad00a4a50594bac12",
    "gems_ground_end": 4,
    "gems_ground_peak": 4,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s123",
    "kills": 11,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "123",
    "xp_collected": 80,
    "xp_dropped": 120
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1141,
-   "final_digest": "7480321af0ce19d20c67f0c10df181164e562d161edbf853cc3e0c38e148fd65",
+   "final_digest": "e43ab47677a662af753a77f6840205d80158598d76feec5c9d08d4ac27d49891",
    "gems_ground_end": 4,
    "gems_ground_peak": 4,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s124",
    "kills": 10,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "124",
    "xp_collected": 70,
    "xp_dropped": 115
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1792,
-   "final_digest": "c2f9baf38d68158e10868e1a30021346209b6c6b1e6e5d782e6e0ea70b538785",
+   "final_digest": "ab9552276143837a8613ab80303d039ad587be5aa72b823fa1e30bd6ec252131",
    "gems_ground_end": 13,
    "gems_ground_peak": 13,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s125",
    "kills": 18,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "125",
    "xp_collected": 60,
    "xp_dropped": 205
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1728,
-   "final_digest": "82e1eb00d3b1849791c648b5874a528a209ab6c159f648417dd815f80348e973",
+   "final_digest": "0f80d35aa343f44a025f5df2de00de3c52cbb6f146ec630e3391702c1408df5b",
    "gems_ground_end": 8,
    "gems_ground_peak": 8,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s126",
    "kills": 18,
    "level": 4,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "126",
    "xp_collected": 115,
    "xp_dropped": 195
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 2155,
-   "final_digest": "d52ecfbdb838304e90fa8c689ab321f6828d07a378312c3e545f1b151f83c68e",
+   "final_digest": "7c95fef1a1d746467259fc8e40298317a25860be80bd579685a8101a20a07430",
    "gems_ground_end": 16,
    "gems_ground_peak": 16,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s127",
    "kills": 23,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "127",
    "xp_collected": 75,
    "xp_dropped": 265
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1746,
-   "final_digest": "5409934b7c0383afc49c3d2f1f919a7b39f44d085a1ecd1b73998d2406d388ba",
+   "final_digest": "8f837d2a55e76c149b5e0d848f757e59c5e67789ce59998dea0bdfc89daa1525",
    "gems_ground_end": 11,
    "gems_ground_peak": 11,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s128",
    "kills": 17,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "128",
    "xp_collected": 60,
    "xp_dropped": 185
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1997,
-   "final_digest": "fb3286a3bbbc040bff41aa8e8e348c12b16a1dafc1c28062ea62444475aa39f6",
+   "final_digest": "e41891b3948b2f47711d47ede3d15106ae7ffd2b519e08c5356a9fe9a4dc8b67",
    "gems_ground_end": 9,
    "gems_ground_peak": 9,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s129",
    "kills": 21,
    "level": 4,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "129",
    "xp_collected": 140,
    "xp_dropped": 245
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1519,
-   "final_digest": "377019e1d149aba7acd297d60daed5c1e657a521d2e8741f93ab0f90c8df901d",
+   "final_digest": "0551be75e5918e6cfde22f0362b307f99cfb9d4fea5c64d83e9f2ca1bbd43db4",
    "gems_ground_end": 8,
    "gems_ground_peak": 8,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s130",
    "kills": 14,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "130",
    "xp_collected": 65,
    "xp_dropped": 155
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1239,
-   "final_digest": "15efb1a8d655a5c638d20c265b66e50dfe9688323a5ac4aa72b921b23f3298c5",
+   "final_digest": "959d53ff59759ebe6a23adae5f97e15b9e8d60c9a3034425f680e73d04b1b2dd",
    "gems_ground_end": 4,
    "gems_ground_peak": 4,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s131",
    "kills": 10,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "131",
    "xp_collected": 60,
    "xp_dropped": 100
   },
   {
    "bot_policy": "idle",
+   "choices": 0,
    "command_count": 0,
    "death_tick": 1515,
-   "final_digest": "e22c7e0bd38e6926d2b5c13ef361ed3f27e6e6460140c10aaa5410760896618b",
+   "final_digest": "046d0b3118dc50be57a664e36d112819a83152d02cc68d0d11071ad38945b1e1",
    "gems_ground_end": 7,
    "gems_ground_peak": 7,
+   "hp_min": 0,
    "id": "botrun.p0.idle.s132",
    "kills": 15,
    "level": 3,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "132",
    "xp_collected": 90,
    "xp_dropped": 165
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 81,
    "death_tick": 3209,
-   "final_digest": "27ea6d9a5d9b796d285e30eece92c7fa8262549d040d5c100260ef83ae5fd0c8",
+   "final_digest": "3ebe55cdb298f21e33ea751d865289cea8ae20846aa8dc589f63a63ce48a2b26",
    "gems_ground_end": 19,
    "gems_ground_peak": 19,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s101",
    "kills": 38,
    "level": 5,
-   "log_digest": "5b679fd570272da41b56418feedd4fbc0f0405b8e00b920ebf41660b15541eb2",
+   "log_digest": "465536d1f65f8a55632f1e181435b1a70ae3c3149f2ef34d876769e069112dec",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "101",
    "xp_collected": 215,
    "xp_dropped": 415
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 85,
    "death_tick": 3400,
-   "final_digest": "cc4354fe106a400282c8fd29d30d1f510ee7e37301f4832811842b1e4d98d17c",
+   "final_digest": "db59e77dacb6ffdaf0b77bee13c4d932fbbc4c0ccbe5051797793b54289e061a",
    "gems_ground_end": 14,
    "gems_ground_peak": 14,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s102",
    "kills": 37,
    "level": 5,
-   "log_digest": "33623105ee59ccb85eada6ed48b0195027bb330c0ce74edbcab1cc3a4b1bfe2d",
+   "log_digest": "14dd2d5399c88c2881baa88991b547526b767395621b16d5e4af48fdeb9d5c4b",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "102",
    "xp_collected": 250,
    "xp_dropped": 395
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 87,
    "death_tick": 3475,
-   "final_digest": "0204ac3a596e1472ae40ee70d1862545a9341299327ef1ee01da80ece5227653",
+   "final_digest": "b135ec3c2ac89411de396c36bbf675655c71b59d4211247f09136be7a0faf919",
    "gems_ground_end": 16,
    "gems_ground_peak": 18,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s103",
    "kills": 39,
    "level": 5,
-   "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
+   "log_digest": "946da124fbf870decfda1869fef04adb3f442d81f0fe68b999aba280d5ab277a",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "103",
    "xp_collected": 250,
    "xp_dropped": 425
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 95,
    "death_tick": 3791,
-   "final_digest": "36ef08bdefe4cf72aaaca851f26ceb1c6f7012f38014816c87d8f35289f7fa0e",
+   "final_digest": "4d7c491ba1236c9cb10c3400518c388d784b8c8558adce64718d3454237f905d",
    "gems_ground_end": 21,
    "gems_ground_peak": 21,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s104",
    "kills": 44,
    "level": 5,
-   "log_digest": "5b1f8f7226883707d4cc978b51925e7cc16ad30f19731dbc6158b8011dceeb28",
+   "log_digest": "6896eeedba4dc5467662b7b4b0e650db60a9a7aa7c05d84b9c061b209b469c1c",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "104",
    "xp_collected": 280,
    "xp_dropped": 510
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 68,
    "death_tick": 2712,
-   "final_digest": "ea39c1a2e097fe7ddda12b0fe8f7e9bbf2154a840c2d09610c32710a43a6bc9f",
+   "final_digest": "8c5bc083a2fbb49a80a16f7830ae83ee3b7d89219e3c1ae10756835e1857eb2e",
    "gems_ground_end": 13,
    "gems_ground_peak": 13,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s105",
    "kills": 30,
    "level": 5,
-   "log_digest": "3d01331ca847cabed776388d5bf42fc3297576744580e6476c34746db85bf27e",
+   "log_digest": "0e264668aae767a7544b26738e6de250fc1b4c04a43fd71d4f5bfa2abfeda016",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "105",
    "xp_collected": 190,
    "xp_dropped": 335
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 70,
    "death_tick": 2776,
-   "final_digest": "c22fd1c2984edaeb0a2cedf0c9f2173af019cff18a940e64c7fde65f6750968a",
+   "final_digest": "1f81baf064aba1b24236fb42632b0fc17f975e05db3fb58f418367eeedf1d74d",
    "gems_ground_end": 16,
    "gems_ground_peak": 17,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s106",
    "kills": 32,
    "level": 4,
-   "log_digest": "57e6a938c4e9a3cbd8f2c9869fed6e26f98ea753a729db0e5dda84039382919d",
+   "log_digest": "c456a23a599b9eed6d0837c360cc4d097ef7044516ff72b08896978017b3bd57",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "106",
    "xp_collected": 175,
    "xp_dropped": 350
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 80,
    "death_tick": 3163,
-   "final_digest": "ac9bb84967ac4efb8878bd598cf70b8af041c1b057968e8b1b4a7acf6104f5ed",
+   "final_digest": "22ac81bd6e1ad2855b319cb8de4a8bcb96e40607adb2abbf2e0a41dda4677e3f",
    "gems_ground_end": 20,
    "gems_ground_peak": 20,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s107",
    "kills": 34,
    "level": 4,
-   "log_digest": "566635601beb62cd9de8227a095fceda6047d80573bc6ab0d7ae81674d92332f",
+   "log_digest": "ba71864a3037b649eced348db90d7bdfacabea69409742c39bdcfb0f56d8fc7d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "107",
    "xp_collected": 150,
    "xp_dropped": 380
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 65,
    "death_tick": 2598,
-   "final_digest": "42901e7375663a4ed2f7c329dfcd1a696cca5b85f47ce0499a063612ae201c8f",
+   "final_digest": "e121fa6b14d8b8c057043a5603b012d5641ff52cc1ba431f7e2c6a90ced25e35",
    "gems_ground_end": 10,
    "gems_ground_peak": 10,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s108",
    "kills": 29,
    "level": 5,
-   "log_digest": "504a6fb2d0de0c99e67a301aecbf1d3c5fbf210bfdbf624941914baa438d4e60",
+   "log_digest": "074e1c540eed701ccfbef1d2be936ccc59cee9de44449b803a8d4b8975bce7f8",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "108",
    "xp_collected": 210,
    "xp_dropped": 320
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 71,
    "death_tick": 2826,
-   "final_digest": "73067a66162f8164d8726b3578a0c2fd72f8329d0216e282a5638fdec59dd76b",
+   "final_digest": "dbf36104b77651faa1266c7f054069debb18e13092fccd7561956e6a2dd16bb0",
    "gems_ground_end": 12,
    "gems_ground_peak": 12,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s109",
    "kills": 31,
    "level": 5,
-   "log_digest": "34a8cd99997c9b32064f9761760a678635c8f58cf1b9d462a2ddb88b44025f19",
+   "log_digest": "73ee3213a9b9ff5ceb4622462feea7bde5ea24d1095407721b87273cc5232a81",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "109",
    "xp_collected": 220,
    "xp_dropped": 350
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 65,
    "death_tick": 2575,
-   "final_digest": "8d4a976d0962d2eca7d8ab8b00bddfd1ea003b6f0c372ebb6a98ccfe9902f453",
+   "final_digest": "f6824521bfed10ff581c17a420b9d9a0d54dfffcc7361c40c72812ce86a73979",
    "gems_ground_end": 14,
    "gems_ground_peak": 14,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s110",
    "kills": 28,
    "level": 4,
-   "log_digest": "504a6fb2d0de0c99e67a301aecbf1d3c5fbf210bfdbf624941914baa438d4e60",
+   "log_digest": "074e1c540eed701ccfbef1d2be936ccc59cee9de44449b803a8d4b8975bce7f8",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "110",
    "xp_collected": 150,
    "xp_dropped": 290
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 71,
    "death_tick": 2826,
-   "final_digest": "0639acd319d0ceaf208a4db967a183aa15994d00b5892beb63724645543e36c8",
+   "final_digest": "fc33b7cf96c1548b2309aa6d0a4b68c5c8f63e17b1af1259cca4184d7eb3bfb2",
    "gems_ground_end": 11,
    "gems_ground_peak": 11,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s111",
    "kills": 30,
    "level": 5,
-   "log_digest": "34a8cd99997c9b32064f9761760a678635c8f58cf1b9d462a2ddb88b44025f19",
+   "log_digest": "73ee3213a9b9ff5ceb4622462feea7bde5ea24d1095407721b87273cc5232a81",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "111",
    "xp_collected": 225,
    "xp_dropped": 345
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 112,
    "death_tick": 4451,
-   "final_digest": "0b8737aae743337019195330c360d0afaa11eb6c2f9e935d424a7860fc2901ec",
+   "final_digest": "ed26a568b207ad0328d3e0e2feb47d0c9225334909c26af64b9528fd9ec01460",
    "gems_ground_end": 31,
    "gems_ground_peak": 31,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s112",
    "kills": 55,
    "level": 5,
-   "log_digest": "2e3a21b519da0dab1f01fd745ad885382fb61a7c71e525aa8fac797653ff99b4",
+   "log_digest": "134c9ae88bd2177a31176da95bc989e27da8dea06e10e984e356c9af4b3d0643",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "112",
    "xp_collected": 260,
    "xp_dropped": 630
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 105,
    "death_tick": 4174,
-   "final_digest": "3721d6d02ac984e97f1774c02b9f29d6cf7dc5c9350fe6bfe1fa23f3079dfb6f",
+   "final_digest": "016df0c0e6505cd9be95fcfea1b6ea6a1dfb9408987669e1106d74b027c1c4f8",
    "gems_ground_end": 25,
    "gems_ground_peak": 25,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s113",
    "kills": 50,
    "level": 5,
-   "log_digest": "6aa9fda76349a43f62e29f27b3e303eacc35fc402632bb5a2b87f17e8bf15de7",
+   "log_digest": "943c99f61d4dff563fa930ef35c98457659d34005ba13eeffe205679326f59d7",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "113",
    "xp_collected": 280,
    "xp_dropped": 560
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 59,
    "death_tick": 2342,
-   "final_digest": "f84f2ab2fdafa7bc36325626997dbc0b6cbc85ef1342a9d87a7c411927b32aa1",
+   "final_digest": "da280ddc86aef60ff5f6e4117e6ce6fd18eaa0aa6619cd3d93542490401e5e4a",
    "gems_ground_end": 13,
    "gems_ground_peak": 13,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s114",
    "kills": 25,
    "level": 4,
-   "log_digest": "626a7f9c80491f6de6fefb4952d0b789c36f990ebeceeaeabcd8884e7df61058",
+   "log_digest": "3955abfb4e7c4e31323240b9bedbb8e9ede25670da63ac75dd6bb3bd1306fa35",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "114",
    "xp_collected": 125,
    "xp_dropped": 260
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 66,
    "death_tick": 2602,
-   "final_digest": "ae1e09761f7419cd2d573a7bbdfe322d7d83302af0ace8b8d9dfc88282fff95b",
+   "final_digest": "f86f9cca584f117aad35a57c4aae7bea578737246a6adcfcc67e0d52278a9b9d",
    "gems_ground_end": 11,
    "gems_ground_peak": 11,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s115",
    "kills": 29,
    "level": 5,
-   "log_digest": "364abab50a611256f4d0049ade8d326c0bac3cf18ca00c57508d92206ae47331",
+   "log_digest": "d6d6a4e4c69198fe5dbc706fbf3434b1f9bc710bee093468975768593883357a",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "115",
    "xp_collected": 210,
    "xp_dropped": 335
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 96,
    "death_tick": 3811,
-   "final_digest": "fc58d8b43a3b598f290c48d323e991f20760cd6eef2f666c808ab8732e3e4a4c",
+   "final_digest": "f45a9ead8f50b58ce58ed07e42633707a93ba7360ec5178437a54f31522e72c1",
    "gems_ground_end": 26,
    "gems_ground_peak": 26,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s116",
    "kills": 45,
    "level": 5,
-   "log_digest": "04d1ce7a966738a8c28d67fbb8446cba3e9c0e0f4ee483513fcf35821b364a0f",
+   "log_digest": "e7cf031e7d39115d5d8d75c01b23617b4d0acc8714b8f9ac1666c7b9c1e9291f",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "116",
    "xp_collected": 210,
    "xp_dropped": 500
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 90,
    "death_tick": 3578,
-   "final_digest": "96f9ad795b33fb84de60f16420c34f59667d9dcc0a0199fc5f8c57e21bfeaca2",
+   "final_digest": "e94aad170da7c487754d6c112cbbcefda546ad53a25432b92af8b2cf4dbaa9eb",
    "gems_ground_end": 18,
    "gems_ground_peak": 18,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s117",
    "kills": 42,
    "level": 5,
-   "log_digest": "142ec935556014b37d4cc8708e7c0c1b0fb9b03428c425c504c455c5f0c2a55c",
+   "log_digest": "9d4f070e38f4845871ad60cfe8ad0a1b7f8e86f518e98cd45b3883b6b8120b1c",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "117",
    "xp_collected": 260,
    "xp_dropped": 455
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 89,
    "death_tick": 3544,
-   "final_digest": "35caeb09c5064d1ff4b54f8155cf09403ff0dd0bd772026751d116940c306f4f",
+   "final_digest": "637ab05ee8450e2f7bbae7621ddfe42b51ede496967a2d07ce5b4ccf692840b9",
    "gems_ground_end": 22,
    "gems_ground_peak": 22,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s118",
    "kills": 41,
    "level": 5,
-   "log_digest": "6bab9ad3200b21b300c36697d2a3c58e1fffa22bf9433b5aa32f21d2bed2d38c",
+   "log_digest": "dd9415a2bc01367357af286dcd0a77f026158db6f6a92b5529f77d27f8adefed",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "118",
    "xp_collected": 195,
    "xp_dropped": 420
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 77,
    "death_tick": 3070,
-   "final_digest": "97d9cb67fd4ece6dbce312f083f8002c97929c06d65744411a6fa82807e68597",
+   "final_digest": "e1b98907167f4bcad7367dd3aacba72c880a7109234743a162986bf8d4debe1f",
    "gems_ground_end": 15,
    "gems_ground_peak": 15,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s119",
    "kills": 35,
    "level": 5,
-   "log_digest": "52f8ef7cc79ddf4721bc05053d03fbcbee4b1c87d0897611f169066f4fd91706",
+   "log_digest": "7d41fdbe7aa4f0934e0c3871e1e231c53ef8808535b8c156e9dd5e051614e64d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "119",
    "xp_collected": 205,
    "xp_dropped": 365
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 87,
    "death_tick": 3469,
-   "final_digest": "49e6da79d442213fc7c160c874f2e0bb445752ebe97b0ff68d327e26083baf83",
+   "final_digest": "95b54f46d35df9f572aea0f4e6cb4a0bd3f461eefe21a238f1d7143daca9354f",
    "gems_ground_end": 19,
    "gems_ground_peak": 19,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s120",
    "kills": 39,
    "level": 5,
-   "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
+   "log_digest": "946da124fbf870decfda1869fef04adb3f442d81f0fe68b999aba280d5ab277a",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "120",
    "xp_collected": 200,
    "xp_dropped": 400
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 80,
    "death_tick": 3168,
-   "final_digest": "fd1901f24a559ae8f328b67747f84b1879132acdec6664b1e632b111ee14a888",
+   "final_digest": "2a0bd0cec7c6f5ebdde80ca3a2b40fdc1f6362c6a6f69e2e6ddba586d7b5b74c",
    "gems_ground_end": 17,
    "gems_ground_peak": 17,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s121",
    "kills": 36,
    "level": 5,
-   "log_digest": "566635601beb62cd9de8227a095fceda6047d80573bc6ab0d7ae81674d92332f",
+   "log_digest": "ba71864a3037b649eced348db90d7bdfacabea69409742c39bdcfb0f56d8fc7d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "121",
    "xp_collected": 215,
    "xp_dropped": 405
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 69,
    "death_tick": 2733,
-   "final_digest": "116aaa5d17d6529921ea9a542910be097f1b462f1b3f1de693c45e2e20f02f6c",
+   "final_digest": "3961305cb235d131d3764aa412162fbb734489e8321071dd09735ec7aed15fce",
    "gems_ground_end": 13,
    "gems_ground_peak": 14,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s122",
    "kills": 31,
    "level": 5,
-   "log_digest": "5597ddafe1333f44709cab5aa29c68942525fdd7f69de1f53238f1a4cf2c0e1e",
+   "log_digest": "a74d7100e193a868c6da8bce2a40e24b61f94041892133550a1226abb56b2e59",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "122",
    "xp_collected": 195,
    "xp_dropped": 340
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 84,
    "death_tick": 3350,
-   "final_digest": "331e3081ac4c20f5fb117b6c9aa91e9dd83658b087533b87ff12234b305e5e4b",
+   "final_digest": "161fda955b7cc11fd82ff74b3b4c2e2df217a8f9caaea49e2c20d43326a141ec",
    "gems_ground_end": 16,
    "gems_ground_peak": 16,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s123",
    "kills": 37,
    "level": 5,
-   "log_digest": "b9b5b246f4b3e0a9b7dd1c522bc82e747e3c49452c1648ac3a2bfe5c319bc2e8",
+   "log_digest": "8fc7cd82248e2afd308cc29bc9b408df56ac066d1234e872dacf0a44cc1ab405",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "123",
    "xp_collected": 240,
    "xp_dropped": 405
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 101,
    "death_tick": 4022,
-   "final_digest": "adf2248e32eaa8e1aca3dc780112f83efda459824edbe349acd4098298c5035d",
+   "final_digest": "4dfed2413c0a6b135a0a2189966086cd3ef5b6b5cbdee1b16f99fd1eaa483652",
    "gems_ground_end": 20,
    "gems_ground_peak": 22,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s124",
    "kills": 48,
    "level": 6,
-   "log_digest": "71bf2da76acf923b7b9b3efd0ab130ef8fd9b065c50a4089ea7e0fd3cff2d8d3",
+   "log_digest": "d3b7a69ec09545522cd37e2b939060e8dacd8d79da2630890e86d011ff8b5d61",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "124",
    "xp_collected": 335,
    "xp_dropped": 560
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 95,
    "death_tick": 3788,
-   "final_digest": "e0a805cef7023dcd862acc59df9c4e953524bf8077d04e680371ab2a2fc811cb",
+   "final_digest": "20052f42e167d2adf7f4d1d0532c4ad1d930d40c046b64e54783383fbc05c9a7",
    "gems_ground_end": 21,
    "gems_ground_peak": 21,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s125",
    "kills": 45,
    "level": 5,
-   "log_digest": "5b1f8f7226883707d4cc978b51925e7cc16ad30f19731dbc6158b8011dceeb28",
+   "log_digest": "6896eeedba4dc5467662b7b4b0e650db60a9a7aa7c05d84b9c061b209b469c1c",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "125",
    "xp_collected": 290,
    "xp_dropped": 515
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 89,
    "death_tick": 3531,
-   "final_digest": "f236aff5fe170c7549272200ab1aa57b06026b73335261901796eea6cb2f0043",
+   "final_digest": "31acd537c50bee8523606dc6519cda4e8817d31a24f236d496d4d2dfda52d101",
    "gems_ground_end": 16,
    "gems_ground_peak": 18,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s126",
    "kills": 39,
    "level": 5,
-   "log_digest": "6bab9ad3200b21b300c36697d2a3c58e1fffa22bf9433b5aa32f21d2bed2d38c",
+   "log_digest": "dd9415a2bc01367357af286dcd0a77f026158db6f6a92b5529f77d27f8adefed",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "126",
    "xp_collected": 245,
    "xp_dropped": 410
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 74,
    "death_tick": 2922,
-   "final_digest": "a868e29dc6f9b2ae4f8c35afde29b6d1c56c424ef1714996c1da11d0fcfc94c8",
+   "final_digest": "51871345438487d4073d80f8756dfe9a7c81927c199c18d0c851417f7b2dc4fb",
    "gems_ground_end": 13,
    "gems_ground_peak": 14,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s127",
    "kills": 31,
    "level": 5,
-   "log_digest": "7e8219e6c04ace4caf895c4d80712bef3a7de819cc3a92146b4ecd5dcaa40ffa",
+   "log_digest": "add16227264f2c074a6a41a1a9ad97bc73a8c347d0700210559e7c8726fe1a24",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "127",
    "xp_collected": 205,
    "xp_dropped": 340
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 82,
    "death_tick": 3259,
-   "final_digest": "e903c465fb6001ae0adcb70c0b5d61a8fb1bbab72c9c4bd1e5a50406e211054e",
+   "final_digest": "837c8a462683cfcbabaeafe314aecba680d25b8b21e87badf237e3c8b36bd45a",
    "gems_ground_end": 14,
    "gems_ground_peak": 15,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s128",
    "kills": 37,
    "level": 5,
-   "log_digest": "b74f4f5a7e277e19f65e125c557562925c6c7dd58fe9a072778ecd61f02f3420",
+   "log_digest": "b77d93ee32c9db40e973d0d7d3ea7bf03ea599b870b8424564c88bccd9dc7557",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "128",
    "xp_collected": 265,
    "xp_dropped": 410
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 73,
    "death_tick": 2911,
-   "final_digest": "8dcd72b74fd42e7695699d7c7094d7f6315d4ef55ad249ef51f4c7d3b140dc02",
+   "final_digest": "62425ab75245cf58a8f6c47fba6c371b8288c410b98b249a3bdd33ca7b488b29",
    "gems_ground_end": 8,
    "gems_ground_peak": 12,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s129",
    "kills": 32,
    "level": 5,
-   "log_digest": "0a4aa20ed18c33e46ba16317827823255b51719377f39d930e703b8a4c78f4aa",
+   "log_digest": "53fca9accf401b215390f8d109eab1e90ef9bd013635df9a6c754c0ed024d1cb",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "129",
    "xp_collected": 290,
    "xp_dropped": 385
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 57,
    "death_tick": 2253,
-   "final_digest": "2e06fa04dd968634fbe6083be2e85f930f9d81f1732bcce382460570a0a053ad",
+   "final_digest": "11d5116b44aff3b8b8e0915c95e4e7c0b6512fff28549ba068ca87804db30494",
    "gems_ground_end": 9,
    "gems_ground_peak": 10,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s130",
    "kills": 23,
    "level": 4,
-   "log_digest": "7e3c421011b3155d543dddb7800f8e3c02ef6b85c55a05b37fc7de9e60780ebd",
+   "log_digest": "ad7f04fd45e0c9af4e0cea97097751e202f9afb028471565cd1c839676ada91d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "130",
    "xp_collected": 155,
    "xp_dropped": 255
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 63,
    "death_tick": 2503,
-   "final_digest": "3ec4d54ec862ecc9fae1e93a1b01ea02cd983f342d337c33da4862bf1eda6e13",
+   "final_digest": "a18b5a31f963d27564d60e794052a62ca8979fb9df79167ee6f4458a40486c94",
    "gems_ground_end": 10,
    "gems_ground_peak": 10,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s131",
    "kills": 27,
    "level": 4,
-   "log_digest": "05e77cf82d6934d5b1e4f87512a6a834a048c00e36e9e41b06958d4945949ae6",
+   "log_digest": "014130d3210d32683f702703f6346181054401614ae6251c8e9666b9e4724f93",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "131",
    "xp_collected": 185,
    "xp_dropped": 290
   },
   {
    "bot_policy": "circle",
+   "choices": 0,
    "command_count": 87,
    "death_tick": 3475,
-   "final_digest": "bab41118f4f19d2ff65f345c697d8e4326bffac3035652f50d0f14c8d2bbeeea",
+   "final_digest": "fb3aacd7c0ee8181ecd3bbd42a476f5d5e89d777de2449b42a8ef5e1b8ec50c1",
    "gems_ground_end": 21,
    "gems_ground_peak": 21,
+   "hp_min": 0,
    "id": "botrun.p0.circle.s132",
    "kills": 41,
    "level": 5,
-   "log_digest": "0115fdeb755c82e64d7109c67cb4db607f02ba215fc74139726040cc8c341bd5",
+   "log_digest": "946da124fbf870decfda1869fef04adb3f442d81f0fe68b999aba280d5ab277a",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "132",
    "xp_collected": 220,
    "xp_dropped": 460
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 493,
    "death_tick": 6456,
-   "final_digest": "97a295fce7db35fa077d9dee7ee851435f7718b9ff87d54746b6b008ca300b7a",
+   "final_digest": "b7c38d89090cbffe6ad0beac99098dce52e0140bef74c11d0ba9826182299afd",
    "gems_ground_end": 33,
    "gems_ground_peak": 33,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s101",
    "kills": 85,
    "level": 7,
-   "log_digest": "96d21efea9b44ea92278855b44f1bd2294d92590ee967286764412bc5121de24",
+   "log_digest": "b8894c290e4107471cda772051d303ad44b0199d0a28f342a9429fee6a631166",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "101",
    "xp_collected": 610,
    "xp_dropped": 960
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 415,
    "death_tick": 5710,
-   "final_digest": "616d0e185d027e3a78b750618be7ee9899542dad1b85a23a57cb43e584da62cf",
+   "final_digest": "e0463f4fd1b2f191308cb10e95cb338a1680ec7f46cf5ce80363139045e40fb5",
    "gems_ground_end": 46,
    "gems_ground_peak": 47,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s102",
    "kills": 72,
    "level": 5,
-   "log_digest": "947116aed1b0694b24b8bfe867e4c00ad74cee64aa6d3ff114ac261f82cc4853",
+   "log_digest": "8366b5dc9421ce1b5ba57a74cc0a175eb802f73afc3f06c0b8c2552484a91d94",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "102",
    "xp_collected": 290,
    "xp_dropped": 775
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 291,
    "death_tick": 4443,
-   "final_digest": "d0f3e355559b95578a9c14916dbf46dce322bedf122f056c42ac01d89a9eb892",
+   "final_digest": "913bb9ba1726f868b5787ee1cad74b7af748cf0323d6e78057ce647b74ac79f7",
    "gems_ground_end": 30,
    "gems_ground_peak": 33,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s103",
    "kills": 53,
    "level": 5,
-   "log_digest": "fe0c8b0197725f687ab529fec53f5976fee88a2782c4042a1ad1ed690a5c5528",
+   "log_digest": "dba728dbdbff8f48e56e4d06565607286177acc73a263dd2b97b89914d53635b",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "103",
    "xp_collected": 265,
    "xp_dropped": 585
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 503,
    "death_tick": 6213,
-   "final_digest": "ab15f1ca95cc5ab3f68a51d5311073b1c743d9330f62a67bfbf5466ffaa5913a",
+   "final_digest": "58dca03396cabf2d4b44125ea6e32242ec51065f83980f02bfcba38e9a218eb0",
    "gems_ground_end": 36,
    "gems_ground_peak": 37,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s104",
    "kills": 82,
    "level": 7,
-   "log_digest": "65adcd0547f526af0f97dd9c7faa91a8a95914e58c95e12521d0600213da4ba5",
+   "log_digest": "cf353d5299c551adf5527e93fbf52f24fb9ff9a3dc4fa5c5cc036d698f6f93ef",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "104",
    "xp_collected": 505,
    "xp_dropped": 915
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 404,
    "death_tick": 5334,
-   "final_digest": "46002c7329267ae012f4f32a0c5a565b83a8a5ff08d8ff1e90dce05c4c4e4b96",
+   "final_digest": "532f5ce9343e46202218a4c372b3341a1dd473baa1d9529cc18ba669efb331a2",
    "gems_ground_end": 38,
    "gems_ground_peak": 38,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s105",
    "kills": 66,
    "level": 6,
-   "log_digest": "65fa506f621fa4e790384b8c4868c3a13f830648915672491bf3461cf6155d9a",
+   "log_digest": "1c26d30b3168e18b859fda5163ab651f15f6e97b1910649d035dfbdf130d92d4",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "105",
    "xp_collected": 320,
    "xp_dropped": 735
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 344,
    "death_tick": 4305,
-   "final_digest": "1b31ceb559d9b3445adeed58fadc7375586865d7c57e81cad819684c9b21725d",
+   "final_digest": "07f9ae1e1901ea0ea86c39e915bb1e5c5ec991e52d2c628e0f9b3fb7acdf425a",
    "gems_ground_end": 22,
    "gems_ground_peak": 22,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s106",
    "kills": 51,
    "level": 6,
-   "log_digest": "d6e4e05f071da659a2dba89db7774a0509c10533d1b9e82e30204a9a6abce33c",
+   "log_digest": "1ee8505945606061aef8cd840467c49a642962d1edacd351c796e19e54db81b0",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "106",
    "xp_collected": 330,
    "xp_dropped": 560
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 457,
    "death_tick": 5950,
-   "final_digest": "1e8dcf3fa36f319fe19baabb60683afca79ca57dbb5eabae2c443c2b04d0fa17",
+   "final_digest": "7bea04429522dc7c2b4e9dd0940877c028736198ad8b13aa69d8eaf0149add3d",
    "gems_ground_end": 35,
    "gems_ground_peak": 35,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s107",
    "kills": 78,
    "level": 7,
-   "log_digest": "e64dfc766f434e5bfcf4a95cf85cd416c911e3d64da7d7489cec67b2edbe930e",
+   "log_digest": "79877268b4f747dbeabfcb4d82f1132e4612572cdddd24b1dabcc2bd81c46a97",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "107",
    "xp_collected": 510,
    "xp_dropped": 910
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 294,
    "death_tick": 3595,
-   "final_digest": "b077fab37c64c37a4a85c99335ce579a018d0092d1cc8a9c8b4111703ca0fa22",
+   "final_digest": "063e306ce3d4e3185e8dece8ecf50d0e5cc996af52ab72f8581baa13ecdae20f",
    "gems_ground_end": 18,
    "gems_ground_peak": 19,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s108",
    "kills": 41,
    "level": 5,
-   "log_digest": "852efdfddd1bfc27c53399a7798dbc8d93f3b7696359e05afee1b066d914a93e",
+   "log_digest": "602f9f714d013613638a76c5903905f75ce442c858db14ed1165cfd078996677",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "108",
    "xp_collected": 265,
    "xp_dropped": 455
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 348,
    "death_tick": 4904,
-   "final_digest": "790882edc2e00b08e36c768ae5d05bce6e27aa69c32bf01120ed18715d25a08b",
+   "final_digest": "19ccd68c6ba84d96831d0a4e4853fbcc3886b303c91e20cec3dc0ea678d66053",
    "gems_ground_end": 22,
    "gems_ground_peak": 26,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s109",
    "kills": 60,
    "level": 6,
-   "log_digest": "f934de3988a28823547e8db0a1594cee89b207aa57ea80a0ec3a9717d5607ad1",
+   "log_digest": "ea1d71815f40cafad996d3bcc72b4996c333a60044635310bbc8365c75cfcea6",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "109",
    "xp_collected": 415,
    "xp_dropped": 655
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 401,
    "death_tick": 5294,
-   "final_digest": "5e24ccc3d065b37abeb7cedc4a8758570eeae0aa94b7b182135e247e890166eb",
+   "final_digest": "c2eb17a69f6f5094cbb224cfa74b3b35061268ea91fe22cd9aacb6fa4fa8c931",
    "gems_ground_end": 36,
    "gems_ground_peak": 36,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s110",
    "kills": 67,
    "level": 6,
-   "log_digest": "6c2e600bdfe520838738542fe5f0c3a7dcd6cd1d4c50290e6e790d8bce157bd0",
+   "log_digest": "883bd142367bfad72efce56faa7e7091fd6f689df5a51167b2e64ec3ea04cadc",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "110",
    "xp_collected": 340,
    "xp_dropped": 725
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 370,
    "death_tick": 5080,
-   "final_digest": "3a9caf67daa835af19988da233cd27b2e48470680df140298abd1ce25890c5a9",
+   "final_digest": "66ab6bccd6c5b572d4adf66dbf08a335a23a323e2d042a30471f95291e69b46d",
    "gems_ground_end": 33,
    "gems_ground_peak": 33,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s111",
    "kills": 62,
    "level": 6,
-   "log_digest": "0efd12401209c3f8b1bfcd19ac7bc6fde92abf126266cfd566cfd5c05824b1f3",
+   "log_digest": "d9a60ff9ec751afed1ea535e1dd53e5683d122315a80458f89f2dd5166bada94",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "111",
    "xp_collected": 345,
    "xp_dropped": 705
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 378,
    "death_tick": 5181,
-   "final_digest": "8e3b705c252a339434ab1a11cd0ef84ffff4ffd8c2376576f2cec7ea41358051",
+   "final_digest": "7784ae5acf27d9cf310caf974c07ea6ed2e8871c3f48ec34aa94585718ce5f99",
    "gems_ground_end": 33,
    "gems_ground_peak": 33,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s112",
    "kills": 63,
    "level": 6,
-   "log_digest": "2e5c2124af992ee4ea6119afc5f7b043275a5b6cd1cbc0d868c51c1f635fa328",
+   "log_digest": "715a31db787bddcaa3ec85539bcaadb77632c998a3093cd9ea5c1e08f92db2b2",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "112",
    "xp_collected": 335,
    "xp_dropped": 700
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 371,
    "death_tick": 4931,
-   "final_digest": "018c437eb383c3a6baf019d3425b9c1092d0606e1f42191ec33ded3f43d1de57",
+   "final_digest": "2e214a1d428aaf0f31d10caec94429aea4688c5e49585d5b1deaa810638e64c5",
    "gems_ground_end": 34,
    "gems_ground_peak": 35,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s113",
    "kills": 60,
    "level": 5,
-   "log_digest": "1d8a2e9d64459ae0cac3e8eed1a44bcee3b32a9fd916d69afcc983591050db14",
+   "log_digest": "42c3161ffb2b88bc00582676a2cf1ea09173694480aa5441c791a16c5062840a",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "113",
    "xp_collected": 295,
    "xp_dropped": 655
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 409,
    "death_tick": 4968,
-   "final_digest": "86d463a110aef27a52cd24162b58d64437b961eeb06975691fc02240ba4d3b1f",
+   "final_digest": "daa1f72bd8f8a0aba66cc16a9524aa6dd36f0b4ffc11133e7bc19758146f17e1",
    "gems_ground_end": 24,
    "gems_ground_peak": 25,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s114",
    "kills": 62,
    "level": 6,
-   "log_digest": "5ae840588c38896eb0c7eac83161c0b481f3041daa87be4eea5ed7a1a919bb25",
+   "log_digest": "11ded04ea3065dde2732579129b4bf487214ea87b9ce64389878f8e9eb44fe5d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "114",
    "xp_collected": 420,
    "xp_dropped": 685
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 271,
    "death_tick": 3781,
-   "final_digest": "b0e37ef0670e3b73ebea821f197f6a1459abe2b8d5f52811089a9fc89afb89fd",
+   "final_digest": "af00701530d0f07975bc41d829d4457a7d4b714b4dcc28edeebb87e11b87ee3e",
    "gems_ground_end": 17,
    "gems_ground_peak": 17,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s115",
    "kills": 43,
    "level": 5,
-   "log_digest": "98efefcf6d5c747ce5cc6a3ddb1e8a5ffa00ce84436318496757d743306b6733",
+   "log_digest": "aaa538f70c7692d43fbf6f78f8400a58f45ca45211c15f6711cde4b326de4e94",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "115",
    "xp_collected": 285,
    "xp_dropped": 485
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 324,
    "death_tick": 4537,
-   "final_digest": "ce89fa368aa2a455710487b79106cbc1c9053bb8b305555f95ac6a058100a075",
+   "final_digest": "a1eaf850f770ca2c02fe91aacb71042d2e8a485ed44f3d79fe75a22de14a98df",
    "gems_ground_end": 27,
    "gems_ground_peak": 29,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s116",
    "kills": 54,
    "level": 5,
-   "log_digest": "01945e5a9ae3ed09c21e39785c73c3bf958538d0e5a4c7ecf9872f446ef18b73",
+   "log_digest": "d36859579ec01af717a3f884310f753de8469179ee9496b7477c933ad90febdc",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "116",
    "xp_collected": 285,
    "xp_dropped": 575
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 482,
    "death_tick": 6370,
-   "final_digest": "f7fca4991e914c5f634ff042d590ec851ab0984e4d4636bae9780eb9e47214a7",
+   "final_digest": "8a7f56487c729af59a7c4c6920c28dbe37e7a973d10bf6f305fa97a8e1235067",
    "gems_ground_end": 37,
    "gems_ground_peak": 37,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s117",
    "kills": 83,
    "level": 7,
-   "log_digest": "d1f292d42698dd3c6ae667ac81173f2f4d2b9652835da17860f277883480f382",
+   "log_digest": "1fea370270aa0e880bc5017296cd7c34aa9508495f4e21e727bdf83cf790f56e",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "117",
    "xp_collected": 520,
    "xp_dropped": 915
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 325,
    "death_tick": 3898,
-   "final_digest": "b9f7c98f015f4d2422c6c6d700f1e8f0d37f755be0e9a6f3a2fd8f2ce1e06db1",
+   "final_digest": "38960d56c81f5935317739b4c7645e2babdf2d186a46d95b918990290a513419",
    "gems_ground_end": 25,
    "gems_ground_peak": 25,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s118",
    "kills": 44,
    "level": 5,
-   "log_digest": "2d0b772cdc65b041a3a35297d4cb922a4bfb7e74c4b27806e1b9bb2c9ceacd31",
+   "log_digest": "45f6e6fe5bb4552ec082c6c6f1a92625dee66f65d56dfa19d79910a94f6e74ac",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "118",
    "xp_collected": 200,
    "xp_dropped": 455
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 367,
    "death_tick": 4807,
-   "final_digest": "5ea0401dc242b688dbd01c7a045406f4f7d17114595a83b9da30105b5c13bbb2",
+   "final_digest": "bc00b005bc30c0847aa3d52dc86405fce8cafcd11dfc534702e1062aae3ba82b",
    "gems_ground_end": 27,
    "gems_ground_peak": 27,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s119",
    "kills": 60,
    "level": 6,
-   "log_digest": "3eed1974a07c2b5f1e16e9d1770c7b1bfaf80a72a978fe1275f06fee198ea152",
+   "log_digest": "5d21e4e21bdafe20640ef6bcdfbad1ff15b8c709cf40dae037543c055f025da2",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "119",
    "xp_collected": 355,
    "xp_dropped": 650
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 494,
    "death_tick": 5922,
-   "final_digest": "f4c32c3d73c9f80a82417ae21f20d5ad41bf58709b166572d154893a02be7c91",
+   "final_digest": "a13e45bd7ca6590d1475b2174ccd4385c4ef6f40e7d4124fdabb7baf2b85891e",
    "gems_ground_end": 34,
    "gems_ground_peak": 35,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s120",
    "kills": 76,
    "level": 7,
-   "log_digest": "419736bbc5efab8d86bedad55633b6f61c1b58c43351ce028a6b24f979a96cb3",
+   "log_digest": "ad6aaf92466ffefcdc8c6464890ea868f36bb45f863cb634957c6a18706be253",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "120",
    "xp_collected": 460,
    "xp_dropped": 810
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 389,
    "death_tick": 4767,
-   "final_digest": "0593754c1210338c0a3f87deeb3c2dbdeceda69a8f1f865f9ba6913e2925d8df",
+   "final_digest": "7cbd595cb365a70e9f984aa82e98a8439d7dde6ba80e2073c316dbd8b0177113",
    "gems_ground_end": 22,
    "gems_ground_peak": 26,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s121",
    "kills": 59,
    "level": 6,
-   "log_digest": "2b3728f7329c9354c9b9ab4c743fda5cddaf5127709500a7d6b481b260948c48",
+   "log_digest": "46a3a4b79a21e39fd2a0d597fd63f3aef491c21506a250e787ccb94badceee56",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "121",
    "xp_collected": 420,
    "xp_dropped": 665
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 268,
    "death_tick": 3535,
-   "final_digest": "5416e8401a8d2a2ba2e4b5dba0e01207c85eb5ae984cfa92fecd32c70808a7ec",
+   "final_digest": "8f9faf77f130ef59f7b43d81301e3651414df0980e82d5f2a5dc49e805e9b615",
    "gems_ground_end": 17,
    "gems_ground_peak": 17,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s122",
    "kills": 39,
    "level": 5,
-   "log_digest": "368f8eec90122ca52d80db6e9c251ba0f2b55f81a38372c03f1c3721f08a9240",
+   "log_digest": "4b9d8b740579fc3da9681227fc38e951b4284f2e28f5bb32cc85f884f437d01d",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "122",
    "xp_collected": 255,
    "xp_dropped": 430
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 368,
    "death_tick": 5014,
-   "final_digest": "94d8eb39ada8f2ad04ff295dbe91bca4d81df086df86192a441f22d042bb230f",
+   "final_digest": "c949a25a7925fbd44abbf3def6e5d6617985a7fcd28b945f292d2fd54a728a74",
    "gems_ground_end": 33,
    "gems_ground_peak": 33,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s123",
    "kills": 63,
    "level": 6,
-   "log_digest": "4d48507b47d5678e8825d399a4ea387eee6a692cdc064a185ce943ce1c6ef942",
+   "log_digest": "c501a558811e512e41d7bd87ce41b39617f24582f5510dbb128bb809480bf5b9",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "123",
    "xp_collected": 330,
    "xp_dropped": 695
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 310,
    "death_tick": 3917,
-   "final_digest": "4d8c65718c85ae0fc9b1047276ee620e2f01bec852f3410d30fe6515b3f36605",
+   "final_digest": "630a8dd27316dc940df873a40009c6702e15e1170c255e958fc33c01982eb1dd",
    "gems_ground_end": 27,
    "gems_ground_peak": 27,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s124",
    "kills": 47,
    "level": 5,
-   "log_digest": "63918562619619c2dc07a7cc4a621ad5c9f3a0b49fbabe6ac117de52ae5f1456",
+   "log_digest": "e7817b1aaa7cc86f56b70e6dfda9452b235abe803719b718a1f9584d2c81d3c1",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "124",
    "xp_collected": 225,
    "xp_dropped": 530
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 414,
    "death_tick": 5093,
-   "final_digest": "193cccf79c32f18e93b754f0deed79f6bc03dfc77eceb080fa07bb3cded55523",
+   "final_digest": "1b08ec59950ba383e7289415caebfb866877fca0a987a985cffea72534e5a6f3",
    "gems_ground_end": 23,
    "gems_ground_peak": 23,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s125",
    "kills": 63,
    "level": 7,
-   "log_digest": "d17a08aea3a22e883fdfffaca26da9c6e1e9ad04a9f1f7ddeb7e54d5b167c72e",
+   "log_digest": "47370afe2d389268910e743b9a2445d25112e481e1a76e060d6e68799889aada",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "125",
    "xp_collected": 470,
    "xp_dropped": 715
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 459,
    "death_tick": 5881,
-   "final_digest": "9e6505fbb8b555281ce6552dfbbcfa6354706da7c91d3e37e73c590fbeb2d688",
+   "final_digest": "5d508112ee92fda2ca9b358829211b9f9608c7b679031f30d9cb861b4b1e6196",
    "gems_ground_end": 38,
    "gems_ground_peak": 39,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s126",
    "kills": 75,
    "level": 6,
-   "log_digest": "b02cf800d3dc46cbf2f9d3d0cf2c5309bc28d0c25d5f4c8cf97080a6ac780901",
+   "log_digest": "a2f7f3895184e91d2b1c7b620420c16264a8b39f1d562dc9397e6568a26bf6e6",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "126",
    "xp_collected": 415,
    "xp_dropped": 830
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 467,
    "death_tick": 6299,
-   "final_digest": "5d63a83e7db37088234e1641cf21e7de990a9d9abce9684634bb3a82aea5c8b2",
+   "final_digest": "6722685d7898b35646faf868003481a2eeff5d13f984c4eab05b4d6921a7e7cf",
    "gems_ground_end": 48,
    "gems_ground_peak": 48,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s127",
    "kills": 82,
    "level": 6,
-   "log_digest": "f434bc59ff4f93aba3785157f3ef211d2d97ae7c860412bc6e7155a4b06ac3ee",
+   "log_digest": "6a831d5064566a0864b29f1efb7bbd2801503ee1b048c31db1e40312e653ec25",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "127",
    "xp_collected": 395,
    "xp_dropped": 920
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 435,
    "death_tick": 5435,
-   "final_digest": "d9b403a3fcab436a357ecf3b3aabe23368beb8c63d791f4eeca8271db9bb64a8",
+   "final_digest": "1d33706884c931fb883a91ae721278e4f2da72115f0e73a344e9a5b4cb46dc66",
    "gems_ground_end": 37,
    "gems_ground_peak": 37,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s128",
    "kills": 69,
    "level": 6,
-   "log_digest": "f8d31583a03db14eec414565bb820a4560e6c01f08dba3a8d664797521802421",
+   "log_digest": "ee4142bf9452692c909ba921d588c9b34dd4589011b70c7e9a126fa4242dc7a5",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "128",
    "xp_collected": 365,
    "xp_dropped": 770
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 299,
    "death_tick": 3793,
-   "final_digest": "8eea20782137fca44f5b0631fd78782e6ba45bada7ae57308e5980ecf1bdb709",
+   "final_digest": "38e00f7c19645815b3f232c6bac42bec83eaaeded49993dfeaa99f4b92c23fb7",
    "gems_ground_end": 18,
    "gems_ground_peak": 19,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s129",
    "kills": 43,
    "level": 5,
-   "log_digest": "73346b791d035bdbbfddefbb74598d0dc1f40465aab835a14e69fcc9baa2bdbc",
+   "log_digest": "535e54628b1c7f00ca4de18d76acac98175b27724bda21e72bcfa6e39e77a073",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "129",
    "xp_collected": 280,
    "xp_dropped": 465
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 452,
    "death_tick": 5526,
-   "final_digest": "df3c05129f9e5820165789d5b75383b3ceb12ccb1e88c9c4eb33de4e37afbc39",
+   "final_digest": "38f842e967152c81e49b4cae180ada3fd0c1c2e25791d55e9685eaaaeb68aa5f",
    "gems_ground_end": 37,
    "gems_ground_peak": 38,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s130",
    "kills": 70,
    "level": 6,
-   "log_digest": "f8da307a2c5999c72803f2a3562c3d2a88c691f99dc8122fae7212f6e2063cae",
+   "log_digest": "177a6f64ee6c4dc359550b48077d3611701b03a43efc62d4cafbf7248da7d423",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "130",
    "xp_collected": 380,
    "xp_dropped": 785
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 375,
    "death_tick": 4892,
-   "final_digest": "015052e919506e3f5b0e228be27dcc9d96af9be00e41fa1cf8b302c7684f5406",
+   "final_digest": "811955ba258cfa38dc9c44916be28fe9cb78e95d28e4482c8f7c8af9250fce25",
    "gems_ground_end": 39,
    "gems_ground_peak": 39,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s131",
    "kills": 60,
    "level": 5,
-   "log_digest": "a9f669e27efa338972bf4aeb0ca624cd350c342ddf5dfcb845e840869a4e4558",
+   "log_digest": "4538d09e46e1a72fe97de1fbcf0e4983a73d93f2abde9728fac6183ebd98fb25",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "131",
    "xp_collected": 235,
    "xp_dropped": 650
   },
   {
    "bot_policy": "kiter",
+   "choices": 0,
    "command_count": 442,
    "death_tick": 5478,
-   "final_digest": "23d9f7fb984f0365794dd493ef9383d9fa70333a4a7d58aa5f54374a397ef95a",
+   "final_digest": "02354706dccc9fa2b2813c519aec43f44bf2b46905bf2868270a51876903bbeb",
    "gems_ground_end": 35,
    "gems_ground_peak": 35,
+   "hp_min": 0,
    "id": "botrun.p0.kiter.s132",
    "kills": 69,
    "level": 6,
-   "log_digest": "9a83c3a80733e27dcf854d26bad2422824086fd969ff959e6a2791678d8a2706",
+   "log_digest": "2a7d37e3095fb8a6ab4854a9060a2ea494f7ce7a87aaadc003b4fe119217a190",
+   "ranks": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ],
    "seed": "132",
    "xp_collected": 375,
    "xp_dropped": 760
@@ -1453,16 +2510,18 @@
  "traces": [
   {
    "bot_policy": "idle",
-   "bot_policy_version": 1,
+   "bot_policy_version": 2,
    "checkpoints": [
     {
-     "digest": "d1fb345b868cb337e68b1822f5e0b3c8b1ee1f4c8c90ad6d528abd735065ffb8",
+     "choices": 0,
+     "digest": "53b7586ba1c705388978c268b2c12d8daebc7cd6d09d7a01d64c63c881fcfeb1",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1471,13 +2530,15 @@
      "xp": 0
     },
     {
-     "digest": "9974cfe545aa7166ecc27bb28ba9b1a86ebb3e8197fb6741b5ee1d6c18199b80",
+     "choices": 0,
+     "digest": "2550b92fbaaf9a38e6d10225ee077a00d2aabeb20c92e8345e58ca8912d8ba86",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1486,13 +2547,15 @@
      "xp": 0
     },
     {
-     "digest": "b58c62236f431a24f757346b273497a7fa9b2d269fd8d29b7a9f5e7e63cb0438",
+     "choices": 0,
+     "digest": "5586392a101777799da5b0cc229edc4dfe7960cba94d1afeb568d284f83b698b",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1501,13 +2564,15 @@
      "xp": 0
     },
     {
-     "digest": "df7c1cdfc817e1239fbe18c951439008e8ca3b1dc10085a8690f4c5c2a2432c8",
+     "choices": 0,
+     "digest": "fc41c83b4d72934de02a4b2513e159c5e3c212503a6cbb867461da08f1107915",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1516,13 +2581,15 @@
      "xp": 0
     },
     {
-     "digest": "b9f5cce5d205018b47918ba200f68520d679c1ade7ff036b7c1b9dede5dedc79",
+     "choices": 0,
+     "digest": "487418bc2859272bd5501b909b7bc56a589c2c04a2f6c1f69082eb6fb12b3d71",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 1,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1531,13 +2598,15 @@
      "xp": 0
     },
     {
-     "digest": "1ac5c51a311817399e5e2ba6939aa0ac92b62f20eb98ab95e2e746018ad3842b",
+     "choices": 0,
+     "digest": "b9e656145976c8cbba344cd5f6ba9dc03104b5fe71bdcd3b0fe9532013881d6c",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
      "hero_hp": "87000",
      "kills": 4,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 1,
@@ -1546,13 +2615,15 @@
      "xp": 10
     },
     {
-     "digest": "8ae14ecef1fae00fa55042f5b6a037adc481471ff6337e2d6d1b62edb3c7452a",
+     "choices": 0,
+     "digest": "c53eae1ed830c8fcbed0e49c702298f8a4a01f7859ff6f55be9e9712d8dca171",
      "enemy_alive": 3,
      "gems": 5,
      "hero_dead": 0,
      "hero_hp": "74000",
      "kills": 7,
      "level": 2,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 1,
@@ -1561,13 +2632,15 @@
      "xp": 20
     },
     {
-     "digest": "5ed62d1e75cdf02263a438eca6f388e2ea1b9269e4f160506b373b8ab6341bf3",
+     "choices": 0,
+     "digest": "42593746847aa0d57d5c621bb4b7f932e4fe95362b14c2f2956476c40505711e",
      "enemy_alive": 3,
      "gems": 5,
      "hero_dead": 0,
      "hero_hp": "33900",
      "kills": 11,
      "level": 3,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 1,
@@ -1576,13 +2649,15 @@
      "xp": 65
     },
     {
-     "digest": "58d57296d42054bb41adbec673b9c2b9be83ff1e0e70e8c2b7dd25dfd62a968c",
+     "choices": 0,
+     "digest": "ed71819700998ad49b4e97e69a16e3b54271ef759dea30d7f16a53c97ef4a470",
      "enemy_alive": 3,
      "gems": 5,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 12,
      "level": 3,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1591,6 +2666,8 @@
      "xp": 80
     }
    ],
+   "choice_mode": 0,
+   "choices": 0,
    "command_count": 0,
    "commands": [],
    "config": [
@@ -1604,6 +2681,7 @@
     "480000"
    ],
    "death_tick": 1324,
+   "end_tick": 1324,
    "enemies": {
     "kinds": [
      "3264",
@@ -1679,16 +2757,18 @@
   },
   {
    "bot_policy": "circle",
-   "bot_policy_version": 1,
+   "bot_policy_version": 2,
    "checkpoints": [
     {
-     "digest": "911053b03f783ce4d9de08c8f3c0a03b18de0ebf6a12c397292171067ab04db3",
+     "choices": 0,
+     "digest": "454d2747818cb42281e05bb8da36431639f392ed1b2eed15dd2b7738780902e4",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "772800",
      "player_y": "480000",
      "projectiles": 0,
@@ -1697,13 +2777,15 @@
      "xp": 0
     },
     {
-     "digest": "a8e38dc3a543254afbaa24c87083351eb0009085c5a7778b013455c7e955f9cd",
+     "choices": 0,
+     "digest": "eb850772aebd77393fda6252b32a6203de77cc88816612a88da2adea933563dc",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "777600",
      "player_y": "480000",
      "projectiles": 0,
@@ -1712,13 +2794,15 @@
      "xp": 0
     },
     {
-     "digest": "0189c7b853860487df18b334313889c76b6a6c8afd4972cdcd48b0df6e7af92a",
+     "choices": 0,
+     "digest": "2db697c62ab6cc8ca2ff6753fb6fd4dadacc908de74d04d7581a96d415583580",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "912000",
      "player_y": "480000",
      "projectiles": 0,
@@ -1727,13 +2811,15 @@
      "xp": 0
     },
     {
-     "digest": "ab4992604e90a90738a5a395e29ebd70b2f5aa917396dcff7db8a32e85d321d5",
+     "choices": 0,
+     "digest": "31bee5aa9fc67b6e03d514fc24fb769d85ba7b9a397a5d41cb6d5b0053405028",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "1027880",
      "player_y": "547880",
      "projectiles": 0,
@@ -1742,13 +2828,15 @@
      "xp": 0
     },
     {
-     "digest": "0db64a2c36b98fe674f84464c239586c929e7959cf1c65e9d3b287e5d08836b5",
+     "choices": 0,
+     "digest": "3c8342c4ec1257a749b46cefcee3a05bca866e38694cdc889eea8ebf73349d08",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 1,
      "level": 1,
+     "paused": 0,
      "player_x": "700120",
      "player_y": "540360",
      "projectiles": 1,
@@ -1757,13 +2845,15 @@
      "xp": 0
     },
     {
-     "digest": "114184340edcc1fe3a4c9f06775c0256c44f0c9ba791a7454f08b1288ec7efca",
+     "choices": 0,
+     "digest": "e9a505b1b82735816b8e0ff8b27f402c7580ea663de04a0fc558573e2897b06b",
      "enemy_alive": 2,
      "gems": 3,
      "hero_dead": 0,
      "hero_hp": "92400",
      "kills": 4,
      "level": 1,
+     "paused": 0,
      "player_x": "632240",
      "player_y": "608240",
      "projectiles": 0,
@@ -1772,13 +2862,15 @@
      "xp": 15
     },
     {
-     "digest": "a46837cc9be553f7cd683a3728b8dfe92a153482564dee32bddb64812c0caf7a",
+     "choices": 0,
+     "digest": "121927f5c4c399d6c6c91c2ef55c4e4019384a27433cdaa6c306df79944e4bac",
      "enemy_alive": 3,
      "gems": 5,
      "hero_dead": 0,
      "hero_hp": "85900",
      "kills": 7,
      "level": 2,
+     "paused": 0,
      "player_x": "632240",
      "player_y": "704240",
      "projectiles": 1,
@@ -1787,13 +2879,15 @@
      "xp": 25
     },
     {
-     "digest": "e5a8307699301f51012cac0cf104ba89f6b034b1929f9aa48f0ad17d54ae6307",
+     "choices": 0,
+     "digest": "b2d942bc9ebfb41faf4b1f5991d76340a4980cd1fb5eec5f3f09d176fcdb212e",
      "enemy_alive": 3,
      "gems": 6,
      "hero_dead": 0,
      "hero_hp": "78300",
      "kills": 11,
      "level": 3,
+     "paused": 0,
      "player_x": "632240",
      "player_y": "800240",
      "projectiles": 1,
@@ -1802,13 +2896,15 @@
      "xp": 65
     },
     {
-     "digest": "8629fff603fd4cf283f9774709fc4d4b8c0ebd3a91f79297719ee9eab589eefc",
+     "choices": 0,
+     "digest": "698a3b4b7ad98dca3f4b8d4d4d02f9d4d87089159bb4e8c6712303b2a8d02bbc",
      "enemy_alive": 2,
      "gems": 9,
      "hero_dead": 0,
      "hero_hp": "78300",
      "kills": 15,
      "level": 3,
+     "paused": 0,
      "player_x": "700120",
      "player_y": "868120",
      "projectiles": 1,
@@ -1817,13 +2913,15 @@
      "xp": 75
     },
     {
-     "digest": "9ec24751a21888d0042613a89023f32dbe457c418a4a0eea31adf6a5bfa2c69b",
+     "choices": 0,
+     "digest": "4f69b0a647f6d27409209b11f370706d999c9c66a6a017a5abb29af279eeba42",
      "enemy_alive": 3,
      "gems": 11,
      "hero_dead": 0,
      "hero_hp": "65300",
      "kills": 18,
      "level": 3,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "936000",
      "projectiles": 1,
@@ -1832,13 +2930,15 @@
      "xp": 85
     },
     {
-     "digest": "e5ad7e81274458b3fc62e015f07b8a6ea7839de69b0d85aeb8a1c3cd229c3d82",
+     "choices": 0,
+     "digest": "4ee393a6c2390d16cfaa25942a7f5d2cec4f2174b449e4830eb31afb7e64782f",
      "enemy_alive": 3,
      "gems": 13,
      "hero_dead": 0,
      "hero_hp": "45800",
      "kills": 22,
      "level": 3,
+     "paused": 0,
      "player_x": "864000",
      "player_y": "936000",
      "projectiles": 1,
@@ -1847,13 +2947,15 @@
      "xp": 105
     },
     {
-     "digest": "23c4226b972e24b43a2aca0fc10aba7d47330a70b56743adcd8a64d299863444",
+     "choices": 0,
+     "digest": "f23d83917ece57ef4c36ce3195c3fc7391fd6a9627fae4c2e5d263fb8239b516",
      "enemy_alive": 3,
      "gems": 13,
      "hero_dead": 0,
      "hero_hp": "32800",
      "kills": 26,
      "level": 4,
+     "paused": 0,
      "player_x": "960000",
      "player_y": "936000",
      "projectiles": 0,
@@ -1862,13 +2964,15 @@
      "xp": 150
     },
     {
-     "digest": "73472ddd3e19b8b207f5337477dc61facad0a81d778d1b4bfa118de8b25df94c",
+     "choices": 0,
+     "digest": "8da7cbd612e2aeb7f1ac49969646b42864a99dbbfc7aeb278922660ecf2d16d7",
      "enemy_alive": 2,
      "gems": 15,
      "hero_dead": 0,
      "hero_hp": "26300",
      "kills": 31,
      "level": 4,
+     "paused": 0,
      "player_x": "1027880",
      "player_y": "868120",
      "projectiles": 1,
@@ -1877,13 +2981,15 @@
      "xp": 180
     },
     {
-     "digest": "e0ca5c12106ae716ede83e1ec0373ae7a5454a1306bd4b5d66517b2dbaeaccf8",
+     "choices": 0,
+     "digest": "f51045e5df3a1b62c2a3b771f8e55dd6e953d4946577de7d065839c7d24718a8",
      "enemy_alive": 3,
      "gems": 16,
      "hero_dead": 0,
      "hero_hp": "13300",
      "kills": 34,
      "level": 5,
+     "paused": 0,
      "player_x": "1095760",
      "player_y": "800240",
      "projectiles": 1,
@@ -1892,13 +2998,15 @@
      "xp": 205
     },
     {
-     "digest": "27ea6d9a5d9b796d285e30eece92c7fa8262549d040d5c100260ef83ae5fd0c8",
+     "choices": 0,
+     "digest": "3ebe55cdb298f21e33ea751d865289cea8ae20846aa8dc589f63a63ce48a2b26",
      "enemy_alive": 2,
      "gems": 19,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 38,
      "level": 5,
+     "paused": 0,
      "player_x": "811200",
      "player_y": "472480",
      "projectiles": 1,
@@ -1907,9 +3015,12 @@
      "xp": 215
     }
    ],
+   "choice_mode": 0,
+   "choices": 0,
    "command_count": 81,
    "commands": [
     [
+     "0",
      "0",
      "0",
      "1",
@@ -1918,6 +3029,7 @@
     [
      "40",
      "1",
+     "0",
      "1",
      "1"
     ],
@@ -1925,23 +3037,27 @@
      "80",
      "2",
      "0",
+     "0",
      "1"
     ],
     [
      "120",
      "3",
+     "0",
      "-1",
      "1"
     ],
     [
      "160",
      "4",
+     "0",
      "-1",
      "0"
     ],
     [
      "200",
      "5",
+     "0",
      "-1",
      "-1"
     ],
@@ -1949,23 +3065,27 @@
      "240",
      "6",
      "0",
+     "0",
      "-1"
     ],
     [
      "280",
      "7",
+     "0",
      "1",
      "-1"
     ],
     [
      "320",
      "8",
+     "0",
      "1",
      "0"
     ],
     [
      "360",
      "9",
+     "0",
      "1",
      "1"
     ],
@@ -1973,23 +3093,27 @@
      "400",
      "10",
      "0",
+     "0",
      "1"
     ],
     [
      "440",
      "11",
+     "0",
      "-1",
      "1"
     ],
     [
      "480",
      "12",
+     "0",
      "-1",
      "0"
     ],
     [
      "520",
      "13",
+     "0",
      "-1",
      "-1"
     ],
@@ -1997,23 +3121,27 @@
      "560",
      "14",
      "0",
+     "0",
      "-1"
     ],
     [
      "600",
      "15",
+     "0",
      "1",
      "-1"
     ],
     [
      "640",
      "16",
+     "0",
      "1",
      "0"
     ],
     [
      "680",
      "17",
+     "0",
      "1",
      "1"
     ],
@@ -2021,23 +3149,27 @@
      "720",
      "18",
      "0",
+     "0",
      "1"
     ],
     [
      "760",
      "19",
+     "0",
      "-1",
      "1"
     ],
     [
      "800",
      "20",
+     "0",
      "-1",
      "0"
     ],
     [
      "840",
      "21",
+     "0",
      "-1",
      "-1"
     ],
@@ -2045,23 +3177,27 @@
      "880",
      "22",
      "0",
+     "0",
      "-1"
     ],
     [
      "920",
      "23",
+     "0",
      "1",
      "-1"
     ],
     [
      "960",
      "24",
+     "0",
      "1",
      "0"
     ],
     [
      "1000",
      "25",
+     "0",
      "1",
      "1"
     ],
@@ -2069,23 +3205,27 @@
      "1040",
      "26",
      "0",
+     "0",
      "1"
     ],
     [
      "1080",
      "27",
+     "0",
      "-1",
      "1"
     ],
     [
      "1120",
      "28",
+     "0",
      "-1",
      "0"
     ],
     [
      "1160",
      "29",
+     "0",
      "-1",
      "-1"
     ],
@@ -2093,23 +3233,27 @@
      "1200",
      "30",
      "0",
+     "0",
      "-1"
     ],
     [
      "1240",
      "31",
+     "0",
      "1",
      "-1"
     ],
     [
      "1280",
      "32",
+     "0",
      "1",
      "0"
     ],
     [
      "1320",
      "33",
+     "0",
      "1",
      "1"
     ],
@@ -2117,23 +3261,27 @@
      "1360",
      "34",
      "0",
+     "0",
      "1"
     ],
     [
      "1400",
      "35",
+     "0",
      "-1",
      "1"
     ],
     [
      "1440",
      "36",
+     "0",
      "-1",
      "0"
     ],
     [
      "1480",
      "37",
+     "0",
      "-1",
      "-1"
     ],
@@ -2141,23 +3289,27 @@
      "1520",
      "38",
      "0",
+     "0",
      "-1"
     ],
     [
      "1560",
      "39",
+     "0",
      "1",
      "-1"
     ],
     [
      "1600",
      "40",
+     "0",
      "1",
      "0"
     ],
     [
      "1640",
      "41",
+     "0",
      "1",
      "1"
     ],
@@ -2165,23 +3317,27 @@
      "1680",
      "42",
      "0",
+     "0",
      "1"
     ],
     [
      "1720",
      "43",
+     "0",
      "-1",
      "1"
     ],
     [
      "1760",
      "44",
+     "0",
      "-1",
      "0"
     ],
     [
      "1800",
      "45",
+     "0",
      "-1",
      "-1"
     ],
@@ -2189,23 +3345,27 @@
      "1840",
      "46",
      "0",
+     "0",
      "-1"
     ],
     [
      "1880",
      "47",
+     "0",
      "1",
      "-1"
     ],
     [
      "1920",
      "48",
+     "0",
      "1",
      "0"
     ],
     [
      "1960",
      "49",
+     "0",
      "1",
      "1"
     ],
@@ -2213,23 +3373,27 @@
      "2000",
      "50",
      "0",
+     "0",
      "1"
     ],
     [
      "2040",
      "51",
+     "0",
      "-1",
      "1"
     ],
     [
      "2080",
      "52",
+     "0",
      "-1",
      "0"
     ],
     [
      "2120",
      "53",
+     "0",
      "-1",
      "-1"
     ],
@@ -2237,23 +3401,27 @@
      "2160",
      "54",
      "0",
+     "0",
      "-1"
     ],
     [
      "2200",
      "55",
+     "0",
      "1",
      "-1"
     ],
     [
      "2240",
      "56",
+     "0",
      "1",
      "0"
     ],
     [
      "2280",
      "57",
+     "0",
      "1",
      "1"
     ],
@@ -2261,23 +3429,27 @@
      "2320",
      "58",
      "0",
+     "0",
      "1"
     ],
     [
      "2360",
      "59",
+     "0",
      "-1",
      "1"
     ],
     [
      "2400",
      "60",
+     "0",
      "-1",
      "0"
     ],
     [
      "2440",
      "61",
+     "0",
      "-1",
      "-1"
     ],
@@ -2285,23 +3457,27 @@
      "2480",
      "62",
      "0",
+     "0",
      "-1"
     ],
     [
      "2520",
      "63",
+     "0",
      "1",
      "-1"
     ],
     [
      "2560",
      "64",
+     "0",
      "1",
      "0"
     ],
     [
      "2600",
      "65",
+     "0",
      "1",
      "1"
     ],
@@ -2309,23 +3485,27 @@
      "2640",
      "66",
      "0",
+     "0",
      "1"
     ],
     [
      "2680",
      "67",
+     "0",
      "-1",
      "1"
     ],
     [
      "2720",
      "68",
+     "0",
      "-1",
      "0"
     ],
     [
      "2760",
      "69",
+     "0",
      "-1",
      "-1"
     ],
@@ -2333,23 +3513,27 @@
      "2800",
      "70",
      "0",
+     "0",
      "-1"
     ],
     [
      "2840",
      "71",
+     "0",
      "1",
      "-1"
     ],
     [
      "2880",
      "72",
+     "0",
      "1",
      "0"
     ],
     [
      "2920",
      "73",
+     "0",
      "1",
      "1"
     ],
@@ -2357,23 +3541,27 @@
      "2960",
      "74",
      "0",
+     "0",
      "1"
     ],
     [
      "3000",
      "75",
+     "0",
      "-1",
      "1"
     ],
     [
      "3040",
      "76",
+     "0",
      "-1",
      "0"
     ],
     [
      "3080",
      "77",
+     "0",
      "-1",
      "-1"
     ],
@@ -2381,17 +3569,20 @@
      "3120",
      "78",
      "0",
+     "0",
      "-1"
     ],
     [
      "3160",
      "79",
+     "0",
      "1",
      "-1"
     ],
     [
      "3200",
      "80",
+     "0",
      "1",
      "0"
     ]
@@ -2407,6 +3598,7 @@
     "480000"
    ],
    "death_tick": 3209,
+   "end_tick": 3209,
    "enemies": {
     "kinds": [
      "3264",
@@ -2434,7 +3626,7 @@
    },
    "id": "botrun.p0.circle.s101",
    "kills": 38,
-   "log_digest": "5b679fd570272da41b56418feedd4fbc0f0405b8e00b920ebf41660b15541eb2",
+   "log_digest": "465536d1f65f8a55632f1e181435b1a70ae3c3149f2ef34d876769e069112dec",
    "name": "botrun.p0.circle.s101",
    "skill": [
     "50000",
@@ -2482,16 +3674,18 @@
   },
   {
    "bot_policy": "kiter",
-   "bot_policy_version": 1,
+   "bot_policy_version": 2,
    "checkpoints": [
     {
-     "digest": "d1fb345b868cb337e68b1822f5e0b3c8b1ee1f4c8c90ad6d528abd735065ffb8",
+     "choices": 0,
+     "digest": "53b7586ba1c705388978c268b2c12d8daebc7cd6d09d7a01d64c63c881fcfeb1",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -2500,13 +3694,15 @@
      "xp": 0
     },
     {
-     "digest": "9974cfe545aa7166ecc27bb28ba9b1a86ebb3e8197fb6741b5ee1d6c18199b80",
+     "choices": 0,
+     "digest": "2550b92fbaaf9a38e6d10225ee077a00d2aabeb20c92e8345e58ca8912d8ba86",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -2515,13 +3711,15 @@
      "xp": 0
     },
     {
-     "digest": "b58c62236f431a24f757346b273497a7fa9b2d269fd8d29b7a9f5e7e63cb0438",
+     "choices": 0,
+     "digest": "5586392a101777799da5b0cc229edc4dfe7960cba94d1afeb568d284f83b698b",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -2530,13 +3728,15 @@
      "xp": 0
     },
     {
-     "digest": "df7c1cdfc817e1239fbe18c951439008e8ca3b1dc10085a8690f4c5c2a2432c8",
+     "choices": 0,
+     "digest": "fc41c83b4d72934de02a4b2513e159c5e3c212503a6cbb867461da08f1107915",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 0,
      "level": 1,
+     "paused": 0,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -2545,13 +3745,15 @@
      "xp": 0
     },
     {
-     "digest": "76a28c8548532578684de0ce5fb0177802556a028f400b90c73b4874af6b78b4",
+     "choices": 0,
+     "digest": "2d3a1a30af40c84c1dc163535e602240fb5b09ead79adfebabc32d7c6dbd229f",
      "enemy_alive": 2,
      "gems": 1,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 1,
      "level": 1,
+     "paused": 0,
      "player_x": "878256",
      "player_y": "688584",
      "projectiles": 0,
@@ -2560,13 +3762,15 @@
      "xp": 0
     },
     {
-     "digest": "fb2541ab90d458891ed72236952635a0ca05f84c6e293f2181605a778509d363",
+     "choices": 0,
+     "digest": "a72aaea74208250037009fa7cdc37338f98b2ae171b05e7c7e0346e61822a370",
      "enemy_alive": 2,
      "gems": 4,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 4,
      "level": 1,
+     "paused": 0,
      "player_x": "1105164",
      "player_y": "747636",
      "projectiles": 0,
@@ -2575,13 +3779,15 @@
      "xp": 0
     },
     {
-     "digest": "8e8a5435102547d585edf3f78461a701a58461c45711aa101bf8549f705d2f66",
+     "choices": 0,
+     "digest": "5e6c40afcafea709172342d934063b126f8dfa0446579f8cd246eccf623c7a09",
      "enemy_alive": 3,
      "gems": 6,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 7,
      "level": 1,
+     "paused": 0,
      "player_x": "918396",
      "player_y": "164652",
      "projectiles": 0,
@@ -2590,13 +3796,15 @@
      "xp": 10
     },
     {
-     "digest": "e712e007f0775d8eeff95d95907a5b93ec66f59982291a3377ba82a1c40b4646",
+     "choices": 0,
+     "digest": "d594f291a3a30e7c23220a5453f0056aedac4a36b0487c8960692c5dab3cb114",
      "enemy_alive": 3,
      "gems": 8,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 11,
      "level": 2,
+     "paused": 0,
      "player_x": "1116504",
      "player_y": "276360",
      "projectiles": 0,
@@ -2605,13 +3813,15 @@
      "xp": 30
     },
     {
-     "digest": "dd2eb5b0db71185eefb68522a3ff5ccaec814fe3651166b4ed561890b23adb0a",
+     "choices": 0,
+     "digest": "3b688ffd99e2bffa9d916321ad4e38adea585e9b47551c29ed0032f482eee85e",
      "enemy_alive": 2,
      "gems": 7,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 15,
      "level": 3,
+     "paused": 0,
      "player_x": "935268",
      "player_y": "418908",
      "projectiles": 0,
@@ -2620,13 +3830,15 @@
      "xp": 90
     },
     {
-     "digest": "2938397798e47f3a8ca49456dfda629e20e0bb2b0eb794db20b04156d714d004",
+     "choices": 0,
+     "digest": "bd4d16652e015419ecb71d2a507fccfc1e6c5bbfa6420549749a88c9ef4a1112",
      "enemy_alive": 2,
      "gems": 8,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 19,
      "level": 4,
+     "paused": 0,
      "player_x": "1050468",
      "player_y": "432876",
      "projectiles": 0,
@@ -2635,13 +3847,15 @@
      "xp": 130
     },
     {
-     "digest": "f5895830de202d78d96f174f08bd89c955c5b695e9734bba8b6f334459ba483c",
+     "choices": 0,
+     "digest": "b417e32c3678a4e00ff75b7c23028db9877c418cec17df2fab34f029d0f93ee0",
      "enemy_alive": 3,
      "gems": 9,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 22,
      "level": 4,
+     "paused": 0,
      "player_x": "1169160",
      "player_y": "112584",
      "projectiles": 1,
@@ -2650,13 +3864,15 @@
      "xp": 155
     },
     {
-     "digest": "da68b87a167a6fdef8c471d03511f1629bf2b1f8ffbe11cd6fc3986736d6701f",
+     "choices": 0,
+     "digest": "9a3fa1464c66a3e5e20f5844b4442947fdb0f868d7aa1b2bee4b2e241f7af238",
      "enemy_alive": 4,
      "gems": 12,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 25,
      "level": 4,
+     "paused": 0,
      "player_x": "1382688",
      "player_y": "78840",
      "projectiles": 1,
@@ -2665,13 +3881,15 @@
      "xp": 155
     },
     {
-     "digest": "42e6f6717cfd500f7ce3eb197e63e135245109598bb86b06a4179b4f7c796ea4",
+     "choices": 0,
+     "digest": "d1262920ca7c9fe5887d3b248f279fc19bd451c92ad505de07b367ddfa6e4dc8",
      "enemy_alive": 3,
      "gems": 13,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 30,
      "level": 5,
+     "paused": 0,
      "player_x": "1370760",
      "player_y": "179208",
      "projectiles": 1,
@@ -2680,13 +3898,15 @@
      "xp": 200
     },
     {
-     "digest": "d77708f78a5b43a81620c4ceb6b45a8876471171d6551c552b1381247cdd728f",
+     "choices": 0,
+     "digest": "36416e97f0937b2075443b1da20e3433e95864dad25eca33ff4e9a71187efcbb",
      "enemy_alive": 4,
      "gems": 14,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 33,
      "level": 5,
+     "paused": 0,
      "player_x": "1419924",
      "player_y": "345612",
      "projectiles": 1,
@@ -2695,13 +3915,15 @@
      "xp": 220
     },
     {
-     "digest": "d5f05dd1f6fef91a860b6d9e9f603d81f9911df651f7fdf7e2056150882c0bc2",
+     "choices": 0,
+     "digest": "657cb5b71364fde3169b2d230295bb2b413132f1ea00e1a9632f240217867461",
      "enemy_alive": 5,
      "gems": 18,
      "hero_dead": 0,
      "hero_hp": "100000",
      "kills": 37,
      "level": 5,
+     "paused": 0,
      "player_x": "1483200",
      "player_y": "832308",
      "projectiles": 1,
@@ -2710,13 +3932,15 @@
      "xp": 220
     },
     {
-     "digest": "f3fba074acb09ab23f01f38ef813456187d0188a1f7d20abd4d054590a16347e",
+     "choices": 0,
+     "digest": "d7e1a10107bbfe310d57d3891217a92b2bbf81535c7b37a5dbd3515a82cb0854",
      "enemy_alive": 3,
      "gems": 21,
      "hero_dead": 0,
      "hero_hp": "84800",
      "kills": 43,
      "level": 5,
+     "paused": 0,
      "player_x": "1274616",
      "player_y": "64728",
      "projectiles": 0,
@@ -2725,13 +3949,15 @@
      "xp": 260
     },
     {
-     "digest": "5b46646309ad22c1c276cb3e82656f3b9de30f9a2d276374efbafbf9c1d21a7c",
+     "choices": 0,
+     "digest": "35107d22583285cafb606bd08aeebf91a1d69716cac0f956424741e5465dd54f",
      "enemy_alive": 4,
      "gems": 19,
      "hero_dead": 0,
      "hero_hp": "84800",
      "kills": 47,
      "level": 6,
+     "paused": 0,
      "player_x": "1481160",
      "player_y": "441168",
      "projectiles": 0,
@@ -2740,13 +3966,15 @@
      "xp": 325
     },
     {
-     "digest": "576bedf98d2966fd86942f6d9af14ffbd5fbc949ad01224f20063239b19173e4",
+     "choices": 0,
+     "digest": "24c72828f01e2b0031098b65238839b86fd590981cdcd0530460c380f916e9a4",
      "enemy_alive": 5,
      "gems": 19,
      "hero_dead": 0,
      "hero_hp": "84800",
      "kills": 50,
      "level": 6,
+     "paused": 0,
      "player_x": "1420068",
      "player_y": "588660",
      "projectiles": 1,
@@ -2755,13 +3983,15 @@
      "xp": 360
     },
     {
-     "digest": "475a29b0a048731ead9149dc9153388cbcc1a7a9f808482417add9a407d6851c",
+     "choices": 0,
+     "digest": "9ba5bfe7cdfb55a58826a71edd1848c8f2ffdd89687f85464fc6715f4f3c6ae3",
      "enemy_alive": 6,
      "gems": 21,
      "hero_dead": 0,
      "hero_hp": "84800",
      "kills": 54,
      "level": 6,
+     "paused": 0,
      "player_x": "1512000",
      "player_y": "24000",
      "projectiles": 0,
@@ -2770,13 +4000,15 @@
      "xp": 380
     },
     {
-     "digest": "b3415e9c937ca318883ed2d374ff41c75d2b8dc967e4bb4858241c262c0c3459",
+     "choices": 0,
+     "digest": "e242b99223d7c407a2f8e4fd18815c0b072c60ce71538ef4b4c82887475dfe2c",
      "enemy_alive": 6,
      "gems": 17,
      "hero_dead": 0,
      "hero_hp": "50100",
      "kills": 59,
      "level": 7,
+     "paused": 0,
      "player_x": "784428",
      "player_y": "854844",
      "projectiles": 0,
@@ -2785,13 +4017,15 @@
      "xp": 485
     },
     {
-     "digest": "7fde99c4e76802f6194e586ec8b290cdbbd4129d8320e5f67b3d56554b4b6f39",
+     "choices": 0,
+     "digest": "37e7729c0bbc9a6d3519e4960ca8576046123ea1efb8272a35e402e406b2f454",
      "enemy_alive": 6,
      "gems": 22,
      "hero_dead": 0,
      "hero_hp": "50100",
      "kills": 64,
      "level": 7,
+     "paused": 0,
      "player_x": "289296",
      "player_y": "114480",
      "projectiles": 0,
@@ -2800,13 +4034,15 @@
      "xp": 485
     },
     {
-     "digest": "8d3ab9fddeef210303d9f0433e0bfada562a998b283134a36d25e858505b633f",
+     "choices": 0,
+     "digest": "0585a37f948a49ec510c1537360d0cdfe8ba5ab520cb0f916c36300a71a1b483",
      "enemy_alive": 6,
      "gems": 25,
      "hero_dead": 0,
      "hero_hp": "50100",
      "kills": 68,
      "level": 7,
+     "paused": 0,
      "player_x": "357372",
      "player_y": "621540",
      "projectiles": 0,
@@ -2815,13 +4051,15 @@
      "xp": 500
     },
     {
-     "digest": "5be84de004c580d5f655e63daf0a87855e4603ec28cd7b6d46f3b7075af89fbe",
+     "choices": 0,
+     "digest": "605cc44312323cce51a674167434b332808552b0f5d837f7c0fb53f1c8f39d3d",
      "enemy_alive": 8,
      "gems": 25,
      "hero_dead": 0,
      "hero_hp": "43600",
      "kills": 72,
      "level": 7,
+     "paused": 0,
      "player_x": "1298472",
      "player_y": "813816",
      "projectiles": 0,
@@ -2830,13 +4068,15 @@
      "xp": 550
     },
     {
-     "digest": "c17fff1f7741b0463349718d0da112e21158bec083cad4574ca809a463ad5d3a",
+     "choices": 0,
+     "digest": "f620d607b888f7940fe4dc7f99a3a3871de3b7d34dcd2de586218ccd87cbceb2",
      "enemy_alive": 5,
      "gems": 30,
      "hero_dead": 0,
      "hero_hp": "20800",
      "kills": 80,
      "level": 7,
+     "paused": 0,
      "player_x": "1410180",
      "player_y": "629088",
      "projectiles": 0,
@@ -2845,13 +4085,15 @@
      "xp": 590
     },
     {
-     "digest": "be67c2e49850886883bfb1239760d2b568a44435355b557312ccb86a5d0bed73",
+     "choices": 0,
+     "digest": "0d7cd1db1c171e39b1f9d67fdb8d1268d15bbe5a026d42a6497ff4e1870884d9",
      "enemy_alive": 6,
      "gems": 32,
      "hero_dead": 0,
      "hero_hp": "20800",
      "kills": 84,
      "level": 7,
+     "paused": 0,
      "player_x": "1296432",
      "player_y": "107196",
      "projectiles": 1,
@@ -2860,13 +4102,15 @@
      "xp": 610
     },
     {
-     "digest": "97a295fce7db35fa077d9dee7ee851435f7718b9ff87d54746b6b008ca300b7a",
+     "choices": 0,
+     "digest": "b7c38d89090cbffe6ad0beac99098dce52e0140bef74c11d0ba9826182299afd",
      "enemy_alive": 8,
      "gems": 33,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 85,
      "level": 7,
+     "paused": 0,
      "player_x": "1447416",
      "player_y": "24000",
      "projectiles": 0,
@@ -2875,10 +4119,13 @@
      "xp": 610
     }
    ],
+   "choice_mode": 0,
+   "choices": 0,
    "command_count": 493,
    "commands": [
     [
      "240",
+     "0",
      "0",
      "1",
      "0"
@@ -2886,6 +4133,7 @@
     [
      "246",
      "1",
+     "0",
      "-1",
      "1"
     ],
@@ -2893,29 +4141,34 @@
      "252",
      "2",
      "0",
+     "0",
      "1"
     ],
     [
      "270",
      "3",
+     "0",
      "1",
      "1"
     ],
     [
      "312",
      "4",
+     "0",
      "-1",
      "-1"
     ],
     [
      "318",
      "5",
+     "0",
      "1",
      "1"
     ],
     [
      "324",
      "6",
+     "0",
      "-1",
      "-1"
     ],
@@ -2923,11 +4176,13 @@
      "348",
      "7",
      "0",
+     "0",
      "-1"
     ],
     [
      "354",
      "8",
+     "0",
      "-1",
      "-1"
     ],
@@ -2935,11 +4190,13 @@
      "360",
      "9",
      "0",
+     "0",
      "-1"
     ],
     [
      "366",
      "10",
+     "0",
      "-1",
      "-1"
     ],
@@ -2947,17 +4204,20 @@
      "372",
      "11",
      "0",
+     "0",
      "-1"
     ],
     [
      "378",
      "12",
      "0",
+     "0",
      "0"
     ],
     [
      "408",
      "13",
+     "0",
      "1",
      "-1"
     ],
@@ -2965,35 +4225,41 @@
      "420",
      "14",
      "0",
+     "0",
      "0"
     ],
     [
      "438",
      "15",
+     "0",
      "1",
      "0"
     ],
     [
      "450",
      "16",
+     "0",
      "-1",
      "0"
     ],
     [
      "456",
      "17",
+     "0",
      "1",
      "0"
     ],
     [
      "486",
      "18",
+     "0",
      "-1",
      "0"
     ],
     [
      "492",
      "19",
+     "0",
      "1",
      "0"
     ],
@@ -3001,11 +4267,13 @@
      "528",
      "20",
      "0",
+     "0",
      "1"
     ],
     [
      "552",
      "21",
+     "0",
      "-1",
      "0"
     ],
@@ -3013,11 +4281,13 @@
      "558",
      "22",
      "0",
+     "0",
      "1"
     ],
     [
      "570",
      "23",
+     "0",
      "-1",
      "-1"
     ],
@@ -3025,11 +4295,13 @@
      "576",
      "24",
      "0",
+     "0",
      "1"
     ],
     [
      "600",
      "25",
+     "0",
      "-1",
      "-1"
     ],
@@ -3037,29 +4309,34 @@
      "606",
      "26",
      "0",
+     "0",
      "1"
     ],
     [
      "624",
      "27",
+     "0",
      "-1",
      "-1"
     ],
     [
      "630",
      "28",
+     "0",
      "1",
      "0"
     ],
     [
      "642",
      "29",
+     "0",
      "-1",
      "-1"
     ],
     [
      "648",
      "30",
+     "0",
      "1",
      "0"
     ],
@@ -3067,11 +4344,13 @@
      "654",
      "31",
      "0",
+     "0",
      "-1"
     ],
     [
      "720",
      "32",
+     "0",
      "1",
      "-1"
     ],
@@ -3079,11 +4358,13 @@
      "726",
      "33",
      "0",
+     "0",
      "-1"
     ],
     [
      "732",
      "34",
+     "0",
      "1",
      "-1"
     ],
@@ -3091,17 +4372,20 @@
      "738",
      "35",
      "0",
+     "0",
      "-1"
     ],
     [
      "744",
      "36",
+     "0",
      "1",
      "-1"
     ],
     [
      "756",
      "37",
+     "0",
      "-1",
      "0"
     ],
@@ -3109,11 +4393,13 @@
      "762",
      "38",
      "0",
+     "0",
      "-1"
     ],
     [
      "774",
      "39",
+     "0",
      "-1",
      "1"
     ],
@@ -3121,11 +4407,13 @@
      "780",
      "40",
      "0",
+     "0",
      "-1"
     ],
     [
      "804",
      "41",
+     "0",
      "-1",
      "1"
     ],
@@ -3133,47 +4421,55 @@
      "810",
      "42",
      "0",
+     "0",
      "-1"
     ],
     [
      "822",
      "43",
      "0",
+     "0",
      "1"
     ],
     [
      "828",
      "44",
+     "0",
      "-1",
      "1"
     ],
     [
      "846",
      "45",
+     "0",
      "-1",
      "-1"
     ],
     [
      "858",
      "46",
+     "0",
      "-1",
      "1"
     ],
     [
      "864",
      "47",
+     "0",
      "-1",
      "-1"
     ],
     [
      "876",
      "48",
+     "0",
      "-1",
      "1"
     ],
     [
      "882",
      "49",
+     "0",
      "-1",
      "-1"
     ],
@@ -3181,23 +4477,27 @@
      "894",
      "50",
      "0",
+     "0",
      "1"
     ],
     [
      "900",
      "51",
+     "0",
      "-1",
      "-1"
     ],
     [
      "912",
      "52",
+     "0",
      "-1",
      "1"
     ],
     [
      "918",
      "53",
+     "0",
      "-1",
      "-1"
     ],
@@ -3205,239 +4505,279 @@
      "924",
      "54",
      "0",
+     "0",
      "1"
     ],
     [
      "960",
      "55",
+     "0",
      "1",
      "0"
     ],
     [
      "972",
      "56",
+     "0",
      "-1",
      "1"
     ],
     [
      "978",
      "57",
+     "0",
      "1",
      "0"
     ],
     [
      "1020",
      "58",
+     "0",
      "-1",
      "1"
     ],
     [
      "1026",
      "59",
+     "0",
      "1",
      "0"
     ],
     [
      "1032",
      "60",
+     "0",
      "-1",
      "1"
     ],
     [
      "1038",
      "61",
+     "0",
      "1",
      "0"
     ],
     [
      "1068",
      "62",
+     "0",
      "-1",
      "0"
     ],
     [
      "1098",
      "63",
+     "0",
      "1",
      "-1"
     ],
     [
      "1122",
      "64",
+     "0",
      "-1",
      "1"
     ],
     [
      "1146",
      "65",
+     "0",
      "-1",
      "0"
     ],
     [
      "1152",
      "66",
+     "0",
      "-1",
      "1"
     ],
     [
      "1158",
      "67",
+     "0",
      "1",
      "-1"
     ],
     [
      "1182",
      "68",
+     "0",
      "-1",
      "1"
     ],
     [
      "1188",
      "69",
+     "0",
      "1",
      "-1"
     ],
     [
      "1224",
      "70",
+     "0",
      "-1",
      "1"
     ],
     [
      "1254",
      "71",
+     "0",
      "-1",
      "-1"
     ],
     [
      "1272",
      "72",
+     "0",
      "-1",
      "1"
     ],
     [
      "1314",
      "73",
+     "0",
      "1",
      "1"
     ],
     [
      "1326",
      "74",
+     "0",
      "-1",
      "0"
     ],
     [
      "1332",
      "75",
+     "0",
      "1",
      "1"
     ],
     [
      "1356",
      "76",
+     "0",
      "-1",
      "0"
     ],
     [
      "1362",
      "77",
+     "0",
      "1",
      "1"
     ],
     [
      "1374",
      "78",
+     "0",
      "-1",
      "0"
     ],
     [
      "1392",
      "79",
+     "0",
      "-1",
      "-1"
     ],
     [
      "1398",
      "80",
+     "0",
      "1",
      "-1"
     ],
     [
      "1404",
      "81",
+     "0",
      "-1",
      "0"
     ],
     [
      "1410",
      "82",
+     "0",
      "1",
      "-1"
     ],
     [
      "1440",
      "83",
+     "0",
      "-1",
      "0"
     ],
     [
      "1446",
      "84",
+     "0",
      "1",
      "-1"
     ],
     [
      "1470",
      "85",
+     "0",
      "-1",
      "1"
     ],
     [
      "1500",
      "86",
+     "0",
      "-1",
      "-1"
     ],
     [
      "1524",
      "87",
+     "0",
      "-1",
      "1"
     ],
     [
      "1536",
      "88",
+     "0",
      "1",
      "1"
     ],
     [
      "1560",
      "89",
+     "0",
      "-1",
      "0"
     ],
     [
      "1566",
      "90",
+     "0",
      "1",
      "1"
     ],
     [
      "1596",
      "91",
+     "0",
      "-1",
      "0"
     ],
     [
      "1602",
      "92",
+     "0",
      "1",
      "1"
     ],
     [
      "1608",
      "93",
+     "0",
      "1",
      "0"
     ],
@@ -3445,11 +4785,13 @@
      "1614",
      "94",
      "0",
+     "0",
      "-1"
     ],
     [
      "1620",
      "95",
+     "0",
      "1",
      "-1"
     ],
@@ -3457,83 +4799,97 @@
      "1626",
      "96",
      "0",
+     "0",
      "-1"
     ],
     [
      "1668",
      "97",
+     "0",
      "-1",
      "1"
     ],
     [
      "1698",
      "98",
+     "0",
      "-1",
      "0"
     ],
     [
      "1704",
      "99",
+     "0",
      "1",
      "0"
     ],
     [
      "1734",
      "100",
+     "0",
      "-1",
      "0"
     ],
     [
      "1740",
      "101",
+     "0",
      "1",
      "0"
     ],
     [
      "1776",
      "102",
+     "0",
      "-1",
      "0"
     ],
     [
      "1836",
      "103",
+     "0",
      "1",
      "-1"
     ],
     [
      "1854",
      "104",
+     "0",
      "-1",
      "1"
     ],
     [
      "1860",
      "105",
+     "0",
      "1",
      "-1"
     ],
     [
      "1884",
      "106",
+     "0",
      "-1",
      "1"
     ],
     [
      "1926",
      "107",
+     "0",
      "1",
      "0"
     ],
     [
      "1932",
      "108",
+     "0",
      "-1",
      "0"
     ],
     [
      "1938",
      "109",
+     "0",
      "1",
      "0"
     ],
@@ -3541,11 +4897,13 @@
      "1980",
      "110",
      "0",
+     "0",
      "-1"
     ],
     [
      "1992",
      "111",
+     "0",
      "1",
      "-1"
     ],
@@ -3553,23 +4911,27 @@
      "1998",
      "112",
      "0",
+     "0",
      "-1"
     ],
     [
      "2004",
      "113",
+     "0",
      "1",
      "-1"
     ],
     [
      "2016",
      "114",
+     "0",
      "-1",
      "1"
     ],
     [
      "2022",
      "115",
+     "0",
      "1",
      "-1"
     ],
@@ -3577,11 +4939,13 @@
      "2034",
      "116",
      "0",
+     "0",
      "-1"
     ],
     [
      "2058",
      "117",
+     "0",
      "-1",
      "1"
     ],
@@ -3589,17 +4953,20 @@
      "2064",
      "118",
      "0",
+     "0",
      "-1"
     ],
     [
      "2076",
      "119",
+     "0",
      "1",
      "0"
     ],
     [
      "2082",
      "120",
+     "0",
      "1",
      "-1"
     ],
@@ -3607,41 +4974,48 @@
      "2088",
      "121",
      "0",
+     "0",
      "1"
     ],
     [
      "2094",
      "122",
      "0",
+     "0",
      "-1"
     ],
     [
      "2100",
      "123",
+     "0",
      "1",
      "-1"
     ],
     [
      "2106",
      "124",
+     "0",
      "1",
      "1"
     ],
     [
      "2112",
      "125",
+     "0",
      "1",
      "-1"
     ],
     [
      "2118",
      "126",
+     "0",
      "1",
      "1"
     ],
     [
      "2124",
      "127",
+     "0",
      "1",
      "-1"
     ],
@@ -3649,29 +5023,34 @@
      "2130",
      "128",
      "0",
+     "0",
      "1"
     ],
     [
      "2142",
      "129",
+     "0",
      "-1",
      "1"
     ],
     [
      "2154",
      "130",
+     "0",
      "-1",
      "-1"
     ],
     [
      "2166",
      "131",
+     "0",
      "-1",
      "1"
     ],
     [
      "2172",
      "132",
+     "0",
      "-1",
      "-1"
     ],
@@ -3679,17 +5058,20 @@
      "2184",
      "133",
      "0",
+     "0",
      "1"
     ],
     [
      "2190",
      "134",
      "0",
+     "0",
      "-1"
     ],
     [
      "2196",
      "135",
+     "0",
      "1",
      "0"
     ],
@@ -3697,11 +5079,13 @@
      "2202",
      "136",
      "0",
+     "0",
      "-1"
     ],
     [
      "2208",
      "137",
+     "0",
      "1",
      "1"
     ],
@@ -3709,41 +5093,48 @@
      "2214",
      "138",
      "0",
+     "0",
      "-1"
     ],
     [
      "2220",
      "139",
+     "0",
      "1",
      "0"
     ],
     [
      "2226",
      "140",
+     "0",
      "1",
      "-1"
     ],
     [
      "2232",
      "141",
+     "0",
      "1",
      "1"
     ],
     [
      "2256",
      "142",
+     "0",
      "1",
      "0"
     ],
     [
      "2280",
      "143",
+     "0",
      "-1",
      "0"
     ],
     [
      "2286",
      "144",
+     "0",
      "1",
      "0"
     ],
@@ -3751,41 +5142,48 @@
      "2292",
      "145",
      "0",
+     "0",
      "1"
     ],
     [
      "2298",
      "146",
+     "0",
      "1",
      "1"
     ],
     [
      "2304",
      "147",
+     "0",
      "-1",
      "1"
     ],
     [
      "2310",
      "148",
+     "0",
      "1",
      "1"
     ],
     [
      "2322",
      "149",
+     "0",
      "-1",
      "1"
     ],
     [
      "2328",
      "150",
+     "0",
      "1",
      "0"
     ],
     [
      "2334",
      "151",
+     "0",
      "-1",
      "-1"
     ],
@@ -3793,11 +5191,13 @@
      "2340",
      "152",
      "0",
+     "0",
      "-1"
     ],
     [
      "2358",
      "153",
+     "0",
      "-1",
      "-1"
     ],
@@ -3805,17 +5205,20 @@
      "2364",
      "154",
      "0",
+     "0",
      "-1"
     ],
     [
      "2376",
      "155",
+     "0",
      "-1",
      "-1"
     ],
     [
      "2382",
      "156",
+     "0",
      "-1",
      "0"
     ],
@@ -3823,11 +5226,13 @@
      "2388",
      "157",
      "0",
+     "0",
      "-1"
     ],
     [
      "2394",
      "158",
+     "0",
      "0",
      "1"
     ],
@@ -3835,23 +5240,27 @@
      "2400",
      "159",
      "0",
+     "0",
      "-1"
     ],
     [
      "2406",
      "160",
+     "0",
      "-1",
      "1"
     ],
     [
      "2412",
      "161",
+     "0",
      "-1",
      "-1"
     ],
     [
      "2418",
      "162",
+     "0",
      "-1",
      "0"
     ],
@@ -3859,11 +5268,13 @@
      "2424",
      "163",
      "0",
+     "0",
      "1"
     ],
     [
      "2448",
      "164",
+     "0",
      "-1",
      "1"
     ],
@@ -3871,11 +5282,13 @@
      "2454",
      "165",
      "0",
+     "0",
      "-1"
     ],
     [
      "2466",
      "166",
+     "0",
      "1",
      "1"
     ],
@@ -3883,29 +5296,34 @@
      "2472",
      "167",
      "0",
+     "0",
      "-1"
     ],
     [
      "2478",
      "168",
+     "0",
      "1",
      "0"
     ],
     [
      "2502",
      "169",
+     "0",
      "-1",
      "0"
     ],
     [
      "2508",
      "170",
+     "0",
      "1",
      "-1"
     ],
     [
      "2514",
      "171",
+     "0",
      "1",
      "1"
     ],
@@ -3913,29 +5331,34 @@
      "2520",
      "172",
      "0",
+     "0",
      "-1"
     ],
     [
      "2526",
      "173",
+     "0",
      "-1",
      "1"
     ],
     [
      "2538",
      "174",
+     "0",
      "1",
      "1"
     ],
     [
      "2550",
      "175",
+     "0",
      "-1",
      "1"
     ],
     [
      "2556",
      "176",
+     "0",
      "1",
      "1"
     ],
@@ -3943,29 +5366,34 @@
      "2568",
      "177",
      "0",
+     "0",
      "1"
     ],
     [
      "2574",
      "178",
+     "0",
      "-1",
      "0"
     ],
     [
      "2586",
      "179",
+     "0",
      "1",
      "0"
     ],
     [
      "2592",
      "180",
+     "0",
      "-1",
      "0"
     ],
     [
      "2598",
      "181",
+     "0",
      "1",
      "0"
     ],
@@ -3973,35 +5401,41 @@
      "2604",
      "182",
      "0",
+     "0",
      "-1"
     ],
     [
      "2640",
      "183",
+     "0",
      "-1",
      "1"
     ],
     [
      "2646",
      "184",
+     "0",
      "1",
      "-1"
     ],
     [
      "2658",
      "185",
+     "0",
      "-1",
      "1"
     ],
     [
      "2664",
      "186",
+     "0",
      "1",
      "-1"
     ],
     [
      "2670",
      "187",
+     "0",
      "-1",
      "1"
     ],
@@ -4009,29 +5443,34 @@
      "2688",
      "188",
      "0",
+     "0",
      "1"
     ],
     [
      "2694",
      "189",
+     "0",
      "-1",
      "1"
     ],
     [
      "2700",
      "190",
+     "0",
      "1",
      "-1"
     ],
     [
      "2712",
      "191",
+     "0",
      "-1",
      "-1"
     ],
     [
      "2718",
      "192",
+     "0",
      "1",
      "1"
     ],
@@ -4039,41 +5478,48 @@
      "2724",
      "193",
      "0",
+     "0",
      "-1"
     ],
     [
      "2730",
      "194",
+     "0",
      "-1",
      "1"
     ],
     [
      "2736",
      "195",
+     "0",
      "1",
      "-1"
     ],
     [
      "2748",
      "196",
+     "0",
      "-1",
      "1"
     ],
     [
      "2754",
      "197",
+     "0",
      "1",
      "-1"
     ],
     [
      "2760",
      "198",
+     "0",
      "-1",
      "-1"
     ],
     [
      "2766",
      "199",
+     "0",
      "1",
      "1"
     ],
@@ -4081,11 +5527,13 @@
      "2772",
      "200",
      "0",
+     "0",
      "-1"
     ],
     [
      "2778",
      "201",
+     "0",
      "-1",
      "1"
     ],
@@ -4093,11 +5541,13 @@
      "2784",
      "202",
      "0",
+     "0",
      "1"
     ],
     [
      "2790",
      "203",
+     "0",
      "-1",
      "1"
     ],
@@ -4105,89 +5555,104 @@
      "2796",
      "204",
      "0",
+     "0",
      "1"
     ],
     [
      "2802",
      "205",
+     "0",
      "-1",
      "1"
     ],
     [
      "2838",
      "206",
+     "0",
      "1",
      "1"
     ],
     [
      "2850",
      "207",
+     "0",
      "-1",
      "0"
     ],
     [
      "2856",
      "208",
+     "0",
      "1",
      "1"
     ],
     [
      "2880",
      "209",
+     "0",
      "-1",
      "0"
     ],
     [
      "2892",
      "210",
+     "0",
      "1",
      "0"
     ],
     [
      "2898",
      "211",
+     "0",
      "-1",
      "0"
     ],
     [
      "2904",
      "212",
+     "0",
      "1",
      "0"
     ],
     [
      "2928",
      "213",
+     "0",
      "-1",
      "0"
     ],
     [
      "2934",
      "214",
+     "0",
      "1",
      "0"
     ],
     [
      "2940",
      "215",
+     "0",
      "-1",
      "0"
     ],
     [
      "2946",
      "216",
+     "0",
      "1",
      "0"
     ],
     [
      "2958",
      "217",
+     "0",
      "-1",
      "0"
     ],
     [
      "2964",
      "218",
+     "0",
      "1",
      "0"
     ],
@@ -4195,59 +5660,69 @@
      "2970",
      "219",
      "0",
+     "0",
      "-1"
     ],
     [
      "2982",
      "220",
+     "0",
      "-1",
      "0"
     ],
     [
      "2994",
      "221",
+     "0",
      "1",
      "0"
     ],
     [
      "3000",
      "222",
+     "0",
      "-1",
      "0"
     ],
     [
      "3006",
      "223",
+     "0",
      "1",
      "0"
     ],
     [
      "3012",
      "224",
+     "0",
      "-1",
      "0"
     ],
     [
      "3018",
      "225",
+     "0",
      "1",
      "0"
     ],
     [
      "3024",
      "226",
+     "0",
      "1",
      "1"
     ],
     [
      "3030",
      "227",
+     "0",
      "-1",
      "1"
     ],
     [
      "3036",
      "228",
+     "0",
      "1",
      "1"
     ],
@@ -4255,11 +5730,13 @@
      "3042",
      "229",
      "0",
+     "0",
      "1"
     ],
     [
      "3060",
      "230",
+     "0",
      "-1",
      "1"
     ],
@@ -4267,41 +5744,48 @@
      "3066",
      "231",
      "0",
+     "0",
      "1"
     ],
     [
      "3078",
      "232",
+     "0",
      "-1",
      "0"
     ],
     [
      "3084",
      "233",
+     "0",
      "1",
      "1"
     ],
     [
      "3090",
      "234",
+     "0",
      "-1",
      "0"
     ],
     [
      "3096",
      "235",
+     "0",
      "1",
      "1"
     ],
     [
      "3102",
      "236",
+     "0",
      "-1",
      "1"
     ],
     [
      "3108",
      "237",
+     "0",
      "1",
      "1"
     ],
@@ -4309,47 +5793,55 @@
      "3114",
      "238",
      "0",
+     "0",
      "1"
     ],
     [
      "3120",
      "239",
+     "0",
      "-1",
      "1"
     ],
     [
      "3126",
      "240",
+     "0",
      "1",
      "1"
     ],
     [
      "3132",
      "241",
+     "0",
      "-1",
      "1"
     ],
     [
      "3138",
      "242",
+     "0",
      "-1",
      "-1"
     ],
     [
      "3144",
      "243",
+     "0",
      "1",
      "0"
     ],
     [
      "3156",
      "244",
+     "0",
      "-1",
      "0"
     ],
     [
      "3162",
      "245",
+     "0",
      "1",
      "0"
     ],
@@ -4357,23 +5849,27 @@
      "3168",
      "246",
      "0",
+     "0",
      "1"
     ],
     [
      "3174",
      "247",
+     "0",
      "1",
      "1"
     ],
     [
      "3180",
      "248",
+     "0",
      "-1",
      "1"
     ],
     [
      "3186",
      "249",
+     "0",
      "1",
      "1"
     ],
@@ -4381,47 +5877,55 @@
      "3192",
      "250",
      "0",
+     "0",
      "1"
     ],
     [
      "3198",
      "251",
+     "0",
      "-1",
      "0"
     ],
     [
      "3204",
      "252",
+     "0",
      "1",
      "1"
     ],
     [
      "3210",
      "253",
+     "0",
      "1",
      "0"
     ],
     [
      "3216",
      "254",
+     "0",
      "-1",
      "-1"
     ],
     [
      "3222",
      "255",
+     "0",
      "1",
      "1"
     ],
     [
      "3228",
      "256",
+     "0",
      "-1",
      "-1"
     ],
     [
      "3234",
      "257",
+     "0",
      "-1",
      "0"
     ],
@@ -4429,59 +5933,69 @@
      "3240",
      "258",
      "0",
+     "0",
      "-1"
     ],
     [
      "3246",
      "259",
+     "0",
      "1",
      "1"
     ],
     [
      "3252",
      "260",
+     "0",
      "1",
      "-1"
     ],
     [
      "3258",
      "261",
+     "0",
      "-1",
      "1"
     ],
     [
      "3264",
      "262",
+     "0",
      "1",
      "0"
     ],
     [
      "3276",
      "263",
+     "0",
      "-1",
      "0"
     ],
     [
      "3282",
      "264",
+     "0",
      "1",
      "0"
     ],
     [
      "3294",
      "265",
+     "0",
      "-1",
      "0"
     ],
     [
      "3300",
      "266",
+     "0",
      "1",
      "0"
     ],
     [
      "3324",
      "267",
+     "0",
      "-1",
      "-1"
     ],
@@ -4489,11 +6003,13 @@
      "3330",
      "268",
      "0",
+     "0",
      "-1"
     ],
     [
      "3342",
      "269",
+     "0",
      "-1",
      "-1"
     ],
@@ -4501,23 +6017,27 @@
      "3366",
      "270",
      "0",
+     "0",
      "-1"
     ],
     [
      "3378",
      "271",
+     "0",
      "1",
      "-1"
     ],
     [
      "3402",
      "272",
+     "0",
      "1",
      "0"
     ],
     [
      "3420",
      "273",
+     "0",
      "1",
      "-1"
     ],
@@ -4525,11 +6045,13 @@
      "3426",
      "274",
      "0",
+     "0",
      "-1"
     ],
     [
      "3474",
      "275",
+     "0",
      "-1",
      "-1"
     ],
@@ -4537,11 +6059,13 @@
      "3498",
      "276",
      "0",
+     "0",
      "-1"
     ],
     [
      "3528",
      "277",
+     "0",
      "-1",
      "0"
     ],
@@ -4549,35 +6073,41 @@
      "3534",
      "278",
      "0",
+     "0",
      "-1"
     ],
     [
      "3570",
      "279",
+     "0",
      "-1",
      "1"
     ],
     [
      "3576",
      "280",
+     "0",
      "-1",
      "0"
     ],
     [
      "3588",
      "281",
+     "0",
      "-1",
      "1"
     ],
     [
      "3594",
      "282",
+     "0",
      "-1",
      "0"
     ],
     [
      "3600",
      "283",
+     "0",
      "-1",
      "1"
     ],
@@ -4585,11 +6115,13 @@
      "3648",
      "284",
      "0",
+     "0",
      "-1"
     ],
     [
      "3660",
      "285",
+     "0",
      "-1",
      "1"
     ],
@@ -4597,17 +6129,20 @@
      "3666",
      "286",
      "0",
+     "0",
      "-1"
     ],
     [
      "3678",
      "287",
+     "0",
      "1",
      "0"
     ],
     [
      "3684",
      "288",
+     "0",
      "1",
      "-1"
     ],
@@ -4615,29 +6150,34 @@
      "3690",
      "289",
      "0",
+     "0",
      "1"
     ],
     [
      "3696",
      "290",
+     "0",
      "1",
      "-1"
     ],
     [
      "3708",
      "291",
+     "0",
      "1",
      "1"
     ],
     [
      "3714",
      "292",
+     "0",
      "1",
      "-1"
     ],
     [
      "3720",
      "293",
+     "0",
      "1",
      "0"
     ],
@@ -4645,83 +6185,97 @@
      "3732",
      "294",
      "0",
+     "0",
      "1"
     ],
     [
      "3738",
      "295",
+     "0",
      "1",
      "0"
     ],
     [
      "3756",
      "296",
+     "0",
      "1",
      "1"
     ],
     [
      "3762",
      "297",
+     "0",
      "1",
      "0"
     ],
     [
      "3768",
      "298",
+     "0",
      "-1",
      "-1"
     ],
     [
      "3774",
      "299",
+     "0",
      "1",
      "0"
     ],
     [
      "3780",
      "300",
+     "0",
      "-1",
      "1"
     ],
     [
      "3786",
      "301",
+     "0",
      "1",
      "0"
     ],
     [
      "3792",
      "302",
+     "0",
      "1",
      "-1"
     ],
     [
      "3798",
      "303",
+     "0",
      "-1",
      "0"
     ],
     [
      "3804",
      "304",
+     "0",
      "1",
      "0"
     ],
     [
      "3816",
      "305",
+     "0",
      "-1",
      "0"
     ],
     [
      "3822",
      "306",
+     "0",
      "1",
      "0"
     ],
     [
      "3828",
      "307",
+     "0",
      "-1",
      "1"
     ],
@@ -4729,23 +6283,27 @@
      "3834",
      "308",
      "0",
+     "0",
      "1"
     ],
     [
      "3870",
      "309",
+     "0",
      "1",
      "1"
     ],
     [
      "3876",
      "310",
+     "0",
      "-1",
      "1"
     ],
     [
      "3882",
      "311",
+     "0",
      "1",
      "1"
     ],
@@ -4753,11 +6311,13 @@
      "3888",
      "312",
      "0",
+     "0",
      "1"
     ],
     [
      "3900",
      "313",
+     "0",
      "-1",
      "1"
     ],
@@ -4765,11 +6325,13 @@
      "3906",
      "314",
      "0",
+     "0",
      "1"
     ],
     [
      "3912",
      "315",
+     "0",
      "-1",
      "1"
     ],
@@ -4777,11 +6339,13 @@
      "3918",
      "316",
      "0",
+     "0",
      "1"
     ],
     [
      "3924",
      "317",
+     "0",
      "-1",
      "1"
     ],
@@ -4789,47 +6353,55 @@
      "3936",
      "318",
      "0",
+     "0",
      "1"
     ],
     [
      "3978",
      "319",
+     "0",
      "-1",
      "0"
     ],
     [
      "3984",
      "320",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4014",
      "321",
+     "0",
      "-1",
      "0"
     ],
     [
      "4020",
      "322",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4026",
      "323",
+     "0",
      "1",
      "1"
     ],
     [
      "4050",
      "324",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4056",
      "325",
+     "0",
      "1",
      "1"
     ],
@@ -4837,65 +6409,76 @@
      "4086",
      "326",
      "0",
+     "0",
      "-1"
     ],
     [
      "4092",
      "327",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4098",
      "328",
+     "0",
      "1",
      "0"
     ],
     [
      "4116",
      "329",
+     "0",
      "-1",
      "0"
     ],
     [
      "4122",
      "330",
+     "0",
      "1",
      "0"
     ],
     [
      "4128",
      "331",
+     "0",
      "-1",
      "0"
     ],
     [
      "4140",
      "332",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4146",
      "333",
+     "0",
      "1",
      "0"
     ],
     [
      "4152",
      "334",
+     "0",
      "1",
      "-1"
     ],
     [
      "4158",
      "335",
+     "0",
      "-1",
      "0"
     ],
     [
      "4164",
      "336",
+     "0",
      "1",
      "0"
     ],
@@ -4903,11 +6486,13 @@
      "4170",
      "337",
      "0",
+     "0",
      "-1"
     ],
     [
      "4206",
      "338",
+     "0",
      "1",
      "-1"
     ],
@@ -4915,11 +6500,13 @@
      "4212",
      "339",
      "0",
+     "0",
      "-1"
     ],
     [
      "4260",
      "340",
+     "0",
      "-1",
      "-1"
     ],
@@ -4927,11 +6514,13 @@
      "4266",
      "341",
      "0",
+     "0",
      "-1"
     ],
     [
      "4284",
      "342",
+     "0",
      "-1",
      "-1"
     ],
@@ -4939,11 +6528,13 @@
      "4290",
      "343",
      "0",
+     "0",
      "-1"
     ],
     [
      "4302",
      "344",
+     "0",
      "0",
      "1"
     ],
@@ -4951,11 +6542,13 @@
      "4308",
      "345",
      "0",
+     "0",
      "-1"
     ],
     [
      "4320",
      "346",
+     "0",
      "0",
      "1"
     ],
@@ -4963,17 +6556,20 @@
      "4326",
      "347",
      "0",
+     "0",
      "-1"
     ],
     [
      "4332",
      "348",
+     "0",
      "1",
      "-1"
     ],
     [
      "4338",
      "349",
+     "0",
      "-1",
      "1"
     ],
@@ -4981,17 +6577,20 @@
      "4344",
      "350",
      "0",
+     "0",
      "-1"
     ],
     [
      "4350",
      "351",
+     "0",
      "1",
      "-1"
     ],
     [
      "4356",
      "352",
+     "0",
      "-1",
      "1"
     ],
@@ -4999,11 +6598,13 @@
      "4362",
      "353",
      "0",
+     "0",
      "-1"
     ],
     [
      "4368",
      "354",
+     "0",
      "1",
      "-1"
     ],
@@ -5011,11 +6612,13 @@
      "4380",
      "355",
      "0",
+     "0",
      "1"
     ],
     [
      "4386",
      "356",
+     "0",
      "-1",
      "1"
     ],
@@ -5023,17 +6626,20 @@
      "4404",
      "357",
      "0",
+     "0",
      "-1"
     ],
     [
      "4410",
      "358",
+     "0",
      "1",
      "-1"
     ],
     [
      "4416",
      "359",
+     "0",
      "1",
      "1"
     ],
@@ -5041,23 +6647,27 @@
      "4422",
      "360",
      "0",
+     "0",
      "-1"
     ],
     [
      "4428",
      "361",
+     "0",
      "1",
      "-1"
     ],
     [
      "4434",
      "362",
+     "0",
      "-1",
      "1"
     ],
     [
      "4440",
      "363",
+     "0",
      "1",
      "-1"
     ],
@@ -5065,11 +6675,13 @@
      "4476",
      "364",
      "0",
+     "0",
      "1"
     ],
     [
      "4482",
      "365",
+     "0",
      "1",
      "-1"
     ],
@@ -5077,23 +6689,27 @@
      "4524",
      "366",
      "0",
+     "0",
      "1"
     ],
     [
      "4536",
      "367",
+     "0",
      "-1",
      "1"
     ],
     [
      "4548",
      "368",
+     "0",
      "-1",
      "0"
     ],
     [
      "4572",
      "369",
+     "0",
      "-1",
      "1"
     ],
@@ -5101,11 +6717,13 @@
      "4590",
      "370",
      "0",
+     "0",
      "1"
     ],
     [
      "4638",
      "371",
+     "0",
      "-1",
      "1"
     ],
@@ -5113,71 +6731,83 @@
      "4674",
      "372",
      "0",
+     "0",
      "1"
     ],
     [
      "4698",
      "373",
+     "0",
      "-1",
      "1"
     ],
     [
      "4764",
      "374",
+     "0",
      "-1",
      "0"
     ],
     [
      "4782",
      "375",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4788",
      "376",
+     "0",
      "-1",
      "0"
     ],
     [
      "4806",
      "377",
+     "0",
      "-1",
      "1"
     ],
     [
      "4818",
      "378",
+     "0",
      "-1",
      "0"
     ],
     [
      "4830",
      "379",
+     "0",
      "-1",
      "1"
     ],
     [
      "4836",
      "380",
+     "0",
      "-1",
      "0"
     ],
     [
      "4842",
      "381",
+     "0",
      "-1",
      "-1"
     ],
     [
      "4848",
      "382",
+     "0",
      "-1",
      "0"
     ],
     [
      "4854",
      "383",
+     "0",
      "-1",
      "-1"
     ],
@@ -5185,11 +6815,13 @@
      "4860",
      "384",
      "0",
+     "0",
      "-1"
     ],
     [
      "4866",
      "385",
+     "0",
      "-1",
      "-1"
     ],
@@ -5197,11 +6829,13 @@
      "4872",
      "386",
      "0",
+     "0",
      "-1"
     ],
     [
      "4890",
      "387",
+     "0",
      "-1",
      "-1"
     ],
@@ -5209,11 +6843,13 @@
      "4896",
      "388",
      "0",
+     "0",
      "-1"
     ],
     [
      "5022",
      "389",
+     "0",
      "0",
      "1"
     ],
@@ -5221,11 +6857,13 @@
      "5028",
      "390",
      "0",
+     "0",
      "-1"
     ],
     [
      "5034",
      "391",
+     "0",
      "0",
      "1"
     ],
@@ -5233,53 +6871,62 @@
      "5040",
      "392",
      "0",
+     "0",
      "-1"
     ],
     [
      "5046",
      "393",
+     "0",
      "-1",
      "1"
     ],
     [
      "5052",
      "394",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5064",
      "395",
+     "0",
      "-1",
      "1"
     ],
     [
      "5070",
      "396",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5076",
      "397",
+     "0",
      "-1",
      "0"
     ],
     [
      "5088",
      "398",
+     "0",
      "-1",
      "1"
     ],
     [
      "5094",
      "399",
+     "0",
      "-1",
      "0"
     ],
     [
      "5124",
      "400",
+     "0",
      "-1",
      "1"
     ],
@@ -5287,11 +6934,13 @@
      "5130",
      "401",
      "0",
+     "0",
      "1"
     ],
     [
      "5136",
      "402",
+     "0",
      "-1",
      "-1"
     ],
@@ -5299,53 +6948,62 @@
      "5142",
      "403",
      "0",
+     "0",
      "-1"
     ],
     [
      "5148",
      "404",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5154",
      "405",
+     "0",
      "1",
      "1"
     ],
     [
      "5160",
      "406",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5172",
      "407",
+     "0",
      "-1",
      "0"
     ],
     [
      "5178",
      "408",
+     "0",
      "1",
      "1"
     ],
     [
      "5190",
      "409",
+     "0",
      "-1",
      "1"
     ],
     [
      "5196",
      "410",
+     "0",
      "1",
      "1"
     ],
     [
      "5202",
      "411",
+     "0",
      "-1",
      "0"
     ],
@@ -5353,11 +7011,13 @@
      "5208",
      "412",
      "0",
+     "0",
      "1"
     ],
     [
      "5226",
      "413",
+     "0",
      "1",
      "0"
     ],
@@ -5365,29 +7025,34 @@
      "5238",
      "414",
      "0",
+     "0",
      "1"
     ],
     [
      "5244",
      "415",
+     "0",
      "-1",
      "1"
     ],
     [
      "5250",
      "416",
+     "0",
      "1",
      "0"
     ],
     [
      "5256",
      "417",
+     "0",
      "-1",
      "0"
     ],
     [
      "5262",
      "418",
+     "0",
      "-1",
      "-1"
     ],
@@ -5395,17 +7060,20 @@
      "5274",
      "419",
      "0",
+     "0",
      "-1"
     ],
     [
      "5280",
      "420",
+     "0",
      "1",
      "0"
     ],
     [
      "5286",
      "421",
+     "0",
      "-1",
      "0"
     ],
@@ -5413,41 +7081,48 @@
      "5292",
      "422",
      "0",
+     "0",
      "1"
     ],
     [
      "5316",
      "423",
+     "0",
      "1",
      "1"
     ],
     [
      "5466",
      "424",
+     "0",
      "1",
      "0"
     ],
     [
      "5508",
      "425",
+     "0",
      "1",
      "-1"
     ],
     [
      "5514",
      "426",
+     "0",
      "1",
      "0"
     ],
     [
      "5520",
      "427",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5526",
      "428",
+     "0",
      "1",
      "1"
     ],
@@ -5455,23 +7130,27 @@
      "5532",
      "429",
      "0",
+     "0",
      "1"
     ],
     [
      "5538",
      "430",
+     "0",
      "-1",
      "0"
     ],
     [
      "5544",
      "431",
+     "0",
      "1",
      "1"
     ],
     [
      "5550",
      "432",
+     "0",
      "-1",
      "1"
     ],
@@ -5479,53 +7158,62 @@
      "5556",
      "433",
      "0",
+     "0",
      "1"
     ],
     [
      "5574",
      "434",
+     "0",
      "1",
      "1"
     ],
     [
      "5616",
      "435",
+     "0",
      "1",
      "0"
     ],
     [
      "5664",
      "436",
+     "0",
      "1",
      "-1"
     ],
     [
      "5700",
      "437",
+     "0",
      "1",
      "0"
     ],
     [
      "5730",
      "438",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5736",
      "439",
+     "0",
      "1",
      "-1"
     ],
     [
      "5748",
      "440",
+     "0",
      "-1",
      "-1"
     ],
     [
      "5754",
      "441",
+     "0",
      "1",
      "0"
     ],
@@ -5533,11 +7221,13 @@
      "5766",
      "442",
      "0",
+     "0",
      "-1"
     ],
     [
      "5772",
      "443",
+     "0",
      "1",
      "0"
     ],
@@ -5545,11 +7235,13 @@
      "5784",
      "444",
      "0",
+     "0",
      "1"
     ],
     [
      "5814",
      "445",
+     "0",
      "-1",
      "1"
     ],
@@ -5557,23 +7249,27 @@
      "5874",
      "446",
      "0",
+     "0",
      "1"
     ],
     [
      "5880",
      "447",
+     "0",
      "1",
      "1"
     ],
     [
      "5886",
      "448",
+     "0",
      "1",
      "0"
     ],
     [
      "5922",
      "449",
+     "0",
      "1",
      "-1"
     ],
@@ -5581,11 +7277,13 @@
      "5940",
      "450",
      "0",
+     "0",
      "-1"
     ],
     [
      "5970",
      "451",
+     "0",
      "-1",
      "-1"
     ],
@@ -5593,29 +7291,34 @@
      "6006",
      "452",
      "0",
+     "0",
      "-1"
     ],
     [
      "6030",
      "453",
+     "0",
      "-1",
      "0"
     ],
     [
      "6060",
      "454",
+     "0",
      "1",
      "0"
     ],
     [
      "6066",
      "455",
+     "0",
      "-1",
      "0"
     ],
     [
      "6072",
      "456",
+     "0",
      "1",
      "0"
     ],
@@ -5623,23 +7326,27 @@
      "6102",
      "457",
      "0",
+     "0",
      "-1"
     ],
     [
      "6108",
      "458",
+     "0",
      "1",
      "0"
     ],
     [
      "6114",
      "459",
+     "0",
      "-1",
      "-1"
     ],
     [
      "6120",
      "460",
+     "0",
      "1",
      "-1"
     ],
@@ -5647,11 +7354,13 @@
      "6126",
      "461",
      "0",
+     "0",
      "-1"
     ],
     [
      "6132",
      "462",
+     "0",
      "-1",
      "0"
     ],
@@ -5659,11 +7368,13 @@
      "6138",
      "463",
      "0",
+     "0",
      "-1"
     ],
     [
      "6156",
      "464",
+     "0",
      "-1",
      "0"
     ],
@@ -5671,11 +7382,13 @@
      "6162",
      "465",
      "0",
+     "0",
      "-1"
     ],
     [
      "6186",
      "466",
+     "0",
      "-1",
      "1"
     ],
@@ -5683,11 +7396,13 @@
      "6192",
      "467",
      "0",
+     "0",
      "-1"
     ],
     [
      "6210",
      "468",
+     "0",
      "0",
      "1"
     ],
@@ -5695,11 +7410,13 @@
      "6216",
      "469",
      "0",
+     "0",
      "-1"
     ],
     [
      "6228",
      "470",
+     "0",
      "0",
      "1"
     ],
@@ -5707,11 +7424,13 @@
      "6234",
      "471",
      "0",
+     "0",
      "-1"
     ],
     [
      "6240",
      "472",
+     "0",
      "0",
      "1"
     ],
@@ -5719,35 +7438,41 @@
      "6246",
      "473",
      "0",
+     "0",
      "-1"
     ],
     [
      "6252",
      "474",
+     "0",
      "-1",
      "-1"
     ],
     [
      "6258",
      "475",
+     "0",
      "-1",
      "1"
     ],
     [
      "6264",
      "476",
+     "0",
      "-1",
      "-1"
     ],
     [
      "6270",
      "477",
+     "0",
      "-1",
      "1"
     ],
     [
      "6276",
      "478",
+     "0",
      "-1",
      "-1"
     ],
@@ -5755,35 +7480,41 @@
      "6282",
      "479",
      "0",
+     "0",
      "1"
     ],
     [
      "6288",
      "480",
+     "0",
      "1",
      "0"
     ],
     [
      "6312",
      "481",
+     "0",
      "1",
      "1"
     ],
     [
      "6318",
      "482",
+     "0",
      "1",
      "0"
     ],
     [
      "6324",
      "483",
+     "0",
      "1",
      "-1"
     ],
     [
      "6330",
      "484",
+     "0",
      "1",
      "1"
     ],
@@ -5791,47 +7522,55 @@
      "6336",
      "485",
      "0",
+     "0",
      "-1"
     ],
     [
      "6342",
      "486",
+     "0",
      "1",
      "-1"
     ],
     [
      "6348",
      "487",
+     "0",
      "-1",
      "1"
     ],
     [
      "6354",
      "488",
+     "0",
      "1",
      "-1"
     ],
     [
      "6366",
      "489",
+     "0",
      "-1",
      "0"
     ],
     [
      "6372",
      "490",
+     "0",
      "1",
      "-1"
     ],
     [
      "6378",
      "491",
+     "0",
      "-1",
      "0"
     ],
     [
      "6384",
      "492",
+     "0",
      "0",
      "-1"
     ]
@@ -5847,6 +7586,7 @@
     "480000"
    ],
    "death_tick": 6456,
+   "end_tick": 6456,
    "enemies": {
     "kinds": [
      "3264",
@@ -5874,7 +7614,7 @@
    },
    "id": "botrun.p0.kiter.s101",
    "kills": 85,
-   "log_digest": "96d21efea9b44ea92278855b44f1bd2294d92590ee967286764412bc5121de24",
+   "log_digest": "b8894c290e4107471cda772051d303ad44b0199d0a28f342a9429fee6a631166",
    "name": "botrun.p0.kiter.s101",
    "skill": [
     "50000",

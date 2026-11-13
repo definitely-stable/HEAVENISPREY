@@ -1,5 +1,5 @@
 """P0-01 simulation core reference: committed traces current, movement and command-log
-rules checked against independent expectations."""
+rules checked against independent expectations; level-up choices (ADR-010 section 6)."""
 import hashlib
 import importlib.util
 import math
@@ -15,11 +15,16 @@ spec.loader.exec_module(sim)
 BASE = sim.BASE
 
 
+def v2(commands):
+    """Schema 1 test records (tick, sequence, move_x, move_y) as schema 2 MOVE records."""
+    return sim.migrate_v1(commands)
+
+
 def run(config, commands, ticks):
     if not isinstance(config, sim.Config):
         config = sim.Config(config)
     log, world = sim.CommandLog(), sim.World(config)
-    for command in commands:
+    for command in v2(commands):
         assert log.append(command, 0) == sim.OK
     for _ in range(ticks):
         sim.step(config, world, log)
@@ -77,12 +82,19 @@ class SimCoreReferenceTests(unittest.TestCase):
 
     def test_log_rejections(self):
         log = sim.CommandLog()
-        self.assertEqual(log.append((3, 5, 0, 0), 3), sim.OK)
-        self.assertEqual(log.append((2, 6, 0, 0), 0), sim.TICK_NOT_MONOTONIC)
-        self.assertEqual(log.append((4, 5, 0, 0), 0), sim.SEQUENCE_NOT_INCREASING)
-        self.assertEqual(log.append((4, 6, 0, 0), 5), sim.PAST_TICK)
-        self.assertEqual(log.append((4, 6, 0, -2), 0), sim.INVALID)
+        self.assertEqual(log.append((3, 5, sim.MOVE, 0, 0), 3), sim.OK)
+        self.assertEqual(log.append((2, 6, sim.MOVE, 0, 0), 0), sim.TICK_NOT_MONOTONIC)
+        self.assertEqual(log.append((4, 5, sim.MOVE, 0, 0), 0), sim.SEQUENCE_NOT_INCREASING)
+        self.assertEqual(log.append((4, 6, sim.MOVE, 0, 0), 5), sim.PAST_TICK)
+        self.assertEqual(log.append((4, 6, sim.MOVE, 0, -2), 0), sim.INVALID)
+        self.assertEqual(log.append((4, 6, sim.CHOOSE, -1, 0), 0), sim.INVALID)
+        self.assertEqual(log.append((4, 6, 7, 0, 0), 0), sim.INVALID)
+        self.assertEqual(log.append((4, 6, 0, 0), 0), sim.INVALID, "schema 1 record")
         self.assertEqual(len(log.records), 1)
+
+    def test_schema_one_log_migrates_to_moves(self):
+        self.assertEqual(sim.migrate_v1([(0, 0, 1, -1), (5, 3, 0, 0)]),
+                         [(0, 0, sim.MOVE, 1, -1), (5, 3, sim.MOVE, 0, 0)])
 
     def test_digest_is_sha256_of_int64_le(self):
         world = sim.World(sim.Config(BASE))
@@ -235,6 +247,11 @@ def place(world, kind, x, y, hp, slot=None):
     world.enemy_alive += 1
 
 
+def proj(world, x, y, vx, vy, ttl=40, damage=10000, capacity=2):
+    """A live projectile record in the slot layout of World (empty ledger)."""
+    return [x, y, vx, vy, ttl, damage, 0, capacity] + [0] * world.ledger_size
+
+
 def cast_ticks(config, world, ticks, log=None):
     """Ticks in which a projectile was fired (a fresh one has flown exactly once)."""
     log, out = log or sim.CommandLog(), []
@@ -291,11 +308,11 @@ class SimCombatReferenceTests(unittest.TestCase):
     def test_two_projectiles_one_kill_second_keeps_its_pierce(self):
         config, world = arena([(0, CX + 200000, CY, 7800)])
         for slot in range(2):
-            world.projectiles.append([CX + 180000, CY, 12000, 0, 40, 1, 10000] + [0, 0])
+            world.projectiles.append(proj(world, CX + 180000, CY, 12000, 0))
         sim.fly_and_hit(config, world)
         self.assertEqual(world.enemies[0][sim.E_HP], 0)
-        self.assertEqual(world.projectiles[1][sim.P_PIERCE], 1, "dead enemy is not hit again")
-        self.assertEqual(world.projectiles[0][sim.P_PIERCE], 0)
+        self.assertEqual(world.projectiles[1][sim.P_HITS], 0, "dead enemy is not hit again")
+        self.assertEqual(world.projectiles[0][sim.P_HITS], 1)
         sim.clear_dead(config, world)
         self.assertEqual((world.kills, world.enemy_alive), (1, 0))
         self.assertEqual(world.enemies[0], [0] * 6)
@@ -312,7 +329,7 @@ class SimCombatReferenceTests(unittest.TestCase):
         kinds = [0, 24000, 5000, 1000, 1, 1, 0, 24000, 999999, 50000, 1, 1]
         config, world = arena([(0, CX + 200000, CY, 5000), (1, CX, CY + 40000, 999999)],
                               kinds=kinds, hero_hp=50000)
-        world.projectiles.append([CX + 190000, CY, 12000, 0, 40, 1, 10000, 0, 0])
+        world.projectiles.append(proj(world, CX + 190000, CY, 12000, 0))
         sim.step(config, world, sim.CommandLog())
         self.assertEqual((world.hero_dead, world.hero_hp, world.kills), (1, 0, 1))
         frozen = world.ints()
@@ -321,7 +338,7 @@ class SimCombatReferenceTests(unittest.TestCase):
 
     def test_reused_slot_is_a_new_target_for_the_ledger(self):
         config, world = arena([(0, CX + 200000, CY, 5000)])
-        world.projectiles.append([CX + 200000, CY, 0, 0, 40, 1, 10000, 0, 0])
+        world.projectiles.append(proj(world, CX + 200000, CY, 0, 0))
         world.projectiles[0][sim.P_LEDGER] = 1
         world.enemies[0] = [0] * 6
         world.enemy_alive = 0
@@ -332,21 +349,21 @@ class SimCombatReferenceTests(unittest.TestCase):
 
     def test_projectile_leaving_the_arena_is_removed_without_hits(self):
         config, world = arena([(0, BASE[4] - 24000, CY, 1000000)])
-        world.projectiles.append([BASE[4] - 5000, CY, 12000, 0, 40, 1, 10000, 0, 0])
+        world.projectiles.append(proj(world, BASE[4] - 5000, CY, 12000, 0))
         sim.fly_and_hit(config, world)
         self.assertEqual(world.live_projectiles(), 0)
         self.assertEqual(world.enemies[0][sim.E_HP], 1000000)
 
     def test_projectile_expires_after_its_lifetime(self):
         config, world = arena([(0, CX + 200000, CY, 1000000)])
-        world.projectiles.append([CX, CY, 0, 1, 2, 1, 10000, 0, 0])
+        world.projectiles.append(proj(world, CX, CY, 0, 1, ttl=2))
         world.skill_acc = -10 ** 6
         log = sim.CommandLog()
         sim.step(config, world, log)
         self.assertEqual(world.live_projectiles(), 1)
         sim.step(config, world, log)
         self.assertEqual(world.live_projectiles(), 0)
-        self.assertEqual(world.projectiles[0], [0] * 9)
+        self.assertEqual(world.projectiles[0], [0] * (sim.P_LEDGER + world.ledger_size))
 
     def test_full_projectile_slots_hold_the_cast(self):
         # One slot; the projectile flies until it leaves the arena in the fly phase of tick
@@ -379,7 +396,7 @@ class SimCombatReferenceTests(unittest.TestCase):
     def test_long_run_kills_and_stays_consistent(self):
         config = sim.SCENARIOS[-1][1]
         log, world = sim.CommandLog(), sim.World(config)
-        for command in sim._circle(25, 3000):
+        for command in v2(sim._circle(25, 3000)):
             log.append(command, 0)
         for _ in range(3000):
             sim.step(config, world, log)
@@ -541,7 +558,8 @@ def check_invariants(test, config, world, xp_kills):
     test.assertEqual(world.xp_dropped_total, world.xp_collected_total + ground, "I1")
     test.assertEqual(world.xp_collected_total, world.xp_bank + paid(config, world.level), "I2")
     test.assertEqual(world.next_gem_uid - 1 + world.gems_merged, xp_kills, "I3")
-    test.assertEqual(world.level - 1, world.choices_voided + world.pending_level_choices, "I4")
+    test.assertEqual(world.level - 1, world.choices_done + world.choices_voided
+                     + world.pending_level_choices, "I4")
     test.assertEqual(world.gems_alive, sum(1 for g in world.gems if g[sim.G_UID]))
 
 
@@ -628,7 +646,7 @@ class SimXpReferenceTests(unittest.TestCase):
         check_invariants(self, config, world, xp_kills=4)
 
     def test_invariants_hold_on_every_tick(self):
-        for name, config, commands, ticks in sim.SCENARIOS:
+        for name, config, commands, ticks in sim.SCENARIOS + sim.CHOICE_SCENARIOS:
             if not config.has_xp() or name.startswith("stress"):
                 continue
             log, world = sim.CommandLog(), sim.World(config)
@@ -647,7 +665,7 @@ class SimXpReferenceTests(unittest.TestCase):
         configs = (base, with_xp, no_value)
         worlds = [sim.World(c) for c in configs]
         log = sim.CommandLog()
-        for command in sim._circle(40, 3600):
+        for command in v2(sim._circle(40, 3600)):
             log.append(command, 0)
         for _ in range(3600):
             for config, world in zip(configs, worlds):
@@ -690,6 +708,284 @@ class SimXpReferenceTests(unittest.TestCase):
             config = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", sim.P0_SKILL, xp)
             self.assertFalse(config.valid(), xp)
         self.assertFalse(sim.Config(BASE, xp=good).valid(), "XP needs enemies")
+
+
+
+# Level-up choice (ADR-010 section 6).
+CHOICE_XP = ((48000, 512), (10, 15), XP_COSTS)
+
+
+def choice_arena(enemies=(), skill=sim.P0_SKILL, max_projectiles=None, choice_mode=1):
+    """Frozen targets, no spawns, P0 skill, cheap levels, choice_mode 1."""
+    skill = list(skill)
+    if max_projectiles is not None:
+        skill[7] = max_projectiles
+    config = sim.Config(BASE, [TOUGH] + NO_SPAWN[1:], TARGET_KINDS, "1", skill, CHOICE_XP,
+                        choice_mode=choice_mode)
+    assert config.valid()
+    world = sim.World(config)
+    for kind, x, y, hp in enemies:
+        place(world, kind, x, y, hp)
+    return config, world
+
+
+def run_to_pause(config, world, log, limit=20000):
+    for _ in range(limit):
+        if world.paused():
+            return
+        sim.step(config, world, log)
+    raise AssertionError("no level-up choice")
+
+
+class SimChoiceReferenceTests(unittest.TestCase):
+    def test_upgrades_are_in_ascii_id_order_with_p0_ranks(self):
+        ids = [uid for uid, _ in sim.UPGRADES]
+        self.assertEqual(ids, sorted(ids, key=lambda text: text.encode("ascii")))
+        self.assertEqual(dict(sim.UPGRADES), {
+            "upgrade.p0.hero_speed": 3, "upgrade.p0.hero_vitality": 5,
+            "upgrade.p0.pickup_radius": 3, "upgrade.p0.sword_count": 2,
+            "upgrade.p0.sword_damage": 2, "upgrade.p0.sword_haste": 5,
+            "upgrade.p0.sword_pierce": 2})
+        self.assertNotIn(sim.RECOVER_ID, ids)
+
+    def test_choice_mode_is_validated(self):
+        self.assertTrue(sim.P0_CHOICE.valid())
+        for mode in (-1, 2):
+            config = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", sim.P0_SKILL, sim.P0_XP,
+                                choice_mode=mode)
+            self.assertFalse(config.valid(), mode)
+        no_xp = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", sim.P0_SKILL, choice_mode=1)
+        self.assertFalse(no_xp.valid(), "choices need XP")
+        no_skill = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", (0,) * 8, sim.P0_XP,
+                              choice_mode=1)
+        self.assertFalse(no_skill.valid(), "choices need the skill")
+
+    def test_pause_changes_nothing_without_choose(self):
+        config, log = sim.P0_CHOICE, sim.CommandLog()
+        world = sim.World(config)
+        run_to_pause(config, world, log)
+        self.assertEqual(len(world.hand), 3)
+        frozen, tick, rng = world.ints(), world.tick, world.rng_cursor
+        for _ in range(300):  # five seconds of frames with the menu open
+            sim.step(config, world, log)
+        self.assertEqual(world.ints(), frozen)
+        self.assertEqual((world.tick, world.rng_cursor), (tick, rng))
+
+    def test_bad_choose_is_rejected_without_changes(self):
+        config, log = sim.P0_CHOICE, sim.CommandLog()
+        world = sim.World(config)
+        run_to_pause(config, world, log)
+        frozen, revision = world.ints(), world.build_revision
+        for index, rev in ((3, revision), (-1, revision), (0, revision + 1), (0, revision - 1)):
+            self.assertFalse(sim.choose(config, world, index, rev), (index, rev))
+            self.assertEqual(world.ints(), frozen)
+        self.assertTrue(sim.choose(config, world, 1, revision))
+        self.assertFalse(sim.choose(config, world, 1, revision), "repeated")
+        self.assertEqual((world.choices_done, world.build_revision, world.pending_level_choices),
+                         (1, revision + 1, 0))
+
+    def test_choose_outside_a_pause_is_skipped(self):
+        config, world = choice_arena()
+        log = sim.CommandLog()
+        log.append((0, 0, sim.CHOOSE, 0, 0), 0)
+        sim.step(config, world, log)
+        self.assertEqual((world.command_cursor, world.choices_done, world.tick), (1, 0, 1))
+        self.assertFalse(sim.choose(config, world, 0, 0))
+
+    def test_two_levels_in_one_tick_give_two_hands_in_turn(self):
+        config, world = choice_arena([(1, CX + 300000, CY, 0)])
+        world.xp_bank = 10  # + 15 from the gem: 25 pays 5 and 12, 8 stays for 20
+        sim.drop(config, world, CX, CY, 15)
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual((world.level, world.pending_level_choices, world.xp_bank), (3, 2, 8))
+        first, cursor = list(world.hand), world.offers_rng_cursor
+        self.assertEqual(cursor, 3)
+        self.assertTrue(sim.choose(config, world, 0, 0))
+        self.assertEqual(world.ranks[first[0]], 1)
+        self.assertEqual((world.pending_level_choices, world.offers_rng_cursor), (1, 6))
+        expect = sim.World(config)
+        expect.ranks, expect.offers_rng_cursor = list(world.ranks), cursor
+        sim.build_hand(config, expect)
+        self.assertEqual(world.hand, expect.hand, "the second hand is built from the new build")
+        self.assertTrue(sim.choose(config, world, 2, 1))
+        self.assertFalse(world.paused())
+        self.assertEqual(world.level - 1, world.choices_done)
+
+    def test_paused_step_resolves_one_choice_and_move_waits(self):
+        config, world = choice_arena()
+        world.pending_level_choices, world.level = 2, 3
+        sim.build_hand(config, world)
+        log, tick, x = sim.CommandLog(), world.tick, world.player_x
+        for record in ((tick, 0, sim.MOVE, 1, 0), (tick, 1, sim.CHOOSE, 0, 0),
+                       (tick, 2, sim.CHOOSE, 0, 1), (tick, 3, sim.MOVE, -1, 0)):
+            self.assertEqual(log.append(record, tick), sim.OK)
+        sim.step(config, world, log)
+        self.assertEqual((world.choices_done, world.command_cursor, world.tick), (1, 2, tick))
+        self.assertEqual(world.player_x, x, "the held direction waits for the pause to end")
+        sim.step(config, world, log)
+        self.assertEqual((world.choices_done, world.command_cursor), (2, 3))
+        self.assertFalse(world.paused())
+        sim.step(config, world, log)
+        speed = sim.hero_speed(config, world)
+        self.assertEqual((world.tick, world.player_x), (tick + 1, x - speed), "last MOVE wins")
+
+    def test_hand_is_short_or_recover_when_ranks_run_out(self):
+        config, world = choice_arena()
+        top = [rank for _, rank in sim.UPGRADES]
+        for free, size in ((7, 3), (3, 3), (2, 2), (1, 1)):
+            world.ranks = top[:7 - free] + [0] * free
+            cursor = world.offers_rng_cursor
+            sim.build_hand(config, world)
+            self.assertEqual(len(world.hand), size, free)
+            self.assertEqual(sorted(world.hand), sorted(set(world.hand)), "distinct cards")
+            self.assertTrue(all(code >= 7 - free for code in world.hand))
+            self.assertEqual(world.offers_rng_cursor, cursor + size, "one word per card")
+        world.ranks, cursor = list(top), world.offers_rng_cursor
+        sim.build_hand(config, world)
+        self.assertEqual((world.hand, world.offers_rng_cursor), ([sim.U_RECOVER], cursor))
+
+    def test_recover_and_vitality_heal(self):
+        config, world = choice_arena()
+        world.hero_hp = TOUGH - 5000
+        sim.apply_upgrade(world, sim.U_RECOVER)
+        self.assertEqual(world.hero_hp, TOUGH, "up to the maximum")
+        world.hero_hp = TOUGH - 50000
+        sim.apply_upgrade(world, sim.U_RECOVER)
+        self.assertEqual(world.hero_hp, TOUGH - 30000)
+        sim.apply_upgrade(world, sim.U_VITALITY)
+        self.assertEqual((world.hero_hp_max, world.hero_hp), (TOUGH + 20000, TOUGH - 10000))
+        self.assertEqual(world.ranks[sim.U_VITALITY], 1)
+
+    def test_derived_stats_follow_the_ranks(self):
+        config, world = choice_arena()
+        for code in (sim.U_SPEED, sim.U_PICKUP, sim.U_DAMAGE, sim.U_HASTE, sim.U_COUNT,
+                     sim.U_PIERCE):
+            sim.apply_upgrade(world, code)
+        self.assertEqual(sim.hero_speed(config, world), 4800 + 240)
+        self.assertEqual(sim.pickup_radius(config, world), 48000 + 24000)
+        self.assertEqual(sim.skill_damage(config, world), 10000 + 3000)
+        self.assertEqual(sim.skill_rate(world), 1150)
+        self.assertEqual(sim.projectile_count(world), 2)
+        self.assertEqual(sim.projectile_pierce(config, world), 2)
+        self.assertEqual(world.ledger_size, 4, "room for pierce 1 + 2 ranks")
+
+    def test_haste_shortens_the_cast_period(self):
+        config, world = choice_arena([(0, CX + 200000, CY, 1000000)])
+        world.ranks[sim.U_HASTE] = 1
+        # 1150 per tick: 50600 after 44 ticks -> cast at tick 43, 600 carried over.
+        self.assertEqual(cast_ticks(config, world, 90), [43, 86])
+
+    def test_flying_projectile_keeps_its_cast_snapshot(self):
+        line = [(0, CX + d, CY, 1000000) for d in (100000, 160000, 220000, 280000)]
+        config, world = choice_arena(line)
+        log = sim.CommandLog()
+        cast_ticks(config, world, 50, log)
+        self.assertEqual(world.projectiles[0][sim.P_DAMAGE:sim.P_CAP + 1], [10000, 0, 2])
+        world.ranks[sim.U_PIERCE] = 2
+        world.ranks[sim.U_DAMAGE] = 1
+        for _ in range(40):
+            sim.step(config, world, log)
+            if world.live_projectiles() == 0:
+                break
+        self.assertEqual([e[sim.E_HP] for e in world.enemies],
+                         [990000, 990000, 1000000, 1000000], "capacity 2 and damage of the cast")
+        world.skill_acc = 49000
+        sim.step(config, world, log)
+        self.assertEqual(world.projectiles[0][sim.P_DAMAGE:sim.P_CAP + 1], [13000, 0, 4])
+
+    def test_count_fires_at_distinct_targets(self):
+        for available, fired in ((1, 1), (2, 2), (3, 3), (4, 3)):
+            rays = [(100000, 0), (0, 120000), (-140000, 0), (0, -160000)]
+            targets = [(0, CX + dx, CY + dy, 1000000) for dx, dy in rays[:available]]
+            config, world = choice_arena(targets)
+            world.ranks[sim.U_COUNT] = 2
+            world.skill_acc = 49000
+            sim.step(config, world, sim.CommandLog())
+            self.assertEqual(world.live_projectiles(), fired, available)
+            heads = {(p[sim.P_VX], p[sim.P_VY]) for p in world.projectiles if p[sim.P_DAMAGE]}
+            self.assertEqual(len(heads), fired, "one projectile per target")
+            self.assertEqual(world.skill_acc, 0)
+
+    def test_count_holds_the_whole_cast_without_enough_slots(self):
+        targets = [(0, CX + 100000 * (k + 1), CY, 1000000) for k in range(3)]
+        config, world = choice_arena(targets, max_projectiles=2)
+        world.projectiles.append(proj(world, CX, CY, 0, 0, ttl=500))
+        world.ranks[sim.U_COUNT] = 2
+        world.skill_acc = 49000
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual((world.live_projectiles(), world.skill_acc), (1, 49000), "held")
+        world.ranks[sim.U_COUNT] = 0
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual((world.live_projectiles(), world.skill_acc), (2, 0), "one slot is enough")
+
+    def test_a_pack_never_hits_one_enemy_twice_per_projectile(self):
+        config, world = choice_arena([(0, CX + 30000, CY, 1000000)])
+        for _ in range(2):
+            world.projectiles.append(proj(world, CX + 30000, CY, 0, 0, capacity=3))
+        for _ in range(3):
+            sim.fly_and_hit(config, world)
+        self.assertEqual(world.enemies[0][sim.E_HP], 1000000 - 2 * 10000, "once per projectile")
+        self.assertEqual([p[sim.P_HITS] for p in world.projectiles], [1, 1])
+
+    def test_death_voids_pending_choices_in_mode_zero(self):
+        config, world = choice_arena([(1, CX + 300000, CY, 0)], choice_mode=0)
+        world.xp_bank, world.hero_hp = 10, 0
+        world.level, world.pending_level_choices, world.xp_collected_total = 3, 2, 27
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual((world.hero_dead, world.pending_level_choices, world.choices_voided),
+                         (1, 0, 2))
+        self.assertFalse(world.paused())
+
+    def test_mode_zero_never_pauses_and_keeps_i4(self):
+        config = sim.Config(BASE, [TOUGH] + sim.P0_VALUES[1:], sim.W0_KINDS, sim.SEED,
+                            sim.P0_SKILL, sim.P0_XP)
+        world, log = sim.World(config), sim.CommandLog()
+        for command in v2(sim._circle(40, 3600)):
+            log.append(command, 0)
+        for _ in range(3600):
+            sim.step(config, world, log)
+            self.assertFalse(world.paused())
+            check_invariants(self, config, world, xp_kills=world.kills)
+        self.assertGreater(world.pending_level_choices, 1)
+        self.assertEqual(world.offers_rng_cursor, 0)
+
+    def test_choice_replay_matches_the_live_run(self):
+        config = sim.P0_CHOICE
+        records, steps = sim.scripted_choices(config, sim._circle(40, 2400), 2400, sim._cycle,
+                                              junk=True)
+        live = sim.World(config)
+        log = sim.CommandLog()
+        for record in records:
+            log.append(record, 0)
+        for _ in range(steps):
+            sim.step(config, live, log)
+        _, replayed, _ = sim.run_trace(config, records, steps)
+        self.assertEqual(replayed.digest(), live.digest())
+        self.assertEqual(live.tick, 2400)
+        self.assertGreater(live.choices_done, 2)
+        shifted = list(records)
+        index = next(i for i, r in enumerate(shifted) if r[2] == sim.CHOOSE and r[3] == 1)
+        shifted[index] = shifted[index][:3] + (2,) + shifted[index][4:]
+        _, other, _ = sim.run_trace(config, shifted, steps)
+        self.assertNotEqual(other.digest(), live.digest(), "another card is another run")
+
+    def test_offers_do_not_touch_the_enemy_stream(self):
+        with_menu = sim.P0_CHOICE
+        without = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, sim.SEED, sim.P0_SKILL, sim.P0_XP)
+        a, b = sim.World(with_menu), sim.World(without)
+        log = sim.CommandLog()
+        for command in v2(sim._circle(40, 3600)):
+            log.append(command, 0)
+        while a.tick < 3600:
+            if a.paused():
+                return_tick = a.tick
+                self.assertEqual(a.rng_cursor, b.rng_cursor)
+                self.assertGreater(a.offers_rng_cursor, 0)
+                self.assertEqual(return_tick, b.tick)
+                return
+            sim.step(with_menu, a, log)
+            sim.step(without, b, log)
+        self.fail("no pause in 3600 ticks")
 
 
 if __name__ == "__main__":
