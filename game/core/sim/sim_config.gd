@@ -26,8 +26,9 @@ const KIND_INTERVAL: int = 4
 const KIND_WEIGHT: int = 5
 ## Enemy attack record (ADR-011 sections 2-3): [form, telegraph_ticks, active_ticks,
 ## recovery_ticks, reach_su, arc_degrees, venom]. FORM_CONTACT kinds hit by touch (all zeros);
-## FORM_ARC kinds run the attack machine with the kind damage, and the kind interval as the
-## cooldown from the start of `tell`.
+## FORM_ARC and FORM_CHARGE kinds run the attack machine with the kind damage, and the kind
+## interval as the cooldown from the start of `tell`. A charge has arc 0, no venom, and its
+## reach is the dash length.
 const ATTACK_STRIDE: int = 7
 const ATTACK_FORM: int = 0
 const ATTACK_TELEGRAPH: int = 1
@@ -38,6 +39,7 @@ const ATTACK_ARC: int = 5
 const ATTACK_VENOM: int = 6
 const FORM_CONTACT: int = 0
 const FORM_ARC: int = 1
+const FORM_CHARGE: int = 2
 ## Keeps the sector test inside int64 (su).
 const MAX_ATTACK_REACH: int = 4194304
 const MAX_ARC_DEGREES: int = 180
@@ -285,6 +287,24 @@ func is_valid() -> bool:
 	return run_ticks >= 0
 
 
+## A dash moves reach // active su per tick: at least 1 su and no longer than the hero and
+## enemy radii together (no tunnelling through the hero); arc 0 and no venom.
+func _charge_valid(kind: int) -> bool:
+	var reach: int = attack_value(kind, ATTACK_REACH)
+	var active: int = attack_value(kind, ATTACK_ACTIVE)
+	if attack_value(kind, ATTACK_TELEGRAPH) < 1 or active < 1 or attack_value(kind, ATTACK_RECOVERY) < 0:
+		return false
+	if reach <= 0 or reach > MAX_ATTACK_REACH:
+		return false
+	var step: int = Fx.floor_div(reach, active)
+	return (
+		attack_value(kind, ATTACK_ARC) == 0
+		and attack_value(kind, ATTACK_VENOM) == 0
+		and step >= 1
+		and step <= player_radius_su + kind_value(kind, KIND_RADIUS)
+	)
+
+
 ## One record per kind; a contact record is all zeros; an arc needs whole phases, a reach up
 ## to MAX_ATTACK_REACH and an arc of 1..180 degrees; venom needs its status values.
 func _attacks_valid() -> bool:
@@ -301,6 +321,10 @@ func _attacks_valid() -> bool:
 		var reach: int = attack_value(kind, ATTACK_REACH)
 		var arc: int = attack_value(kind, ATTACK_ARC)
 		var flag: int = attack_value(kind, ATTACK_VENOM)
+		if form == FORM_CHARGE:
+			if not _charge_valid(kind):
+				return false
+			continue
 		var arc_ok: bool = (
 			form == FORM_ARC
 			and attack_value(kind, ATTACK_TELEGRAPH) >= 1

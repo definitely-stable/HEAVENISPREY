@@ -4,9 +4,10 @@ extends RefCounted
 ##
 ## From content (read-only): the jade_grove roster window w0 (enemy IDs and spawn weights),
 ## each enemy's speed/radius/health multipliers and its attack: CONTACT (damage multiplier,
-## hit interval) or MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
-## radius multiplier of the danger radius H, arc degrees, status.venom) with the venom values
-## from the status catalog (ADR-011); the sword class start skill and its cooldown. NOT canonical (ADR-009
+## hit interval), MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
+## radius multiplier of the danger radius H, arc degrees, status.venom) or CHARGE (the same
+## timings, dash length in hero radii, no retarget) with the venom values from the status
+## catalog (ADR-011); the sword class start skill and its cooldown. NOT canonical (ADR-009
 ## section 3): the bases those multipliers scale (hero speed, radius and HP, base enemy HP
 ## and contact damage), spawn cadence, ramp and cap, arena size, and the skill's range,
 ## damage and projectile, and the XP settings of ADR-010 (pickup radius, gem cap, level
@@ -137,8 +138,8 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 	var attack: Dictionary = registry.definition(str(attack_ids[0]))
 	var params: Dictionary = attack.get("params", {})
 	var form: String = str(attack.get("kind", ""))
-	if form != "CONTACT" and form != "MELEE_ARC":
-		_fail(enemy_id + ": only CONTACT and MELEE_ARC attacks are simulated so far")
+	if form != "CONTACT" and form != "MELEE_ARC" and form != "CHARGE":
+		_fail(enemy_id + ": only CONTACT, MELEE_ARC and CHARGE attacks are simulated so far")
 		return PackedInt64Array()
 	var speed: Variant = Fx.from_catalog(stats.get("speed_mult"))
 	var radius: Variant = Fx.from_catalog(stats.get("collision_radius_mult"))
@@ -146,9 +147,9 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 	var damage: Variant = Fx.from_catalog(attack.get("damage_mult"))
 	var interval: Variant = ContentRegistry.integral(params.get("hit_interval_ticks"))
 	var arc_record: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
-	if form == "MELEE_ARC":
+	if form != "CONTACT":
 		interval = ContentRegistry.integral(attack.get("cooldown_ticks"))
-		arc_record = _arc_record(enemy_id, attack)
+		arc_record = _arc_record(enemy_id, attack) if form == "MELEE_ARC" else _charge_record(enemy_id, attack)
 		if arc_record.is_empty():
 			return PackedInt64Array()
 	var spawn_weight: Variant = ContentRegistry.integral(weight)
@@ -187,6 +188,25 @@ func _arc_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
 	return PackedInt64Array([
 		SimConfig.FORM_ARC, numbers[0], numbers[1], numbers[2],
 		Fx.mul(DANGER_RADIUS_SU, numbers[3]), numbers[4], 1 if status == VENOM_ID else 0,
+	])
+
+
+## CHARGE attack record: [FORM_CHARGE, telegraph, active, recovery, dash_player_radii x hero
+## radius, 0, 0]; a charge that may retarget is not simulated.
+func _charge_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
+	var params: Dictionary = attack.get("params", {})
+	var numbers: Array = [
+		ContentRegistry.integral(attack.get("telegraph_ticks")),
+		ContentRegistry.integral(attack.get("active_ticks")),
+		ContentRegistry.integral(attack.get("recovery_ticks")),
+		Fx.from_catalog(params.get("dash_player_radii")),
+	]
+	if numbers.has(null) or params.get("can_retarget") != false or attack.get("apply_status_id") != null:
+		_fail(enemy_id + ": CHARGE timings, dash length, retarget or status are not usable in P0")
+		return PackedInt64Array()
+	return PackedInt64Array([
+		SimConfig.FORM_CHARGE, numbers[0], numbers[1], numbers[2],
+		Fx.mul(HERO_RADIUS_PX * Fx.FX_ONE, numbers[3]), 0, 0,
 	])
 
 
