@@ -111,12 +111,12 @@
  "note": "movement, enemy and skill constants here are trace inputs, not canonical tuning",
  "policy_id": "hip-fx-v1",
  "rng_policy_id": "hip-rng-v1",
- "schema_version": 3,
+ "schema_version": 4,
  "traces": [
   {
    "checkpoints": [
     {
-     "digest": "543c2e872e73846a881b8d88497aa218b074bf9c1f396665fe9bd916c9fe59e9",
+     "digest": "1d21aefabf0d6f82b21e455e4df492cd5492c47771494740a33cb04afef2c62a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -128,7 +128,7 @@
      "tick": 1
     },
     {
-     "digest": "529929b0dbad482a348bfa072672ae12c1c26582066288fee432de42bf6ddd6f",
+     "digest": "5ccf69c4dc8eeaeeff4f0f2ab50604de46d7b069fe08997ee313ce5286671831",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -140,7 +140,7 @@
      "tick": 2
     },
     {
-     "digest": "05f3f26596e61e696b95d6337c1ab843933e8ab0139add9f1908a826aabcdf07",
+     "digest": "daa7ea20e21a53d9987f3334866c30b88ad562f15c690678b820217eac9f0085",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -152,7 +152,7 @@
      "tick": 30
     },
     {
-     "digest": "10ec59ab0adbc902b2d617b0d9c0ebb3a8c3b3970a976793438758dd973ed07f",
+     "digest": "9861af25f36d4ab3e41ad95ba0143159c940dd8c5e8516e8d0243a9030ace14d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -164,7 +164,7 @@
      "tick": 60
     },
     {
-     "digest": "d5dd1b5938aa0637bd7c1e393523ff50467b90785e708b6f4e7f0d35631ce900",
+     "digest": "ceec17e68ff73029305050b39409f933bd2d7d7cbd7e45992442d839ea5e97ea",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -196,7 +196,7 @@
   {
    "checkpoints": [
     {
-     "digest": "9f4788c8aad8e93b4f9e1ca186f88cb1b1313340da44426327cac7f85055094f",
+     "digest": "9421bcd1d79082785bf42ec017f587ad90644c4527774ea6c99ab2a2c2492a2e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -208,7 +208,7 @@
      "tick": 1
     },
     {
-     "digest": "0c748b5d5a1629cbe01ee4c177ae03291ac7df3600205035f6e48d7778400d48",
+     "digest": "27c7b781eba1111f3243660f96dad2aacfb3a8da0e3cd1181d03a855ad0ab44f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -220,7 +220,7 @@
      "tick": 2
     },
     {
-     "digest": "7c7dafb40b223a0e15ededbf246c760b43186b8ba5f030908dced460b7e9161d",
+     "digest": "2340d4be54286264942a197da7358ccc29232e0f6fa5c75a3b7c3b1b5921d234",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -232,7 +232,7 @@
      "tick": 30
     },
     {
-     "digest": "968ff0dc9a465e09132b6fda45949fd1f8d2ffac59e8fbb493ad5d1f0836ef77",
+     "digest": "8235193a579569140f1865bf54d4409458969a37247574124dba180eb36f57b7",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -271,7 +271,7 @@
   {
    "checkpoints": [
     {
-     "digest": "3453ccb1b106ac5e95a356c562237964d218d811e41ef9241a645ade7749ff88",
+     "digest": "4c8f1572d02684628cd49ad18d49da849ffa9fba41107a32d8014df2c7b82ec4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -283,7 +283,7 @@
      "tick": 1
     },
     {
-     "digest": "80f7e9811639a322a6a1923beb21e5670e80c280cd15cae1abf660e7d108968e",
+     "digest": "cac88e89c928904e13dfe64e4a9f4ca54867f99f11f17497a09c8935160c6acc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -295,7 +295,7 @@
      "tick": 2
     },
     {
-     "digest": "8cd74dcec0f6f67848adf335158dfdcb21df2d983c04a8f2add4ac7360248884",
+     "digest": "949ea2cd9af2e058fbfed48a4d99db735501a77a6998c736dea53f3b7b69d637",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -307,7 +307,7 @@
      "tick": 30
     },
     {
-     "digest": "0ae01a90c857c19731dbc930aa382220e6690852c349f4f6403c0b25c4ce2eee",
+     "digest": "79c76f3407b1de173ee6be65d88eed17ccb61358c6f5830458e33371c572da5b",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -346,7 +346,7 @@
   {
    "checkpoints": [
     {
-     "digest": "90f77b8bd37f186163f70f2195fc6412f0b066c30dd7931f3bdfaab6cc1f93ea",
+     "digest": "74cfee638459f9d63de1c984a49545547ceb0af80b76c86020b0cc4c7c47f2f2",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -358,7 +358,7 @@
      "tick": 1
     },
     {
-     "digest": "5ce9192736e84ec45d4ca6c23140195799d000a535cd42b0fe38cc2431659703",
+     "digest": "a6f5231dd2bfd08f28bc072127bd97ff946a394746e68bec4148d35efc0c4f45",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -370,7 +370,7 @@
      "tick": 2
     },
     {
-     "digest": "986e6f7aca4285825e29fa9081f7ef23f78bae84441e7879a259d92d348f0468",
+     "digest": "5862fd1db9c7d708f0af0850e0d516c382399bf39185f54ff09bb6ccd3b9fc67",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -382,7 +382,7 @@
      "tick": 30
     },
     {
-     "digest": "74b276fd324593a921d0a0c95db5a83e12f012d071dff8d547135ce77fc0fe68",
+     "digest": "21ff7cde107c7e0e2b21cc43fba9883d7ae5f449256645ce0ccd4af0824ef31b",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -394,7 +394,7 @@
      "tick": 60
     },
     {
-     "digest": "4d845c5da643f0d196b1f9d2c2044cda1c4e42473b73ecb72de7e2d83dcc4927",
+     "digest": "2a544a4ab46a739c7831824ee173440bc5d6b383ad6f9c8054f1d71c2371f21a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -439,7 +439,7 @@
   {
    "checkpoints": [
     {
-     "digest": "9f4788c8aad8e93b4f9e1ca186f88cb1b1313340da44426327cac7f85055094f",
+     "digest": "9421bcd1d79082785bf42ec017f587ad90644c4527774ea6c99ab2a2c2492a2e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -451,7 +451,7 @@
      "tick": 1
     },
     {
-     "digest": "0c748b5d5a1629cbe01ee4c177ae03291ac7df3600205035f6e48d7778400d48",
+     "digest": "27c7b781eba1111f3243660f96dad2aacfb3a8da0e3cd1181d03a855ad0ab44f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -463,7 +463,7 @@
      "tick": 2
     },
     {
-     "digest": "7c7dafb40b223a0e15ededbf246c760b43186b8ba5f030908dced460b7e9161d",
+     "digest": "2340d4be54286264942a197da7358ccc29232e0f6fa5c75a3b7c3b1b5921d234",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -475,7 +475,7 @@
      "tick": 30
     },
     {
-     "digest": "968ff0dc9a465e09132b6fda45949fd1f8d2ffac59e8fbb493ad5d1f0836ef77",
+     "digest": "8235193a579569140f1865bf54d4409458969a37247574124dba180eb36f57b7",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -487,7 +487,7 @@
      "tick": 60
     },
     {
-     "digest": "70f40f3bec4aa1eb0c389383e20404b2b63429f7f83b7802fd83e661734674d8",
+     "digest": "e43db7346d38c8225a8a454ee90236b089812af7f0e387f42d4b7e98387785fe",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -499,7 +499,7 @@
      "tick": 300
     },
     {
-     "digest": "7d2b57f5a162855c327c1d8ff03f8d34d720b05a768d1559d46218fc41ada8c9",
+     "digest": "8cafcc55f39a9310014d073cea8b2a340a376214da7e3c00ae21e57ba6edd524",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -538,7 +538,7 @@
   {
    "checkpoints": [
     {
-     "digest": "543c2e872e73846a881b8d88497aa218b074bf9c1f396665fe9bd916c9fe59e9",
+     "digest": "1d21aefabf0d6f82b21e455e4df492cd5492c47771494740a33cb04afef2c62a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -550,7 +550,7 @@
      "tick": 1
     },
     {
-     "digest": "529929b0dbad482a348bfa072672ae12c1c26582066288fee432de42bf6ddd6f",
+     "digest": "5ccf69c4dc8eeaeeff4f0f2ab50604de46d7b069fe08997ee313ce5286671831",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -562,7 +562,7 @@
      "tick": 2
     },
     {
-     "digest": "f981694066ff242f34f3cab354b904af10d12116ab02320510e65566ff6e2c0f",
+     "digest": "b04cd9549e6da0c63dffd2ab425a811c4d06865dd56199cd61d8087978e141e2",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -574,7 +574,7 @@
      "tick": 30
     },
     {
-     "digest": "c5ea3bc73505081b39404fabc0c3092e7fd30c04ae827fb4874141c2024bd101",
+     "digest": "cd7bfb80a04628a016dc123552a5745afad661a54ddc93edb1c7cf35c835d97a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -586,7 +586,7 @@
      "tick": 60
     },
     {
-     "digest": "f7d57b313c4c24b13db087d6fcb4b2010971d7a44f3f7358826538be65a5bf99",
+     "digest": "a86f5e183fbe43fcf32117574e578c5ce9e88854f8dfdaf2a990615f875a4845",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -598,7 +598,7 @@
      "tick": 300
     },
     {
-     "digest": "0a7c3ab9b0257fd7980756f0c09e4a10720c7eeb6e4a6fac255542e5bfa5c96d",
+     "digest": "23e56f81628070a26a60fca1394acd909bcae10c2af422ee68741f738cc6fc2d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -637,7 +637,7 @@
   {
    "checkpoints": [
     {
-     "digest": "543c2e872e73846a881b8d88497aa218b074bf9c1f396665fe9bd916c9fe59e9",
+     "digest": "1d21aefabf0d6f82b21e455e4df492cd5492c47771494740a33cb04afef2c62a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -649,7 +649,7 @@
      "tick": 1
     },
     {
-     "digest": "529929b0dbad482a348bfa072672ae12c1c26582066288fee432de42bf6ddd6f",
+     "digest": "5ccf69c4dc8eeaeeff4f0f2ab50604de46d7b069fe08997ee313ce5286671831",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -661,7 +661,7 @@
      "tick": 2
     },
     {
-     "digest": "2de615211e49b41949307c326ce7302ed7fa1f530e85746681694ebe59a26de3",
+     "digest": "5c61fbcc2fdd8d02246dfa06cbd0f1e928f35c9a46ac3e91f7f8a8e2f3125c4d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -673,7 +673,7 @@
      "tick": 30
     },
     {
-     "digest": "f955cdd926a272e3bd1e4fde05dd917e9a39310aa4156bb5cf954467b895d2cb",
+     "digest": "cb17af6d85f228352184a025bab32bd303553fdd6c3e191947fd0f5bf1408c04",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -724,7 +724,7 @@
   {
    "checkpoints": [
     {
-     "digest": "5cf021fc980cdd5248110e8ee12baf6f8ec52be792c597797764a71c6fabddd7",
+     "digest": "b90cf10ef889b799bb5ca35657e61b32b5bdf13c3dd24bb5fd1bc89e4930c8f7",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -736,7 +736,7 @@
      "tick": 1
     },
     {
-     "digest": "ecfb951d56d005636cd7c9af54040df27c7f164bcc7e87e09e87fff495a2c5dc",
+     "digest": "22a90ec6659f344bec5b4cd90ed754aa7de1feb927ecb834d33bbceadc0b98fc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -748,7 +748,7 @@
      "tick": 2
     },
     {
-     "digest": "eef8f388c85dd9325dc3fd973d6d41cf77bc7abeaf0081ac4c84c736e85347f7",
+     "digest": "efbfe6fa2fe21eaa7d0ef5ca191358453ebb0f516a249418b9e7261f66394e36",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -760,7 +760,7 @@
      "tick": 30
     },
     {
-     "digest": "fc719434a9b1f40a77880b1784ca255fa494edb5021c081c6d06e0ad3076be38",
+     "digest": "8bffbc10dcd8f43ffc38546f115f39763ebea5fc2bcba02f671b3196408d0b88",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -772,7 +772,7 @@
      "tick": 60
     },
     {
-     "digest": "73466ab2bc2c1de8cd7e6daaaf22bcd763736fc2031a59e440a97c9cb43ca6e3",
+     "digest": "37b7242420d52fbc8efc30d8129d637e84688711c2b6955a820df3bc56bc7bdd",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -784,7 +784,7 @@
      "tick": 300
     },
     {
-     "digest": "80bb624699754a3e7bc5c95e4712a7537a25a98a51ee5ff3fdda3ce3d61a8874",
+     "digest": "b584c10dcf78ee304f9ed92617eb71cc34821eaa7f478ff9de25d846640d9f57",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -796,7 +796,7 @@
      "tick": 600
     },
     {
-     "digest": "ebdc992681a15e3c031e8ecf4921618f935c74a4178565d85f80829c300282cc",
+     "digest": "10baee1cbf6a9ada6f1ddcb5d47ad46be123a00c3c2b4615fa146e78432b86b1",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1429,7 +1429,7 @@
   {
    "checkpoints": [
     {
-     "digest": "1c3a3538f09d483bcab2c4f64574a870c3eb5c5d4d283afcdbe0915e5d9dd59b",
+     "digest": "d85cbb69a1afb9a976f3d03ef4066b2242f8d4601fed705b1670b9e092c2cb8e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1441,7 +1441,7 @@
      "tick": 1
     },
     {
-     "digest": "9da4e8845b5460ada2f98600a19385f98a690d2bd22bac04a4571912c0dfac3c",
+     "digest": "bcc5c8c1c2c5c29d4871c467a73170ff69c7489a6a5f6acf5d962b6aacbbbc84",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1453,7 +1453,7 @@
      "tick": 2
     },
     {
-     "digest": "e677d75303d537f1e9868917b630d056015d3ae78402685fcf011352a16ad4b7",
+     "digest": "3b836bc3fdc6495434f3e163abe3b2d02665674737af7ec262130bc722225651",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1465,7 +1465,7 @@
      "tick": 30
     },
     {
-     "digest": "857876a02d4343d75364f89213feff8b457304b6347734469cd3c6e3341675fc",
+     "digest": "c9c7261350447acbbea35ba4c655c5335a24ffe5d595bd3cc435d8bcc312be1f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1477,7 +1477,7 @@
      "tick": 60
     },
     {
-     "digest": "2b7961b5ea5c9c395b9e77c9a47928efa624805cf641ab2e57e45572900808d0",
+     "digest": "81b18b198f607300ca27861154cb2f3229009b5e982e31bf31eaafbcb762557a",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1522,7 +1522,7 @@
   {
    "checkpoints": [
     {
-     "digest": "3453ccb1b106ac5e95a356c562237964d218d811e41ef9241a645ade7749ff88",
+     "digest": "4c8f1572d02684628cd49ad18d49da849ffa9fba41107a32d8014df2c7b82ec4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1534,7 +1534,7 @@
      "tick": 1
     },
     {
-     "digest": "80f7e9811639a322a6a1923beb21e5670e80c280cd15cae1abf660e7d108968e",
+     "digest": "cac88e89c928904e13dfe64e4a9f4ca54867f99f11f17497a09c8935160c6acc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1546,7 +1546,7 @@
      "tick": 2
     },
     {
-     "digest": "8cd74dcec0f6f67848adf335158dfdcb21df2d983c04a8f2add4ac7360248884",
+     "digest": "949ea2cd9af2e058fbfed48a4d99db735501a77a6998c736dea53f3b7b69d637",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1558,7 +1558,7 @@
      "tick": 30
     },
     {
-     "digest": "0ae01a90c857c19731dbc930aa382220e6690852c349f4f6403c0b25c4ce2eee",
+     "digest": "79c76f3407b1de173ee6be65d88eed17ccb61358c6f5830458e33371c572da5b",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1570,7 +1570,7 @@
      "tick": 60
     },
     {
-     "digest": "86900c6d71694d864201c33819b71d95a9d98ccd501c517a6d48dae159956700",
+     "digest": "25a6ee1d3e3d6e0e52c8b7635330a68c1e95e5e3958de2997c9dda3380455c76",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1582,7 +1582,7 @@
      "tick": 300
     },
     {
-     "digest": "08c3d75d16907bb8c190bc054a72cebd3ae4afcea30d36d72f49c1962465d54c",
+     "digest": "2e5d1c6d159b0437a11d9ee26fb824c93206520da6d2edce32077354267a15cb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1594,7 +1594,7 @@
      "tick": 600
     },
     {
-     "digest": "f3468382a7c03476e394c6c490215ffad33b5b38ecfc459815e939a8f4879b13",
+     "digest": "a355597f1ef74d0738339e0526ca9290824b3250a09bfd9b98b80ec878eba816",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1606,7 +1606,7 @@
      "tick": 900
     },
     {
-     "digest": "25dbe4bd256b99c13619daa3450b5363f45055c44db7899655af746370ead56c",
+     "digest": "3632fd814ecbff16eef2eebb5b856e7447b33021e0ce1f74ff7a055239e13351",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1618,7 +1618,7 @@
      "tick": 1200
     },
     {
-     "digest": "bbe2d115340a8527e4e04a6bd58e0e2f94d5906b9e73e91945acd7b3a6786b6f",
+     "digest": "cb016cb276dfbdfb02a1a6189607497e02573c299feeb7d80db2fadcc591c0f1",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1630,7 +1630,7 @@
      "tick": 1500
     },
     {
-     "digest": "6108a8b46d7fa710e5215b2433bb33946808255a4977bcae719684233870b6f3",
+     "digest": "2b5b5e6f76686d53456d5f9ba7a07a65db4e9e4a98c5663dc64a2a4d6e84b024",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1642,7 +1642,7 @@
      "tick": 1800
     },
     {
-     "digest": "27d2c0a4adeb625f66573473c9ad3455a51fad3b47a4c1783890ea18ffcf535a",
+     "digest": "7227a16231a21b1355e8323bd91135195c78a7c03e9087cbaa8ed599718c501e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1654,7 +1654,7 @@
      "tick": 2100
     },
     {
-     "digest": "02ff368d000477f3ea0cf97815809fd66ff8942c678d738f9968eb180be6a099",
+     "digest": "9bda9a4b9980155251e4dc2eccebcd9e794d5aa10251edae03c0461d68a21b8f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1666,7 +1666,7 @@
      "tick": 2400
     },
     {
-     "digest": "514749cf55f076a0c9777a000dc96496d320b8d6512325a7661c9f644c6cc880",
+     "digest": "af0dd15459ec18196284e20a6ad80076ba5aa4857f3e520ffb72288704073297",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1678,7 +1678,7 @@
      "tick": 2700
     },
     {
-     "digest": "2821fe0e5b868f5b6fadbf4dc6f28d4ac558e28cd170eb852edc923669cbee20",
+     "digest": "6bbd81ccb030084aab69f924c6dbae26cd8ea9b82abecbfc7bc39e1325c4a55d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1690,7 +1690,7 @@
      "tick": 3000
     },
     {
-     "digest": "d0330e0ab4f3dc03f3b43d0328077872b7297bc92dda8ee2533ae191f1454e66",
+     "digest": "cd110a38a0c303210ac197edbdad2694e87219025a18672c0c2b4513818f4ff8",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1702,7 +1702,7 @@
      "tick": 3300
     },
     {
-     "digest": "09ce6ea5c5f2a3bf0cc571b8d338e85d8fa8a3a7cba3bc7dbb253b3a5d30b163",
+     "digest": "c6b8f25ecdf6e6574df78196bd763aff77430bc3018a25541be8f7d588edcb2f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1714,7 +1714,7 @@
      "tick": 3600
     },
     {
-     "digest": "1f2f577348d9975dd2cd2c0a568b3d4302165ab3bef6aeada2f3bead2bdae528",
+     "digest": "dcfae9fcbbcfb5c00fe717ddb34c19eaea4ecac25e84378972c211ad9910e39f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1726,7 +1726,7 @@
      "tick": 3900
     },
     {
-     "digest": "9c2cb355f326d647c163ddb656e35cbcad0071842a27530071dbd27d145c0f6a",
+     "digest": "edfda63c6bf561eaa0f3a76cbfae8650ded50845409248710a3258b784d5dba0",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1738,7 +1738,7 @@
      "tick": 4200
     },
     {
-     "digest": "fa679f5f607e8ce5229c08157007b502fbb1114ace3c4317eead65df396f3482",
+     "digest": "0af290dc426c0c7eca4a7b33d317002d52a990d4b19b652965ff74e860548cfb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1750,7 +1750,7 @@
      "tick": 4500
     },
     {
-     "digest": "c6a04d0ed11dd0ec8634e820844dcfeafa00ec6f2d3205eaf1645c51a6930c59",
+     "digest": "dfc1b25cefbaba1735586ada4c6aca22c23904bdb6ef6156dd0c6287924dd4aa",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1762,7 +1762,7 @@
      "tick": 4800
     },
     {
-     "digest": "0b29f010c43dc15abfa0fa7a89e4f585996f49daa9428146363625908fb0060d",
+     "digest": "e060a71a880a1bd9c74ea388092aa1e34437126a8a49816dececbd2bc56d735f",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1774,7 +1774,7 @@
      "tick": 5100
     },
     {
-     "digest": "92f14f5f6004b0564bb1902e69d6abb97159579d52dfeaf3394a4aea7f965795",
+     "digest": "876b0f54f2a5c8d7dd4d305bcc2bb15196a409e49cd5cd0f544f85416eceb942",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1786,7 +1786,7 @@
      "tick": 5400
     },
     {
-     "digest": "b1cd84eacdd696583501568d0a48a1c8bd4bed78879f1f7afaa05cdc6368afcf",
+     "digest": "2a4eab011857eb6e414741f7a3dd7652fd8fb949f897b2ae922c07c94b2c37d9",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1798,7 +1798,7 @@
      "tick": 5700
     },
     {
-     "digest": "67394cfc90910a19ef871f5ef2606d5e6c8f2874360a68beb2ca86598990b263",
+     "digest": "455b7896cc00fbda69f24124f02f12cfd6e2119b4946da1cd50b415aa9168afb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1810,7 +1810,7 @@
      "tick": 6000
     },
     {
-     "digest": "c51d7a2c1fcd19aa64f548d64491850f47303abc14c27961de7215d012bca34f",
+     "digest": "3ad44298ba7ce686acfda4e0430be3c85904d5074027d87fb24cc05f8c814039",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1822,7 +1822,7 @@
      "tick": 6300
     },
     {
-     "digest": "eeee9e65b16612bf9dc425450ed4bef7523b74002048967562318f49a7b72dc5",
+     "digest": "78b447c9b077e4ef5daebd29cadcab452e5c820b05d17eed87d28ed5a8532461",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1834,7 +1834,7 @@
      "tick": 6600
     },
     {
-     "digest": "dd1a899985d8da6616c94df7ff1e65c4d3a6a9b0fc7b25865fa2198789f2a6a5",
+     "digest": "13cd27cecfe73a5f5eacef995d52e377838077b1c99862eda66afa42c34b32ae",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1846,7 +1846,7 @@
      "tick": 6900
     },
     {
-     "digest": "d731ab8dde4bde9379f3a9c946af6d02246103ad677505a0c73c20ed8cf7dcd3",
+     "digest": "9e1a46e1bbda4c41753752b5e40bb367f35980902e626130e4b105134785da10",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1858,7 +1858,7 @@
      "tick": 7200
     },
     {
-     "digest": "682a6163cc8367d7f1faa50f3610eda124101272204bc5c8458ad39388339b85",
+     "digest": "4b6cde4ae812cb1a8ac08df7a7ad06346c140c2313907c5916761007c7e3d262",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1870,7 +1870,7 @@
      "tick": 7500
     },
     {
-     "digest": "d76b72d52aead4e7cc8b66f9f7c3e81e2df7fa5e7144519e56909052912af9c3",
+     "digest": "20d01fafa938d76920b5b12c602af29c17735a6985c0eb3e13bf075c2249aea4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1882,7 +1882,7 @@
      "tick": 7800
     },
     {
-     "digest": "e15c3e7c95325ec6a7dadc954ab67a157d39f06c6fe8a3bffcdba8353aea11d1",
+     "digest": "b78f15689279dd94c139655a38faba550da8c949e8ddeef21133770c300c957d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1894,7 +1894,7 @@
      "tick": 8100
     },
     {
-     "digest": "f050212ff0f0c7c52d68361de320ee2dc4181eb75f322b0cb49f948d874e38a4",
+     "digest": "019f4e90a57a30269da3e7bea99884c375303ec50961346c19766296d15ad8b1",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1906,7 +1906,7 @@
      "tick": 8400
     },
     {
-     "digest": "078026220f4e6d676be4655162ba6d60ef76fd5f8a37d021e7865995a9980537",
+     "digest": "71bdc3f098457f6c6f9cb278ea2d53ff84577c779d541b1d37281dc068264c53",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1918,7 +1918,7 @@
      "tick": 8700
     },
     {
-     "digest": "6448a29a7f2683584eed56a60538c5a2d16e951368a2f6478ce19abe9baef265",
+     "digest": "14a3fafd8e6d9710acf89560d9ec0b3dd9367c66879f807e37367df45043f741",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1930,7 +1930,7 @@
      "tick": 9000
     },
     {
-     "digest": "8382496ac6c53587a361b326baa05b2113f6547654c85a7fe0362963397ef702",
+     "digest": "935911078dd3f129f9ebbf497448fa92d561b174065f8827ae62cba175408d78",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1942,7 +1942,7 @@
      "tick": 9300
     },
     {
-     "digest": "e34b9bea79ade44448a2b94126500d94b9828c298bc74b46c19d7794ff2e2857",
+     "digest": "d15daa584c9f2f92514b8a6119cff515226ded68fdf4bf53f1b2e30ab9599b32",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1954,7 +1954,7 @@
      "tick": 9600
     },
     {
-     "digest": "4163c323543f643fb13732d352cd4c797d8707d24f994c04e42a83b5a86fd67a",
+     "digest": "2ef7180106f00f1c549c21fee3213521e7fffe131a1d088e03cd37561b224068",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1966,7 +1966,7 @@
      "tick": 9900
     },
     {
-     "digest": "22350058f1ccbf9e1110b48e7d00ca68882b47356fb79ad4209e45403d68d7bb",
+     "digest": "5976edb2cff2a6672cd44b6d6d8409344cd06165764c414bd240019759897898",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1978,7 +1978,7 @@
      "tick": 10200
     },
     {
-     "digest": "28e84e71b930ef7cd9a6ba581cc6570d8e4039a79aac90c3df5dcba9fa9ccd31",
+     "digest": "c2b67b2cb1bf73e4f69e6076d173b5eeddbe73300cbe15b7879a65dde003fcf4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -1990,7 +1990,7 @@
      "tick": 10500
     },
     {
-     "digest": "f64904e17f903ef241a3666321895c5ec270b578eef7c4705cbb2e5ec4ce02ce",
+     "digest": "7c12f6687c42a85623a510bffff53cceff3075a1b515e878b3818589db0ea820",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2002,7 +2002,7 @@
      "tick": 10800
     },
     {
-     "digest": "0f2bc85738a84ab7bb35ef7a2fdb25734fd565fb102eaf1f41546cdc7887353b",
+     "digest": "0e1b33e5b6f56a1b6d0fd1fe43d66fd97c875a0f334df047cbee9a36c3e9fa9c",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2014,7 +2014,7 @@
      "tick": 11100
     },
     {
-     "digest": "f5b4bb805767ea3d94c7c8d1de6ecc412bbb076a1b697646f87e7d837d8dcb6e",
+     "digest": "5805f33b529e8e66e0981b27498ded45e054037e338650e378cdbe458cf55902",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2026,7 +2026,7 @@
      "tick": 11400
     },
     {
-     "digest": "a10daa0e67f63e98ee3d6a670c4ab3c1ae6297716133372a5f64f88a25a19cf4",
+     "digest": "43991fe6957f57fc3ce6f79e56487d88602645211d543f482602dbc74f02c1de",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2038,7 +2038,7 @@
      "tick": 11700
     },
     {
-     "digest": "22371b2379d7f410eff1fe8b0a018ec5c7f968605676e46b74ffe28b4856fcb5",
+     "digest": "1c1217b3a13e3e7c7cda05dc8371e20bc6cef190558f35f565b28fabe7671a73",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2050,7 +2050,7 @@
      "tick": 12000
     },
     {
-     "digest": "54e3fd5798be9f59e86ee2a738c76c78e687968c5442fc3a98175bed94261f63",
+     "digest": "76578b6834b782fc0a92d692d7747b557e001fa07ece5a104cca14092beaac2d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2062,7 +2062,7 @@
      "tick": 12300
     },
     {
-     "digest": "9309b8fedcc8320f677d1d47f23015a5a3805bc610cd38a42cb921bfce27e857",
+     "digest": "c2e41d8561dd8870cff56f01d05f719c5462a46fea88547b430d1a3bd357d8bd",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2074,7 +2074,7 @@
      "tick": 12600
     },
     {
-     "digest": "fea9b80e405503a289db011052c0cf936815fb54474aa80e196d16aa222b79bc",
+     "digest": "04fbde5e57fc478940877e8309c9b4afbbd4bc8f53b58f3737756936f406361e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2086,7 +2086,7 @@
      "tick": 12900
     },
     {
-     "digest": "e66ce658a41f45c204777d8a750a2601539edc1c6400aa9fbda8758c47c90b9a",
+     "digest": "86be46fa1f54df51ffd226f28f68d030c3df3865d49d856a7fb5d7fe94c04d93",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2098,7 +2098,7 @@
      "tick": 13200
     },
     {
-     "digest": "f992e8581ca7d85d901123b215f98d4e46590708c2bf2f76b5f00a60ef0f44d1",
+     "digest": "e6009493a2755ea4e6801eb9428aa00d547a19850cdb23406b53aae49ef4d3cc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2110,7 +2110,7 @@
      "tick": 13500
     },
     {
-     "digest": "32230a65fe8f5e4e7e74f86a9a2d5ad6cd3fa4648ac04e11be4f444aa522144f",
+     "digest": "d0ff0ba01924281df39829e5ea230d49a4a30e93715104a6184cd656e76434ed",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2122,7 +2122,7 @@
      "tick": 13800
     },
     {
-     "digest": "dd8f12c5ee7850c7cbe781810abf529520f31951c7414e0103ef6ba887c78787",
+     "digest": "07bcb04546d22f2c222c9334742afadf7c3cefdd240296351c32877cfcae26d0",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2134,7 +2134,7 @@
      "tick": 14100
     },
     {
-     "digest": "66325375e307a56ed832f3a15e16b19fd84ea274fa1788fe4dd192cb88fc103a",
+     "digest": "393d4f2f0b084b11066838e3b0a3c5f3c0e361dfffcb0fa457ba4ebc5430c4a3",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2146,7 +2146,7 @@
      "tick": 14400
     },
     {
-     "digest": "45af9df1f217208eead29ca05bd225d66d775e4d9a988bad9d45fae37bfcaeeb",
+     "digest": "9df1fc90d0dcb811fe4f01c4f42de321e8f7d70c70932eb348a5af50c93a2075",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2158,7 +2158,7 @@
      "tick": 14700
     },
     {
-     "digest": "47cf0d7dcceb7275a58f0f3bcf5d013c861d9f169870c88c83f094c107eafe2e",
+     "digest": "fb2200f433bba55298c38aaab2ebca88368548ad0a1bbac8d4b700172b9c973e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2170,7 +2170,7 @@
      "tick": 15000
     },
     {
-     "digest": "f1ef7413aa8411d13d8cef94ab6777ca268a05470c1eba68d6f8a0902e5fe40d",
+     "digest": "2044ce9d69d49389697028fefeb500d06a04583e52144fbc04f6e8d300e8fbde",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2182,7 +2182,7 @@
      "tick": 15300
     },
     {
-     "digest": "0310bf8fbc7235d55d206e554575dcf0c683ad0df128360f95035db9a1cd8e4f",
+     "digest": "f465d232106bb3e62977723776bcbe5970c8937519a488e273bf1bc34ad00975",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2194,7 +2194,7 @@
      "tick": 15600
     },
     {
-     "digest": "1c2ae50991e66e71cfb5fa09b9285c1ac4781c95803927614293b40dcc6b9875",
+     "digest": "e5942121b047d953d87743bb6c48073a820ba1d53967fd32250f00ed9ea1fa67",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2206,7 +2206,7 @@
      "tick": 15900
     },
     {
-     "digest": "48cdc9cb04012b1393a292e4f3786d3ec4c9667846f5ede8c5cd645ad9a78642",
+     "digest": "a34522e92c8599278ba8b6afee8bd6344ef66d1eedeadce45cba3f996ea6276e",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2218,7 +2218,7 @@
      "tick": 16200
     },
     {
-     "digest": "2da250fac72aab1462dd2ed8b191a29f7d19fafebdcb229d20b442eff3e43f3f",
+     "digest": "658716e76c3a9c6994663c2e3c386c1255f1fd64167d6756dcf5dcfe844e1aea",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2230,7 +2230,7 @@
      "tick": 16500
     },
     {
-     "digest": "e4dbe815fee844e30ee138583b9c0095b2e342972216c20c54a0b5fb4ad718d2",
+     "digest": "0ad973692ea88305eb51aee93d09b3855307a781332e8cfe98463db96e404fa6",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2242,7 +2242,7 @@
      "tick": 16800
     },
     {
-     "digest": "9beef546bb596e6a9dd778ebafeb8fbfff30ad00e39e54ed8fd1fd17d7dc7769",
+     "digest": "e3f6c5a56838cccde2b18fb778285bc6efab2948523f2982c2af6abecd0b8fd4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2254,7 +2254,7 @@
      "tick": 17100
     },
     {
-     "digest": "a33fe60e96c323260882889fb4d923b77f30737e4e52692424c16f2ed2bb7d76",
+     "digest": "f6dc1c1a5b16b6c4e9450655813242882b027ba482d507fdeed8919383d959ea",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2266,7 +2266,7 @@
      "tick": 17400
     },
     {
-     "digest": "e44ee52d4be911a98caf7a8c1530f389cb7150dd8386a439366fdd9ed38f040a",
+     "digest": "7aa991d6f8764be5591b14b5f96d2c0fdeed1605bf0a6ab9d0434b94ca277837",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -2278,7 +2278,7 @@
      "tick": 17700
     },
     {
-     "digest": "c93b7a74c949908233aea73006dc9a5dcad1765f830eb03d19b28645752992aa",
+     "digest": "c01ffafb915e9a9a79c3e0f50ad48cca257410ad9e8830be69b4ba065a5c0ac5",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "0",
@@ -3511,7 +3511,7 @@
   {
    "checkpoints": [
     {
-     "digest": "223b8a29692dd7e28f611bec2b4803eb9be86dfd34ffaf0357d3be1729ce3ea7",
+     "digest": "d7f5ccbe97da702d7602c462ea59ff1816b6c58e7f57e6b2edf6499f1d746123",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3523,7 +3523,7 @@
      "tick": 1
     },
     {
-     "digest": "73a56da2e337c94251bc55d72d3891095e5e7715c0b8497d2b988dac652837bf",
+     "digest": "66fc0d8441d955302908f610115dd2e95d3e5b2b69fef227d5f8bff019f8f40b",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3535,7 +3535,7 @@
      "tick": 2
     },
     {
-     "digest": "a924f359d08b0e461c3bd3fb52090dda1daf3f3514a14e2299bfcfb11b916854",
+     "digest": "550549b9af193b31c02d639416fd3204a3d8df38b253f6df2225282155f1f35d",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3547,7 +3547,7 @@
      "tick": 30
     },
     {
-     "digest": "3f3ffdddb62b9a8e4e4b6c83f7603ab5a8738b5c917b25ee4d3feb4349ec5d9b",
+     "digest": "cc968e1ed6383ff7cdd2497bb06253fb7a0ec6db8df472e76ff6fd8856dd249b",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3559,7 +3559,7 @@
      "tick": 60
     },
     {
-     "digest": "44af5f0a4dc49619d9754e6720f4e1506b5aa80c3ba974780d14fadab784b5de",
+     "digest": "64e71f044a5686751c3543b19eaefe7d9d5f5d280ad63c646fbf244c2514c9fb",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "87000",
@@ -3571,7 +3571,7 @@
      "tick": 300
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3583,7 +3583,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3595,7 +3595,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3607,7 +3607,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3619,7 +3619,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3631,7 +3631,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3643,7 +3643,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3655,7 +3655,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3667,7 +3667,7 @@
      "tick": 501
     },
     {
-     "digest": "ced5bf05615ada0e0b2803bf5a8792819703f96b1be5a1826ba898ce04342138",
+     "digest": "48b4ed71b11269ce18a7fa4d3d591e4376700730d90fbf1d44856b473a079786",
      "enemy_alive": 5,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -3723,7 +3723,7 @@
   {
    "checkpoints": [
     {
-     "digest": "d1c93c573c7b744eff7117a8a6afdf5ff9a112daab41668647de2ba977261c91",
+     "digest": "71136fb9b85d7dd068ac7f915edccecf7db8014fdcbe806a6d98d660787b8b05",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3735,7 +3735,7 @@
      "tick": 1
     },
     {
-     "digest": "461d80017ac264e9b5921173f34b07b06e77dbcee40a8ab790259d0fda7a413d",
+     "digest": "61aca67c8be74b643a5beb8a5fb15076a42831a311680de383392a256ab62caf",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3747,7 +3747,7 @@
      "tick": 2
     },
     {
-     "digest": "dfbcb35e2ecda7e2615a395dcbff3c49f6b5797bf81319b4897a15815461a8fd",
+     "digest": "8d7f5f53b4b3d150917705faae4a6f86c18071ef0e7fd4c6d7712899fab8a4ba",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3759,7 +3759,7 @@
      "tick": 30
     },
     {
-     "digest": "e83f6ba2cb8fa196bec60947358e8dcb54e3febdd332491a865662f57fa0773f",
+     "digest": "b5d1ad039ebc65fcfc9b18e7eabb2a11de4208a465fe9f1d7fce4fe33da2a1a8",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -3771,7 +3771,7 @@
      "tick": 60
     },
     {
-     "digest": "f87d2e1610eb539ff9dffee891b9e4d3873fa28095e9ca5341bb86a16140be3c",
+     "digest": "261a3440efd5a008c761b404c66502a9026c08b9f9bda051e12c41020ccc0071",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "93500",
@@ -3783,7 +3783,7 @@
      "tick": 300
     },
     {
-     "digest": "0bede240a401be60dc071f730c473c40e2582f8204e91be19c07b5fd3bad7a04",
+     "digest": "1d75c750d9dab6d0d228788cfad1a7d879f3cde654d84f5499cfb70c81dc171a",
      "enemy_alive": 6,
      "hero_dead": 0,
      "hero_hp": "42500",
@@ -3795,124 +3795,124 @@
      "tick": 600
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 900,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 1200,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 1500,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 1800,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 2100,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 2400,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 2700,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 3000,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 3300,
-     "tick": 696
+     "tick": 697
     },
     {
-     "digest": "9810d3afb6745eea01f299d0270ab9a97548fde3a03f6602aa2a15e4d49bfbd3",
+     "digest": "0df5916cef3409f937f8a36b9a471913dbc391ff2bb2cd2c1a8e6ca66f98638a",
      "enemy_alive": 7,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 0,
-     "player_x": "1014304",
-     "player_y": "526784",
+     "player_x": "1017698",
+     "player_y": "530178",
      "projectiles": 0,
      "step": 3600,
-     "tick": 696
+     "tick": 697
     }
    ],
    "commands": [
@@ -4500,7 +4500,7 @@
   {
    "checkpoints": [
     {
-     "digest": "e8ed97208e0e10d197e575125cecd96c3fcea19852ece022a6d9f30b82252303",
+     "digest": "50c871a191dacb746b2108dd68dc0b8fbcc1e33897d536606a41f45e3f548de8",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4512,7 +4512,7 @@
      "tick": 1
     },
     {
-     "digest": "f73ac6e0cb139a5da47f596bf1f6ec0a61df043b09309a1f2ae49f5e548db11c",
+     "digest": "b2b75f2023c5220a1bc84e23b04cdd37cccb0e78db5201bd66e6ff0b86c49e63",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4524,7 +4524,7 @@
      "tick": 2
     },
     {
-     "digest": "bd4282bd4717d89fec0c63804935ec151c44e318b3cba403507e769b27f3a986",
+     "digest": "2c82fcbcad695b9af4322e5bdffe594c62aca0a8a5cec57118f341af1290aefa",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4536,7 +4536,7 @@
      "tick": 30
     },
     {
-     "digest": "a7d6dae7fc2255fcbff98acc72724135e8fd83943085759676d7b281660d28a3",
+     "digest": "0d79895499fe3ae3ad2eba9f8cfd4ef6721dd43649e3276aac5b009824cce160",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4548,7 +4548,7 @@
      "tick": 60
     },
     {
-     "digest": "78992fcf334f2d48ca76a7df5777318aa778385f34ac6fcefd98fa67583e0399",
+     "digest": "d1820520e046c132eebde54d62ef4f8b4ee39ac714a96bd1bbc321316afb6053",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "499954500",
@@ -4560,7 +4560,7 @@
      "tick": 300
     },
     {
-     "digest": "26d982443da44a1eb93cd6f43d32f26ce43934a5becd9198bc7c9527c6c8f840",
+     "digest": "941e87cb876dbf728c8bddcb9fbcc740a02e608d663dae8bde812ce116683f14",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "499785500",
@@ -4616,7 +4616,7 @@
   {
    "checkpoints": [
     {
-     "digest": "3f81516bd8984acaec69863370cf4435e955aef4af5144ba4d420d6c6f22d5c4",
+     "digest": "3a5913348a74727f9f95235b4c856db57c44ad1c0b3e3ac040b806613b0f8ee6",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4628,7 +4628,7 @@
      "tick": 1
     },
     {
-     "digest": "891c0bcbd438cae816c5eb4f7fb8c0edf1adb0010b7c4e24f92995295870a146",
+     "digest": "9d66adb7da5efecb6393ae49b0f597aa9583c36577c79f9ca4463116e0e8aabb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4640,7 +4640,7 @@
      "tick": 2
     },
     {
-     "digest": "e7b5971f9f38bee0419d7a4d5b38126bb039d48ecc6f93d5b0c08cd93eb591c0",
+     "digest": "b9806b2685af0147b7171872c3662c8643025ee3ca1421d288369ef4ba7c7fd0",
      "enemy_alive": 1,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4652,7 +4652,7 @@
      "tick": 30
     },
     {
-     "digest": "d495cb583df7db527f58b4458b2b5e900ab324cfe65883ef6c78cd92f9732708",
+     "digest": "a50c829639586e66d46dcfa7409c4b4c645099b00b18bf72cf50a4dc43796742",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4664,10 +4664,10 @@
      "tick": 60
     },
     {
-     "digest": "95ce19be4bf4ea75a5a4d512747b9aa245bc7b85a0cd86bf56590b0f943cb89c",
+     "digest": "58238bce050a62d8e1a7eba4f4a30ff72790edfa127310b64dca7b5b5fb43d88",
      "enemy_alive": 6,
      "hero_dead": 0,
-     "hero_hp": "499820100",
+     "hero_hp": "499902500",
      "kills": 0,
      "player_x": "276000",
      "player_y": "276000",
@@ -4676,10 +4676,10 @@
      "tick": 300
     },
     {
-     "digest": "107b96c417fa261bcab9a2678aed1540ca79be34d60e0d8798fe9c9a7de535f2",
+     "digest": "bdba16eaecf9293ed78a9fa34dbb98e890d3485f16bfedd801fb7041b7cc2fb8",
      "enemy_alive": 6,
      "hero_dead": 0,
-     "hero_hp": "499720400",
+     "hero_hp": "499857000",
      "kills": 0,
      "player_x": "276000",
      "player_y": "276000",
@@ -4739,7 +4739,7 @@
   {
    "checkpoints": [
     {
-     "digest": "83f1849fb05cb6ffdaecdb724f28130a4567fbbfc0636050e7d13d196d53ee1c",
+     "digest": "c5c8f0e5601014909b225bbeda45ee1659a59f4d55ea55be6f7a98fe4dc7e141",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4751,7 +4751,7 @@
      "tick": 1
     },
     {
-     "digest": "5945926587311f70fe27a39661066073def63efff4072c10ee38f0861e695e75",
+     "digest": "42f0236fa5904c2dcaf32f3c7232034a09fb42a5edc2757100e061add38d74a5",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4763,7 +4763,7 @@
      "tick": 2
     },
     {
-     "digest": "2d97af60e334d9f3dbad91ecba07359b85ed3a017b5eba7f59bc86b7cbff581c",
+     "digest": "2df9bda51a13c7859269be65457365dd81d52feff2b695a7d61d1b4e1259d215",
      "enemy_alive": 1,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4775,7 +4775,7 @@
      "tick": 30
     },
     {
-     "digest": "4e69ebfe2f5388f02c894a5c9fd51b9fa3e1c3dbded658c3a7cebd17871d7c79",
+     "digest": "832bfc1421668a5944aefa05608c811336bb6c71ecd48cad2cd80b2543b20239",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -4787,7 +4787,7 @@
      "tick": 60
     },
     {
-     "digest": "0d9d427d52d8d37f7bd359f2851fa3022ec12cbaa788e2f4b32e726c6c45e67b",
+     "digest": "744935b034c1cb8d42cd6b83c684d4d19b56a75a53570bd8d3565e45ac3251d3",
      "enemy_alive": 10,
      "hero_dead": 0,
      "hero_hp": "499987000",
@@ -4799,10 +4799,10 @@
      "tick": 300
     },
     {
-     "digest": "29412faf012022730badff340a2e9c63c0bd3a17274c9c052fa65d0f5fae5e9c",
+     "digest": "67eff775a653755c28b3adc52de74b6f6698e0317eb388b3886fc289f13335b4",
      "enemy_alive": 20,
      "hero_dead": 0,
-     "hero_hp": "499920800",
+     "hero_hp": "499907800",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4811,10 +4811,10 @@
      "tick": 600
     },
     {
-     "digest": "d3182bcac3b5a404c9bcf9b5a0c365c621c32ead4cd26422d1b7958451a484ac",
+     "digest": "729db010b4a622e7a26c34b01c814a026eb342b5286d43af7e870c53009b5799",
      "enemy_alive": 30,
      "hero_dead": 0,
-     "hero_hp": "499613600",
+     "hero_hp": "499723500",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4823,10 +4823,10 @@
      "tick": 900
     },
     {
-     "digest": "d98cc376c7c06704757c9e81ebb30e5df108e8cb2b480a9d9c408043c629ece5",
+     "digest": "62c619726259e8be955b84bd59078cd5b287c612150e9b4bbb819a1f0d22e2b7",
      "enemy_alive": 40,
      "hero_dead": 0,
-     "hero_hp": "499162000",
+     "hero_hp": "499529500",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4835,10 +4835,10 @@
      "tick": 1200
     },
     {
-     "digest": "d6a7511bc0c812aadf10ffb79bb9d2d2d40baad560f449e888c62534a2ec30b8",
+     "digest": "e96d36c8fb81602828794c6950a9670b0d1df79aea7bb7b413145a49edc3a634",
      "enemy_alive": 50,
      "hero_dead": 0,
-     "hero_hp": "498703900",
+     "hero_hp": "499245600",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4847,10 +4847,10 @@
      "tick": 1500
     },
     {
-     "digest": "1192c6d64dd9058c18190f8aa45b5172626250f588f60d48172c3260750688e7",
+     "digest": "d383b39d0190e131af71b8b7954b7739155c90ba1c84910ae11ba834fde560d3",
      "enemy_alive": 60,
      "hero_dead": 0,
-     "hero_hp": "498110100",
+     "hero_hp": "498818600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4859,10 +4859,10 @@
      "tick": 1800
     },
     {
-     "digest": "dca4dab830adf317466511fa62f0ae4c3e35de72b1e1f70192fe417de9f9c2cb",
+     "digest": "61dc7dca9f54ffa0eca71ddd30c533b7d0ee6a52f908d65c0e8ee031a12efa5a",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497387100",
+     "hero_hp": "498368900",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4871,10 +4871,10 @@
      "tick": 2100
     },
     {
-     "digest": "c9e18268b5c07f97dfb2c9ac5c0308f82b471f2c6753c9f38c44a7ec5ee6692b",
+     "digest": "d36f6a9216fed718c754a160f96e76bb70943a56286ae9661aa96d44110571b8",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "496666200",
+     "hero_hp": "497867200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4883,10 +4883,10 @@
      "tick": 2400
     },
     {
-     "digest": "5e58a8673083ea458abe0948435697ef6de9be5f8f3fe351f60b548e7101f176",
+     "digest": "2278586f9a6c84b079f6f9fa633e7424468b677e4b0c2c3120e53ea12dd0fcd7",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "495967000",
+     "hero_hp": "497360100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4895,10 +4895,10 @@
      "tick": 2700
     },
     {
-     "digest": "d6c89f4825e8319f02269553f5b6e4e3b7da6906c239ecadd9a09fd85a3121c4",
+     "digest": "f876a594c8c628b773d779580d2e39a50a01756a5781f9bb416f7ebd15402a5d",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "495252600",
+     "hero_hp": "496859500",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4907,10 +4907,10 @@
      "tick": 3000
     },
     {
-     "digest": "96c88779f08e82513512d9d4bffc4ca6c093eecd355ecaf8c03d715f1d33993c",
+     "digest": "d9898bbd8164b2972c77647beb5b1af7275aedab3941a741531ef3340ef19c8d",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "494530600",
+     "hero_hp": "496358900",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4919,10 +4919,10 @@
      "tick": 3300
     },
     {
-     "digest": "37e64f288c5adbc37bfb61c0f4a21446e776bd435a7ceca3194d9647161fa20c",
+     "digest": "5e16e48b66ed0d78407fe2c3f94ebca4f6a4ef4d4c36645ab52f856e86673cfd",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "493831400",
+     "hero_hp": "495857200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4931,10 +4931,10 @@
      "tick": 3600
     },
     {
-     "digest": "7c5bd5c988011d40e0a1c4071a91c47db08855fd0b034855b3181cc520b7a793",
+     "digest": "1060928f99312051783fa3489d218452c32da40ba7ef80d9d03856ef211d8261",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "493139800",
+     "hero_hp": "495362000",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4943,10 +4943,10 @@
      "tick": 3900
     },
     {
-     "digest": "3b532e8d7f348c8de33f1eb5c47102ce3bef89abf6a5c18803b9c25acc2fc6e9",
+     "digest": "009ec7ff3051caa328f69bee8952be590da45b6aceb4e845c5b262782b1df3b4",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "492440600",
+     "hero_hp": "494866800",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4955,10 +4955,10 @@
      "tick": 4200
     },
     {
-     "digest": "ea4e40aba6e1abba64b91a1a5ecd04d914795e02bc0e8c2b476468fa751942b3",
+     "digest": "aab6cf769a18ecd70f354cbae8c331325f60569e491f2e97ff65ec998c5fb5cd",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "491726200",
+     "hero_hp": "494340100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4967,10 +4967,10 @@
      "tick": 4500
     },
     {
-     "digest": "e565ea772be97a7af128cdba99fc61a81fac51f4e19d1994d8b59ed3f889f869",
+     "digest": "336698372668d25374443d96ed75cd38df7beea4df27b7f84fedd85586b3c6a1",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "491027000",
+     "hero_hp": "493837300",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -4979,10 +4979,10 @@
      "tick": 4800
     },
     {
-     "digest": "6f56baa612a40b738f4f6799c3449fe81de608c99dd7daf7afad63d2c8970263",
+     "digest": "7f16b488b32c1bddda51a2400df2083dce44cf0e60781c9eed233ffd0110fd78",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "490312600",
+     "hero_hp": "493339900",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -4991,10 +4991,10 @@
      "tick": 5100
     },
     {
-     "digest": "e8c1b9dae8eab01444e04b77bdfe9aaf7f0f7dc44641ca3f521f5d7faf9c82f3",
+     "digest": "918a7ca1c4421320eb30ae05f95e03514b1a32bbfff42d45e9024ac6da9f8b67",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "489590600",
+     "hero_hp": "492838200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5003,10 +5003,10 @@
      "tick": 5400
     },
     {
-     "digest": "5bb7b96736935723f296e08056cf5e67c3c12fa5faa518000f633a39382343ee",
+     "digest": "cc8f8c91d9fa085db68bf2f0d3d6be24a40cde13b3ad7823b200e6d9e43ce0bc",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "488891400",
+     "hero_hp": "492322400",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5015,10 +5015,10 @@
      "tick": 5700
     },
     {
-     "digest": "33fcc4efaa036a787f30eba0ff17a5b649e48c28603626e5d67c3e985da99c02",
+     "digest": "b9bd06faca259ded0f445780f2e824a675dda9f5bc812b83fd77e39c1e66661d",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "488199800",
+     "hero_hp": "491832600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5027,10 +5027,10 @@
      "tick": 6000
     },
     {
-     "digest": "410cdabde5212534480427cde62e998c98ad861c6ab248428e3287ab2fbb926d",
+     "digest": "e9d3084149b5dd98b0308e8052c97b6043f1bd1b139aea597603c1cb36a2d565",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "487500600",
+     "hero_hp": "491323300",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5039,10 +5039,10 @@
      "tick": 6300
     },
     {
-     "digest": "bf1f07ad98e922561032ede05f3fe7ff2b42e8df6416bc798d978d7a6b3563da",
+     "digest": "47bd8e36a57321e991cd3a15de3e1fc6dcfce069720fbb386471daeae385f0f1",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "486786200",
+     "hero_hp": "490808600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5051,10 +5051,10 @@
      "tick": 6600
     },
     {
-     "digest": "55eb0d8a53fd95e8b7fc8d81c60cad1539afaa6a147fa747dfb3906037dcfdff",
+     "digest": "0396cf42218c84fcc9dc85cec0a6f980b19119cb2d489faa9708e45efb240fc4",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "486087000",
+     "hero_hp": "490305800",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5063,10 +5063,10 @@
      "tick": 6900
     },
     {
-     "digest": "553cd0f84b91938f8a6c1c28a6b7c6ab6ff4cebd6f3359447983e9aaac385da8",
+     "digest": "72c00fadbf52cfd66b03354fc9d2a3655f782adde83bcca4a24f242e8823c670",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "485372600",
+     "hero_hp": "489809500",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5075,10 +5075,10 @@
      "tick": 7200
     },
     {
-     "digest": "c8f224a0c0597cfa7e5edaa81de2edafb13734aed519127a2c3d76950ca2da37",
+     "digest": "0e067c9786ed3d436251a4b43d43e107faad89a4c1216cbae84693865f47ce5c",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "484650600",
+     "hero_hp": "489298000",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5087,10 +5087,10 @@
      "tick": 7500
     },
     {
-     "digest": "79ea90694fdfefb1cf298591eab773e5325b6c899d351546708e168d53a1867b",
+     "digest": "f8fdee57a187283df022ff49a79bd57ac1b83608b1a45d6772885cd9c47b22fb",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "483951400",
+     "hero_hp": "488798500",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5099,10 +5099,10 @@
      "tick": 7800
     },
     {
-     "digest": "1b3d7288914b6bab6e41269425476868ef6fc4c9e8cd320f815b313e90bf7fb7",
+     "digest": "9860611b82164164542a21a068716d6e5a4e9b6300724c196ce5b4ba7dfdfc23",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "483259800",
+     "hero_hp": "488288100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5111,10 +5111,10 @@
      "tick": 8100
     },
     {
-     "digest": "949d62f0a022c42125355eb791f2557e6dd4b39decab5f845762c8ea51be2627",
+     "digest": "79e33ed823eae80affe5289d723e768409052c745bad1acfe8b2a96dfdc976a0",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "482560600",
+     "hero_hp": "487779900",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5123,10 +5123,10 @@
      "tick": 8400
     },
     {
-     "digest": "73cc3dc6a269cad94bfccc2115f20e04d29798f7088f7d723968336555d33482",
+     "digest": "e66ea78b0dfa5cfd6903119d0128d46daa0fccac34e7c095a09155814b5f8915",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "481846200",
+     "hero_hp": "487268400",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5135,10 +5135,10 @@
      "tick": 8700
     },
     {
-     "digest": "efe4995e09017780bbb47d899f744bbc4b1f58dee879ed58b82aeb494980d5c1",
+     "digest": "27e5423c254fca115a7b50726087dd2f9f1b903a7d8cdf3af1350be266fd07a9",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "481147000",
+     "hero_hp": "486765600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5147,10 +5147,10 @@
      "tick": 9000
     },
     {
-     "digest": "f38f262ad9de8fa48f755ca79cc215bf66a285de9da11213d1f86b1a3aa53c6c",
+     "digest": "853a2d17659d8034e23eff3af87fc189147bf2143beb03b82c934b2d178a72fe",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "480432600",
+     "hero_hp": "486228100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5159,10 +5159,10 @@
      "tick": 9300
     },
     {
-     "digest": "e2d246b71cc3c2ae0d7e09b85d1d5abc3e858c36a498689df7b34cce72c75a9c",
+     "digest": "7d67f48aa092a915d9eb53a8e9dd6fc5244b32bc28aee4af07081cbdbcd093fa",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "479710600",
+     "hero_hp": "485710100",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5171,10 +5171,10 @@
      "tick": 9600
     },
     {
-     "digest": "e7ec2fbc016715528e0a3808875fdfb920b4c91ab35d5d824785c504db32a054",
+     "digest": "a6ccc466b0b2d79fafdcf8511f5f0481d22c8f3e2fb4216118cfae7dbbf27004",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "479011400",
+     "hero_hp": "485189900",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5183,10 +5183,10 @@
      "tick": 9900
     },
     {
-     "digest": "395c215a7ad438785ca571b5f80188d129db5cf2a1f07a18bae6af3da47b551b",
+     "digest": "e1e09e8cc508dfafcb426b9a75420a03b5d3d946ca9fc1c2274dc72b0503f639",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "478319800",
+     "hero_hp": "484688200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5195,10 +5195,10 @@
      "tick": 10200
     },
     {
-     "digest": "e38b79516e388732a70d58e7c7abfb249357bc5e5c835958af742ea0ebc35991",
+     "digest": "8698e628227af8d95429cb5a6c03f28613e5cc308ab348054d4716e36c68c444",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "477620600",
+     "hero_hp": "484198400",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5207,10 +5207,10 @@
      "tick": 10500
     },
     {
-     "digest": "27829df0917654a77995fcfcb059b566b990122a0f171bb108ca48f34698d4b3",
+     "digest": "76fac0c6c8041315f4466a85723f26209cc535d72b161918f21b75b4583444f0",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "476906200",
+     "hero_hp": "483702100",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5219,10 +5219,10 @@
      "tick": 10800
     },
     {
-     "digest": "de1de248e19cbe183f410be78a76a492e6c5260b50001cba77bfcec0303e6259",
+     "digest": "5c4b625ef1db39b1b644062a2a6761d7d69f2b025bd05c04731e8e4269311e80",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "476207000",
+     "hero_hp": "483185200",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5231,10 +5231,10 @@
      "tick": 11100
     },
     {
-     "digest": "8abff4fd271e0cd704c60fb948ed77e5dc0402f44f4ea17616ee5222ba2d899e",
+     "digest": "136dd680b1c943cefb4c3c9e4343c6f5f986b856c8632eb8b00f7448ad37cbef",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "475492600",
+     "hero_hp": "482692200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5243,10 +5243,10 @@
      "tick": 11400
     },
     {
-     "digest": "1d0a1bbe4a5334592ec4261b04c2bd6ad4505fed03ee839d222e2b753f8bd47c",
+     "digest": "3bee98281ae391c1a65d0eaff29183eba3aa91aa7091595670c16d156a2e3e07",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "474770600",
+     "hero_hp": "482167700",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5255,10 +5255,10 @@
      "tick": 11700
     },
     {
-     "digest": "b539f17867beb3e9a1ee255c214256dcf2e80a168a168beec1965df604bd0f5a",
+     "digest": "f4341196863b32eb9548664354b44f53a74166c74d5602239226a2484fb78fff",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "474071400",
+     "hero_hp": "481630200",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5267,10 +5267,10 @@
      "tick": 12000
     },
     {
-     "digest": "dff00f15a37785f43b7430955e8a38f0f527ac89551053bd037967b46cdaab53",
+     "digest": "3619a99b5a62f827fe9bb8bd33ec91c1ac1126ca1ef8f86c6e74af5148c178b4",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "473379800",
+     "hero_hp": "481139300",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5279,10 +5279,10 @@
      "tick": 12300
     },
     {
-     "digest": "28af7bcf5d93cf70a40cb8041f2e9ea43fde178279b231761f9ce1c9a0a73321",
+     "digest": "ca8edb36549558f91a9ec9da09834ab218feec12a8449556bbf0bb2f0e26abd8",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "472680600",
+     "hero_hp": "480615900",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5291,10 +5291,10 @@
      "tick": 12600
     },
     {
-     "digest": "fcdb2537dca026ec280a81eeb8c9561f01f437c25e321024ef6e1ca333e2ecd9",
+     "digest": "1b5c4ee9970efd88d66d745a7cb521c6b5df176d1592158325eab680b0d149ec",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "471966200",
+     "hero_hp": "480100100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5303,10 +5303,10 @@
      "tick": 12900
     },
     {
-     "digest": "e222bebf5a72f6cf05cbbb0add2c7da850f2bd925cfad199292a1d9a9c66b687",
+     "digest": "1722dc35f2e415af45298b72379b3168feaa34d2b43dc6c36fcc7a0fc872520e",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "471267000",
+     "hero_hp": "479606000",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5315,10 +5315,10 @@
      "tick": 13200
     },
     {
-     "digest": "91b3d26e045299b7641dc61fa780fed641ff3a84598e30434b399c6477a123bc",
+     "digest": "0e3bc72cccf9fe3df51cd0b17311cafbfe41cffc713e5c99c8548af454771c97",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "470552600",
+     "hero_hp": "479092400",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5327,10 +5327,10 @@
      "tick": 13500
     },
     {
-     "digest": "243bbb79d8b6ee1435afb2f2d0c26e297b85e4fafe674fa47b7b9351a55caf89",
+     "digest": "ee8dd1e9ccb4d8368b769a5c9d5061efd8c0a767949f13a98596d709f3a402ba",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "469830600",
+     "hero_hp": "478607000",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5339,10 +5339,10 @@
      "tick": 13800
     },
     {
-     "digest": "fe23a6f890604737f1302bf5169f7e7e3b264940c20a70c638b747eb92f97095",
+     "digest": "755ee9efe1f8959a041c760a064b9955ee3a7cd597b0692aceaddf1a39441d47",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "469131400",
+     "hero_hp": "478124800",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5351,10 +5351,10 @@
      "tick": 14100
     },
     {
-     "digest": "bd008992510fd09df8ad3743f5016b8ac9969b7f47f6daa82fbd5cb440e9b4dd",
+     "digest": "4c566f2c62f48163a3ccaeaf621f2569259067a9aa743dd23f5330ea3849f937",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "468439800",
+     "hero_hp": "477616600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5363,10 +5363,10 @@
      "tick": 14400
     },
     {
-     "digest": "917348a840d572741d69f73ad68a8568c35335abb5a34820f5d9810cfbd5db17",
+     "digest": "a0baca8b5f16abaa3039d085353e56c58b893321747f6559ff05616d217a80d9",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "467740600",
+     "hero_hp": "477112700",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5375,10 +5375,10 @@
      "tick": 14700
     },
     {
-     "digest": "6f8d45a889a903df03579e25fef1e46e4070481e9558680f54ca33b162a43139",
+     "digest": "70afb448eaf75f1612e1c1d6b52f93e278d97c0b0d92b72469b826412640d60e",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "467026200",
+     "hero_hp": "476625100",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5387,10 +5387,10 @@
      "tick": 15000
     },
     {
-     "digest": "4f42225933d29067e1cd2f7aac065a1f6482e21371339a86c82b9120338ac913",
+     "digest": "a4e7eea85bef4665c7ff403deefbd068319ef9e94e59a7938fbe18f51b3fed57",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "466327000",
+     "hero_hp": "476107100",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5399,10 +5399,10 @@
      "tick": 15300
     },
     {
-     "digest": "f8a31ff606e1d24a16de5b47e141e31daa4bdd0630a1a2c397437e55748ed839",
+     "digest": "9c9ffdf04296a8f723e3f356b781f417515666d1b3311a5b42a1c3965fdb96d5",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "465612600",
+     "hero_hp": "475614100",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5411,10 +5411,10 @@
      "tick": 15600
     },
     {
-     "digest": "97969b7b74530bc00081e1568ff7fad5f35d6e461cf0d7cfbf3cbed9be8745f8",
+     "digest": "e07d0cfbbaae6210c542d668d23b2ff1b691bbade61b4e74e6e4ee9b475170e6",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "464890600",
+     "hero_hp": "475100500",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5423,10 +5423,10 @@
      "tick": 15900
     },
     {
-     "digest": "183127d9d28adbc6ef8874e8c8f7258b4103603448f754f1faeba319b09a17eb",
+     "digest": "aedc2f76254f9670611cb7eeb079fd6e82e1c9e7469da3f56229a6b634dba9ee",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "464191400",
+     "hero_hp": "474607500",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5435,10 +5435,10 @@
      "tick": 16200
     },
     {
-     "digest": "b09d33da824393681bf906775a1888fdf67ed7fb7a194503634bcf3c0b44e275",
+     "digest": "39bdc838f2de1f820396c8a4f6b5928262db17af8f67df4e4d7b1c38a581c783",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "463499800",
+     "hero_hp": "474106900",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5447,10 +5447,10 @@
      "tick": 16500
     },
     {
-     "digest": "7118c502b265220c7cf79a5ffe7cb2e171ab3167de05f46e7c52d9109e61516c",
+     "digest": "5fe218c9449b375cfa822108d88a8be05dbe427d2651b8eecf67d0fc53212505",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "462800600",
+     "hero_hp": "473597600",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5459,10 +5459,10 @@
      "tick": 16800
     },
     {
-     "digest": "0c38f07587b00b50968590f2ba671bb83c025fa7bc4dd4efb69837e88162825f",
+     "digest": "37a424e93439050d01eaa16fc27c1bc8555e8efeadcd3a50ae649e93451b0695",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "462086200",
+     "hero_hp": "473097000",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5471,10 +5471,10 @@
      "tick": 17100
     },
     {
-     "digest": "bce251920863ae47b9e1cc412777b2e454cd2a8ec7eddd4a27c9100e45cb8ffc",
+     "digest": "428464b74fe2c2ce5278f0027acb872d2e51356375dc1f924d73617d15c83550",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "461387000",
+     "hero_hp": "472601800",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -5483,10 +5483,10 @@
      "tick": 17400
     },
     {
-     "digest": "cc9f9922e8fde80237d8aa8921b4f778be1a567ebc5acc02bdd0c255d855a4e7",
+     "digest": "a3d761cd51bddf67523baab05bf60cb8fd2ce03e03e551ebc7b5e5b7f0b88e30",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "460672600",
+     "hero_hp": "472099000",
      "kills": 0,
      "player_x": "888000",
      "player_y": "769700",
@@ -5495,10 +5495,10 @@
      "tick": 17700
     },
     {
-     "digest": "b27c5eceacfa73b76e20b13d6df6be8c2c65f5b5d779f75d8e7a570af9f8d0c2",
+     "digest": "12bc144915ed97c8b080e4edc1669e0c427f2491a507a6db6a349d77fceb6127",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "459950600",
+     "hero_hp": "471603800",
      "kills": 0,
      "player_x": "768000",
      "player_y": "480000",
@@ -9872,7 +9872,7 @@
   {
    "checkpoints": [
     {
-     "digest": "47c4304cf3f9ea45554a4afd095479226183d00ce7154c38fd6b55ce5657bdc9",
+     "digest": "e35b2cf9dc5d6a03741903cbe1aa9f7e3f8769bb5e0962ac10624b271e968ecc",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9884,7 +9884,7 @@
      "tick": 1
     },
     {
-     "digest": "4d99a9a8483383d0f42e49124652310b431eb6ed4110f1894cafdc3652f3a795",
+     "digest": "3d68a528d1b1bdc5d0b5866724204891a413f8262d1443cb417c5f4d109b0fcb",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9896,7 +9896,7 @@
      "tick": 2
     },
     {
-     "digest": "da444bee0a68592d93b4ce94f497db637acdd99fc20a2f62b8d115716323dfc0",
+     "digest": "c17e51c2eeb6a7f9ff4e8fbd83e74f14b26a5e1a72b95d683093dd6baeb2c799",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9908,7 +9908,7 @@
      "tick": 30
     },
     {
-     "digest": "a4e2ae82f8132e0824b12353a71af5a19977b64f5c3bbe50b1fb80528415a3f9",
+     "digest": "12a21ee74c5438f597878228a7deede04c9064c74b790337f091752ec7bed4b6",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9920,7 +9920,7 @@
      "tick": 60
     },
     {
-     "digest": "c3d0f74af30864e609183cb1b9ff6353248cfa9204f8508a68a42a3b930d1ee7",
+     "digest": "7337b0ffe87378c6ce17732960bf96afd419c3de545b163687772926fe5d6000",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9932,7 +9932,7 @@
      "tick": 300
     },
     {
-     "digest": "045249b013f54563255f16469604099d26aa5405cf85daaa3ce086d2cf89befd",
+     "digest": "578382b79a4dc605250c90e2e0e53c0ed98ff0141c7427366b6412b6195a5dac",
      "enemy_alive": 1,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9944,7 +9944,7 @@
      "tick": 600
     },
     {
-     "digest": "da02d53efa61e29b69303ffe07d8b6f4a7ef321fbd308867fb825530df648482",
+     "digest": "efd9a9934a9a19300fbdc94046cf142550e8c8dd097a3c7201495dbb11c554b1",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -9956,7 +9956,7 @@
      "tick": 900
     },
     {
-     "digest": "0920a2779575e5e11f1240fa3d3bbab8c3c53ad6a806b2d18078fc59a6cc1859",
+     "digest": "9d3d2480b3c3bace63f3f3d066b25020649a693c095bc76ae491968c5d54c2e5",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "66400",
@@ -9968,10 +9968,10 @@
      "tick": 1200
     },
     {
-     "digest": "07fdc1a1bbed4242de03230dbcc094e9288cc479f6131d8fef76962a572ef8b0",
+     "digest": "aca1d60ae3b4ec3c28979ad328537b57be8e03057f259e1c1dd3791600e485fe",
      "enemy_alive": 2,
      "hero_dead": 0,
-     "hero_hp": "44700",
+     "hero_hp": "23000",
      "kills": 15,
      "player_x": "768000",
      "player_y": "480000",
@@ -9980,11 +9980,11 @@
      "tick": 1500
     },
     {
-     "digest": "731c0570e0857d5226142cb8df136bbee9a3cb1482d1a2b9a208c0cde87924d7",
-     "enemy_alive": 3,
+     "digest": "02e5bd09a9f9d93b623ac79254aa5c472c2d5feda2522b2f5ba19649810b3508",
+     "enemy_alive": 1,
      "hero_dead": 0,
-     "hero_hp": "18700",
-     "kills": 18,
+     "hero_hp": "3500",
+     "kills": 20,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -9992,8 +9992,8 @@
      "tick": 1800
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10001,11 +10001,11 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 2100,
-     "tick": 1861
+     "tick": 1819
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10013,11 +10013,11 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 2400,
-     "tick": 1861
+     "tick": 1819
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10025,11 +10025,11 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 2700,
-     "tick": 1861
+     "tick": 1819
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10037,11 +10037,11 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 3000,
-     "tick": 1861
+     "tick": 1819
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10049,11 +10049,11 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 3300,
-     "tick": 1861
+     "tick": 1819
     },
     {
-     "digest": "e585de472eaed6ebedb4f380ea6d79f2548cc757d404dcbaaac4720299aa8236",
-     "enemy_alive": 2,
+     "digest": "2b989cf15ef193b9241078f381195f298bf78239b946582a9cc50c53893c727c",
+     "enemy_alive": 1,
      "hero_dead": 1,
      "hero_hp": "0",
      "kills": 20,
@@ -10061,7 +10061,7 @@
      "player_y": "480000",
      "projectiles": 0,
      "step": 3600,
-     "tick": 1861
+     "tick": 1819
     }
    ],
    "commands": [],
@@ -10117,7 +10117,7 @@
   {
    "checkpoints": [
     {
-     "digest": "e566a3c65700ebc7693e92de5d3247a4b2a803d640d7595f0afced7f58317c33",
+     "digest": "ba2bf60c14288c8fd3c1bb82dd80368f5c80046d8bf4eace250bd91f3092f270",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -10129,7 +10129,7 @@
      "tick": 1
     },
     {
-     "digest": "0976eab99ee1be310da3a9ebeb2b59fcd7f7323ac53c81ca6785d113e9acd2c7",
+     "digest": "8641d0d89bc38f938e62ec1cb418933afe09bc3292d097fec6e644fb437de793",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -10141,7 +10141,7 @@
      "tick": 2
     },
     {
-     "digest": "1de0026e3a3a60573721c2fdc84536a46d70a9f17af849fa8488812bae0e5924",
+     "digest": "5be450ba6051af0740fffb17fce48bdd5d7522386daa319c80345fbbbcf323d4",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -10153,7 +10153,7 @@
      "tick": 30
     },
     {
-     "digest": "51066ce69a145419a47abc949a116ad75ff7c66a6ae0990ae8959087f2c55c63",
+     "digest": "2c3c69074b7152c33228883ee73868a705a1c6e2a2e4c245cdbd7ce99f76c006",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "100000",
@@ -10165,7 +10165,7 @@
      "tick": 60
     },
     {
-     "digest": "3a7c326f5be05a5efce7f367839388875a5aa90be9147b94673d354713c491b9",
+     "digest": "a6073a8dac66bbf0dbc24befa86baa5af373b3cd4e7cc2f92ba836565c57408e",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "93500",
@@ -10177,7 +10177,7 @@
      "tick": 300
     },
     {
-     "digest": "281475d8da965c3a7a557cd51f516f58891a0244f0ffb241d0fec4606f3d1e0b",
+     "digest": "382e064576edf222889baa768b42b73d09de0c360a50fb19f05dde684e60fce4",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "87000",
@@ -10189,7 +10189,7 @@
      "tick": 600
     },
     {
-     "digest": "d26134ff2a928fae143d49ad772be4888fe737e591300c5afdf833bc93fb3ac6",
+     "digest": "d6e3204d2a3c61782bf09c948f4e88afcd29a7413b1f7e43e8f0004f4269c328",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "74000",
@@ -10201,7 +10201,7 @@
      "tick": 900
     },
     {
-     "digest": "736f9833f843756d6f2da750c3d2d32fcaafd01b2f84f60740d693e7e5b017c1",
+     "digest": "5dd2fac22e9168efa93cb7e13a92d876cbaa3e7cfc1ef1bb7cc025997a3c326a",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "66400",
@@ -10213,7 +10213,7 @@
      "tick": 1200
     },
     {
-     "digest": "c16ab00aea6e63dbde5b325664d5daedbe78a1d31d653abab22b882d6b93ad87",
+     "digest": "a032cf0137686f3601b60c4de15835b832a8cb829494ea49a65f02b4ec53deb0",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "51200",
@@ -10225,7 +10225,7 @@
      "tick": 1500
     },
     {
-     "digest": "19832e477045d2062dbfbbfb938a8c1f9e43f6e3ecad50dea0eb5ffc8b116be9",
+     "digest": "3ff37c6ed011aab874632a500eb0c5b3f1547e254fafca9873ee7ccac723dcd0",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "44700",
@@ -10237,7 +10237,7 @@
      "tick": 1800
     },
     {
-     "digest": "23e6a7996a8409f633d65806d8ca1d686c7505337e3ef3717b3e774f5858695d",
+     "digest": "cca6b363198ad91d6e4c06b9456ed9b50028121800e5c60e92bc68e15ad15611",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "23000",
@@ -10249,7 +10249,7 @@
      "tick": 2100
     },
     {
-     "digest": "241e91a9b6144cbb7ba746e7df435fe80d814a15aa5a59033b608ba703586872",
+     "digest": "cf8b7cb3e6c7c97b63f5d28a5e82e0873c97963d196ca6ffc8ca54796384cb5b",
      "enemy_alive": 4,
      "hero_dead": 0,
      "hero_hp": "23000",
@@ -10261,7 +10261,7 @@
      "tick": 2400
     },
     {
-     "digest": "c4361e7af881811cf2e0495c7a399763ac9e89f790f116e5b63cf2811eded462",
+     "digest": "6d793a1a12583bfbfe2f6481be4b26478cc2d9a3781e40d556e2ab1a36e71e87",
      "enemy_alive": 3,
      "hero_dead": 0,
      "hero_hp": "8900",
@@ -10273,7 +10273,7 @@
      "tick": 2700
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10285,7 +10285,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10297,7 +10297,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10309,7 +10309,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10321,7 +10321,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10333,7 +10333,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10345,7 +10345,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10357,7 +10357,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10369,7 +10369,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10381,7 +10381,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10393,7 +10393,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10405,7 +10405,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10417,7 +10417,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10429,7 +10429,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10441,7 +10441,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10453,7 +10453,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10465,7 +10465,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10477,7 +10477,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10489,7 +10489,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10501,7 +10501,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10513,7 +10513,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10525,7 +10525,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10537,7 +10537,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10549,7 +10549,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10561,7 +10561,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10573,7 +10573,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10585,7 +10585,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10597,7 +10597,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10609,7 +10609,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10621,7 +10621,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10633,7 +10633,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10645,7 +10645,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10657,7 +10657,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10669,7 +10669,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10681,7 +10681,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10693,7 +10693,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10705,7 +10705,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10717,7 +10717,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10729,7 +10729,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10741,7 +10741,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10753,7 +10753,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10765,7 +10765,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10777,7 +10777,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10789,7 +10789,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10801,7 +10801,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10813,7 +10813,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10825,7 +10825,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10837,7 +10837,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10849,7 +10849,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10861,7 +10861,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -10873,7 +10873,7 @@
      "tick": 2913
     },
     {
-     "digest": "79ff7bf28dd686380a1c01c7a02b0bc625f0ebb7017dc8d83bb6b36603872b11",
+     "digest": "ce55d6e1a218ed6ced490389c94d14f89d74c973c1272ba476e3f04d1349363e",
      "enemy_alive": 3,
      "hero_dead": 1,
      "hero_hp": "0",
@@ -13639,7 +13639,7 @@
   {
    "checkpoints": [
     {
-     "digest": "4222da8af6dc79a1c915a0cc38573b4e3d7d02cb6ccdcb29f59cc7a54dcbbdc7",
+     "digest": "0b2c08a688beb2f5a967a8a54659df32a8ca89c4f9213afba010429369078b87",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -13651,7 +13651,7 @@
      "tick": 1
     },
     {
-     "digest": "20df6539358ebf8df05a5bfc68d52169662816de8f5f9e53c7e6b384f3a5d494",
+     "digest": "5768d551db8cbb092ac9f3dd92358ce7bf7add49d5b6dbe31f9d795502b0dfc8",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -13663,7 +13663,7 @@
      "tick": 2
     },
     {
-     "digest": "2692b86411cdb4d679f2c01b6f392e4d7023fc574fde6948bee79bf4c28012ef",
+     "digest": "2c3406f30a1373d459d2a95aab3c31e4f8a4d874c0ef81525077c412450d14fe",
      "enemy_alive": 5,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -13675,7 +13675,7 @@
      "tick": 30
     },
     {
-     "digest": "d66aa845283c647916852034d8754e68537b532ab486f26db00fbd5bb51fa493",
+     "digest": "694c8d04e3d7fdbf5d77fa03f87c2123f2b098be2d88dd26810cddcc7fbbe104",
      "enemy_alive": 9,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -13687,83 +13687,83 @@
      "tick": 60
     },
     {
-     "digest": "97a6779c6e847b87e1dcd51482fc4f538f2c72dc672445f47f0d755320ae9e1b",
-     "enemy_alive": 35,
+     "digest": "227e30b9c6af067169c9d5bc642d0e99f5c512a0c2c42e02f1e36862ae865987",
+     "enemy_alive": 38,
      "hero_dead": 0,
-     "hero_hp": "499965300",
-     "kills": 15,
+     "hero_hp": "499957700",
+     "kills": 12,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 2,
+     "projectiles": 3,
      "step": 300,
      "tick": 300
     },
     {
-     "digest": "937f0a229a876051adea26e80315d6253b22093a551d8e42eb6d795ffae719e1",
-     "enemy_alive": 58,
+     "digest": "ce7df1c2ff1300cd2121e535ab095a126c353104ad1ed6b78ab43314be36bf0b",
+     "enemy_alive": 50,
      "hero_dead": 0,
-     "hero_hp": "499739800",
-     "kills": 42,
+     "hero_hp": "499730100",
+     "kills": 50,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 2,
+     "projectiles": 1,
      "step": 600,
      "tick": 600
     },
     {
-     "digest": "0f076109d04b3769ea2cf18c72c2b74f2d34066709cac53d25887c42f9206796",
-     "enemy_alive": 63,
+     "digest": "c63631afc310f89b74864c2305f6e92fda315f79c017dd202aed4ee739ef742a",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499537000",
-     "kills": 69,
+     "hero_hp": "499435300",
+     "kills": 78,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 2,
+     "projectiles": 1,
      "step": 900,
      "tick": 900
     },
     {
-     "digest": "de2d1825049bb4bde9d2b7dc3c0962f49146883b3b54d00f4444a2c856212a6a",
-     "enemy_alive": 63,
+     "digest": "9469537c14eff23d3b5352e913deb32041b767625f3c65b7bca7335e8d5a7f37",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499429700",
-     "kills": 99,
+     "hero_hp": "499018100",
+     "kills": 111,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 2,
+     "projectiles": 0,
      "step": 1200,
      "tick": 1200
     },
     {
-     "digest": "48f37f95a461fa1387ec4c6154e57fd1b2b103d8df9129d9c6c6541edb2f693c",
-     "enemy_alive": 63,
+     "digest": "0eed2dcdd09705287cac99243cbcddc772ca9f84c37610a311e7d3dffa21917a",
+     "enemy_alive": 61,
      "hero_dead": 0,
-     "hero_hp": "499312600",
-     "kills": 143,
+     "hero_hp": "498644200",
+     "kills": 154,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 2,
+     "projectiles": 0,
      "step": 1500,
      "tick": 1500
     },
     {
-     "digest": "ecbf0313b40267b328418c2e368cf63cda4cb8166b85abb5e978aad069012759",
-     "enemy_alive": 64,
+     "digest": "e88df495199b5925559226de5155978db83134469f102142cdc4cacb46e18e6d",
+     "enemy_alive": 62,
      "hero_dead": 0,
-     "hero_hp": "499135900",
-     "kills": 175,
+     "hero_hp": "498216100",
+     "kills": 186,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 2,
      "step": 1800,
      "tick": 1800
     },
     {
-     "digest": "f902c6cd0f424388b8380ea8113c0c4f95bfb425cdd542e7442cdb9821b58d33",
-     "enemy_alive": 64,
+     "digest": "7c31dd07fe5887805f21280bcc62757d0a8c242c1f55cb03bc87995e41dddef0",
+     "enemy_alive": 62,
      "hero_dead": 0,
-     "hero_hp": "499013400",
-     "kills": 208,
+     "hero_hp": "497818300",
+     "kills": 226,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 1,
@@ -13771,35 +13771,35 @@
      "tick": 2100
     },
     {
-     "digest": "294e56a94ca3316e0466a002aae4f1189756d86e77c19163b5a2f0c1e9a9cb58",
-     "enemy_alive": 60,
+     "digest": "7e66b9ffa8ea61b04a113b4b586f92d6ede58e729f153f87b78742eb3061aebd",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498871400",
-     "kills": 246,
+     "hero_hp": "497401000",
+     "kills": 266,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 0,
+     "projectiles": 1,
      "step": 2400,
      "tick": 2400
     },
     {
-     "digest": "76f22a637e67702c6ad588fed47722a873ac94f5f06e42eb4b1deaaf90084dde",
+     "digest": "86686f4ed9e7d0ccabcc6032f2b48d4d50447f4feeefa5589b81bcc7061a406e",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498647000",
-     "kills": 276,
+     "hero_hp": "497045600",
+     "kills": 296,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 0,
+     "projectiles": 1,
      "step": 2700,
      "tick": 2700
     },
     {
-     "digest": "e723ad1036a1bf84a2c6fc3da64b8c18e4199860261781d5ef83bfc7619c04b0",
-     "enemy_alive": 62,
+     "digest": "af6c60bb4267aef01dcd7665f153b395bcb12159b6a53957119b73c5104e7343",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498524500",
-     "kills": 310,
+     "hero_hp": "496643600",
+     "kills": 333,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 3,
@@ -13807,11 +13807,11 @@
      "tick": 3000
     },
     {
-     "digest": "fb2419af5e15668f592c8b00c6cbb8d2eb791b4bd948301a7298f4eaa0527251",
+     "digest": "6823540638e443e344017bc2ef75b6da93e3cf0c49a0e905b0dd42048ccea496",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498396600",
-     "kills": 343,
+     "hero_hp": "496270800",
+     "kills": 366,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 1,
@@ -13819,47 +13819,47 @@
      "tick": 3300
     },
     {
-     "digest": "e82f1b074584f6a73c1269449bcdf99864952cec94995970768624c6a39fe82c",
-     "enemy_alive": 63,
+     "digest": "61bd30199ee9789de1a875cb8e9f81d075b5e68683b76ac7c3b249a5fac5c05f",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498272000",
-     "kills": 370,
+     "hero_hp": "495852500",
+     "kills": 400,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 2,
+     "projectiles": 1,
      "step": 3600,
      "tick": 3600
     },
     {
-     "digest": "93054948fadcac1fc8c64c27ff3ab222f079d63503fc827ae98cbec6c379cbab",
+     "digest": "e4a06a6e5c4b54d06be669bf9aa15d03e9ed8ac89efc35355cf35baefd022e00",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498128900",
-     "kills": 398,
+     "hero_hp": "495458000",
+     "kills": 438,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 3,
+     "projectiles": 1,
      "step": 3900,
      "tick": 3900
     },
     {
-     "digest": "008aa6c430bd501e954d6e991b5db4545f2ce517d4dc4ea56e9590764c537ca9",
-     "enemy_alive": 62,
+     "digest": "6eade40c999cd2395fd2f2b02eb2be1e6327d69b830e489173a6886ccb0c930d",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498038900",
-     "kills": 438,
+     "hero_hp": "495076600",
+     "kills": 470,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 2,
+     "projectiles": 0,
      "step": 4200,
      "tick": 4200
     },
     {
-     "digest": "47ddac9ffc5e3a535f69d829eded3f008f47de964c9370c976346f37a210ac66",
-     "enemy_alive": 61,
+     "digest": "014dca7366757d8651afc94e6efa268570ad7ddc9f7303bbb40eaec8ebab8e5f",
+     "enemy_alive": 63,
      "hero_dead": 0,
-     "hero_hp": "497911000",
-     "kills": 472,
+     "hero_hp": "494697300",
+     "kills": 507,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 1,
@@ -13867,35 +13867,35 @@
      "tick": 4500
     },
     {
-     "digest": "452cff9a3fbffd21b8149359948cdf774410e48d722a75a2450463f59fd9f5aa",
-     "enemy_alive": 63,
+     "digest": "549e1ceafbc88c4be1b646d85f87c80aa7bd51d7b49be2a4a92208e28fe976b4",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497772200",
-     "kills": 512,
+     "hero_hp": "494331000",
+     "kills": 537,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 3,
+     "projectiles": 2,
      "step": 4800,
      "tick": 4800
     },
     {
-     "digest": "4e84746736d9668b816252ee2cef1da3cb2a6dce902be6adeefd671268ad3773",
-     "enemy_alive": 64,
+     "digest": "8208fe295d23bedb7af37a062f12e04c43c58bbadfd5e11520d59a98c308ad30",
+     "enemy_alive": 63,
      "hero_dead": 0,
-     "hero_hp": "497624800",
-     "kills": 540,
+     "hero_hp": "493958200",
+     "kills": 580,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 3,
+     "projectiles": 0,
      "step": 5100,
      "tick": 5100
     },
     {
-     "digest": "d0357f5025564d252edd9bba23238f0221db8844c75fa03740720edc1650c00f",
+     "digest": "e0c4b111783a19076bce5c561abcd524ebf4a3a9ca2cc7e46ea6a33290602a6c",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497428600",
-     "kills": 567,
+     "hero_hp": "493532300",
+     "kills": 613,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 2,
@@ -13903,26 +13903,26 @@
      "tick": 5400
     },
     {
-     "digest": "9fa5d4ef4a2f8df2bca5475d2eabbaf4bf1d09f05823825c26d8777fb2684bab",
-     "enemy_alive": 62,
+     "digest": "cd673cff78cc0040290c5b0985058d579171cca68aebabae0b12f1468255cb07",
+     "enemy_alive": 63,
      "hero_dead": 0,
-     "hero_hp": "497353800",
-     "kills": 605,
+     "hero_hp": "493176900",
+     "kills": 656,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 5700,
      "tick": 5700
     },
     {
-     "digest": "8627c4a9579bdae2303cb0bdeec9a85cbb31978f220cef8ddc0ba0749d7b1c2d",
+     "digest": "96461118bd91eade62215cd6e1f4879d1891d592ea7900d54d9361805bd3fd18",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497224800",
-     "kills": 635,
+     "hero_hp": "492787800",
+     "kills": 686,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 2,
      "step": 6000,
      "tick": 6000
     }
@@ -15421,7 +15421,7 @@
   {
    "checkpoints": [
     {
-     "digest": "4222da8af6dc79a1c915a0cc38573b4e3d7d02cb6ccdcb29f59cc7a54dcbbdc7",
+     "digest": "0b2c08a688beb2f5a967a8a54659df32a8ca89c4f9213afba010429369078b87",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -15433,7 +15433,7 @@
      "tick": 1
     },
     {
-     "digest": "20df6539358ebf8df05a5bfc68d52169662816de8f5f9e53c7e6b384f3a5d494",
+     "digest": "5768d551db8cbb092ac9f3dd92358ce7bf7add49d5b6dbe31f9d795502b0dfc8",
      "enemy_alive": 0,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -15445,7 +15445,7 @@
      "tick": 2
     },
     {
-     "digest": "68b0bb04c05ed644a00041b749fe66c0f3dfe237255ad26f5add25487b129082",
+     "digest": "75089127f1f38a0b34a2b81508107849f040aff0491309b4a34174862ac72492",
      "enemy_alive": 1,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -15457,7 +15457,7 @@
      "tick": 30
     },
     {
-     "digest": "11852ac59528aa47fd7e8247467dcf3c1a081813c324234778a3cce87028c637",
+     "digest": "2a7f25ef13d5f3f046b337e4ea68b9b651cb5a7bb8615992e1d2521a1ad34ba9",
      "enemy_alive": 2,
      "hero_dead": 0,
      "hero_hp": "500000000",
@@ -15469,7 +15469,7 @@
      "tick": 60
     },
     {
-     "digest": "a25d4152561962333132ca4979550f9d2d03d4a4154186ac9b8dfcec7a645c48",
+     "digest": "6ef23f30eb3b730ec983597a885e3724467813134d415e2949bf5614aa8ff0c2",
      "enemy_alive": 8,
      "hero_dead": 0,
      "hero_hp": "499987000",
@@ -15481,7 +15481,7 @@
      "tick": 300
     },
     {
-     "digest": "1cf8869633460a5432d9bed2b5f6cf285e0057b8829497d8837af5a135a4d6e2",
+     "digest": "ef88237eb35376e2a891ee406f7cdf46e146e3d821e768d31e2d727c0ffacdac",
      "enemy_alive": 11,
      "hero_dead": 0,
      "hero_hp": "499956600",
@@ -15493,11 +15493,11 @@
      "tick": 600
     },
     {
-     "digest": "23dcff98096d1c4f14526a3f1eed15c594a4bdfd590599f5321104b99e32f601",
-     "enemy_alive": 14,
+     "digest": "0b85d059eaeab636d8bab3c85e6f302b8a08f3c175ccec8d53e9a1e3b36f7a2a",
+     "enemy_alive": 17,
      "hero_dead": 0,
-     "hero_hp": "499847000",
-     "kills": 19,
+     "hero_hp": "499825300",
+     "kills": 16,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 1,
@@ -15505,10 +15505,10 @@
      "tick": 900
     },
     {
-     "digest": "260b317aaf9f45da6435a7a09d98a92e128d75d036b45539d21a74d5f7b39994",
+     "digest": "cbed04a2ee2995a3a5c69ed3840915fd2bdc7497a0756fb550a0148364573ec6",
      "enemy_alive": 20,
      "hero_dead": 0,
-     "hero_hp": "499813400",
+     "hero_hp": "499742900",
      "kills": 26,
      "player_x": "768000",
      "player_y": "480000",
@@ -15517,11 +15517,11 @@
      "tick": 1200
     },
     {
-     "digest": "74ceed5a95003bd95014c627f36d604dd219bfca1cce5ef58e25b209d317d89f",
-     "enemy_alive": 28,
+     "digest": "84ddc2a608792d9f74b77dc870cf9ec92e1965c286f623116c974cf4e0b93fce",
+     "enemy_alive": 26,
      "hero_dead": 0,
-     "hero_hp": "499723400",
-     "kills": 32,
+     "hero_hp": "499612800",
+     "kills": 34,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15529,23 +15529,23 @@
      "tick": 1500
     },
     {
-     "digest": "da5fb2413c4485f6c4443da16d0ae01edcd99842d9c8073acbf56362440c5373",
-     "enemy_alive": 37,
+     "digest": "11e3a762e8b255d896b87ce1164884ce69f6f3a79eaa4a4ea6cf353367a8c2e1",
+     "enemy_alive": 30,
      "hero_dead": 0,
-     "hero_hp": "499655100",
-     "kills": 37,
+     "hero_hp": "499448100",
+     "kills": 44,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 1800,
      "tick": 1800
     },
     {
-     "digest": "2a3e5eb76538fc182d052edf1a0a43c26bcb6bb5e44ac93c5a9c7288a925b0c4",
-     "enemy_alive": 46,
+     "digest": "db4384797ee48f993d0a9744409d0ce8488aa7b844495cee412c9ea275f12f18",
+     "enemy_alive": 37,
      "hero_dead": 0,
-     "hero_hp": "499619300",
-     "kills": 44,
+     "hero_hp": "499253000",
+     "kills": 53,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15553,11 +15553,11 @@
      "tick": 2100
     },
     {
-     "digest": "029c7ca99b13e3bdc071e7418f632d5a57faa3e4817bd7000b133d5dd54256a3",
-     "enemy_alive": 56,
+     "digest": "9c4c39ba3d773a347bb277d0798f2180f298ade22b078157f3f4a9e847b5e824",
+     "enemy_alive": 47,
      "hero_dead": 0,
-     "hero_hp": "499501100",
-     "kills": 50,
+     "hero_hp": "499002700",
+     "kills": 59,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15565,23 +15565,23 @@
      "tick": 2400
     },
     {
-     "digest": "11d00435ead5d7554b4b66a0c90b77ea36191edee4ecfd864ec880c258bd5665",
-     "enemy_alive": 64,
+     "digest": "90bef9ee11c32f4e754e07fcb80297c5d5de40fb240c1eedfe4d61fd61191172",
+     "enemy_alive": 58,
      "hero_dead": 0,
-     "hero_hp": "499380700",
-     "kills": 55,
+     "hero_hp": "498654800",
+     "kills": 65,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 0,
+     "projectiles": 1,
      "step": 2700,
      "tick": 2700
     },
     {
-     "digest": "e53ea04431be855a7fc9ad8679a1ded9d97710d877dfe9e730bb044281577f39",
-     "enemy_alive": 63,
+     "digest": "aee125327e3e3480bcf1b756f9db96156fd4e0d165324c13f660bac5b62a702e",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499340600",
-     "kills": 62,
+     "hero_hp": "498231100",
+     "kills": 71,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15589,11 +15589,11 @@
      "tick": 3000
     },
     {
-     "digest": "e34b6d519caced89f52c358f00bc8123f69c10e127bec7bb8d942e41618e5934",
+     "digest": "dd9d4f170d9a722ec8861ab23837cf86b0a756c2fa65a7f705c490db449d3a79",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499294000",
-     "kills": 70,
+     "hero_hp": "497760800",
+     "kills": 76,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15601,11 +15601,11 @@
      "tick": 3300
     },
     {
-     "digest": "3705d363fd14f8f264b4dc780f3c3e414d131618db7557336c67181cf97fd39d",
+     "digest": "a44070ab73901709fda9cee7f5b35885f228d40d452e3e6cc36c5c35947027b5",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499224600",
-     "kills": 80,
+     "hero_hp": "497302400",
+     "kills": 88,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15613,11 +15613,11 @@
      "tick": 3600
     },
     {
-     "digest": "c9d38efb089382212c93974a56111b66e4b0b75743b5ef3c06bfbd94a79db7e2",
+     "digest": "20225132a898952d393fbfb8e28bd3f53f6e8e6556c18186be504dfecb220266",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499167100",
-     "kills": 91,
+     "hero_hp": "496824500",
+     "kills": 94,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15625,35 +15625,35 @@
      "tick": 3900
     },
     {
-     "digest": "333346c045e1546fb782af4d56c0f2705c5fe35ddaa041d1f3362b1674e32af5",
+     "digest": "41a80ae2e07cdfd1a90eb75bc19358dcb29f3539c5d6b20385bc59f122b021bb",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499133500",
-     "kills": 96,
+     "hero_hp": "496378000",
+     "kills": 104,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 4200,
      "tick": 4200
     },
     {
-     "digest": "dd79009a8e37466b426b53a2176ace507a43f505d6fcd669025d46e9bff826a3",
+     "digest": "602b7b786c2835e2cb8e22df2a08215c1d11f4e04c6282fc3006827350f581c5",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499091200",
-     "kills": 106,
+     "hero_hp": "495916400",
+     "kills": 117,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 4500,
      "tick": 4500
     },
     {
-     "digest": "498ec96d8a042962c923c10b8513d636ab34b8823fd5e2272db2f84a849d1c32",
+     "digest": "dca6fc599734f64a2f3ea99a6786626e99c8157d85acaff48ac40d7412c1ab1c",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "499037000",
-     "kills": 117,
+     "hero_hp": "495441800",
+     "kills": 126,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15661,11 +15661,11 @@
      "tick": 4800
     },
     {
-     "digest": "c6cc826266ad2961639241e80d1f4ed9c590bfa6503b549693107a81c5d0c529",
-     "enemy_alive": 63,
+     "digest": "998620fae1e2259c190f1e197872d5b99d1009cff386b007dd143a8f8c6a188d",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498996900",
-     "kills": 126,
+     "hero_hp": "494988900",
+     "kills": 136,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15673,11 +15673,11 @@
      "tick": 5100
     },
     {
-     "digest": "18d9e730dd90641af29972cf11bd728abbcfe1fada674a6f2df4f18b11394712",
+     "digest": "c51301f904eb6e5b6561fc4e727250e930283d57475fe6e04a8ba756818be243",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498963300",
-     "kills": 134,
+     "hero_hp": "494507800",
+     "kills": 145,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15685,35 +15685,35 @@
      "tick": 5400
     },
     {
-     "digest": "53fb82be7a18cf66e6993462cc37db2fc1039405d432f2039be1cb5be76b785b",
+     "digest": "88c2029be5bde77a0cbf399065b908bce21ff33375cc67e4660e80173b0bf127",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498915600",
-     "kills": 144,
+     "hero_hp": "494045100",
+     "kills": 155,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 5700,
      "tick": 5700
     },
     {
-     "digest": "cd97210d1a3048e631d4d8efbb1e44127944fbc555316d42e46404c3bf0a449d",
+     "digest": "1289150dc037890de707d1505ef5dff2ac677feb23a61bceac5ec09e4149da99",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498852700",
-     "kills": 153,
+     "hero_hp": "493561800",
+     "kills": 161,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 6000,
      "tick": 6000
     },
     {
-     "digest": "644777f2108ba66328bf575ae114d0052a0cf0e4e46c45e883aba22eb1c63bde",
+     "digest": "39247d8f6cb6b9a622f73b72dc18ee7242e45d7dea2425d72fa4a6be4901fc0d",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498801700",
-     "kills": 160,
+     "hero_hp": "493068600",
+     "kills": 173,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15721,23 +15721,23 @@
      "tick": 6300
     },
     {
-     "digest": "b427c6159cfeb20b9b2bb5bec682fe0b450e5bc957e0e0871274cf241b209b34",
+     "digest": "ba4922b386c1c3c805a7db64e6b67f9d99478cd8a417453b80bb0da30a5e7303",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498750700",
-     "kills": 172,
+     "hero_hp": "492572200",
+     "kills": 183,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 0,
+     "projectiles": 1,
      "step": 6600,
      "tick": 6600
     },
     {
-     "digest": "812b759baef52b82672ff4fad8112e579a3794baad0166bc9a79d2eb2ef4cd66",
+     "digest": "ff70264bc18ce6bd0899428003397b0e673a26f374d62012000a11e03e16d477",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498695400",
-     "kills": 177,
+     "hero_hp": "492076900",
+     "kills": 194,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15745,23 +15745,23 @@
      "tick": 6900
     },
     {
-     "digest": "1cac47f7bfd89604d421bf74313f594ec828edea9efd9879a2e1fafc8477fc57",
+     "digest": "b3defe100db337e22d1df5196c40cfe3d249dc23e73fd9f763a4c7cc70a4e98f",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498652000",
-     "kills": 188,
+     "hero_hp": "491617400",
+     "kills": 203,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 7200,
      "tick": 7200
     },
     {
-     "digest": "31b5cbe56f5f507cccbd7f9e79e2d17e3033d680efddbf3164d9f9e3a1464f19",
+     "digest": "20bcfc6f67ddc73a090f0f613831ffef68e17a08360372b5a352665227273156",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498589100",
-     "kills": 196,
+     "hero_hp": "491136200",
+     "kills": 216,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15769,11 +15769,11 @@
      "tick": 7500
     },
     {
-     "digest": "93a2aae428d7208398cbd4c513879414962c45423d6ee0d3926572582014d8f5",
+     "digest": "d5d2d72e6f075a93acbd0d87b9d161f8ac3aee7670b5c096af41beb923ad3324",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498549000",
-     "kills": 203,
+     "hero_hp": "490646400",
+     "kills": 224,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15781,11 +15781,11 @@
      "tick": 7800
     },
     {
-     "digest": "179c1e3456538a64e34fa68857c5ef37a6f7408ee902e79725e0132f4b74be7e",
-     "enemy_alive": 63,
+     "digest": "87a85a203cd38156c19711c14b3177950741af9d761069fe6f10281de8fdaafe",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498501300",
-     "kills": 213,
+     "hero_hp": "490193400",
+     "kills": 239,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15793,11 +15793,11 @@
      "tick": 8100
     },
     {
-     "digest": "7907cf89c7b10e5864c6ef40bf8770d11d2ad9aae45d5cd368f9792103ca3671",
+     "digest": "25e4ad7b0a5c1417b7668ce6e600186580d57b6f6781ed4c687d892dd5e107cd",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498423200",
-     "kills": 222,
+     "hero_hp": "489734000",
+     "kills": 248,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15805,11 +15805,11 @@
      "tick": 8400
     },
     {
-     "digest": "ef855d8eab735714e0e98ffbdad124ec5ba7f39d2f8fcf4e0741597c690a8613",
-     "enemy_alive": 63,
+     "digest": "a9f2432836fb5fe64113cf0703f223caf55ae2e8eb111ff6b177ab426153e265",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498396100",
-     "kills": 229,
+     "hero_hp": "489236600",
+     "kills": 260,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15817,11 +15817,11 @@
      "tick": 8700
     },
     {
-     "digest": "d32f916a3f176672ab272bab256540da2e973cbfe44e0171deac1d02e7e48edb",
-     "enemy_alive": 64,
+     "digest": "c128e5cb778b00b1d396b05c54ee7985c3d58ef360a6c0d2030ac10772c808f0",
+     "enemy_alive": 63,
      "hero_dead": 0,
-     "hero_hp": "498341900",
-     "kills": 237,
+     "hero_hp": "488765200",
+     "kills": 270,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15829,11 +15829,11 @@
      "tick": 9000
     },
     {
-     "digest": "acf75d478798602858147e660e9119321a46737c718f134df794ee1b6f600ece",
-     "enemy_alive": 64,
+     "digest": "fc05be596c70c2a6459089a02b125ef33d8ae185c1073c4f3b962d4072439818",
+     "enemy_alive": 63,
      "hero_dead": 0,
-     "hero_hp": "498314800",
-     "kills": 249,
+     "hero_hp": "488294900",
+     "kills": 281,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15841,23 +15841,23 @@
      "tick": 9300
     },
     {
-     "digest": "a98fb6076b36ed792e35495216d203a5b295f1dc07c119e2fa0bea6cc59e7d10",
+     "digest": "db73240b8706c88db8a9b2574ea09a2ca6a035e9a767d46dda8f5cd00f976a32",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498244300",
-     "kills": 256,
+     "hero_hp": "487821300",
+     "kills": 289,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 9600,
      "tick": 9600
     },
     {
-     "digest": "86a3bdc65c3cac2a74f2200447b8f3ed9fd7f5b56f1f2721bc332c226af3351c",
+     "digest": "a6deb479f7aa3e279ab6c1ffbace0b948c2a0ee1297159b9936722244beb9424",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498207400",
-     "kills": 265,
+     "hero_hp": "487352100",
+     "kills": 297,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15865,83 +15865,83 @@
      "tick": 9900
     },
     {
-     "digest": "05fa186759fed5a0698b5fb4c0e06c643d243f938fab7a12fc2bbf6ee6b7479c",
+     "digest": "ac8d4c0ca77502726f9ce6657f21b36a83fd82c46f4724ecb231cfb9a019786d",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498154300",
-     "kills": 272,
+     "hero_hp": "486891600",
+     "kills": 309,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 10200,
      "tick": 10200
     },
     {
-     "digest": "09b000558e8a67f7b01f71cadadbaf42e747bbeabc92569cb9549befeedd312d",
+     "digest": "fcebab6ec92975084d903467fd7cddbc973a5206e4a9b1df740b8c068432e2f2",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498104400",
-     "kills": 279,
+     "hero_hp": "486435400",
+     "kills": 318,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 10500,
      "tick": 10500
     },
     {
-     "digest": "99973f945fffe38e44326865366f981a7519ba4d4145f77e3f2c47ed72d0968d",
+     "digest": "45821976414691b541e083585303dc11b6def7dcc43839b0c04eea26ce5b2cb9",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498049100",
-     "kills": 286,
+     "hero_hp": "485967300",
+     "kills": 330,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 10800,
      "tick": 10800
     },
     {
-     "digest": "30cc8cb90c42f8ccbb0b66d8e47a49bf0349e09aca814df0c3b1851dce1a26a2",
+     "digest": "f0c0c7b58ee86ef8f012fa93d5df1af93bc249cfa2a1bc30245087577e6ad9b6",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "498028500",
-     "kills": 297,
+     "hero_hp": "485531700",
+     "kills": 342,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 11100,
      "tick": 11100
     },
     {
-     "digest": "040c22602ed955383106f017c82edd2b64ab6f21f812c67d01dca16d5324e72c",
+     "digest": "97cec148f7f3ecc2658f702dae2ab237f626c19030853e2d18bc140931eef737",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497989500",
-     "kills": 302,
+     "hero_hp": "485054900",
+     "kills": 349,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 11400,
      "tick": 11400
     },
     {
-     "digest": "c328d770af67aba7a82c7c0936f5c074907f66d636d0b922f3bb145ba4289674",
+     "digest": "d33455be15a0fe69ddf3784849d5fd264d12059a7138180da170ee5637537f45",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497945000",
-     "kills": 312,
+     "hero_hp": "484611700",
+     "kills": 361,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 11700,
      "tick": 11700
     },
     {
-     "digest": "bc38631dac3ed7a647985b2eed0017bc77718a9e6112c9a4952f650a7c081ad4",
+     "digest": "711f583c55bcaee24f5100395892e7a5e1d781e4c09948cfec5da47d30a9810a",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497904900",
-     "kills": 320,
+     "hero_hp": "484138200",
+     "kills": 368,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15949,11 +15949,11 @@
      "tick": 12000
     },
     {
-     "digest": "663ede14f034ecad12f36cddeda95bc1acd51e34fedb3b9f9572ef946bc27403",
+     "digest": "a35972451e1115071ebb6559f5260016aa822fdf7ee79d1935be229cd2711b0c",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497843100",
-     "kills": 329,
+     "hero_hp": "483703700",
+     "kills": 375,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15961,11 +15961,11 @@
      "tick": 12300
     },
     {
-     "digest": "6e12955a593b07d2f5c379d4272f7bdb4632b0be46683307ceb56dc30c84e5bc",
+     "digest": "5774b51f13f1e14d85a564674affabac8468fc4bad385150bb7231b16fd005cb",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497801900",
-     "kills": 341,
+     "hero_hp": "483234500",
+     "kills": 385,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -15973,11 +15973,11 @@
      "tick": 12600
     },
     {
-     "digest": "60ddfa20499903ed72dcc5b4fa8ca0bcb8eef75a50f51c3ef2b749f39f6c199e",
-     "enemy_alive": 63,
+     "digest": "94c16a7918a52d492ca5c6b8c212975bd260ca60bf56cc2cff222e66a583fe04",
+     "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497760700",
-     "kills": 351,
+     "hero_hp": "482770700",
+     "kills": 396,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -15985,11 +15985,11 @@
      "tick": 12900
     },
     {
-     "digest": "f871d58ba1759545fb533d1e8ae63586c606d8133675a5a56e49aebf5bb17305",
+     "digest": "54e4034c880bed05452216040029e0d8a986146bd94ddf150b001ceffd5d63e5",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497690200",
-     "kills": 359,
+     "hero_hp": "482295000",
+     "kills": 406,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 1,
@@ -15997,47 +15997,47 @@
      "tick": 13200
     },
     {
-     "digest": "08ad6d2caf336ee66c0b844a09de8c8d1bc5a8ed4973602293440b77b894b2a4",
+     "digest": "ca198bcb43190cb0cd8b99d69408b586dbb5663a3f8c1435671c9af65986b995",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497670700",
-     "kills": 364,
+     "hero_hp": "481833400",
+     "kills": 416,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 13500,
      "tick": 13500
     },
     {
-     "digest": "8d247180d41bf44c57adfd0c23b0a6a087234ddee318b2db7999866827b696c8",
+     "digest": "af25d157ee1a8fe575eba122d232e8c32447e939119e5a8aaafcc386e318d347",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497624100",
-     "kills": 372,
+     "hero_hp": "481368500",
+     "kills": 431,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 13800,
      "tick": 13800
     },
     {
-     "digest": "5b000277a7b621b3d6b1d2984b2b058de3f97b3f789f797db333abd1deaf3224",
+     "digest": "dcda501b539e0a14721e18b2453052ed684a3fe37900b27b20e7edc0045aec2e",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497603500",
-     "kills": 384,
+     "hero_hp": "480919900",
+     "kills": 443,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 14100,
      "tick": 14100
     },
     {
-     "digest": "11065afc4f0a83aa6b84cbe3dbe3747793bc9e0d4ec604ead5611e488ddea163",
+     "digest": "7a71c178ad93710e4e7109306ad3d5096ef2ac99d20c2574cd5c35cc70e54dbf",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497521100",
-     "kills": 393,
+     "hero_hp": "480409400",
+     "kills": 449,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -16045,23 +16045,23 @@
      "tick": 14400
     },
     {
-     "digest": "6607a4d87aa197266003403a713712c4e0195e0bd123378aadc37185b76ed188",
+     "digest": "5764a0ef0e8bfddfa4496bd27ee9af1e235d467a51f77a1e17d0346c56509afa",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497479900",
-     "kills": 404,
+     "hero_hp": "479917400",
+     "kills": 459,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 14700,
      "tick": 14700
     },
     {
-     "digest": "54892d9c5ba9eafa4b7b4cdedc7e150f78739dbc9da20e8713d616fda5dfcc87",
+     "digest": "dd747cc5bd34e5084b3205ebe3614aec93b80a254c98f14739c185e84d9fc178",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497410500",
-     "kills": 412,
+     "hero_hp": "479415600",
+     "kills": 465,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -16069,11 +16069,11 @@
      "tick": 15000
     },
     {
-     "digest": "467c2bdd1f1016c63b056fc85f76d04ced0e6f379f1b358c74f4fd3e22ee9efa",
+     "digest": "71cb7433ef3eb9c2b7e7e0d02b07daa7728afcdb3998d6e090ee8034b2201be2",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497332400",
-     "kills": 422,
+     "hero_hp": "478964800",
+     "kills": 478,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -16081,35 +16081,35 @@
      "tick": 15300
     },
     {
-     "digest": "3d6c784bf553b892b2d1529b3545d6f7612556c7542066097e09c3cb5bbf7cc7",
+     "digest": "5ff8804424c68eacdace75e6ffbc0d72ecc348f6bc80afbbad4834035bc6f0bc",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497271700",
-     "kills": 430,
+     "hero_hp": "478488000",
+     "kills": 490,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 15600,
      "tick": 15600
     },
     {
-     "digest": "78c46c98d0b8e9f6bb19f6a0c3e3970b54a7ccf8cbafe598370862b29b822724",
+     "digest": "f4a2c9db3ba27754cddd35d0bafeffd658f2a960e5d237d8e5c2054422efa39e",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497201200",
-     "kills": 439,
+     "hero_hp": "477966700",
+     "kills": 498,
      "player_x": "888000",
      "player_y": "769700",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 15900,
      "tick": 15900
     },
     {
-     "digest": "dd735656a67c9ee23334ac26ede41d6eb89507d377f442814a445c6b01f1df4f",
+     "digest": "61736704edf54dbe4cf6b3302e9b055cb6b64ae7ece88eaedc9807d08eb7dd97",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497130700",
-     "kills": 449,
+     "hero_hp": "477472500",
+     "kills": 510,
      "player_x": "768000",
      "player_y": "480000",
      "projectiles": 0,
@@ -16117,11 +16117,11 @@
      "tick": 16200
     },
     {
-     "digest": "67b9cc0acf6f79c5c02b9b809cea0fc56bbf43b46ccedca5b0414acf10995ece",
+     "digest": "84fd78fa1d54e04a31bfdcf8f4157a370a08808362a28ed218b27c9dd752a065",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497080800",
-     "kills": 458,
+     "hero_hp": "477006500",
+     "kills": 520,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -16129,23 +16129,23 @@
      "tick": 16500
     },
     {
-     "digest": "72f276f9493a0d5de5ef74163d3233e7d0dcc1e4658330b85b389d624a881398",
+     "digest": "f1df61292c56038ee228419e357545bc81c022b28695126b3e969be43ef67aa9",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497017900",
-     "kills": 470,
+     "hero_hp": "476534000",
+     "kills": 530,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 16800,
      "tick": 16800
     },
     {
-     "digest": "9a43c9ece04ca9479e602c116c0468c284a30455858b5402df5fc56d210453e4",
+     "digest": "6bd4db87b46f74682533367f63df0c9d036009a49612966ea106ec82b5b25ef9",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "497003800",
-     "kills": 478,
+     "hero_hp": "476036600",
+     "kills": 539,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -16153,23 +16153,23 @@
      "tick": 17100
     },
     {
-     "digest": "124f5fca5b28c7ebcdffa8ffb890cb8b6c8f771fc3ceee8462206f10c90bd424",
+     "digest": "18f31f241ab17a432275e4f55f2e0f4a7a8e7373c3397a963ded93bd7d7ca414",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "496947400",
-     "kills": 488,
+     "hero_hp": "475572800",
+     "kills": 549,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 17400,
      "tick": 17400
     },
     {
-     "digest": "51d1e0dc93c87b542cd5e816bfddb3b5dcb2d9e94d5b5f4e998cfe569c5308e8",
+     "digest": "9909bab615d360d26ef90ccc76e09af41e323dc6505cb16fca48f6f8d9d15c0f",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "496912700",
-     "kills": 495,
+     "hero_hp": "475114400",
+     "kills": 560,
      "player_x": "888000",
      "player_y": "769700",
      "projectiles": 0,
@@ -16177,14 +16177,14 @@
      "tick": 17700
     },
     {
-     "digest": "8a184e8ac26f36cde3706296eb7675ae415a73f827232ffba1e92adeabda994b",
+     "digest": "c63bad41c55802096c66901787775fcea0fa8622544ba8f689f9535c115934a6",
      "enemy_alive": 64,
      "hero_dead": 0,
-     "hero_hp": "496891000",
-     "kills": 508,
+     "hero_hp": "474637600",
+     "kills": 569,
      "player_x": "768000",
      "player_y": "480000",
-     "projectiles": 1,
+     "projectiles": 0,
      "step": 18000,
      "tick": 18000
     }
@@ -20559,6 +20559,2520 @@
     "64"
    ],
    "ticks": 18000
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "0b2c08a688beb2f5a967a8a54659df32a8ca89c4f9213afba010429369078b87",
+     "enemy_alive": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "player_x": "772800",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "5768d551db8cbb092ac9f3dd92358ce7bf7add49d5b6dbe31f9d795502b0dfc8",
+     "enemy_alive": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "player_x": "777600",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "aeb27701356d38c768307006647fc5c93232417dfa211d0e52f22a40f3d1d2ee",
+     "enemy_alive": 5,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "player_x": "912000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "4ce719d41026766d492e973a9c5c470071330a32edbfead7add031a21e8a70f5",
+     "enemy_alive": 10,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 1,
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "f42a648ea29ff08c6e682517d4fffa105941bf1081d9e0169d7a592e898b5590",
+     "enemy_alive": 43,
+     "hero_dead": 0,
+     "hero_hp": "499908900",
+     "kills": 7,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 1,
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "ae8a3b89a4ea29ed1f8c6cf382a5492d3cb500edb3591cd932e3dffcd5028a06",
+     "enemy_alive": 89,
+     "hero_dead": 0,
+     "hero_hp": "499667200",
+     "kills": 11,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 600,
+     "tick": 600
+    },
+    {
+     "digest": "677460aec39022538d6cb09bd21fceb8d87dd6561b9cc81f85621ebe27712644",
+     "enemy_alive": 139,
+     "hero_dead": 0,
+     "hero_hp": "499156800",
+     "kills": 11,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 900,
+     "tick": 900
+    },
+    {
+     "digest": "6107339489fe78ae8a548308ed59dec727806d4c079f4687ccc6cb3a27c29e7e",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "498452400",
+     "kills": 18,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 1200,
+     "tick": 1200
+    },
+    {
+     "digest": "dc7c5e9151aa3fd260d95dae3ca6bdb17d345984d024596b3edfe15ad8ad31df",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "497758800",
+     "kills": 24,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 1500,
+     "tick": 1500
+    },
+    {
+     "digest": "3b795fdb388a8db3d38a67bc953f9117d0c3f4e9ff8a3ced8cf828548d7a2d42",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "497057700",
+     "kills": 27,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 1800,
+     "tick": 1800
+    },
+    {
+     "digest": "2f5677ee7e7668978a7805b0cd9391db250516833952c4a3345c44f573f558cc",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "496332700",
+     "kills": 35,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 2100,
+     "tick": 2100
+    },
+    {
+     "digest": "8257ee098c405b9d93b6e12cc6c243d145fe6146fe1d3ede4d4121d263d4b423",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "495646700",
+     "kills": 40,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 2400,
+     "tick": 2400
+    },
+    {
+     "digest": "d2b6d54197ac969eff5c2279d0c14b4e640923a86f747f4a9f90c5b04918b6f7",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "494954300",
+     "kills": 45,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 2700,
+     "tick": 2700
+    },
+    {
+     "digest": "eec119e1f56d49bceb0036eaa07208776f622dc19a9089d94e23beb202296a45",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "494261900",
+     "kills": 51,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 3000,
+     "tick": 3000
+    },
+    {
+     "digest": "ed07cbe1818692784bc4bff165a5a545e43331f06c63e9b880b6d625fb603c32",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "493521700",
+     "kills": 58,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 3300,
+     "tick": 3300
+    },
+    {
+     "digest": "50073e94f334d9f6bd756447b91ce0689df44a1be9d71f9f45bd53de0cfb435e",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "492808600",
+     "kills": 64,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 3600,
+     "tick": 3600
+    },
+    {
+     "digest": "663b2c905cdd9ff54c7a7c3e21d5235873ca7bcdd41438ab727212c34a6727c3",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "492112800",
+     "kills": 72,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 3900,
+     "tick": 3900
+    },
+    {
+     "digest": "e2f2614ec28920cf7b9c71ac255750353413350ff16b4194bc4f03dd312399bf",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "491443100",
+     "kills": 78,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 4200,
+     "tick": 4200
+    },
+    {
+     "digest": "7b9293405b755d2e4b1c62325da484d0804b7943877ef84c7c41c768066f2d92",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "490736600",
+     "kills": 85,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 4500,
+     "tick": 4500
+    },
+    {
+     "digest": "2d770c8816d5e5f6982dd191727b12a488e28b51647a83c06cfb7a6d13b49254",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "490035500",
+     "kills": 90,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 4800,
+     "tick": 4800
+    },
+    {
+     "digest": "2f95bd2a14c609fb7e58ce863a485544559da0ac6a0ed25090e64bde07f001cf",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "489334400",
+     "kills": 94,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 5100,
+     "tick": 5100
+    },
+    {
+     "digest": "34a2fb851d4081d7721eeabcaac61b20ecb13061ca9a034292e72a0799542d36",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "488650600",
+     "kills": 102,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 5400,
+     "tick": 5400
+    },
+    {
+     "digest": "9242ff1e459f0480847ad0eb460355693f3e96d8398bbccaad292488b7f4bbc3",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "487938600",
+     "kills": 108,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 5700,
+     "tick": 5700
+    },
+    {
+     "digest": "d49403572d81f92f646e02f5d39e3859087b7eed09ad6259bd3840321f013882",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "487232000",
+     "kills": 112,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 6000,
+     "tick": 6000
+    },
+    {
+     "digest": "d6d1217bc2dc611c5e551cf92a5ed66e5c77b73f2a84acf6edf1468a44584119",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "486525500",
+     "kills": 120,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 6300,
+     "tick": 6300
+    },
+    {
+     "digest": "4f55cc5d089e8c1c932d40dbffca7ff3a43c12e1b366de4a3d9a4a135f6a23df",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "485868900",
+     "kills": 126,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 6600,
+     "tick": 6600
+    },
+    {
+     "digest": "f20bce6c8608ccea266e0cba63c27a7f82af4fbcbcbcf1df84a309b8b0361671",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "485138500",
+     "kills": 132,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 6900,
+     "tick": 6900
+    },
+    {
+     "digest": "de6f0b7caf29c6b7aa74aa62ca0a464bb67979912deb59e9b2bb55c87a0e028b",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "484434200",
+     "kills": 138,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 7200,
+     "tick": 7200
+    },
+    {
+     "digest": "89fef2d2e35402a294ece388c714d9fb7ce06c39eb22561d046a2e02f8327707",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "483753700",
+     "kills": 146,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 7500,
+     "tick": 7500
+    },
+    {
+     "digest": "73d5c12db6ca1d55811e2b1390adf2e464f147bc2da146e0e5e594bb1145e878",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "483081900",
+     "kills": 152,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 7800,
+     "tick": 7800
+    },
+    {
+     "digest": "407a1c4d92ab39693c0a7d64a8d91bcc62e8d946c9a307afb27e58c5e364e1f2",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "482368900",
+     "kills": 160,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 8100,
+     "tick": 8100
+    },
+    {
+     "digest": "bc111fac5d41f9a2d81ad3f45a819427455a55b881a89c01f017549f24aa2d59",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "481662300",
+     "kills": 167,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 8400,
+     "tick": 8400
+    },
+    {
+     "digest": "6a0cb36248623c86f006ee1d414ecb5737b8f8cb862ed67545b4b279cb0eaed0",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "480962200",
+     "kills": 172,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 8700,
+     "tick": 8700
+    },
+    {
+     "digest": "540f0163243e51fc6748a8ff45df4cc1211d0b0cc4994b5269646f2cb06240ff",
+     "enemy_alive": 149,
+     "hero_dead": 0,
+     "hero_hp": "480245900",
+     "kills": 178,
+     "player_x": "912000",
+     "player_y": "827640",
+     "projectiles": 0,
+     "step": 9000,
+     "tick": 9000
+    },
+    {
+     "digest": "075303ba4787c70243dfe0ef8f83ac0d73b2720f06d08fc55ad98fd5243f5e93",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "479524100",
+     "kills": 186,
+     "player_x": "666180",
+     "player_y": "725820",
+     "projectiles": 0,
+     "step": 9300,
+     "tick": 9300
+    },
+    {
+     "digest": "7033f708f8b19a2403e286ca4a5490ddffb9328caeef6546f777a64711bdddaf",
+     "enemy_alive": 148,
+     "hero_dead": 0,
+     "hero_hp": "478833800",
+     "kills": 194,
+     "player_x": "768000",
+     "player_y": "480000",
+     "projectiles": 0,
+     "step": 9600,
+     "tick": 9600
+    },
+    {
+     "digest": "645cbad32a822a08595ccb0121bf130ab152b77febcf8ad83d2a865ff2c03caa",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "478122900",
+     "kills": 199,
+     "player_x": "1013820",
+     "player_y": "581820",
+     "projectiles": 0,
+     "step": 9900,
+     "tick": 9900
+    },
+    {
+     "digest": "ce3bf3825845021e5c8c2adc83e9fc15ae5c5fa749d5c4af734ba5eda3d78b02",
+     "enemy_alive": 150,
+     "hero_dead": 0,
+     "hero_hp": "477876900",
+     "kills": 201,
+     "player_x": "734060",
+     "player_y": "793700",
+     "projectiles": 0,
+     "step": 10000,
+     "tick": 10000
+    }
+   ],
+   "commands": [
+    [
+     "0",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "30",
+     "1",
+     "1",
+     "1"
+    ],
+    [
+     "60",
+     "2",
+     "0",
+     "1"
+    ],
+    [
+     "90",
+     "3",
+     "-1",
+     "1"
+    ],
+    [
+     "120",
+     "4",
+     "-1",
+     "0"
+    ],
+    [
+     "150",
+     "5",
+     "-1",
+     "-1"
+    ],
+    [
+     "180",
+     "6",
+     "0",
+     "-1"
+    ],
+    [
+     "210",
+     "7",
+     "1",
+     "-1"
+    ],
+    [
+     "240",
+     "8",
+     "1",
+     "0"
+    ],
+    [
+     "270",
+     "9",
+     "1",
+     "1"
+    ],
+    [
+     "300",
+     "10",
+     "0",
+     "1"
+    ],
+    [
+     "330",
+     "11",
+     "-1",
+     "1"
+    ],
+    [
+     "360",
+     "12",
+     "-1",
+     "0"
+    ],
+    [
+     "390",
+     "13",
+     "-1",
+     "-1"
+    ],
+    [
+     "420",
+     "14",
+     "0",
+     "-1"
+    ],
+    [
+     "450",
+     "15",
+     "1",
+     "-1"
+    ],
+    [
+     "480",
+     "16",
+     "1",
+     "0"
+    ],
+    [
+     "510",
+     "17",
+     "1",
+     "1"
+    ],
+    [
+     "540",
+     "18",
+     "0",
+     "1"
+    ],
+    [
+     "570",
+     "19",
+     "-1",
+     "1"
+    ],
+    [
+     "600",
+     "20",
+     "-1",
+     "0"
+    ],
+    [
+     "630",
+     "21",
+     "-1",
+     "-1"
+    ],
+    [
+     "660",
+     "22",
+     "0",
+     "-1"
+    ],
+    [
+     "690",
+     "23",
+     "1",
+     "-1"
+    ],
+    [
+     "720",
+     "24",
+     "1",
+     "0"
+    ],
+    [
+     "750",
+     "25",
+     "1",
+     "1"
+    ],
+    [
+     "780",
+     "26",
+     "0",
+     "1"
+    ],
+    [
+     "810",
+     "27",
+     "-1",
+     "1"
+    ],
+    [
+     "840",
+     "28",
+     "-1",
+     "0"
+    ],
+    [
+     "870",
+     "29",
+     "-1",
+     "-1"
+    ],
+    [
+     "900",
+     "30",
+     "0",
+     "-1"
+    ],
+    [
+     "930",
+     "31",
+     "1",
+     "-1"
+    ],
+    [
+     "960",
+     "32",
+     "1",
+     "0"
+    ],
+    [
+     "990",
+     "33",
+     "1",
+     "1"
+    ],
+    [
+     "1020",
+     "34",
+     "0",
+     "1"
+    ],
+    [
+     "1050",
+     "35",
+     "-1",
+     "1"
+    ],
+    [
+     "1080",
+     "36",
+     "-1",
+     "0"
+    ],
+    [
+     "1110",
+     "37",
+     "-1",
+     "-1"
+    ],
+    [
+     "1140",
+     "38",
+     "0",
+     "-1"
+    ],
+    [
+     "1170",
+     "39",
+     "1",
+     "-1"
+    ],
+    [
+     "1200",
+     "40",
+     "1",
+     "0"
+    ],
+    [
+     "1230",
+     "41",
+     "1",
+     "1"
+    ],
+    [
+     "1260",
+     "42",
+     "0",
+     "1"
+    ],
+    [
+     "1290",
+     "43",
+     "-1",
+     "1"
+    ],
+    [
+     "1320",
+     "44",
+     "-1",
+     "0"
+    ],
+    [
+     "1350",
+     "45",
+     "-1",
+     "-1"
+    ],
+    [
+     "1380",
+     "46",
+     "0",
+     "-1"
+    ],
+    [
+     "1410",
+     "47",
+     "1",
+     "-1"
+    ],
+    [
+     "1440",
+     "48",
+     "1",
+     "0"
+    ],
+    [
+     "1470",
+     "49",
+     "1",
+     "1"
+    ],
+    [
+     "1500",
+     "50",
+     "0",
+     "1"
+    ],
+    [
+     "1530",
+     "51",
+     "-1",
+     "1"
+    ],
+    [
+     "1560",
+     "52",
+     "-1",
+     "0"
+    ],
+    [
+     "1590",
+     "53",
+     "-1",
+     "-1"
+    ],
+    [
+     "1620",
+     "54",
+     "0",
+     "-1"
+    ],
+    [
+     "1650",
+     "55",
+     "1",
+     "-1"
+    ],
+    [
+     "1680",
+     "56",
+     "1",
+     "0"
+    ],
+    [
+     "1710",
+     "57",
+     "1",
+     "1"
+    ],
+    [
+     "1740",
+     "58",
+     "0",
+     "1"
+    ],
+    [
+     "1770",
+     "59",
+     "-1",
+     "1"
+    ],
+    [
+     "1800",
+     "60",
+     "-1",
+     "0"
+    ],
+    [
+     "1830",
+     "61",
+     "-1",
+     "-1"
+    ],
+    [
+     "1860",
+     "62",
+     "0",
+     "-1"
+    ],
+    [
+     "1890",
+     "63",
+     "1",
+     "-1"
+    ],
+    [
+     "1920",
+     "64",
+     "1",
+     "0"
+    ],
+    [
+     "1950",
+     "65",
+     "1",
+     "1"
+    ],
+    [
+     "1980",
+     "66",
+     "0",
+     "1"
+    ],
+    [
+     "2010",
+     "67",
+     "-1",
+     "1"
+    ],
+    [
+     "2040",
+     "68",
+     "-1",
+     "0"
+    ],
+    [
+     "2070",
+     "69",
+     "-1",
+     "-1"
+    ],
+    [
+     "2100",
+     "70",
+     "0",
+     "-1"
+    ],
+    [
+     "2130",
+     "71",
+     "1",
+     "-1"
+    ],
+    [
+     "2160",
+     "72",
+     "1",
+     "0"
+    ],
+    [
+     "2190",
+     "73",
+     "1",
+     "1"
+    ],
+    [
+     "2220",
+     "74",
+     "0",
+     "1"
+    ],
+    [
+     "2250",
+     "75",
+     "-1",
+     "1"
+    ],
+    [
+     "2280",
+     "76",
+     "-1",
+     "0"
+    ],
+    [
+     "2310",
+     "77",
+     "-1",
+     "-1"
+    ],
+    [
+     "2340",
+     "78",
+     "0",
+     "-1"
+    ],
+    [
+     "2370",
+     "79",
+     "1",
+     "-1"
+    ],
+    [
+     "2400",
+     "80",
+     "1",
+     "0"
+    ],
+    [
+     "2430",
+     "81",
+     "1",
+     "1"
+    ],
+    [
+     "2460",
+     "82",
+     "0",
+     "1"
+    ],
+    [
+     "2490",
+     "83",
+     "-1",
+     "1"
+    ],
+    [
+     "2520",
+     "84",
+     "-1",
+     "0"
+    ],
+    [
+     "2550",
+     "85",
+     "-1",
+     "-1"
+    ],
+    [
+     "2580",
+     "86",
+     "0",
+     "-1"
+    ],
+    [
+     "2610",
+     "87",
+     "1",
+     "-1"
+    ],
+    [
+     "2640",
+     "88",
+     "1",
+     "0"
+    ],
+    [
+     "2670",
+     "89",
+     "1",
+     "1"
+    ],
+    [
+     "2700",
+     "90",
+     "0",
+     "1"
+    ],
+    [
+     "2730",
+     "91",
+     "-1",
+     "1"
+    ],
+    [
+     "2760",
+     "92",
+     "-1",
+     "0"
+    ],
+    [
+     "2790",
+     "93",
+     "-1",
+     "-1"
+    ],
+    [
+     "2820",
+     "94",
+     "0",
+     "-1"
+    ],
+    [
+     "2850",
+     "95",
+     "1",
+     "-1"
+    ],
+    [
+     "2880",
+     "96",
+     "1",
+     "0"
+    ],
+    [
+     "2910",
+     "97",
+     "1",
+     "1"
+    ],
+    [
+     "2940",
+     "98",
+     "0",
+     "1"
+    ],
+    [
+     "2970",
+     "99",
+     "-1",
+     "1"
+    ],
+    [
+     "3000",
+     "100",
+     "-1",
+     "0"
+    ],
+    [
+     "3030",
+     "101",
+     "-1",
+     "-1"
+    ],
+    [
+     "3060",
+     "102",
+     "0",
+     "-1"
+    ],
+    [
+     "3090",
+     "103",
+     "1",
+     "-1"
+    ],
+    [
+     "3120",
+     "104",
+     "1",
+     "0"
+    ],
+    [
+     "3150",
+     "105",
+     "1",
+     "1"
+    ],
+    [
+     "3180",
+     "106",
+     "0",
+     "1"
+    ],
+    [
+     "3210",
+     "107",
+     "-1",
+     "1"
+    ],
+    [
+     "3240",
+     "108",
+     "-1",
+     "0"
+    ],
+    [
+     "3270",
+     "109",
+     "-1",
+     "-1"
+    ],
+    [
+     "3300",
+     "110",
+     "0",
+     "-1"
+    ],
+    [
+     "3330",
+     "111",
+     "1",
+     "-1"
+    ],
+    [
+     "3360",
+     "112",
+     "1",
+     "0"
+    ],
+    [
+     "3390",
+     "113",
+     "1",
+     "1"
+    ],
+    [
+     "3420",
+     "114",
+     "0",
+     "1"
+    ],
+    [
+     "3450",
+     "115",
+     "-1",
+     "1"
+    ],
+    [
+     "3480",
+     "116",
+     "-1",
+     "0"
+    ],
+    [
+     "3510",
+     "117",
+     "-1",
+     "-1"
+    ],
+    [
+     "3540",
+     "118",
+     "0",
+     "-1"
+    ],
+    [
+     "3570",
+     "119",
+     "1",
+     "-1"
+    ],
+    [
+     "3600",
+     "120",
+     "1",
+     "0"
+    ],
+    [
+     "3630",
+     "121",
+     "1",
+     "1"
+    ],
+    [
+     "3660",
+     "122",
+     "0",
+     "1"
+    ],
+    [
+     "3690",
+     "123",
+     "-1",
+     "1"
+    ],
+    [
+     "3720",
+     "124",
+     "-1",
+     "0"
+    ],
+    [
+     "3750",
+     "125",
+     "-1",
+     "-1"
+    ],
+    [
+     "3780",
+     "126",
+     "0",
+     "-1"
+    ],
+    [
+     "3810",
+     "127",
+     "1",
+     "-1"
+    ],
+    [
+     "3840",
+     "128",
+     "1",
+     "0"
+    ],
+    [
+     "3870",
+     "129",
+     "1",
+     "1"
+    ],
+    [
+     "3900",
+     "130",
+     "0",
+     "1"
+    ],
+    [
+     "3930",
+     "131",
+     "-1",
+     "1"
+    ],
+    [
+     "3960",
+     "132",
+     "-1",
+     "0"
+    ],
+    [
+     "3990",
+     "133",
+     "-1",
+     "-1"
+    ],
+    [
+     "4020",
+     "134",
+     "0",
+     "-1"
+    ],
+    [
+     "4050",
+     "135",
+     "1",
+     "-1"
+    ],
+    [
+     "4080",
+     "136",
+     "1",
+     "0"
+    ],
+    [
+     "4110",
+     "137",
+     "1",
+     "1"
+    ],
+    [
+     "4140",
+     "138",
+     "0",
+     "1"
+    ],
+    [
+     "4170",
+     "139",
+     "-1",
+     "1"
+    ],
+    [
+     "4200",
+     "140",
+     "-1",
+     "0"
+    ],
+    [
+     "4230",
+     "141",
+     "-1",
+     "-1"
+    ],
+    [
+     "4260",
+     "142",
+     "0",
+     "-1"
+    ],
+    [
+     "4290",
+     "143",
+     "1",
+     "-1"
+    ],
+    [
+     "4320",
+     "144",
+     "1",
+     "0"
+    ],
+    [
+     "4350",
+     "145",
+     "1",
+     "1"
+    ],
+    [
+     "4380",
+     "146",
+     "0",
+     "1"
+    ],
+    [
+     "4410",
+     "147",
+     "-1",
+     "1"
+    ],
+    [
+     "4440",
+     "148",
+     "-1",
+     "0"
+    ],
+    [
+     "4470",
+     "149",
+     "-1",
+     "-1"
+    ],
+    [
+     "4500",
+     "150",
+     "0",
+     "-1"
+    ],
+    [
+     "4530",
+     "151",
+     "1",
+     "-1"
+    ],
+    [
+     "4560",
+     "152",
+     "1",
+     "0"
+    ],
+    [
+     "4590",
+     "153",
+     "1",
+     "1"
+    ],
+    [
+     "4620",
+     "154",
+     "0",
+     "1"
+    ],
+    [
+     "4650",
+     "155",
+     "-1",
+     "1"
+    ],
+    [
+     "4680",
+     "156",
+     "-1",
+     "0"
+    ],
+    [
+     "4710",
+     "157",
+     "-1",
+     "-1"
+    ],
+    [
+     "4740",
+     "158",
+     "0",
+     "-1"
+    ],
+    [
+     "4770",
+     "159",
+     "1",
+     "-1"
+    ],
+    [
+     "4800",
+     "160",
+     "1",
+     "0"
+    ],
+    [
+     "4830",
+     "161",
+     "1",
+     "1"
+    ],
+    [
+     "4860",
+     "162",
+     "0",
+     "1"
+    ],
+    [
+     "4890",
+     "163",
+     "-1",
+     "1"
+    ],
+    [
+     "4920",
+     "164",
+     "-1",
+     "0"
+    ],
+    [
+     "4950",
+     "165",
+     "-1",
+     "-1"
+    ],
+    [
+     "4980",
+     "166",
+     "0",
+     "-1"
+    ],
+    [
+     "5010",
+     "167",
+     "1",
+     "-1"
+    ],
+    [
+     "5040",
+     "168",
+     "1",
+     "0"
+    ],
+    [
+     "5070",
+     "169",
+     "1",
+     "1"
+    ],
+    [
+     "5100",
+     "170",
+     "0",
+     "1"
+    ],
+    [
+     "5130",
+     "171",
+     "-1",
+     "1"
+    ],
+    [
+     "5160",
+     "172",
+     "-1",
+     "0"
+    ],
+    [
+     "5190",
+     "173",
+     "-1",
+     "-1"
+    ],
+    [
+     "5220",
+     "174",
+     "0",
+     "-1"
+    ],
+    [
+     "5250",
+     "175",
+     "1",
+     "-1"
+    ],
+    [
+     "5280",
+     "176",
+     "1",
+     "0"
+    ],
+    [
+     "5310",
+     "177",
+     "1",
+     "1"
+    ],
+    [
+     "5340",
+     "178",
+     "0",
+     "1"
+    ],
+    [
+     "5370",
+     "179",
+     "-1",
+     "1"
+    ],
+    [
+     "5400",
+     "180",
+     "-1",
+     "0"
+    ],
+    [
+     "5430",
+     "181",
+     "-1",
+     "-1"
+    ],
+    [
+     "5460",
+     "182",
+     "0",
+     "-1"
+    ],
+    [
+     "5490",
+     "183",
+     "1",
+     "-1"
+    ],
+    [
+     "5520",
+     "184",
+     "1",
+     "0"
+    ],
+    [
+     "5550",
+     "185",
+     "1",
+     "1"
+    ],
+    [
+     "5580",
+     "186",
+     "0",
+     "1"
+    ],
+    [
+     "5610",
+     "187",
+     "-1",
+     "1"
+    ],
+    [
+     "5640",
+     "188",
+     "-1",
+     "0"
+    ],
+    [
+     "5670",
+     "189",
+     "-1",
+     "-1"
+    ],
+    [
+     "5700",
+     "190",
+     "0",
+     "-1"
+    ],
+    [
+     "5730",
+     "191",
+     "1",
+     "-1"
+    ],
+    [
+     "5760",
+     "192",
+     "1",
+     "0"
+    ],
+    [
+     "5790",
+     "193",
+     "1",
+     "1"
+    ],
+    [
+     "5820",
+     "194",
+     "0",
+     "1"
+    ],
+    [
+     "5850",
+     "195",
+     "-1",
+     "1"
+    ],
+    [
+     "5880",
+     "196",
+     "-1",
+     "0"
+    ],
+    [
+     "5910",
+     "197",
+     "-1",
+     "-1"
+    ],
+    [
+     "5940",
+     "198",
+     "0",
+     "-1"
+    ],
+    [
+     "5970",
+     "199",
+     "1",
+     "-1"
+    ],
+    [
+     "6000",
+     "200",
+     "1",
+     "0"
+    ],
+    [
+     "6030",
+     "201",
+     "1",
+     "1"
+    ],
+    [
+     "6060",
+     "202",
+     "0",
+     "1"
+    ],
+    [
+     "6090",
+     "203",
+     "-1",
+     "1"
+    ],
+    [
+     "6120",
+     "204",
+     "-1",
+     "0"
+    ],
+    [
+     "6150",
+     "205",
+     "-1",
+     "-1"
+    ],
+    [
+     "6180",
+     "206",
+     "0",
+     "-1"
+    ],
+    [
+     "6210",
+     "207",
+     "1",
+     "-1"
+    ],
+    [
+     "6240",
+     "208",
+     "1",
+     "0"
+    ],
+    [
+     "6270",
+     "209",
+     "1",
+     "1"
+    ],
+    [
+     "6300",
+     "210",
+     "0",
+     "1"
+    ],
+    [
+     "6330",
+     "211",
+     "-1",
+     "1"
+    ],
+    [
+     "6360",
+     "212",
+     "-1",
+     "0"
+    ],
+    [
+     "6390",
+     "213",
+     "-1",
+     "-1"
+    ],
+    [
+     "6420",
+     "214",
+     "0",
+     "-1"
+    ],
+    [
+     "6450",
+     "215",
+     "1",
+     "-1"
+    ],
+    [
+     "6480",
+     "216",
+     "1",
+     "0"
+    ],
+    [
+     "6510",
+     "217",
+     "1",
+     "1"
+    ],
+    [
+     "6540",
+     "218",
+     "0",
+     "1"
+    ],
+    [
+     "6570",
+     "219",
+     "-1",
+     "1"
+    ],
+    [
+     "6600",
+     "220",
+     "-1",
+     "0"
+    ],
+    [
+     "6630",
+     "221",
+     "-1",
+     "-1"
+    ],
+    [
+     "6660",
+     "222",
+     "0",
+     "-1"
+    ],
+    [
+     "6690",
+     "223",
+     "1",
+     "-1"
+    ],
+    [
+     "6720",
+     "224",
+     "1",
+     "0"
+    ],
+    [
+     "6750",
+     "225",
+     "1",
+     "1"
+    ],
+    [
+     "6780",
+     "226",
+     "0",
+     "1"
+    ],
+    [
+     "6810",
+     "227",
+     "-1",
+     "1"
+    ],
+    [
+     "6840",
+     "228",
+     "-1",
+     "0"
+    ],
+    [
+     "6870",
+     "229",
+     "-1",
+     "-1"
+    ],
+    [
+     "6900",
+     "230",
+     "0",
+     "-1"
+    ],
+    [
+     "6930",
+     "231",
+     "1",
+     "-1"
+    ],
+    [
+     "6960",
+     "232",
+     "1",
+     "0"
+    ],
+    [
+     "6990",
+     "233",
+     "1",
+     "1"
+    ],
+    [
+     "7020",
+     "234",
+     "0",
+     "1"
+    ],
+    [
+     "7050",
+     "235",
+     "-1",
+     "1"
+    ],
+    [
+     "7080",
+     "236",
+     "-1",
+     "0"
+    ],
+    [
+     "7110",
+     "237",
+     "-1",
+     "-1"
+    ],
+    [
+     "7140",
+     "238",
+     "0",
+     "-1"
+    ],
+    [
+     "7170",
+     "239",
+     "1",
+     "-1"
+    ],
+    [
+     "7200",
+     "240",
+     "1",
+     "0"
+    ],
+    [
+     "7230",
+     "241",
+     "1",
+     "1"
+    ],
+    [
+     "7260",
+     "242",
+     "0",
+     "1"
+    ],
+    [
+     "7290",
+     "243",
+     "-1",
+     "1"
+    ],
+    [
+     "7320",
+     "244",
+     "-1",
+     "0"
+    ],
+    [
+     "7350",
+     "245",
+     "-1",
+     "-1"
+    ],
+    [
+     "7380",
+     "246",
+     "0",
+     "-1"
+    ],
+    [
+     "7410",
+     "247",
+     "1",
+     "-1"
+    ],
+    [
+     "7440",
+     "248",
+     "1",
+     "0"
+    ],
+    [
+     "7470",
+     "249",
+     "1",
+     "1"
+    ],
+    [
+     "7500",
+     "250",
+     "0",
+     "1"
+    ],
+    [
+     "7530",
+     "251",
+     "-1",
+     "1"
+    ],
+    [
+     "7560",
+     "252",
+     "-1",
+     "0"
+    ],
+    [
+     "7590",
+     "253",
+     "-1",
+     "-1"
+    ],
+    [
+     "7620",
+     "254",
+     "0",
+     "-1"
+    ],
+    [
+     "7650",
+     "255",
+     "1",
+     "-1"
+    ],
+    [
+     "7680",
+     "256",
+     "1",
+     "0"
+    ],
+    [
+     "7710",
+     "257",
+     "1",
+     "1"
+    ],
+    [
+     "7740",
+     "258",
+     "0",
+     "1"
+    ],
+    [
+     "7770",
+     "259",
+     "-1",
+     "1"
+    ],
+    [
+     "7800",
+     "260",
+     "-1",
+     "0"
+    ],
+    [
+     "7830",
+     "261",
+     "-1",
+     "-1"
+    ],
+    [
+     "7860",
+     "262",
+     "0",
+     "-1"
+    ],
+    [
+     "7890",
+     "263",
+     "1",
+     "-1"
+    ],
+    [
+     "7920",
+     "264",
+     "1",
+     "0"
+    ],
+    [
+     "7950",
+     "265",
+     "1",
+     "1"
+    ],
+    [
+     "7980",
+     "266",
+     "0",
+     "1"
+    ],
+    [
+     "8010",
+     "267",
+     "-1",
+     "1"
+    ],
+    [
+     "8040",
+     "268",
+     "-1",
+     "0"
+    ],
+    [
+     "8070",
+     "269",
+     "-1",
+     "-1"
+    ],
+    [
+     "8100",
+     "270",
+     "0",
+     "-1"
+    ],
+    [
+     "8130",
+     "271",
+     "1",
+     "-1"
+    ],
+    [
+     "8160",
+     "272",
+     "1",
+     "0"
+    ],
+    [
+     "8190",
+     "273",
+     "1",
+     "1"
+    ],
+    [
+     "8220",
+     "274",
+     "0",
+     "1"
+    ],
+    [
+     "8250",
+     "275",
+     "-1",
+     "1"
+    ],
+    [
+     "8280",
+     "276",
+     "-1",
+     "0"
+    ],
+    [
+     "8310",
+     "277",
+     "-1",
+     "-1"
+    ],
+    [
+     "8340",
+     "278",
+     "0",
+     "-1"
+    ],
+    [
+     "8370",
+     "279",
+     "1",
+     "-1"
+    ],
+    [
+     "8400",
+     "280",
+     "1",
+     "0"
+    ],
+    [
+     "8430",
+     "281",
+     "1",
+     "1"
+    ],
+    [
+     "8460",
+     "282",
+     "0",
+     "1"
+    ],
+    [
+     "8490",
+     "283",
+     "-1",
+     "1"
+    ],
+    [
+     "8520",
+     "284",
+     "-1",
+     "0"
+    ],
+    [
+     "8550",
+     "285",
+     "-1",
+     "-1"
+    ],
+    [
+     "8580",
+     "286",
+     "0",
+     "-1"
+    ],
+    [
+     "8610",
+     "287",
+     "1",
+     "-1"
+    ],
+    [
+     "8640",
+     "288",
+     "1",
+     "0"
+    ],
+    [
+     "8670",
+     "289",
+     "1",
+     "1"
+    ],
+    [
+     "8700",
+     "290",
+     "0",
+     "1"
+    ],
+    [
+     "8730",
+     "291",
+     "-1",
+     "1"
+    ],
+    [
+     "8760",
+     "292",
+     "-1",
+     "0"
+    ],
+    [
+     "8790",
+     "293",
+     "-1",
+     "-1"
+    ],
+    [
+     "8820",
+     "294",
+     "0",
+     "-1"
+    ],
+    [
+     "8850",
+     "295",
+     "1",
+     "-1"
+    ],
+    [
+     "8880",
+     "296",
+     "1",
+     "0"
+    ],
+    [
+     "8910",
+     "297",
+     "1",
+     "1"
+    ],
+    [
+     "8940",
+     "298",
+     "0",
+     "1"
+    ],
+    [
+     "8970",
+     "299",
+     "-1",
+     "1"
+    ],
+    [
+     "9000",
+     "300",
+     "-1",
+     "0"
+    ],
+    [
+     "9030",
+     "301",
+     "-1",
+     "-1"
+    ],
+    [
+     "9060",
+     "302",
+     "0",
+     "-1"
+    ],
+    [
+     "9090",
+     "303",
+     "1",
+     "-1"
+    ],
+    [
+     "9120",
+     "304",
+     "1",
+     "0"
+    ],
+    [
+     "9150",
+     "305",
+     "1",
+     "1"
+    ],
+    [
+     "9180",
+     "306",
+     "0",
+     "1"
+    ],
+    [
+     "9210",
+     "307",
+     "-1",
+     "1"
+    ],
+    [
+     "9240",
+     "308",
+     "-1",
+     "0"
+    ],
+    [
+     "9270",
+     "309",
+     "-1",
+     "-1"
+    ],
+    [
+     "9300",
+     "310",
+     "0",
+     "-1"
+    ],
+    [
+     "9330",
+     "311",
+     "1",
+     "-1"
+    ],
+    [
+     "9360",
+     "312",
+     "1",
+     "0"
+    ],
+    [
+     "9390",
+     "313",
+     "1",
+     "1"
+    ],
+    [
+     "9420",
+     "314",
+     "0",
+     "1"
+    ],
+    [
+     "9450",
+     "315",
+     "-1",
+     "1"
+    ],
+    [
+     "9480",
+     "316",
+     "-1",
+     "0"
+    ],
+    [
+     "9510",
+     "317",
+     "-1",
+     "-1"
+    ],
+    [
+     "9540",
+     "318",
+     "0",
+     "-1"
+    ],
+    [
+     "9570",
+     "319",
+     "1",
+     "-1"
+    ],
+    [
+     "9600",
+     "320",
+     "1",
+     "0"
+    ],
+    [
+     "9630",
+     "321",
+     "1",
+     "1"
+    ],
+    [
+     "9660",
+     "322",
+     "0",
+     "1"
+    ],
+    [
+     "9690",
+     "323",
+     "-1",
+     "1"
+    ],
+    [
+     "9720",
+     "324",
+     "-1",
+     "0"
+    ],
+    [
+     "9750",
+     "325",
+     "-1",
+     "-1"
+    ],
+    [
+     "9780",
+     "326",
+     "0",
+     "-1"
+    ],
+    [
+     "9810",
+     "327",
+     "1",
+     "-1"
+    ],
+    [
+     "9840",
+     "328",
+     "1",
+     "0"
+    ],
+    [
+     "9870",
+     "329",
+     "1",
+     "1"
+    ],
+    [
+     "9900",
+     "330",
+     "0",
+     "1"
+    ],
+    [
+     "9930",
+     "331",
+     "-1",
+     "1"
+    ],
+    [
+     "9960",
+     "332",
+     "-1",
+     "0"
+    ],
+    [
+     "9990",
+     "333",
+     "-1",
+     "-1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "20261113",
+    "values": [
+     "500000000",
+     "6000",
+     "0",
+     "1000",
+     "150",
+     "384000"
+    ]
+   },
+   "log_digest": "e68eb469a875d908887c559ddc76ad0e2e231a8b285d1be598c84c3566277bdf",
+   "name": "stress_150_separation",
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 10000
   }
  ]
 }

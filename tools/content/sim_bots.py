@@ -79,8 +79,8 @@ def kiter(seen: Observation, tick: int) -> tuple[int, int]:
         d2 = dx * dx + dy * dy
         if d2 > KITER_SENSE_SU * KITER_SENSE_SU:
             continue
-        weight = KITER_SENSE_SU - fx.isqrt(d2)
-        qx, qy = fx.normalize_q14(dx, dy)
+        weight = KITER_SENSE_SU - sim.isqrt(d2)
+        qx, qy = sim.normalize_q14(dx, dy)
         vx += fx.floor_div(qx * weight, KITER_SENSE_SU)
         vy += fx.floor_div(qy * weight, KITER_SENSE_SU)
     for gap, axis, sign in ((hx - seen.min_x, 0, 1), (seen.max_x - hx, 0, -1),

@@ -253,3 +253,64 @@ func test_acquire_range_is_inclusive() -> void:
 	world.skill_acc = 49000
 	SimKernel.step(config, world, CommandLog.new())
 	assert_eq(world.skill_acc, 49000, "one su further is out of range")
+
+
+## Separation (ADR-009 section 2), checked directly; the stress trace covers it end to end.
+static func _push_pass(config: SimConfig, world: WorldState) -> Array[PackedInt64Array]:
+	var push_x: PackedInt64Array = PackedInt64Array()
+	var push_y: PackedInt64Array = PackedInt64Array()
+	push_x.resize(world.enemy_slots())
+	push_y.resize(world.enemy_slots())
+	push_x.fill(0)
+	push_y.fill(0)
+	SeparationSystem._separate(config, world, push_x, push_y)
+	return [push_x, push_y]
+
+
+func test_separation_pushes_half_the_overlap_and_coincident_along_x() -> void:
+	var config: SimConfig = _arena(P0_SKILL)
+	var world: WorldState = WorldState.initial(config)
+	_place(world, 768000, 480000, 1)
+	_place(world, 798000, 480000, 1)
+	var push: Array[PackedInt64Array] = _push_pass(config, world)
+	assert_eq(push[0], PackedInt64Array([-9000, 9000]), "half of the 18000 overlap each")
+	assert_eq(push[1], PackedInt64Array([0, 0]))
+	var same: WorldState = WorldState.initial(config)
+	_place(same, 768000, 480000, 1)
+	_place(same, 1268000, 480000, 1)
+	_place(same, 768000, 480000, 1)
+	push = _push_pass(config, same)
+	assert_eq(push[0], PackedInt64Array([-24000, 0, 24000]), "the larger slot goes towards +x")
+	assert_eq(push[1], PackedInt64Array([0, 0, 0]))
+
+
+func test_separation_budget_resumes_at_the_cursor() -> void:
+	var config: SimConfig = _arena(P0_SKILL)
+	var world: WorldState = WorldState.initial(config)
+	# Three crowds of 70 in cells (2,2), (10,10), (20,15): 2415 checks each, 33 columns.
+	for centre: Array in [[120000, 120000], [504000, 504000], [984000, 744000]]:
+		for k: int in 70:
+			_place(world, centre[0] + k * 100, centre[1], 1)
+	var push: Array[PackedInt64Array] = _push_pass(config, world)
+	assert_eq(world.sep_cursor, 10 * 33 + 11, "stops before the first cell after 4096 checks")
+	assert_ne(push[0][70], 0, "the second crowd is finished")
+	assert_eq(push[0][140], 0, "the third crowd waits for the next tick")
+	push = _push_pass(config, world)
+	assert_eq(world.sep_cursor, 0, "the resumed pass completes")
+	assert_eq(push[0][0], 0, "the resumed pass starts at the cursor")
+	assert_ne(push[0][140], 0)
+
+
+func test_separated_move_is_capped_and_touching_enemy_stays() -> void:
+	var config: SimConfig = SimConfig.create(PackedInt64Array(BASE)).with_enemies(
+		PackedInt64Array([500000000, 536870912, 0, 1000, 64, 0]),
+		PackedInt64Array([3264, 24000, 1000000, 0, 36, 1]), "1"
+	)
+	var world: WorldState = WorldState.initial(config)
+	_place(world, 816000, 480000, 1)
+	SeparationSystem.chase_and_separate(config, world)
+	assert_eq([world.enemy_x[0], world.enemy_y[0]], [816000, 480000], "touching the hero: stays")
+	_place(world, 826000, 480000, 1)
+	SeparationSystem.chase_and_separate(config, world)
+	assert_eq(world.enemy_x[0], 816000 - 3264, "push of 19000 capped at the speed 3264")
+	assert_eq(world.enemy_y[0], 480000)

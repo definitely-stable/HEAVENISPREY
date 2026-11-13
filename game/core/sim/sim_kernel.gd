@@ -9,7 +9,8 @@ extends RefCounted
 ##   2. move the hero by the held direction (Q14 unit vector x speed, symmetric rounding)
 ##      and clamp inside the arena rectangle (radius-aware);
 ##   3. spawn at most one enemy into the lowest free slot (EnemySystem.spawn);
-##   4. move enemies toward the hero (EnemySystem.chase);
+##   4. move enemies toward the hero with separation, capped at their speed
+##      (SeparationSystem.chase_and_separate);
 ##   5. hero skill: cooldown, target, cast (CombatSystem.cast);
 ##   6-7a. projectiles fly and hit enemies, slot order (CombatSystem.fly_and_hit);
 ##   7b. enemy contact hits, slot order, enemies at 0 HP do not hit (EnemySystem.contact);
@@ -43,7 +44,7 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 	world.player_y = clampi(next_y, config.arena_min_y + r, config.arena_max_y - r)
 	if config.has_enemies():
 		EnemySystem.spawn(config, world)
-		EnemySystem.chase(config, world)
+		SeparationSystem.chase_and_separate(config, world)
 		if config.has_skill():
 			CombatSystem.cast(config, world)
 			CombatSystem.fly_and_hit(config, world)

@@ -28,6 +28,8 @@ var enemy_alive: int = 0
 var kills: int = 0
 ## Hero skill cooldown accumulator in milli-ticks.
 var skill_acc: int = 0
+## Grid cell where the next separation pass starts (0 after a complete pass).
+var sep_cursor: int = 0
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -79,7 +81,7 @@ func to_ints() -> PackedInt64Array:
 	var out: PackedInt64Array = PackedInt64Array([
 		tick, player_x, player_y, move_x, move_y, command_cursor,
 		hero_hp, hero_dead, spawn_acc, enemy_rng_cursor, next_enemy_uid, enemy_alive, kills,
-		skill_acc, enemy_slots(), projectile_slots(),
+		skill_acc, sep_cursor, enemy_slots(), projectile_slots(),
 	])
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
@@ -115,6 +117,7 @@ func copy() -> WorldState:
 	other.enemy_alive = enemy_alive
 	other.kills = kills
 	other.skill_acc = skill_acc
+	other.sep_cursor = sep_cursor
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
