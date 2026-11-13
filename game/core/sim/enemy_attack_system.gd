@@ -1,7 +1,7 @@
 class_name EnemyAttackSystem
 extends RefCounted
-## Enemy attack machine (ADR-011 sections 2-3: MELEE_ARC in E2, CHARGE in E3). Exact port of
-## tools/content/sim_core.py.
+## Enemy attack machine (ADR-011 sections 2-3: MELEE_ARC in E2, CHARGE in E3, PROJECTILE in
+## E4). Exact port of tools/content/sim_core.py.
 ##
 ## Per live enemy whose kind has an attack record (not contact), in slot order: the cooldown
 ## counts down; an enemy in an attack counts down its state (tell -> active, the hit lands in
@@ -14,7 +14,9 @@ extends RefCounted
 ## MELEE_ARC launches within 3R/4 and keeps its direction; the sector hits in the first active
 ## tick. CHARGE launches within its dash length L, aims again at the end of `tell` and never
 ## after; each active tick it dashes L // active_ticks su (clamped by the walls) and its first
-## touch of the hero hits.
+## touch of the hero hits. PROJECTILE launches within its reach, aims again at the end of
+## `tell` and releases one shot (EnemyShotSystem.release); the enemy is active for one tick and
+## the shot lives active_ticks ticks.
 
 const ST_APPROACH: int = 0
 const ST_TELL: int = 1
@@ -60,7 +62,7 @@ static func run(config: SimConfig, world: WorldState) -> void:
 		var dx: int = world.player_x - world.enemy_x[slot]
 		var dy: int = world.player_y - world.enemy_y[slot]
 		var in_range: bool = in_launch_range(reach, dx, dy)
-		if form == SimConfig.FORM_CHARGE:
+		if form == SimConfig.FORM_CHARGE or form == SimConfig.FORM_PROJECTILE:
 			in_range = dx * dx + dy * dy <= reach * reach
 		if world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0 and in_range:
 			var unit: PackedInt64Array = aim(world, slot)
@@ -77,12 +79,17 @@ static func _next_state(config: SimConfig, world: WorldState, slot: int, kind: i
 	var state: int = world.enemy_state[slot]
 	var recovery: int = config.attack_value(kind, SimConfig.ATTACK_RECOVERY)
 	if state == ST_TELL:
+		var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
 		world.enemy_state[slot] = ST_ACTIVE
 		world.enemy_left[slot] = config.attack_value(kind, SimConfig.ATTACK_ACTIVE)
-		if config.attack_value(kind, SimConfig.ATTACK_FORM) == SimConfig.FORM_CHARGE:
+		if form == SimConfig.FORM_PROJECTILE:
+			world.enemy_left[slot] = 1
+		if form == SimConfig.FORM_CHARGE or form == SimConfig.FORM_PROJECTILE:
 			var unit: PackedInt64Array = aim(world, slot)
 			world.enemy_dir_x[slot] = unit[0]
 			world.enemy_dir_y[slot] = unit[1]
+			if form == SimConfig.FORM_PROJECTILE:
+				EnemyShotSystem.release(config, world, slot)
 			return
 		var hit: bool = in_sector(
 			config.attack_value(kind, SimConfig.ATTACK_REACH), config.attack_value(kind, SimConfig.ATTACK_ARC),

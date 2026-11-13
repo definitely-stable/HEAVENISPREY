@@ -19,8 +19,10 @@ extends RefCounted
 ##      (SeparationSystem.chase_and_separate);
 ##   5. hero skill: cooldown, target, cast (CombatSystem.cast);
 ##   6-7a. projectiles fly and hit enemies, slot order (CombatSystem.fly_and_hit);
+##   7a'. enemy shots fly and hit the hero, slot order (EnemyShotSystem.fly, ADR-011);
 ##   7b. enemy contact hits, slot order, enemies at 0 HP do not hit (EnemySystem.contact);
-##   7c. enemy attack machines: launches, states, arc hits (EnemyAttackSystem.run, ADR-011);
+##   7c. enemy attack machines: launches, states, arc hits, shot releases
+##       (EnemyAttackSystem.run, ADR-011);
 ##   7d. hero statuses: venom damage and expiry (StatusSystem.tick);
 ##   8. deaths: enemies in slot order (XP gem drop, slot freed, kill counted), expired
 ##      projectiles, then the hero (pending level choices are voided when the run ends);
@@ -66,6 +68,7 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 		if config.has_skill():
 			CombatSystem.cast(config, world)
 			CombatSystem.fly_and_hit(config, world)
+		EnemyShotSystem.fly(config, world)
 		EnemySystem.contact(config, world)
 		EnemyAttackSystem.run(config, world)
 		StatusSystem.tick(config, world)

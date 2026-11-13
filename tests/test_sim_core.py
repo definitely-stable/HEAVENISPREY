@@ -1106,6 +1106,17 @@ def charge_world(extra=0):
     return config, world
 
 
+def lantern_world(extra=0, record=None):
+    """The lantern on the hero's +x side: its first chase step ends exactly at the launch
+    range of 8 cells (384 px); the shot then flies 352 px to touch the hero."""
+    config = sim.Config(BASE, NO_SPAWN, sim.LANTERN_KIND, "1",
+                        attacks=record or sim.LANTERN_WISP)
+    assert config.valid()
+    world = sim.World(config)
+    place(world, 0, CX + 384000 + sim.LANTERN_KIND[0] + extra, CY, 1000000)
+    return config, world
+
+
 def run_moves(config, world, moves, ticks):
     """Steps `ticks` ticks; `moves` = {tick: (move_x, move_y)} held from that tick on."""
     log, sequence = sim.CommandLog(), 0
@@ -1355,6 +1366,126 @@ class SimEnemyAttackReferenceTests(unittest.TestCase):
             sim.step(config, world, sim.CommandLog())
             states.append(world.enemies[0][sim.E_STATE])
         self.assertEqual(states[25:], [sim.ST_ACTIVE, sim.ST_APPROACH])
+
+class SimEnemyShotReferenceTests(unittest.TestCase):
+    """ADR-011 section 3 (E4): PROJECTILE attacks, the enemy shot pool, keep distance."""
+
+    SHOT = [CX + 384000, CY, -2784, 0, 240, 6400, 8000]
+
+    def test_lantern_launches_within_reach_and_releases_one_shot(self):
+        config, world = lantern_world(extra=1)
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_APPROACH, "1 su too far")
+        config, world = lantern_world()
+        run_moves(config, world, {}, 36)
+        self.assertEqual((world.enemies[0][sim.E_STATE], world.shots), (sim.ST_TELL, []))
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_ACTIVE)
+        self.assertEqual(world.shots, [self.SHOT], "released in the first active tick")
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_RECOVER, "active is one tick")
+        self.assertEqual(world.shots[0][:2], [CX + 384000 - 2784, CY])
+
+    def test_shot_hits_a_standing_hero_once(self):
+        config, world = lantern_world()
+        run_moves(config, world, {}, 163)
+        self.assertEqual((world.hero_hp, world.live_shots()), (TOUGH, 1))
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.hero_hp, world.live_shots()), (TOUGH - 6400, 0))
+        self.assertEqual(world.shots, [[0] * sim.SHOT_FIELDS], "freed on the hit")
+
+    def test_shot_does_not_home(self):
+        """RANGED-DODGE: the shot keeps the direction locked at the end of tell; a step
+        aside after the release dodges it, up to 3 ticks before the touch (tick 163): the
+        hero sidesteps faster than the shot flies."""
+        for start, hit in ((37, False), (161, False), (162, True)):
+            config, world = lantern_world()
+            run_moves(config, world, {start: (0, 1)}, 170)
+            self.assertEqual(world.hero_hp < TOUGH, hit, start)
+        config, world = lantern_world()
+        run_moves(config, world, {37: (0, 1)}, 100)
+        self.assertEqual(world.shots[0][sim.S_VY], 0)
+        self.assertEqual(world.shots[0][sim.S_Y], CY)
+
+    def test_aim_is_locked_at_the_end_of_tell(self):
+        config, world = lantern_world()
+        run_moves(config, world, {20: (0, 1)}, 37)
+        shot = world.shots[0]
+        self.assertLess(shot[sim.S_VX], 0)
+        self.assertGreater(shot[sim.S_VY], 0, "aimed at the hero's position at the release")
+
+    def test_shot_expires_after_its_lifetime(self):
+        config, world = lantern_world()
+        run_moves(config, world, {}, 37)
+        world.enemies[0][sim.E_CD] = 1000  # no second shot
+        run_moves(config, world, {37: (0, 1)}, 239)
+        self.assertEqual(world.live_shots(), 1)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.live_shots(), 0, "240 ticks of flight")
+
+    def test_shot_is_freed_past_the_arena_edge(self):
+        config, world = lantern_world()
+        world.enemies[0] = [0] * sim.ENEMY_FIELDS
+        world.shots = [[config.min_x + 2000, CY, -2784, 0, 240, 6400, 8000]]
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual(world.shots, [[0] * sim.SHOT_FIELDS])
+
+    def test_shot_outlives_the_lantern(self):
+        config, world = lantern_world()
+        run_moves(config, world, {}, 40)
+        world.enemies[0][sim.E_HP] = 0
+        run_moves(config, world, {}, 124)
+        self.assertEqual(world.enemy_alive, 0)
+        self.assertEqual(world.hero_hp, TOUGH - 6400)
+
+    def test_shot_pool_is_limited(self):
+        config, world = lantern_world()
+        far = [config.min_x + 1000, config.min_y + 1000, 0, 0, 1000, 1, 8000]
+        world.shots = [list(far) for _ in range(sim.ENEMY_SHOTS_LIMIT)]
+        run_moves(config, world, {}, 37)
+        self.assertEqual(len(world.shots), sim.ENEMY_SHOTS_LIMIT)
+        self.assertNotIn(self.SHOT, world.shots, "no free slot: the shot is not fired")
+        config, world = lantern_world()
+        world.shots = [list(far) for _ in range(3)]
+        world.shots[1] = [0] * sim.SHOT_FIELDS
+        run_moves(config, world, {}, 37)
+        self.assertEqual(world.shots[1], self.SHOT, "lowest free slot")
+        self.assertEqual(len(world.shots), 3)
+
+    def test_lantern_keeps_its_distance(self):
+        config, world = lantern_world()
+        place(world, 0, CX + 288000, CY, 1000000, slot=0)
+        world.enemies[0][sim.E_CD] = 100
+        run_moves(config, world, {}, 50)
+        self.assertEqual(world.enemies[0][sim.E_X], CX + 288000, "no chase within keep")
+        world.enemies[0][sim.E_X] = CX + 288001
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemies[0][sim.E_X], CX + 288001 - sim.LANTERN_KIND[0])
+
+    def test_fastest_valid_shot_cannot_step_over_the_hero(self):
+        record = list(sim.LANTERN_WISP)
+        record[7] = 24000 + 8000
+        config, world = lantern_world(record=record)
+        run_moves(config, world, {}, 37 + 12)
+        self.assertEqual(world.hero_hp, TOUGH - 6400)
+
+    def test_shot_records_are_validated(self):
+        def valid(record, kind=sim.LANTERN_KIND):
+            return sim.Config(BASE, NO_SPAWN, kind, "1", attacks=record).valid()
+        self.assertTrue(valid(sim.LANTERN_WISP))
+        for field, value in ((5, 1), (6, 1), (7, 0), (7, 32001), (8, 0), (9, -1),
+                             (9, 384001), (4, 0)):
+            record = list(sim.LANTERN_WISP)
+            record[field] = value
+            self.assertFalse(valid(record), (field, value))
+        harmless = list(sim.LANTERN_KIND)
+        harmless[3] = 0
+        self.assertFalse(valid(sim.LANTERN_WISP, harmless), "a shot must deal damage")
+        for field in (7, 8, 9):
+            record = list(sim.MANTIS_LUNGE)
+            record[field] = 1
+            self.assertFalse(sim.Config(BASE, NO_SPAWN, sim.MANTIS_KIND, "1",
+                                        attacks=record).valid(), field)
 
 
 

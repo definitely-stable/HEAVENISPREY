@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 8
+VECTORS_SCHEMA_VERSION = 9
 
 
 def _load(name: str, file: str):
@@ -85,12 +85,16 @@ RATE_ONE = 1000
 BELOW_LIMIT = 1 << 32
 
 # ADR-011 sections 2-4: enemy attack record per kind (ATTACK_STRIDE values, kind order):
-# (form, telegraph_ticks, active_ticks, recovery_ticks, reach_su, arc_degrees, venom).
-# FORM_CONTACT kinds hit by touch (the record is all zeros); FORM_ARC and FORM_CHARGE kinds run
-# the attack machine with the kind's damage and its interval as the cooldown from the start of
-# `tell`. A charge has arc 0 and no venom; its reach is the dash length L.
-ATTACK_STRIDE = 7
-FORM_CONTACT, FORM_ARC, FORM_CHARGE = 0, 1, 2
+# (form, telegraph_ticks, active_ticks, recovery_ticks, reach_su, arc_degrees, venom,
+#  shot_speed_su, shot_radius_su, keep_su).
+# FORM_CONTACT kinds hit by touch (the record is all zeros); the other forms run the attack
+# machine with the kind's damage and its interval as the cooldown from the start of `tell`.
+# A charge has arc 0 and no venom; its reach is the dash length L. A projectile kind launches
+# within reach, does not chase closer than keep_su, and its active_ticks is the lifetime of
+# the shot (the enemy itself is active for one tick, the release).
+ATTACK_STRIDE = 10
+FORM_CONTACT, FORM_ARC, FORM_CHARGE, FORM_PROJECTILE = 0, 1, 2, 3
+ENEMY_SHOTS_LIMIT = 64     # enemy projectile pool (ADR-011 section 3)
 ST_APPROACH, ST_TELL, ST_ACTIVE, ST_RECOVER = range(4)
 MAX_ATTACK_REACH = 1 << 22    # su; keeps the sector test inside int64
 MAX_ARC_DEGREES = 180
@@ -318,14 +322,26 @@ class Config:
             return False
         venom_used = False
         for kind in range(len(self.kinds)):
-            form, tell, active, recover, reach, arc, venom = self.attack(kind)
+            form, tell, active, recover, reach, arc, venom, speed, shot_r, keep = \
+                self.attack(kind)
             if form == FORM_CONTACT:
                 if any(self.attack(kind)):
                     return False
                 continue
-            if form not in (FORM_ARC, FORM_CHARGE) or tell < 1 or active < 1 or recover < 0:
+            if form not in (FORM_ARC, FORM_CHARGE, FORM_PROJECTILE) or tell < 1 or active < 1 \
+                    or recover < 0:
                 return False
             if not 0 < reach <= MAX_ATTACK_REACH:
+                return False
+            if form == FORM_PROJECTILE:
+                # A shot must not step over the hero in one tick (no tunnelling) and must
+                # deal damage; it is released from the enemy centre.
+                if arc != 0 or venom != 0 or not 0 < shot_r <= MAX_ATTACK_REACH \
+                        or not 0 < speed <= self.radius + shot_r or not 0 <= keep <= reach \
+                        or self.kinds[kind][3] <= 0:
+                    return False
+                continue
+            if speed != 0 or shot_r != 0 or keep != 0:
                 return False
             if form == FORM_CHARGE:
                 # A dash moves reach // active su per tick: at least 1 su, and no tunnelling
@@ -406,6 +422,8 @@ ENEMY_FIELDS = 12
 P_X, P_Y, P_VX, P_VY, P_TTL, P_DAMAGE, P_HITS, P_CAP = range(8)
 P_LEDGER = 8
 G_UID, G_X, G_Y, G_VALUE = range(4)
+S_X, S_Y, S_VX, S_VY, S_TTL, S_DAMAGE, S_RADIUS = range(7)
+SHOT_FIELDS = 7
 
 
 class World:
@@ -420,7 +438,9 @@ class World:
     hand of upgrade codes (non-empty only while the run is paused for a choice).
 
     Enemy attacks and hero statuses (ADR-011 sections 2 and 4): the attack instance counter and
-    status.venom (stacks, ticks left, ticks to the next damage)."""
+    status.venom (stacks, ticks left, ticks to the next damage). Enemy shot slot: [x, y, vx, vy,
+    ttl, damage, radius], free when damage == 0 (all fields 0); lowest free slot, at most
+    ENEMY_SHOTS_LIMIT slots."""
 
     def __init__(self, config: Config):
         self.tick = 0
@@ -460,6 +480,7 @@ class World:
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
         self.gems: list[list[int]] = []
+        self.shots: list[list[int]] = []
 
     def over(self) -> bool:
         """Terminal: the hero died or the run was won (ADR-011 section 1)."""
@@ -480,16 +501,20 @@ class World:
                 self.choices_done, self.build_revision, self.offers_rng_cursor] + hand \
             + self.ranks + [self.hero_hp_max, self.next_attack_uid, self.venom_stacks,
                             self.venom_left, self.venom_phase, len(self.enemies),
-                            len(self.projectiles), len(self.gems)]
+                            len(self.projectiles), len(self.gems), len(self.shots)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile] \
-            + [v for gem in self.gems for v in gem]
+            + [v for gem in self.gems for v in gem] \
+            + [v for shot in self.shots for v in shot]
 
     def digest(self) -> str:
         return ints_digest(self.ints())
 
     def live_projectiles(self) -> int:
         return sum(1 for p in self.projectiles if p[P_DAMAGE] != 0)
+
+    def live_shots(self) -> int:
+        return sum(1 for shot in self.shots if shot[S_DAMAGE] != 0)
 
 
 def _dist2(ax: int, ay: int, bx: int, by: int) -> int:
@@ -650,6 +675,8 @@ def chase_and_separate(config: Config, world: World) -> None:
     for slot, enemy in enumerate(world.enemies):
         if enemy[E_UID] == 0 or enemy[E_STATE] != ST_APPROACH or _touching(config, world, enemy):
             continue
+        if _keeps_distance(config, world, enemy):
+            continue
         speed = config.kinds[enemy[E_KIND]][0]
         qx, qy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
         tx[slot] += mul_q14(speed, qx)
@@ -805,6 +832,50 @@ def in_launch_range(reach: int, dx: int, dy: int) -> bool:
     return d2 <= reach * reach and 16 * d2 <= 9 * reach * reach
 
 
+def _keeps_distance(config: Config, world: World, enemy: list[int]) -> bool:
+    """A projectile kind does not chase closer than its keep distance (ADR-011 section 3)."""
+    record = config.attack(enemy[E_KIND])
+    if record[0] != FORM_PROJECTILE:
+        return False
+    return _dist2(enemy[E_X], enemy[E_Y], world.player_x, world.player_y) <= record[9] * record[9]
+
+
+def _release(config: Config, world: World, enemy: list[int]) -> None:
+    """The shot of a projectile attack: from the enemy centre along the locked direction, the
+    lowest free shot slot; with all ENEMY_SHOTS_LIMIT slots taken no shot is fired."""
+    record = config.attack(enemy[E_KIND])
+    speed, radius, ttl = record[7], record[8], record[2]
+    shot = [enemy[E_X], enemy[E_Y], mul_q14(speed, enemy[E_DX]), mul_q14(speed, enemy[E_DY]),
+            ttl, config.kinds[enemy[E_KIND]][3], radius]
+    slot = _lowest_free(world.shots, S_DAMAGE)
+    if slot >= 0:
+        world.shots[slot] = shot
+    elif len(world.shots) < ENEMY_SHOTS_LIMIT:
+        world.shots.append(shot)
+
+
+def fly_shots(config: Config, world: World) -> None:
+    """Enemy shots after the hero's projectiles (ADR-011 section 2), slot order: a shot moves,
+    loses a tick of life, and is freed past the arena edge, on touching the hero (the damage,
+    once) or when its life runs out. Shots outlive the enemy that fired them."""
+    for slot, shot in enumerate(world.shots):
+        if shot[S_DAMAGE] == 0:
+            continue
+        shot[S_X] += shot[S_VX]
+        shot[S_Y] += shot[S_VY]
+        shot[S_TTL] -= 1
+        x, y = shot[S_X], shot[S_Y]
+        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y:
+            world.shots[slot] = [0] * SHOT_FIELDS
+            continue
+        reach = config.radius + shot[S_RADIUS]
+        if _dist2(x, y, world.player_x, world.player_y) <= reach * reach:
+            world.hero_hp -= shot[S_DAMAGE]
+            world.shots[slot] = [0] * SHOT_FIELDS
+        elif shot[S_TTL] <= 0:
+            world.shots[slot] = [0] * SHOT_FIELDS
+
+
 def _aim(world: World, enemy: list[int]) -> tuple[int, int]:
     """Q14 direction from the enemy to the hero; +x when they coincide."""
     ux, uy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
@@ -863,9 +934,11 @@ def enemy_attacks(config: Config, world: World) -> None:
         if not _live(enemy):
             continue
         kind = enemy[E_KIND]
-        form, tell, active, recover, reach, arc, venom = config.attack(kind)
+        form, tell, active, recover, reach, arc, venom = config.attack(kind)[:7]
         if form == FORM_CONTACT:
             continue
+        if form == FORM_PROJECTILE:
+            active = 1  # the enemy releases the shot; the shot lives active_ticks
         if enemy[E_CD] > 0:
             enemy[E_CD] -= 1
         if enemy[E_STATE] != ST_APPROACH:
@@ -875,6 +948,9 @@ def enemy_attacks(config: Config, world: World) -> None:
                     enemy[E_STATE], enemy[E_LEFT] = ST_ACTIVE, active
                     if form == FORM_CHARGE:
                         enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
+                    elif form == FORM_PROJECTILE:
+                        enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
+                        _release(config, world, enemy)
                     elif in_sector(reach, arc, enemy[E_DX], enemy[E_DY],
                                    world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
                         world.hero_hp -= config.kinds[kind][3]
@@ -888,7 +964,7 @@ def enemy_attacks(config: Config, world: World) -> None:
         if form == FORM_CHARGE and enemy[E_STATE] == ST_ACTIVE:
             _dash(config, world, enemy, reach // active)
         dx, dy = world.player_x - enemy[E_X], world.player_y - enemy[E_Y]
-        if form == FORM_CHARGE:
+        if form in (FORM_CHARGE, FORM_PROJECTILE):
             in_range = dx * dx + dy * dy <= reach * reach
         else:
             in_range = in_launch_range(reach, dx, dy)
@@ -1071,6 +1147,7 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         if config.has_skill():
             cast(config, world)
             fly_and_hit(config, world)
+        fly_shots(config, world)
         contact(config, world)
         enemy_attacks(config, world)
         tick_statuses(config, world)
@@ -1287,14 +1364,18 @@ ARC_KINDS = [5856, 16800, 6500, 5000, 96, 3,
              4944, 24000, 10500, 9000, 120, 2,
              2592, 30720, 25000, 11800, 180, 1]
 # (form, telegraph, active, recovery, reach_su = radius_mult x H, arc_degrees, venom)
-CONTACT_ATTACK = [FORM_CONTACT, 0, 0, 0, 0, 0, 0]
-SNAKE_BITE = [FORM_ARC, 20, 6, 27, DANGER_SU, 85, 1]
-DISCIPLE_CLEAVE = [FORM_ARC, 30, 10, 37, 129600, 125, 0]
-JADE_STOMP = [FORM_ARC, 48, 12, 40, 153600, 130, 0]
+CONTACT_ATTACK = [FORM_CONTACT, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+SNAKE_BITE = [FORM_ARC, 20, 6, 27, DANGER_SU, 85, 1, 0, 0, 0]
+DISCIPLE_CLEAVE = [FORM_ARC, 30, 10, 37, 129600, 125, 0, 0, 0, 0]
+JADE_STOMP = [FORM_ARC, 48, 12, 40, 153600, 130, 0, 0, 0, 0]
 ARC_ATTACKS = SNAKE_BITE + DISCIPLE_CLEAVE + JADE_STOMP
 #   sickle_mantis: speed 1.1, radius 0.78, hp 0.72, lunge 0.95, cooldown 150; L = 4.5 hero radii
 MANTIS_KIND = [5280, 18720, 7200, 9500, 150, 2]
-MANTIS_LUNGE = [FORM_CHARGE, 33, 10, 36, 108000, 0, 0]
+MANTIS_LUNGE = [FORM_CHARGE, 33, 10, 36, 108000, 0, 0, 0, 0, 0]
+#   cursed_spirit_lantern: speed 0.82, radius 0.7, hp 0.7, wisp 0.64, cooldown 204; launch
+#   within 8 cells, keeps 6 cells, shot 0.58 x hero speed, 8 px, 240 ticks
+LANTERN_KIND = [3936, 16800, 7000, 6400, 204, 3]
+LANTERN_WISP = [FORM_PROJECTILE, 36, 240, 27, 384000, 0, 0, 2784, 8000, 288000]
 MIXED_KINDS = W0_KINDS + ARC_KINDS
 MIXED_ATTACKS = CONTACT_ATTACK * 2 + ARC_ATTACKS
 # status.venom: 3 stacks, 240 ticks, damage every 60 ticks, 1 HP per stack.
@@ -1323,6 +1404,11 @@ def _attack_scenarios():
                    ((48000, 512), (10, 15, 15, 15, 20, 15), P0_XP_COSTS),
                    attacks=MIXED_ATTACKS + MANTIS_LUNGE, venom=P0_VENOM)
     out.append(("charge_mixed_hero_circles", crowd, migrate_v1(_circle(30, 3600)), 3600))
+    # E4: lanterns around a standing hero (shots, pool, keep distance) and a circling one.
+    lanterns = Config(BASE, [TOUGH, 20000, 0, 1000, 10, 384000], LANTERN_KIND, SEED,
+                      attacks=LANTERN_WISP)
+    out.append(("shots_hero_stands_still", lanterns, [], 2400))
+    out.append(("shots_hero_circles", lanterns, migrate_v1(_circle(20, 2400)), 2400))
     return out
 
 
@@ -1423,6 +1509,7 @@ def run_trace(config: Config, commands, steps: int):
                 "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
                 "choices": world.choices_done, "paused": int(world.paused()), "won": world.won,
                 "attacks": world.next_attack_uid - 1, "venom": world.venom_stacks,
+                "shots": world.live_shots(),
                 "digest": world.digest()})
     return log, world, checkpoints
 

@@ -26,7 +26,8 @@ extends RefCounted
 ## 7: victory after the stage duration, `won` in the state (ADR-011 section 1).
 ## 8: enemy attack states and instances, the attack table and status.venom (ADR-011 E2).
 ## 9: the enemy charge, a hit flag per enemy slot (ADR-011 E3).
-const SIM_SCHEMA_VERSION: int = 9
+## 10: enemy projectiles, the shot pool in the world digest, the 10-field attack record (ADR-011 E4).
+const SIM_SCHEMA_VERSION: int = 10
 
 var error: String:
 	get:

@@ -107,6 +107,15 @@ var gem_x: PackedInt64Array = PackedInt64Array()
 var gem_y: PackedInt64Array = PackedInt64Array()
 var gem_value: PackedInt64Array = PackedInt64Array()
 
+## Enemy shots (ADR-011 section 3): a slot is free when shot_damage == 0 (all fields 0).
+var shot_x: PackedInt64Array = PackedInt64Array()
+var shot_y: PackedInt64Array = PackedInt64Array()
+var shot_vx: PackedInt64Array = PackedInt64Array()
+var shot_vy: PackedInt64Array = PackedInt64Array()
+var shot_ttl: PackedInt64Array = PackedInt64Array()
+var shot_damage: PackedInt64Array = PackedInt64Array()
+var shot_radius: PackedInt64Array = PackedInt64Array()
+
 
 static func initial(config: SimConfig) -> WorldState:
 	var world: WorldState = WorldState.new()
@@ -148,6 +157,30 @@ func gem_slots() -> int:
 	return gem_uid.size()
 
 
+func shot_slots() -> int:
+	return shot_damage.size()
+
+
+func live_shots() -> int:
+	var count: int = 0
+	for slot: int in shot_slots():
+		if shot_damage[slot] != 0:
+			count += 1
+	return count
+
+
+## Appends a free shot slot (all fields 0) and returns its index.
+func append_shot_slot() -> int:
+	shot_x.append(0)
+	shot_y.append(0)
+	shot_vx.append(0)
+	shot_vy.append(0)
+	shot_ttl.append(0)
+	shot_damage.append(0)
+	shot_radius.append(0)
+	return shot_slots() - 1
+
+
 func is_over() -> bool:
 	return hero_dead != 0 or won != 0
 
@@ -174,7 +207,7 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(ranks)
 	out.append_array(PackedInt64Array([
 		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase,
-		enemy_slots(), projectile_slots(), gem_slots(),
+		enemy_slots(), projectile_slots(), gem_slots(), shot_slots(),
 	]))
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
@@ -190,6 +223,11 @@ func to_ints() -> PackedInt64Array:
 		out.append_array(proj_ledger.slice(slot * ledger_stride, (slot + 1) * ledger_stride))
 	for slot: int in gem_slots():
 		out.append_array(PackedInt64Array([gem_uid[slot], gem_x[slot], gem_y[slot], gem_value[slot]]))
+	for slot: int in shot_slots():
+		out.append_array(PackedInt64Array([
+			shot_x[slot], shot_y[slot], shot_vx[slot], shot_vy[slot], shot_ttl[slot],
+			shot_damage[slot], shot_radius[slot],
+		]))
 	return out
 
 
@@ -260,4 +298,11 @@ func copy() -> WorldState:
 	other.gem_x = gem_x.duplicate()
 	other.gem_y = gem_y.duplicate()
 	other.gem_value = gem_value.duplicate()
+	other.shot_x = shot_x.duplicate()
+	other.shot_y = shot_y.duplicate()
+	other.shot_vx = shot_vx.duplicate()
+	other.shot_vy = shot_vy.duplicate()
+	other.shot_ttl = shot_ttl.duplicate()
+	other.shot_damage = shot_damage.duplicate()
+	other.shot_radius = shot_radius.duplicate()
 	return other

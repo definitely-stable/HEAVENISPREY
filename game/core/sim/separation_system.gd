@@ -5,7 +5,8 @@ extends RefCounted
 ##
 ## 1. Chase writes tentative positions (tx, ty) without clamping; an enemy touching the hero
 ##    stays where it is. An enemy in an attack (state other than approach, ADR-011 section 2)
-##    neither moves nor takes part in the separation.
+##    neither moves nor takes part in the separation. A projectile kind within its keep
+##    distance does not chase (it is still pushed apart, ADR-011 section 3).
 ## 2. A uniform grid (cell = 2 x the largest kind radius, index clamped to the grid) is built
 ##    from the positions of tick N by counting sort over slots (cell_start, cell_items).
 ## 3. Pairs are visited cell by cell, row-major: the cell itself (later items only), then the
@@ -31,7 +32,7 @@ static func chase_and_separate(config: SimConfig, world: WorldState) -> void:
 	for slot: int in slots:
 		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
 			continue
-		if EnemySystem.touching(config, world, slot):
+		if EnemySystem.touching(config, world, slot) or EnemyShotSystem.keeps_distance(config, world, slot):
 			continue
 		var direction: PackedInt64Array = Fx.normalize_q14(
 			world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot]

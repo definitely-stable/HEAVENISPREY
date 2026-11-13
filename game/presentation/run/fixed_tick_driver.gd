@@ -112,6 +112,21 @@ func projectile_position_px(slot: int) -> Vector2:
 	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
 
 
+## Interpolated enemy shot position in pixels (ADR-011 section 3); one released this tick is
+## drawn where it is.
+func shot_position_px(slot: int) -> Vector2:
+	var to: Vector2 = Vector2(world.shot_x[slot], world.shot_y[slot])
+	var same: bool = (
+		slot < previous.shot_slots()
+		and previous.shot_damage[slot] != 0
+		and previous.shot_ttl[slot] == world.shot_ttl[slot] + 1
+	)
+	if not same:
+		return to / float(Fx.FX_ONE)
+	var from: Vector2 = Vector2(previous.shot_x[slot], previous.shot_y[slot])
+	return from.lerp(to, alpha()) / float(Fx.FX_ONE)
+
+
 ## Gem position in pixels (gems do not move).
 func gem_position_px(slot: int) -> Vector2:
 	return Vector2(world.gem_x[slot], world.gem_y[slot]) / float(Fx.FX_ONE)
