@@ -9,7 +9,8 @@ extends RefCounted
 ## one is at least `spawn_min_distance_su` from the hero; else the inset corner farthest from
 ## the hero (first in corner order on ties).
 ## Chase and separation: SeparationSystem.
-## Contact: per live enemy in slot order the cooldown counts down; a touching enemy with a
+## Contact: per live enemy of a contact kind (no attack record, ADR-011) in slot order the
+## cooldown counts down; a touching enemy with a
 ## ready cooldown hits the hero and restarts it. Deaths: per dead enemy in slot order its XP
 ## gem drops (XpSystem.drop), then its slot is freed and the kill counted.
 
@@ -70,19 +71,18 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 	world.enemy_rng_cursor = rng.cursor()
 	var slot: int = world.enemy_uid.find(0)
 	if slot < 0:
-		slot = world.enemy_slots()
-		world.enemy_uid.append(0)
-		world.enemy_kind.append(0)
-		world.enemy_x.append(0)
-		world.enemy_y.append(0)
-		world.enemy_hp.append(0)
-		world.enemy_cooldown.append(0)
+		slot = world.append_enemy_slot()
 	world.enemy_uid[slot] = world.next_enemy_uid
 	world.enemy_kind[slot] = kind
 	world.enemy_x[slot] = sx
 	world.enemy_y[slot] = sy
 	world.enemy_hp[slot] = config.kind_value(kind, SimConfig.KIND_HP)
 	world.enemy_cooldown[slot] = 0
+	world.enemy_state[slot] = 0
+	world.enemy_left[slot] = 0
+	world.enemy_dir_x[slot] = 0
+	world.enemy_dir_y[slot] = 0
+	world.enemy_attack_uid[slot] = 0
 	world.next_enemy_uid += 1
 	world.enemy_alive += 1
 
@@ -90,6 +90,8 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 static func contact(config: SimConfig, world: WorldState) -> void:
 	for slot: int in world.enemy_slots():
 		if not world.is_enemy_live(slot):
+			continue
+		if config.attack_value(world.enemy_kind[slot], SimConfig.ATTACK_FORM) != SimConfig.FORM_CONTACT:
 			continue
 		if world.enemy_cooldown[slot] > 0:
 			world.enemy_cooldown[slot] -= 1
@@ -113,6 +115,11 @@ static func clear_dead(config: SimConfig, world: WorldState) -> void:
 		world.enemy_y[slot] = 0
 		world.enemy_hp[slot] = 0
 		world.enemy_cooldown[slot] = 0
+		world.enemy_state[slot] = 0
+		world.enemy_left[slot] = 0
+		world.enemy_dir_x[slot] = 0
+		world.enemy_dir_y[slot] = 0
+		world.enemy_attack_uid[slot] = 0
 		world.enemy_alive -= 1
 		world.kills += 1
 

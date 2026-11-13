@@ -3,8 +3,10 @@ extends RefCounted
 ## P0 placeholder run setup: builds a SimConfig from canonical content plus placeholder bases.
 ##
 ## From content (read-only): the jade_grove roster window w0 (enemy IDs and spawn weights),
-## each enemy's speed/radius/health multipliers and its CONTACT attack (damage multiplier,
-## hit interval); the sword class start skill and its cooldown. NOT canonical (ADR-009
+## each enemy's speed/radius/health multipliers and its attack: CONTACT (damage multiplier,
+## hit interval) or MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
+## radius multiplier of the danger radius H, arc degrees, status.venom) with the venom values
+## from the status catalog (ADR-011); the sword class start skill and its cooldown. NOT canonical (ADR-009
 ## section 3): the bases those multipliers scale (hero speed, radius and HP, base enemy HP
 ## and contact damage), spawn cadence, ramp and cap, arena size, and the skill's range,
 ## damage and projectile, and the XP settings of ADR-010 (pickup radius, gem cap, level
@@ -28,6 +30,9 @@ const ROSTER_ID: String = "roster.jade_grove"
 const WINDOW_ID: String = "jade_grove.w0"
 const CLASS_ID: String = "class.sword"
 const STAGE_ID: String = "stage.jade_grove"
+## Base danger radius H = 2 cells (ADR-011 section 3, placeholder).
+const DANGER_RADIUS_SU: int = 2 * CELL_PX * Fx.FX_ONE
+const VENOM_ID: String = "status.venom"
 const SKILL_RANGE_CELLS: int = 8
 const SKILL_DAMAGE_MHP: int = 10000
 const PROJECTILE_SPEED_SU: int = 12000
@@ -70,13 +75,18 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	if window.is_empty():
 		return _fail("roster window " + WINDOW_ID + " not found")
 	var kinds: PackedInt64Array = PackedInt64Array()
+	var attacks: PackedInt64Array = PackedInt64Array()
+	var has_arcs: bool = false
 	var kind_xp: PackedInt64Array = PackedInt64Array()
 	for entry: Variant in window.get("weighted_enemies", []):
 		var weighted: Dictionary = entry if entry is Dictionary else {}
 		var enemy_id: String = str(weighted.get("enemy_id", ""))
-		var record: PackedInt64Array = _kind(registry, enemy_id, weighted.get("weight"))
+		var record: PackedInt64Array = kind_record(registry, enemy_id, weighted.get("weight"))
 		if record.is_empty():
 			return null
+		attacks.append_array(record.slice(SimConfig.KIND_STRIDE))
+		has_arcs = has_arcs or record[SimConfig.KIND_STRIDE] != SimConfig.FORM_CONTACT
+		record = record.slice(0, SimConfig.KIND_STRIDE)
 		var spawn_cost: Variant = ContentRegistry.integral(registry.definition(enemy_id).get("spawn_cost"))
 		if spawn_cost == null or int(spawn_cost) < 0:
 			return _fail(enemy_id + ": spawn_cost is not a non-negative integer")
@@ -91,6 +101,11 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	if skill.is_empty():
 		return null
 	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
+	if has_arcs:
+		var venom: PackedInt64Array = venom_values(registry)
+		if venom.is_empty():
+			return null
+		config.with_attacks(attacks, venom)
 	config.with_xp(
 		PackedInt64Array([PICKUP_RADIUS_PX * Fx.FX_ONE, MAX_GEMS]), kind_xp, PackedInt64Array(XP_COSTS)
 	)
@@ -106,7 +121,10 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	return config
 
 
-func _kind(registry: ContentRegistry, enemy_id: String, weight: Variant) -> PackedInt64Array:
+## The SimConfig kind record of `enemy_id` (KIND_STRIDE values) followed by its attack record
+## (ATTACK_STRIDE values, all zeros for CONTACT); empty with `error` set when content is not
+## usable in P0.
+func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -> PackedInt64Array:
 	var enemy: Dictionary = registry.definition(enemy_id)
 	var stats: Dictionary = enemy.get("stats", {})
 	var attack_ids: Array = enemy.get("attack_ids", [])
@@ -118,21 +136,28 @@ func _kind(registry: ContentRegistry, enemy_id: String, weight: Variant) -> Pack
 		return PackedInt64Array()
 	var attack: Dictionary = registry.definition(str(attack_ids[0]))
 	var params: Dictionary = attack.get("params", {})
-	if attack.get("kind") != "CONTACT":
-		_fail(enemy_id + ": only CONTACT attacks are simulated in P0")
+	var form: String = str(attack.get("kind", ""))
+	if form != "CONTACT" and form != "MELEE_ARC":
+		_fail(enemy_id + ": only CONTACT and MELEE_ARC attacks are simulated so far")
 		return PackedInt64Array()
 	var speed: Variant = Fx.from_catalog(stats.get("speed_mult"))
 	var radius: Variant = Fx.from_catalog(stats.get("collision_radius_mult"))
 	var health: Variant = Fx.from_catalog(stats.get("health_mult"))
 	var damage: Variant = Fx.from_catalog(attack.get("damage_mult"))
 	var interval: Variant = ContentRegistry.integral(params.get("hit_interval_ticks"))
+	var arc_record: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
+	if form == "MELEE_ARC":
+		interval = ContentRegistry.integral(attack.get("cooldown_ticks"))
+		arc_record = _arc_record(enemy_id, attack)
+		if arc_record.is_empty():
+			return PackedInt64Array()
 	var spawn_weight: Variant = ContentRegistry.integral(weight)
 	var numbers: Array = [speed, radius, health, damage, interval, spawn_weight]
 	if numbers.has(null):
 		_fail(enemy_id + ": stats, attack or weight are not exact catalog numbers")
 		return PackedInt64Array()
 	var fx: PackedInt64Array = PackedInt64Array(numbers)
-	return PackedInt64Array([
+	var record: PackedInt64Array = PackedInt64Array([
 		Fx.mul(HERO_SPEED_SU_PER_TICK, fx[0]),
 		Fx.mul(HERO_RADIUS_PX * Fx.FX_ONE, fx[1]),
 		Fx.mul(BASE_ENEMY_HP_MHP, fx[2]),
@@ -140,6 +165,45 @@ func _kind(registry: ContentRegistry, enemy_id: String, weight: Variant) -> Pack
 		fx[4],
 		fx[5],
 	])
+	record.append_array(arc_record)
+	return record
+
+
+## MELEE_ARC attack record: [FORM_ARC, telegraph, active, recovery, radius_mult x H, arc
+## degrees, 1 when it applies status.venom].
+func _arc_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
+	var params: Dictionary = attack.get("params", {})
+	var numbers: Array = [
+		ContentRegistry.integral(attack.get("telegraph_ticks")),
+		ContentRegistry.integral(attack.get("active_ticks")),
+		ContentRegistry.integral(attack.get("recovery_ticks")),
+		Fx.from_catalog(params.get("radius_mult")),
+		ContentRegistry.integral(params.get("arc_degrees")),
+	]
+	var status: Variant = attack.get("apply_status_id")
+	if numbers.has(null) or (status != null and status != VENOM_ID):
+		_fail(enemy_id + ": MELEE_ARC timings, radius, arc or status are not usable in P0")
+		return PackedInt64Array()
+	return PackedInt64Array([
+		SimConfig.FORM_ARC, numbers[0], numbers[1], numbers[2],
+		Fx.mul(DANGER_RADIUS_SU, numbers[3]), numbers[4], 1 if status == VENOM_ID else 0,
+	])
+
+
+## status.venom from the status catalog: [max_stacks, duration_ticks, tick_period_ticks,
+## dot_damage x 1000 mhp]; empty with `error` set when the entry is incomplete.
+func venom_values(registry: ContentRegistry) -> PackedInt64Array:
+	var venom: Dictionary = registry.definition(VENOM_ID)
+	var numbers: Array = [
+		ContentRegistry.integral(venom.get("max_stacks")),
+		ContentRegistry.integral(venom.get("duration_ticks")),
+		ContentRegistry.integral(venom.get("tick_period_ticks")),
+		ContentRegistry.integral(venom.get("dot_damage")),
+	]
+	if numbers.has(null):
+		_fail(VENOM_ID + ": stacks, duration, period or damage are not integers")
+		return PackedInt64Array()
+	return PackedInt64Array([numbers[0], numbers[1], numbers[2], int(numbers[3]) * Fx.FX_ONE])
 
 
 func _skill(registry: ContentRegistry) -> PackedInt64Array:

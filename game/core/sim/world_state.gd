@@ -9,6 +9,10 @@ extends RefCounted
 ## never shrink, so slot
 ## order (= iteration order) stays deterministic. A projectile keeps the damage and capacity
 ## (pierce + 1) of its cast and counts its hits; its first hit_count ledger cells are used.
+## Enemy attacks (ADR-011 section 2): per slot the attack state, the ticks left in it, the
+## direction fixed at the start of `tell` (Q14) and the attack instance uid (from
+## next_attack_uid). status.venom on the hero (ADR-011 section 4): stacks, ticks left, ticks to
+## the next damage.
 ## The build (ADR-010 section 6): upgrade ranks in UpgradeSystem code order, the maximum hero
 ## HP and the offered hand (non-empty only while the run is paused for a choice). The state
 ## digest is SHA-256 over the little-endian bytes of `to_ints()`, never `hash()` or
@@ -61,6 +65,10 @@ var hand: PackedInt64Array = PackedInt64Array()
 ## Upgrade ranks in UpgradeSystem code order.
 var ranks: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0])
 var hero_hp_max: int = 0
+var next_attack_uid: int = 1
+var venom_stacks: int = 0
+var venom_left: int = 0
+var venom_phase: int = 0
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -69,6 +77,14 @@ var enemy_y: PackedInt64Array = PackedInt64Array()
 var enemy_hp: PackedInt64Array = PackedInt64Array()
 ## Ticks until the enemy's contact attack may hit again (0 = ready).
 var enemy_cooldown: PackedInt64Array = PackedInt64Array()
+## EnemySystem.ST_* attack state (0 = approach).
+var enemy_state: PackedInt64Array = PackedInt64Array()
+## Ticks left in the attack state.
+var enemy_left: PackedInt64Array = PackedInt64Array()
+var enemy_dir_x: PackedInt64Array = PackedInt64Array()
+var enemy_dir_y: PackedInt64Array = PackedInt64Array()
+## Uid of the current attack instance (0 = none).
+var enemy_attack_uid: PackedInt64Array = PackedInt64Array()
 
 var proj_x: PackedInt64Array = PackedInt64Array()
 var proj_y: PackedInt64Array = PackedInt64Array()
@@ -104,6 +120,23 @@ func enemy_slots() -> int:
 	return enemy_uid.size()
 
 
+## Appends a free enemy slot (all fields 0) and returns its index.
+func append_enemy_slot() -> int:
+	# Packed arrays are values: each member is appended to directly, not through a list.
+	enemy_uid.append(0)
+	enemy_kind.append(0)
+	enemy_x.append(0)
+	enemy_y.append(0)
+	enemy_hp.append(0)
+	enemy_cooldown.append(0)
+	enemy_state.append(0)
+	enemy_left.append(0)
+	enemy_dir_x.append(0)
+	enemy_dir_y.append(0)
+	enemy_attack_uid.append(0)
+	return enemy_slots() - 1
+
+
 func projectile_slots() -> int:
 	return proj_damage.size()
 
@@ -136,11 +169,15 @@ func to_ints() -> PackedInt64Array:
 	for card: int in UpgradeSystem.HAND_SIZE:
 		out.append(hand[card] if card < hand.size() else UpgradeSystem.NO_CARD)
 	out.append_array(ranks)
-	out.append_array(PackedInt64Array([hero_hp_max, enemy_slots(), projectile_slots(), gem_slots()]))
+	out.append_array(PackedInt64Array([
+		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase,
+		enemy_slots(), projectile_slots(), gem_slots(),
+	]))
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
 			enemy_uid[slot], enemy_kind[slot], enemy_x[slot], enemy_y[slot], enemy_hp[slot],
-			enemy_cooldown[slot],
+			enemy_cooldown[slot], enemy_state[slot], enemy_left[slot], enemy_dir_x[slot],
+			enemy_dir_y[slot], enemy_attack_uid[slot],
 		]))
 	for slot: int in projectile_slots():
 		out.append_array(PackedInt64Array([
@@ -190,12 +227,21 @@ func copy() -> WorldState:
 	other.hand = hand.duplicate()
 	other.ranks = ranks.duplicate()
 	other.hero_hp_max = hero_hp_max
+	other.next_attack_uid = next_attack_uid
+	other.venom_stacks = venom_stacks
+	other.venom_left = venom_left
+	other.venom_phase = venom_phase
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
 	other.enemy_y = enemy_y.duplicate()
 	other.enemy_hp = enemy_hp.duplicate()
 	other.enemy_cooldown = enemy_cooldown.duplicate()
+	other.enemy_state = enemy_state.duplicate()
+	other.enemy_left = enemy_left.duplicate()
+	other.enemy_dir_x = enemy_dir_x.duplicate()
+	other.enemy_dir_y = enemy_dir_y.duplicate()
+	other.enemy_attack_uid = enemy_attack_uid.duplicate()
 	other.proj_x = proj_x.duplicate()
 	other.proj_y = proj_y.duplicate()
 	other.proj_vx = proj_vx.duplicate()

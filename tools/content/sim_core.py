@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 7
+VECTORS_SCHEMA_VERSION = 8
 
 
 def _load(name: str, file: str):
@@ -83,6 +83,36 @@ MAX_XP_COSTS = 64
 MAX_KIND_XP = 1000000
 RATE_ONE = 1000
 BELOW_LIMIT = 1 << 32
+
+# ADR-011 sections 2-4: enemy attack record per kind (ATTACK_STRIDE values, kind order):
+# (form, telegraph_ticks, active_ticks, recovery_ticks, reach_su, arc_degrees, venom).
+# FORM_CONTACT kinds hit by touch (the record is all zeros); FORM_ARC kinds run the attack
+# machine with the kind's damage and its interval as the cooldown from the start of `tell`.
+ATTACK_STRIDE = 7
+FORM_CONTACT, FORM_ARC = 0, 1
+ST_APPROACH, ST_TELL, ST_ACTIVE, ST_RECOVER = range(4)
+MAX_ATTACK_REACH = 1 << 22    # su; keeps the sector test inside int64
+MAX_ARC_DEGREES = 180
+# status.venom (ADR-011 section 4): (max_stacks, duration_ticks, period_ticks, damage_mhp per
+# stack and period), all 0 when no attack applies venom.
+VENOM_STRIDE = 4
+# round(16384 * cos(k degrees)) for k = 0..180, half away from zero (golden, = FxTables).
+COS_Q14 = (
+    16384, 16382, 16374, 16362, 16344, 16322, 16294, 16262, 16225, 16182, 16135, 16083, 16026,
+    15964, 15897, 15826, 15749, 15668, 15582, 15491, 15396, 15296, 15191, 15082, 14968, 14849,
+    14726, 14598, 14466, 14330, 14189, 14044, 13894, 13741, 13583, 13421, 13255, 13085, 12911,
+    12733, 12551, 12365, 12176, 11982, 11786, 11585, 11381, 11174, 10963, 10749, 10531, 10311,
+    10087, 9860, 9630, 9397, 9162, 8923, 8682, 8438, 8192, 7943, 7692, 7438, 7182, 6924, 6664,
+    6402, 6138, 5872, 5604, 5334, 5063, 4790, 4516, 4240, 3964, 3686, 3406, 3126, 2845, 2563,
+    2280, 1997, 1713, 1428, 1143, 857, 572, 286, 0, -286, -572, -857, -1143, -1428, -1713,
+    -1997, -2280, -2563, -2845, -3126, -3406, -3686, -3964, -4240, -4516, -4790, -5063, -5334,
+    -5604, -5872, -6138, -6402, -6664, -6924, -7182, -7438, -7692, -7943, -8192, -8438, -8682,
+    -8923, -9162, -9397, -9630, -9860, -10087, -10311, -10531, -10749, -10963, -11174, -11381,
+    -11585, -11786, -11982, -12176, -12365, -12551, -12733, -12911, -13085, -13255, -13421,
+    -13583, -13741, -13894, -14044, -14189, -14330, -14466, -14598, -14726, -14849, -14968,
+    -15082, -15191, -15296, -15396, -15491, -15582, -15668, -15749, -15826, -15897, -15964,
+    -16026, -16083, -16135, -16182, -16225, -16262, -16294, -16322, -16344, -16362, -16374,
+    -16382, -16384)
 
 OK = "ok"
 INVALID = "invalid_command"
@@ -176,12 +206,19 @@ class Config:
     stop the run (the choices stay pending), 1 = Immediate (the run pauses for each choice).
     run_ticks (ADR-011 section 1): the stage duration; the hero who is not dead after the tick
     that reaches it wins. 0 = no time limit.
+    attacks (ADR-011 sections 2-3): empty (every kind hits by contact) or one ATTACK_STRIDE
+    record per kind; venom: the status.venom values (VENOM_STRIDE).
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
-                 skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0):
+                 skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0, attacks=(),
+                 venom=(0,) * VENOM_STRIDE):
         self.choice_mode = choice_mode
         self.run_ticks = run_ticks
+        self.raw_attacks = list(attacks)
+        self.venom = list(venom)
+        (self.venom_max, self.venom_duration, self.venom_period, self.venom_damage) = \
+            (list(venom) + [0] * VENOM_STRIDE)[:VENOM_STRIDE]
         (self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
          self.start_x, self.start_y) = movement
         (self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
@@ -210,7 +247,17 @@ class Config:
         return [self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
-            + [self.choice_mode, self.run_ticks]
+            + [self.choice_mode, self.run_ticks, len(self.raw_attacks)] + self.raw_attacks \
+            + self.venom
+
+    def attack(self, kind: int) -> tuple:
+        """The attack record of `kind`; all zeros (contact) without an attack table."""
+        if not self.raw_attacks:
+            return (0,) * ATTACK_STRIDE
+        return tuple(self.raw_attacks[kind * ATTACK_STRIDE:(kind + 1) * ATTACK_STRIDE])
+
+    def form(self, kind: int) -> int:
+        return self.attack(kind)[0]
 
     def ledger_size(self) -> int:
         """Ledger cells of every projectile slot: enough for the largest pierce an upgrade can
@@ -257,7 +304,35 @@ class Config:
             return False
         if self.choice_mode == 1 and not (self.has_xp() and self.has_skill()):
             return False
+        if self.raw_attacks and not self._attacks_valid():
+            return False
+        if len(self.venom) != VENOM_STRIDE:
+            return False
         return self.run_ticks >= 0
+
+    def _attacks_valid(self) -> bool:
+        """One record per kind; a contact record is all zeros; an arc needs whole phases, a
+        reach up to MAX_ATTACK_REACH, an arc of 1..180 degrees; venom needs its status values."""
+        if not self.has_enemies() or len(self.raw_attacks) != len(self.kinds) * ATTACK_STRIDE:
+            return False
+        venom_used = False
+        for kind in range(len(self.kinds)):
+            form, tell, active, recover, reach, arc, venom = self.attack(kind)
+            if form == FORM_CONTACT:
+                if any(self.attack(kind)):
+                    return False
+                continue
+            if form != FORM_ARC or tell < 1 or active < 1 or recover < 0:
+                return False
+            if not 0 < reach <= MAX_ATTACK_REACH or not 0 < arc <= MAX_ARC_DEGREES:
+                return False
+            if venom not in (0, 1):
+                return False
+            venom_used = venom_used or venom == 1
+        if venom_used:
+            return (self.venom_max > 0 and self.venom_duration > 0 and self.venom_period > 0
+                    and self.venom_damage >= 0)
+        return True
 
     def _enemies_valid(self) -> bool:
         if len(self.raw_kinds) % KIND_STRIDE != 0:
@@ -313,22 +388,28 @@ def direction_q14(move_x: int, move_y: int) -> tuple[int, int]:
     return (fx.sign(move_x) * AXIS_Q14, fx.sign(move_y) * AXIS_Q14)
 
 
-# Slot field indexes.
-E_UID, E_KIND, E_X, E_Y, E_HP, E_CD = range(6)
+# Slot field indexes. Enemy: the attack state, ticks left in it, the attack direction (Q14,
+# fixed at the start of `tell`) and the uid of the attack instance (ADR-011 section 2).
+E_UID, E_KIND, E_X, E_Y, E_HP, E_CD, E_STATE, E_LEFT, E_DX, E_DY, E_ATK = range(11)
+ENEMY_FIELDS = 11
 P_X, P_Y, P_VX, P_VY, P_TTL, P_DAMAGE, P_HITS, P_CAP = range(8)
 P_LEDGER = 8
 G_UID, G_X, G_Y, G_VALUE = range(4)
 
 
 class World:
-    """Enemy slot: [uid, kind, x, y, hp, cooldown], free when uid == 0 (all fields 0).
+    """Enemy slot: [uid, kind, x, y, hp, cooldown, state, left, dir_x, dir_y, attack_uid],
+    free when uid == 0 (all fields 0).
     Projectile slot: [x, y, vx, vy, ttl, damage, hit_count, capacity] + config.ledger_size()
     ledger cells (enemy uids, the first hit_count used), free when damage == 0; damage and
     capacity (pierce + 1) are a snapshot taken at the cast. Gem slot: [uid, x, y, value], free
     when uid == 0. Lists never shrink; spawns and drops take the lowest free slot.
 
     Build (ADR-010 section 6): upgrade ranks in code order, the maximum hero HP, the current
-    hand of upgrade codes (non-empty only while the run is paused for a choice)."""
+    hand of upgrade codes (non-empty only while the run is paused for a choice).
+
+    Enemy attacks and hero statuses (ADR-011 sections 2 and 4): the attack instance counter and
+    status.venom (stacks, ticks left, ticks to the next damage)."""
 
     def __init__(self, config: Config):
         self.tick = 0
@@ -360,6 +441,10 @@ class World:
         self.hand: list[int] = []
         self.ranks = [0] * len(UPGRADES)
         self.hero_hp_max = config.hero_hp
+        self.next_attack_uid = 1
+        self.venom_stacks = 0
+        self.venom_left = 0
+        self.venom_phase = 0
         self.ledger_size = config.ledger_size()
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
@@ -382,8 +467,9 @@ class World:
                 self.gems_merged, self.xp_dropped_total, self.xp_collected_total, self.xp_bank,
                 self.level, self.pending_level_choices, self.choices_voided,
                 self.choices_done, self.build_revision, self.offers_rng_cursor] + hand \
-            + self.ranks + [self.hero_hp_max, len(self.enemies), len(self.projectiles),
-                            len(self.gems)]
+            + self.ranks + [self.hero_hp_max, self.next_attack_uid, self.venom_stacks,
+                            self.venom_left, self.venom_phase, len(self.enemies),
+                            len(self.projectiles), len(self.gems)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile] \
             + [v for gem in self.gems for v in gem]
@@ -457,7 +543,8 @@ def spawn(config: Config, world: World) -> None:
             if d2 > best:
                 best, spot = d2, corner
     world.rng_cursor = rng.cursor
-    record = [world.next_enemy_uid, kind, spot[0], spot[1], config.kinds[kind][2], 0]
+    record = [world.next_enemy_uid, kind, spot[0], spot[1], config.kinds[kind][2]] \
+        + [0] * (ENEMY_FIELDS - E_CD)
     slot = _lowest_free(world.enemies, E_UID)
     if slot < 0:
         world.enemies.append(record)
@@ -490,7 +577,7 @@ def separate(config: Config, world: World, push_x, push_y) -> None:
     min_x, min_y, kinds = config.min_x, config.min_y, config.kinds
     buckets: list[list[tuple[int, int, int, int]]] = [[] for _ in range(cells)]
     for slot, enemy in enumerate(world.enemies):
-        if enemy[E_UID] == 0:
+        if enemy[E_UID] == 0 or enemy[E_STATE] != ST_APPROACH:
             continue
         cx = min(max((enemy[E_X] - min_x) // cell, 0), cols - 1)
         cy = min(max((enemy[E_Y] - min_y) // cell, 0), rows - 1)
@@ -544,11 +631,13 @@ def separate(config: Config, world: World, push_x, push_y) -> None:
 
 def chase_and_separate(config: Config, world: World) -> None:
     """Chase writes tentative positions (touching enemies stay), separation adds pushes from
-    tick-N positions, the move is capped at the kind speed and clamped into the arena."""
+    tick-N positions, the move is capped at the kind speed and clamped into the arena. An
+    enemy in an attack (state other than approach) neither moves nor takes part in the
+    separation (ADR-011 section 2)."""
     tx = [enemy[E_X] for enemy in world.enemies]
     ty = [enemy[E_Y] for enemy in world.enemies]
     for slot, enemy in enumerate(world.enemies):
-        if enemy[E_UID] == 0 or _touching(config, world, enemy):
+        if enemy[E_UID] == 0 or enemy[E_STATE] != ST_APPROACH or _touching(config, world, enemy):
             continue
         speed = config.kinds[enemy[E_KIND]][0]
         qx, qy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
@@ -558,7 +647,7 @@ def chase_and_separate(config: Config, world: World) -> None:
     push_y = [0] * len(world.enemies)
     separate(config, world, push_x, push_y)
     for slot, enemy in enumerate(world.enemies):
-        if enemy[E_UID] == 0:
+        if enemy[E_UID] == 0 or enemy[E_STATE] != ST_APPROACH:
             continue
         speed, r = config.kinds[enemy[E_KIND]][0], config.kinds[enemy[E_KIND]][1]
         mx = tx[slot] - enemy[E_X] + push_x[slot]
@@ -689,13 +778,103 @@ def fly_and_hit(config: Config, world: World) -> None:
 
 def contact(config: Config, world: World) -> None:
     for enemy in world.enemies:
-        if not _live(enemy):
+        if not _live(enemy) or config.form(enemy[E_KIND]) != FORM_CONTACT:
             continue
         if enemy[E_CD] > 0:
             enemy[E_CD] -= 1
         if enemy[E_CD] == 0 and _touching(config, world, enemy):
             world.hero_hp -= config.kinds[enemy[E_KIND]][3]
             enemy[E_CD] = config.kinds[enemy[E_KIND]][4]
+
+
+def in_launch_range(reach: int, dx: int, dy: int) -> bool:
+    """ADR-011 section 3: an arc starts when the hero centre is within 3R/4 (16 d^2 <= 9 R^2,
+    tested after d^2 <= R^2 so the products stay inside int64)."""
+    d2 = dx * dx + dy * dy
+    return d2 <= reach * reach and 16 * d2 <= 9 * reach * reach
+
+
+def in_sector(reach: int, arc: int, ux: int, uy: int, dx: int, dy: int) -> bool:
+    """The point (dx, dy) from the sector centre lies in the sector of radius `reach`, width
+    `arc` degrees (1..180) around the Q14 direction (ux, uy): d <= R and the angle theta to
+    the direction <= arc / 2, i.e. dot >= 0 and cos(2 theta) >= cos(arc), with
+    cos(2 theta) = 2 cos^2(theta) - 1 and dot = d cos(theta) (floored to su). The centre itself
+    is inside."""
+    d2 = dx * dx + dy * dy
+    if d2 > reach * reach:
+        return False
+    if d2 == 0:
+        return True
+    dot = ux * dx + uy * dy
+    if dot < 0:
+        return False
+    dot_su = dot >> 14
+    return 2 * dot_su * dot_su * fx.Q14 >= d2 * (fx.Q14 + COS_Q14[arc])
+
+
+def add_venom(config: Config, world: World) -> None:
+    """status.venom refresh_and_add (ADR-011 section 4): one more stack up to the cap, the
+    duration starts again; the damage period runs from the first stack."""
+    if world.venom_stacks == 0:
+        world.venom_phase = config.venom_period
+    world.venom_stacks = min(world.venom_stacks + 1, config.venom_max)
+    world.venom_left = config.venom_duration
+
+
+def enemy_attacks(config: Config, world: World) -> None:
+    """ADR-011 section 2, slot order, live attack-machine enemies: the cooldown counts down;
+    an enemy in an attack counts down its state (tell -> active with the hit in the first
+    active tick -> recover -> approach); an approaching enemy with a ready cooldown and the
+    hero within the launch range starts `tell`: the direction to the hero is fixed, the
+    cooldown restarts and the attack instance gets the next attack uid. The tell starts in
+    this tick and lasts telegraph_ticks ticks; the hit lands in tick start + telegraph."""
+    for enemy in world.enemies:
+        if not _live(enemy):
+            continue
+        kind = enemy[E_KIND]
+        form, tell, active, recover, reach, arc, venom = config.attack(kind)
+        if form == FORM_CONTACT:
+            continue
+        if enemy[E_CD] > 0:
+            enemy[E_CD] -= 1
+        if enemy[E_STATE] != ST_APPROACH:
+            enemy[E_LEFT] -= 1
+            if enemy[E_LEFT] == 0:
+                if enemy[E_STATE] == ST_TELL:
+                    enemy[E_STATE], enemy[E_LEFT] = ST_ACTIVE, active
+                    if in_sector(reach, arc, enemy[E_DX], enemy[E_DY],
+                                 world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
+                        world.hero_hp -= config.kinds[kind][3]
+                        if venom:
+                            add_venom(config, world)
+                elif enemy[E_STATE] == ST_ACTIVE and recover > 0:
+                    enemy[E_STATE], enemy[E_LEFT] = ST_RECOVER, recover
+                else:
+                    enemy[E_STATE], enemy[E_DX], enemy[E_DY], enemy[E_ATK] = ST_APPROACH, 0, 0, 0
+        dx, dy = world.player_x - enemy[E_X], world.player_y - enemy[E_Y]
+        if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_launch_range(reach, dx, dy):
+            ux, uy = normalize_q14(dx, dy)
+            if ux == 0 and uy == 0:
+                ux = fx.Q14
+            enemy[E_STATE], enemy[E_LEFT], enemy[E_CD] = ST_TELL, tell, config.kinds[kind][4]
+            enemy[E_DX], enemy[E_DY] = ux, uy
+            enemy[E_ATK] = world.next_attack_uid
+            world.next_attack_uid += 1
+
+
+def tick_statuses(config: Config, world: World) -> None:
+    """Hero statuses before the death phase (ADR-011 section 4). status.venom: the tick it is
+    applied counts as the first of its duration and period; damage = stacks x damage per
+    period, in the same tick before the expiry."""
+    if world.venom_stacks == 0:
+        return
+    world.venom_left -= 1
+    world.venom_phase -= 1
+    if world.venom_phase == 0:
+        world.hero_hp -= world.venom_stacks * config.venom_damage
+        world.venom_phase = config.venom_period
+    if world.venom_left == 0:
+        world.venom_stacks = world.venom_phase = 0
 
 
 def clear_dead(config: Config, world: World) -> None:
@@ -705,7 +884,7 @@ def clear_dead(config: Config, world: World) -> None:
             continue
         if config.has_xp() and config.kind_xp[enemy[E_KIND]] > 0:
             drop(config, world, enemy[E_X], enemy[E_Y], config.kind_xp[enemy[E_KIND]])
-        world.enemies[slot] = [0] * 6
+        world.enemies[slot] = [0] * ENEMY_FIELDS
         world.enemy_alive -= 1
         world.kills += 1
 
@@ -856,6 +1035,8 @@ def step(config: Config, world: World, log: CommandLog) -> None:
             cast(config, world)
             fly_and_hit(config, world)
         contact(config, world)
+        enemy_attacks(config, world)
+        tick_statuses(config, world)
         clear_dead(config, world)
         if config.has_skill():
             clear_expired(world)
@@ -1059,6 +1240,61 @@ def _run_end_scenarios():
 
 RUN_END_SCENARIOS = _run_end_scenarios()
 
+# ADR-011 sections 2-4 trace inputs (not canon): the MELEE_ARC kinds from the catalog
+# multipliers on the same bases as W0_KINDS, H = 2 cells = 96 px.
+#   venom_spirit_snake: speed 1.22, radius 0.7, hp 0.65, bite 0.5, cooldown 96
+#   fallen_sword_disciple: speed 1.03, radius 1.0, hp 1.05, cleave 0.9, cooldown 120
+#   ruined_jade_guardian: speed 0.54, radius 1.28, hp 2.5, stomp 1.18, cooldown 180
+DANGER_SU = 96000
+ARC_KINDS = [5856, 16800, 6500, 5000, 96, 3,
+             4944, 24000, 10500, 9000, 120, 2,
+             2592, 30720, 25000, 11800, 180, 1]
+# (form, telegraph, active, recovery, reach_su = radius_mult x H, arc_degrees, venom)
+CONTACT_ATTACK = [FORM_CONTACT, 0, 0, 0, 0, 0, 0]
+SNAKE_BITE = [FORM_ARC, 20, 6, 27, DANGER_SU, 85, 1]
+DISCIPLE_CLEAVE = [FORM_ARC, 30, 10, 37, 129600, 125, 0]
+JADE_STOMP = [FORM_ARC, 48, 12, 40, 153600, 130, 0]
+ARC_ATTACKS = SNAKE_BITE + DISCIPLE_CLEAVE + JADE_STOMP
+MIXED_KINDS = W0_KINDS + ARC_KINDS
+MIXED_ATTACKS = CONTACT_ATTACK * 2 + ARC_ATTACKS
+# status.venom: 3 stacks, 240 ticks, damage every 60 ticks, 1 HP per stack.
+P0_VENOM = [3, 240, 60, 1000]
+
+
+def _attack_scenarios():
+    """ADR-011 E2: the arc kinds alone around a standing hero (tell, hits, venom stacks and
+    expiry), the mixed w0 + arc crowd against the P0 skill with XP, and a circling hero."""
+    out = []
+    standing = Config(BASE, [TOUGH, 30000, 0, 1000, 12, 384000], ARC_KINDS, SEED,
+                      attacks=ARC_ATTACKS, venom=P0_VENOM)
+    out.append(("arcs_hero_stands_still", standing, [], 2400))
+    mixed = Config(BASE, P0_VALUES, MIXED_KINDS, SEED, P0_SKILL,
+                   ((48000, 512), (10, 15, 15, 15, 20), P0_XP_COSTS), attacks=MIXED_ATTACKS,
+                   venom=P0_VENOM)
+    out.append(("arcs_mixed_hero_circles", mixed, migrate_v1(_circle(40, 3600)), 3600))
+    tough = Config(BASE, [TOUGH, 20000, 0, 1000, 24, 384000], MIXED_KINDS, "7",
+                   attacks=MIXED_ATTACKS, venom=P0_VENOM)
+    out.append(("arcs_tough_hero_circles", tough, migrate_v1(_circle(25, 3000)), 3000))
+    return out
+
+
+ATTACK_SCENARIOS = _attack_scenarios()
+
+# Golden sector tests (reach, arc, ux, uy, dx, dy): edges of the radius and of the half arc,
+# behind the enemy, the centre, a diagonal direction.
+SECTOR_CASES = [
+    (96000, 85, 16384, 0, 96000, 0), (96000, 85, 16384, 0, 96001, 0),
+    (96000, 85, 16384, 0, 0, 0), (96000, 85, 16384, 0, -1, 0),
+    (96000, 85, 16384, 0, 50000, 45800), (96000, 85, 16384, 0, 50000, 45900),
+    (96000, 85, 16384, 0, 50000, -45800), (96000, 85, 16384, 0, 50000, -45900),
+    (129600, 125, 0, -16384, 60000, -31000), (129600, 125, 0, -16384, 60000, -31500),
+    (153600, 130, 11585, 11585, 0, 150000), (153600, 130, 11585, 11585, -20000, 100000),
+    (153600, 130, 11585, 11585, -40000, 100000), (153600, 180, 16384, 0, 0, 153600),
+    (153600, 180, 16384, 0, -1, 1000), (1, 1, 16384, 0, 1, 0),
+]
+LAUNCH_CASES = [(96000, 72000, 0), (96000, 72001, 0), (96000, 50912, 50912),
+                (96000, 50913, 50913), (4194304, 3145728, 0), (4194304, -1 << 30, 1 << 30)]
+
 # Golden hands (ADR-010 section 6): (name, seed, ranks, offers cursor) -> hand, cursor after.
 _MAX_RANKS = [top for _, top in UPGRADES]
 HAND_CASES = [
@@ -1138,6 +1374,7 @@ def run_trace(config: Config, commands, steps: int):
                 "kills": world.kills, "projectiles": world.live_projectiles(),
                 "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
                 "choices": world.choices_done, "paused": int(world.paused()), "won": world.won,
+                "attacks": world.next_attack_uid - 1, "venom": world.venom_stacks,
                 "digest": world.digest()})
     return log, world, checkpoints
 
@@ -1154,13 +1391,19 @@ def config_json(config: Config) -> dict:
         xp = {"values": [str(v) for v in config.xp_values()],
               "kind_xp": [str(v) for v in config.kind_xp],
               "costs": [str(v) for v in config.xp_costs]}
+    attacks = None
+    if config.raw_attacks:
+        attacks = {"records": [str(v) for v in config.raw_attacks],
+                   "venom": [str(v) for v in config.venom]}
     return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
-            "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks}
+            "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks,
+            "attacks": attacks}
 
 
 def build_vectors() -> dict:
     traces = []
-    for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS + RUN_END_SCENARIOS:
+    for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS + RUN_END_SCENARIOS \
+            + ATTACK_SCENARIOS:
         assert config.valid(), name
         log, _, checkpoints = run_trace(config, commands, steps)
         traces.append({"name": name, **config_json(config),
@@ -1182,7 +1425,10 @@ def build_vectors() -> dict:
             "recover_id": RECOVER_ID,
             "generator": "tools/content/sim_core.py",
             "note": "movement, enemy and skill constants here are trace inputs, not canonical tuning",
-            "traces": traces, "append_cases": appends, "hands": hand_vectors()}
+            "traces": traces, "append_cases": appends, "hands": hand_vectors(),
+            "cos_q14": list(COS_Q14),
+            "sector_cases": [list(c) + [int(in_sector(*c))] for c in SECTOR_CASES],
+            "launch_cases": [list(c) + [int(in_launch_range(*c))] for c in LAUNCH_CASES]}
 
 
 def vectors_bytes() -> bytes:

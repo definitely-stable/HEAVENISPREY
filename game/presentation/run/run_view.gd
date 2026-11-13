@@ -40,6 +40,8 @@ const COLOR_HUD: Color = Color(0.95, 0.92, 0.85)
 ## XP gems: jade blue (red stays reserved for enemies).
 const COLOR_GEM: Color = Color(0.36, 0.84, 0.78)
 const COLOR_XP_BACK: Color = Color(0.0, 0.0, 0.0, 0.55)
+## status.venom on the hero: tint and one pip per stack above the HP bar.
+const COLOR_VENOM: Color = Color(0.45, 0.85, 0.3)
 ## Placeholder enemy colours by kind index (yin corpse, blood wolf, then fallbacks).
 const ENEMY_COLORS: Array[Color] = [
 	Color(0.45, 0.55, 0.45), Color(0.6, 0.12, 0.14), Color(0.5, 0.45, 0.7), Color(0.7, 0.6, 0.3),
@@ -222,6 +224,7 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_WALL, false, 4.0)
 	_draw_puffs()
 	_draw_gems()
+	_draw_telegraphs()
 	_draw_enemies()
 	_draw_projectiles()
 	_draw_hero()
@@ -352,6 +355,14 @@ func _draw_hud() -> void:
 		_hud.draw_string(font, corner + Vector2(184, 0), level, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
 
 
+## Attack telegraphs under the enemies (AttackTelegraph, ADR-011).
+func _draw_telegraphs() -> void:
+	for slot: int in driver.world.enemy_slots():
+		var telegraph: Dictionary = AttackTelegraph.shape(driver.config, driver.world, slot)
+		if not telegraph.is_empty():
+			AttackTelegraph.draw(self, telegraph, driver.enemy_position_px(slot))
+
+
 func _enemy_color(kind: int) -> Color:
 	return ENEMY_COLORS[mini(kind, ENEMY_COLORS.size() - 1)]
 
@@ -365,7 +376,12 @@ func _kind_radius_px(kind: int) -> float:
 func _draw_hero() -> void:
 	var hero: Vector2 = driver.hero_position_px()
 	var color: Color = COLOR_HERO_HIT if _flash > 0.0 else COLOR_HERO
+	var stacks: int = driver.world.venom_stacks
+	if stacks > 0 and _flash <= 0.0:
+		color = color.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
 	draw_circle(hero, HERO_RADIUS_PX, color)
+	for pip: int in stacks:
+		draw_circle(hero + Vector2(-8.0 + 8.0 * pip, -HERO_RADIUS_PX - 18), 3.0, COLOR_VENOM)
 	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
 	var max_hp: int = driver.world.hero_hp_max
 	if max_hp <= 0:

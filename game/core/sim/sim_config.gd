@@ -11,6 +11,8 @@ extends RefCounted
 ## pending), 1 = Immediate (the run pauses for each choice; needs XP and the skill).
 ## Run end (ADR-011 section 1): run_ticks is the stage duration; a hero who is not dead after
 ## the tick that reaches it wins. 0 = no time limit.
+## Enemy attacks (ADR-011 sections 2-4): empty (every kind hits by contact) or one
+## ATTACK_STRIDE record per kind; the status.venom values (VENOM_STRIDE).
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -22,6 +24,25 @@ const KIND_HP: int = 2
 const KIND_DAMAGE: int = 3
 const KIND_INTERVAL: int = 4
 const KIND_WEIGHT: int = 5
+## Enemy attack record (ADR-011 sections 2-3): [form, telegraph_ticks, active_ticks,
+## recovery_ticks, reach_su, arc_degrees, venom]. FORM_CONTACT kinds hit by touch (all zeros);
+## FORM_ARC kinds run the attack machine with the kind damage, and the kind interval as the
+## cooldown from the start of `tell`.
+const ATTACK_STRIDE: int = 7
+const ATTACK_FORM: int = 0
+const ATTACK_TELEGRAPH: int = 1
+const ATTACK_ACTIVE: int = 2
+const ATTACK_RECOVERY: int = 3
+const ATTACK_REACH: int = 4
+const ATTACK_ARC: int = 5
+const ATTACK_VENOM: int = 6
+const FORM_CONTACT: int = 0
+const FORM_ARC: int = 1
+## Keeps the sector test inside int64 (su).
+const MAX_ATTACK_REACH: int = 4194304
+const MAX_ARC_DEGREES: int = 180
+## status.venom: [max_stacks, duration_ticks, period_ticks, damage_mhp per stack and period].
+const VENOM_STRIDE: int = 4
 const MAX_ENEMIES_LIMIT: int = 4096
 const MAX_PROJECTILES_LIMIT: int = 256
 const MAX_PIERCE: int = 7
@@ -71,6 +92,8 @@ var kind_xp: PackedInt64Array = PackedInt64Array()
 var xp_costs: PackedInt64Array = PackedInt64Array()
 var choice_mode: int = CHOICE_NONE
 var run_ticks: int = 0
+var attacks: PackedInt64Array = PackedInt64Array()
+var venom: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -141,6 +164,25 @@ func with_run_ticks(p_ticks: int) -> SimConfig:
 	return self
 
 
+## Sets the enemy attack table (one ATTACK_STRIDE record per kind, or empty) and the
+## status.venom values.
+func with_attacks(p_attacks: PackedInt64Array, p_venom: PackedInt64Array) -> SimConfig:
+	attacks = p_attacks.duplicate()
+	venom = p_venom.duplicate()
+	return self
+
+
+## A value of the attack record of `kind`; 0 (contact) without an attack table.
+func attack_value(kind: int, field: int) -> int:
+	if attacks.is_empty():
+		return 0
+	return attacks[kind * ATTACK_STRIDE + field]
+
+
+func venom_value(field: int) -> int:
+	return venom[field]
+
+
 func kind_count() -> int:
 	return Fx.floor_div(kinds.size(), KIND_STRIDE)
 
@@ -201,6 +243,9 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(xp_costs)
 	out.append(choice_mode)
 	out.append(run_ticks)
+	out.append(attacks.size())
+	out.append_array(attacks)
+	out.append_array(venom)
 	return out
 
 
@@ -233,7 +278,46 @@ func is_valid() -> bool:
 		return false
 	if choice_mode == CHOICE_IMMEDIATE and not (has_xp() and has_skill()):
 		return false
+	if not attacks.is_empty() and not _attacks_valid():
+		return false
+	if venom.size() != VENOM_STRIDE:
+		return false
 	return run_ticks >= 0
+
+
+## One record per kind; a contact record is all zeros; an arc needs whole phases, a reach up
+## to MAX_ATTACK_REACH and an arc of 1..180 degrees; venom needs its status values.
+func _attacks_valid() -> bool:
+	if not has_enemies() or attacks.size() != kind_count() * ATTACK_STRIDE:
+		return false
+	var venom_used: bool = false
+	for kind: int in kind_count():
+		var form: int = attack_value(kind, ATTACK_FORM)
+		if form == FORM_CONTACT:
+			for field: int in ATTACK_STRIDE:
+				if attack_value(kind, field) != 0:
+					return false
+			continue
+		var reach: int = attack_value(kind, ATTACK_REACH)
+		var arc: int = attack_value(kind, ATTACK_ARC)
+		var flag: int = attack_value(kind, ATTACK_VENOM)
+		var arc_ok: bool = (
+			form == FORM_ARC
+			and attack_value(kind, ATTACK_TELEGRAPH) >= 1
+			and attack_value(kind, ATTACK_ACTIVE) >= 1
+			and attack_value(kind, ATTACK_RECOVERY) >= 0
+			and reach > 0
+			and reach <= MAX_ATTACK_REACH
+			and arc > 0
+			and arc <= MAX_ARC_DEGREES
+			and (flag == 0 or flag == 1)
+		)
+		if not arc_ok:
+			return false
+		venom_used = venom_used or flag == 1
+	if venom_used:
+		return venom[0] > 0 and venom[1] > 0 and venom[2] > 0 and venom[3] >= 0
+	return true
 
 
 func _enemies_valid() -> bool:
