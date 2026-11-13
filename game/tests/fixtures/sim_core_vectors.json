@@ -108,40 +108,61 @@
  ],
  "generator": "tools/content/sim_core.py",
  "kind": "hip-sim-core-vectors",
- "note": "movement constants here are trace inputs, not canonical tuning",
+ "note": "movement and enemy constants here are trace inputs, not canonical tuning",
  "policy_id": "hip-fx-v1",
- "schema_version": 1,
+ "rng_policy_id": "hip-rng-v1",
+ "schema_version": 2,
  "traces": [
   {
    "checkpoints": [
     {
-     "digest": "650a9016bcbbbf3b670599683ae7e644e6025a748648dba23ec1c2bd9c55637a",
+     "digest": "0589ce69207080205e7eac4cabb36ed3431dff0b02f0a4ba02b36a5a1640bf5c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "eb6b5abfe36168c27d2b08164c2c5d5ef315e410e46e9db8e840d28379c3758d",
+     "digest": "60b443786a9f27ba3635731772239d5e6ef04f292ad4b683521202feb3951c72",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "90f942071da61e7e58e629ff9b7b50a1d70d8f0135b7e221554d2e0cc080a4b0",
+     "digest": "b1ccf9639c0e990a7948247b15ad039e6bdc6d695b4afb87dbb14b66abbcfd05",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "1ac8444dd55e73bcf16cce84a2e1db2aebc672c60044ed2b89d3ac33f3e98c4d",
+     "digest": "660ca96692f500fbd3518bbace4813366060dedbdfc58a8600ab5ec5c428ac57",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "cfba18c3426ec526f7c110cc88a2e135fb8b8f81cd20e04d6b1764d2b4a1d7f3",
+     "digest": "40c915a6bdfe69de1c2648863b4a2153d6c9d9cb627637330e4501608573f847",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 120,
      "tick": 120
     }
    ],
@@ -156,6 +177,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
    "name": "idle",
    "ticks": 120
@@ -163,27 +185,43 @@
   {
    "checkpoints": [
     {
-     "digest": "82802a137825b667a74b1da816e4c5d89e28abf007e1814ca45d6a432b75ff45",
+     "digest": "55bbd096a48ea14e6c1e052e278b21502c47f4fc11345ac695c45b815a3ee958",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "772800",
      "player_y": "480000",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "096f66e5ddd1b9899252d8cf0f0224c4b71713259912da0753ab85dd6f8cb371",
+     "digest": "a18c4aea67ee9b058c126319e5fd4f74bb0f0aad94741b581e9950c0c64c3e62",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "777600",
      "player_y": "480000",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "7ba5a9f3f6506db72541715f5df963b05300e7402aec36e35e0caaf1e25f64db",
+     "digest": "582073b93dcfed78f3d9033cae879e24bfbaca75fbf51f9027db3ad70931a67d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "912000",
      "player_y": "480000",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "e6ceac7b758c3fa3ba876cd36290a391de4fd9b6e10772908e9bd0dbcd9f1fec",
+     "digest": "2c398d4910bfcbe1e4cfb7c405f378ea62a0900d698dd37ed1b7432ab3c01c7d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "1056000",
      "player_y": "480000",
+     "step": 60,
      "tick": 60
     }
    ],
@@ -205,6 +243,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "6cc4f0e930b34481d03a4134331852eaed66667e3b3d8605f7cd3777551d2b6f",
    "name": "east_one_second",
    "ticks": 60
@@ -212,27 +251,43 @@
   {
    "checkpoints": [
     {
-     "digest": "14340d54eebc6f57d6c685f5a17d262414e9f9a5a7318ef19cdb79aa2bb509db",
+     "digest": "6e08e07fc1492d86c7f5654a74edb3d8d824795dad0515ecfaec1ff45b1dd3cb",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "764606",
      "player_y": "476606",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "0fcbe5cf3ad2cd65a24020b6103ea5c94a8e26e9cce9e46707e465ff30326c15",
+     "digest": "d3dedb6bfd93ce57990b7a2bb8c63814f351813c85445c9181224a11a33730a8",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "761212",
      "player_y": "473212",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "df6d4e2257fa3e8c1d43496e182109bd3c9185a64d795f8a66dcd7b6dbca42b9",
+     "digest": "968248adc6af37d9940713eebc0042198f35e35564376fd48a2d59b61c669ce5",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "378180",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "1af70d5ab95e0270bc578cd453b029da2317b1f8e951fcb5426ffc673b39ef0f",
+     "digest": "304b383f0007baa6cefb482dfc4d46d4c1e0926e2f42988f11a8e68a0ed90512",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "276360",
+     "step": 60,
      "tick": 60
     }
    ],
@@ -254,6 +309,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "a386a11d535d6047c30ecdd1135c508b2812378b2554eeab247b48e712dce009",
    "name": "diagonal_north_west",
    "ticks": 60
@@ -261,33 +317,53 @@
   {
    "checkpoints": [
     {
-     "digest": "57451045cbb81d6ed968067dabe673a9b4aa7359999a312c01201839cd66de2d",
+     "digest": "c7bc16ef12ee98f968b138a08c2105540074394cf03afbcaafa94a1f9c4dc765",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "484800",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "48b1d155b8527d80b6e7abdb1e61fb825e1154e70f12cd65047f49b2f402521b",
+     "digest": "fe1d9a7443702add5df5637ea95c71cdd1330301f275c46c6741f703e6c1027c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "489600",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "f4b45653d3c72ef19f2ca7dd5749dc47e7c30bf72deb9f75fd3d8d614a46d1ca",
+     "digest": "79c85b24f23c37a5e031d0bb3358c9456e5f92044985e2fdcf1d503f52e6ffc0",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "624000",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "11e054f459257037b0b2d8a0b549dc0160ff0765456768dbb1c319fc21d9d651",
+     "digest": "e10c7af8e19f4765afd937763c26a67c6c5d2a00fbc1e7ed0d9c5b17684c5519",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "624000",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "d77714fddf328f31a00485599534af5329a5693cc295481960689eb0eac7103b",
+     "digest": "c6413435cff91367da147f073f44d21e3deecd1b852bdd83ab6f21867c387a06",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "624000",
+     "step": 90,
      "tick": 90
     }
    ],
@@ -315,6 +391,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "fc19a7f70101e3cd779e4f1d5d2b4b82f7a98808e00c2378a93b8e92bade224f",
    "name": "held_then_released",
    "ticks": 90
@@ -322,33 +399,63 @@
   {
    "checkpoints": [
     {
-     "digest": "82802a137825b667a74b1da816e4c5d89e28abf007e1814ca45d6a432b75ff45",
+     "digest": "55bbd096a48ea14e6c1e052e278b21502c47f4fc11345ac695c45b815a3ee958",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "772800",
      "player_y": "480000",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "096f66e5ddd1b9899252d8cf0f0224c4b71713259912da0753ab85dd6f8cb371",
+     "digest": "a18c4aea67ee9b058c126319e5fd4f74bb0f0aad94741b581e9950c0c64c3e62",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "777600",
      "player_y": "480000",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "7ba5a9f3f6506db72541715f5df963b05300e7402aec36e35e0caaf1e25f64db",
+     "digest": "582073b93dcfed78f3d9033cae879e24bfbaca75fbf51f9027db3ad70931a67d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "912000",
      "player_y": "480000",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "e6ceac7b758c3fa3ba876cd36290a391de4fd9b6e10772908e9bd0dbcd9f1fec",
+     "digest": "2c398d4910bfcbe1e4cfb7c405f378ea62a0900d698dd37ed1b7432ab3c01c7d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "1056000",
      "player_y": "480000",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "679b72186a81f3e5f9bc75f6df11a76f1304a7313d0f7c27192a2d4ab05ce0df",
+     "digest": "e12b3798a2491d74f7f7065499b0239694eff16f10f79533e89cab947a873cae",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "1512000",
      "player_y": "480000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "1aaa147c1bd84280f95d8cc3081180362e4aad3821558d53bd26fbd8d09d2e73",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "1512000",
+     "player_y": "480000",
+     "step": 400,
      "tick": 400
     }
    ],
@@ -370,6 +477,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "6cc4f0e930b34481d03a4134331852eaed66667e3b3d8605f7cd3777551d2b6f",
    "name": "clamp_east_wall",
    "ticks": 400
@@ -377,33 +485,63 @@
   {
    "checkpoints": [
     {
-     "digest": "650a9016bcbbbf3b670599683ae7e644e6025a748648dba23ec1c2bd9c55637a",
+     "digest": "0589ce69207080205e7eac4cabb36ed3431dff0b02f0a4ba02b36a5a1640bf5c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "eb6b5abfe36168c27d2b08164c2c5d5ef315e410e46e9db8e840d28379c3758d",
+     "digest": "60b443786a9f27ba3635731772239d5e6ef04f292ad4b683521202feb3951c72",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "4e55c94d812a19dbf5c2c4d198d87194888ddecaade385871a73bb0cd87499a6",
+     "digest": "1f9dbde95b4f34f848aae2a750e7f6bc70f49488a56681758f36238ec4b62c29",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "852850",
      "player_y": "564850",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "7187100749e5171bad25547b8cc6754b42234a1d7c62e139ec00fc40ab1b0673",
+     "digest": "58cd9f17067c0014dd9d9ea1029fef7f732316b1782c3033b7021fd2340d74b8",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "954670",
      "player_y": "666670",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "308a1a412b37e69f28a4464591d5bfa36ff742f3fede66daa4f4c6611b469ad5",
+     "digest": "3d9968de6a10e92d919f086f2ba2ff8ace9ed5ec9e39e7a0f3f8df49beef00d2",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "1512000",
      "player_y": "936000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "8e004622c332f96ebb37181adb30a2addde882ba42bd39416e030cf5b707eb67",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "1512000",
+     "player_y": "936000",
+     "step": 600,
      "tick": 600
     }
    ],
@@ -425,6 +563,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "08237e03d98e6c929400ddf0e80cfab41d5aeceab1086d671e72df6da6766716",
    "name": "clamp_corner",
    "ticks": 600
@@ -432,27 +571,43 @@
   {
    "checkpoints": [
     {
-     "digest": "650a9016bcbbbf3b670599683ae7e644e6025a748648dba23ec1c2bd9c55637a",
+     "digest": "0589ce69207080205e7eac4cabb36ed3431dff0b02f0a4ba02b36a5a1640bf5c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "eb6b5abfe36168c27d2b08164c2c5d5ef315e410e46e9db8e840d28379c3758d",
+     "digest": "60b443786a9f27ba3635731772239d5e6ef04f292ad4b683521202feb3951c72",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "480000",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "dfe10fe1fb7e43d7cc31a96ba11572d37ed7a4d2636ebd30d953c99718ee97bd",
+     "digest": "c2fbea1c73d802d0c2b8cf83a8bdb14d8e5ec8c2e2b3ab8f5759d624a4b74ffc",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "384000",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "345734b17a3af54505587873950111cdff3caed2c2319c3033fc878764f9acef",
+     "digest": "5f786f334753af06e8609f310e7ac7239b476a1961de8570c42f97890f32640a",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "336000",
+     "step": 40,
      "tick": 40
     }
    ],
@@ -486,6 +641,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "484211a03017d77f5719b830ef42778852cf0ecca29a9385ee933d1acb432f2f",
    "name": "same_tick_last_wins",
    "ticks": 40
@@ -493,39 +649,73 @@
   {
    "checkpoints": [
     {
-     "digest": "49eb226ad1881862bdee09976cd7f6c5b9908e790fde50c4b569eefc21df2bcd",
+     "digest": "340542d96213b356af48c1ac09508ec0ab849a11f4dea4f5aeea0caf607fc9bc",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "771394",
      "player_y": "476606",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "125902a82e415e0ddb1e70a471978555e89e3f7b367845abb68d8a56a65c4ed3",
+     "digest": "5c64574740538d7b632a97a5caf2842b2b4b192a8cc79e64963c8b6c08d6715f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "774788",
      "player_y": "473212",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "97c51cdeb0f9a5fe34c8532c04d08e6747eb83cfb067b5bb78bbdf67d1acab18",
+     "digest": "ac716201eca3271406e2e799084b3d86e22043afde6af808df7dd0e0785e06fc",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "774788",
      "player_y": "439272",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "fbf766f9c44952dc29de8d435a76380b90b145034befeddbfb58423dbf5734b1",
+     "digest": "302f7edd6a529f5224e0937757a6db9f76cea9c99566fe0d03af74c45a727488",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "787200",
      "player_y": "432484",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "cfad9645a87c2aa71f0fd45c83d9c0e945779668bbc95d95104fa0e6968c1e5e",
+     "digest": "c66b49a06fc851ed134bf8eb1456c0efc467d72b54fe6d64d51efbe283cdc295",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "788364",
+     "player_y": "459636",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "bea374510735da2c1c75ef18df039134bbff569e24e5d1d4cf0c4ba2bcc3624c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "774788",
      "player_y": "439272",
+     "step": 600,
      "tick": 600
     },
     {
-     "digest": "aa5d1229704801d2809baf01f3e67f6ef105ab7265b8e8de718728a2a904fa59",
+     "digest": "99e86d02c34ed1e1d6d203b2c4c5f3eb3981b053313effbed3d731cf9c60fe6e",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "672000",
      "player_y": "432484",
+     "step": 720,
      "tick": 720
     }
    ],
@@ -1141,6 +1331,7 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "684819e5a0222cd1924d057c87c66ade4399c6d7cd8771bd4e02f60b3d6267af",
    "name": "zigzag",
    "ticks": 720
@@ -1148,33 +1339,53 @@
   {
    "checkpoints": [
     {
-     "digest": "ee3453e2e0c276c1e7ebf8799cc1f637b9e25a2cf254620ac420f025bdd9c7dc",
+     "digest": "dc696787cb1edbb831ad22c4b37b0eeca39c2c4c6fc084c4293347e64eda5e72",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "3394",
      "player_y": "3394",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "b31d1e218f4f7fefdd1cf0687320bd1a9d3816c868a5d019194d1687f3c9d4da",
+     "digest": "f93f76c57f13c8bda525422c5a74faf470a60c5c243c3c5f13af76d225d9902e",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "6788",
      "player_y": "6788",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "753f2b0defbf664423ee4fd985f8571152f26111ac36a0e9b32c7164e3c2e027",
+     "digest": "5217bb20dace52358512464fbe9a2e9c5a48587c6c7665db55ae232bdffb6e9c",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "101820",
      "player_y": "101820",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "62ffeb8c7b624b6c622495f7be7d163b41078cc4add0fcc638be9e9bc0369f79",
+     "digest": "cddfd7d9f25f7773f87c62af349f35262d1b6ca257ca9a872d50a98c57b29e34",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "203640",
      "player_y": "203640",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "95e15826960dd9960f8188d83be2982d2c15abe05d4a5ec083eedee154f41b2e",
+     "digest": "9c04f8bdb9188b7593b6d155eb7d0fdbbe73d8f77c7dbfe0355ebfd2dd929375",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "0",
      "player_y": "0",
+     "step": 200,
      "tick": 200
     }
    ],
@@ -1202,6 +1413,7 @@
     "0",
     "0"
    ],
+   "enemies": null,
    "log_digest": "d446b8f155bf81265056c94c78f1c93b90d84f7bb940276a399151a3c512da58",
    "name": "odd_speed_symmetry",
    "ticks": 200
@@ -1209,207 +1421,643 @@
   {
    "checkpoints": [
     {
-     "digest": "14340d54eebc6f57d6c685f5a17d262414e9f9a5a7318ef19cdb79aa2bb509db",
+     "digest": "6e08e07fc1492d86c7f5654a74edb3d8d824795dad0515ecfaec1ff45b1dd3cb",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "764606",
      "player_y": "476606",
+     "step": 1,
      "tick": 1
     },
     {
-     "digest": "0fcbe5cf3ad2cd65a24020b6103ea5c94a8e26e9cce9e46707e465ff30326c15",
+     "digest": "d3dedb6bfd93ce57990b7a2bb8c63814f351813c85445c9181224a11a33730a8",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "761212",
      "player_y": "473212",
+     "step": 2,
      "tick": 2
     },
     {
-     "digest": "df6d4e2257fa3e8c1d43496e182109bd3c9185a64d795f8a66dcd7b6dbca42b9",
+     "digest": "968248adc6af37d9940713eebc0042198f35e35564376fd48a2d59b61c669ce5",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "378180",
+     "step": 30,
      "tick": 30
     },
     {
-     "digest": "1af70d5ab95e0270bc578cd453b029da2317b1f8e951fcb5426ffc673b39ef0f",
+     "digest": "304b383f0007baa6cefb482dfc4d46d4c1e0926e2f42988f11a8e68a0ed90512",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "276360",
+     "step": 60,
      "tick": 60
     },
     {
-     "digest": "073d3c72e8fb90d821ff45f61295d86c96c295aa697d52fc8fa2d63383a29c0b",
+     "digest": "13fdf872e78fb3674ad43c4859c41b430d0dc0049c7c83ddedb23f232387d3da",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "624000",
+     "player_y": "24000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "3f7924bbe83e66842e873ba0c19aa4692a86149fbb2ba5b3dd3acbb63a430544",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "227640",
+     "step": 600,
      "tick": 600
     },
     {
-     "digest": "9adf0259602d618727e7a5575a264cdf95507314e00fea3c60bcf68acd71ffb3",
+     "digest": "01509a8d5ba0346744a13b7f0c74c04ad1ee0abc38b83f0422269e8ded83dd86",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "630540",
+     "step": 900,
+     "tick": 900
+    },
+    {
+     "digest": "3cb7d7c6ebb6024bab372380776c60d6bdd1231b105a54772c9f155c82b5ddd7",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "336000",
      "player_y": "24000",
+     "step": 1200,
      "tick": 1200
     },
     {
-     "digest": "3a8cab8e9b3c0a2f45822ccb9f4123f53b904b31b8de891629ce553ccb4a98f3",
+     "digest": "44ec308e272668c571cfe987704bbb1ae4c98756315bcde8c7a33dc8cd9218c3",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "617460",
+     "step": 1500,
+     "tick": 1500
+    },
+    {
+     "digest": "5d7f1dcba6f09bb790bc4fda041e898e409076c596d258efb378a08009076613",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "198540",
+     "step": 1800,
      "tick": 1800
     },
     {
-     "digest": "9db2ccb7a83825a19e8d1593235cd6277443e5b30f4a1a8a9c923a612777b5fa",
+     "digest": "f8ee4ed4af2f90a3a00eb606ed38d27c43ba1080cf9eeb65eb9bfe11c169c321",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "480000",
+     "player_y": "24000",
+     "step": 2100,
+     "tick": 2100
+    },
+    {
+     "digest": "1a8b25587374357ecd646b2855317f9c6f7030695748c9280aaea0ca10450c94",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "936000",
+     "step": 2400,
      "tick": 2400
     },
     {
-     "digest": "1f2346035812154a1703310ab236416d5197b66dcaf39594dd92df6aa70a2210",
+     "digest": "0be0dff7460df85ef6d6e13aae75d7c0554ed1820bbb5299ac0da04fff3d2bfb",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "24000",
+     "step": 2700,
+     "tick": 2700
+    },
+    {
+     "digest": "dc21629cda3938db05cc10e415806188e341342bea76cb1a53f45eeb4d00e493",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "125820",
+     "step": 3000,
      "tick": 3000
     },
     {
-     "digest": "49bfe316e3c78ec29abb37e034303eaf33dda34bd1f30fb9522991d5b6a7f3e6",
+     "digest": "c7adaa097eeb5eaf27eb4742a045635f29f0f1a3e428f61fe2294af532708797",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "564360",
+     "player_y": "732360",
+     "step": 3300,
+     "tick": 3300
+    },
+    {
+     "digest": "983c83dc58241fe10c594ad094a1f0fd17ae6903fcf7c6560b1d8458366298fc",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "336000",
      "player_y": "24000",
+     "step": 3600,
      "tick": 3600
     },
     {
-     "digest": "ae5ca32790dd0a546ffeb158ac5fa19cf16ec8fe4b8e3ae928484f405861e358",
+     "digest": "13637f1c676ed797e344e8b9de95b88efa56473aca2a2a91e0d7dbc3f503ebed",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "473460",
+     "step": 3900,
+     "tick": 3900
+    },
+    {
+     "digest": "747a2046fa5e327db3da2456694468c4f08db58bc998509d5cecd51e196a0348",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "342540",
+     "step": 4200,
      "tick": 4200
     },
     {
-     "digest": "90b356b79abe05806e218d88cc95caa9a246206010fd3e443eadc2205c89d858",
+     "digest": "270b362cf5c55f5a1ebe42356095cd65cd1ecf60836da5442c92c28af50d106f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "336000",
+     "player_y": "24000",
+     "step": 4500,
+     "tick": 4500
+    },
+    {
+     "digest": "9e691c8af1de32c90e5983e84efaba74bbc8370979ece68bf0b64faae414ff20",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "863280",
+     "step": 4800,
      "tick": 4800
     },
     {
-     "digest": "03e8d4496a15db9c26566ff52893470a31afa1a2f7fdb757efcff2a016bb3da6",
+     "digest": "425e41c86be61f78c6163de8a6ebf8e7f4e7953825730820c68d48f380c22e82",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "666180",
+     "player_y": "24000",
+     "step": 5100,
+     "tick": 5100
+    },
+    {
+     "digest": "d07583e288afeaa16ac07b762499cd3f8ce4091182be9f0b382c6f79b35cb4f7",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "24000",
+     "step": 5400,
      "tick": 5400
     },
     {
-     "digest": "59662c1b0d0c8c25fd097f009ab824eaa7074ae962551d679dce34e7e621f6ea",
+     "digest": "1d53b171dc5d477d6643f688d938a90b145a1491cc1f73859f46c7beb97f3cc0",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "666180",
+     "player_y": "834180",
+     "step": 5700,
+     "tick": 5700
+    },
+    {
+     "digest": "72cc8b053a60fe8b086af72ff160e6185dc8fcaac31aa692b3287f97906801b0",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "480000",
      "player_y": "24000",
+     "step": 6000,
      "tick": 6000
     },
     {
-     "digest": "786bf2a885fe4f03c35d9027dd3ca85df50b24f34e76643b63e11851815ab8ed",
+     "digest": "28075b900b8a87e5a825d9958582bfc3000e3aef31180586d5f76ddd85a4ce18",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "329460",
+     "step": 6300,
+     "tick": 6300
+    },
+    {
+     "digest": "24a115484ab3f230f335a3fae3bb19be0b1d51913b7a8b06827fc260ca8d8c0d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "486540",
+     "step": 6600,
      "tick": 6600
     },
     {
-     "digest": "094dd91a6d0517bedd17d26069788abb16917c44fe8c733269fb6eabcebdc9e9",
+     "digest": "ea2aa5dc2695b1a9734b988417ff326f37fbd227bb54c8efe19b2b7eaee078e8",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "336000",
+     "player_y": "24000",
+     "step": 6900,
+     "tick": 6900
+    },
+    {
+     "digest": "719a05b2dbace2c5e8a576bfe61447a21923a8d60371f2231c3e5ab40216792e",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "761460",
+     "step": 7200,
      "tick": 7200
     },
     {
-     "digest": "73375cf3153997e56f828438ad31c35b2b5a62bd9a663ac83f63b420db4162f5",
+     "digest": "60179ac62db2cb4956fb00e1cd63f2fcda27cbf13b1e616229ecd5a08ac4ef0d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "564360",
+     "player_y": "96720",
+     "step": 7500,
+     "tick": 7500
+    },
+    {
+     "digest": "5c3c47589c8ca7a7f90fbef4a24dda18d0d4affb11b40b747f3a2265647af762",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "624000",
      "player_y": "24000",
+     "step": 7800,
      "tick": 7800
     },
     {
-     "digest": "5e7bfae5d318fe862751bded57772e33fe8975af43e673a2e339401b083eb50a",
+     "digest": "3fab3b0873be08e9cc1801c659b986cfd0d08e00aa828f7e52e135043b7d70de",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "936000",
+     "step": 8100,
+     "tick": 8100
+    },
+    {
+     "digest": "2dce6be677d8281ce97894d013212cc167e800a9191c051ba2bc3b595340ba5a",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "624000",
      "player_y": "24000",
+     "step": 8400,
      "tick": 8400
     },
     {
-     "digest": "5607e76f075e7e504b8a386fc479a17e16005dbe942e6578874d904fb308f46d",
+     "digest": "bcb4b9a0c735b9398cf47d24ae398086aed5e505f06b66ad7736e76eccf711b1",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "564360",
+     "player_y": "227640",
+     "step": 8700,
+     "tick": 8700
+    },
+    {
+     "digest": "51ee59bc07229e09baca9f3d5072a9acfaf44d72279888483235a8b3f862f7e1",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "630540",
+     "step": 9000,
      "tick": 9000
     },
     {
-     "digest": "3ddee21b2e029ee936afaca4db96fd229327862504ecdd20be64da610b21befd",
+     "digest": "3143f8e53e8ffd33a27c8a5f616d504f7aa03df468ba7e79669b3d62a1c8ba8d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "336000",
+     "player_y": "24000",
+     "step": 9300,
+     "tick": 9300
+    },
+    {
+     "digest": "c34b0eb3133bd3a1c15045de40ecf8f7d660541d658b586fb8b7018acbee0801",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "617460",
+     "step": 9600,
      "tick": 9600
     },
     {
-     "digest": "8be3cb0767721bbd9f14d4169b8a503ea4c02d3d5810164973937c474f4f6318",
+     "digest": "626247f95b2cdefdf42a89eafd8694c934962a4170893d1cb6fe0f93427d6667",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "198540",
+     "step": 9900,
+     "tick": 9900
+    },
+    {
+     "digest": "76a640885f6e8c9536000fb9e2ffb48d25a3caecfc9f9f557310abb86d4c3c2d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "480000",
      "player_y": "24000",
+     "step": 10200,
      "tick": 10200
     },
     {
-     "digest": "aee55077844588832aee9a2ea33fda25896699ccb910ba148d9efc10157c3fc3",
+     "digest": "2f767f4b9e0ca3ef3006daa80710d3734e47773c7281a48dc9abf775e99c11be",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "666180",
+     "player_y": "936000",
+     "step": 10500,
+     "tick": 10500
+    },
+    {
+     "digest": "0c5e52e0f744caba9f7f776f69aa0694885427f10de92e0872c6cc40d7042137",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "24000",
+     "step": 10800,
      "tick": 10800
     },
     {
-     "digest": "d7115e91bd4dfa6981eb38ae4f624409fa82c63c7ff14895ddf8edb64631e88a",
+     "digest": "889826f5896cd44b085fd6d3c45f4a96cb3cb0c81f32e8f5f747f0d4115f471b",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "666180",
+     "player_y": "125820",
+     "step": 11100,
+     "tick": 11100
+    },
+    {
+     "digest": "6d033d0773bed639d28671a4f8b47a206e5f8f6e8b06790e6ec3a544a0c042f5",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "732360",
+     "step": 11400,
      "tick": 11400
     },
     {
-     "digest": "1475a44260c835bdf21f0005e3f944bf0f5a8aab2e207391f31bf22d5e82ab18",
+     "digest": "840608e295358453ed8b65b77585acbe6f1c48b0cb057e1623609f8eb35fee27",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "336000",
+     "player_y": "24000",
+     "step": 11700,
+     "tick": 11700
+    },
+    {
+     "digest": "f574c27b40e129360c5a7972ae2879fd6226c107a190b04ce652772616c737f5",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "473460",
+     "step": 12000,
      "tick": 12000
     },
     {
-     "digest": "fb6e32776b460af8289318f9822227a15f8dd91230ac31e386423fa0a7804d4f",
+     "digest": "5471b1fda6136cff19b1b003b56a29151158ffe7ddf60a07ec70e7ff09d6b204",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "342540",
+     "step": 12300,
+     "tick": 12300
+    },
+    {
+     "digest": "e5aa4b28c600733ef7d3745a266a812e49191e6a3819dd7fe05e60fb9575c03d",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "336000",
      "player_y": "24000",
+     "step": 12600,
      "tick": 12600
     },
     {
-     "digest": "071482a7e025168f5ab9181db1faddb202cdd4c6225d0127a0115401a844a44c",
+     "digest": "8cb59f8f2613f2ae414f7c25fdb49497495252061580b23b7ad6a8a3eebe8c55",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "564360",
+     "player_y": "863280",
+     "step": 12900,
+     "tick": 12900
+    },
+    {
+     "digest": "bdc1af1e4a440cb19384b2de257159e1ef551a4cffd52e64772fee8cc4ff3538",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "24000",
+     "step": 13200,
      "tick": 13200
     },
     {
-     "digest": "98e6255dceb80d654d140d95e62d6bc7af0572a58bca2f4ccca505a7d7a9b1c0",
+     "digest": "014bbe2af9eb76e4c372fd1af90a581d3bb6797051df5d5c6a52e8d471afa9b2",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "24000",
+     "step": 13500,
+     "tick": 13500
+    },
+    {
+     "digest": "4fcfb85e758bcaf3245cddbe426e4ddb94cb9cb4d93495565ada32744a462c8b",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "666180",
      "player_y": "834180",
+     "step": 13800,
      "tick": 13800
     },
     {
-     "digest": "20dbf8dc58c6e1048498bb34c68a2255931ead53df245bf7c36441b5f741265f",
+     "digest": "de196f86d93a6dd0fce95db2016d78394d0cd7eb3b70755a414861504f18f549",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "480000",
+     "player_y": "24000",
+     "step": 14100,
+     "tick": 14100
+    },
+    {
+     "digest": "cff4bd0adeb0884f85cced1412587cee6b40c3324dfd948c490c6b408cd8bf3a",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "329460",
+     "step": 14400,
      "tick": 14400
     },
     {
-     "digest": "50ecf494cc8cb31b723145b3653d135313b2307a460f911eef50e1546bb998b2",
+     "digest": "bba4174d119c45492db049af9e99486b63a461ecad2dd120c2e9ff8d68d1540f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "486540",
+     "step": 14700,
+     "tick": 14700
+    },
+    {
+     "digest": "ab2d75f359b1a900e3f7b6098db0887f34bf7f7cc0b3678d354e903bb91cf273",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "336000",
      "player_y": "24000",
+     "step": 15000,
      "tick": 15000
     },
     {
-     "digest": "0df1d0ca687cb504af20dd0149baeaa17c92d32e8ca7873ae48368ca92eb1739",
+     "digest": "cc60958837180913a2ef7d8e29a9a33b38d5e4bf5eb8474d69e0cd54f0912829",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "761460",
+     "step": 15300,
+     "tick": 15300
+    },
+    {
+     "digest": "d9c09c1fb32eeeef4cd64b9d1d69002fe0738facaf0dcde75310f31c65312ab5",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "96720",
+     "step": 15600,
      "tick": 15600
     },
     {
-     "digest": "c2a4275803634553f6cd05beda0ba926f5a32a39e66228e66a7ffab194e0f8c2",
+     "digest": "9b7bd5a143c141d99bea227c56a7d65617c5afd7acde0dbd1dd7ddf534c67661",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "624000",
+     "player_y": "24000",
+     "step": 15900,
+     "tick": 15900
+    },
+    {
+     "digest": "63949b750069c6fd2d7e67354e2b9f9ee6226a8403099eb988928e1c61c3039f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "768000",
      "player_y": "936000",
+     "step": 16200,
      "tick": 16200
     },
     {
-     "digest": "afe75fd893725f6c808883c64a47675e7aa1fb697775617bcd37666a4abff27b",
+     "digest": "18158db59b378c58336beef26587dfa7cb8a29a4328e72ab007dec270eb3eef9",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "624000",
+     "player_y": "24000",
+     "step": 16500,
+     "tick": 16500
+    },
+    {
+     "digest": "4ff931e8404aaeaa924963c2f4391e4110d7e83d53d7e2a46ed80b712a800dd0",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "564360",
      "player_y": "227640",
+     "step": 16800,
      "tick": 16800
     },
     {
-     "digest": "46ae6fd0840a57227e54c4277bf87d176da14cc5b2b08e1d03602756cb6bac3e",
+     "digest": "75c191bba690e1b7afc14b8093ba209d3809e48300deca925cbcaea094db4264",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "630540",
+     "step": 17100,
+     "tick": 17100
+    },
+    {
+     "digest": "a6794834a9383fb414540fc7c603ea0395ef71124e11fa47c9570376305498cb",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "336000",
      "player_y": "24000",
+     "step": 17400,
      "tick": 17400
     },
     {
-     "digest": "39fb93eefbad4884ddb42a7a691afe2addd380c2d81f777307ab93426a6f8ee9",
+     "digest": "ccccd6eb7b3e08043bdaed3738cf8e5248c0af2933d474a74811cbfd7809877b",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "player_x": "462540",
+     "player_y": "617460",
+     "step": 17700,
+     "tick": 17700
+    },
+    {
+     "digest": "bbf9a4ecd3ef0a0811677364a27ee554cf64dc5ea656b58b84df28e452f3af2f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
      "player_x": "462540",
      "player_y": "198540",
+     "step": 18000,
      "tick": 18000
     }
    ],
@@ -2625,8 +3273,6143 @@
     "768000",
     "480000"
    ],
+   "enemies": null,
    "log_digest": "6774aab01c4d3fe2fea6e2ee1e519e8ecf444a4dcddea3195742ee18d0890906",
    "name": "five_minutes",
+   "ticks": 18000
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "8aea5af380f5f3644227c2a0e88ab9a63bbe3936a0070f4ac8911f12d0121362",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "27bbf48b4e9ceb70b60356110a55bb8d902cdba8d4f2726e3ea3e8ccf023b854",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "68a90552de5725410095fea3c620dd04838dc716d3e8767a42a33840f266105f",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "03a0ef36e224408dbd522292ea77faf2958edb147f0a254189e543606a02f8de",
+     "enemy_count": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "ce026f710a2ab317253e8b6b640659be9310a99ee14f03840c7417abf3e5dab8",
+     "enemy_count": 6,
+     "hero_dead": 0,
+     "hero_hp": "59900",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 600,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 900,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1200,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1500,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1800,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2100,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2400,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2700,
+     "tick": 380
+    },
+    {
+     "digest": "fc0b0e17ea7ee4e4ebc1ac4b9869e8601e27ff84751aa817b6498a8e2086383c",
+     "enemy_count": 8,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 3000,
+     "tick": 380
+    }
+   ],
+   "commands": [],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "20261113",
+    "values": [
+     "100000",
+     "45",
+     "48",
+     "384000"
+    ]
+   },
+   "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "name": "enemies_hero_stands_still",
+   "ticks": 3000
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "27dde1b65105960ef9e029207b4c0ac500ea2e377826110b5cb0098e66356e15",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "772800",
+     "player_y": "480000",
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "0f55bba3ef9dad422f398f69399ce49e03132c2b79b67c75d783f7b3abeee5ed",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "777600",
+     "player_y": "480000",
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "7d096766ed9afee14ca39a6cb22035d394fe22955af1e9708882120b280d1766",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "912000",
+     "player_y": "480000",
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "129b14ea9747b60adf0a21311c8daf74aa116a38dde6d48ccf1fa9c072e38234",
+     "enemy_count": 1,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "player_x": "1027880",
+     "player_y": "547880",
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "88533cadf40e4cc9fa4df48193b34461758ecf8d67b63d048eebe428f127fda8",
+     "enemy_count": 6,
+     "hero_dead": 0,
+     "hero_hp": "85900",
+     "player_x": "700120",
+     "player_y": "540360",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 600,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 900,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 1200,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 1500,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 1800,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 2100,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 2400,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 2700,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 3000,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 3300,
+     "tick": 546
+    },
+    {
+     "digest": "aae998af387359042ded61cba5a9186d8308c76830617c84132d70465cedfb6b",
+     "enemy_count": 12,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "player_x": "679756",
+     "player_y": "847756",
+     "step": 3600,
+     "tick": 546
+    }
+   ],
+   "commands": [
+    [
+     "0",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "40",
+     "1",
+     "1",
+     "1"
+    ],
+    [
+     "80",
+     "2",
+     "0",
+     "1"
+    ],
+    [
+     "120",
+     "3",
+     "-1",
+     "1"
+    ],
+    [
+     "160",
+     "4",
+     "-1",
+     "0"
+    ],
+    [
+     "200",
+     "5",
+     "-1",
+     "-1"
+    ],
+    [
+     "240",
+     "6",
+     "0",
+     "-1"
+    ],
+    [
+     "280",
+     "7",
+     "1",
+     "-1"
+    ],
+    [
+     "320",
+     "8",
+     "1",
+     "0"
+    ],
+    [
+     "360",
+     "9",
+     "1",
+     "1"
+    ],
+    [
+     "400",
+     "10",
+     "0",
+     "1"
+    ],
+    [
+     "440",
+     "11",
+     "-1",
+     "1"
+    ],
+    [
+     "480",
+     "12",
+     "-1",
+     "0"
+    ],
+    [
+     "520",
+     "13",
+     "-1",
+     "-1"
+    ],
+    [
+     "560",
+     "14",
+     "0",
+     "-1"
+    ],
+    [
+     "600",
+     "15",
+     "1",
+     "-1"
+    ],
+    [
+     "640",
+     "16",
+     "1",
+     "0"
+    ],
+    [
+     "680",
+     "17",
+     "1",
+     "1"
+    ],
+    [
+     "720",
+     "18",
+     "0",
+     "1"
+    ],
+    [
+     "760",
+     "19",
+     "-1",
+     "1"
+    ],
+    [
+     "800",
+     "20",
+     "-1",
+     "0"
+    ],
+    [
+     "840",
+     "21",
+     "-1",
+     "-1"
+    ],
+    [
+     "880",
+     "22",
+     "0",
+     "-1"
+    ],
+    [
+     "920",
+     "23",
+     "1",
+     "-1"
+    ],
+    [
+     "960",
+     "24",
+     "1",
+     "0"
+    ],
+    [
+     "1000",
+     "25",
+     "1",
+     "1"
+    ],
+    [
+     "1040",
+     "26",
+     "0",
+     "1"
+    ],
+    [
+     "1080",
+     "27",
+     "-1",
+     "1"
+    ],
+    [
+     "1120",
+     "28",
+     "-1",
+     "0"
+    ],
+    [
+     "1160",
+     "29",
+     "-1",
+     "-1"
+    ],
+    [
+     "1200",
+     "30",
+     "0",
+     "-1"
+    ],
+    [
+     "1240",
+     "31",
+     "1",
+     "-1"
+    ],
+    [
+     "1280",
+     "32",
+     "1",
+     "0"
+    ],
+    [
+     "1320",
+     "33",
+     "1",
+     "1"
+    ],
+    [
+     "1360",
+     "34",
+     "0",
+     "1"
+    ],
+    [
+     "1400",
+     "35",
+     "-1",
+     "1"
+    ],
+    [
+     "1440",
+     "36",
+     "-1",
+     "0"
+    ],
+    [
+     "1480",
+     "37",
+     "-1",
+     "-1"
+    ],
+    [
+     "1520",
+     "38",
+     "0",
+     "-1"
+    ],
+    [
+     "1560",
+     "39",
+     "1",
+     "-1"
+    ],
+    [
+     "1600",
+     "40",
+     "1",
+     "0"
+    ],
+    [
+     "1640",
+     "41",
+     "1",
+     "1"
+    ],
+    [
+     "1680",
+     "42",
+     "0",
+     "1"
+    ],
+    [
+     "1720",
+     "43",
+     "-1",
+     "1"
+    ],
+    [
+     "1760",
+     "44",
+     "-1",
+     "0"
+    ],
+    [
+     "1800",
+     "45",
+     "-1",
+     "-1"
+    ],
+    [
+     "1840",
+     "46",
+     "0",
+     "-1"
+    ],
+    [
+     "1880",
+     "47",
+     "1",
+     "-1"
+    ],
+    [
+     "1920",
+     "48",
+     "1",
+     "0"
+    ],
+    [
+     "1960",
+     "49",
+     "1",
+     "1"
+    ],
+    [
+     "2000",
+     "50",
+     "0",
+     "1"
+    ],
+    [
+     "2040",
+     "51",
+     "-1",
+     "1"
+    ],
+    [
+     "2080",
+     "52",
+     "-1",
+     "0"
+    ],
+    [
+     "2120",
+     "53",
+     "-1",
+     "-1"
+    ],
+    [
+     "2160",
+     "54",
+     "0",
+     "-1"
+    ],
+    [
+     "2200",
+     "55",
+     "1",
+     "-1"
+    ],
+    [
+     "2240",
+     "56",
+     "1",
+     "0"
+    ],
+    [
+     "2280",
+     "57",
+     "1",
+     "1"
+    ],
+    [
+     "2320",
+     "58",
+     "0",
+     "1"
+    ],
+    [
+     "2360",
+     "59",
+     "-1",
+     "1"
+    ],
+    [
+     "2400",
+     "60",
+     "-1",
+     "0"
+    ],
+    [
+     "2440",
+     "61",
+     "-1",
+     "-1"
+    ],
+    [
+     "2480",
+     "62",
+     "0",
+     "-1"
+    ],
+    [
+     "2520",
+     "63",
+     "1",
+     "-1"
+    ],
+    [
+     "2560",
+     "64",
+     "1",
+     "0"
+    ],
+    [
+     "2600",
+     "65",
+     "1",
+     "1"
+    ],
+    [
+     "2640",
+     "66",
+     "0",
+     "1"
+    ],
+    [
+     "2680",
+     "67",
+     "-1",
+     "1"
+    ],
+    [
+     "2720",
+     "68",
+     "-1",
+     "0"
+    ],
+    [
+     "2760",
+     "69",
+     "-1",
+     "-1"
+    ],
+    [
+     "2800",
+     "70",
+     "0",
+     "-1"
+    ],
+    [
+     "2840",
+     "71",
+     "1",
+     "-1"
+    ],
+    [
+     "2880",
+     "72",
+     "1",
+     "0"
+    ],
+    [
+     "2920",
+     "73",
+     "1",
+     "1"
+    ],
+    [
+     "2960",
+     "74",
+     "0",
+     "1"
+    ],
+    [
+     "3000",
+     "75",
+     "-1",
+     "1"
+    ],
+    [
+     "3040",
+     "76",
+     "-1",
+     "0"
+    ],
+    [
+     "3080",
+     "77",
+     "-1",
+     "-1"
+    ],
+    [
+     "3120",
+     "78",
+     "0",
+     "-1"
+    ],
+    [
+     "3160",
+     "79",
+     "1",
+     "-1"
+    ],
+    [
+     "3200",
+     "80",
+     "1",
+     "0"
+    ],
+    [
+     "3240",
+     "81",
+     "1",
+     "1"
+    ],
+    [
+     "3280",
+     "82",
+     "0",
+     "1"
+    ],
+    [
+     "3320",
+     "83",
+     "-1",
+     "1"
+    ],
+    [
+     "3360",
+     "84",
+     "-1",
+     "0"
+    ],
+    [
+     "3400",
+     "85",
+     "-1",
+     "-1"
+    ],
+    [
+     "3440",
+     "86",
+     "0",
+     "-1"
+    ],
+    [
+     "3480",
+     "87",
+     "1",
+     "-1"
+    ],
+    [
+     "3520",
+     "88",
+     "1",
+     "0"
+    ],
+    [
+     "3560",
+     "89",
+     "1",
+     "1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "20261113",
+    "values": [
+     "100000",
+     "45",
+     "48",
+     "384000"
+    ]
+   },
+   "log_digest": "142ec935556014b37d4cc8708e7c0c1b0fb9b03428c425c504c455c5f0c2a55c",
+   "name": "enemies_hero_circles",
+   "ticks": 3600
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "ff2e01efef912b80e8866e1924cff652ecc119ef0cb936ec8ba97f5775b63124",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "7f3e8be43d9bbe2d61d281a2342f9ab6187875e73b3dcce9726e3eea9d27aa1a",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "dd992dfb16dd8dbe2c66632307f348dd962ec151376ae7f6f74c5bf15f86aaf4",
+     "enemy_count": 2,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "37096abe83dad277d027195a7ad84dadfe00146edc1206c341a50ab7934032b3",
+     "enemy_count": 3,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "4c0dee682053ecbe9bea355b8babf6b0faec1c264c400bf643ac1625cadbad2c",
+     "enemy_count": 3,
+     "hero_dead": 0,
+     "hero_hp": "499954500",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "0c15e53eb56eb7b54aae2ac10707587cb72e1285627df50213015bb0aca94f39",
+     "enemy_count": 3,
+     "hero_dead": 0,
+     "hero_hp": "499785500",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 600,
+     "tick": 600
+    }
+   ],
+   "commands": [],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "7",
+    "values": [
+     "500000000",
+     "10",
+     "3",
+     "384000"
+    ]
+   },
+   "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "name": "enemies_spawn_cap",
+   "ticks": 600
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "6f3bfd63481d81ade2cd70d34c2decbd1ee380badd9b7649973fbf52de5d77b6",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "153394",
+     "player_y": "153394",
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "7370afa8de31cad015224e5e2cb1fb754a0b5cd91578fdaef25d5b50bbeb9fe3",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "156788",
+     "player_y": "156788",
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "c6e6400c8cc7465f43dbdc89692073efa80965436dd78635724fe9c8939af85d",
+     "enemy_count": 1,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "251820",
+     "player_y": "251820",
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "25791bb4cfaacf5af6a2b205491891b66bd0467909ae03ac6000c9f9668fa80c",
+     "enemy_count": 2,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "276000",
+     "player_y": "276000",
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "dff72db4c49b121779c2bd21d8c838f1e5e67a226893466f27ad3aa50fe1ca3b",
+     "enemy_count": 6,
+     "hero_dead": 0,
+     "hero_hp": "499820100",
+     "player_x": "276000",
+     "player_y": "276000",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "69105bd27fbd12a099264fd3833e9d1b4f59cb25b54e7e00582817e5bacbe863",
+     "enemy_count": 6,
+     "hero_dead": 0,
+     "hero_hp": "499720400",
+     "player_x": "276000",
+     "player_y": "276000",
+     "step": 400,
+     "tick": 400
+    }
+   ],
+   "commands": [
+    [
+     "0",
+     "0",
+     "1",
+     "1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "300000",
+    "300000",
+    "150000",
+    "150000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "99",
+    "values": [
+     "500000000",
+     "20",
+     "6",
+     "1000000"
+    ]
+   },
+   "log_digest": "b64c0d4ec2af5aba75d0e38754bd4da29669e6bd54220441f3710964fdb4ece3",
+   "name": "enemies_corner_fallback",
+   "ticks": 400
+  },
+  {
+   "checkpoints": [
+    {
+     "digest": "36ff952fc7f36bffbf80b47a530012970a8d17fa007c2d897c26d0626168e4f2",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "772800",
+     "player_y": "480000",
+     "step": 1,
+     "tick": 1
+    },
+    {
+     "digest": "d66d6d516836b2aadab065a3d99d44558b05cf257f8634888d88252cf3981471",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "777600",
+     "player_y": "480000",
+     "step": 2,
+     "tick": 2
+    },
+    {
+     "digest": "9444501a2810d0d666b7c8ee1d69fb8abe72274c27b393db4091c273db642fa9",
+     "enemy_count": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "904970",
+     "player_y": "496970",
+     "step": 30,
+     "tick": 30
+    },
+    {
+     "digest": "b42bec4b0376b17538b790753513c3959056e5dfe44a68f39bab4fbb81d6795a",
+     "enemy_count": 1,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "player_x": "972850",
+     "player_y": "612850",
+     "step": 60,
+     "tick": 60
+    },
+    {
+     "digest": "79cda36ce52ec885b9c1d72677c9252e7712094c3a50b1c6af5b050c9f850b01",
+     "enemy_count": 9,
+     "hero_dead": 0,
+     "hero_hp": "499987000",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 300,
+     "tick": 300
+    },
+    {
+     "digest": "2805f080790bb9284b56561b111f0d1f896b26cd780887eb1f7e5a9a8871f158",
+     "enemy_count": 19,
+     "hero_dead": 0,
+     "hero_hp": "499914300",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 600,
+     "tick": 600
+    },
+    {
+     "digest": "2a63802563c2edc53918becec3e6105ff9b4a15800d4686d3165507107fc0ffe",
+     "enemy_count": 29,
+     "hero_dead": 0,
+     "hero_hp": "499607100",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 900,
+     "tick": 900
+    },
+    {
+     "digest": "2fe245887353a3cbe7685f7385ee6bcdb1fc7eab07d9301d9fe31c4733ce1ed3",
+     "enemy_count": 39,
+     "hero_dead": 0,
+     "hero_hp": "499169600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1200,
+     "tick": 1200
+    },
+    {
+     "digest": "6b62500ce38b9eff2c0cb04593231ec2817649833d787e347a4d96b5a3b22234",
+     "enemy_count": 49,
+     "hero_dead": 0,
+     "hero_hp": "498703900",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 1500,
+     "tick": 1500
+    },
+    {
+     "digest": "85ea3b9ff9e9ebec63bdc20c0f87099bd2ea3e2c0907dd51a07c9e4243f8c400",
+     "enemy_count": 59,
+     "hero_dead": 0,
+     "hero_hp": "498110100",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 1800,
+     "tick": 1800
+    },
+    {
+     "digest": "811b8990b0e729db256e7c3ccd0a6a37a5894f1ececa93a110efece91a274db6",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "497387100",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 2100,
+     "tick": 2100
+    },
+    {
+     "digest": "54de23487fa568d85644be9dfefb418220c9ced2efa21113ef10f32cceda7c56",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "496673800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 2400,
+     "tick": 2400
+    },
+    {
+     "digest": "88359758ebfa0bf84082ec6c47016440a36d4530aef4e584ad6f268b93144178",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "495974600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 2700,
+     "tick": 2700
+    },
+    {
+     "digest": "f5a3cd28b2cf0581dd1e5484cae14550b0ed49144adfd9a02f45dce3bcf47cc3",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "495252600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 3000,
+     "tick": 3000
+    },
+    {
+     "digest": "c2bd98f0f428c8229fe79373cdc26e15a05267ad5f3025dc308b3a7533a1f72a",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "494538200",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 3300,
+     "tick": 3300
+    },
+    {
+     "digest": "44cba17ef2c0520e1cd0456d09eb676daf1c2cca979006cfe3577d1723773440",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "493831400",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 3600,
+     "tick": 3600
+    },
+    {
+     "digest": "d716baac0d902a859ddea93ad7f20142c234442286df9185577f1895a1bda133",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "493139800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 3900,
+     "tick": 3900
+    },
+    {
+     "digest": "02dc023fbafd11ed590366dcd0dc660d4742c9c2fb62e6478c595273c35c7c2d",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "492440600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 4200,
+     "tick": 4200
+    },
+    {
+     "digest": "a0899842739e9614e21fb8a227261e4d7af71462c345e07131d4ef7bda2f576a",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "491733800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 4500,
+     "tick": 4500
+    },
+    {
+     "digest": "b138ebe8dd6ce4e5653f0474a9d8d3fa45124b111f653e52e5d5a1e5e25a8d20",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "491034600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 4800,
+     "tick": 4800
+    },
+    {
+     "digest": "9828d2a17efef4298c99273bc64ea792582ed600c97a59f94c2a3bce48890390",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "490312600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 5100,
+     "tick": 5100
+    },
+    {
+     "digest": "4363f4aca0565415187784abe5ef64a4e00961a02a4141e0b367b9a1d0260bbd",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "489598200",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 5400,
+     "tick": 5400
+    },
+    {
+     "digest": "988e31b91a22fbf4e9325f7a97871d0dd70a1a385adb049b0916b880af2661da",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "488891400",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 5700,
+     "tick": 5700
+    },
+    {
+     "digest": "f282d83bfaa219a359674112fe7e7df7cce99eeb451bdca0c2d400cb96a69211",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "488199800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 6000,
+     "tick": 6000
+    },
+    {
+     "digest": "83a8d30cb2f7a8b4c146953f4f17b3a6b382461846e1ef87adaa6c4136c21e3f",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "487500600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 6300,
+     "tick": 6300
+    },
+    {
+     "digest": "0335b129bcdd5310818e17ade07daac50342c3899ffb8330d11ac0642665ce10",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "486793800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 6600,
+     "tick": 6600
+    },
+    {
+     "digest": "2a6f9f31e68a54397ed219f14f320fb34fd37ebc57383d35727b571394cb1ff7",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "486094600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 6900,
+     "tick": 6900
+    },
+    {
+     "digest": "b2fed306fe6cbf2150f38c95525270c4e1fa44e3f392b31e3371cf6b3e07f28d",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "485372600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 7200,
+     "tick": 7200
+    },
+    {
+     "digest": "bd80e50304bcbc10641d58712c7383d3d745358266522cf4c9699305041c991b",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "484658200",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 7500,
+     "tick": 7500
+    },
+    {
+     "digest": "3bd6535999267027a47837e8fcacee6691077aeac00295a592db7416e5df53a0",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "483951400",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 7800,
+     "tick": 7800
+    },
+    {
+     "digest": "dbc59481ce02731414040a40c50517703b7573d20c609a0205b183947c0578cc",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "483259800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 8100,
+     "tick": 8100
+    },
+    {
+     "digest": "74e07e3c5760461390d4e0cd948907289fa6aa96de3dbb1fe3e750653f0d649b",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "482560600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 8400,
+     "tick": 8400
+    },
+    {
+     "digest": "aaf3338cbe5be8947781fe6bf5ac1826761a06d7058e0faf2589af44b04a2b2b",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "481853800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 8700,
+     "tick": 8700
+    },
+    {
+     "digest": "4d4bd4ae71c5425858ba462a114cdeaf925a6ef625f458b6dd9c68484b71e845",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "481154600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 9000,
+     "tick": 9000
+    },
+    {
+     "digest": "dc801ea224dc7da4d746434ca4332b62f021f4a1c5abfd615c9a3d79684a02aa",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "480432600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 9300,
+     "tick": 9300
+    },
+    {
+     "digest": "3704cf6e1dd81ca757cdc1a870644b46eebd49df1542b013b76563dc538a1bf2",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "479718200",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 9600,
+     "tick": 9600
+    },
+    {
+     "digest": "3e68237953fc1790578961d2abb7449c45c746def2fe68fae3cb322823d3cdac",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "479011400",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 9900,
+     "tick": 9900
+    },
+    {
+     "digest": "ebb917110380d8e34232c3c9c3ace9aca9fce94914821378d5f6e2b7674584f0",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "478319800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 10200,
+     "tick": 10200
+    },
+    {
+     "digest": "2044ac8b54ad171f7771d8141e7461ffe4eb66dd7426ec47b569c00968b2b1b3",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "477620600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 10500,
+     "tick": 10500
+    },
+    {
+     "digest": "4e0080ae92ee95e6684bdcaf1f605a29c973aa3b4667afcb2381cb9008891e5d",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "476913800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 10800,
+     "tick": 10800
+    },
+    {
+     "digest": "7105fe4745488a19fb7e98a0c5d30482f6b94b5006c8a14c6328fff08a4fbf92",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "476214600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 11100,
+     "tick": 11100
+    },
+    {
+     "digest": "91e217547ae446156a5ba47ae21d907ed7316cfdeb8878aa9e72d5f2fdca1493",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "475492600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 11400,
+     "tick": 11400
+    },
+    {
+     "digest": "68342ebb322de8f8d0c133932523ccefc42bf5ac369c693759c7fe5fb9c33f69",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "474778200",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 11700,
+     "tick": 11700
+    },
+    {
+     "digest": "db0c2b089482da934e0d09cfda64edec5ecf11269eb27516f546832cdccdc0f5",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "474071400",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 12000,
+     "tick": 12000
+    },
+    {
+     "digest": "75964e8f4ffc995091a46a8afcdb8ca435fc94f7f7f2eb9608de03a3d825c595",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "473379800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 12300,
+     "tick": 12300
+    },
+    {
+     "digest": "4136489f3df5185f2d3cad6164c1a5d952ed7464059c9f08cfce7c88480b7afe",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "472680600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 12600,
+     "tick": 12600
+    },
+    {
+     "digest": "6343e0af159b3be6395ba47b147f2d7d845993d9ad4e3412a698746e9e8944c4",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "471973800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 12900,
+     "tick": 12900
+    },
+    {
+     "digest": "23aec9aa8d29d4ac36c6cd928571bd1fe5f3747e0e84cf92a25314a0b130eac0",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "471274600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 13200,
+     "tick": 13200
+    },
+    {
+     "digest": "ab93678c03e249fb410225a13df386369da289ed40e419002b14a1aaa95aed90",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "470552600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 13500,
+     "tick": 13500
+    },
+    {
+     "digest": "5647f19769c5240ebdf0eab08b559f7e14ee65350587d3c1cc4bb588c61a4b31",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "469838200",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 13800,
+     "tick": 13800
+    },
+    {
+     "digest": "02ae6aac6d44c84a7b8327cd62ba69186b3bfcf6cadfd6601099cbc7fde07a24",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "469131400",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 14100,
+     "tick": 14100
+    },
+    {
+     "digest": "508960e9e0cd1929b0a4fd700b3ad7cd7dd5db9327d1889fca80f42f565b10ca",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "468439800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 14400,
+     "tick": 14400
+    },
+    {
+     "digest": "1491bd7302c98fe04b12035fa4c3eaee3be64a5c86d5cbebcc6aa77403c36cdb",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "467740600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 14700,
+     "tick": 14700
+    },
+    {
+     "digest": "94ce1f30ba6428de8746a01a34c10764073bf086892ab1b79f0e6f04e3df4f10",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "467033800",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 15000,
+     "tick": 15000
+    },
+    {
+     "digest": "965a1a6dcd218ddaf63678b782ca743d79031e86efdc425cb35f1f5eb9ffcca9",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "466334600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 15300,
+     "tick": 15300
+    },
+    {
+     "digest": "75b118f30dcab5d0d5715e4e8909c1962b09d746ed077fb64eff5ccb2c1b514a",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "465612600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 15600,
+     "tick": 15600
+    },
+    {
+     "digest": "bc0632185e99976b007355c0a5f495f2e9c794435489b19c5dc6a09946f6d7c5",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "464898200",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 15900,
+     "tick": 15900
+    },
+    {
+     "digest": "af8dacff10afd30df71876c80e321fdaf9b8da13689d68daa341711e46de12c2",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "464191400",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 16200,
+     "tick": 16200
+    },
+    {
+     "digest": "5e4fd5bdf91ebfea66a8acd9c55b68ec28fba9bd14f9fd5a3e8744aad26d88c6",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "463499800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 16500,
+     "tick": 16500
+    },
+    {
+     "digest": "42963d6b5c750cf47fb5f562cbb1a2fa33c45741bce602ca1d14458d3160cabc",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "462800600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 16800,
+     "tick": 16800
+    },
+    {
+     "digest": "8eb68afc750e71502d867fe2ef2091db0e2d11abe5bbc60c5fd7e065a19b8e5c",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "462093800",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 17100,
+     "tick": 17100
+    },
+    {
+     "digest": "c309b72f200fde2c6548aeedc37af2dad01e63278d294739cf60babeb41ac5c9",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "461394600",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 17400,
+     "tick": 17400
+    },
+    {
+     "digest": "c768fb9c04ef7c9491a62774be7ce5572e5406a23f16670f0615f0e23a86648f",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "460672600",
+     "player_x": "888000",
+     "player_y": "769700",
+     "step": 17700,
+     "tick": 17700
+    },
+    {
+     "digest": "5f5c5dbb682d366313d41709d2be4cb4c2559e3a4342973d6d4b8e0f5014e159",
+     "enemy_count": 64,
+     "hero_dead": 0,
+     "hero_hp": "459958200",
+     "player_x": "768000",
+     "player_y": "480000",
+     "step": 18000,
+     "tick": 18000
+    }
+   ],
+   "commands": [
+    [
+     "0",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "25",
+     "1",
+     "1",
+     "1"
+    ],
+    [
+     "50",
+     "2",
+     "0",
+     "1"
+    ],
+    [
+     "75",
+     "3",
+     "-1",
+     "1"
+    ],
+    [
+     "100",
+     "4",
+     "-1",
+     "0"
+    ],
+    [
+     "125",
+     "5",
+     "-1",
+     "-1"
+    ],
+    [
+     "150",
+     "6",
+     "0",
+     "-1"
+    ],
+    [
+     "175",
+     "7",
+     "1",
+     "-1"
+    ],
+    [
+     "200",
+     "8",
+     "1",
+     "0"
+    ],
+    [
+     "225",
+     "9",
+     "1",
+     "1"
+    ],
+    [
+     "250",
+     "10",
+     "0",
+     "1"
+    ],
+    [
+     "275",
+     "11",
+     "-1",
+     "1"
+    ],
+    [
+     "300",
+     "12",
+     "-1",
+     "0"
+    ],
+    [
+     "325",
+     "13",
+     "-1",
+     "-1"
+    ],
+    [
+     "350",
+     "14",
+     "0",
+     "-1"
+    ],
+    [
+     "375",
+     "15",
+     "1",
+     "-1"
+    ],
+    [
+     "400",
+     "16",
+     "1",
+     "0"
+    ],
+    [
+     "425",
+     "17",
+     "1",
+     "1"
+    ],
+    [
+     "450",
+     "18",
+     "0",
+     "1"
+    ],
+    [
+     "475",
+     "19",
+     "-1",
+     "1"
+    ],
+    [
+     "500",
+     "20",
+     "-1",
+     "0"
+    ],
+    [
+     "525",
+     "21",
+     "-1",
+     "-1"
+    ],
+    [
+     "550",
+     "22",
+     "0",
+     "-1"
+    ],
+    [
+     "575",
+     "23",
+     "1",
+     "-1"
+    ],
+    [
+     "600",
+     "24",
+     "1",
+     "0"
+    ],
+    [
+     "625",
+     "25",
+     "1",
+     "1"
+    ],
+    [
+     "650",
+     "26",
+     "0",
+     "1"
+    ],
+    [
+     "675",
+     "27",
+     "-1",
+     "1"
+    ],
+    [
+     "700",
+     "28",
+     "-1",
+     "0"
+    ],
+    [
+     "725",
+     "29",
+     "-1",
+     "-1"
+    ],
+    [
+     "750",
+     "30",
+     "0",
+     "-1"
+    ],
+    [
+     "775",
+     "31",
+     "1",
+     "-1"
+    ],
+    [
+     "800",
+     "32",
+     "1",
+     "0"
+    ],
+    [
+     "825",
+     "33",
+     "1",
+     "1"
+    ],
+    [
+     "850",
+     "34",
+     "0",
+     "1"
+    ],
+    [
+     "875",
+     "35",
+     "-1",
+     "1"
+    ],
+    [
+     "900",
+     "36",
+     "-1",
+     "0"
+    ],
+    [
+     "925",
+     "37",
+     "-1",
+     "-1"
+    ],
+    [
+     "950",
+     "38",
+     "0",
+     "-1"
+    ],
+    [
+     "975",
+     "39",
+     "1",
+     "-1"
+    ],
+    [
+     "1000",
+     "40",
+     "1",
+     "0"
+    ],
+    [
+     "1025",
+     "41",
+     "1",
+     "1"
+    ],
+    [
+     "1050",
+     "42",
+     "0",
+     "1"
+    ],
+    [
+     "1075",
+     "43",
+     "-1",
+     "1"
+    ],
+    [
+     "1100",
+     "44",
+     "-1",
+     "0"
+    ],
+    [
+     "1125",
+     "45",
+     "-1",
+     "-1"
+    ],
+    [
+     "1150",
+     "46",
+     "0",
+     "-1"
+    ],
+    [
+     "1175",
+     "47",
+     "1",
+     "-1"
+    ],
+    [
+     "1200",
+     "48",
+     "1",
+     "0"
+    ],
+    [
+     "1225",
+     "49",
+     "1",
+     "1"
+    ],
+    [
+     "1250",
+     "50",
+     "0",
+     "1"
+    ],
+    [
+     "1275",
+     "51",
+     "-1",
+     "1"
+    ],
+    [
+     "1300",
+     "52",
+     "-1",
+     "0"
+    ],
+    [
+     "1325",
+     "53",
+     "-1",
+     "-1"
+    ],
+    [
+     "1350",
+     "54",
+     "0",
+     "-1"
+    ],
+    [
+     "1375",
+     "55",
+     "1",
+     "-1"
+    ],
+    [
+     "1400",
+     "56",
+     "1",
+     "0"
+    ],
+    [
+     "1425",
+     "57",
+     "1",
+     "1"
+    ],
+    [
+     "1450",
+     "58",
+     "0",
+     "1"
+    ],
+    [
+     "1475",
+     "59",
+     "-1",
+     "1"
+    ],
+    [
+     "1500",
+     "60",
+     "-1",
+     "0"
+    ],
+    [
+     "1525",
+     "61",
+     "-1",
+     "-1"
+    ],
+    [
+     "1550",
+     "62",
+     "0",
+     "-1"
+    ],
+    [
+     "1575",
+     "63",
+     "1",
+     "-1"
+    ],
+    [
+     "1600",
+     "64",
+     "1",
+     "0"
+    ],
+    [
+     "1625",
+     "65",
+     "1",
+     "1"
+    ],
+    [
+     "1650",
+     "66",
+     "0",
+     "1"
+    ],
+    [
+     "1675",
+     "67",
+     "-1",
+     "1"
+    ],
+    [
+     "1700",
+     "68",
+     "-1",
+     "0"
+    ],
+    [
+     "1725",
+     "69",
+     "-1",
+     "-1"
+    ],
+    [
+     "1750",
+     "70",
+     "0",
+     "-1"
+    ],
+    [
+     "1775",
+     "71",
+     "1",
+     "-1"
+    ],
+    [
+     "1800",
+     "72",
+     "1",
+     "0"
+    ],
+    [
+     "1825",
+     "73",
+     "1",
+     "1"
+    ],
+    [
+     "1850",
+     "74",
+     "0",
+     "1"
+    ],
+    [
+     "1875",
+     "75",
+     "-1",
+     "1"
+    ],
+    [
+     "1900",
+     "76",
+     "-1",
+     "0"
+    ],
+    [
+     "1925",
+     "77",
+     "-1",
+     "-1"
+    ],
+    [
+     "1950",
+     "78",
+     "0",
+     "-1"
+    ],
+    [
+     "1975",
+     "79",
+     "1",
+     "-1"
+    ],
+    [
+     "2000",
+     "80",
+     "1",
+     "0"
+    ],
+    [
+     "2025",
+     "81",
+     "1",
+     "1"
+    ],
+    [
+     "2050",
+     "82",
+     "0",
+     "1"
+    ],
+    [
+     "2075",
+     "83",
+     "-1",
+     "1"
+    ],
+    [
+     "2100",
+     "84",
+     "-1",
+     "0"
+    ],
+    [
+     "2125",
+     "85",
+     "-1",
+     "-1"
+    ],
+    [
+     "2150",
+     "86",
+     "0",
+     "-1"
+    ],
+    [
+     "2175",
+     "87",
+     "1",
+     "-1"
+    ],
+    [
+     "2200",
+     "88",
+     "1",
+     "0"
+    ],
+    [
+     "2225",
+     "89",
+     "1",
+     "1"
+    ],
+    [
+     "2250",
+     "90",
+     "0",
+     "1"
+    ],
+    [
+     "2275",
+     "91",
+     "-1",
+     "1"
+    ],
+    [
+     "2300",
+     "92",
+     "-1",
+     "0"
+    ],
+    [
+     "2325",
+     "93",
+     "-1",
+     "-1"
+    ],
+    [
+     "2350",
+     "94",
+     "0",
+     "-1"
+    ],
+    [
+     "2375",
+     "95",
+     "1",
+     "-1"
+    ],
+    [
+     "2400",
+     "96",
+     "1",
+     "0"
+    ],
+    [
+     "2425",
+     "97",
+     "1",
+     "1"
+    ],
+    [
+     "2450",
+     "98",
+     "0",
+     "1"
+    ],
+    [
+     "2475",
+     "99",
+     "-1",
+     "1"
+    ],
+    [
+     "2500",
+     "100",
+     "-1",
+     "0"
+    ],
+    [
+     "2525",
+     "101",
+     "-1",
+     "-1"
+    ],
+    [
+     "2550",
+     "102",
+     "0",
+     "-1"
+    ],
+    [
+     "2575",
+     "103",
+     "1",
+     "-1"
+    ],
+    [
+     "2600",
+     "104",
+     "1",
+     "0"
+    ],
+    [
+     "2625",
+     "105",
+     "1",
+     "1"
+    ],
+    [
+     "2650",
+     "106",
+     "0",
+     "1"
+    ],
+    [
+     "2675",
+     "107",
+     "-1",
+     "1"
+    ],
+    [
+     "2700",
+     "108",
+     "-1",
+     "0"
+    ],
+    [
+     "2725",
+     "109",
+     "-1",
+     "-1"
+    ],
+    [
+     "2750",
+     "110",
+     "0",
+     "-1"
+    ],
+    [
+     "2775",
+     "111",
+     "1",
+     "-1"
+    ],
+    [
+     "2800",
+     "112",
+     "1",
+     "0"
+    ],
+    [
+     "2825",
+     "113",
+     "1",
+     "1"
+    ],
+    [
+     "2850",
+     "114",
+     "0",
+     "1"
+    ],
+    [
+     "2875",
+     "115",
+     "-1",
+     "1"
+    ],
+    [
+     "2900",
+     "116",
+     "-1",
+     "0"
+    ],
+    [
+     "2925",
+     "117",
+     "-1",
+     "-1"
+    ],
+    [
+     "2950",
+     "118",
+     "0",
+     "-1"
+    ],
+    [
+     "2975",
+     "119",
+     "1",
+     "-1"
+    ],
+    [
+     "3000",
+     "120",
+     "1",
+     "0"
+    ],
+    [
+     "3025",
+     "121",
+     "1",
+     "1"
+    ],
+    [
+     "3050",
+     "122",
+     "0",
+     "1"
+    ],
+    [
+     "3075",
+     "123",
+     "-1",
+     "1"
+    ],
+    [
+     "3100",
+     "124",
+     "-1",
+     "0"
+    ],
+    [
+     "3125",
+     "125",
+     "-1",
+     "-1"
+    ],
+    [
+     "3150",
+     "126",
+     "0",
+     "-1"
+    ],
+    [
+     "3175",
+     "127",
+     "1",
+     "-1"
+    ],
+    [
+     "3200",
+     "128",
+     "1",
+     "0"
+    ],
+    [
+     "3225",
+     "129",
+     "1",
+     "1"
+    ],
+    [
+     "3250",
+     "130",
+     "0",
+     "1"
+    ],
+    [
+     "3275",
+     "131",
+     "-1",
+     "1"
+    ],
+    [
+     "3300",
+     "132",
+     "-1",
+     "0"
+    ],
+    [
+     "3325",
+     "133",
+     "-1",
+     "-1"
+    ],
+    [
+     "3350",
+     "134",
+     "0",
+     "-1"
+    ],
+    [
+     "3375",
+     "135",
+     "1",
+     "-1"
+    ],
+    [
+     "3400",
+     "136",
+     "1",
+     "0"
+    ],
+    [
+     "3425",
+     "137",
+     "1",
+     "1"
+    ],
+    [
+     "3450",
+     "138",
+     "0",
+     "1"
+    ],
+    [
+     "3475",
+     "139",
+     "-1",
+     "1"
+    ],
+    [
+     "3500",
+     "140",
+     "-1",
+     "0"
+    ],
+    [
+     "3525",
+     "141",
+     "-1",
+     "-1"
+    ],
+    [
+     "3550",
+     "142",
+     "0",
+     "-1"
+    ],
+    [
+     "3575",
+     "143",
+     "1",
+     "-1"
+    ],
+    [
+     "3600",
+     "144",
+     "1",
+     "0"
+    ],
+    [
+     "3625",
+     "145",
+     "1",
+     "1"
+    ],
+    [
+     "3650",
+     "146",
+     "0",
+     "1"
+    ],
+    [
+     "3675",
+     "147",
+     "-1",
+     "1"
+    ],
+    [
+     "3700",
+     "148",
+     "-1",
+     "0"
+    ],
+    [
+     "3725",
+     "149",
+     "-1",
+     "-1"
+    ],
+    [
+     "3750",
+     "150",
+     "0",
+     "-1"
+    ],
+    [
+     "3775",
+     "151",
+     "1",
+     "-1"
+    ],
+    [
+     "3800",
+     "152",
+     "1",
+     "0"
+    ],
+    [
+     "3825",
+     "153",
+     "1",
+     "1"
+    ],
+    [
+     "3850",
+     "154",
+     "0",
+     "1"
+    ],
+    [
+     "3875",
+     "155",
+     "-1",
+     "1"
+    ],
+    [
+     "3900",
+     "156",
+     "-1",
+     "0"
+    ],
+    [
+     "3925",
+     "157",
+     "-1",
+     "-1"
+    ],
+    [
+     "3950",
+     "158",
+     "0",
+     "-1"
+    ],
+    [
+     "3975",
+     "159",
+     "1",
+     "-1"
+    ],
+    [
+     "4000",
+     "160",
+     "1",
+     "0"
+    ],
+    [
+     "4025",
+     "161",
+     "1",
+     "1"
+    ],
+    [
+     "4050",
+     "162",
+     "0",
+     "1"
+    ],
+    [
+     "4075",
+     "163",
+     "-1",
+     "1"
+    ],
+    [
+     "4100",
+     "164",
+     "-1",
+     "0"
+    ],
+    [
+     "4125",
+     "165",
+     "-1",
+     "-1"
+    ],
+    [
+     "4150",
+     "166",
+     "0",
+     "-1"
+    ],
+    [
+     "4175",
+     "167",
+     "1",
+     "-1"
+    ],
+    [
+     "4200",
+     "168",
+     "1",
+     "0"
+    ],
+    [
+     "4225",
+     "169",
+     "1",
+     "1"
+    ],
+    [
+     "4250",
+     "170",
+     "0",
+     "1"
+    ],
+    [
+     "4275",
+     "171",
+     "-1",
+     "1"
+    ],
+    [
+     "4300",
+     "172",
+     "-1",
+     "0"
+    ],
+    [
+     "4325",
+     "173",
+     "-1",
+     "-1"
+    ],
+    [
+     "4350",
+     "174",
+     "0",
+     "-1"
+    ],
+    [
+     "4375",
+     "175",
+     "1",
+     "-1"
+    ],
+    [
+     "4400",
+     "176",
+     "1",
+     "0"
+    ],
+    [
+     "4425",
+     "177",
+     "1",
+     "1"
+    ],
+    [
+     "4450",
+     "178",
+     "0",
+     "1"
+    ],
+    [
+     "4475",
+     "179",
+     "-1",
+     "1"
+    ],
+    [
+     "4500",
+     "180",
+     "-1",
+     "0"
+    ],
+    [
+     "4525",
+     "181",
+     "-1",
+     "-1"
+    ],
+    [
+     "4550",
+     "182",
+     "0",
+     "-1"
+    ],
+    [
+     "4575",
+     "183",
+     "1",
+     "-1"
+    ],
+    [
+     "4600",
+     "184",
+     "1",
+     "0"
+    ],
+    [
+     "4625",
+     "185",
+     "1",
+     "1"
+    ],
+    [
+     "4650",
+     "186",
+     "0",
+     "1"
+    ],
+    [
+     "4675",
+     "187",
+     "-1",
+     "1"
+    ],
+    [
+     "4700",
+     "188",
+     "-1",
+     "0"
+    ],
+    [
+     "4725",
+     "189",
+     "-1",
+     "-1"
+    ],
+    [
+     "4750",
+     "190",
+     "0",
+     "-1"
+    ],
+    [
+     "4775",
+     "191",
+     "1",
+     "-1"
+    ],
+    [
+     "4800",
+     "192",
+     "1",
+     "0"
+    ],
+    [
+     "4825",
+     "193",
+     "1",
+     "1"
+    ],
+    [
+     "4850",
+     "194",
+     "0",
+     "1"
+    ],
+    [
+     "4875",
+     "195",
+     "-1",
+     "1"
+    ],
+    [
+     "4900",
+     "196",
+     "-1",
+     "0"
+    ],
+    [
+     "4925",
+     "197",
+     "-1",
+     "-1"
+    ],
+    [
+     "4950",
+     "198",
+     "0",
+     "-1"
+    ],
+    [
+     "4975",
+     "199",
+     "1",
+     "-1"
+    ],
+    [
+     "5000",
+     "200",
+     "1",
+     "0"
+    ],
+    [
+     "5025",
+     "201",
+     "1",
+     "1"
+    ],
+    [
+     "5050",
+     "202",
+     "0",
+     "1"
+    ],
+    [
+     "5075",
+     "203",
+     "-1",
+     "1"
+    ],
+    [
+     "5100",
+     "204",
+     "-1",
+     "0"
+    ],
+    [
+     "5125",
+     "205",
+     "-1",
+     "-1"
+    ],
+    [
+     "5150",
+     "206",
+     "0",
+     "-1"
+    ],
+    [
+     "5175",
+     "207",
+     "1",
+     "-1"
+    ],
+    [
+     "5200",
+     "208",
+     "1",
+     "0"
+    ],
+    [
+     "5225",
+     "209",
+     "1",
+     "1"
+    ],
+    [
+     "5250",
+     "210",
+     "0",
+     "1"
+    ],
+    [
+     "5275",
+     "211",
+     "-1",
+     "1"
+    ],
+    [
+     "5300",
+     "212",
+     "-1",
+     "0"
+    ],
+    [
+     "5325",
+     "213",
+     "-1",
+     "-1"
+    ],
+    [
+     "5350",
+     "214",
+     "0",
+     "-1"
+    ],
+    [
+     "5375",
+     "215",
+     "1",
+     "-1"
+    ],
+    [
+     "5400",
+     "216",
+     "1",
+     "0"
+    ],
+    [
+     "5425",
+     "217",
+     "1",
+     "1"
+    ],
+    [
+     "5450",
+     "218",
+     "0",
+     "1"
+    ],
+    [
+     "5475",
+     "219",
+     "-1",
+     "1"
+    ],
+    [
+     "5500",
+     "220",
+     "-1",
+     "0"
+    ],
+    [
+     "5525",
+     "221",
+     "-1",
+     "-1"
+    ],
+    [
+     "5550",
+     "222",
+     "0",
+     "-1"
+    ],
+    [
+     "5575",
+     "223",
+     "1",
+     "-1"
+    ],
+    [
+     "5600",
+     "224",
+     "1",
+     "0"
+    ],
+    [
+     "5625",
+     "225",
+     "1",
+     "1"
+    ],
+    [
+     "5650",
+     "226",
+     "0",
+     "1"
+    ],
+    [
+     "5675",
+     "227",
+     "-1",
+     "1"
+    ],
+    [
+     "5700",
+     "228",
+     "-1",
+     "0"
+    ],
+    [
+     "5725",
+     "229",
+     "-1",
+     "-1"
+    ],
+    [
+     "5750",
+     "230",
+     "0",
+     "-1"
+    ],
+    [
+     "5775",
+     "231",
+     "1",
+     "-1"
+    ],
+    [
+     "5800",
+     "232",
+     "1",
+     "0"
+    ],
+    [
+     "5825",
+     "233",
+     "1",
+     "1"
+    ],
+    [
+     "5850",
+     "234",
+     "0",
+     "1"
+    ],
+    [
+     "5875",
+     "235",
+     "-1",
+     "1"
+    ],
+    [
+     "5900",
+     "236",
+     "-1",
+     "0"
+    ],
+    [
+     "5925",
+     "237",
+     "-1",
+     "-1"
+    ],
+    [
+     "5950",
+     "238",
+     "0",
+     "-1"
+    ],
+    [
+     "5975",
+     "239",
+     "1",
+     "-1"
+    ],
+    [
+     "6000",
+     "240",
+     "1",
+     "0"
+    ],
+    [
+     "6025",
+     "241",
+     "1",
+     "1"
+    ],
+    [
+     "6050",
+     "242",
+     "0",
+     "1"
+    ],
+    [
+     "6075",
+     "243",
+     "-1",
+     "1"
+    ],
+    [
+     "6100",
+     "244",
+     "-1",
+     "0"
+    ],
+    [
+     "6125",
+     "245",
+     "-1",
+     "-1"
+    ],
+    [
+     "6150",
+     "246",
+     "0",
+     "-1"
+    ],
+    [
+     "6175",
+     "247",
+     "1",
+     "-1"
+    ],
+    [
+     "6200",
+     "248",
+     "1",
+     "0"
+    ],
+    [
+     "6225",
+     "249",
+     "1",
+     "1"
+    ],
+    [
+     "6250",
+     "250",
+     "0",
+     "1"
+    ],
+    [
+     "6275",
+     "251",
+     "-1",
+     "1"
+    ],
+    [
+     "6300",
+     "252",
+     "-1",
+     "0"
+    ],
+    [
+     "6325",
+     "253",
+     "-1",
+     "-1"
+    ],
+    [
+     "6350",
+     "254",
+     "0",
+     "-1"
+    ],
+    [
+     "6375",
+     "255",
+     "1",
+     "-1"
+    ],
+    [
+     "6400",
+     "256",
+     "1",
+     "0"
+    ],
+    [
+     "6425",
+     "257",
+     "1",
+     "1"
+    ],
+    [
+     "6450",
+     "258",
+     "0",
+     "1"
+    ],
+    [
+     "6475",
+     "259",
+     "-1",
+     "1"
+    ],
+    [
+     "6500",
+     "260",
+     "-1",
+     "0"
+    ],
+    [
+     "6525",
+     "261",
+     "-1",
+     "-1"
+    ],
+    [
+     "6550",
+     "262",
+     "0",
+     "-1"
+    ],
+    [
+     "6575",
+     "263",
+     "1",
+     "-1"
+    ],
+    [
+     "6600",
+     "264",
+     "1",
+     "0"
+    ],
+    [
+     "6625",
+     "265",
+     "1",
+     "1"
+    ],
+    [
+     "6650",
+     "266",
+     "0",
+     "1"
+    ],
+    [
+     "6675",
+     "267",
+     "-1",
+     "1"
+    ],
+    [
+     "6700",
+     "268",
+     "-1",
+     "0"
+    ],
+    [
+     "6725",
+     "269",
+     "-1",
+     "-1"
+    ],
+    [
+     "6750",
+     "270",
+     "0",
+     "-1"
+    ],
+    [
+     "6775",
+     "271",
+     "1",
+     "-1"
+    ],
+    [
+     "6800",
+     "272",
+     "1",
+     "0"
+    ],
+    [
+     "6825",
+     "273",
+     "1",
+     "1"
+    ],
+    [
+     "6850",
+     "274",
+     "0",
+     "1"
+    ],
+    [
+     "6875",
+     "275",
+     "-1",
+     "1"
+    ],
+    [
+     "6900",
+     "276",
+     "-1",
+     "0"
+    ],
+    [
+     "6925",
+     "277",
+     "-1",
+     "-1"
+    ],
+    [
+     "6950",
+     "278",
+     "0",
+     "-1"
+    ],
+    [
+     "6975",
+     "279",
+     "1",
+     "-1"
+    ],
+    [
+     "7000",
+     "280",
+     "1",
+     "0"
+    ],
+    [
+     "7025",
+     "281",
+     "1",
+     "1"
+    ],
+    [
+     "7050",
+     "282",
+     "0",
+     "1"
+    ],
+    [
+     "7075",
+     "283",
+     "-1",
+     "1"
+    ],
+    [
+     "7100",
+     "284",
+     "-1",
+     "0"
+    ],
+    [
+     "7125",
+     "285",
+     "-1",
+     "-1"
+    ],
+    [
+     "7150",
+     "286",
+     "0",
+     "-1"
+    ],
+    [
+     "7175",
+     "287",
+     "1",
+     "-1"
+    ],
+    [
+     "7200",
+     "288",
+     "1",
+     "0"
+    ],
+    [
+     "7225",
+     "289",
+     "1",
+     "1"
+    ],
+    [
+     "7250",
+     "290",
+     "0",
+     "1"
+    ],
+    [
+     "7275",
+     "291",
+     "-1",
+     "1"
+    ],
+    [
+     "7300",
+     "292",
+     "-1",
+     "0"
+    ],
+    [
+     "7325",
+     "293",
+     "-1",
+     "-1"
+    ],
+    [
+     "7350",
+     "294",
+     "0",
+     "-1"
+    ],
+    [
+     "7375",
+     "295",
+     "1",
+     "-1"
+    ],
+    [
+     "7400",
+     "296",
+     "1",
+     "0"
+    ],
+    [
+     "7425",
+     "297",
+     "1",
+     "1"
+    ],
+    [
+     "7450",
+     "298",
+     "0",
+     "1"
+    ],
+    [
+     "7475",
+     "299",
+     "-1",
+     "1"
+    ],
+    [
+     "7500",
+     "300",
+     "-1",
+     "0"
+    ],
+    [
+     "7525",
+     "301",
+     "-1",
+     "-1"
+    ],
+    [
+     "7550",
+     "302",
+     "0",
+     "-1"
+    ],
+    [
+     "7575",
+     "303",
+     "1",
+     "-1"
+    ],
+    [
+     "7600",
+     "304",
+     "1",
+     "0"
+    ],
+    [
+     "7625",
+     "305",
+     "1",
+     "1"
+    ],
+    [
+     "7650",
+     "306",
+     "0",
+     "1"
+    ],
+    [
+     "7675",
+     "307",
+     "-1",
+     "1"
+    ],
+    [
+     "7700",
+     "308",
+     "-1",
+     "0"
+    ],
+    [
+     "7725",
+     "309",
+     "-1",
+     "-1"
+    ],
+    [
+     "7750",
+     "310",
+     "0",
+     "-1"
+    ],
+    [
+     "7775",
+     "311",
+     "1",
+     "-1"
+    ],
+    [
+     "7800",
+     "312",
+     "1",
+     "0"
+    ],
+    [
+     "7825",
+     "313",
+     "1",
+     "1"
+    ],
+    [
+     "7850",
+     "314",
+     "0",
+     "1"
+    ],
+    [
+     "7875",
+     "315",
+     "-1",
+     "1"
+    ],
+    [
+     "7900",
+     "316",
+     "-1",
+     "0"
+    ],
+    [
+     "7925",
+     "317",
+     "-1",
+     "-1"
+    ],
+    [
+     "7950",
+     "318",
+     "0",
+     "-1"
+    ],
+    [
+     "7975",
+     "319",
+     "1",
+     "-1"
+    ],
+    [
+     "8000",
+     "320",
+     "1",
+     "0"
+    ],
+    [
+     "8025",
+     "321",
+     "1",
+     "1"
+    ],
+    [
+     "8050",
+     "322",
+     "0",
+     "1"
+    ],
+    [
+     "8075",
+     "323",
+     "-1",
+     "1"
+    ],
+    [
+     "8100",
+     "324",
+     "-1",
+     "0"
+    ],
+    [
+     "8125",
+     "325",
+     "-1",
+     "-1"
+    ],
+    [
+     "8150",
+     "326",
+     "0",
+     "-1"
+    ],
+    [
+     "8175",
+     "327",
+     "1",
+     "-1"
+    ],
+    [
+     "8200",
+     "328",
+     "1",
+     "0"
+    ],
+    [
+     "8225",
+     "329",
+     "1",
+     "1"
+    ],
+    [
+     "8250",
+     "330",
+     "0",
+     "1"
+    ],
+    [
+     "8275",
+     "331",
+     "-1",
+     "1"
+    ],
+    [
+     "8300",
+     "332",
+     "-1",
+     "0"
+    ],
+    [
+     "8325",
+     "333",
+     "-1",
+     "-1"
+    ],
+    [
+     "8350",
+     "334",
+     "0",
+     "-1"
+    ],
+    [
+     "8375",
+     "335",
+     "1",
+     "-1"
+    ],
+    [
+     "8400",
+     "336",
+     "1",
+     "0"
+    ],
+    [
+     "8425",
+     "337",
+     "1",
+     "1"
+    ],
+    [
+     "8450",
+     "338",
+     "0",
+     "1"
+    ],
+    [
+     "8475",
+     "339",
+     "-1",
+     "1"
+    ],
+    [
+     "8500",
+     "340",
+     "-1",
+     "0"
+    ],
+    [
+     "8525",
+     "341",
+     "-1",
+     "-1"
+    ],
+    [
+     "8550",
+     "342",
+     "0",
+     "-1"
+    ],
+    [
+     "8575",
+     "343",
+     "1",
+     "-1"
+    ],
+    [
+     "8600",
+     "344",
+     "1",
+     "0"
+    ],
+    [
+     "8625",
+     "345",
+     "1",
+     "1"
+    ],
+    [
+     "8650",
+     "346",
+     "0",
+     "1"
+    ],
+    [
+     "8675",
+     "347",
+     "-1",
+     "1"
+    ],
+    [
+     "8700",
+     "348",
+     "-1",
+     "0"
+    ],
+    [
+     "8725",
+     "349",
+     "-1",
+     "-1"
+    ],
+    [
+     "8750",
+     "350",
+     "0",
+     "-1"
+    ],
+    [
+     "8775",
+     "351",
+     "1",
+     "-1"
+    ],
+    [
+     "8800",
+     "352",
+     "1",
+     "0"
+    ],
+    [
+     "8825",
+     "353",
+     "1",
+     "1"
+    ],
+    [
+     "8850",
+     "354",
+     "0",
+     "1"
+    ],
+    [
+     "8875",
+     "355",
+     "-1",
+     "1"
+    ],
+    [
+     "8900",
+     "356",
+     "-1",
+     "0"
+    ],
+    [
+     "8925",
+     "357",
+     "-1",
+     "-1"
+    ],
+    [
+     "8950",
+     "358",
+     "0",
+     "-1"
+    ],
+    [
+     "8975",
+     "359",
+     "1",
+     "-1"
+    ],
+    [
+     "9000",
+     "360",
+     "1",
+     "0"
+    ],
+    [
+     "9025",
+     "361",
+     "1",
+     "1"
+    ],
+    [
+     "9050",
+     "362",
+     "0",
+     "1"
+    ],
+    [
+     "9075",
+     "363",
+     "-1",
+     "1"
+    ],
+    [
+     "9100",
+     "364",
+     "-1",
+     "0"
+    ],
+    [
+     "9125",
+     "365",
+     "-1",
+     "-1"
+    ],
+    [
+     "9150",
+     "366",
+     "0",
+     "-1"
+    ],
+    [
+     "9175",
+     "367",
+     "1",
+     "-1"
+    ],
+    [
+     "9200",
+     "368",
+     "1",
+     "0"
+    ],
+    [
+     "9225",
+     "369",
+     "1",
+     "1"
+    ],
+    [
+     "9250",
+     "370",
+     "0",
+     "1"
+    ],
+    [
+     "9275",
+     "371",
+     "-1",
+     "1"
+    ],
+    [
+     "9300",
+     "372",
+     "-1",
+     "0"
+    ],
+    [
+     "9325",
+     "373",
+     "-1",
+     "-1"
+    ],
+    [
+     "9350",
+     "374",
+     "0",
+     "-1"
+    ],
+    [
+     "9375",
+     "375",
+     "1",
+     "-1"
+    ],
+    [
+     "9400",
+     "376",
+     "1",
+     "0"
+    ],
+    [
+     "9425",
+     "377",
+     "1",
+     "1"
+    ],
+    [
+     "9450",
+     "378",
+     "0",
+     "1"
+    ],
+    [
+     "9475",
+     "379",
+     "-1",
+     "1"
+    ],
+    [
+     "9500",
+     "380",
+     "-1",
+     "0"
+    ],
+    [
+     "9525",
+     "381",
+     "-1",
+     "-1"
+    ],
+    [
+     "9550",
+     "382",
+     "0",
+     "-1"
+    ],
+    [
+     "9575",
+     "383",
+     "1",
+     "-1"
+    ],
+    [
+     "9600",
+     "384",
+     "1",
+     "0"
+    ],
+    [
+     "9625",
+     "385",
+     "1",
+     "1"
+    ],
+    [
+     "9650",
+     "386",
+     "0",
+     "1"
+    ],
+    [
+     "9675",
+     "387",
+     "-1",
+     "1"
+    ],
+    [
+     "9700",
+     "388",
+     "-1",
+     "0"
+    ],
+    [
+     "9725",
+     "389",
+     "-1",
+     "-1"
+    ],
+    [
+     "9750",
+     "390",
+     "0",
+     "-1"
+    ],
+    [
+     "9775",
+     "391",
+     "1",
+     "-1"
+    ],
+    [
+     "9800",
+     "392",
+     "1",
+     "0"
+    ],
+    [
+     "9825",
+     "393",
+     "1",
+     "1"
+    ],
+    [
+     "9850",
+     "394",
+     "0",
+     "1"
+    ],
+    [
+     "9875",
+     "395",
+     "-1",
+     "1"
+    ],
+    [
+     "9900",
+     "396",
+     "-1",
+     "0"
+    ],
+    [
+     "9925",
+     "397",
+     "-1",
+     "-1"
+    ],
+    [
+     "9950",
+     "398",
+     "0",
+     "-1"
+    ],
+    [
+     "9975",
+     "399",
+     "1",
+     "-1"
+    ],
+    [
+     "10000",
+     "400",
+     "1",
+     "0"
+    ],
+    [
+     "10025",
+     "401",
+     "1",
+     "1"
+    ],
+    [
+     "10050",
+     "402",
+     "0",
+     "1"
+    ],
+    [
+     "10075",
+     "403",
+     "-1",
+     "1"
+    ],
+    [
+     "10100",
+     "404",
+     "-1",
+     "0"
+    ],
+    [
+     "10125",
+     "405",
+     "-1",
+     "-1"
+    ],
+    [
+     "10150",
+     "406",
+     "0",
+     "-1"
+    ],
+    [
+     "10175",
+     "407",
+     "1",
+     "-1"
+    ],
+    [
+     "10200",
+     "408",
+     "1",
+     "0"
+    ],
+    [
+     "10225",
+     "409",
+     "1",
+     "1"
+    ],
+    [
+     "10250",
+     "410",
+     "0",
+     "1"
+    ],
+    [
+     "10275",
+     "411",
+     "-1",
+     "1"
+    ],
+    [
+     "10300",
+     "412",
+     "-1",
+     "0"
+    ],
+    [
+     "10325",
+     "413",
+     "-1",
+     "-1"
+    ],
+    [
+     "10350",
+     "414",
+     "0",
+     "-1"
+    ],
+    [
+     "10375",
+     "415",
+     "1",
+     "-1"
+    ],
+    [
+     "10400",
+     "416",
+     "1",
+     "0"
+    ],
+    [
+     "10425",
+     "417",
+     "1",
+     "1"
+    ],
+    [
+     "10450",
+     "418",
+     "0",
+     "1"
+    ],
+    [
+     "10475",
+     "419",
+     "-1",
+     "1"
+    ],
+    [
+     "10500",
+     "420",
+     "-1",
+     "0"
+    ],
+    [
+     "10525",
+     "421",
+     "-1",
+     "-1"
+    ],
+    [
+     "10550",
+     "422",
+     "0",
+     "-1"
+    ],
+    [
+     "10575",
+     "423",
+     "1",
+     "-1"
+    ],
+    [
+     "10600",
+     "424",
+     "1",
+     "0"
+    ],
+    [
+     "10625",
+     "425",
+     "1",
+     "1"
+    ],
+    [
+     "10650",
+     "426",
+     "0",
+     "1"
+    ],
+    [
+     "10675",
+     "427",
+     "-1",
+     "1"
+    ],
+    [
+     "10700",
+     "428",
+     "-1",
+     "0"
+    ],
+    [
+     "10725",
+     "429",
+     "-1",
+     "-1"
+    ],
+    [
+     "10750",
+     "430",
+     "0",
+     "-1"
+    ],
+    [
+     "10775",
+     "431",
+     "1",
+     "-1"
+    ],
+    [
+     "10800",
+     "432",
+     "1",
+     "0"
+    ],
+    [
+     "10825",
+     "433",
+     "1",
+     "1"
+    ],
+    [
+     "10850",
+     "434",
+     "0",
+     "1"
+    ],
+    [
+     "10875",
+     "435",
+     "-1",
+     "1"
+    ],
+    [
+     "10900",
+     "436",
+     "-1",
+     "0"
+    ],
+    [
+     "10925",
+     "437",
+     "-1",
+     "-1"
+    ],
+    [
+     "10950",
+     "438",
+     "0",
+     "-1"
+    ],
+    [
+     "10975",
+     "439",
+     "1",
+     "-1"
+    ],
+    [
+     "11000",
+     "440",
+     "1",
+     "0"
+    ],
+    [
+     "11025",
+     "441",
+     "1",
+     "1"
+    ],
+    [
+     "11050",
+     "442",
+     "0",
+     "1"
+    ],
+    [
+     "11075",
+     "443",
+     "-1",
+     "1"
+    ],
+    [
+     "11100",
+     "444",
+     "-1",
+     "0"
+    ],
+    [
+     "11125",
+     "445",
+     "-1",
+     "-1"
+    ],
+    [
+     "11150",
+     "446",
+     "0",
+     "-1"
+    ],
+    [
+     "11175",
+     "447",
+     "1",
+     "-1"
+    ],
+    [
+     "11200",
+     "448",
+     "1",
+     "0"
+    ],
+    [
+     "11225",
+     "449",
+     "1",
+     "1"
+    ],
+    [
+     "11250",
+     "450",
+     "0",
+     "1"
+    ],
+    [
+     "11275",
+     "451",
+     "-1",
+     "1"
+    ],
+    [
+     "11300",
+     "452",
+     "-1",
+     "0"
+    ],
+    [
+     "11325",
+     "453",
+     "-1",
+     "-1"
+    ],
+    [
+     "11350",
+     "454",
+     "0",
+     "-1"
+    ],
+    [
+     "11375",
+     "455",
+     "1",
+     "-1"
+    ],
+    [
+     "11400",
+     "456",
+     "1",
+     "0"
+    ],
+    [
+     "11425",
+     "457",
+     "1",
+     "1"
+    ],
+    [
+     "11450",
+     "458",
+     "0",
+     "1"
+    ],
+    [
+     "11475",
+     "459",
+     "-1",
+     "1"
+    ],
+    [
+     "11500",
+     "460",
+     "-1",
+     "0"
+    ],
+    [
+     "11525",
+     "461",
+     "-1",
+     "-1"
+    ],
+    [
+     "11550",
+     "462",
+     "0",
+     "-1"
+    ],
+    [
+     "11575",
+     "463",
+     "1",
+     "-1"
+    ],
+    [
+     "11600",
+     "464",
+     "1",
+     "0"
+    ],
+    [
+     "11625",
+     "465",
+     "1",
+     "1"
+    ],
+    [
+     "11650",
+     "466",
+     "0",
+     "1"
+    ],
+    [
+     "11675",
+     "467",
+     "-1",
+     "1"
+    ],
+    [
+     "11700",
+     "468",
+     "-1",
+     "0"
+    ],
+    [
+     "11725",
+     "469",
+     "-1",
+     "-1"
+    ],
+    [
+     "11750",
+     "470",
+     "0",
+     "-1"
+    ],
+    [
+     "11775",
+     "471",
+     "1",
+     "-1"
+    ],
+    [
+     "11800",
+     "472",
+     "1",
+     "0"
+    ],
+    [
+     "11825",
+     "473",
+     "1",
+     "1"
+    ],
+    [
+     "11850",
+     "474",
+     "0",
+     "1"
+    ],
+    [
+     "11875",
+     "475",
+     "-1",
+     "1"
+    ],
+    [
+     "11900",
+     "476",
+     "-1",
+     "0"
+    ],
+    [
+     "11925",
+     "477",
+     "-1",
+     "-1"
+    ],
+    [
+     "11950",
+     "478",
+     "0",
+     "-1"
+    ],
+    [
+     "11975",
+     "479",
+     "1",
+     "-1"
+    ],
+    [
+     "12000",
+     "480",
+     "1",
+     "0"
+    ],
+    [
+     "12025",
+     "481",
+     "1",
+     "1"
+    ],
+    [
+     "12050",
+     "482",
+     "0",
+     "1"
+    ],
+    [
+     "12075",
+     "483",
+     "-1",
+     "1"
+    ],
+    [
+     "12100",
+     "484",
+     "-1",
+     "0"
+    ],
+    [
+     "12125",
+     "485",
+     "-1",
+     "-1"
+    ],
+    [
+     "12150",
+     "486",
+     "0",
+     "-1"
+    ],
+    [
+     "12175",
+     "487",
+     "1",
+     "-1"
+    ],
+    [
+     "12200",
+     "488",
+     "1",
+     "0"
+    ],
+    [
+     "12225",
+     "489",
+     "1",
+     "1"
+    ],
+    [
+     "12250",
+     "490",
+     "0",
+     "1"
+    ],
+    [
+     "12275",
+     "491",
+     "-1",
+     "1"
+    ],
+    [
+     "12300",
+     "492",
+     "-1",
+     "0"
+    ],
+    [
+     "12325",
+     "493",
+     "-1",
+     "-1"
+    ],
+    [
+     "12350",
+     "494",
+     "0",
+     "-1"
+    ],
+    [
+     "12375",
+     "495",
+     "1",
+     "-1"
+    ],
+    [
+     "12400",
+     "496",
+     "1",
+     "0"
+    ],
+    [
+     "12425",
+     "497",
+     "1",
+     "1"
+    ],
+    [
+     "12450",
+     "498",
+     "0",
+     "1"
+    ],
+    [
+     "12475",
+     "499",
+     "-1",
+     "1"
+    ],
+    [
+     "12500",
+     "500",
+     "-1",
+     "0"
+    ],
+    [
+     "12525",
+     "501",
+     "-1",
+     "-1"
+    ],
+    [
+     "12550",
+     "502",
+     "0",
+     "-1"
+    ],
+    [
+     "12575",
+     "503",
+     "1",
+     "-1"
+    ],
+    [
+     "12600",
+     "504",
+     "1",
+     "0"
+    ],
+    [
+     "12625",
+     "505",
+     "1",
+     "1"
+    ],
+    [
+     "12650",
+     "506",
+     "0",
+     "1"
+    ],
+    [
+     "12675",
+     "507",
+     "-1",
+     "1"
+    ],
+    [
+     "12700",
+     "508",
+     "-1",
+     "0"
+    ],
+    [
+     "12725",
+     "509",
+     "-1",
+     "-1"
+    ],
+    [
+     "12750",
+     "510",
+     "0",
+     "-1"
+    ],
+    [
+     "12775",
+     "511",
+     "1",
+     "-1"
+    ],
+    [
+     "12800",
+     "512",
+     "1",
+     "0"
+    ],
+    [
+     "12825",
+     "513",
+     "1",
+     "1"
+    ],
+    [
+     "12850",
+     "514",
+     "0",
+     "1"
+    ],
+    [
+     "12875",
+     "515",
+     "-1",
+     "1"
+    ],
+    [
+     "12900",
+     "516",
+     "-1",
+     "0"
+    ],
+    [
+     "12925",
+     "517",
+     "-1",
+     "-1"
+    ],
+    [
+     "12950",
+     "518",
+     "0",
+     "-1"
+    ],
+    [
+     "12975",
+     "519",
+     "1",
+     "-1"
+    ],
+    [
+     "13000",
+     "520",
+     "1",
+     "0"
+    ],
+    [
+     "13025",
+     "521",
+     "1",
+     "1"
+    ],
+    [
+     "13050",
+     "522",
+     "0",
+     "1"
+    ],
+    [
+     "13075",
+     "523",
+     "-1",
+     "1"
+    ],
+    [
+     "13100",
+     "524",
+     "-1",
+     "0"
+    ],
+    [
+     "13125",
+     "525",
+     "-1",
+     "-1"
+    ],
+    [
+     "13150",
+     "526",
+     "0",
+     "-1"
+    ],
+    [
+     "13175",
+     "527",
+     "1",
+     "-1"
+    ],
+    [
+     "13200",
+     "528",
+     "1",
+     "0"
+    ],
+    [
+     "13225",
+     "529",
+     "1",
+     "1"
+    ],
+    [
+     "13250",
+     "530",
+     "0",
+     "1"
+    ],
+    [
+     "13275",
+     "531",
+     "-1",
+     "1"
+    ],
+    [
+     "13300",
+     "532",
+     "-1",
+     "0"
+    ],
+    [
+     "13325",
+     "533",
+     "-1",
+     "-1"
+    ],
+    [
+     "13350",
+     "534",
+     "0",
+     "-1"
+    ],
+    [
+     "13375",
+     "535",
+     "1",
+     "-1"
+    ],
+    [
+     "13400",
+     "536",
+     "1",
+     "0"
+    ],
+    [
+     "13425",
+     "537",
+     "1",
+     "1"
+    ],
+    [
+     "13450",
+     "538",
+     "0",
+     "1"
+    ],
+    [
+     "13475",
+     "539",
+     "-1",
+     "1"
+    ],
+    [
+     "13500",
+     "540",
+     "-1",
+     "0"
+    ],
+    [
+     "13525",
+     "541",
+     "-1",
+     "-1"
+    ],
+    [
+     "13550",
+     "542",
+     "0",
+     "-1"
+    ],
+    [
+     "13575",
+     "543",
+     "1",
+     "-1"
+    ],
+    [
+     "13600",
+     "544",
+     "1",
+     "0"
+    ],
+    [
+     "13625",
+     "545",
+     "1",
+     "1"
+    ],
+    [
+     "13650",
+     "546",
+     "0",
+     "1"
+    ],
+    [
+     "13675",
+     "547",
+     "-1",
+     "1"
+    ],
+    [
+     "13700",
+     "548",
+     "-1",
+     "0"
+    ],
+    [
+     "13725",
+     "549",
+     "-1",
+     "-1"
+    ],
+    [
+     "13750",
+     "550",
+     "0",
+     "-1"
+    ],
+    [
+     "13775",
+     "551",
+     "1",
+     "-1"
+    ],
+    [
+     "13800",
+     "552",
+     "1",
+     "0"
+    ],
+    [
+     "13825",
+     "553",
+     "1",
+     "1"
+    ],
+    [
+     "13850",
+     "554",
+     "0",
+     "1"
+    ],
+    [
+     "13875",
+     "555",
+     "-1",
+     "1"
+    ],
+    [
+     "13900",
+     "556",
+     "-1",
+     "0"
+    ],
+    [
+     "13925",
+     "557",
+     "-1",
+     "-1"
+    ],
+    [
+     "13950",
+     "558",
+     "0",
+     "-1"
+    ],
+    [
+     "13975",
+     "559",
+     "1",
+     "-1"
+    ],
+    [
+     "14000",
+     "560",
+     "1",
+     "0"
+    ],
+    [
+     "14025",
+     "561",
+     "1",
+     "1"
+    ],
+    [
+     "14050",
+     "562",
+     "0",
+     "1"
+    ],
+    [
+     "14075",
+     "563",
+     "-1",
+     "1"
+    ],
+    [
+     "14100",
+     "564",
+     "-1",
+     "0"
+    ],
+    [
+     "14125",
+     "565",
+     "-1",
+     "-1"
+    ],
+    [
+     "14150",
+     "566",
+     "0",
+     "-1"
+    ],
+    [
+     "14175",
+     "567",
+     "1",
+     "-1"
+    ],
+    [
+     "14200",
+     "568",
+     "1",
+     "0"
+    ],
+    [
+     "14225",
+     "569",
+     "1",
+     "1"
+    ],
+    [
+     "14250",
+     "570",
+     "0",
+     "1"
+    ],
+    [
+     "14275",
+     "571",
+     "-1",
+     "1"
+    ],
+    [
+     "14300",
+     "572",
+     "-1",
+     "0"
+    ],
+    [
+     "14325",
+     "573",
+     "-1",
+     "-1"
+    ],
+    [
+     "14350",
+     "574",
+     "0",
+     "-1"
+    ],
+    [
+     "14375",
+     "575",
+     "1",
+     "-1"
+    ],
+    [
+     "14400",
+     "576",
+     "1",
+     "0"
+    ],
+    [
+     "14425",
+     "577",
+     "1",
+     "1"
+    ],
+    [
+     "14450",
+     "578",
+     "0",
+     "1"
+    ],
+    [
+     "14475",
+     "579",
+     "-1",
+     "1"
+    ],
+    [
+     "14500",
+     "580",
+     "-1",
+     "0"
+    ],
+    [
+     "14525",
+     "581",
+     "-1",
+     "-1"
+    ],
+    [
+     "14550",
+     "582",
+     "0",
+     "-1"
+    ],
+    [
+     "14575",
+     "583",
+     "1",
+     "-1"
+    ],
+    [
+     "14600",
+     "584",
+     "1",
+     "0"
+    ],
+    [
+     "14625",
+     "585",
+     "1",
+     "1"
+    ],
+    [
+     "14650",
+     "586",
+     "0",
+     "1"
+    ],
+    [
+     "14675",
+     "587",
+     "-1",
+     "1"
+    ],
+    [
+     "14700",
+     "588",
+     "-1",
+     "0"
+    ],
+    [
+     "14725",
+     "589",
+     "-1",
+     "-1"
+    ],
+    [
+     "14750",
+     "590",
+     "0",
+     "-1"
+    ],
+    [
+     "14775",
+     "591",
+     "1",
+     "-1"
+    ],
+    [
+     "14800",
+     "592",
+     "1",
+     "0"
+    ],
+    [
+     "14825",
+     "593",
+     "1",
+     "1"
+    ],
+    [
+     "14850",
+     "594",
+     "0",
+     "1"
+    ],
+    [
+     "14875",
+     "595",
+     "-1",
+     "1"
+    ],
+    [
+     "14900",
+     "596",
+     "-1",
+     "0"
+    ],
+    [
+     "14925",
+     "597",
+     "-1",
+     "-1"
+    ],
+    [
+     "14950",
+     "598",
+     "0",
+     "-1"
+    ],
+    [
+     "14975",
+     "599",
+     "1",
+     "-1"
+    ],
+    [
+     "15000",
+     "600",
+     "1",
+     "0"
+    ],
+    [
+     "15025",
+     "601",
+     "1",
+     "1"
+    ],
+    [
+     "15050",
+     "602",
+     "0",
+     "1"
+    ],
+    [
+     "15075",
+     "603",
+     "-1",
+     "1"
+    ],
+    [
+     "15100",
+     "604",
+     "-1",
+     "0"
+    ],
+    [
+     "15125",
+     "605",
+     "-1",
+     "-1"
+    ],
+    [
+     "15150",
+     "606",
+     "0",
+     "-1"
+    ],
+    [
+     "15175",
+     "607",
+     "1",
+     "-1"
+    ],
+    [
+     "15200",
+     "608",
+     "1",
+     "0"
+    ],
+    [
+     "15225",
+     "609",
+     "1",
+     "1"
+    ],
+    [
+     "15250",
+     "610",
+     "0",
+     "1"
+    ],
+    [
+     "15275",
+     "611",
+     "-1",
+     "1"
+    ],
+    [
+     "15300",
+     "612",
+     "-1",
+     "0"
+    ],
+    [
+     "15325",
+     "613",
+     "-1",
+     "-1"
+    ],
+    [
+     "15350",
+     "614",
+     "0",
+     "-1"
+    ],
+    [
+     "15375",
+     "615",
+     "1",
+     "-1"
+    ],
+    [
+     "15400",
+     "616",
+     "1",
+     "0"
+    ],
+    [
+     "15425",
+     "617",
+     "1",
+     "1"
+    ],
+    [
+     "15450",
+     "618",
+     "0",
+     "1"
+    ],
+    [
+     "15475",
+     "619",
+     "-1",
+     "1"
+    ],
+    [
+     "15500",
+     "620",
+     "-1",
+     "0"
+    ],
+    [
+     "15525",
+     "621",
+     "-1",
+     "-1"
+    ],
+    [
+     "15550",
+     "622",
+     "0",
+     "-1"
+    ],
+    [
+     "15575",
+     "623",
+     "1",
+     "-1"
+    ],
+    [
+     "15600",
+     "624",
+     "1",
+     "0"
+    ],
+    [
+     "15625",
+     "625",
+     "1",
+     "1"
+    ],
+    [
+     "15650",
+     "626",
+     "0",
+     "1"
+    ],
+    [
+     "15675",
+     "627",
+     "-1",
+     "1"
+    ],
+    [
+     "15700",
+     "628",
+     "-1",
+     "0"
+    ],
+    [
+     "15725",
+     "629",
+     "-1",
+     "-1"
+    ],
+    [
+     "15750",
+     "630",
+     "0",
+     "-1"
+    ],
+    [
+     "15775",
+     "631",
+     "1",
+     "-1"
+    ],
+    [
+     "15800",
+     "632",
+     "1",
+     "0"
+    ],
+    [
+     "15825",
+     "633",
+     "1",
+     "1"
+    ],
+    [
+     "15850",
+     "634",
+     "0",
+     "1"
+    ],
+    [
+     "15875",
+     "635",
+     "-1",
+     "1"
+    ],
+    [
+     "15900",
+     "636",
+     "-1",
+     "0"
+    ],
+    [
+     "15925",
+     "637",
+     "-1",
+     "-1"
+    ],
+    [
+     "15950",
+     "638",
+     "0",
+     "-1"
+    ],
+    [
+     "15975",
+     "639",
+     "1",
+     "-1"
+    ],
+    [
+     "16000",
+     "640",
+     "1",
+     "0"
+    ],
+    [
+     "16025",
+     "641",
+     "1",
+     "1"
+    ],
+    [
+     "16050",
+     "642",
+     "0",
+     "1"
+    ],
+    [
+     "16075",
+     "643",
+     "-1",
+     "1"
+    ],
+    [
+     "16100",
+     "644",
+     "-1",
+     "0"
+    ],
+    [
+     "16125",
+     "645",
+     "-1",
+     "-1"
+    ],
+    [
+     "16150",
+     "646",
+     "0",
+     "-1"
+    ],
+    [
+     "16175",
+     "647",
+     "1",
+     "-1"
+    ],
+    [
+     "16200",
+     "648",
+     "1",
+     "0"
+    ],
+    [
+     "16225",
+     "649",
+     "1",
+     "1"
+    ],
+    [
+     "16250",
+     "650",
+     "0",
+     "1"
+    ],
+    [
+     "16275",
+     "651",
+     "-1",
+     "1"
+    ],
+    [
+     "16300",
+     "652",
+     "-1",
+     "0"
+    ],
+    [
+     "16325",
+     "653",
+     "-1",
+     "-1"
+    ],
+    [
+     "16350",
+     "654",
+     "0",
+     "-1"
+    ],
+    [
+     "16375",
+     "655",
+     "1",
+     "-1"
+    ],
+    [
+     "16400",
+     "656",
+     "1",
+     "0"
+    ],
+    [
+     "16425",
+     "657",
+     "1",
+     "1"
+    ],
+    [
+     "16450",
+     "658",
+     "0",
+     "1"
+    ],
+    [
+     "16475",
+     "659",
+     "-1",
+     "1"
+    ],
+    [
+     "16500",
+     "660",
+     "-1",
+     "0"
+    ],
+    [
+     "16525",
+     "661",
+     "-1",
+     "-1"
+    ],
+    [
+     "16550",
+     "662",
+     "0",
+     "-1"
+    ],
+    [
+     "16575",
+     "663",
+     "1",
+     "-1"
+    ],
+    [
+     "16600",
+     "664",
+     "1",
+     "0"
+    ],
+    [
+     "16625",
+     "665",
+     "1",
+     "1"
+    ],
+    [
+     "16650",
+     "666",
+     "0",
+     "1"
+    ],
+    [
+     "16675",
+     "667",
+     "-1",
+     "1"
+    ],
+    [
+     "16700",
+     "668",
+     "-1",
+     "0"
+    ],
+    [
+     "16725",
+     "669",
+     "-1",
+     "-1"
+    ],
+    [
+     "16750",
+     "670",
+     "0",
+     "-1"
+    ],
+    [
+     "16775",
+     "671",
+     "1",
+     "-1"
+    ],
+    [
+     "16800",
+     "672",
+     "1",
+     "0"
+    ],
+    [
+     "16825",
+     "673",
+     "1",
+     "1"
+    ],
+    [
+     "16850",
+     "674",
+     "0",
+     "1"
+    ],
+    [
+     "16875",
+     "675",
+     "-1",
+     "1"
+    ],
+    [
+     "16900",
+     "676",
+     "-1",
+     "0"
+    ],
+    [
+     "16925",
+     "677",
+     "-1",
+     "-1"
+    ],
+    [
+     "16950",
+     "678",
+     "0",
+     "-1"
+    ],
+    [
+     "16975",
+     "679",
+     "1",
+     "-1"
+    ],
+    [
+     "17000",
+     "680",
+     "1",
+     "0"
+    ],
+    [
+     "17025",
+     "681",
+     "1",
+     "1"
+    ],
+    [
+     "17050",
+     "682",
+     "0",
+     "1"
+    ],
+    [
+     "17075",
+     "683",
+     "-1",
+     "1"
+    ],
+    [
+     "17100",
+     "684",
+     "-1",
+     "0"
+    ],
+    [
+     "17125",
+     "685",
+     "-1",
+     "-1"
+    ],
+    [
+     "17150",
+     "686",
+     "0",
+     "-1"
+    ],
+    [
+     "17175",
+     "687",
+     "1",
+     "-1"
+    ],
+    [
+     "17200",
+     "688",
+     "1",
+     "0"
+    ],
+    [
+     "17225",
+     "689",
+     "1",
+     "1"
+    ],
+    [
+     "17250",
+     "690",
+     "0",
+     "1"
+    ],
+    [
+     "17275",
+     "691",
+     "-1",
+     "1"
+    ],
+    [
+     "17300",
+     "692",
+     "-1",
+     "0"
+    ],
+    [
+     "17325",
+     "693",
+     "-1",
+     "-1"
+    ],
+    [
+     "17350",
+     "694",
+     "0",
+     "-1"
+    ],
+    [
+     "17375",
+     "695",
+     "1",
+     "-1"
+    ],
+    [
+     "17400",
+     "696",
+     "1",
+     "0"
+    ],
+    [
+     "17425",
+     "697",
+     "1",
+     "1"
+    ],
+    [
+     "17450",
+     "698",
+     "0",
+     "1"
+    ],
+    [
+     "17475",
+     "699",
+     "-1",
+     "1"
+    ],
+    [
+     "17500",
+     "700",
+     "-1",
+     "0"
+    ],
+    [
+     "17525",
+     "701",
+     "-1",
+     "-1"
+    ],
+    [
+     "17550",
+     "702",
+     "0",
+     "-1"
+    ],
+    [
+     "17575",
+     "703",
+     "1",
+     "-1"
+    ],
+    [
+     "17600",
+     "704",
+     "1",
+     "0"
+    ],
+    [
+     "17625",
+     "705",
+     "1",
+     "1"
+    ],
+    [
+     "17650",
+     "706",
+     "0",
+     "1"
+    ],
+    [
+     "17675",
+     "707",
+     "-1",
+     "1"
+    ],
+    [
+     "17700",
+     "708",
+     "-1",
+     "0"
+    ],
+    [
+     "17725",
+     "709",
+     "-1",
+     "-1"
+    ],
+    [
+     "17750",
+     "710",
+     "0",
+     "-1"
+    ],
+    [
+     "17775",
+     "711",
+     "1",
+     "-1"
+    ],
+    [
+     "17800",
+     "712",
+     "1",
+     "0"
+    ],
+    [
+     "17825",
+     "713",
+     "1",
+     "1"
+    ],
+    [
+     "17850",
+     "714",
+     "0",
+     "1"
+    ],
+    [
+     "17875",
+     "715",
+     "-1",
+     "1"
+    ],
+    [
+     "17900",
+     "716",
+     "-1",
+     "0"
+    ],
+    [
+     "17925",
+     "717",
+     "-1",
+     "-1"
+    ],
+    [
+     "17950",
+     "718",
+     "0",
+     "-1"
+    ],
+    [
+     "17975",
+     "719",
+     "1",
+     "-1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "1536000",
+    "960000",
+    "768000",
+    "480000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "18446744073709551615",
+    "values": [
+     "500000000",
+     "30",
+     "64",
+     "384000"
+    ]
+   },
+   "log_digest": "b130053a8219ea558d8c98d06f1ca68db0645946b5305ecd4c8df02cbfd6bcb4",
+   "name": "enemies_five_minutes",
    "ticks": 18000
   }
  ]
