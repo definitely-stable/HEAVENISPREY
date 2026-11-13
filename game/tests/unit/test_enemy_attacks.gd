@@ -18,6 +18,9 @@ const ARC_ATTACKS: Array[int] = [
 	1, 48, 12, 40, 153600, 130, 0,
 ]
 const VENOM: Array[int] = [3, 240, 60, 1000]
+## ADR-011 E3: the mantis CHARGE (= sim_core MANTIS_KIND, MANTIS_LUNGE).
+const MANTIS_KIND: Array[int] = [5280, 18720, 7200, 9500, 150, 2]
+const MANTIS_LUNGE: Array[int] = [2, 33, 10, 36, 108000, 0, 0]
 
 
 static func _config() -> SimConfig:
@@ -184,3 +187,87 @@ func test_telegraph_shape_follows_the_attack_state() -> void:
 	_run(config, world, -1, 6)
 	assert_true(AttackTelegraph.shape(config, world, 0).is_empty(), "recover: nothing to show")
 	assert_eq(AttackTelegraph.sector(Vector2.ZERO, 10.0, 0.0, 0.5).size(), AttackTelegraph.ARC_POINTS + 2)
+
+
+
+static func _mantis() -> SimConfig:
+	return SimConfig.create(PackedInt64Array(BASE)).with_enemies(
+		PackedInt64Array(NO_SPAWN), PackedInt64Array(MANTIS_KIND), "1"
+	).with_attacks(PackedInt64Array(MANTIS_LUNGE), PackedInt64Array([0, 0, 0, 0]))
+
+
+## The mantis on the hero's +x side: its first chase step ends at the dash length (+ extra).
+static func _mantis_world(config: SimConfig, extra: int = 0) -> WorldState:
+	var world: WorldState = WorldState.initial(config)
+	var slot: int = world.append_enemy_slot()
+	world.enemy_uid[slot] = world.next_enemy_uid
+	world.enemy_x[slot] = world.player_x + 108000 + MANTIS_KIND[0] + extra
+	world.enemy_y[slot] = world.player_y
+	world.enemy_hp[slot] = 1000000
+	world.next_enemy_uid += 1
+	world.enemy_alive += 1
+	return world
+
+
+static func _run_dir(config: SimConfig, world: WorldState, from_tick: int, move: Vector2i, ticks: int) -> void:
+	var commands: CommandLog = CommandLog.new()
+	commands.append(PlayerCommand.create(from_tick, 0, move.x, move.y), 0)
+	SimKernel.run(config, world, commands, ticks)
+
+
+func test_charge_config_is_valid_and_checked() -> void:
+	assert_true(_mantis().is_valid())
+	for change: Array in [[5, 1], [6, 1], [4, 9], [4, 427210]]:
+		var record: PackedInt64Array = PackedInt64Array(MANTIS_LUNGE)
+		record[change[0]] = change[1]
+		assert_false(_mantis().with_attacks(record, PackedInt64Array([0, 0, 0, 0])).is_valid(), str(change))
+
+
+func test_charge_launches_at_the_dash_length_and_dashes_it() -> void:
+	var config: SimConfig = _mantis()
+	var far: WorldState = _mantis_world(config, 1)
+	_run(config, far, -1, 1)
+	assert_eq(far.enemy_state[0], EnemyAttackSystem.ST_APPROACH, "1 su too far")
+	var world: WorldState = _mantis_world(config)
+	_run(config, world, -1, 33)
+	var start: int = world.enemy_x[0]
+	assert_eq(start - world.player_x, 108000, "holds still through the tell")
+	_run(config, world, -1, 10)
+	assert_eq(world.enemy_state[0], EnemyAttackSystem.ST_ACTIVE, "the last of 10 active ticks")
+	assert_eq(start - world.enemy_x[0], 108000, "10 steps of 10800 su")
+	_run(config, world, -1, 1)
+	assert_eq(world.enemy_state[0], EnemyAttackSystem.ST_RECOVER)
+	assert_eq(start - world.enemy_x[0], 108000, "no step in recover")
+	assert_eq(world.hero_hp, TOUGH - 9500, "one hit per instance")
+
+
+func test_charge_escape_by_stepping_aside_before_the_aim() -> void:
+	var config: SimConfig = _mantis()
+	for row: Array in [[28, Vector2i(0, 1), false], [30, Vector2i(0, 1), true], [34, Vector2i(-1, 0), false]]:
+		var world: WorldState = _mantis_world(config)
+		_run_dir(config, world, row[0], row[1], 60)
+		assert_eq(world.hero_hp < TOUGH, row[2], str(row))
+
+
+func test_charge_lane_follows_the_hero_until_the_aim_locks() -> void:
+	var config: SimConfig = _mantis()
+	var world: WorldState = _mantis_world(config)
+	_run(config, world, -1, 1)
+	var tell: Dictionary = AttackTelegraph.shape(config, world, 0)
+	assert_eq(tell["form"], SimConfig.FORM_CHARGE)
+	assert_eq(tell["radius"], 108.0)
+	assert_almost_eq(float(tell["width"]), 37.44, 0.001)
+	world.player_y += 50000
+	assert_almost_eq(float(AttackTelegraph.shape(config, world, 0)["angle"]), PI - atan2(50.0, 108.0), 0.001)
+	assert_eq(AttackTelegraph.lane(Vector2.ZERO, 10.0, 0.0, 4.0), PackedVector2Array([
+		Vector2(0, -2), Vector2(10, -2), Vector2(10, 2), Vector2(0, 2),
+	]))
+
+
+func test_tuning_builds_the_mantis_from_content() -> void:
+	var tuning: P0Tuning = P0Tuning.new()
+	var record: PackedInt64Array = tuning.kind_record(ContentRegistry.load_dir(), "enemy.sickle_mantis", 2)
+	assert_eq(tuning.error, "")
+	var expected: PackedInt64Array = PackedInt64Array(MANTIS_KIND)
+	expected.append_array(PackedInt64Array(MANTIS_LUNGE))
+	assert_eq(record, expected, "the oracle trace inputs are the content numbers")

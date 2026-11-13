@@ -83,6 +83,7 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 	world.enemy_dir_x[slot] = 0
 	world.enemy_dir_y[slot] = 0
 	world.enemy_attack_uid[slot] = 0
+	world.enemy_hit[slot] = 0
 	world.next_enemy_uid += 1
 	world.enemy_alive += 1
 
@@ -120,6 +121,7 @@ static func clear_dead(config: SimConfig, world: WorldState) -> void:
 		world.enemy_dir_x[slot] = 0
 		world.enemy_dir_y[slot] = 0
 		world.enemy_attack_uid[slot] = 0
+		world.enemy_hit[slot] = 0
 		world.enemy_alive -= 1
 		world.kills += 1
 

@@ -10,9 +10,9 @@ extends RefCounted
 ## order (= iteration order) stays deterministic. A projectile keeps the damage and capacity
 ## (pierce + 1) of its cast and counts its hits; its first hit_count ledger cells are used.
 ## Enemy attacks (ADR-011 section 2): per slot the attack state, the ticks left in it, the
-## direction fixed at the start of `tell` (Q14) and the attack instance uid (from
-## next_attack_uid). status.venom on the hero (ADR-011 section 4): stacks, ticks left, ticks to
-## the next damage.
+## attack direction (Q14; an arc fixes it at the start of `tell`, a charge aims again at its
+## end), the attack instance uid (from next_attack_uid) and whether it already hit the hero.
+## status.venom on the hero (ADR-011 section 4): stacks, ticks left, ticks to the next damage.
 ## The build (ADR-010 section 6): upgrade ranks in UpgradeSystem code order, the maximum hero
 ## HP and the offered hand (non-empty only while the run is paused for a choice). The state
 ## digest is SHA-256 over the little-endian bytes of `to_ints()`, never `hash()` or
@@ -85,6 +85,8 @@ var enemy_dir_x: PackedInt64Array = PackedInt64Array()
 var enemy_dir_y: PackedInt64Array = PackedInt64Array()
 ## Uid of the current attack instance (0 = none).
 var enemy_attack_uid: PackedInt64Array = PackedInt64Array()
+## 1 once the current attack instance hit the hero (a charge hits once per instance).
+var enemy_hit: PackedInt64Array = PackedInt64Array()
 
 var proj_x: PackedInt64Array = PackedInt64Array()
 var proj_y: PackedInt64Array = PackedInt64Array()
@@ -134,6 +136,7 @@ func append_enemy_slot() -> int:
 	enemy_dir_x.append(0)
 	enemy_dir_y.append(0)
 	enemy_attack_uid.append(0)
+	enemy_hit.append(0)
 	return enemy_slots() - 1
 
 
@@ -177,7 +180,7 @@ func to_ints() -> PackedInt64Array:
 		out.append_array(PackedInt64Array([
 			enemy_uid[slot], enemy_kind[slot], enemy_x[slot], enemy_y[slot], enemy_hp[slot],
 			enemy_cooldown[slot], enemy_state[slot], enemy_left[slot], enemy_dir_x[slot],
-			enemy_dir_y[slot], enemy_attack_uid[slot],
+			enemy_dir_y[slot], enemy_attack_uid[slot], enemy_hit[slot],
 		]))
 	for slot: int in projectile_slots():
 		out.append_array(PackedInt64Array([
@@ -242,6 +245,7 @@ func copy() -> WorldState:
 	other.enemy_dir_x = enemy_dir_x.duplicate()
 	other.enemy_dir_y = enemy_dir_y.duplicate()
 	other.enemy_attack_uid = enemy_attack_uid.duplicate()
+	other.enemy_hit = enemy_hit.duplicate()
 	other.proj_x = proj_x.duplicate()
 	other.proj_y = proj_y.duplicate()
 	other.proj_vx = proj_vx.duplicate()

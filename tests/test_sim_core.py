@@ -1096,6 +1096,16 @@ def arc_world(kind, hp=1000000, extra=0):
     return config, world
 
 
+def charge_world(extra=0):
+    """The mantis on the hero's +x side: its first chase step ends exactly at the dash
+    length L = 108 px (the charge launch range)."""
+    config = sim.Config(BASE, NO_SPAWN, sim.MANTIS_KIND, "1", attacks=sim.MANTIS_LUNGE)
+    assert config.valid()
+    world = sim.World(config)
+    place(world, 0, CX + 108000 + sim.MANTIS_KIND[0] + extra, CY, 1000000)
+    return config, world
+
+
 def run_moves(config, world, moves, ticks):
     """Steps `ticks` ticks; `moves` = {tick: (move_x, move_y)} held from that tick on."""
     log, sequence = sim.CommandLog(), 0
@@ -1268,6 +1278,70 @@ class SimEnemyAttackReferenceTests(unittest.TestCase):
         contact = list(sim.CONTACT_ATTACK)
         contact[4] = 1
         self.assertFalse(valid(contact, kinds=sim.W0_KINDS[:6]), "contact record must be zero")
+
+    def test_charge_aims_at_the_end_of_tell_and_dashes_its_length(self):
+        config, world = charge_world()
+        sim.step(config, world, sim.CommandLog())
+        enemy = world.enemies[0]
+        self.assertEqual((enemy[sim.E_STATE], enemy[sim.E_X] - CX), (sim.ST_TELL, 108000))
+        run_moves(config, world, {1: (0, 1)}, 32)
+        self.assertEqual((enemy[sim.E_X] - CX, enemy[sim.E_DX], enemy[sim.E_DY]),
+                         (108000, -16384, 0), "holds still, launch direction until the end")
+        start = (enemy[sim.E_X], enemy[sim.E_Y])
+        run_moves(config, world, {}, 1)
+        aim = (enemy[sim.E_DX], enemy[sim.E_DY])
+        self.assertNotEqual(aim, (-16384, 0), "aimed again at the end of tell")
+        self.assertEqual(enemy[sim.E_STATE], sim.ST_ACTIVE)
+        for _ in range(9):
+            sim.step(config, world, sim.CommandLog())
+            self.assertEqual((enemy[sim.E_DX], enemy[sim.E_DY]), aim, "no retarget")
+        moved = (enemy[sim.E_X] - start[0], enemy[sim.E_Y] - start[1])
+        self.assertEqual(moved, (10 * sim.mul_q14(10800, aim[0]), 10 * sim.mul_q14(10800, aim[1])))
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual(enemy[sim.E_STATE], sim.ST_RECOVER)
+        self.assertEqual((enemy[sim.E_X] - start[0], enemy[sim.E_Y] - start[1]), moved)
+
+    def test_charge_launch_range_is_the_dash_length(self):
+        config, world = charge_world(extra=1)
+        sim.step(config, world, sim.CommandLog())
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_APPROACH)
+
+    def test_charge_hits_a_standing_hero_once(self):
+        config, world = charge_world()
+        run_moves(config, world, {}, 79)
+        self.assertEqual((world.hero_hp, world.enemies[0][sim.E_HIT]), (TOUGH - 9500, 1))
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_RECOVER)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_APPROACH)
+        self.assertEqual(world.enemies[0][sim.E_HIT], 0, "cleared when the attack ends")
+
+    def test_charge_escape_by_stepping_aside_before_the_aim(self):
+        """MANTIS / ESCAPE: a sidestep started 5 ticks before the aim leaves the dash lane,
+        3 ticks before is too late; retreating at the full dash length escapes."""
+        for start, moves, hit in ((28, (0, 1), False), (30, (0, 1), True),
+                                  (0, (-1, 0), False), (34, (-1, 0), False)):
+            config, world = charge_world()
+            run_moves(config, world, {start: moves}, 60)
+            self.assertEqual(world.hero_hp < TOUGH, hit, (start, moves))
+
+    def test_charge_stops_at_the_wall(self):
+        config, world = charge_world()
+        r = sim.MANTIS_KIND[1]
+        world.player_x = config.min_x + 24000
+        world.enemies[0][sim.E_X] = world.player_x + 60000
+        for _ in range(45):
+            sim.step(config, world, sim.CommandLog())
+            self.assertGreaterEqual(world.enemies[0][sim.E_X], config.min_x + r)
+        self.assertEqual(world.enemies[0][sim.E_X], config.min_x + r, "dash clamped by the wall")
+
+    def test_charge_records_are_validated(self):
+        def valid(record):
+            return sim.Config(BASE, NO_SPAWN, sim.MANTIS_KIND, "1", attacks=record).valid()
+        self.assertTrue(valid(sim.MANTIS_LUNGE))
+        for field, value in ((5, 1), (6, 1), (4, 9), (4, 10 * (24000 + 18720) + 10)):
+            record = list(sim.MANTIS_LUNGE)
+            record[field] = value
+            self.assertFalse(valid(record), (field, value))
 
     def test_recovery_zero_returns_to_approach(self):
         attack = list(sim.SNAKE_BITE)

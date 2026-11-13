@@ -32,7 +32,7 @@ from pathlib import Path
 ENCODING_ID = "hip-rules-hash-v1"
 DOMAIN_PREFIX = b"HEAVENISPREY/RULES-HASH/v1"
 VECTORS_SCHEMA_VERSION = 1
-SIM_SCHEMA_VERSION = 8          # simulation schema since enemy attack states and venom (ADR-011 E2)
+SIM_SCHEMA_VERSION = 9          # simulation schema since the enemy charge and its hit flag (ADR-011 E3)
 RNG_POLICY_ID = "hip-rng-v1"
 
 U32_MAX = (1 << 32) - 1

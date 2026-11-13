@@ -86,10 +86,11 @@ BELOW_LIMIT = 1 << 32
 
 # ADR-011 sections 2-4: enemy attack record per kind (ATTACK_STRIDE values, kind order):
 # (form, telegraph_ticks, active_ticks, recovery_ticks, reach_su, arc_degrees, venom).
-# FORM_CONTACT kinds hit by touch (the record is all zeros); FORM_ARC kinds run the attack
-# machine with the kind's damage and its interval as the cooldown from the start of `tell`.
+# FORM_CONTACT kinds hit by touch (the record is all zeros); FORM_ARC and FORM_CHARGE kinds run
+# the attack machine with the kind's damage and its interval as the cooldown from the start of
+# `tell`. A charge has arc 0 and no venom; its reach is the dash length L.
 ATTACK_STRIDE = 7
-FORM_CONTACT, FORM_ARC = 0, 1
+FORM_CONTACT, FORM_ARC, FORM_CHARGE = 0, 1, 2
 ST_APPROACH, ST_TELL, ST_ACTIVE, ST_RECOVER = range(4)
 MAX_ATTACK_REACH = 1 << 22    # su; keeps the sector test inside int64
 MAX_ARC_DEGREES = 180
@@ -322,9 +323,18 @@ class Config:
                 if any(self.attack(kind)):
                     return False
                 continue
-            if form != FORM_ARC or tell < 1 or active < 1 or recover < 0:
+            if form not in (FORM_ARC, FORM_CHARGE) or tell < 1 or active < 1 or recover < 0:
                 return False
-            if not 0 < reach <= MAX_ATTACK_REACH or not 0 < arc <= MAX_ARC_DEGREES:
+            if not 0 < reach <= MAX_ATTACK_REACH:
+                return False
+            if form == FORM_CHARGE:
+                # A dash moves reach // active su per tick: at least 1 su, and no tunnelling
+                # through the hero (a step no longer than the two radii).
+                step = reach // active
+                if arc != 0 or venom != 0 or step < 1 or step > self.radius + self.kinds[kind][1]:
+                    return False
+                continue
+            if not 0 < arc <= MAX_ARC_DEGREES:
                 return False
             if venom not in (0, 1):
                 return False
@@ -388,18 +398,19 @@ def direction_q14(move_x: int, move_y: int) -> tuple[int, int]:
     return (fx.sign(move_x) * AXIS_Q14, fx.sign(move_y) * AXIS_Q14)
 
 
-# Slot field indexes. Enemy: the attack state, ticks left in it, the attack direction (Q14,
-# fixed at the start of `tell`) and the uid of the attack instance (ADR-011 section 2).
-E_UID, E_KIND, E_X, E_Y, E_HP, E_CD, E_STATE, E_LEFT, E_DX, E_DY, E_ATK = range(11)
-ENEMY_FIELDS = 11
+# Slot field indexes. Enemy: the attack state, ticks left in it, the attack direction (Q14;
+# an arc fixes it at the start of `tell`, a charge aims again at its end), the uid of the
+# attack instance and whether that instance already hit the hero (ADR-011 section 2).
+E_UID, E_KIND, E_X, E_Y, E_HP, E_CD, E_STATE, E_LEFT, E_DX, E_DY, E_ATK, E_HIT = range(12)
+ENEMY_FIELDS = 12
 P_X, P_Y, P_VX, P_VY, P_TTL, P_DAMAGE, P_HITS, P_CAP = range(8)
 P_LEDGER = 8
 G_UID, G_X, G_Y, G_VALUE = range(4)
 
 
 class World:
-    """Enemy slot: [uid, kind, x, y, hp, cooldown, state, left, dir_x, dir_y, attack_uid],
-    free when uid == 0 (all fields 0).
+    """Enemy slot: [uid, kind, x, y, hp, cooldown, state, left, dir_x, dir_y, attack_uid,
+    hit], free when uid == 0 (all fields 0).
     Projectile slot: [x, y, vx, vy, ttl, damage, hit_count, capacity] + config.ledger_size()
     ledger cells (enemy uids, the first hit_count used), free when damage == 0; damage and
     capacity (pierce + 1) are a snapshot taken at the cast. Gem slot: [uid, x, y, value], free
@@ -794,6 +805,23 @@ def in_launch_range(reach: int, dx: int, dy: int) -> bool:
     return d2 <= reach * reach and 16 * d2 <= 9 * reach * reach
 
 
+def _aim(world: World, enemy: list[int]) -> tuple[int, int]:
+    """Q14 direction from the enemy to the hero; +x when they coincide."""
+    ux, uy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
+    return (fx.Q14, 0) if ux == 0 and uy == 0 else (ux, uy)
+
+
+def _dash(config: Config, world: World, enemy: list[int], step: int) -> None:
+    """One active tick of a charge (ADR-011 section 3): `step` su along the fixed direction,
+    clamped into the arena; the first touch of the hero in this instance deals the damage."""
+    r = config.kinds[enemy[E_KIND]][1]
+    enemy[E_X] = min(max(enemy[E_X] + mul_q14(step, enemy[E_DX]), config.min_x + r), config.max_x - r)
+    enemy[E_Y] = min(max(enemy[E_Y] + mul_q14(step, enemy[E_DY]), config.min_y + r), config.max_y - r)
+    if enemy[E_HIT] == 0 and _touching(config, world, enemy):
+        world.hero_hp -= config.kinds[enemy[E_KIND]][3]
+        enemy[E_HIT] = 1
+
+
 def in_sector(reach: int, arc: int, ux: int, uy: int, dx: int, dy: int) -> bool:
     """The point (dx, dy) from the sector centre lies in the sector of radius `reach`, width
     `arc` degrees (1..180) around the Q14 direction (ux, uy): d <= R and the angle theta to
@@ -823,11 +851,14 @@ def add_venom(config: Config, world: World) -> None:
 
 def enemy_attacks(config: Config, world: World) -> None:
     """ADR-011 section 2, slot order, live attack-machine enemies: the cooldown counts down;
-    an enemy in an attack counts down its state (tell -> active with the hit in the first
-    active tick -> recover -> approach); an approaching enemy with a ready cooldown and the
-    hero within the launch range starts `tell`: the direction to the hero is fixed, the
-    cooldown restarts and the attack instance gets the next attack uid. The tell starts in
-    this tick and lasts telegraph_ticks ticks; the hit lands in tick start + telegraph."""
+    an enemy in an attack counts down its state (tell -> active -> recover -> approach); an
+    approaching enemy with a ready cooldown and the hero within the launch range starts
+    `tell`: the direction to the hero is taken, the cooldown restarts and the attack instance
+    gets the next attack uid. The tell starts in this tick and lasts telegraph_ticks ticks.
+    MELEE_ARC (launch d <= 3R/4): the direction stays; the sector hits in the first active
+    tick (start + telegraph). CHARGE (launch d <= L): the direction is aimed again at the end
+    of `tell` and does not change after; each active tick dashes L // active_ticks su and the
+    first touch hits."""
     for enemy in world.enemies:
         if not _live(enemy):
             continue
@@ -842,8 +873,10 @@ def enemy_attacks(config: Config, world: World) -> None:
             if enemy[E_LEFT] == 0:
                 if enemy[E_STATE] == ST_TELL:
                     enemy[E_STATE], enemy[E_LEFT] = ST_ACTIVE, active
-                    if in_sector(reach, arc, enemy[E_DX], enemy[E_DY],
-                                 world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
+                    if form == FORM_CHARGE:
+                        enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
+                    elif in_sector(reach, arc, enemy[E_DX], enemy[E_DY],
+                                   world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
                         world.hero_hp -= config.kinds[kind][3]
                         if venom:
                             add_venom(config, world)
@@ -851,13 +884,17 @@ def enemy_attacks(config: Config, world: World) -> None:
                     enemy[E_STATE], enemy[E_LEFT] = ST_RECOVER, recover
                 else:
                     enemy[E_STATE], enemy[E_DX], enemy[E_DY], enemy[E_ATK] = ST_APPROACH, 0, 0, 0
+                    enemy[E_HIT] = 0
+        if form == FORM_CHARGE and enemy[E_STATE] == ST_ACTIVE:
+            _dash(config, world, enemy, reach // active)
         dx, dy = world.player_x - enemy[E_X], world.player_y - enemy[E_Y]
-        if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_launch_range(reach, dx, dy):
-            ux, uy = normalize_q14(dx, dy)
-            if ux == 0 and uy == 0:
-                ux = fx.Q14
+        if form == FORM_CHARGE:
+            in_range = dx * dx + dy * dy <= reach * reach
+        else:
+            in_range = in_launch_range(reach, dx, dy)
+        if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_range:
             enemy[E_STATE], enemy[E_LEFT], enemy[E_CD] = ST_TELL, tell, config.kinds[kind][4]
-            enemy[E_DX], enemy[E_DY] = ux, uy
+            enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
             enemy[E_ATK] = world.next_attack_uid
             world.next_attack_uid += 1
 
@@ -1255,6 +1292,9 @@ SNAKE_BITE = [FORM_ARC, 20, 6, 27, DANGER_SU, 85, 1]
 DISCIPLE_CLEAVE = [FORM_ARC, 30, 10, 37, 129600, 125, 0]
 JADE_STOMP = [FORM_ARC, 48, 12, 40, 153600, 130, 0]
 ARC_ATTACKS = SNAKE_BITE + DISCIPLE_CLEAVE + JADE_STOMP
+#   sickle_mantis: speed 1.1, radius 0.78, hp 0.72, lunge 0.95, cooldown 150; L = 4.5 hero radii
+MANTIS_KIND = [5280, 18720, 7200, 9500, 150, 2]
+MANTIS_LUNGE = [FORM_CHARGE, 33, 10, 36, 108000, 0, 0]
 MIXED_KINDS = W0_KINDS + ARC_KINDS
 MIXED_ATTACKS = CONTACT_ATTACK * 2 + ARC_ATTACKS
 # status.venom: 3 stacks, 240 ticks, damage every 60 ticks, 1 HP per stack.
@@ -1275,6 +1315,14 @@ def _attack_scenarios():
     tough = Config(BASE, [TOUGH, 20000, 0, 1000, 24, 384000], MIXED_KINDS, "7",
                    attacks=MIXED_ATTACKS, venom=P0_VENOM)
     out.append(("arcs_tough_hero_circles", tough, migrate_v1(_circle(25, 3000)), 3000))
+    # E3: the mantis alone around a standing hero and in the mixed crowd with the skill.
+    mantis = Config(BASE, [TOUGH, 30000, 0, 1000, 8, 384000], MANTIS_KIND, SEED,
+                    attacks=MANTIS_LUNGE)
+    out.append(("charge_hero_stands_still", mantis, [], 2400))
+    crowd = Config(BASE, P0_VALUES, MIXED_KINDS + MANTIS_KIND, "7", P0_SKILL,
+                   ((48000, 512), (10, 15, 15, 15, 20, 15), P0_XP_COSTS),
+                   attacks=MIXED_ATTACKS + MANTIS_LUNGE, venom=P0_VENOM)
+    out.append(("charge_mixed_hero_circles", crowd, migrate_v1(_circle(30, 3600)), 3600))
     return out
 
 

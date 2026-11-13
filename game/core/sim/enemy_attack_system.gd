@@ -1,6 +1,6 @@
 class_name EnemyAttackSystem
 extends RefCounted
-## Enemy attack machine (ADR-011 sections 2-3, slice E2: MELEE_ARC). Exact port of
+## Enemy attack machine (ADR-011 sections 2-3: MELEE_ARC in E2, CHARGE in E3). Exact port of
 ## tools/content/sim_core.py.
 ##
 ## Per live enemy whose kind has an attack record (not contact), in slot order: the cooldown
@@ -11,6 +11,10 @@ extends RefCounted
 ## The tell starts in that tick and lasts telegraph_ticks ticks. An attacking enemy does not
 ## chase and takes no part in the separation (SeparationSystem). No float: the half arc test
 ## uses the golden COS_Q14 table.
+## MELEE_ARC launches within 3R/4 and keeps its direction; the sector hits in the first active
+## tick. CHARGE launches within its dash length L, aims again at the end of `tell` and never
+## after; each active tick it dashes L // active_ticks su (clamped by the walls) and its first
+## touch of the hero hits.
 
 const ST_APPROACH: int = 0
 const ST_TELL: int = 1
@@ -49,13 +53,17 @@ static func run(config: SimConfig, world: WorldState) -> void:
 			world.enemy_left[slot] -= 1
 			if world.enemy_left[slot] == 0:
 				_next_state(config, world, slot, kind)
+		var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
+		var reach: int = config.attack_value(kind, SimConfig.ATTACK_REACH)
+		if form == SimConfig.FORM_CHARGE and world.enemy_state[slot] == ST_ACTIVE:
+			_dash(config, world, slot, Fx.floor_div(reach, config.attack_value(kind, SimConfig.ATTACK_ACTIVE)))
 		var dx: int = world.player_x - world.enemy_x[slot]
 		var dy: int = world.player_y - world.enemy_y[slot]
-		var reach: int = config.attack_value(kind, SimConfig.ATTACK_REACH)
-		if world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0 and in_launch_range(reach, dx, dy):
-			var unit: PackedInt64Array = Fx.normalize_q14(dx, dy)
-			if unit[0] == 0 and unit[1] == 0:
-				unit[0] = Fx.Q14
+		var in_range: bool = in_launch_range(reach, dx, dy)
+		if form == SimConfig.FORM_CHARGE:
+			in_range = dx * dx + dy * dy <= reach * reach
+		if world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0 and in_range:
+			var unit: PackedInt64Array = aim(world, slot)
 			world.enemy_state[slot] = ST_TELL
 			world.enemy_left[slot] = config.attack_value(kind, SimConfig.ATTACK_TELEGRAPH)
 			world.enemy_cooldown[slot] = config.kind_value(kind, SimConfig.KIND_INTERVAL)
@@ -71,6 +79,11 @@ static func _next_state(config: SimConfig, world: WorldState, slot: int, kind: i
 	if state == ST_TELL:
 		world.enemy_state[slot] = ST_ACTIVE
 		world.enemy_left[slot] = config.attack_value(kind, SimConfig.ATTACK_ACTIVE)
+		if config.attack_value(kind, SimConfig.ATTACK_FORM) == SimConfig.FORM_CHARGE:
+			var unit: PackedInt64Array = aim(world, slot)
+			world.enemy_dir_x[slot] = unit[0]
+			world.enemy_dir_y[slot] = unit[1]
+			return
 		var hit: bool = in_sector(
 			config.attack_value(kind, SimConfig.ATTACK_REACH), config.attack_value(kind, SimConfig.ATTACK_ARC),
 			world.enemy_dir_x[slot], world.enemy_dir_y[slot],
@@ -88,6 +101,31 @@ static func _next_state(config: SimConfig, world: WorldState, slot: int, kind: i
 		world.enemy_dir_x[slot] = 0
 		world.enemy_dir_y[slot] = 0
 		world.enemy_attack_uid[slot] = 0
+		world.enemy_hit[slot] = 0
+
+
+## Q14 direction from the enemy in `slot` to the hero; +x when they coincide.
+static func aim(world: WorldState, slot: int) -> PackedInt64Array:
+	var unit: PackedInt64Array = Fx.normalize_q14(
+		world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot]
+	)
+	if unit[0] == 0 and unit[1] == 0:
+		unit[0] = Fx.Q14
+	return unit
+
+
+## One active tick of a charge: `step` su along the fixed direction, clamped into the arena;
+## the first touch of the hero in this attack instance deals the kind damage.
+static func _dash(config: SimConfig, world: WorldState, slot: int, step: int) -> void:
+	var kind: int = world.enemy_kind[slot]
+	var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
+	var x: int = world.enemy_x[slot] + Fx.mul_q14(step, world.enemy_dir_x[slot])
+	var y: int = world.enemy_y[slot] + Fx.mul_q14(step, world.enemy_dir_y[slot])
+	world.enemy_x[slot] = clampi(x, config.arena_min_x + r, config.arena_max_x - r)
+	world.enemy_y[slot] = clampi(y, config.arena_min_y + r, config.arena_max_y - r)
+	if world.enemy_hit[slot] == 0 and EnemySystem.touching(config, world, slot):
+		world.hero_hp -= config.kind_value(kind, SimConfig.KIND_DAMAGE)
+		world.enemy_hit[slot] = 1
 
 
 ## The hero centre at (dx, dy) from the enemy is within 3R/4 (16 d^2 <= 9 R^2, tested after
