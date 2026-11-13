@@ -1,6 +1,6 @@
 class_name SimKernel
 extends RefCounted
-## Fixed 60 Hz simulation step (s04, ADR-008, ADR-009 section 1). Exact port of
+## Fixed 60 Hz simulation step (s04, ADR-008, ADR-009 section 1, ADR-010). Exact port of
 ## tools/content/sim_core.py.
 ##
 ## Phase order inside one tick (P0-01 subset of s04):
@@ -14,8 +14,11 @@ extends RefCounted
 ##   5. hero skill: cooldown, target, cast (CombatSystem.cast);
 ##   6-7a. projectiles fly and hit enemies, slot order (CombatSystem.fly_and_hit);
 ##   7b. enemy contact hits, slot order, enemies at 0 HP do not hit (EnemySystem.contact);
-##   8. deaths: enemies (slots freed, kills counted), expired projectiles, then the hero;
-##   9. advance the tick.
+##   8. deaths: enemies in slot order (XP gem drop, slot freed, kill counted), expired
+##      projectiles, then the hero (pending level choices are voided when the run ends);
+##   9. XP pickup within the pickup radius (XpSystem.pickup), not in the tick the hero dies;
+##   10. level progression from the XP bank (XpSystem.progress), same condition;
+##   11. advance the tick.
 ## No float, no Input, no delta: the same log and config give the same state everywhere.
 
 const AXIS_Q14: int = 16384
@@ -49,12 +52,17 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 			CombatSystem.cast(config, world)
 			CombatSystem.fly_and_hit(config, world)
 		EnemySystem.contact(config, world)
-		EnemySystem.clear_dead(world)
+		EnemySystem.clear_dead(config, world)
 		if config.has_skill():
 			CombatSystem.clear_expired(world)
 		if world.hero_hp <= 0:
 			world.hero_hp = 0
 			world.hero_dead = 1
+			world.choices_voided += world.pending_level_choices
+			world.pending_level_choices = 0
+		elif config.has_xp():
+			XpSystem.pickup(config, world)
+			XpSystem.progress(config, world)
 	world.tick += 1
 
 

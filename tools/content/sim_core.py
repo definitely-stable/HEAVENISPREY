@@ -1,6 +1,7 @@
 """Reference of the P0-01 simulation core (ADR-008, ADR-009): PlayerCommand log and hero
 movement (P0-01b); enemy spawn, chase, contact damage and hero death (P0-01E); hero
-auto-attack with projectiles, enemy deaths and kills (P0-01F); enemy separation (ADR-009 2).
+auto-attack with projectiles, enemy deaths and kills (P0-01F); enemy separation (ADR-009 2);
+XP gems, pickup and level progression (ADR-010).
 
 Oracle for game/core/sim/*.gd. Integers only (hip-fx-v1 via tools/content/fx.py, hip-rng-v1
 via tools/content/hip_rng.py). Golden traces:
@@ -20,7 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 4
+VECTORS_SCHEMA_VERSION = 5
 
 
 def _load(name: str, file: str):
@@ -75,6 +76,9 @@ SPAWN_ATTEMPTS = 4
 MAX_ENEMIES_LIMIT = 4096
 MAX_PROJECTILES_LIMIT = 256
 MAX_PIERCE = 7
+MAX_GEMS_LIMIT = 4096
+MAX_XP_COSTS = 64
+MAX_KIND_XP = 1000000
 RATE_ONE = 1000
 BELOW_LIMIT = 1 << 32
 
@@ -114,7 +118,8 @@ class CommandLog:
 
 class Config:
     """Mirror of SimConfig: 8 movement values; optional enemies (6 values, kinds, seed);
-    optional hero skill (8 values).
+    optional hero skill (8 values); optional XP (ADR-010): xp = ((pickup_radius_su, max_gems),
+    xp_value per kind in kind order, incremental level costs).
 
     enemy_values: (hero_hp_mhp, spawn_period_mt, spawn_ramp_ticks, spawn_rate_max_fx,
     max_enemies, spawn_min_distance_su). Kind record: (speed_su_per_tick, radius_su, hp_mhp,
@@ -124,7 +129,7 @@ class Config:
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
-                 skill=(0,) * 8):
+                 skill=(0,) * 8, xp=((0, 0), (), ())):
         (self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
          self.start_x, self.start_y) = movement
         (self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
@@ -135,6 +140,8 @@ class Config:
         self.kinds = [tuple(kinds[i:i + KIND_STRIDE])
                       for i in range(0, len(kinds) - KIND_STRIDE + 1, KIND_STRIDE)]
         self.seed = seed
+        (self.pickup_radius, self.max_gems), kind_xp, costs = xp
+        self.kind_xp, self.xp_costs = list(kind_xp), list(costs)
 
     def enemy_values(self) -> list[int]:
         return [self.hero_hp, self.spawn_period, self.spawn_ramp, self.spawn_rate_max,
@@ -144,16 +151,26 @@ class Config:
         return [self.skill_period, self.skill_range, self.skill_damage, self.proj_speed,
                 self.proj_radius, self.proj_ttl, self.pierce, self.max_projectiles]
 
+    def xp_values(self) -> list[int]:
+        return [self.pickup_radius, self.max_gems]
+
     def ints(self) -> list[int]:
         return [self.speed, self.radius, self.min_x, self.min_y, self.max_x, self.max_y,
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
-            + self.raw_kinds
+            + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs
 
     def has_enemies(self) -> bool:
         return bool(self.raw_kinds)
 
     def has_skill(self) -> bool:
         return self.skill_damage > 0
+
+    def has_xp(self) -> bool:
+        return bool(self.xp_costs)
+
+    def xp_cost(self, level: int) -> int:
+        """XP to go from `level` to `level + 1`; the last listed cost repeats."""
+        return self.xp_costs[min(level - 1, len(self.xp_costs) - 1)]
 
     def total_weight(self) -> int:
         return sum(kind[5] for kind in self.kinds)
@@ -175,6 +192,8 @@ class Config:
         if self.has_enemies() and not self._enemies_valid():
             return False
         if self.has_skill() and not self._skill_valid():
+            return False
+        if (self.has_xp() or self.kind_xp) and not self._xp_valid():
             return False
         return True
 
@@ -210,6 +229,17 @@ class Config:
                 and self.proj_ttl > 0 and 0 <= self.pierce <= MAX_PIERCE
                 and 0 < self.max_projectiles <= MAX_PROJECTILES_LIMIT)
 
+    def _xp_valid(self) -> bool:
+        """Gems fall where enemies die: a gem dropped by an enemy touching the hero must be in
+        reach (pickup radius >= hero radius - smallest kind radius)."""
+        if not self.has_enemies() or len(self.kind_xp) != len(self.kinds):
+            return False
+        min_radius = min(kind[1] for kind in self.kinds)
+        return (0 < len(self.xp_costs) <= MAX_XP_COSTS and all(c > 0 for c in self.xp_costs)
+                and all(0 <= v <= MAX_KIND_XP for v in self.kind_xp)
+                and self.pickup_radius >= max(0, self.radius - min_radius)
+                and 0 < self.max_gems <= MAX_GEMS_LIMIT)
+
 
 def config_valid(movement: list[int]) -> bool:
     return Config(movement).valid()
@@ -225,12 +255,14 @@ def direction_q14(move_x: int, move_y: int) -> tuple[int, int]:
 E_UID, E_KIND, E_X, E_Y, E_HP, E_CD = range(6)
 P_X, P_Y, P_VX, P_VY, P_TTL, P_PIERCE, P_DAMAGE = range(7)
 P_LEDGER = 7
+G_UID, G_X, G_Y, G_VALUE = range(4)
 
 
 class World:
     """Enemy slot: [uid, kind, x, y, hp, cooldown], free when uid == 0 (all fields 0).
     Projectile slot: [x, y, vx, vy, ttl, pierce_left, damage] + ledger of pierce + 1 enemy
-    uids, free when damage == 0. Lists never shrink; spawns take the lowest free slot."""
+    uids, free when damage == 0. Gem slot: [uid, x, y, value], free when uid == 0. Lists
+    never shrink; spawns and drops take the lowest free slot."""
 
     def __init__(self, config: Config):
         self.tick = 0
@@ -246,17 +278,31 @@ class World:
         self.kills = 0
         self.skill_acc = 0
         self.sep_cursor = 0
+        self.next_gem_uid = 1
+        self.gems_alive = 0
+        self.gems_merged = 0
+        self.xp_dropped_total = 0
+        self.xp_collected_total = 0
+        self.xp_bank = 0
+        self.level = 1
+        self.pending_level_choices = 0
+        self.choices_voided = 0
         self.ledger_size = config.pierce + 1
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
+        self.gems: list[list[int]] = []
 
     def ints(self) -> list[int]:
         head = [self.tick, self.player_x, self.player_y, self.move_x, self.move_y,
                 self.command_cursor, self.hero_hp, self.hero_dead, self.spawn_acc,
                 self.rng_cursor, self.next_enemy_uid, self.enemy_alive, self.kills,
-                self.skill_acc, self.sep_cursor, len(self.enemies), len(self.projectiles)]
+                self.skill_acc, self.sep_cursor, self.next_gem_uid, self.gems_alive,
+                self.gems_merged, self.xp_dropped_total, self.xp_collected_total, self.xp_bank,
+                self.level, self.pending_level_choices, self.choices_voided, len(self.enemies),
+                len(self.projectiles), len(self.gems)]
         return head + [v for enemy in self.enemies for v in enemy] \
-            + [v for projectile in self.projectiles for v in projectile]
+            + [v for projectile in self.projectiles for v in projectile] \
+            + [v for gem in self.gems for v in gem]
 
     def digest(self) -> str:
         return ints_digest(self.ints())
@@ -526,13 +572,71 @@ def contact(config: Config, world: World) -> None:
             enemy[E_CD] = config.kinds[enemy[E_KIND]][4]
 
 
-def clear_dead(world: World) -> None:
+def clear_dead(config: Config, world: World) -> None:
+    """Phase 8a: per dead enemy in slot order the gem drop, then the freed slot and the kill."""
     for slot, enemy in enumerate(world.enemies):
         if enemy[E_UID] == 0 or enemy[E_HP] > 0:
             continue
+        if config.has_xp() and config.kind_xp[enemy[E_KIND]] > 0:
+            drop(config, world, enemy[E_X], enemy[E_Y], config.kind_xp[enemy[E_KIND]])
         world.enemies[slot] = [0] * 6
         world.enemy_alive -= 1
         world.kills += 1
+
+
+XP_OVERFLOW_POLICY_ID = "xp.overflow.nearest_v1"
+
+
+def drop(config: Config, world: World, x: int, y: int, value: int) -> None:
+    """ADR-010 sections 1 and 4: the value is fixed at the drop (x1 gain in P0); a new gem takes
+    the lowest free slot; with all max_gems slots taken the value joins the gem nearest to the
+    death point (d2, then slot) and gems_merged counts it."""
+    world.xp_dropped_total += value
+    slot = _lowest_free(world.gems, G_UID)
+    if slot < 0 and len(world.gems) >= config.max_gems:
+        best, best_d2 = -1, -1
+        for index, gem in enumerate(world.gems):
+            d2 = _dist2(gem[G_X], gem[G_Y], x, y)
+            if best < 0 or d2 < best_d2:
+                best, best_d2 = index, d2
+        world.gems[best][G_VALUE] += value
+        world.gems_merged += 1
+        return
+    record = [world.next_gem_uid, x, y, value]
+    if slot < 0:
+        world.gems.append(record)
+    else:
+        world.gems[slot] = record
+    world.next_gem_uid += 1
+    world.gems_alive += 1
+
+
+def collect(world: World, slot: int, uid: int) -> bool:
+    """Credits one gem once: a stale or repeated (slot, uid) is rejected without changes."""
+    if uid == 0 or not 0 <= slot < len(world.gems) or world.gems[slot][G_UID] != uid:
+        return False
+    value = world.gems[slot][G_VALUE]
+    world.gems[slot] = [0, 0, 0, 0]
+    world.gems_alive -= 1
+    world.xp_collected_total += value
+    world.xp_bank += value
+    return True
+
+
+def pickup(config: Config, world: World) -> None:
+    """Phase 9: every gem whose centre is within pickup_radius of the hero centre, slot order."""
+    reach = config.pickup_radius * config.pickup_radius
+    for slot, gem in enumerate(world.gems):
+        if gem[G_UID] != 0 and _dist2(gem[G_X], gem[G_Y], world.player_x, world.player_y) <= reach:
+            collect(world, slot, gem[G_UID])
+
+
+def progress(config: Config, world: World) -> None:
+    """Phase 10: each crossed threshold is paid from the bank and earns one pending choice."""
+    while world.xp_bank >= config.xp_cost(world.level):
+        world.xp_bank -= config.xp_cost(world.level)
+        world.level += 1
+        world.pending_level_choices += 1
 
 
 def clear_expired(world: World) -> None:
@@ -561,12 +665,17 @@ def step(config: Config, world: World, log: CommandLog) -> None:
             cast(config, world)
             fly_and_hit(config, world)
         contact(config, world)
-        clear_dead(world)
+        clear_dead(config, world)
         if config.has_skill():
             clear_expired(world)
         if world.hero_hp <= 0:
             world.hero_hp = 0
             world.hero_dead = 1
+            world.choices_voided += world.pending_level_choices
+            world.pending_level_choices = 0
+        elif config.has_xp():
+            pickup(config, world)
+            progress(config, world)
     world.tick += 1
 
 
@@ -585,6 +694,11 @@ P0_VALUES = [100000, 90000, 10800, 2000, 48, 384000]
 # range, 10 HP damage, 12 px/tick, 10 px radius, 40 ticks, pierce 1, 64 projectile slots.
 P0_SKILL = [50000, 384000, 10000, 12000, 10000, 40, 1, 64]
 SEED = "20261113"
+# ADR-010 placeholder XP: pickup radius 2 hero radii, 512 gems, yin_corpse 10 / blood_wolf 15,
+# incremental level costs (5L^2 + 15L + 20) / 2 for levels 2..21, the last one repeats.
+P0_XP_COSTS = [20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460, 530, 605, 685, 770, 860,
+               955, 1055, 1160]
+P0_XP = ((48000, 512), (10, 15), P0_XP_COSTS)
 
 
 def _circle(period: int, ticks: int) -> list[tuple[int, int, int, int]]:
@@ -629,8 +743,17 @@ SCENARIOS = [
      Config(BASE, [TOUGH, 30000, 3600, 4000, 64, 384000], W0_KINDS, MAX_SEED,
             [30000, 480000, 6000, 12000, 10000, 40, 2, 64]), _circle(25, 18000), 18000),
     # ADR-009 section 2 stress fixture: 150 enemies alive within ~15 s, 10000 ticks.
-    ("stress_150_separation", Config(BASE, STRESS_VALUES, W0_KINDS, SEED, P0_SKILL),
+    ("stress_150_separation", Config(BASE, STRESS_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP),
      _circle(30, 10000), 10000),
+    # ADR-010: gems, pickup and levels on the P0 tuning; the hero dies with gems on the ground.
+    ("xp_hero_stands_still", Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP), [], 3000),
+    ("xp_hero_circles", Config(BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP),
+     _circle(40, 3600), 3600),
+    # Four gem slots and the smallest legal pickup radius: overflow merges into the nearest gem.
+    ("xp_overflow_merge",
+     Config(BASE, [TOUGH, 6000, 0, 1000, 64, 200000], W0_KINDS, "123",
+            [10000, 600000, 5000, 20000, 12000, 60, 3, 4], ((2400, 4), (10, 15), [7, 9, 11])),
+     _circle(25, 6000), 6000),
 ]
 
 APPEND_CASES = [
@@ -663,6 +786,7 @@ def run_trace(config: Config, commands, ticks: int):
                 "player_y": str(world.player_y), "hero_hp": str(world.hero_hp),
                 "hero_dead": world.hero_dead, "enemy_alive": world.enemy_alive,
                 "kills": world.kills, "projectiles": world.live_projectiles(),
+                "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
                 "digest": world.digest()})
     return log, world, checkpoints
 
@@ -677,8 +801,13 @@ def build_vectors() -> dict:
             enemies = {"values": [str(v) for v in config.enemy_values()],
                        "kinds": [str(v) for v in config.raw_kinds], "seed": config.seed}
         skill = [str(v) for v in config.skill_values()] if config.has_skill() else None
+        xp = None
+        if config.has_xp():
+            xp = {"values": [str(v) for v in config.xp_values()],
+                  "kind_xp": [str(v) for v in config.kind_xp],
+                  "costs": [str(v) for v in config.xp_costs]}
         traces.append({"name": name, "config": [str(v) for v in config.ints()[:8]],
-                       "enemies": enemies, "skill": skill,
+                       "enemies": enemies, "skill": skill, "xp": xp,
                        "commands": [[str(v) for v in c] for c in commands], "ticks": ticks,
                        "log_digest": log.digest(), "checkpoints": checkpoints})
     appends = []

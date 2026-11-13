@@ -53,6 +53,10 @@ static func _config(row: Dictionary) -> SimConfig:
 	var skill: Variant = row.get("skill")
 	if typeof(skill) == TYPE_ARRAY:
 		config.with_skill(_ints(skill))
+	var xp: Variant = row.get("xp")
+	if typeof(xp) == TYPE_DICTIONARY:
+		var spec_xp: Dictionary = xp
+		config.with_xp(_ints(spec_xp["values"]), _ints(spec_xp["kind_xp"]), _ints(spec_xp["costs"]))
 	return config
 
 
@@ -85,6 +89,9 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.enemy_alive, int(mark["enemy_alive"]), label + " enemies")
 			assert_eq(world.kills, int(mark["kills"]), label + " kills")
 			assert_eq(_live_projectiles(world), int(mark["projectiles"]), label + " projectiles")
+			assert_eq(world.gems_alive, int(mark["gems"]), label + " gems")
+			assert_eq(world.xp_collected_total, int(mark["xp"]), label + " xp")
+			assert_eq(world.level, int(mark["level"]), label + " level")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 

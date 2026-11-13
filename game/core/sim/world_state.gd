@@ -1,10 +1,12 @@
 class_name WorldState
 extends RefCounted
-## IC-05: the complete simulation state, integers only (ADR-008, ADR-009 section 1).
+## IC-05: the complete simulation state, integers only (ADR-008, ADR-009 section 1,
+## ADR-010).
 ##
 ## `tick` is the next tick to simulate. Enemies and hero projectiles live in parallel arrays
 ## indexed by slot. A slot is free when its enemy uid is 0 (projectile: damage 0) and then
-## all its fields are 0; spawns take the lowest free slot, arrays never shrink, so slot
+## all its fields are 0 (gem: uid 0); spawns and drops take the lowest free slot, arrays
+## never shrink, so slot
 ## order (= iteration order) stays deterministic. The state digest is SHA-256 over the
 ## little-endian bytes of `to_ints()`, never `hash()` or `var_to_bytes`.
 
@@ -30,6 +32,19 @@ var kills: int = 0
 var skill_acc: int = 0
 ## Grid cell where the next separation pass starts (0 after a complete pass).
 var sep_cursor: int = 0
+var next_gem_uid: int = 1
+var gems_alive: int = 0
+## Drops that joined the nearest gem because all gem slots were taken.
+var gems_merged: int = 0
+var xp_dropped_total: int = 0
+var xp_collected_total: int = 0
+## Collected XP not yet spent on a level.
+var xp_bank: int = 0
+var level: int = 1
+## Earned level-up choices not resolved yet.
+var pending_level_choices: int = 0
+## Earned choices cancelled when the run ended.
+var choices_voided: int = 0
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -51,6 +66,11 @@ var proj_damage: PackedInt64Array = PackedInt64Array()
 var proj_ledger: PackedInt64Array = PackedInt64Array()
 var ledger_stride: int = 1
 
+var gem_uid: PackedInt64Array = PackedInt64Array()
+var gem_x: PackedInt64Array = PackedInt64Array()
+var gem_y: PackedInt64Array = PackedInt64Array()
+var gem_value: PackedInt64Array = PackedInt64Array()
+
 
 static func initial(config: SimConfig) -> WorldState:
 	var world: WorldState = WorldState.new()
@@ -69,6 +89,10 @@ func projectile_slots() -> int:
 	return proj_damage.size()
 
 
+func gem_slots() -> int:
+	return gem_uid.size()
+
+
 func is_over() -> bool:
 	return hero_dead != 0
 
@@ -81,7 +105,9 @@ func to_ints() -> PackedInt64Array:
 	var out: PackedInt64Array = PackedInt64Array([
 		tick, player_x, player_y, move_x, move_y, command_cursor,
 		hero_hp, hero_dead, spawn_acc, enemy_rng_cursor, next_enemy_uid, enemy_alive, kills,
-		skill_acc, sep_cursor, enemy_slots(), projectile_slots(),
+		skill_acc, sep_cursor, next_gem_uid, gems_alive, gems_merged, xp_dropped_total,
+		xp_collected_total, xp_bank, level, pending_level_choices, choices_voided,
+		enemy_slots(), projectile_slots(), gem_slots(),
 	])
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
@@ -94,6 +120,8 @@ func to_ints() -> PackedInt64Array:
 			proj_pierce_left[slot], proj_damage[slot],
 		]))
 		out.append_array(proj_ledger.slice(slot * ledger_stride, (slot + 1) * ledger_stride))
+	for slot: int in gem_slots():
+		out.append_array(PackedInt64Array([gem_uid[slot], gem_x[slot], gem_y[slot], gem_value[slot]]))
 	return out
 
 
@@ -118,6 +146,15 @@ func copy() -> WorldState:
 	other.kills = kills
 	other.skill_acc = skill_acc
 	other.sep_cursor = sep_cursor
+	other.next_gem_uid = next_gem_uid
+	other.gems_alive = gems_alive
+	other.gems_merged = gems_merged
+	other.xp_dropped_total = xp_dropped_total
+	other.xp_collected_total = xp_collected_total
+	other.xp_bank = xp_bank
+	other.level = level
+	other.pending_level_choices = pending_level_choices
+	other.choices_voided = choices_voided
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
@@ -133,4 +170,8 @@ func copy() -> WorldState:
 	other.proj_damage = proj_damage.duplicate()
 	other.proj_ledger = proj_ledger.duplicate()
 	other.ledger_stride = ledger_stride
+	other.gem_uid = gem_uid.duplicate()
+	other.gem_x = gem_x.duplicate()
+	other.gem_y = gem_y.duplicate()
+	other.gem_value = gem_value.duplicate()
 	return other

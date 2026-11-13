@@ -7,8 +7,9 @@ extends RefCounted
 ## hit interval); the sword class start skill and its cooldown. NOT canonical (ADR-009
 ## section 3): the bases those multipliers scale (hero speed, radius and HP, base enemy HP
 ## and contact damage), spawn cadence, ramp and cap, arena size, and the skill's range,
-## damage and projectile. They are placeholders until combat bases enter content; nothing
-## here writes content.
+## damage and projectile, and the XP settings of ADR-010 (pickup radius, gem cap, level
+## costs, XP per kind = XP_BASE + XP_PER_SPAWN_COST x the enemy's content spawn_cost). They
+## are placeholders until combat bases enter content; nothing here writes content.
 
 const CELL_PX: int = 48
 const ARENA_CELLS: Vector2i = Vector2i(32, 20)
@@ -33,6 +34,14 @@ const PROJECTILE_RADIUS_PX: int = 10
 const PROJECTILE_TTL_TICKS: int = 40
 const PROJECTILE_PIERCE: int = 1
 const MAX_PROJECTILES: int = 64
+const PICKUP_RADIUS_PX: int = 48
+const MAX_GEMS: int = 512
+const XP_BASE: int = 5
+const XP_PER_SPAWN_COST: int = 5
+## Incremental level costs (5L^2 + 15L + 20) / 2 for levels 2..21; the last one repeats.
+const XP_COSTS: Array[int] = [
+	20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460, 530, 605, 685, 770, 860, 955, 1055, 1160,
+]
 
 var error: String = ""
 ## Enemy IDs in kind order (kind index = position).
@@ -50,7 +59,7 @@ static func movement_config() -> SimConfig:
 	]))
 
 
-## Movement, the w0 enemies and the class start skill; null with `error` set when content is
+## Movement, the w0 enemies, the class start skill and XP; null with `error` set when content is
 ## missing or invalid.
 func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	enemy_ids.clear()
@@ -60,13 +69,18 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	if window.is_empty():
 		return _fail("roster window " + WINDOW_ID + " not found")
 	var kinds: PackedInt64Array = PackedInt64Array()
+	var kind_xp: PackedInt64Array = PackedInt64Array()
 	for entry: Variant in window.get("weighted_enemies", []):
 		var weighted: Dictionary = entry if entry is Dictionary else {}
 		var enemy_id: String = str(weighted.get("enemy_id", ""))
 		var record: PackedInt64Array = _kind(registry, enemy_id, weighted.get("weight"))
 		if record.is_empty():
 			return null
+		var spawn_cost: Variant = ContentRegistry.integral(registry.definition(enemy_id).get("spawn_cost"))
+		if spawn_cost == null or int(spawn_cost) < 0:
+			return _fail(enemy_id + ": spawn_cost is not a non-negative integer")
 		kinds.append_array(record)
+		kind_xp.append(XP_BASE + XP_PER_SPAWN_COST * int(spawn_cost))
 		enemy_ids.append(enemy_id)
 	var values: PackedInt64Array = PackedInt64Array([
 		HERO_HP_MHP, SPAWN_PERIOD_MT, SPAWN_RAMP_TICKS, SPAWN_RATE_MAX_FX, MAX_ENEMIES,
@@ -76,6 +90,9 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	if skill.is_empty():
 		return null
 	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
+	config.with_xp(
+		PackedInt64Array([PICKUP_RADIUS_PX * Fx.FX_ONE, MAX_GEMS]), kind_xp, PackedInt64Array(XP_COSTS)
+	)
 	if not config.is_valid():
 		return _fail("assembled run config is not valid")
 	return config

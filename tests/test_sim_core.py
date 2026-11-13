@@ -160,7 +160,7 @@ class SimEnemyReferenceTests(unittest.TestCase):
         self.assertEqual(world.enemy_alive, 1)
         self.assertEqual(world.spawn_acc, 89000, "the blocked tick does not advance")
         world.enemies[0][sim.E_HP] = 0
-        sim.clear_dead(world)
+        sim.clear_dead(config, world)
         log, uid = sim.CommandLog(), world.next_enemy_uid
         sim.step(config, world, log)
         self.assertEqual(world.next_enemy_uid, uid + 1, "spawns on the first free tick")
@@ -296,7 +296,7 @@ class SimCombatReferenceTests(unittest.TestCase):
         self.assertEqual(world.enemies[0][sim.E_HP], 0)
         self.assertEqual(world.projectiles[1][sim.P_PIERCE], 1, "dead enemy is not hit again")
         self.assertEqual(world.projectiles[0][sim.P_PIERCE], 0)
-        sim.clear_dead(world)
+        sim.clear_dead(config, world)
         self.assertEqual((world.kills, world.enemy_alive), (1, 0))
         self.assertEqual(world.enemies[0], [0] * 6)
 
@@ -516,6 +516,180 @@ class SimSeparationReferenceTests(unittest.TestCase):
                 self.assertEqual(sim.normalize_q14(a, q), fx.normalize_q14(a, q), (a, q))
         for n in [abs(v) for v in values] + [fx.PRODUCT_LIMIT, fx.PRODUCT_LIMIT + 1]:
             self.assertEqual(sim.isqrt(n), fx.isqrt(n), n)
+
+
+# XP (ADR-010): frozen, harmless kinds (0: radius 24000, 1: radius 21600), no spawns, no skill.
+XP_COSTS = (5, 12, 20, 30)
+
+
+def xp_arena(enemies=(), pickup=48000, max_gems=512, kind_xp=(10, 15), costs=XP_COSTS):
+    config = sim.Config(BASE, [TOUGH] + NO_SPAWN[1:], TARGET_KINDS, "1", (0,) * 8,
+                        ((pickup, max_gems), kind_xp, costs))
+    assert config.valid()
+    world = sim.World(config)
+    for kind, x, y, hp in enemies:
+        place(world, kind, x, y, hp)
+    return config, world
+
+
+def paid(config, level):
+    return sum(config.xp_cost(lv) for lv in range(1, level))
+
+
+def check_invariants(test, config, world, xp_kills):
+    ground = sum(g[sim.G_VALUE] for g in world.gems if g[sim.G_UID])
+    test.assertEqual(world.xp_dropped_total, world.xp_collected_total + ground, "I1")
+    test.assertEqual(world.xp_collected_total, world.xp_bank + paid(config, world.level), "I2")
+    test.assertEqual(world.next_gem_uid - 1 + world.gems_merged, xp_kills, "I3")
+    test.assertEqual(world.level - 1, world.choices_voided + world.pending_level_choices, "I4")
+    test.assertEqual(world.gems_alive, sum(1 for g in world.gems if g[sim.G_UID]))
+
+
+def combat_view(world):
+    return (world.tick, world.player_x, world.player_y, world.hero_hp, world.hero_dead,
+            world.spawn_acc, world.rng_cursor, world.next_enemy_uid, world.kills, world.skill_acc,
+            world.sep_cursor, [list(e) for e in world.enemies],
+            [list(p) for p in world.projectiles])
+
+
+class SimXpReferenceTests(unittest.TestCase):
+    def test_kill_drops_one_gem_at_the_death_point(self):
+        config, world = xp_arena([(1, CX + 300000, CY + 1000, 0)])
+        sim.clear_dead(config, world)
+        self.assertEqual(world.gems, [[1, CX + 300000, CY + 1000, 15]])
+        self.assertEqual((world.xp_dropped_total, world.kills, world.next_gem_uid), (15, 1, 2))
+
+    def test_zero_xp_kind_drops_nothing_and_is_not_an_xp_kill(self):
+        config, world = xp_arena([(0, CX + 300000, CY, 0), (1, CX - 300000, CY, 0)],
+                                 kind_xp=(0, 15))
+        sim.clear_dead(config, world)
+        self.assertEqual(world.kills, 2)
+        self.assertEqual([g[sim.G_VALUE] for g in world.gems], [15])
+        check_invariants(self, config, world, xp_kills=1)
+
+    def test_pickup_radius_is_inclusive(self):
+        config, world = xp_arena()
+        sim.drop(config, world, CX + 48000, CY, 10)
+        sim.drop(config, world, CX, CY + 48001, 10)
+        sim.pickup(config, world)
+        self.assertEqual([g[sim.G_UID] for g in world.gems], [0, 2])
+        self.assertEqual(world.xp_collected_total, 10)
+
+    def test_collect_rejects_stale_repeated_and_empty(self):
+        config, world = xp_arena()
+        sim.drop(config, world, CX + 300000, CY, 10)
+        self.assertTrue(sim.collect(world, 0, 1))
+        frozen = world.ints()
+        self.assertFalse(sim.collect(world, 0, 1), "repeated")
+        self.assertEqual(world.ints(), frozen)
+        sim.drop(config, world, CX + 300000, CY, 15)  # reuses slot 0 with uid 2
+        frozen = world.ints()
+        for slot, uid in ((0, 1), (0, 0), (1, 2), (-1, 2)):
+            self.assertFalse(sim.collect(world, slot, uid), (slot, uid))
+            self.assertEqual(world.ints(), frozen)
+        self.assertTrue(sim.collect(world, 0, 2))
+        self.assertEqual((world.xp_collected_total, world.gems_alive), (25, 0))
+
+    def test_several_levels_in_one_tick_keep_the_remainder(self):
+        config, world = xp_arena()
+        world.xp_bank = 40  # GAME-ARCH-01 fixture: costs 5, 12, 20 paid, 3 left for 30
+        sim.progress(config, world)
+        self.assertEqual((world.level, world.pending_level_choices, world.xp_bank), (4, 3, 3))
+        config, world = xp_arena(costs=(5,))
+        world.xp_bank = 17
+        sim.progress(config, world)
+        self.assertEqual((world.level, world.xp_bank), (4, 2), "the last cost repeats")
+
+    def test_terminal_tick_drops_but_does_not_collect_and_voids_choices(self):
+        for hero_hp, collected in ((0, 17), (TOUGH, 32)):
+            config, world = xp_arena([(1, CX + 10000, CY, 0)])
+            world.hero_hp, world.level, world.pending_level_choices = hero_hp, 3, 2
+            world.xp_dropped_total = world.xp_collected_total = 17  # costs 5 + 12 paid
+            sim.step(config, world, sim.CommandLog())
+            self.assertEqual(world.xp_dropped_total, 32)
+            self.assertEqual(world.xp_collected_total, collected, hero_hp)
+            if hero_hp == 0:
+                self.assertEqual((world.hero_dead, world.gems_alive), (1, 1))
+                self.assertEqual((world.pending_level_choices, world.choices_voided), (0, 2))
+            else:
+                self.assertEqual((world.xp_bank, world.level), (15, 3), "15 < cost 20")
+            check_invariants(self, config, world, xp_kills=1)
+
+    def test_overflow_joins_the_nearest_gem_then_the_lower_slot(self):
+        config, world = xp_arena(max_gems=2)
+        sim.drop(config, world, 100000, 100000, 10)
+        sim.drop(config, world, 900000, 100000, 10)
+        sim.drop(config, world, 850000, 100000, 15)
+        self.assertEqual([g[sim.G_VALUE] for g in world.gems], [10, 25])
+        sim.drop(config, world, 500000, 100000, 7)  # equidistant: the lower slot
+        self.assertEqual([g[sim.G_VALUE] for g in world.gems], [17, 25])
+        self.assertEqual((world.gems_merged, world.next_gem_uid, world.xp_dropped_total),
+                         (2, 3, 42))
+        check_invariants(self, config, world, xp_kills=4)
+
+    def test_invariants_hold_on_every_tick(self):
+        for name, config, commands, ticks in sim.SCENARIOS:
+            if not config.has_xp() or name.startswith("stress"):
+                continue
+            log, world = sim.CommandLog(), sim.World(config)
+            for command in commands:
+                log.append(command, 0)
+            for _ in range(ticks):
+                sim.step(config, world, log)
+                check_invariants(self, config, world, xp_kills=world.kills)
+            self.assertGreater(world.xp_dropped_total, 0, name)
+
+    def test_xp_does_not_change_combat(self):
+        base = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, sim.SEED, sim.P0_SKILL)
+        with_xp = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, sim.SEED, sim.P0_SKILL, sim.P0_XP)
+        no_value = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, sim.SEED, sim.P0_SKILL,
+                              ((48000, 512), (0, 0), sim.P0_XP_COSTS))
+        configs = (base, with_xp, no_value)
+        worlds = [sim.World(c) for c in configs]
+        log = sim.CommandLog()
+        for command in sim._circle(40, 3600):
+            log.append(command, 0)
+        for _ in range(3600):
+            for config, world in zip(configs, worlds):
+                sim.step(config, world, log)
+            views = [combat_view(w) for w in worlds]
+            self.assertEqual(views[0], views[1])
+            self.assertEqual(views[0], views[2])
+        self.assertGreater(worlds[1].xp_collected_total, 0)
+        self.assertEqual(worlds[2].xp_dropped_total, 0)
+
+    def test_one_kind_runs_with_minimal_and_with_full_pickup(self):
+        # The smallest legal radius still collects now and then: separation may push an enemy
+        # that touches the hero into it (the hero is not pushed, ADR-009 section 2).
+        wolf = [6144, 21600, 7800, 7600, 42, 2]
+        corpse = [3264, 24000, 12800, 6500, 36, 8]
+        for kinds, value in ((wolf, 15), (corpse, 10)):
+            for pickup, full in ((2400, False), (2000000, True)):
+                config = sim.Config(BASE, [TOUGH, 30000, 0, 1000, 32, 384000], kinds, "5",
+                                    sim.P0_SKILL, ((pickup, 512), (value,), sim.P0_XP_COSTS))
+                self.assertTrue(config.valid())
+                log, world = sim.CommandLog(), sim.World(config)
+                for _ in range(2400):
+                    sim.step(config, world, log)
+                    check_invariants(self, config, world, xp_kills=world.kills)
+                self.assertGreater(world.kills, 5)
+                self.assertEqual(world.xp_dropped_total, value * world.kills)
+                if full:
+                    self.assertEqual(world.xp_collected_total, world.xp_dropped_total, value)
+                else:
+                    self.assertLess(world.xp_collected_total, world.xp_dropped_total // 2, value)
+
+    def test_invalid_xp_configs(self):
+        good = ((48000, 512), (10, 15), sim.P0_XP_COSTS)
+        self.assertTrue(sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", sim.P0_SKILL,
+                                   good).valid())
+        for xp in [((48000, 512), (10,), sim.P0_XP_COSTS), ((48000, 512), (10, 15), ()),
+                   ((48000, 512), (10, 15), (5, 0)), ((48000, 512), (-1, 15), (5,)),
+                   ((2399, 512), (10, 15), (5,)), ((48000, 0), (10, 15), (5,)),
+                   ((48000, 4097), (10, 15), (5,)), ((48000, 512), (10, 15), (1,) * 65)]:
+            config = sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1", sim.P0_SKILL, xp)
+            self.assertFalse(config.valid(), xp)
+        self.assertFalse(sim.Config(BASE, xp=good).valid(), "XP needs enemies")
 
 
 if __name__ == "__main__":

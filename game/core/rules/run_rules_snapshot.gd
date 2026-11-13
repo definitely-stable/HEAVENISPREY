@@ -20,7 +20,8 @@ extends RefCounted
 ## 2 since P0-01E: the simulation changes combat state (ADR-008 section e).
 ## 3 since P0-01F: enemy slots with uids, spawn ramp, hero skill and projectiles (ADR-009).
 ## 4: enemy separation (ADR-009 section 2).
-const SIM_SCHEMA_VERSION: int = 4
+## 5: XP gems, pickup and level progression (ADR-010).
+const SIM_SCHEMA_VERSION: int = 5
 
 var error: String:
 	get:
