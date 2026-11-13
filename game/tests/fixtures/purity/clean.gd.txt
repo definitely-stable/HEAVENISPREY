@@ -1,0 +1,34 @@
+extends RefCounted
+## Integer-only simulation sample for the ADR-008 section e guard.
+## Every value below is int or PackedInt64Array, never a float.
+
+const FX_ONE: int = 1000
+const HIT_LABEL: String = "100%"
+
+var hp: int = 12000
+var damage: int = 2500
+var position: PackedInt64Array = PackedInt64Array([0, 0])
+var velocity: PackedInt64Array = PackedInt64Array([0, 0])
+
+
+static func damage_after(hp_value: int, damage_value: int) -> int:
+	# 1.5 / 2 in a comment stays outside the scan.
+	return maxi(hp_value - Fx.mul(damage_value, FX_ONE), 0)
+
+
+static func step_position(pos: PackedInt64Array, vel: PackedInt64Array) -> PackedInt64Array:
+	pos[0] = clampi(pos[0] + vel[0], -Fx.COORD_MAX, Fx.COORD_MAX)
+	pos[1] = clampi(pos[1] + vel[1], -Fx.COORD_MAX, Fx.COORD_MAX)
+	return pos
+
+
+static func signed_scale(value: int, factor: int) -> int:
+	return Fx.mul_sym(value, factor)
+
+
+static func short_span(first: int, second: int) -> int:
+	var lower: int = mini(first, second)
+	var upper: int = maxi(first, second)
+	var magnitude: int = absi(upper - lower)
+	var direction: int = signi(upper - lower)
+	return Fx.floor_div(magnitude * direction, FX_ONE)

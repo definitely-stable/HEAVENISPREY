@@ -1,0 +1,14 @@
+# ADR-008 section e: one forbidden construct per line.
+var a: int = 1.5
+var b: float = 1
+var c: Vector2
+var d: Transform2D
+var e: int = randi()
+var f: int = floor(1)
+var g: int = max(1, 2)
+var h: int = Time.get_ticks_msec()
+var i: CharacterBody2D = null
+var j: int = hash("key")
+var k: int = 7 / 2
+var l: int = 7 % 2
+for key: int in data.keys():
