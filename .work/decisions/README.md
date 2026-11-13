@@ -8,5 +8,6 @@
 
 6. [ADR-006 — единственный источник контента](ADR-006-content-catalog.md)
 7. [ADR-007 — runtime bootstrap P0-00: renderer, контент, RNG, RulesHash, GUT](ADR-007-runtime-bootstrap.md)
+8. [ADR-008 — числовая модель симуляции `hip-fx-v1`: целочисленная фиксированная точка](ADR-008-sim-numeric-model.md)
 
 **Иерархия:** ADR + v7 > непересмотренные v6 > v5/core > архив. Изменения требуют ADR amendment, а не тихой правки исторического документа.
