@@ -1,0 +1,81 @@
+class_name RunLighting
+extends RefCounted
+## ADR-014 sections 4-5: one lighting model for the run scene. The ground layer is lit by
+## Godot 2D lights over normal maps (ambient = CanvasModulate, the moon, lanterns, the hero
+## aura); upright sprites are not lit by Light2D (a spot on the floor would paint the head of
+## an enemy standing in front of it) but take modulate = light_at(feet), the same model
+## evaluated at their ground point. Shadows fall away from the moon. Presentation only.
+
+## Night ambient of the grove (CanvasModulate of the ground; the base of upright light).
+const AMBIENT: Color = Color(0.56, 0.6, 0.72)
+## Moonlight: colour, energy and height for normal mapping (0..1). It travels from the upper
+## left to the lower right of the screen, along the cast shadows (moon_travel()).
+const MOON_COLOR: Color = Color(0.62, 0.72, 0.95)
+const MOON_ENERGY: float = 0.3
+const MOON_HEIGHT: float = 0.55
+## Upright sprites get a flat share of the moon (no normal on the ground point).
+const MOON_FLAT: float = 0.18
+## Lanterns of the arena until stage props arrive (slice A3): cell positions, warm light.
+const LANTERN_CELLS: Array[Vector2i] = [Vector2i(5, 4), Vector2i(26, 4), Vector2i(5, 15), Vector2i(26, 15)]
+const LANTERN_COLOR: Color = Color(1.0, 0.7, 0.42)
+const LANTERN_ENERGY: float = 2.6
+const LANTERN_RADIUS_PX: float = 240.0
+## Lantern height above the ground in screen px (the flame of the primitive post).
+const LANTERN_HEIGHT_PX: float = 46.0
+## Aura of the hero: a soft gold light that follows them.
+const AURA_COLOR: Color = Color(1.0, 0.88, 0.62)
+const AURA_ENERGY: float = 0.55
+const AURA_RADIUS_PX: float = 150.0
+## Share of a point light an upright sprite takes: its faces stand across the light that
+## falls from above onto the floor, so they catch less of it than the ground below.
+const UPRIGHT_SHARE: float = 0.45
+## Height of point lights for normal mapping, px.
+const LIGHT_HEIGHT_PX: float = 40.0
+## Cast shadow of an upright sprite: squash of its height and horizontal shear per unit of
+## height, both along the moon's travel (the shadow falls to the lower right).
+const SHADOW_SQUASH: float = 0.34
+const SHADOW_SHEAR: float = -0.62
+## Darkening of the shadow layer, composited once (overlaps do not stack).
+const SHADOW_ALPHA: float = 0.4
+
+
+## Screen direction the moonlight travels: the direction cast shadows fall.
+static func moon_travel() -> Vector2:
+	return Vector2(-SHADOW_SHEAR, SHADOW_SQUASH).normalized()
+
+
+## Rotation of a DirectionalLight2D whose light travels along moon_travel() (a rotation of 0
+## shines down the screen).
+static func moon_rotation() -> float:
+	var travel: Vector2 = moon_travel()
+	return atan2(-travel.x, travel.y)
+
+
+static func lantern_positions(cell_px: int) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for cell: Vector2i in LANTERN_CELLS:
+		out.append((Vector2(cell) + Vector2(0.5, 0.5)) * cell_px)
+	return out
+
+
+## Linear fall-off of a radial light texture: 1 at the centre, 0 at `radius`.
+static func falloff(distance: float, radius: float) -> float:
+	return clampf(1.0 - distance / radius, 0.0, 1.0)
+
+
+## Light on an upright sprite whose feet stand at `feet` (world px); `hero` (world px) carries
+## the aura. Ambient plus the flat moon share plus UPRIGHT_SHARE of every point light there.
+static func light_at(feet: Vector2, hero: Vector2, lanterns: Array[Vector2]) -> Color:
+	var light: Color = AMBIENT + MOON_COLOR * MOON_FLAT
+	for lantern: Vector2 in lanterns:
+		light += LANTERN_COLOR * (LANTERN_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(lantern), LANTERN_RADIUS_PX))
+	light += AURA_COLOR * (AURA_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(hero), AURA_RADIUS_PX))
+	light.a = 1.0
+	return light
+
+
+## Screen transform that lays an upright sprite drawn at the origin (feet) down as its cast
+## shadow at `feet_screen`: heights shrink by SHADOW_SQUASH and flip to fall down the screen,
+## and lean to the right along the moon.
+static func shadow_transform(feet_screen: Vector2) -> Transform2D:
+	return Transform2D(Vector2(1.0, 0.0), Vector2(SHADOW_SHEAR, -SHADOW_SQUASH), feet_screen)
