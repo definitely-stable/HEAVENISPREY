@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "asset_id": "asset.char.hero_sword",
+      "kind": "sprite_atlas",
+      "path": "game/assets/characters/hero_sword/hero_sword.png",
+      "sha256": "9491066c47ac435dce50d0ed38de0fc5c773c40696319b6998938aabfde2042e",
+      "bytes": 465666,
+      "size": [
+        768,
+        768
+      ],
+      "asset_version": 1,
+      "art_bible_version": 2,
+      "content_ids": [
+        "class.sword"
+      ],
+      "layout": {
+        "anchor_x": "feet",
+        "frame_size": 192,
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "frames": 4,
+        "feet_anchor": [
+          96,
+          186
+        ],
+        "scale": 0.5562
+      },
+      "source": {
+        "path": "art_source/hero_sword/master.webp",
+        "sha256": "4084ac303618fb9d11bf3f623e4c8d63d4bff52ffe3d3671697ec87f614cb002",
+        "bytes": 1429152,
+        "prompt_sha256": "d3ccfb9d8de283dde968b1b2383fe063b64ca47296e0c7d1c8edbdaa56646d3f"
+      },
+      "qa": {
+        "palette_group": "hero_sprite",
+        "opaque_px": 11840,
+        "palette_mean_delta_e": 7.41,
+        "tones_pct": [
+          31.4,
+          38.8,
+          29.8
+        ],
+        "chroma": 0.145,
+        "threat_colour_pct": 0.0
+      }
+    },
+    {
+      "asset_id": "asset.enemy.blood_wolf",
+      "kind": "sprite_atlas",
+      "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
+      "sha256": "c8b1dbfc5322908993909497f008d981e2099fab787b75bb5cd601fda8485514",
+      "bytes": 274868,
+      "size": [
+        768,
+        384
+      ],
+      "asset_version": 1,
+      "art_bible_version": 2,
+      "content_ids": [
+        "enemy.blood_wolf"
+      ],
+      "layout": {
+        "anchor_x": "bbox_centre",
+        "frame_size": 192,
+        "directions": [
+          "left",
+          "right"
+        ],
+        "frames": 4,
+        "feet_anchor": [
+          96,
+          186
+        ],
+        "scale": 0.5137
+      },
+      "source": {
+        "path": "art_source/blood_wolf/master.webp",
+        "sha256": "e1545a9b4ffdf3772d61bed05da3d697d4d794d5fc8d23169d24551f42893d0b",
+        "bytes": 1162560,
+        "prompt_sha256": "bca2252d04dc85eee313c87e32846bad99ca721257e894daf9ef41fc163178f3"
+      },
+      "qa": {
+        "palette_group": "characters",
+        "opaque_px": 7743,
+        "palette_mean_delta_e": 11.82,
+        "tones_pct": [
+          62.1,
+          36.9,
+          1.1
+        ],
+        "chroma": 0.153,
+        "threat_colour_pct": 0.0
+      }
+    },
+    {
+      "asset_id": "asset.enemy.yin_corpse",
+      "kind": "sprite_atlas",
+      "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
+      "sha256": "246e1d51e8ceb257fc5258b2317304c5ed673da54035d3f1b347d8d3b9ee5a9c",
+      "bytes": 299558,
+      "size": [
+        768,
+        384
+      ],
+      "asset_version": 1,
+      "art_bible_version": 2,
+      "content_ids": [
+        "enemy.yin_corpse"
+      ],
+      "layout": {
+        "anchor_x": "feet",
+        "frame_size": 192,
+        "directions": [
+          "left",
+          "right"
+        ],
+        "frames": 4,
+        "feet_anchor": [
+          96,
+          186
+        ],
+        "scale": 0.399
+      },
+      "source": {
+        "path": "art_source/yin_corpse/master.webp",
+        "sha256": "122f09f43e1a761c8e278a45a6101468946859978e99a8eea27167d5fb6d3fe0",
+        "bytes": 1511436,
+        "prompt_sha256": "bbfcafb4cede648ba9efea0947223c8b053e7f0c86285562c89856eff5c6420f"
+      },
+      "qa": {
+        "palette_group": "characters",
+        "opaque_px": 8109,
+        "palette_mean_delta_e": 12.01,
+        "tones_pct": [
+          69.6,
+          29.2,
+          1.2
+        ],
+        "chroma": 0.082,
+        "threat_colour_pct": 0.0
+      }
+    },
+    {
+      "asset_id": "asset.tile.jade_grove_floor",
+      "kind": "floor_texture",
+      "path": "game/assets/tiles/jade_grove_floor/jade_grove_floor.png",
+      "sha256": "cfb63f19aee40c62cc1448da570146cc2d2d110bbb766532417dfaf77587a687",
+      "bytes": 776200,
+      "size": [
+        768,
+        768
+      ],
+      "asset_version": 1,
+      "art_bible_version": 2,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "texture_px": 768,
+        "cells": 8,
+        "tone_gain": 1.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_floor/master.webp",
+        "sha256": "f4a65bb9b90d35181906443bd24f3eaa3db0ed20706ccb646219e107bdf2fb78",
+        "bytes": 1590028,
+        "prompt_sha256": "2e8dd869e2b52b612c5228744dfc681eaf0778b81d91ed296c5a498e93054519"
+      },
+      "qa": {
+        "palette_group": "environment",
+        "opaque_px": 65536,
+        "palette_mean_delta_e": 4.74,
+        "tones_pct": [
+          100.0,
+          0.0,
+          0.0
+        ],
+        "chroma": 0.019,
+        "threat_colour_pct": 0.0
+      }
+    }
+  ]
+}

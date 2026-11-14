@@ -1,0 +1,8 @@
+2D game sprite sheet of the Blood Demon Wolf enemy from the attached reference: a large gaunt demonic wolf, ash-grey and charcoal fur with dark crimson streaks along the back and legs, bristling mane, glowing red eyes painted (not emitted), bared fangs, low predatory running pose, whole body in side view. Hand-painted ink-and-gold xianxia style, clean dark ink outline about 2 px, painted cel shading, key light from the top-left, readable silhouette at small size, moderate detail.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells on a 1536 x 1024 landscape canvas, no borders, no gutters drawn, no labels. Each cell holds one full-body figure, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, nothing crossing into a neighbouring cell.
+Row 1: moving to the left (facing left), 4 walk-cycle frames.
+Row 2: moving to the right (facing right), 4 walk-cycle frames.
+Camera: high three-quarter top-down game camera, like an action roguelite seen from above at about 45 degrees.
+
+Background: perfectly flat solid pure green #00FF00 everywhere behind the figures, no gradient, no floor, no shadow, no glow, no sparkles, no motion trails. No text, no numbers, no watermark.

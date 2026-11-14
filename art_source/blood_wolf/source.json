@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.enemy.blood_wolf",
+  "kind": "sprite_atlas",
+  "group": "enemies",
+  "asset_version": 1,
+  "content_ids": [
+    "enemy.blood_wolf"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-034",
+      "file": "Кровавый демонический волк_ лист персонажа.png",
+      "sha256": "7f9798537d30325a24ddd356850cc58716756be14ed310747c5a0359387411dc"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.168.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "bca2252d04dc85eee313c87e32846bad99ca721257e894daf9ef41fc163178f3",
+    "created": "2026-11-14T15:02:15+0500",
+    "master_sha256": "f222e2beb61c0268a027a9bf17d39d6cef597f3fab2c282b6c3bee4e73c603ff",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "characters",
+  "sheet": {
+    "grid": [
+      4,
+      2
+    ],
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150
+  },
+  "directions": [
+    "left",
+    "right"
+  ],
+  "frame_size": 192,
+  "feet_anchor": [
+    96,
+    186
+  ],
+  "margin_px": 2,
+  "figure_height_px": 150,
+  "anchor_x": "bbox_centre"
+}

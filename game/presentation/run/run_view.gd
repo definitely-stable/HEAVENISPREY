@@ -8,6 +8,9 @@ extends Node2D
 ## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
 ## A finished run (victory after the stage duration or defeat) stays under RunResults until
 ## the player starts a new one (ADR-011 section 1).
+## Sprites (ADR-013): the floor texture, the hero and the enemies with an asset in
+## SpriteSet are drawn as atlas frames sorted by depth over blob shadows; anything without an
+## asset keeps its primitive, so the scene stays playable with no assets at all.
 
 const CELL_PX: int = P0Tuning.CELL_PX
 const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
@@ -47,6 +50,23 @@ const COLOR_ROOTED: Color = Color(0.82, 0.2, 0.28, 0.9)
 ## Enemy shot (lantern wisp): a pale ghost-fire orb with a glow.
 const COLOR_WISP: Color = Color(0.72, 1.0, 0.86)
 const COLOR_WISP_GLOW: Color = Color(0.45, 0.95, 0.75, 0.3)
+const HERO_ASSET: String = "asset.char.hero_sword"
+const FLOOR_ASSET: String = "asset.tile.jade_grove_floor"
+## Enemy content id -> sprite asset_id; kinds not listed keep their circles.
+const ENEMY_ASSETS: Dictionary = {
+	"enemy.yin_corpse": "asset.enemy.yin_corpse",
+	"enemy.blood_wolf": "asset.enemy.blood_wolf",
+}
+## Blob shadow under a sprite: ellipse of the body radius, flattened.
+const COLOR_SHADOW: Color = Color(0.0, 0.0, 0.0, 0.38)
+const SHADOW_SQUASH: float = 0.38
+## Hit flash of a sprite (modulate above 1 brightens it).
+const TINT_ENEMY_HIT: Color = Color(2.2, 2.2, 2.2)
+const TINT_HERO_HIT: Color = Color(1.0, 0.42, 0.38)
+## Px of horizontal hero offset before an enemy turns to face the other way.
+const TURN_DEADBAND_PX: float = 6.0
+## Screen px from the hero's feet to the top of its sprite (168 atlas px at half size).
+const HERO_SPRITE_HEIGHT_PX: float = 84.0
 ## Placeholder enemy colours by kind index (yin corpse, blood wolf, then fallbacks).
 const ENEMY_COLORS: Array[Color] = [
 	Color(0.45, 0.55, 0.45), Color(0.6, 0.12, 0.14), Color(0.5, 0.45, 0.7), Color(0.7, 0.6, 0.3),
@@ -73,6 +93,14 @@ var _level_ring: float = 0.0
 var _hud: Node2D
 var _menu: ChoiceMenu
 var _results: RunResults
+var _sprites: SpriteSet = SpriteSet.new()
+## Sprite asset_id per enemy kind of the current run ("" = primitive).
+var _kind_assets: PackedStringArray = PackedStringArray()
+## Enemy uid -> true while it faces left.
+var _faces_left: Dictionary = {}
+## Seconds of walk animation (stops with the run).
+var _anim_time: float = 0.0
+var _hero_moving: bool = false
 
 @onready var _camera: Camera2D = $Camera
 
@@ -85,6 +113,8 @@ static func placeholder_config() -> SimConfig:
 func _ready() -> void:
 	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
+	_sprites = SpriteSet.load_default()
+	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	var layer: CanvasLayer = CanvasLayer.new()
 	add_child(layer)
 	_hud = Node2D.new()
@@ -111,6 +141,12 @@ func start_run(seed_text: String) -> void:
 		config = placeholder_config()
 	driver = FixedTickDriver.create(config)
 	runs_started += 1
+	_kind_assets = PackedStringArray()
+	for enemy_id: String in tuning.enemy_ids:
+		_kind_assets.append(str(ENEMY_ASSETS.get(enemy_id, "")))
+	_faces_left.clear()
+	_anim_time = 0.0
+	_hero_moving = false
 	_flash = 0.0
 	if _results != null:
 		_results.close()
@@ -174,7 +210,9 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		_flash = HIT_FLASH
 	else:
 		_flash = maxf(_flash - delta, 0.0)
-	if move != Vector2i.ZERO:
+	_anim_time += delta
+	_hero_moving = move != Vector2i.ZERO
+	if _hero_moving:
 		_facing = Vector2(move).normalized()
 	_camera.position = driver.hero_position_px()
 	_sync_menu()
@@ -221,19 +259,15 @@ func _sync_menu() -> void:
 
 func _draw() -> void:
 	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
-	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_FLOOR)
-	for x: int in range(CELL_PX, int(arena.x), CELL_PX):
-		draw_line(Vector2(x, 0), Vector2(x, arena.y), COLOR_GRID, 1.0)
-	for y: int in range(CELL_PX, int(arena.y), CELL_PX):
-		draw_line(Vector2(0, y), Vector2(arena.x, y), COLOR_GRID, 1.0)
+	_draw_floor(arena)
 	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_WALL, false, 4.0)
 	_draw_puffs()
 	_draw_gems()
 	_draw_zones()
 	_draw_telegraphs()
-	_draw_enemies()
+	_draw_bodies()
 	_draw_projectiles()
-	_draw_hero()
+	_draw_hero_overlay()
 	_draw_shots()
 	_draw_pickups()
 	if driver.world.is_over():
@@ -258,19 +292,67 @@ func _age_effects(delta: float) -> void:
 	_level_ring = maxf(_level_ring - delta, 0.0)
 
 
-func _draw_enemies() -> void:
+## The floor texture repeated over the arena, or the flat floor and its grid.
+func _draw_floor(arena: Vector2) -> void:
+	var floor_texture: Texture2D = _sprites.texture(FLOOR_ASSET)
+	if floor_texture == null:
+		draw_rect(Rect2(Vector2.ZERO, arena), COLOR_FLOOR)
+		for x: int in range(CELL_PX, int(arena.x), CELL_PX):
+			draw_line(Vector2(x, 0), Vector2(x, arena.y), COLOR_GRID, 1.0)
+		for y: int in range(CELL_PX, int(arena.y), CELL_PX):
+			draw_line(Vector2(0, y), Vector2(arena.x, y), COLOR_GRID, 1.0)
+		return
+	var repeat: float = _sprites.floor_repeat_px(FLOOR_ASSET, CELL_PX) / float(floor_texture.get_width())
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2(repeat, repeat))
+	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, arena / repeat), true)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+## Enemies sorted by feet y (then slot), so a body nearer the bottom of the screen covers the
+## one behind it; the hero is drawn over all of them (readability before depth, PLAYABILITY
+## G3).
+func _draw_bodies() -> void:
 	var world: WorldState = driver.world
+	var order: Array[Vector2i] = []
 	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] == 0:
-			continue
-		var kind: int = world.enemy_kind[slot]
-		var color: Color = _enemy_color(kind)
-		if _enemy_flash.has(world.enemy_uid[slot]):
-			color = color.lerp(COLOR_ENEMY_HIT, 0.75)
-		var radius: float = _kind_radius_px(kind)
-		var at: Vector2 = driver.enemy_position_px(slot)
-		draw_circle(at, radius, color)
-		draw_circle(at, radius, color.darkened(0.45), false, 2.0)
+		if world.enemy_uid[slot] != 0:
+			order.append(Vector2i(roundi(driver.enemy_position_px(slot).y * 16.0), slot))
+	order.sort()
+	for key: Vector2i in order:
+		_draw_enemy(key.y)
+	_draw_hero()
+
+
+func _draw_enemy(slot: int) -> void:
+	var world: WorldState = driver.world
+	var kind: int = world.enemy_kind[slot]
+	var uid: int = world.enemy_uid[slot]
+	var radius: float = _kind_radius_px(kind)
+	var at: Vector2 = driver.enemy_position_px(slot)
+	var asset: String = _kind_assets[kind] if kind < _kind_assets.size() else ""
+	if _sprites.has(asset):
+		_draw_shadow(at, radius)
+		var dx: float = driver.hero_position_px().x - at.x
+		if dx < -TURN_DEADBAND_PX:
+			_faces_left[uid] = true
+		elif dx > TURN_DEADBAND_PX:
+			_faces_left[uid] = false
+		var direction: String = "left" if _faces_left.get(uid, false) else "right"
+		var tint: Color = TINT_ENEMY_HIT if _enemy_flash.has(uid) else Color.WHITE
+		var frame: int = SpriteSet.walk_frame(_anim_time, posmod(uid, 4))
+		if _sprites.draw_frame(self, asset, direction, frame, at, tint):
+			return
+	var color: Color = _enemy_color(kind)
+	if _enemy_flash.has(uid):
+		color = color.lerp(COLOR_ENEMY_HIT, 0.75)
+	draw_circle(at, radius, color)
+	draw_circle(at, radius, color.darkened(0.45), false, 2.0)
+
+
+func _draw_shadow(feet: Vector2, radius: float) -> void:
+	draw_set_transform(feet, 0.0, Vector2(1.0, SHADOW_SQUASH))
+	draw_circle(Vector2.ZERO, radius, COLOR_SHADOW)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_projectiles() -> void:
@@ -404,18 +486,35 @@ func _draw_hero() -> void:
 	var hero: Vector2 = driver.hero_position_px()
 	var color: Color = COLOR_HERO_HIT if _flash > 0.0 else COLOR_HERO
 	var stacks: int = driver.world.venom_stacks
+	if _sprites.has(HERO_ASSET):
+		var tint: Color = TINT_HERO_HIT if _flash > 0.0 else Color.WHITE
+		if stacks > 0 and _flash <= 0.0:
+			tint = tint.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
+		var frame: int = SpriteSet.walk_frame(_anim_time, 0) if _hero_moving else 0
+		_draw_shadow(hero, HERO_RADIUS_PX)
+		if _sprites.draw_frame(self, HERO_ASSET, SpriteSet.four_way(_facing), frame, hero, tint):
+			return
 	if stacks > 0 and _flash <= 0.0:
 		color = color.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
 	draw_circle(hero, HERO_RADIUS_PX, color)
+	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
+
+
+## Root ring, venom pips and the HP bar, over every body. The bar sits above a sprite's head.
+func _draw_hero_overlay() -> void:
+	var hero: Vector2 = driver.hero_position_px()
+	var stacks: int = driver.world.venom_stacks
 	if driver.world.root_left > 0:
 		draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
+	var top: float = -HERO_RADIUS_PX - 12.0
+	if _sprites.has(HERO_ASSET):
+		top = -HERO_SPRITE_HEIGHT_PX - 8.0
 	for pip: int in stacks:
-		draw_circle(hero + Vector2(-8.0 + 8.0 * pip, -HERO_RADIUS_PX - 18), 3.0, COLOR_VENOM)
-	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
+		draw_circle(hero + Vector2(-8.0 + 8.0 * pip, top - 6.0), 3.0, COLOR_VENOM)
 	var max_hp: int = driver.world.hero_hp_max
 	if max_hp <= 0:
 		return
-	var bar: Rect2 = Rect2(hero + Vector2(-HERO_RADIUS_PX, -HERO_RADIUS_PX - 12), Vector2(HERO_RADIUS_PX * 2, 5))
+	var bar: Rect2 = Rect2(hero + Vector2(-HERO_RADIUS_PX, top), Vector2(HERO_RADIUS_PX * 2, 5))
 	draw_rect(bar, COLOR_HP_BACK)
 	var share: float = clampf(float(driver.world.hero_hp) / float(max_hp), 0.0, 1.0)
 	draw_rect(Rect2(bar.position, Vector2(bar.size.x * share, bar.size.y)), COLOR_HP)

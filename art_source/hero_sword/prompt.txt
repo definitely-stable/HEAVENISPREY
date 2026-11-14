@@ -1,0 +1,10 @@
+2D game sprite sheet of the sword cultivator hero from the attached references (long black hair tied up, white and ivory robes with gold embroidery, dark sash, red ribbon accents, a slim jian sword held low in the right hand). Hand-painted ink-and-gold xianxia style, clean dark ink outline about 2 px, painted cel shading, key light from the top-left, readable silhouette at small size, moderate detail.
+
+Layout: a strict 4 x 4 grid of equal square cells on a 1024 x 1024 canvas, no borders, no gutters drawn, no labels. Each cell holds one full-body figure, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, nothing crossing into a neighbouring cell.
+Row 1: walking toward the viewer (front three-quarter view), 4 walk-cycle frames.
+Row 2: walking to the left (side view facing left), 4 walk-cycle frames.
+Row 3: walking to the right (side view facing right), 4 walk-cycle frames.
+Row 4: walking away from the viewer (back three-quarter view), 4 walk-cycle frames.
+Camera: high three-quarter top-down game camera, like an action roguelite seen from above at about 45 degrees.
+
+Background: perfectly flat solid pure green #00FF00 everywhere behind the figures, no gradient, no floor, no shadow, no glow, no sparkles, no motion trails. No text, no numbers, no watermark.

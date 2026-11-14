@@ -18,7 +18,7 @@
 | Режимы, баланс, испытания | [Режимы v7](../spec/v7/modes-and-compatibility.md) | [Боты](../spec/v7/bot-acceptance.md) · [Design](../spec/v5/v5_design.md) |
 | Переводы, тексты, UI | [Локализация](../spec/v6/v6_i18n.md) · [UX](../spec/v5/v5_ux.md) | [Ключи RU/EN](../config/v7/localization_additions.csv) · [контексты](../config/v7/localization_context.json) и [settings](../config/v7/settings.example.cfg) — `python scripts/validate_content.py` |
 | **Арт-референсы, look-dev, брифы генерации** | [Каталог `ref/`](../../ref/README.md) | [catalog.json](../../ref/catalog.json) · [v5_assets](../spec/v5/v5_assets.md) |
-| Графика/спрайты/эффекты | [2D презентация](../spec/core/s14.md) · [Визуальный QA](../spec/v5/v5_assets.md) | [Контракт ассетов](../spec/core/s17.md) |
+| Графика/спрайты/эффекты | [ADR-013 первые спрайты и конвейер](../decisions/ADR-013-art-01-first-sprites.md) · [2D презентация](../spec/core/s14.md) · [Визуальный QA](../spec/v5/v5_assets.md) | [Контракт ассетов](../spec/core/s17.md) · `python tools/art/build_sprites.py` · `python scripts/validate_assets.py` |
 | Reverse engineering | [RE](../spec/core/s23.md) · [Доказательства](../spec/v5/v5_re.md) | [Реестр источников](../research/SOURCES.md) |
 | **Skills агентов, адаптеры Claude/Codex/OpenCode, handoff** | [AGENT_EXECUTION](../development/AGENT_EXECUTION.md) | [SKILLS_AUDIT](../development/SKILLS_AUDIT.md) · [skills.lock.json](../tooling/skills.lock.json) |
 | **Установка инструментов, версия Godot, диагностика окружения, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) · [DEV_ENVIRONMENT](../guides/DEV_ENVIRONMENT.md) | [toolchain.lock.json](../tooling/toolchain.lock.json) · [ADR-001](../decisions/ADR-001-stack.md) |

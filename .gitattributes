@@ -19,3 +19,11 @@ ref/*.jpg filter=lfs diff=lfs merge=lfs -text
 
 # Generated ContentRegistry: digest is over exact bytes, never normalize (ADR-007).
 game/content/generated/* -text
+
+# Game sprites and their masters (ADR-009 section 5, ADR-013): binaries in Git LFS,
+# manifest/source/prompt/cards and Godot .import files stay plain text.
+game/assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+art_source/**/*.webp filter=lfs diff=lfs merge=lfs -text
+art_source/**/*.png filter=lfs diff=lfs merge=lfs -text
+art_source/**/*.txt text eol=lf
+*.import text eol=lf

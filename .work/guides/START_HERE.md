@@ -16,7 +16,7 @@
 | Сложности, режимы, награды | [ADR-003](../decisions/ADR-003-late-game.md) | [v7 поздняя прогрессия](../spec/v7/late-game-progression.md) · [Режимы](../spec/v7/modes-and-compatibility.md) |
 | Экономика и сохранения | [Экономика v7](../spec/v7/economy-and-talent-sinks.md) | [Data](../config/v7/README.md) · [Сохранения](../spec/core/s20.md) |
 | **Визуальные референсы `ref/`: классификация, связь с контентом, готовность** | [Каталог ART-REF-001](../../ref/README.md) | [catalog.json](../../ref/catalog.json) · [Арт-контракт s17](../spec/core/s17.md) |
-| Godot 2D, визуализация, арт | [2D rendering](../spec/core/s14.md) | [VFX](../spec/core/s15.md) · [Арты](../spec/v5/v5_assets.md) |
+| Godot 2D, визуализация, арт | [2D rendering](../spec/core/s14.md) · [ADR-013 игровые спрайты](../decisions/ADR-013-art-01-first-sprites.md) | [VFX](../spec/core/s15.md) · [Арты](../spec/v5/v5_assets.md) · [манифест ассетов](../../game/assets/manifest.json) |
 | RU/EN, интерфейс | [Локализация](../spec/v6/v6_i18n.md) | [UX](../spec/v5/v5_ux.md) |
 | Автоматическое тестирование | [BOT-QA v7](../spec/v7/bot-acceptance.md) | [Тесты](../spec/v5/v5_tests.md) · [Replay](../spec/core/s13.md) |
 | Reverse engineering | [RE pipeline](../spec/core/s23.md) | [RE evidence](../spec/v5/v5_re.md) |

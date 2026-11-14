@@ -70,6 +70,8 @@ jobs:
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)
         run: python scripts/ref_catalog.py validate
+      - name: Verify ART-01 game asset manifest (LFS identity, provenance, style passport)
+        run: python scripts/validate_assets.py
       - name: Verify DEV-ENV-002 agent skills, triggers and client adapters
         run: python scripts/validate_agent_skills.py
       - name: Verify DEV-ENV-003 MCP registry and secret-free example configs

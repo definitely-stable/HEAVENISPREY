@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "document": "ART-BIBLE-001",
+  "passport_version": 2,
+  "threat_colour": "#e8343c",
+  "threat_delta_e": 12,
+  "groups": {
+    "environment": {
+      "colours": [
+        "#12131a",
+        "#19181e",
+        "#35313a",
+        "#5e393f",
+        "#614f5b",
+        "#91808e"
+      ],
+      "max_palette_delta_e": 12,
+      "max_chroma": 0.15,
+      "max_lights_pct": 5
+    },
+    "characters": {
+      "colours": [
+        "#181719",
+        "#5f3d40",
+        "#272022",
+        "#815c5d",
+        "#aa7d79",
+        "#d6ae9d"
+      ],
+      "max_palette_delta_e": 15
+    },
+    "hero_sprite": {
+      "colours": [
+        "#cfb9a0",
+        "#baa288",
+        "#312b25",
+        "#50372f",
+        "#a18f7d",
+        "#88735e",
+        "#e8d7c6",
+        "#665242"
+      ],
+      "max_palette_delta_e": 12,
+      "min_lights_pct": 20,
+      "max_threat_pct": 0
+    }
+  }
+}
