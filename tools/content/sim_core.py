@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 9
+VECTORS_SCHEMA_VERSION = 10
 
 
 def _load(name: str, file: str):
@@ -92,15 +92,25 @@ BELOW_LIMIT = 1 << 32
 # A charge has arc 0 and no venom; its reach is the dash length L. A projectile kind launches
 # within reach, does not chase closer than keep_su, and its active_ticks is the lifetime of
 # the shot (the enemy itself is active for one tick, the release).
+# Zones (ADR-011 E5) use radius_su (the shot field) as the zone radius and active_ticks as its
+# lifetime after the telegraph. ON_DEATH_ZONE: no attack while alive (the kind interval is 0);
+# its death leaves a zone that hits the hero once with the kind damage. GROUND_ZONE: launches
+# within reach, the zone is centred on the hero at the launch and applies status.root_slow
+# (no damage, the kind damage is 0); the enemy is active for one tick, one zone per caster.
 ATTACK_STRIDE = 10
 FORM_CONTACT, FORM_ARC, FORM_CHARGE, FORM_PROJECTILE = 0, 1, 2, 3
+FORM_DEATH_ZONE, FORM_GROUND_ZONE = 4, 5
 ENEMY_SHOTS_LIMIT = 64     # enemy projectile pool (ADR-011 section 3)
+ZONES_LIMIT = 64           # enemy zone pool (ADR-011 E5)
 ST_APPROACH, ST_TELL, ST_ACTIVE, ST_RECOVER = range(4)
 MAX_ATTACK_REACH = 1 << 22    # su; keeps the sector test inside int64
 MAX_ARC_DEGREES = 180
 # status.venom (ADR-011 section 4): (max_stacks, duration_ticks, period_ticks, damage_mhp per
 # stack and period), all 0 when no attack applies venom.
 VENOM_STRIDE = 4
+# status.root_slow (ADR-011 section 4): (duration_ticks, hero speed multiplier fx), both 0
+# when no attack applies it.
+ROOT_STRIDE = 2
 # round(16384 * cos(k degrees)) for k = 0..180, half away from zero (golden, = FxTables).
 COS_Q14 = (
     16384, 16382, 16374, 16362, 16344, 16322, 16294, 16262, 16225, 16182, 16135, 16083, 16026,
@@ -212,13 +222,16 @@ class Config:
     run_ticks (ADR-011 section 1): the stage duration; the hero who is not dead after the tick
     that reaches it wins. 0 = no time limit.
     attacks (ADR-011 sections 2-3): empty (every kind hits by contact) or one ATTACK_STRIDE
-    record per kind; venom: the status.venom values (VENOM_STRIDE).
+    record per kind; venom: the status.venom values (VENOM_STRIDE); root: the
+    status.root_slow values (ROOT_STRIDE).
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
                  skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0, attacks=(),
-                 venom=(0,) * VENOM_STRIDE):
+                 venom=(0,) * VENOM_STRIDE, root=(0,) * ROOT_STRIDE):
         self.choice_mode = choice_mode
+        self.root = list(root)
+        self.root_duration, self.root_mult = (list(root) + [0] * ROOT_STRIDE)[:ROOT_STRIDE]
         self.run_ticks = run_ticks
         self.raw_attacks = list(attacks)
         self.venom = list(venom)
@@ -253,7 +266,7 @@ class Config:
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
             + [self.choice_mode, self.run_ticks, len(self.raw_attacks)] + self.raw_attacks \
-            + self.venom
+            + self.venom + self.root
 
     def attack(self, kind: int) -> tuple:
         """The attack record of `kind`; all zeros (contact) without an attack table."""
@@ -311,16 +324,21 @@ class Config:
             return False
         if self.raw_attacks and not self._attacks_valid():
             return False
-        if len(self.venom) != VENOM_STRIDE:
+        if len(self.venom) != VENOM_STRIDE or len(self.root) != ROOT_STRIDE:
             return False
         return self.run_ticks >= 0
+
+    def _death_zone_kind(self, kind: int) -> bool:
+        """The kind leaves a zone on death and never attacks while alive (interval 0)."""
+        return len(self.raw_attacks) == len(self.kinds) * ATTACK_STRIDE \
+            and self.form(kind) == FORM_DEATH_ZONE
 
     def _attacks_valid(self) -> bool:
         """One record per kind; a contact record is all zeros; an arc needs whole phases, a
         reach up to MAX_ATTACK_REACH, an arc of 1..180 degrees; venom needs its status values."""
         if not self.has_enemies() or len(self.raw_attacks) != len(self.kinds) * ATTACK_STRIDE:
             return False
-        venom_used = False
+        venom_used = root_used = False
         for kind in range(len(self.kinds)):
             form, tell, active, recover, reach, arc, venom, speed, shot_r, keep = \
                 self.attack(kind)
@@ -328,9 +346,24 @@ class Config:
                 if any(self.attack(kind)):
                     return False
                 continue
-            if form not in (FORM_ARC, FORM_CHARGE, FORM_PROJECTILE) or tell < 1 or active < 1 \
-                    or recover < 0:
+            if form not in (FORM_ARC, FORM_CHARGE, FORM_PROJECTILE, FORM_DEATH_ZONE,
+                            FORM_GROUND_ZONE) or tell < 1 or active < 1 or recover < 0:
                 return False
+            if form in (FORM_DEATH_ZONE, FORM_GROUND_ZONE):
+                # A zone: a radius, no arc, venom, shot speed or keep distance. A death zone
+                # hits once with the kind damage and has no launch (reach 0, no recovery); a
+                # ground zone launches within reach, deals no damage and applies the root.
+                if arc != 0 or venom != 0 or speed != 0 or keep != 0 \
+                        or not 0 < shot_r <= MAX_ATTACK_REACH:
+                    return False
+                if form == FORM_DEATH_ZONE and (reach != 0 or recover != 0
+                                                or self.kinds[kind][3] <= 0):
+                    return False
+                if form == FORM_GROUND_ZONE and (not 0 < reach <= MAX_ATTACK_REACH
+                                                 or self.kinds[kind][3] != 0):
+                    return False
+                root_used = root_used or form == FORM_GROUND_ZONE
+                continue
             if not 0 < reach <= MAX_ATTACK_REACH:
                 return False
             if form == FORM_PROJECTILE:
@@ -355,6 +388,8 @@ class Config:
             if venom not in (0, 1):
                 return False
             venom_used = venom_used or venom == 1
+        if root_used and not (self.root_duration > 0 and 0 < self.root_mult <= RATE_ONE):
+            return False
         if venom_used:
             return (self.venom_max > 0 and self.venom_duration > 0 and self.venom_period > 0
                     and self.venom_damage >= 0)
@@ -378,7 +413,12 @@ class Config:
             perimeter = 2 * (self.max_x - self.min_x - 4 * radius + self.max_y - self.min_y)
             if not (speed >= 0 and radius > 0 and self.max_x - self.min_x > 2 * radius
                     and self.max_y - self.min_y > 2 * radius and perimeter <= BELOW_LIMIT
-                    and hp > 0 and damage >= 0 and interval > 0 and weight > 0):
+                    and hp > 0 and damage >= 0 and weight > 0):
+                return False
+        # Every kind attacks on an interval, except a death-zone kind, which never attacks
+        # while alive (interval 0).
+        for kind, record in enumerate(self.kinds):
+            if (record[4] != 0) if self._death_zone_kind(kind) else (record[4] <= 0):
                 return False
         return True
 
@@ -424,6 +464,8 @@ P_LEDGER = 8
 G_UID, G_X, G_Y, G_VALUE = range(4)
 S_X, S_Y, S_VX, S_VY, S_TTL, S_DAMAGE, S_RADIUS = range(7)
 SHOT_FIELDS = 7
+Z_X, Z_Y, Z_RADIUS, Z_TELL, Z_LEFT, Z_DAMAGE, Z_FORM, Z_OWNER, Z_HIT = range(9)
+ZONE_FIELDS = 9
 
 
 class World:
@@ -440,7 +482,11 @@ class World:
     Enemy attacks and hero statuses (ADR-011 sections 2 and 4): the attack instance counter and
     status.venom (stacks, ticks left, ticks to the next damage). Enemy shot slot: [x, y, vx, vy,
     ttl, damage, radius], free when damage == 0 (all fields 0); lowest free slot, at most
-    ENEMY_SHOTS_LIMIT slots."""
+    ENEMY_SHOTS_LIMIT slots.
+
+    Zones (ADR-011 E5): status.root_slow ticks left; zone slot: [x, y, radius, tell ticks left,
+    active ticks left, damage, form, owner enemy uid, hit], free when form == 0 (all fields 0);
+    lowest free slot, at most ZONES_LIMIT slots."""
 
     def __init__(self, config: Config):
         self.tick = 0
@@ -476,11 +522,13 @@ class World:
         self.venom_stacks = 0
         self.venom_left = 0
         self.venom_phase = 0
+        self.root_left = 0
         self.ledger_size = config.ledger_size()
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
         self.gems: list[list[int]] = []
         self.shots: list[list[int]] = []
+        self.zones: list[list[int]] = []
 
     def over(self) -> bool:
         """Terminal: the hero died or the run was won (ADR-011 section 1)."""
@@ -500,12 +548,14 @@ class World:
                 self.level, self.pending_level_choices, self.choices_voided,
                 self.choices_done, self.build_revision, self.offers_rng_cursor] + hand \
             + self.ranks + [self.hero_hp_max, self.next_attack_uid, self.venom_stacks,
-                            self.venom_left, self.venom_phase, len(self.enemies),
-                            len(self.projectiles), len(self.gems), len(self.shots)]
+                            self.venom_left, self.venom_phase, self.root_left,
+                            len(self.enemies), len(self.projectiles), len(self.gems),
+                            len(self.shots), len(self.zones)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile] \
             + [v for gem in self.gems for v in gem] \
-            + [v for shot in self.shots for v in shot]
+            + [v for shot in self.shots for v in shot] \
+            + [v for zone in self.zones for v in zone]
 
     def digest(self) -> str:
         return ints_digest(self.ints())
@@ -515,6 +565,9 @@ class World:
 
     def live_shots(self) -> int:
         return sum(1 for shot in self.shots if shot[S_DAMAGE] != 0)
+
+    def live_zones(self) -> int:
+        return sum(1 for zone in self.zones if zone[Z_FORM] != 0)
 
 
 def _dist2(ax: int, ay: int, bx: int, by: int) -> int:
@@ -702,6 +755,12 @@ def hero_speed(config: Config, world: World) -> int:
     return config.speed + SPEED_PER_RANK * world.ranks[U_SPEED]
 
 
+def move_speed(config: Config, world: World) -> int:
+    """The step of the hero this tick: the build speed, slowed by status.root_slow."""
+    speed = hero_speed(config, world)
+    return fx.mul(speed, config.root_mult) if world.root_left > 0 else speed
+
+
 def pickup_radius(config: Config, world: World) -> int:
     return config.pickup_radius + PICKUP_PER_RANK * world.ranks[U_PICKUP]
 
@@ -876,6 +935,50 @@ def fly_shots(config: Config, world: World) -> None:
             world.shots[slot] = [0] * SHOT_FIELDS
 
 
+def _zone(config: Config, kind: int, x: int, y: int, owner: int) -> list[int]:
+    """A new zone of `kind` at (x, y): its telegraph starts in this tick (ADR-011 E5)."""
+    form, tell, active = config.attack(kind)[:3]
+    return [x, y, config.attack(kind)[8], tell, active, config.kinds[kind][3], form, owner, 0]
+
+
+def _add_zone(world: World, zone: list[int]) -> None:
+    """The lowest free zone slot; with all ZONES_LIMIT slots taken the zone is not created."""
+    slot = _lowest_free(world.zones, Z_FORM)
+    if slot >= 0:
+        world.zones[slot] = zone
+    elif len(world.zones) < ZONES_LIMIT:
+        world.zones.append(zone)
+
+
+def _owns_zone(world: World, uid: int) -> bool:
+    """A ground-zone caster keeps at most one zone (ADR-011 section 3)."""
+    return any(zone[Z_FORM] == FORM_GROUND_ZONE and zone[Z_OWNER] == uid for zone in world.zones)
+
+
+def tick_zones(config: Config, world: World) -> None:
+    """Zones after the enemy shots (ADR-011 section 2), slot order. The telegraph is safe: a
+    zone made in tick N is active from tick N + telegraph for active_ticks ticks, then freed.
+    While active, with the hero centre inside the radius: a death zone deals its damage once
+    per zone; a ground zone applies status.root_slow (the duration starts again) and deals no
+    damage. Zones never touch enemies, so a death never comes from a zone."""
+    for slot, zone in enumerate(world.zones):
+        if zone[Z_FORM] == 0:
+            continue
+        if zone[Z_TELL] > 0:
+            zone[Z_TELL] -= 1
+            if zone[Z_TELL] > 0:
+                continue
+        zone[Z_LEFT] -= 1
+        if _dist2(zone[Z_X], zone[Z_Y], world.player_x, world.player_y) <= zone[Z_RADIUS] ** 2:
+            if zone[Z_FORM] == FORM_GROUND_ZONE:
+                world.root_left = config.root_duration
+            elif zone[Z_HIT] == 0:
+                world.hero_hp -= zone[Z_DAMAGE]
+                zone[Z_HIT] = 1
+        if zone[Z_LEFT] == 0:
+            world.zones[slot] = [0] * ZONE_FIELDS
+
+
 def _aim(world: World, enemy: list[int]) -> tuple[int, int]:
     """Q14 direction from the enemy to the hero; +x when they coincide."""
     ux, uy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
@@ -929,16 +1032,18 @@ def enemy_attacks(config: Config, world: World) -> None:
     MELEE_ARC (launch d <= 3R/4): the direction stays; the sector hits in the first active
     tick (start + telegraph). CHARGE (launch d <= L): the direction is aimed again at the end
     of `tell` and does not change after; each active tick dashes L // active_ticks su and the
-    first touch hits."""
+    first touch hits. GROUND_ZONE (launch d <= reach, no zone of its own alive): the zone is
+    made at the launch on the hero centre; the enemy is active for one tick. A death-zone kind
+    never attacks while alive."""
     for enemy in world.enemies:
         if not _live(enemy):
             continue
         kind = enemy[E_KIND]
         form, tell, active, recover, reach, arc, venom = config.attack(kind)[:7]
-        if form == FORM_CONTACT:
+        if form in (FORM_CONTACT, FORM_DEATH_ZONE):
             continue
-        if form == FORM_PROJECTILE:
-            active = 1  # the enemy releases the shot; the shot lives active_ticks
+        if form in (FORM_PROJECTILE, FORM_GROUND_ZONE):
+            active = 1  # the shot or the zone lives active_ticks, not the enemy
         if enemy[E_CD] > 0:
             enemy[E_CD] -= 1
         if enemy[E_STATE] != ST_APPROACH:
@@ -951,8 +1056,9 @@ def enemy_attacks(config: Config, world: World) -> None:
                     elif form == FORM_PROJECTILE:
                         enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
                         _release(config, world, enemy)
-                    elif in_sector(reach, arc, enemy[E_DX], enemy[E_DY],
-                                   world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
+                    elif form == FORM_ARC and in_sector(
+                            reach, arc, enemy[E_DX], enemy[E_DY],
+                            world.player_x - enemy[E_X], world.player_y - enemy[E_Y]):
                         world.hero_hp -= config.kinds[kind][3]
                         if venom:
                             add_venom(config, world)
@@ -964,21 +1070,29 @@ def enemy_attacks(config: Config, world: World) -> None:
         if form == FORM_CHARGE and enemy[E_STATE] == ST_ACTIVE:
             _dash(config, world, enemy, reach // active)
         dx, dy = world.player_x - enemy[E_X], world.player_y - enemy[E_Y]
-        if form in (FORM_CHARGE, FORM_PROJECTILE):
-            in_range = dx * dx + dy * dy <= reach * reach
-        else:
+        if form == FORM_ARC:
             in_range = in_launch_range(reach, dx, dy)
+        else:
+            in_range = dx * dx + dy * dy <= reach * reach
+        if form == FORM_GROUND_ZONE and _owns_zone(world, enemy[E_UID]):
+            in_range = False
         if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_range:
             enemy[E_STATE], enemy[E_LEFT], enemy[E_CD] = ST_TELL, tell, config.kinds[kind][4]
             enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
             enemy[E_ATK] = world.next_attack_uid
             world.next_attack_uid += 1
+            if form == FORM_GROUND_ZONE:
+                _add_zone(world, _zone(config, kind, world.player_x, world.player_y,
+                                       enemy[E_UID]))
 
 
 def tick_statuses(config: Config, world: World) -> None:
     """Hero statuses before the death phase (ADR-011 section 4). status.venom: the tick it is
     applied counts as the first of its duration and period; damage = stacks x damage per
-    period, in the same tick before the expiry."""
+    period, in the same tick before the expiry. status.root_slow: one tick less (the tick it is
+    applied counts as the first of its duration)."""
+    if world.root_left > 0:
+        world.root_left -= 1
     if world.venom_stacks == 0:
         return
     world.venom_left -= 1
@@ -991,10 +1105,14 @@ def tick_statuses(config: Config, world: World) -> None:
 
 
 def clear_dead(config: Config, world: World) -> None:
-    """Phase 8a: per dead enemy in slot order the gem drop, then the freed slot and the kill."""
+    """Phase 8a: per dead enemy in slot order its death zone (ON_DEATH_ZONE kinds), the gem
+    drop, then the freed slot and the kill."""
     for slot, enemy in enumerate(world.enemies):
         if enemy[E_UID] == 0 or enemy[E_HP] > 0:
             continue
+        if config.form(enemy[E_KIND]) == FORM_DEATH_ZONE:
+            _add_zone(world, _zone(config, enemy[E_KIND], enemy[E_X], enemy[E_Y],
+                                   enemy[E_UID]))
         if config.has_xp() and config.kind_xp[enemy[E_KIND]] > 0:
             drop(config, world, enemy[E_X], enemy[E_Y], config.kind_xp[enemy[E_KIND]])
         world.enemies[slot] = [0] * ENEMY_FIELDS
@@ -1136,7 +1254,7 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         _apply_command(config, world, records[world.command_cursor])
         world.command_cursor += 1
     qx, qy = direction_q14(world.move_x, world.move_y)
-    r, speed = config.radius, hero_speed(config, world)
+    r, speed = config.radius, move_speed(config, world)
     world.player_x = min(max(world.player_x + mul_q14(speed, qx), config.min_x + r),
                          config.max_x - r)
     world.player_y = min(max(world.player_y + mul_q14(speed, qy), config.min_y + r),
@@ -1148,6 +1266,7 @@ def step(config: Config, world: World, log: CommandLog) -> None:
             cast(config, world)
             fly_and_hit(config, world)
         fly_shots(config, world)
+        tick_zones(config, world)
         contact(config, world)
         enemy_attacks(config, world)
         tick_statuses(config, world)
@@ -1376,6 +1495,16 @@ MANTIS_LUNGE = [FORM_CHARGE, 33, 10, 36, 108000, 0, 0, 0, 0, 0]
 #   within 8 cells, keeps 6 cells, shot 0.58 x hero speed, 8 px, 240 ticks
 LANTERN_KIND = [3936, 16800, 7000, 6400, 204, 3]
 LANTERN_WISP = [FORM_PROJECTILE, 36, 240, 27, 384000, 0, 0, 2784, 8000, 288000]
+#   paper_puppet: speed 0.83, radius 0.82, hp 0.82, burst 0.38, no attack while alive; the
+#   death zone has the radius H, a 36-tick telegraph and 54 active ticks
+PUPPET_KIND = [3984, 19680, 8200, 3800, 0, 2]
+PUPPET_BURST = [FORM_DEATH_ZONE, 36, 54, 0, 0, 0, 0, 0, DANGER_SU, 0]
+#   root_abomination: speed 0.64, radius 1.05, hp 1.1, no damage, cooldown 360; launch within
+#   8 cells, the zone of 1.6 H on the hero: 57-tick telegraph, 165 active ticks, recovery 45
+ROOT_KIND = [3072, 25200, 11000, 0, 360, 1]
+ROOT_GROWTH = [FORM_GROUND_ZONE, 57, 165, 45, 384000, 0, 0, 0, 153600, 0]
+# status.root_slow: 90 ticks, hero speed x 0.72.
+P0_ROOT = [90, 720]
 MIXED_KINDS = W0_KINDS + ARC_KINDS
 MIXED_ATTACKS = CONTACT_ATTACK * 2 + ARC_ATTACKS
 # status.venom: 3 stacks, 240 ticks, damage every 60 ticks, 1 HP per stack.
@@ -1409,6 +1538,21 @@ def _attack_scenarios():
                       attacks=LANTERN_WISP)
     out.append(("shots_hero_stands_still", lanterns, [], 2400))
     out.append(("shots_hero_circles", lanterns, migrate_v1(_circle(20, 2400)), 2400))
+    # E5: puppets killed by the skill around a standing hero (death zones), root casters
+    # around a standing and a circling hero (zones, status.root_slow), and the w2-w3 crowd.
+    puppets = Config(BASE, [TOUGH, 20000, 0, 1000, 12, 384000], PUPPET_KIND, SEED, P0_SKILL,
+                     attacks=PUPPET_BURST)
+    out.append(("zones_puppets_hero_stands_still", puppets, [], 2400))
+    out.append(("zones_puppets_hero_circles", puppets, migrate_v1(_circle(20, 2400)), 2400))
+    roots = Config(BASE, [TOUGH, 30000, 0, 1000, 6, 384000], ROOT_KIND, SEED,
+                   attacks=ROOT_GROWTH, root=P0_ROOT)
+    out.append(("zones_roots_hero_stands_still", roots, [], 2400))
+    out.append(("zones_roots_hero_circles", roots, migrate_v1(_circle(30, 2400)), 2400))
+    late = Config(BASE, P0_VALUES, MIXED_KINDS + PUPPET_KIND + ROOT_KIND, "7", P0_SKILL,
+                  ((48000, 512), (10, 15, 15, 15, 20, 15, 20), P0_XP_COSTS),
+                  attacks=MIXED_ATTACKS + PUPPET_BURST + ROOT_GROWTH, venom=P0_VENOM,
+                  root=P0_ROOT)
+    out.append(("zones_mixed_hero_circles", late, migrate_v1(_circle(30, 3600)), 3600))
     return out
 
 
@@ -1509,7 +1653,8 @@ def run_trace(config: Config, commands, steps: int):
                 "gems": world.gems_alive, "xp": world.xp_collected_total, "level": world.level,
                 "choices": world.choices_done, "paused": int(world.paused()), "won": world.won,
                 "attacks": world.next_attack_uid - 1, "venom": world.venom_stacks,
-                "shots": world.live_shots(),
+                "shots": world.live_shots(), "zones": world.live_zones(),
+                "root": world.root_left,
                 "digest": world.digest()})
     return log, world, checkpoints
 
@@ -1529,7 +1674,8 @@ def config_json(config: Config) -> dict:
     attacks = None
     if config.raw_attacks:
         attacks = {"records": [str(v) for v in config.raw_attacks],
-                   "venom": [str(v) for v in config.venom]}
+                   "venom": [str(v) for v in config.venom],
+                   "root": [str(v) for v in config.root]}
     return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
             "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks,
             "attacks": attacks}

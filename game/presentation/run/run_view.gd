@@ -42,6 +42,8 @@ const COLOR_GEM: Color = Color(0.36, 0.84, 0.78)
 const COLOR_XP_BACK: Color = Color(0.0, 0.0, 0.0, 0.55)
 ## status.venom on the hero: tint and one pip per stack above the HP bar.
 const COLOR_VENOM: Color = Color(0.45, 0.85, 0.3)
+## status.root_slow on the hero: a ring of roots.
+const COLOR_ROOTED: Color = Color(0.82, 0.2, 0.28, 0.9)
 ## Enemy shot (lantern wisp): a pale ghost-fire orb with a glow.
 const COLOR_WISP: Color = Color(0.72, 1.0, 0.86)
 const COLOR_WISP_GLOW: Color = Color(0.45, 0.95, 0.75, 0.3)
@@ -227,6 +229,7 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_WALL, false, 4.0)
 	_draw_puffs()
 	_draw_gems()
+	_draw_zones()
 	_draw_telegraphs()
 	_draw_enemies()
 	_draw_projectiles()
@@ -371,6 +374,14 @@ func _draw_hud() -> void:
 		_hud.draw_string(font, corner + Vector2(184, 0), level, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
 
 
+## Enemy zones on the floor, under the telegraphs and the enemies (ADR-011 E5).
+func _draw_zones() -> void:
+	for slot: int in driver.world.zone_slots():
+		var zone: Dictionary = AttackTelegraph.zone_shape(driver.config, driver.world, slot)
+		if not zone.is_empty():
+			AttackTelegraph.draw_zone(self, zone)
+
+
 ## Attack telegraphs under the enemies (AttackTelegraph, ADR-011).
 func _draw_telegraphs() -> void:
 	for slot: int in driver.world.enemy_slots():
@@ -396,6 +407,8 @@ func _draw_hero() -> void:
 	if stacks > 0 and _flash <= 0.0:
 		color = color.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
 	draw_circle(hero, HERO_RADIUS_PX, color)
+	if driver.world.root_left > 0:
+		draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
 	for pip: int in stacks:
 		draw_circle(hero + Vector2(-8.0 + 8.0 * pip, -HERO_RADIUS_PX - 18), 3.0, COLOR_VENOM)
 	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)

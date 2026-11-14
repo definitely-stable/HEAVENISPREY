@@ -12,7 +12,8 @@ extends RefCounted
 ## Run end (ADR-011 section 1): run_ticks is the stage duration; a hero who is not dead after
 ## the tick that reaches it wins. 0 = no time limit.
 ## Enemy attacks (ADR-011 sections 2-4): empty (every kind hits by contact) or one
-## ATTACK_STRIDE record per kind; the status.venom values (VENOM_STRIDE).
+## ATTACK_STRIDE record per kind; the status.venom values (VENOM_STRIDE) and the
+## status.root_slow values (ROOT_STRIDE).
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -25,12 +26,17 @@ const KIND_DAMAGE: int = 3
 const KIND_INTERVAL: int = 4
 const KIND_WEIGHT: int = 5
 ## Enemy attack record (ADR-011 sections 2-3): [form, telegraph_ticks, active_ticks,
-## recovery_ticks, reach_su, arc_degrees, venom, shot_speed_su, shot_radius_su, keep_su].
+## recovery_ticks, reach_su, arc_degrees, venom, shot_speed_su, radius_su, keep_su].
 ## FORM_CONTACT kinds hit by touch (all zeros); the other forms run the attack machine with
 ## the kind damage, and the kind interval as the cooldown from the start of `tell`. A charge
 ## has arc 0, no venom, and its reach is the dash length. A projectile kind launches within
 ## reach, does not chase closer than keep_su, and its active_ticks is the shot lifetime (the
 ## enemy itself is active for one tick, the release). The shot fields are 0 for other forms.
+## Zones (ADR-011 E5) take radius_su as the zone radius and active_ticks as the zone lifetime
+## after its telegraph. ON_DEATH_ZONE: no attack while alive (kind interval 0, reach 0); its
+## death leaves a zone that hits the hero once with the kind damage. GROUND_ZONE: launches
+## within reach, the zone is centred on the hero at the launch and applies status.root_slow
+## without damage (kind damage 0); the enemy is active for one tick, one zone per caster.
 const ATTACK_STRIDE: int = 10
 const ATTACK_FORM: int = 0
 const ATTACK_TELEGRAPH: int = 1
@@ -40,19 +46,26 @@ const ATTACK_REACH: int = 4
 const ATTACK_ARC: int = 5
 const ATTACK_VENOM: int = 6
 const ATTACK_SHOT_SPEED: int = 7
-const ATTACK_SHOT_RADIUS: int = 8
+## Shot or zone radius.
+const ATTACK_RADIUS: int = 8
 const ATTACK_KEEP: int = 9
 const FORM_CONTACT: int = 0
 const FORM_ARC: int = 1
 const FORM_CHARGE: int = 2
 const FORM_PROJECTILE: int = 3
+const FORM_DEATH_ZONE: int = 4
+const FORM_GROUND_ZONE: int = 5
 ## Enemy shot pool (ADR-011 section 3): a shot that finds no free slot is not fired.
 const ENEMY_SHOTS_LIMIT: int = 64
+## Enemy zone pool (ADR-011 E5): a zone that finds no free slot is not created.
+const ZONES_LIMIT: int = 64
 ## Keeps the sector test inside int64 (su).
 const MAX_ATTACK_REACH: int = 4194304
 const MAX_ARC_DEGREES: int = 180
 ## status.venom: [max_stacks, duration_ticks, period_ticks, damage_mhp per stack and period].
 const VENOM_STRIDE: int = 4
+## status.root_slow: [duration_ticks, hero speed multiplier fx].
+const ROOT_STRIDE: int = 2
 const MAX_ENEMIES_LIMIT: int = 4096
 const MAX_PROJECTILES_LIMIT: int = 256
 const MAX_PIERCE: int = 7
@@ -104,6 +117,7 @@ var choice_mode: int = CHOICE_NONE
 var run_ticks: int = 0
 var attacks: PackedInt64Array = PackedInt64Array()
 var venom: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
+var root: PackedInt64Array = PackedInt64Array([0, 0])
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -174,11 +188,14 @@ func with_run_ticks(p_ticks: int) -> SimConfig:
 	return self
 
 
-## Sets the enemy attack table (one ATTACK_STRIDE record per kind, or empty) and the
-## status.venom values.
-func with_attacks(p_attacks: PackedInt64Array, p_venom: PackedInt64Array) -> SimConfig:
+## Sets the enemy attack table (one ATTACK_STRIDE record per kind, or empty), the status.venom
+## values and the status.root_slow values ([duration_ticks, speed multiplier fx]).
+func with_attacks(
+	p_attacks: PackedInt64Array, p_venom: PackedInt64Array, p_root: PackedInt64Array = PackedInt64Array([0, 0])
+) -> SimConfig:
 	attacks = p_attacks.duplicate()
 	venom = p_venom.duplicate()
+	root = p_root.duplicate()
 	return self
 
 
@@ -256,6 +273,7 @@ func to_ints() -> PackedInt64Array:
 	out.append(attacks.size())
 	out.append_array(attacks)
 	out.append_array(venom)
+	out.append_array(root)
 	return out
 
 
@@ -290,9 +308,14 @@ func is_valid() -> bool:
 		return false
 	if not attacks.is_empty() and not _attacks_valid():
 		return false
-	if venom.size() != VENOM_STRIDE:
+	if venom.size() != VENOM_STRIDE or root.size() != ROOT_STRIDE:
 		return false
 	return run_ticks >= 0
+
+
+## The kind leaves a zone on death and never attacks while alive (interval 0).
+func _death_zone_kind(kind: int) -> bool:
+	return attacks.size() == kind_count() * ATTACK_STRIDE and attack_value(kind, ATTACK_FORM) == FORM_DEATH_ZONE
 
 
 ## A dash moves reach // active su per tick: at least 1 su and no longer than the hero and
@@ -313,11 +336,30 @@ func _charge_valid(kind: int) -> bool:
 	)
 
 
+## A zone: a radius, no arc, venom, shot speed or keep distance. A death zone hits once
+## with the kind damage and has no launch (reach 0, no recovery); a ground zone launches
+## within reach and deals no damage (kind damage 0).
+func _zone_valid(kind: int) -> bool:
+	var form: int = attack_value(kind, ATTACK_FORM)
+	var reach: int = attack_value(kind, ATTACK_REACH)
+	var radius: int = attack_value(kind, ATTACK_RADIUS)
+	if attack_value(kind, ATTACK_TELEGRAPH) < 1 or attack_value(kind, ATTACK_ACTIVE) < 1:
+		return false
+	if attack_value(kind, ATTACK_RECOVERY) < 0 or radius <= 0 or radius > MAX_ATTACK_REACH:
+		return false
+	for field: int in [ATTACK_ARC, ATTACK_VENOM, ATTACK_SHOT_SPEED, ATTACK_KEEP]:
+		if attack_value(kind, field) != 0:
+			return false
+	if form == FORM_DEATH_ZONE:
+		return reach == 0 and attack_value(kind, ATTACK_RECOVERY) == 0 and kind_value(kind, KIND_DAMAGE) > 0
+	return reach > 0 and reach <= MAX_ATTACK_REACH and kind_value(kind, KIND_DAMAGE) == 0
+
+
 ## A shot must deal damage and must not step over the hero in one tick (speed no more than the
 ## hero and shot radii together); arc 0, no venom, keep distance within the reach.
 func _projectile_valid(kind: int) -> bool:
 	var reach: int = attack_value(kind, ATTACK_REACH)
-	var shot_radius: int = attack_value(kind, ATTACK_SHOT_RADIUS)
+	var shot_radius: int = attack_value(kind, ATTACK_RADIUS)
 	var speed: int = attack_value(kind, ATTACK_SHOT_SPEED)
 	var keep: int = attack_value(kind, ATTACK_KEEP)
 	if attack_value(kind, ATTACK_TELEGRAPH) < 1 or attack_value(kind, ATTACK_ACTIVE) < 1:
@@ -343,6 +385,7 @@ func _attacks_valid() -> bool:
 	if not has_enemies() or attacks.size() != kind_count() * ATTACK_STRIDE:
 		return false
 	var venom_used: bool = false
+	var root_used: bool = false
 	for kind: int in kind_count():
 		var form: int = attack_value(kind, ATTACK_FORM)
 		if form == FORM_CONTACT:
@@ -357,7 +400,12 @@ func _attacks_valid() -> bool:
 			if not _projectile_valid(kind):
 				return false
 			continue
-		for field: int in [ATTACK_SHOT_SPEED, ATTACK_SHOT_RADIUS, ATTACK_KEEP]:
+		if form == FORM_DEATH_ZONE or form == FORM_GROUND_ZONE:
+			if not _zone_valid(kind):
+				return false
+			root_used = root_used or form == FORM_GROUND_ZONE
+			continue
+		for field: int in [ATTACK_SHOT_SPEED, ATTACK_RADIUS, ATTACK_KEEP]:
 			if attack_value(kind, field) != 0:
 				return false
 		if form == FORM_CHARGE:
@@ -378,6 +426,8 @@ func _attacks_valid() -> bool:
 		if not arc_ok:
 			return false
 		venom_used = venom_used or flag == 1
+	if root_used and not (root[0] > 0 and root[1] > 0 and root[1] <= RATE_ONE):
+		return false
 	if venom_used:
 		return venom[0] > 0 and venom[1] > 0 and venom[2] > 0 and venom[3] >= 0
 	return true
@@ -404,10 +454,13 @@ func _enemies_valid() -> bool:
 			and perimeter <= BELOW_LIMIT
 			and kind_value(kind, KIND_HP) > 0
 			and kind_value(kind, KIND_DAMAGE) >= 0
-			and kind_value(kind, KIND_INTERVAL) > 0
 			and kind_value(kind, KIND_WEIGHT) > 0
 		)
 		if not kind_ok:
+			return false
+		# Every kind attacks on an interval, except a death-zone kind (interval 0).
+		var interval: int = kind_value(kind, KIND_INTERVAL)
+		if (interval != 0) if _death_zone_kind(kind) else (interval <= 0):
 			return false
 	return true
 

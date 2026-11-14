@@ -102,11 +102,14 @@ static func contact(config: SimConfig, world: WorldState) -> void:
 			world.enemy_cooldown[slot] = config.kind_value(kind, SimConfig.KIND_INTERVAL)
 
 
-## Death phase, enemies: every occupied slot with HP 0 is freed (all fields 0), in slot order.
+## Death phase, enemies: every occupied slot with HP 0 leaves its death zone (ON_DEATH_ZONE
+## kinds), drops its gem and is freed (all fields 0), in slot order.
 static func clear_dead(config: SimConfig, world: WorldState) -> void:
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] == 0 or world.enemy_hp[slot] > 0:
 			continue
+		if config.attack_value(world.enemy_kind[slot], SimConfig.ATTACK_FORM) == SimConfig.FORM_DEATH_ZONE:
+			EnemyZoneSystem.on_death(config, world, slot)
 		if config.has_xp() and config.kind_xp[world.enemy_kind[slot]] > 0:
 			var value: int = config.kind_xp[world.enemy_kind[slot]]
 			XpSystem.drop(config, world, world.enemy_x[slot], world.enemy_y[slot], value)

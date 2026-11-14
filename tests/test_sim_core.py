@@ -1012,8 +1012,8 @@ class SimRunEndReferenceTests(unittest.TestCase):
 
     def test_run_ticks_follows_the_choice_mode(self):
         config = p0(run_ticks=18000)
-        # choice_mode, run_ticks, then the attack table (empty) and the venom values.
-        self.assertEqual(config.ints()[-7:], [0, 18000, 0, 0, 0, 0, 0])
+        # choice_mode, run_ticks, then the attack table (empty), the venom and root values.
+        self.assertEqual(config.ints()[-9:], [0, 18000, 0, 0, 0, 0, 0, 0, 0])
         self.assertTrue(config.valid())
         self.assertFalse(p0(run_ticks=-1).valid())
 
@@ -1114,6 +1114,27 @@ def lantern_world(extra=0, record=None):
     assert config.valid()
     world = sim.World(config)
     place(world, 0, CX + 384000 + sim.LANTERN_KIND[0] + extra, CY, 1000000)
+    return config, world
+
+
+def puppet_world():
+    """A puppet at 0 HP on the hero centre: it dies in the first tick (no chase step, it
+    touches the hero) and leaves its death zone at (CX, CY) in tick 0."""
+    config = sim.Config(BASE, NO_SPAWN, sim.PUPPET_KIND, "1", attacks=sim.PUPPET_BURST)
+    assert config.valid()
+    world = sim.World(config)
+    place(world, 0, CX, CY, 0)
+    return config, world
+
+
+def root_world(kind=None):
+    """The root caster on the hero's +x side: its first chase step ends exactly at the launch
+    range of 8 cells, so the zone is made on the hero centre in tick 0."""
+    kind = kind or sim.ROOT_KIND
+    config = sim.Config(BASE, NO_SPAWN, kind, "1", attacks=sim.ROOT_GROWTH, root=sim.P0_ROOT)
+    assert config.valid()
+    world = sim.World(config)
+    place(world, 0, CX + 384000 + kind[0], CY, 1000000)
     return config, world
 
 
@@ -1487,6 +1508,167 @@ class SimEnemyShotReferenceTests(unittest.TestCase):
             self.assertFalse(sim.Config(BASE, NO_SPAWN, sim.MANTIS_KIND, "1",
                                         attacks=record).valid(), field)
 
+
+class SimEnemyZoneReferenceTests(unittest.TestCase):
+    """ADR-011 sections 3-4 (E5): death zones, ground zones, status.root_slow."""
+
+    BURST = [CX, CY, 96000, 36, 54, 3800, sim.FORM_DEATH_ZONE, 1, 0]
+    ROOTS = [CX, CY, 153600, 57, 165, 0, sim.FORM_GROUND_ZONE, 1, 0]
+
+    def test_puppet_death_leaves_a_zone_safe_during_the_telegraph(self):
+        """PUPPET-DEATH: the zone appears where the puppet died; the telegraph (ticks 0..35)
+        never hits, the first active tick (36) does."""
+        config, world = puppet_world()
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.kills, world.zones), (1, [self.BURST]))
+        run_moves(config, world, {}, 35)
+        self.assertEqual(world.hero_hp, TOUGH, "telegraph is safe")
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.hero_hp, TOUGH - 3800)
+
+    def test_death_zone_hits_once_and_expires(self):
+        config, world = puppet_world()
+        run_moves(config, world, {}, 89)
+        self.assertEqual((world.hero_hp, world.live_zones()), (TOUGH - 3800, 1))
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.zones, [[0] * sim.ZONE_FIELDS], "54 active ticks")
+        self.assertEqual(world.hero_hp, TOUGH - 3800, "once per zone")
+
+    def test_hero_leaves_the_death_zone_during_the_telegraph(self):
+        """The hero centre must be farther than H (96 px) in the first active tick: walking
+        out from tick 16 is in time, from tick 17 it is not (exactly on the edge)."""
+        for start, hit in ((16, False), (17, True)):
+            config, world = puppet_world()
+            run_moves(config, world, {start: (1, 0)}, 100)
+            self.assertEqual(world.hero_hp < TOUGH, hit, start)
+
+    def test_hero_walking_into_an_active_zone_is_hit_once(self):
+        config, world = puppet_world()
+        world.enemies[0] = [0] * sim.ENEMY_FIELDS
+        world.enemy_alive = 0
+        world.zones = [[CX + 200000, CY, 96000, 1, 54, 3800, sim.FORM_DEATH_ZONE, 9, 0]]
+        run_moves(config, world, {0: (1, 0)}, 21)
+        self.assertEqual(world.hero_hp, TOUGH)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.hero_hp, TOUGH - 3800, "enters at tick 21")
+        run_moves(config, world, {}, 30)
+        self.assertEqual(world.hero_hp, TOUGH - 3800)
+
+    def test_zones_never_touch_enemies(self):
+        """No recursion: a zone damages only the hero, so no death comes from a zone."""
+        config, world = puppet_world()
+        place(world, 0, CX + 40000, CY, 5000)
+        run_moves(config, world, {}, 90)
+        self.assertEqual(world.enemies[1][sim.E_HP], 5000)
+        self.assertEqual((world.kills, world.live_zones()), (1, 0))
+
+    def test_zone_pool_is_limited(self):
+        config, world = puppet_world()
+        far = [config.min_x, config.min_y, 1000, 1000, 1000, 1, sim.FORM_DEATH_ZONE, 99, 0]
+        world.zones = [list(far) for _ in range(sim.ZONES_LIMIT)]
+        run_moves(config, world, {}, 1)
+        self.assertEqual(len(world.zones), sim.ZONES_LIMIT)
+        self.assertNotIn(self.BURST, world.zones, "no free slot: no zone")
+        config, world = puppet_world()
+        world.zones = [list(far) for _ in range(3)]
+        world.zones[1] = [0] * sim.ZONE_FIELDS
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.zones[1], len(world.zones)), (self.BURST, 3), "lowest free")
+
+    def test_root_zone_is_made_on_the_hero_at_the_launch(self):
+        config, world = root_world()
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.zones, [self.ROOTS])
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_TELL)
+        run_moves(config, world, {}, 56)
+        self.assertEqual(world.root_left, 0, "telegraph does not root")
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.root_left, world.hero_hp), (89, TOUGH), "rooted, no damage")
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_ACTIVE)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemies[0][sim.E_STATE], sim.ST_RECOVER, "active is one tick")
+
+    def test_hero_leaves_the_root_zone_during_the_telegraph(self):
+        """ROOT-ESCAPE: 154 px in 57 ticks without the slow; from tick 25 the hero is out
+        before the zone wakes up, from tick 26 it is rooted."""
+        for start, rooted in ((25, False), (26, True)):
+            config, world = root_world()
+            log, seen = sim.CommandLog(), False
+            log.append((start, 0, sim.MOVE, -1, 0), 0)
+            for _ in range(120):
+                sim.step(config, world, log)
+                seen = seen or world.root_left > 0
+            self.assertEqual(seen, rooted, start)
+
+    def test_root_slows_the_hero_and_expires_after_leaving(self):
+        """ROOT-ESCAPE: rooted, the hero steps 0.72 x 4800 = 3456 su and still walks out
+        (45 steps, tick 104); the slow lasts 90 ticks from the last tick inside (103)."""
+        config, world = root_world()
+        log = sim.CommandLog()
+        log.append((60, 0, sim.MOVE, -1, 0), 0)
+        steps = []
+        for _ in range(260):
+            x = world.player_x
+            sim.step(config, world, log)
+            steps.append(x - world.player_x)
+        self.assertEqual(steps[60:193], [3456] * 133)
+        self.assertEqual(steps[193:200], [4800] * 7)
+        self.assertEqual(world.hero_hp, TOUGH)
+
+    def test_root_slow_scales_the_build_speed(self):
+        config, world = root_world()
+        world.ranks[sim.U_SPEED] = 1
+        world.root_left = 5
+        self.assertEqual(sim.move_speed(config, world), 3628, "5040 x 0.72, floored")
+        world.root_left = 0
+        self.assertEqual(sim.move_speed(config, world), 5040)
+
+    def test_one_zone_per_caster(self):
+        """A caster with a cooldown shorter than its zone waits for the zone to end: the zone
+        lives ticks 57..221 and the next launch comes in tick 221, after it is freed."""
+        kind = list(sim.ROOT_KIND)
+        kind[4] = 80
+        config, world = root_world(kind)
+        run_moves(config, world, {}, 221)
+        self.assertEqual(world.next_attack_uid - 1, 1)
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.next_attack_uid - 1, world.live_zones()), (2, 1))
+
+    def test_zone_outlives_its_caster(self):
+        config, world = root_world()
+        run_moves(config, world, {}, 10)
+        world.enemies[0][sim.E_HP] = 0
+        run_moves(config, world, {}, 48)
+        self.assertEqual(world.enemy_alive, 0)
+        self.assertEqual(world.root_left, 89, "the zone made in tell still roots")
+
+    def test_zone_records_are_validated(self):
+        def valid(record, kind, root=sim.P0_ROOT):
+            return sim.Config(BASE, NO_SPAWN, kind, "1", attacks=record, root=root).valid()
+        self.assertTrue(valid(sim.PUPPET_BURST, sim.PUPPET_KIND))
+        self.assertTrue(valid(sim.ROOT_GROWTH, sim.ROOT_KIND))
+        for field, value in ((3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 0), (9, 1)):
+            record = list(sim.PUPPET_BURST)
+            record[field] = value
+            self.assertFalse(valid(record, sim.PUPPET_KIND), ("burst", field, value))
+        for field, value in ((4, 0), (5, 1), (6, 1), (7, 1), (8, 0), (9, 1), (2, 0)):
+            record = list(sim.ROOT_GROWTH)
+            record[field] = value
+            self.assertFalse(valid(record, sim.ROOT_KIND), ("roots", field, value))
+        for field, value in ((3, 0), (4, 1)):
+            kind = list(sim.PUPPET_KIND)
+            kind[field] = value
+            self.assertFalse(valid(sim.PUPPET_BURST, kind), ("puppet", field, value))
+        harmful = list(sim.ROOT_KIND)
+        harmful[3] = 100
+        self.assertFalse(valid(sim.ROOT_GROWTH, harmful), "a ground zone deals no damage")
+        idle = list(sim.ROOT_KIND)
+        idle[4] = 0
+        self.assertFalse(valid(sim.ROOT_GROWTH, idle), "only a death-zone kind has interval 0")
+        for root in ([0, 720], [90, 0], [90, 1001], [90]):
+            self.assertFalse(valid(sim.ROOT_GROWTH, sim.ROOT_KIND, root), root)
+        self.assertFalse(sim.Config(BASE, NO_SPAWN, sim.PUPPET_KIND, "1").valid(),
+                         "interval 0 without the death-zone record")
 
 
 if __name__ == "__main__":

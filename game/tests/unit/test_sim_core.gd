@@ -77,7 +77,7 @@ static func _config(row: Dictionary) -> SimConfig:
 	var attacks: Variant = row.get("attacks")
 	if typeof(attacks) == TYPE_DICTIONARY:
 		var spec_attacks: Dictionary = attacks
-		config.with_attacks(_ints(spec_attacks["records"]), _ints(spec_attacks["venom"]))
+		config.with_attacks(_ints(spec_attacks["records"]), _ints(spec_attacks["venom"]), _ints(spec_attacks["root"]))
 	return config.with_choice_mode(int(row.get("choice_mode", 0))).with_run_ticks(int(row.get("run_ticks", 0)))
 
 
@@ -119,6 +119,8 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.next_attack_uid - 1, int(mark["attacks"]), label + " attacks")
 			assert_eq(world.venom_stacks, int(mark["venom"]), label + " venom")
 			assert_eq(world.live_shots(), int(mark["shots"]), label + " shots")
+			assert_eq(world.live_zones(), int(mark["zones"]), label + " zones")
+			assert_eq(world.root_left, int(mark["root"]), label + " root")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 

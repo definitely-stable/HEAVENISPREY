@@ -12,7 +12,9 @@ extends RefCounted
 ## Enemy attacks (ADR-011 section 2): per slot the attack state, the ticks left in it, the
 ## attack direction (Q14; an arc fixes it at the start of `tell`, a charge aims again at its
 ## end), the attack instance uid (from next_attack_uid) and whether it already hit the hero.
-## status.venom on the hero (ADR-011 section 4): stacks, ticks left, ticks to the next damage.
+## status.venom on the hero (ADR-011 section 4): stacks, ticks left, ticks to the next damage;
+## status.root_slow: ticks left. Enemy zones (ADR-011 E5): a slot is free when zone_form == 0
+## (all fields 0); lowest free slot, at most SimConfig.ZONES_LIMIT slots.
 ## The build (ADR-010 section 6): upgrade ranks in UpgradeSystem code order, the maximum hero
 ## HP and the offered hand (non-empty only while the run is paused for a choice). The state
 ## digest is SHA-256 over the little-endian bytes of `to_ints()`, never `hash()` or
@@ -69,6 +71,7 @@ var next_attack_uid: int = 1
 var venom_stacks: int = 0
 var venom_left: int = 0
 var venom_phase: int = 0
+var root_left: int = 0
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -115,6 +118,18 @@ var shot_vy: PackedInt64Array = PackedInt64Array()
 var shot_ttl: PackedInt64Array = PackedInt64Array()
 var shot_damage: PackedInt64Array = PackedInt64Array()
 var shot_radius: PackedInt64Array = PackedInt64Array()
+
+## Enemy zones (ADR-011 E5): centre, radius, telegraph ticks left, active ticks left, damage,
+## SimConfig.FORM_DEATH_ZONE or FORM_GROUND_ZONE (0 = free), owner enemy uid, hit flag.
+var zone_x: PackedInt64Array = PackedInt64Array()
+var zone_y: PackedInt64Array = PackedInt64Array()
+var zone_radius: PackedInt64Array = PackedInt64Array()
+var zone_tell: PackedInt64Array = PackedInt64Array()
+var zone_left: PackedInt64Array = PackedInt64Array()
+var zone_damage: PackedInt64Array = PackedInt64Array()
+var zone_form: PackedInt64Array = PackedInt64Array()
+var zone_owner: PackedInt64Array = PackedInt64Array()
+var zone_hit: PackedInt64Array = PackedInt64Array()
 
 
 static func initial(config: SimConfig) -> WorldState:
@@ -181,6 +196,32 @@ func append_shot_slot() -> int:
 	return shot_slots() - 1
 
 
+func zone_slots() -> int:
+	return zone_form.size()
+
+
+func live_zones() -> int:
+	var count: int = 0
+	for slot: int in zone_slots():
+		if zone_form[slot] != 0:
+			count += 1
+	return count
+
+
+## Appends a free zone slot (all fields 0) and returns its index.
+func append_zone_slot() -> int:
+	zone_x.append(0)
+	zone_y.append(0)
+	zone_radius.append(0)
+	zone_tell.append(0)
+	zone_left.append(0)
+	zone_damage.append(0)
+	zone_form.append(0)
+	zone_owner.append(0)
+	zone_hit.append(0)
+	return zone_slots() - 1
+
+
 func is_over() -> bool:
 	return hero_dead != 0 or won != 0
 
@@ -206,8 +247,8 @@ func to_ints() -> PackedInt64Array:
 		out.append(hand[card] if card < hand.size() else UpgradeSystem.NO_CARD)
 	out.append_array(ranks)
 	out.append_array(PackedInt64Array([
-		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase,
-		enemy_slots(), projectile_slots(), gem_slots(), shot_slots(),
+		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase, root_left,
+		enemy_slots(), projectile_slots(), gem_slots(), shot_slots(), zone_slots(),
 	]))
 	for slot: int in enemy_slots():
 		out.append_array(PackedInt64Array([
@@ -227,6 +268,11 @@ func to_ints() -> PackedInt64Array:
 		out.append_array(PackedInt64Array([
 			shot_x[slot], shot_y[slot], shot_vx[slot], shot_vy[slot], shot_ttl[slot],
 			shot_damage[slot], shot_radius[slot],
+		]))
+	for slot: int in zone_slots():
+		out.append_array(PackedInt64Array([
+			zone_x[slot], zone_y[slot], zone_radius[slot], zone_tell[slot], zone_left[slot],
+			zone_damage[slot], zone_form[slot], zone_owner[slot], zone_hit[slot],
 		]))
 	return out
 
@@ -272,6 +318,7 @@ func copy() -> WorldState:
 	other.venom_stacks = venom_stacks
 	other.venom_left = venom_left
 	other.venom_phase = venom_phase
+	other.root_left = root_left
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
@@ -305,4 +352,13 @@ func copy() -> WorldState:
 	other.shot_ttl = shot_ttl.duplicate()
 	other.shot_damage = shot_damage.duplicate()
 	other.shot_radius = shot_radius.duplicate()
+	other.zone_x = zone_x.duplicate()
+	other.zone_y = zone_y.duplicate()
+	other.zone_radius = zone_radius.duplicate()
+	other.zone_tell = zone_tell.duplicate()
+	other.zone_left = zone_left.duplicate()
+	other.zone_damage = zone_damage.duplicate()
+	other.zone_form = zone_form.duplicate()
+	other.zone_owner = zone_owner.duplicate()
+	other.zone_hit = zone_hit.duplicate()
 	return other

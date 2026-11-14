@@ -34,8 +34,8 @@ func test_stage_duration_comes_from_content() -> void:
 	var config: SimConfig = tuning.run_config(ContentRegistry.load_dir(), "101")
 	assert_not_null(config, tuning.error)
 	assert_eq(config.run_ticks, 5 * 60 * 60, "stage.jade_grove: 5 minutes")
-	# run_ticks, then the attack table size and the four venom values (ADR-011 E2).
-	assert_eq(config.to_ints()[config.to_ints().size() - 6], config.run_ticks)
+	# run_ticks, then the attack table size, four venom and two root values (ADR-011 E2, E5).
+	assert_eq(config.to_ints()[config.to_ints().size() - 8], config.run_ticks)
 
 
 func test_config_rejects_a_negative_duration() -> void:
