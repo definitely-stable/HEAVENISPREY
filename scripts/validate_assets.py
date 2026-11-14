@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ART-01: game asset manifest checks (ADR-009 section 5, ADR-013). Stdlib only.
+"""ART-01: game asset manifest checks (ADR-009 section 5, ADR-013, ADR-014). Stdlib only.
 
 game/assets/manifest.json lists every game sprite and texture. For each entry:
 - structure, a stable unique asset_id, a path under game/assets/<group>/<name>/<name>.png;
@@ -10,7 +10,9 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
 - source.json names the same asset, its prompt.txt hashes to prompt_sha256, references
   exist in ref/catalog.json with the same sha256, content_ids exist in the v7 configs;
 - the recorded style metrics meet the thresholds of the passport group
-  (art_source/style_passport.json, ART-BIBLE-001 version 2);
+  (art_source/style_passport.json, ART-BIBLE-001 version 3); a group with
+  min_rim_contrast_l needs a rim at least that much lighter than the median L of the
+  lightest floor texture (ADR-014 section 2);
 - the LFS volume of the slice (built files + masters) stays within the budget.
 """
 from __future__ import annotations
@@ -86,12 +88,14 @@ def content_ids() -> set[str]:
     return ids
 
 
-def check_qa(entry: dict, passport: dict) -> None:
+def check_qa(entry: dict, passport: dict, floor_l: float | None) -> None:
     qa = entry["qa"]
     group = passport["groups"].get(qa.get("palette_group"))
     label = entry["asset_id"]
     if group is None:
         raise AssetError(f"{label}: unknown palette group {qa.get('palette_group')}")
+    if any(c.startswith("class.") for c in entry["content_ids"]) and qa["palette_group"] != "hero_sprite":
+        raise AssetError(f"{label}: a hero asset must be measured against hero_sprite (no threat colour)")
     if qa["palette_mean_delta_e"] > group["max_palette_delta_e"]:
         raise AssetError(f"{label}: palette ΔE {qa['palette_mean_delta_e']} > {group['max_palette_delta_e']}")
     if "max_chroma" in group and qa["chroma"] > group["max_chroma"]:
@@ -102,8 +106,11 @@ def check_qa(entry: dict, passport: dict) -> None:
         raise AssetError(f"{label}: lights {qa['tones_pct'][2]} % < {group['min_lights_pct']} %")
     if "max_threat_pct" in group and qa["threat_colour_pct"] > group["max_threat_pct"]:
         raise AssetError(f"{label}: threat colour {qa['threat_colour_pct']} % > {group['max_threat_pct']} %")
-    if any(c.startswith("class.") for c in entry["content_ids"]) and qa["palette_group"] != "hero_sprite":
-        raise AssetError(f"{label}: a hero asset must be measured against hero_sprite (no threat colour)")
+    if "min_rim_contrast_l" in group:
+        if "rim_l" not in qa:
+            raise AssetError(f"{label}: group {qa['palette_group']} needs a rim")
+        if floor_l is not None and qa["rim_l"] - floor_l < group["min_rim_contrast_l"]:
+            raise AssetError(f"{label}: rim L {qa['rim_l']} is less than {group['min_rim_contrast_l']} above the floor")
 
 
 def check_layout(entry: dict) -> None:
@@ -133,7 +140,8 @@ def check_png(entry: dict, path: Path) -> None:
         raise AssetError(f"{entry['asset_id']}: a sprite atlas must be RGBA")
 
 
-def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]) -> tuple[int, bool]:
+def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str],
+                floor_l: float | None) -> tuple[int, bool]:
     for key in REQUIRED:
         if key not in entry:
             raise AssetError(f"{entry.get('asset_id', '?')}: missing {key}")
@@ -172,7 +180,7 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
             raise AssetError(f"{asset_id}: reference {ref['id']} is not in ref/catalog.json with that sha256")
     if not (SOURCE / name / "ASSET_CARD.md").is_file():
         raise AssetError(f"{asset_id}: no ASSET_CARD.md")
-    check_qa(entry, passport)
+    check_qa(entry, passport, floor_l)
     return entry["bytes"] + source["bytes"], real
 
 
@@ -187,11 +195,13 @@ def validate() -> dict:
     ids = content_ids()
     seen: set[str] = set()
     volume = real = 0
+    floors = [e["qa"]["median_l"] for e in manifest["assets"] if e.get("kind") == "floor_texture"]
+    floor_l = max(floors) if floors else None
     for entry in manifest["assets"]:
         if entry.get("asset_id") in seen:
             raise AssetError(f"duplicate asset_id {entry.get('asset_id')}")
         seen.add(entry["asset_id"])
-        size, checked = check_entry(entry, passport, ids, refs)
+        size, checked = check_entry(entry, passport, ids, refs, floor_l)
         volume += size
         real += checked
     if [e["asset_id"] for e in manifest["assets"]] != sorted(seen):

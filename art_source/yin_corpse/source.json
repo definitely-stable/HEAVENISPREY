@@ -3,7 +3,7 @@
   "asset_id": "asset.enemy.yin_corpse",
   "kind": "sprite_atlas",
   "group": "enemies",
-  "asset_version": 1,
+  "asset_version": 2,
   "content_ids": [
     "enemy.yin_corpse"
   ],
@@ -43,6 +43,12 @@
     96,
     186
   ],
-  "margin_px": 2,
-  "figure_height_px": 168
+  "margin_px": 4,
+  "figure_height_px": 122,
+  "anchor_x": "torso",
+  "rim": {
+    "colour": "#9db5ae",
+    "width_px": 2,
+    "alpha": 0.7
+  }
 }
