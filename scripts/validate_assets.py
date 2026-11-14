@@ -106,14 +106,14 @@ def check_qa(entry: dict, passport: dict) -> None:
         raise AssetError(f"{label}: a hero asset must be measured against hero_sprite (no threat colour)")
 
 
-def check_layout(entry: dict, width: int, height: int, colour: int) -> None:
+def check_layout(entry: dict) -> None:
+    """Layout rules that hold for the manifest alone (an LFS pointer checkout too)."""
     layout = entry["layout"]
     label = entry["asset_id"]
+    width, height = entry["size"]
     if entry["kind"] == "sprite_atlas":
         frame = layout["frame_size"]
         anchor = layout["feet_anchor"]
-        if colour != 6:
-            raise AssetError(f"{label}: a sprite atlas must be RGBA")
         if (width, height) != (frame * layout["frames"], frame * len(layout["directions"])):
             raise AssetError(f"{label}: atlas size is not frames x directions of {frame} px")
         if not (2 <= anchor[0] <= frame - 2 and 2 <= anchor[1] <= frame - 2):
@@ -122,6 +122,15 @@ def check_layout(entry: dict, width: int, height: int, colour: int) -> None:
             raise AssetError(f"{label}: duplicate directions")
     elif (width, height) != (layout["texture_px"], layout["texture_px"]):
         raise AssetError(f"{label}: floor texture is not texture_px square")
+
+
+def check_png(entry: dict, path: Path) -> None:
+    """A real PNG has the manifest size; sprite atlases are RGBA."""
+    width, height, colour = png_header(path)
+    if [width, height] != entry["size"]:
+        raise AssetError(f"{entry['asset_id']}: PNG size differs from the manifest")
+    if entry["kind"] == "sprite_atlas" and colour != 6:
+        raise AssetError(f"{entry['asset_id']}: a sprite atlas must be RGBA")
 
 
 def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]) -> tuple[int, bool]:
@@ -141,13 +150,11 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     for cid in entry["content_ids"]:
         if cid not in ids:
             raise AssetError(f"{asset_id}: unknown content id {cid}")
+    check_layout(entry)
     built = ROOT / entry["path"]
     real = check_binary(built, entry["sha256"], entry["bytes"], asset_id)
     if real:
-        width, height, colour = png_header(built)
-        if [width, height] != entry["size"]:
-            raise AssetError(f"{asset_id}: PNG size differs from the manifest")
-        check_layout(entry, width, height, colour)
+        check_png(entry, built)
     source = entry["source"]
     if source["path"] != f"art_source/{name}/" + Path(source["path"]).name:
         raise AssetError(f"{asset_id}: master must live in art_source/{name}/")

@@ -90,7 +90,7 @@ class AssetManifestTests(unittest.TestCase):
 
     def test_changed_file_fails(self):
         path = self.root / self.entry()["path"]
-        path.write_bytes(path.read_bytes() + b"x")
+        path.write_bytes(tiny_png(768, 768))
         self.fails("sha256/bytes differ")
 
     def atlas(self, data: bytes) -> None:
@@ -99,17 +99,21 @@ class AssetManifestTests(unittest.TestCase):
         entry.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
 
     def test_atlas_must_be_frames_by_directions(self):
-        self.atlas(tiny_png(768, 576))
         self.entry()["size"] = [768, 576]
         self.fails("frames x directions")
+
+    def test_layout_is_checked_on_an_lfs_pointer_checkout(self):
+        for entry in self.manifest["assets"]:
+            (self.root / entry["path"]).write_bytes(pointer(entry["sha256"], entry["bytes"]))
+        self.entry()["layout"]["feet_anchor"] = [96, 191]
+        self.fails("transparent margin")
 
     def test_atlas_must_be_rgba(self):
         self.atlas(tiny_png(768, 768, colour=2))
         self.fails("RGBA")
 
     def test_png_size_must_equal_the_manifest(self):
-        self.atlas(tiny_png(768, 768))
-        self.entry()["size"] = [768, 384]
+        self.atlas(tiny_png(768, 384))
         self.fails("PNG size differs")
 
     def test_feet_anchor_keeps_the_margin(self):
