@@ -8,11 +8,14 @@ extends RefCounted
 ## radius multiplier of the danger radius H, arc degrees, status.venom), CHARGE (the same
 ## timings, dash length in hero radii, no retarget) or PROJECTILE (the same timings, the
 ## active ticks as the shot lifetime, shot speed in hero speeds; one shot, no homing, aim
-## locked at the end of tell) with the venom values from the status catalog (ADR-011); the
+## locked at the end of tell), ON_DEATH_ZONE (telegraph, persistent ticks, the zone of radius
+## H) or GROUND_ZONE (the same timings, radius multiplier of H, status.root_slow, one zone per
+## caster, no barrier) with the venom and root values from the status catalog (ADR-011); the
 ## sword class start skill and its cooldown. NOT canonical (ADR-009 section 3): the bases
 ## those multipliers scale (hero speed, radius and HP, base enemy HP and contact damage),
 ## spawn cadence, ramp and cap, arena size, the skill's range, damage and projectile, the
-## enemy shot radius, launch range and keep distance (ADR-011 section 3), and the XP
+## enemy shot radius, launch range and keep distance, the ground-zone launch range
+## (ADR-011 section 3), and the XP
 ## settings of ADR-010 (pickup radius, gem cap, level costs, XP per kind = XP_BASE +
 ## XP_PER_SPAWN_COST x the enemy's content spawn_cost). They are placeholders until combat
 ## bases enter content; nothing here writes content.
@@ -37,10 +40,13 @@ const STAGE_ID: String = "stage.jade_grove"
 ## Base danger radius H = 2 cells (ADR-011 section 3, placeholder).
 const DANGER_RADIUS_SU: int = 2 * CELL_PX * Fx.FX_ONE
 const VENOM_ID: String = "status.venom"
+const ROOT_ID: String = "status.root_slow"
 ## Enemy shots (ADR-011 section 3, placeholders): a ranged kind launches within 8 cells,
 ## stops chasing at 6 cells; the shot radius is 8 px.
 const RANGED_TRIGGER_CELLS: int = 8
 const KEEP_DISTANCE_CELLS: int = 6
+## A ground-zone caster launches within 8 cells (ADR-011 section 3, placeholder).
+const ZONE_TRIGGER_CELLS: int = 8
 const ENEMY_SHOT_RADIUS_PX: int = 8
 const SKILL_RANGE_CELLS: int = 8
 const SKILL_DAMAGE_MHP: int = 10000
@@ -112,9 +118,10 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
 	if has_arcs:
 		var venom: PackedInt64Array = venom_values(registry)
-		if venom.is_empty():
+		var root: PackedInt64Array = root_values(registry)
+		if venom.is_empty() or root.is_empty():
 			return null
-		config.with_attacks(attacks, venom)
+		config.with_attacks(attacks, venom, root)
 	config.with_xp(
 		PackedInt64Array([PICKUP_RADIUS_PX * Fx.FX_ONE, MAX_GEMS]), kind_xp, PackedInt64Array(XP_COSTS)
 	)
@@ -146,8 +153,8 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 	var attack: Dictionary = registry.definition(str(attack_ids[0]))
 	var params: Dictionary = attack.get("params", {})
 	var form: String = str(attack.get("kind", ""))
-	if not ["CONTACT", "MELEE_ARC", "CHARGE", "PROJECTILE"].has(form):
-		_fail(enemy_id + ": only CONTACT, MELEE_ARC, CHARGE and PROJECTILE attacks are simulated so far")
+	if not ["CONTACT", "MELEE_ARC", "CHARGE", "PROJECTILE", "ON_DEATH_ZONE", "GROUND_ZONE"].has(form):
+		_fail(enemy_id + ": " + form + " attacks are not simulated")
 		return PackedInt64Array()
 	var speed: Variant = Fx.from_catalog(stats.get("speed_mult"))
 	var radius: Variant = Fx.from_catalog(stats.get("collision_radius_mult"))
@@ -162,8 +169,10 @@ func kind_record(registry: ContentRegistry, enemy_id: String, weight: Variant) -
 			attack_record = _arc_record(enemy_id, attack)
 		elif form == "CHARGE":
 			attack_record = _charge_record(enemy_id, attack)
-		else:
+		elif form == "PROJECTILE":
 			attack_record = _projectile_record(enemy_id, attack)
+		else:
+			attack_record = _zone_record(enemy_id, attack)
 		if attack_record.is_empty():
 			return PackedInt64Array()
 	var spawn_weight: Variant = ContentRegistry.integral(weight)
@@ -250,6 +259,69 @@ func _projectile_record(enemy_id: String, attack: Dictionary) -> PackedInt64Arra
 		Fx.mul(HERO_SPEED_SU_PER_TICK, numbers[3]), ENEMY_SHOT_RADIUS_PX * Fx.FX_ONE,
 		KEEP_DISTANCE_CELLS * CELL_PX * Fx.FX_ONE,
 	])
+
+
+## Zone attack record: ON_DEATH_ZONE [FORM_DEATH_ZONE, telegraph, persistent ticks, 0, 0, 0,
+## 0, 0, H, 0] (needs requires_death and no retrigger by a death proc); GROUND_ZONE
+## [FORM_GROUND_ZONE, telegraph, persistent ticks, recovery, launch range, 0, 0, 0,
+## radius_mult x H, 0] (status.root_slow, one zone per caster, no solid barrier). The
+## persistent ticks must equal active_ticks.
+func _zone_record(enemy_id: String, attack: Dictionary) -> PackedInt64Array:
+	var params: Dictionary = attack.get("params", {})
+	var death: bool = attack.get("kind") == "ON_DEATH_ZONE"
+	var numbers: Array = [
+		ContentRegistry.integral(attack.get("telegraph_ticks")),
+		ContentRegistry.integral(attack.get("active_ticks")),
+		ContentRegistry.integral(attack.get("recovery_ticks")),
+		ContentRegistry.integral(params.get("persistent_ticks")),
+	]
+	var shape_ok: bool = not numbers.has(null) and numbers[1] == numbers[3]
+	if death:
+		shape_ok = (
+			shape_ok
+			and params.get("requires_death") == true
+			and params.get("no_retrigger_by_death_proc") == true
+			and numbers[2] == 0
+			and ContentRegistry.integral(attack.get("cooldown_ticks")) == 0
+			and attack.get("apply_status_id") == null
+		)
+		if not shape_ok:
+			_fail(enemy_id + ": ON_DEATH_ZONE timings, death trigger, retrigger or status are not usable in P0")
+			return PackedInt64Array()
+		return PackedInt64Array([SimConfig.FORM_DEATH_ZONE, numbers[0], numbers[1], 0, 0, 0, 0, 0, DANGER_RADIUS_SU, 0])
+	var radius: Variant = Fx.from_catalog(params.get("radius_mult"))
+	shape_ok = (
+		shape_ok
+		and radius != null
+		and attack.get("apply_status_id") == ROOT_ID
+		and params.get("solid_barrier") == false
+		and ContentRegistry.integral(params.get("max_zones_per_caster")) == 1
+		and Fx.from_catalog(attack.get("damage_mult")) == 0
+	)
+	if not shape_ok:
+		_fail(enemy_id + ": GROUND_ZONE timings, radius, status, barrier or zone count are not usable in P0")
+		return PackedInt64Array()
+	return PackedInt64Array([
+		SimConfig.FORM_GROUND_ZONE, numbers[0], numbers[1], numbers[2],
+		ZONE_TRIGGER_CELLS * CELL_PX * Fx.FX_ONE, 0, 0, 0, Fx.mul(DANGER_RADIUS_SU, radius), 0,
+	])
+
+
+## status.root_slow from the status catalog: [duration_ticks, movement_speed_multiplier fx];
+## empty with `error` set when the entry is incomplete or not a one-stack refresh.
+func root_values(registry: ContentRegistry) -> PackedInt64Array:
+	var root: Dictionary = registry.definition(ROOT_ID)
+	var duration: Variant = ContentRegistry.integral(root.get("duration_ticks"))
+	var mult: Variant = Fx.from_catalog(root.get("movement_speed_multiplier"))
+	var shape_ok: bool = (
+		root.get("stack_policy") == "refresh_only"
+		and ContentRegistry.integral(root.get("max_stacks")) == 1
+		and ContentRegistry.integral(root.get("dot_damage")) == 0
+	)
+	if duration == null or mult == null or not shape_ok:
+		_fail(ROOT_ID + ": duration, speed multiplier or stacking are not usable in P0")
+		return PackedInt64Array()
+	return PackedInt64Array([duration, mult])
 
 
 ## status.venom from the status catalog: [max_stacks, duration_ticks, tick_period_ticks,

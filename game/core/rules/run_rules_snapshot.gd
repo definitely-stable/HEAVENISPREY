@@ -27,7 +27,8 @@ extends RefCounted
 ## 8: enemy attack states and instances, the attack table and status.venom (ADR-011 E2).
 ## 9: the enemy charge, a hit flag per enemy slot (ADR-011 E3).
 ## 10: enemy projectiles, the shot pool in the world digest, the 10-field attack record (ADR-011 E4).
-const SIM_SCHEMA_VERSION: int = 10
+## 11: death and ground zones, the zone pool and status.root_slow in the digest (ADR-011 E5).
+const SIM_SCHEMA_VERSION: int = 11
 
 var error: String:
 	get:

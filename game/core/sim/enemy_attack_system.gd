@@ -16,7 +16,10 @@ extends RefCounted
 ## after; each active tick it dashes L // active_ticks su (clamped by the walls) and its first
 ## touch of the hero hits. PROJECTILE launches within its reach, aims again at the end of
 ## `tell` and releases one shot (EnemyShotSystem.release); the enemy is active for one tick and
-## the shot lives active_ticks ticks.
+## the shot lives active_ticks ticks. GROUND_ZONE (E5) launches within its reach while no zone
+## of its own is alive; the zone is made at the launch on the hero centre
+## (EnemyZoneSystem.launch) and the enemy is active for one tick. A death-zone kind never
+## attacks while alive (EnemyZoneSystem.on_death leaves its zone).
 
 const ST_APPROACH: int = 0
 const ST_TELL: int = 1
@@ -47,7 +50,8 @@ static func run(config: SimConfig, world: WorldState) -> void:
 		if not world.is_enemy_live(slot):
 			continue
 		var kind: int = world.enemy_kind[slot]
-		if config.attack_value(kind, SimConfig.ATTACK_FORM) == SimConfig.FORM_CONTACT:
+		var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
+		if form == SimConfig.FORM_CONTACT or form == SimConfig.FORM_DEATH_ZONE:
 			continue
 		if world.enemy_cooldown[slot] > 0:
 			world.enemy_cooldown[slot] -= 1
@@ -55,15 +59,16 @@ static func run(config: SimConfig, world: WorldState) -> void:
 			world.enemy_left[slot] -= 1
 			if world.enemy_left[slot] == 0:
 				_next_state(config, world, slot, kind)
-		var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
 		var reach: int = config.attack_value(kind, SimConfig.ATTACK_REACH)
 		if form == SimConfig.FORM_CHARGE and world.enemy_state[slot] == ST_ACTIVE:
 			_dash(config, world, slot, Fx.floor_div(reach, config.attack_value(kind, SimConfig.ATTACK_ACTIVE)))
 		var dx: int = world.player_x - world.enemy_x[slot]
 		var dy: int = world.player_y - world.enemy_y[slot]
-		var in_range: bool = in_launch_range(reach, dx, dy)
-		if form == SimConfig.FORM_CHARGE or form == SimConfig.FORM_PROJECTILE:
-			in_range = dx * dx + dy * dy <= reach * reach
+		var in_range: bool = dx * dx + dy * dy <= reach * reach
+		if form == SimConfig.FORM_ARC:
+			in_range = in_launch_range(reach, dx, dy)
+		if form == SimConfig.FORM_GROUND_ZONE and EnemyZoneSystem.owns_zone(world, world.enemy_uid[slot]):
+			in_range = false
 		if world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0 and in_range:
 			var unit: PackedInt64Array = aim(world, slot)
 			world.enemy_state[slot] = ST_TELL
@@ -73,6 +78,8 @@ static func run(config: SimConfig, world: WorldState) -> void:
 			world.enemy_dir_y[slot] = unit[1]
 			world.enemy_attack_uid[slot] = world.next_attack_uid
 			world.next_attack_uid += 1
+			if form == SimConfig.FORM_GROUND_ZONE:
+				EnemyZoneSystem.launch(config, world, slot)
 
 
 static func _next_state(config: SimConfig, world: WorldState, slot: int, kind: int) -> void:
@@ -82,8 +89,10 @@ static func _next_state(config: SimConfig, world: WorldState, slot: int, kind: i
 		var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
 		world.enemy_state[slot] = ST_ACTIVE
 		world.enemy_left[slot] = config.attack_value(kind, SimConfig.ATTACK_ACTIVE)
-		if form == SimConfig.FORM_PROJECTILE:
+		if form == SimConfig.FORM_PROJECTILE or form == SimConfig.FORM_GROUND_ZONE:
 			world.enemy_left[slot] = 1
+		if form == SimConfig.FORM_GROUND_ZONE:
+			return
 		if form == SimConfig.FORM_CHARGE or form == SimConfig.FORM_PROJECTILE:
 			var unit: PackedInt64Array = aim(world, slot)
 			world.enemy_dir_x[slot] = unit[0]

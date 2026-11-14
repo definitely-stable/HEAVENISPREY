@@ -102,6 +102,6 @@ func test_the_game_tuning_is_the_bot_config() -> void:
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
 	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
 	var ints: PackedInt64Array = tuned.to_ints()
-	# choice_mode, run_ticks, the attack table size (0) and the four venom values close the list.
-	ints[ints.size() - 7] = SimConfig.CHOICE_NONE
+	# choice_mode, run_ticks, the attack table size (0), four venom and two root values close the list.
+	ints[ints.size() - 9] = SimConfig.CHOICE_NONE
 	assert_eq(ints, config_of(anchor).to_ints(), "anchors play it without the choice")

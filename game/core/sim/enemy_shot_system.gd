@@ -37,7 +37,7 @@ static func release(config: SimConfig, world: WorldState, slot: int) -> void:
 	world.shot_vy[shot] = Fx.mul_q14(speed, world.enemy_dir_y[slot])
 	world.shot_ttl[shot] = config.attack_value(kind, SimConfig.ATTACK_ACTIVE)
 	world.shot_damage[shot] = config.kind_value(kind, SimConfig.KIND_DAMAGE)
-	world.shot_radius[shot] = config.attack_value(kind, SimConfig.ATTACK_SHOT_RADIUS)
+	world.shot_radius[shot] = config.attack_value(kind, SimConfig.ATTACK_RADIUS)
 
 
 static func fly(config: SimConfig, world: WorldState) -> void:

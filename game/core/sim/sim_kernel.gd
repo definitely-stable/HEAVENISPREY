@@ -12,19 +12,20 @@ extends RefCounted
 ##   0. a finished run (hero dead) does not step;
 ##   1. apply every logged command whose tick <= world.tick, in log order (last MOVE wins; a
 ##      CHOOSE outside a pause is skipped);
-##   2. move the hero by the held direction (Q14 unit vector x speed with upgrades, symmetric
-##      rounding) and clamp inside the arena rectangle (radius-aware);
+##   2. move the hero by the held direction (Q14 unit vector x speed with upgrades and
+##      status.root_slow, symmetric rounding) and clamp inside the arena rectangle;
 ##   3. spawn at most one enemy into the lowest free slot (EnemySystem.spawn);
 ##   4. move enemies toward the hero with separation, capped at their speed
 ##      (SeparationSystem.chase_and_separate);
 ##   5. hero skill: cooldown, target, cast (CombatSystem.cast);
 ##   6-7a. projectiles fly and hit enemies, slot order (CombatSystem.fly_and_hit);
 ##   7a'. enemy shots fly and hit the hero, slot order (EnemyShotSystem.fly, ADR-011);
+##   7a''. enemy zones: telegraph, hits, status.root_slow, expiry (EnemyZoneSystem.tick);
 ##   7b. enemy contact hits, slot order, enemies at 0 HP do not hit (EnemySystem.contact);
-##   7c. enemy attack machines: launches, states, arc hits, shot releases
+##   7c. enemy attack machines: launches, states, arc hits, shot releases, ground zones
 ##       (EnemyAttackSystem.run, ADR-011);
-##   7d. hero statuses: venom damage and expiry (StatusSystem.tick);
-##   8. deaths: enemies in slot order (XP gem drop, slot freed, kill counted), expired
+##   7d. hero statuses: venom damage and expiry, root ticks (StatusSystem.tick);
+##   8. deaths: enemies in slot order (death zone, XP gem drop, slot freed, kill counted), expired
 ##      projectiles, then the hero (pending level choices are voided when the run ends);
 ##   9. XP pickup within the pickup radius (XpSystem.pickup), not in the tick the hero dies;
 ##   10. level progression from the XP bank (XpSystem.progress), same condition; with
@@ -57,7 +58,7 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 		world.command_cursor += 1
 	var direction: PackedInt64Array = direction_q14(world.move_x, world.move_y)
 	var r: int = config.player_radius_su
-	var speed: int = UpgradeSystem.hero_speed(config, world)
+	var speed: int = StatusSystem.move_speed(config, world)
 	var next_x: int = world.player_x + Fx.mul_q14(speed, direction[0])
 	var next_y: int = world.player_y + Fx.mul_q14(speed, direction[1])
 	world.player_x = clampi(next_x, config.arena_min_x + r, config.arena_max_x - r)
@@ -69,6 +70,7 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 			CombatSystem.cast(config, world)
 			CombatSystem.fly_and_hit(config, world)
 		EnemyShotSystem.fly(config, world)
+		EnemyZoneSystem.tick(config, world)
 		EnemySystem.contact(config, world)
 		EnemyAttackSystem.run(config, world)
 		StatusSystem.tick(config, world)
