@@ -2,7 +2,8 @@ class_name P0Tuning
 extends RefCounted
 ## P0 placeholder run setup: builds a SimConfig from canonical content plus placeholder bases.
 ##
-## From content (read-only): the jade_grove roster window w0 (enemy IDs and spawn weights),
+## From content (read-only): the jade_grove roster windows w0..w3 (time bounds, enemy IDs and
+## spawn weights, max_control_enemies_near_player) and the roster threat_caps (ADR-011 E6),
 ## each enemy's speed/radius/health multipliers and its attack: CONTACT (damage multiplier,
 ## hit interval), MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
 ## radius multiplier of the danger radius H, arc degrees, status.venom), CHARGE (the same
@@ -15,7 +16,7 @@ extends RefCounted
 ## those multipliers scale (hero speed, radius and HP, base enemy HP and contact damage),
 ## spawn cadence, ramp and cap, arena size, the skill's range, damage and projectile, the
 ## enemy shot radius, launch range and keep distance, the ground-zone launch range
-## (ADR-011 section 3), and the XP
+## (ADR-011 section 3), the max_control_near radius of the caps, and the XP
 ## settings of ADR-010 (pickup radius, gem cap, level costs, XP per kind = XP_BASE +
 ## XP_PER_SPAWN_COST x the enemy's content spawn_cost). They are placeholders until combat
 ## bases enter content; nothing here writes content.
@@ -34,7 +35,13 @@ const SPAWN_RATE_MAX_FX: int = 2000
 const MAX_ENEMIES: int = 48
 const MIN_SPAWN_DISTANCE_CELLS: int = 8
 const ROSTER_ID: String = "roster.jade_grove"
-const WINDOW_ID: String = "jade_grove.w0"
+## The radius around the hero for max_control_enemies_near_player (8 cells, placeholder).
+const CONTROL_NEAR_CELLS: int = 8
+## roster.jade_grove threat_caps in ThreatCaps order.
+const CAP_KEYS: Array[String] = [
+	"simultaneous_projectile_casts_winding_up", "simultaneous_charge_windups", "active_control_zones",
+	"active_death_hazards", "ordinary_ranged_on_screen",
+]
 const CLASS_ID: String = "class.sword"
 const STAGE_ID: String = "stage.jade_grove"
 ## Base danger radius H = 2 cells (ADR-011 section 3, placeholder).
@@ -80,34 +87,41 @@ static func movement_config() -> SimConfig:
 	]))
 
 
-## Movement, the w0 enemies, the class start skill, XP, the immediate level-up choice and the
-## stage duration; null with `error` set when content is missing or invalid.
+## Movement, the enemies of every roster window, the class start skill, XP, the immediate
+## level-up choice and the stage duration; null with `error` set when content is missing or
+## invalid. Kinds are the union of the windows in the order of first appearance (w0 keeps kinds
+## 0 and 1); a kind record carries the weight of its first window.
 func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	enemy_ids.clear()
 	if registry == null or not registry.is_valid():
 		return _fail("content registry is not valid")
-	var window: Dictionary = _window(registry.catalog("enemy_rosters"))
-	if window.is_empty():
-		return _fail("roster window " + WINDOW_ID + " not found")
+	var roster: Dictionary = _roster(registry.catalog("enemy_rosters"))
+	var windows: Array = roster.get("windows", [])
+	if windows.is_empty():
+		return _fail("roster " + ROSTER_ID + " has no windows")
 	var kinds: PackedInt64Array = PackedInt64Array()
 	var attacks: PackedInt64Array = PackedInt64Array()
-	var has_arcs: bool = false
 	var kind_xp: PackedInt64Array = PackedInt64Array()
-	for entry: Variant in window.get("weighted_enemies", []):
-		var weighted: Dictionary = entry if entry is Dictionary else {}
-		var enemy_id: String = str(weighted.get("enemy_id", ""))
-		var record: PackedInt64Array = kind_record(registry, enemy_id, weighted.get("weight"))
-		if record.is_empty():
-			return null
-		attacks.append_array(record.slice(SimConfig.KIND_STRIDE))
-		has_arcs = has_arcs or record[SimConfig.KIND_STRIDE] != SimConfig.FORM_CONTACT
-		record = record.slice(0, SimConfig.KIND_STRIDE)
-		var spawn_cost: Variant = ContentRegistry.integral(registry.definition(enemy_id).get("spawn_cost"))
-		if spawn_cost == null or int(spawn_cost) < 0:
-			return _fail(enemy_id + ": spawn_cost is not a non-negative integer")
-		kinds.append_array(record)
-		kind_xp.append(XP_BASE + XP_PER_SPAWN_COST * int(spawn_cost))
-		enemy_ids.append(enemy_id)
+	for window: Variant in windows:
+		for entry: Variant in (window as Dictionary).get("weighted_enemies", []) if window is Dictionary else []:
+			var weighted: Dictionary = entry if entry is Dictionary else {}
+			var enemy_id: String = str(weighted.get("enemy_id", ""))
+			if enemy_ids.has(enemy_id):
+				continue
+			var record: PackedInt64Array = kind_record(registry, enemy_id, weighted.get("weight"))
+			if record.is_empty():
+				return null
+			attacks.append_array(record.slice(SimConfig.KIND_STRIDE))
+			var spawn_cost: Variant = ContentRegistry.integral(registry.definition(enemy_id).get("spawn_cost"))
+			if spawn_cost == null or int(spawn_cost) < 0:
+				return _fail(enemy_id + ": spawn_cost is not a non-negative integer")
+			kinds.append_array(record.slice(0, SimConfig.KIND_STRIDE))
+			kind_xp.append(XP_BASE + XP_PER_SPAWN_COST * int(spawn_cost))
+			enemy_ids.append(enemy_id)
+	var window_values: PackedInt64Array = _window_values(windows)
+	var caps: PackedInt64Array = _caps(roster)
+	if window_values.is_empty() or caps.is_empty():
+		return null
 	var values: PackedInt64Array = PackedInt64Array([
 		HERO_HP_MHP, SPAWN_PERIOD_MT, SPAWN_RAMP_TICKS, SPAWN_RATE_MAX_FX, MAX_ENEMIES,
 		MIN_SPAWN_DISTANCE_CELLS * CELL_PX * Fx.FX_ONE,
@@ -116,12 +130,11 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	if skill.is_empty():
 		return null
 	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
-	if has_arcs:
-		var venom: PackedInt64Array = venom_values(registry)
-		var root: PackedInt64Array = root_values(registry)
-		if venom.is_empty() or root.is_empty():
-			return null
-		config.with_attacks(attacks, venom, root)
+	var venom: PackedInt64Array = venom_values(registry)
+	var root: PackedInt64Array = root_values(registry)
+	if venom.is_empty() or root.is_empty():
+		return null
+	config.with_attacks(attacks, venom, root).with_windows(window_values, caps)
 	config.with_xp(
 		PackedInt64Array([PICKUP_RADIUS_PX * Fx.FX_ONE, MAX_GEMS]), kind_xp, PackedInt64Array(XP_COSTS)
 	)
@@ -362,13 +375,56 @@ func _skill(registry: ContentRegistry) -> PackedInt64Array:
 	])
 
 
-static func _window(rosters_catalog: Dictionary) -> Dictionary:
+static func _roster(rosters_catalog: Dictionary) -> Dictionary:
 	for roster: Variant in rosters_catalog.get("rosters", []):
 		if roster is Dictionary and (roster as Dictionary).get("id") == ROSTER_ID:
-			for window: Variant in (roster as Dictionary).get("windows", []):
-				if window is Dictionary and (window as Dictionary).get("id") == WINDOW_ID:
-					return window
+			return roster
 	return {}
+
+
+## ThreatCaps window records in kind order (enemy_ids): [start_second x 60, end_second x 60,
+## max_control_enemies_near_player, weight per kind (0 when the kind is not in the window)].
+func _window_values(windows: Array) -> PackedInt64Array:
+	var out: PackedInt64Array = PackedInt64Array()
+	for entry: Variant in windows:
+		var window: Dictionary = entry if entry is Dictionary else {}
+		var head: Array = [
+			ContentRegistry.integral(window.get("start_second")),
+			ContentRegistry.integral(window.get("end_second")),
+			ContentRegistry.integral(window.get("max_control_enemies_near_player")),
+		]
+		if head.has(null):
+			_fail(str(window.get("id", "?")) + ": window bounds or control budget are not integers")
+			return PackedInt64Array()
+		out.append_array(PackedInt64Array([
+			int(head[0]) * Fx.TICKS_PER_SECOND, int(head[1]) * Fx.TICKS_PER_SECOND, head[2],
+		]))
+		var weights: PackedInt64Array = PackedInt64Array()
+		weights.resize(enemy_ids.size())
+		for item: Variant in window.get("weighted_enemies", []):
+			var weighted: Dictionary = item if item is Dictionary else {}
+			var weight: Variant = ContentRegistry.integral(weighted.get("weight"))
+			var kind: int = enemy_ids.find(str(weighted.get("enemy_id", "")))
+			if weight == null or kind < 0:
+				_fail(str(window.get("id", "?")) + ": a weighted enemy is not usable")
+				return PackedInt64Array()
+			weights[kind] = weight
+		out.append_array(weights)
+	return out
+
+
+## The roster threat_caps in ThreatCaps order, then the max_control_near radius.
+func _caps(roster: Dictionary) -> PackedInt64Array:
+	var caps: Dictionary = roster.get("threat_caps", {})
+	var out: PackedInt64Array = PackedInt64Array()
+	for key: String in CAP_KEYS:
+		var cap: Variant = ContentRegistry.integral(caps.get(key))
+		if cap == null or int(cap) <= 0:
+			_fail(ROSTER_ID + ": threat_caps." + key + " is not a positive integer")
+			return PackedInt64Array()
+		out.append(cap)
+	out.append(CONTROL_NEAR_CELLS * CELL_PX * Fx.FX_ONE)
+	return out
 
 
 func _fail(message: String) -> SimConfig:

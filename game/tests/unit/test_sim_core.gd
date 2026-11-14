@@ -78,6 +78,7 @@ static func _config(row: Dictionary) -> SimConfig:
 	if typeof(attacks) == TYPE_DICTIONARY:
 		var spec_attacks: Dictionary = attacks
 		config.with_attacks(_ints(spec_attacks["records"]), _ints(spec_attacks["venom"]), _ints(spec_attacks["root"]))
+		config.with_windows(_ints(spec_attacks["windows"]), _ints(spec_attacks["caps"]))
 	return config.with_choice_mode(int(row.get("choice_mode", 0))).with_run_ticks(int(row.get("run_ticks", 0)))
 
 

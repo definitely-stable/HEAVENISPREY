@@ -13,9 +13,9 @@ extends RefCounted
 
 static func add_venom(config: SimConfig, world: WorldState) -> void:
 	if world.venom_stacks == 0:
-		world.venom_phase = config.venom_value(2)
-	world.venom_stacks = mini(world.venom_stacks + 1, config.venom_value(0))
-	world.venom_left = config.venom_value(1)
+		world.venom_phase = config.venom[2]
+	world.venom_stacks = mini(world.venom_stacks + 1, config.venom[0])
+	world.venom_left = config.venom[1]
 
 
 ## The step of the hero this tick: the build speed, slowed by status.root_slow.
@@ -34,8 +34,8 @@ static func tick(config: SimConfig, world: WorldState) -> void:
 	world.venom_left -= 1
 	world.venom_phase -= 1
 	if world.venom_phase == 0:
-		world.hero_hp -= world.venom_stacks * config.venom_value(3)
-		world.venom_phase = config.venom_value(2)
+		world.hero_hp -= world.venom_stacks * config.venom[3]
+		world.venom_phase = config.venom[2]
 	if world.venom_left == 0:
 		world.venom_stacks = 0
 		world.venom_phase = 0

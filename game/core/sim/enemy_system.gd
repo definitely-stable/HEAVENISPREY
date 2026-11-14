@@ -7,7 +7,9 @@ extends RefCounted
 ## the tick does not advance the accumulator). The `enemy` stream draws the kind (by weight),
 ## then up to SPAWN_ATTEMPTS points on the arena perimeter (inset by the enemy radius) until
 ## one is at least `spawn_min_distance_su` from the hero; else the inset corner farthest from
-## the hero (first in corner order on ties).
+## the hero (first in corner order on ties). The weights are those of the roster window of the
+## tick; a kind over its threat cap gives way to the next allowed one, and with none the spawn
+## is skipped (the roll is spent, the accumulator does not advance; ThreatCaps).
 ## Chase and separation: SeparationSystem.
 ## Contact: per live enemy of a contact kind (no attack record, ADR-011) in slot order the
 ## cooldown counts down; a touching enemy with a
@@ -28,7 +30,15 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 		return
 	world.spawn_acc -= config.spawn_period_mt
 	var rng: HipRng = HipRng.create(config.run_seed, RNG_STREAM, str(world.enemy_rng_cursor))
-	var kind: int = _pick_kind(config, rng.below(config.total_weight()))
+	var weights: PackedInt64Array = ThreatCaps.spawn_weights(config, world.tick)
+	var total: int = 0
+	for weight: int in weights:
+		total += weight
+	var kind: int = ThreatCaps.allowed_kind(config, world, weights, _pick_kind(weights, rng.below(total)))
+	if kind < 0:
+		world.enemy_rng_cursor = rng.cursor()
+		world.spawn_acc += config.spawn_period_mt - rate
+		return
 	var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
 	var x0: int = config.arena_min_x + r
 	var y0: int = config.arena_min_y + r
@@ -140,9 +150,9 @@ static func dist2(ax: int, ay: int, bx: int, by: int) -> int:
 	return dx * dx + dy * dy
 
 
-static func _pick_kind(config: SimConfig, roll: int) -> int:
-	for kind: int in config.kind_count():
-		roll -= config.kind_value(kind, SimConfig.KIND_WEIGHT)
+static func _pick_kind(weights: PackedInt64Array, roll: int) -> int:
+	for kind: int in weights.size():
+		roll -= weights[kind]
 		if roll < 0:
 			return kind
-	return config.kind_count() - 1
+	return weights.size() - 1

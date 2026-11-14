@@ -28,7 +28,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_runs.json"
 UPGRADE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_upgrade_runs.json"
-RUNS_SCHEMA_VERSION = 3
+RUNS_SCHEMA_VERSION = 4
 BOT_POLICY_VERSION = 2
 
 
@@ -186,9 +186,12 @@ UPGRADE_BOTS = ["kiter_upgrades", "diag_first_id", "diag_utility_first"]
 
 def p0_config(seed: str, choice_mode: int = 0):
     """The P0 placeholder run, ending in victory after MAX_TICKS (equal to P0Tuning in the
-    game, choice_mode aside)."""
-    return sim.Config(sim.BASE, sim.P0_VALUES, sim.W0_KINDS, seed, sim.P0_SKILL, sim.P0_XP,
-                      choice_mode=choice_mode, run_ticks=MAX_TICKS)
+    game, choice_mode aside): roster windows w0..w3 with every attack, threat_caps, venom and
+    root (ADR-011 E6)."""
+    return sim.Config(sim.BASE, sim.P0_VALUES, sim.P0_KINDS, seed, sim.P0_SKILL,
+                      (sim.P0_XP[0], sim.P0_KIND_XP, sim.P0_XP[2]), choice_mode=choice_mode,
+                      run_ticks=MAX_TICKS, attacks=sim.P0_ATTACKS, venom=sim.P0_VENOM,
+                      root=sim.P0_ROOT, windows=sim.P0_WINDOWS, caps=sim.P0_CAPS)
 
 
 def config_for(name: str, seed: str):
