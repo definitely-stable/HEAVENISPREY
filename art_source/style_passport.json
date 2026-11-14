@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "document": "ART-BIBLE-001",
-  "passport_version": 2,
+  "passport_version": 3,
   "threat_colour": "#e8343c",
   "threat_delta_e": 12,
   "groups": {
@@ -27,7 +27,8 @@
         "#aa7d79",
         "#d6ae9d"
       ],
-      "max_palette_delta_e": 15
+      "max_palette_delta_e": 15,
+      "min_rim_contrast_l": 40
     },
     "hero_sprite": {
       "colours": [

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ART-01: build game sprites and floor textures from master sheets (ADR-013).
+"""ART-01: build game sprites and floor textures from master sheets (ADR-013, ADR-014).
 
 art_source/<name>/source.json describes one master image (Git LFS) and how it becomes a
 game asset: a sprite atlas (chroma key, grid slicing, one scale per asset, a fixed
@@ -21,7 +21,7 @@ import math
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "art_source"
@@ -94,7 +94,12 @@ def style_metrics(image: Image.Image, palette: list[str], threat_hex: str, threa
         "tones_pct": [round(100 * shadows / n, 1), round(100 * (n - shadows - lights) / n, 1), round(100 * lights / n, 1)],
         "chroma": round(chroma / n, 3),
         "threat_colour_pct": round(100 * threat_px / n, 3),
+        "median_l": round(sorted(luma_of(rgb) for rgb in pixels)[n // 2], 1),
     }
+
+
+def luma_of(rgb: tuple[int, int, int]) -> float:
+    return 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]
 
 
 # --- chroma key ---
@@ -146,6 +151,42 @@ def feet_x(cell: Image.Image, box: tuple[int, int, int, int]) -> float:
     return float(xs[len(xs) // 2]) if xs else (left + right) / 2.0
 
 
+def torso_x(cell: Image.Image, box: tuple[int, int, int, int]) -> float:
+    """Median x of solid pixels between 30 % and 60 % of the figure height from the top: the
+    torso stays put while legs, sword and hair swing (ADR-014 section 3)."""
+    left, top, right, bottom = box
+    height = bottom - top
+    alpha = cell.getchannel("A").load()
+    xs = sorted(x for y in range(top + round(height * 0.30), top + round(height * 0.60))
+                for x in range(left, right) if alpha[x, y] > SOLID_ALPHA)
+    return float(xs[len(xs) // 2]) if xs else (left + right) / 2.0
+
+
+ANCHORS = {"feet": feet_x, "torso": torso_x}
+
+
+def check_margin(atlas: Image.Image, frame: int, cols: int, rows: int, margin: int, label: str) -> None:
+    for index in range(cols * rows):
+        col, row = index % cols, index // cols
+        frame_img = atlas.crop((col * frame, row * frame, (col + 1) * frame, (row + 1) * frame))
+        inner = bbox(frame_img, 0)
+        if inner is None or min(inner[0], inner[1], frame - inner[2], frame - inner[3]) < margin:
+            raise ValueError(f"{label}: frame {index} breaks the {margin} px transparent margin")
+
+
+def add_rim(atlas: Image.Image, rim: dict) -> Image.Image:
+    """A light cold rim just outside the silhouette, under the sprite (ADR-014 section 2): an
+    ink outline does not read on the dark floor."""
+    alpha = atlas.getchannel("A")
+    solid = alpha.point(lambda a: 255 if a > EDGE_ALPHA else 0)
+    grown = solid.filter(ImageFilter.MaxFilter(2 * rim["width_px"] + 1)).filter(ImageFilter.GaussianBlur(0.6))
+    ring = ImageChops.subtract(grown, alpha).point(lambda v: round(v * rim["alpha"]))
+    out = Image.new("RGBA", atlas.size, hex_rgb(rim["colour"]) + (0,))
+    out.putalpha(ring)
+    out.alpha_composite(atlas)
+    return out
+
+
 def resize_premultiplied(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     return image.convert("RGBa").resize(size, Image.Resampling.LANCZOS).convert("RGBA")
 
@@ -169,7 +210,8 @@ def build_atlas(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
             left, top, right, bottom = inner
             if left == 0 or top == 0 or right == cell.width or bottom == cell.height:
                 raise ValueError(f"{spec['asset_id']}: figure touches the edge of cell {row},{col}")
-            centre = feet_x(cell, inner) if spec.get("anchor_x", "feet") == "feet" else (left + right) / 2.0
+            anchor_of = ANCHORS.get(spec.get("anchor_x", "feet"))
+            centre = anchor_of(cell, inner) if anchor_of else (left + right) / 2.0
             cells.append((cell, inner, centre))
     # One scale for the whole asset: the tallest figure gets figure_height_px, and nothing
     # may leave the frame minus its transparent margin.
@@ -187,12 +229,10 @@ def build_atlas(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         oy = anchor_y - size[1]
         col, row = index % cols, index // cols
         atlas.alpha_composite(figure, (col * frame + ox, row * frame + oy))
-    for index in range(cols * rows):
-        col, row = index % cols, index // cols
-        frame_img = atlas.crop((col * frame, row * frame, (col + 1) * frame, (row + 1) * frame))
-        inner = bbox(frame_img, 0)
-        if inner is None or min(inner[0], inner[1], frame - inner[2], frame - inner[3]) < margin:
-            raise ValueError(f"{spec['asset_id']}: frame {index} breaks the {margin} px transparent margin")
+    if spec.get("rim"):
+        # The rim grows the silhouette: the margin must still hold after it.
+        check_margin(atlas, frame, cols, rows, margin + spec["rim"]["width_px"], spec["asset_id"])
+    check_margin(atlas, frame, cols, rows, margin, spec["asset_id"])
     layout = {"anchor_x": spec.get("anchor_x", "feet"), "frame_size": frame, "directions": spec["directions"], "frames": cols,
               "feet_anchor": [anchor_x, anchor_y], "scale": round(scale, 4)}
     if rows != len(spec["directions"]):
@@ -238,12 +278,17 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_floor(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
+    # Style metrics describe the painted figure; the rim is measured on its own.
+    group = passport["groups"][spec["palette_group"]]
+    metrics = style_metrics(image, group["colours"], passport["threat_colour"], passport["threat_delta_e"])
+    if spec.get("rim"):
+        image = add_rim(image, spec["rim"])
+        layout["rim"] = spec["rim"]
+        metrics["rim_l"] = round(luma_of(hex_rgb(spec["rim"]["colour"])), 1)
     out = ASSETS / spec["group"] / name / f"{name}.png"
     out.parent.mkdir(parents=True, exist_ok=True)
     image.save(out, optimize=True)
     data = out.read_bytes()
-    group = passport["groups"][spec["palette_group"]]
-    metrics = style_metrics(image, group["colours"], passport["threat_colour"], passport["threat_delta_e"])
     return {
         "asset_id": spec["asset_id"],
         "kind": spec["kind"],
@@ -289,12 +334,13 @@ def render_card(name: str, entry: dict) -> str:
         f"- **Generation:** {gen['capability']} · {gen['tool_version']} · prompt sha256 `{gen['prompt_sha256'][:16]}` "
         f"([prompt.txt](prompt.txt)) · {gen['created']} · мастер [{spec['master']}]({spec['master']}) `{entry['source']['sha256'][:12]}`",
         f"- **Geometry:** {geometry}",
-        "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — blob-слой в сцене",
+        "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены"
+        + (f"; кант `{layout['rim']['colour']}` {layout['rim']['width_px']} px (L {qa['rim_l']})" if layout.get("rim") else ""),
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
         f"цвет угрозы {qa['threat_colour_pct']} %",
         f"- **Build:** [{Path(entry['path']).name}](../../{entry['path']}) · {entry['size'][0]}×{entry['size'][1]} · "
         f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}`",
-        "- **Decision:** approved для P0 (ADR-013), до плейтеста",
+        "- **Decision:** approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)",
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",
     ]

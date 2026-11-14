@@ -11,6 +11,9 @@ extends Node2D
 ## Sprites (ADR-013): the floor texture, the hero and the enemies with an asset in
 ## SpriteSet are drawn as atlas frames sorted by depth over blob shadows; anything without an
 ## asset keeps its primitive, so the scene stays playable with no assets at all.
+## Isometric view (ADR-014 section 1): the ground (floor, walls, zones, telegraphs, shadows,
+## rings) is drawn in world px under IsoProjection.ground(); bodies, gems, projectiles and the
+## HUD over them are drawn at their projected points; movement keys are read in screen axes.
 
 const CELL_PX: int = P0Tuning.CELL_PX
 const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
@@ -27,6 +30,8 @@ const LEVEL_RING: float = 0.6
 const XP_BAR_HEIGHT: float = 6.0
 
 const COLOR_FLOOR: Color = Color(0.09, 0.08, 0.11)
+## Beyond the arena diamond (ADR-014 section 1; fog and cliffs come with slice A3).
+const COLOR_VOID: Color = Color(0.03, 0.03, 0.04)
 const COLOR_GRID: Color = Color(0.16, 0.14, 0.19)
 const COLOR_WALL: Color = Color(0.55, 0.47, 0.33)
 const COLOR_HERO: Color = Color(0.93, 0.86, 0.66)
@@ -57,12 +62,17 @@ const ENEMY_ASSETS: Dictionary = {
 	"enemy.yin_corpse": "asset.enemy.yin_corpse",
 	"enemy.blood_wolf": "asset.enemy.blood_wolf",
 }
-## Blob shadow under a sprite: ellipse of the body radius, flattened.
-const COLOR_SHADOW: Color = Color(0.0, 0.0, 0.0, 0.38)
-const SHADOW_SQUASH: float = 0.38
-## Hit flash of a sprite (modulate above 1 brightens it).
+## Soft contact shadow on the ground: a radial fade over this many body radii.
+const SHADOW_RADII: float = 1.25
+const SHADOW_ALPHA: float = 0.55
+## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
+## hue stays reserved for enemies (ADR-014 section 2).
 const TINT_ENEMY_HIT: Color = Color(2.2, 2.2, 2.2)
-const TINT_HERO_HIT: Color = Color(1.0, 0.42, 0.38)
+const TINT_HERO_HIT: Color = Color(1.9, 1.9, 1.9)
+## Screen px a projectile or an enemy shot flies above its ground point.
+const FLIGHT_LIFT_PX: float = 26.0
+## Screen px of empty space the camera may show around the arena diamond.
+const CAMERA_MARGIN_PX: int = 96
 ## Px of horizontal hero offset before an enemy turns to face the other way.
 const TURN_DEADBAND_PX: float = 6.0
 ## Screen px from the hero's feet to the top of its sprite (168 atlas px at half size).
@@ -101,6 +111,7 @@ var _faces_left: Dictionary = {}
 ## Seconds of walk animation (stops with the run).
 var _anim_time: float = 0.0
 var _hero_moving: bool = false
+var _shadow_texture: Texture2D = _make_shadow_texture()
 
 @onready var _camera: Camera2D = $Camera
 
@@ -115,6 +126,8 @@ func _ready() -> void:
 	_registry = ContentRegistry.load_dir()
 	_sprites = SpriteSet.load_default()
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	RenderingServer.set_default_clear_color(COLOR_VOID)
 	var layer: CanvasLayer = CanvasLayer.new()
 	add_child(layer)
 	_hud = Node2D.new()
@@ -125,12 +138,28 @@ func _ready() -> void:
 	_menu.picked.connect(_on_card_picked)
 	_results = RunResults.new()
 	layer.add_child(_results)
-	var arena: Vector2i = ARENA_CELLS * CELL_PX
-	_camera.limit_left = 0
-	_camera.limit_top = 0
-	_camera.limit_right = arena.x
-	_camera.limit_bottom = arena.y
+	var view: Rect2 = IsoProjection.bounds(Vector2(ARENA_CELLS * CELL_PX)).grow(CAMERA_MARGIN_PX)
+	_camera.limit_left = floori(view.position.x)
+	_camera.limit_top = floori(view.position.y)
+	_camera.limit_right = ceili(view.end.x)
+	_camera.limit_bottom = ceili(view.end.y)
 	start_run(str(randi()))
+
+
+## A radial fade from black to clear: the soft contact shadow under every body.
+static func _make_shadow_texture() -> Texture2D:
+	var gradient: Gradient = Gradient.new()
+	gradient.set_color(0, Color(0.0, 0.0, 0.0, 1.0))
+	gradient.set_color(1, Color(0.0, 0.0, 0.0, 0.0))
+	gradient.add_point(0.45, Color(0.0, 0.0, 0.0, 0.8))
+	var texture: GradientTexture2D = GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.width = 64
+	texture.height = 64
+	return texture
 
 
 ## Starts a fresh run; falls back to the empty arena when content cannot be assembled.
@@ -154,7 +183,7 @@ func start_run(seed_text: String) -> void:
 	_puffs.clear()
 	_pickups.clear()
 	_level_ring = 0.0
-	_camera.position = driver.hero_position_px()
+	_camera.position = IsoProjection.to_screen(driver.hero_position_px())
 	_camera.reset_smoothing()
 	_sync_menu()
 	queue_redraw()
@@ -168,7 +197,7 @@ func _process(delta: float) -> void:
 		return
 	if Input.is_action_just_pressed("ui_accept") and confirm_results():
 		return
-	advance_frame(delta, MoveInput.read())
+	advance_frame(delta, IsoProjection.screen_move_to_world(MoveInput.read()))
 
 
 ## Starts a new run from the results screen once it is armed; false otherwise.
@@ -183,6 +212,7 @@ func is_results_open() -> bool:
 	return _results != null and _results.visible
 
 
+## One presentation frame; `move` is in world axes (tests and replays feed it directly).
 func advance_frame(delta: float, move: Vector2i) -> int:
 	if driver.world.is_paused():
 		# The run waits for a card; effects freeze with it.
@@ -214,7 +244,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	_hero_moving = move != Vector2i.ZERO
 	if _hero_moving:
 		_facing = Vector2(move).normalized()
-	_camera.position = driver.hero_position_px()
+	_camera.position = IsoProjection.to_screen(driver.hero_position_px())
 	_sync_menu()
 	if driver.world.is_over():
 		_show_results()
@@ -259,19 +289,25 @@ func _sync_menu() -> void:
 
 func _draw() -> void:
 	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
+	# Ground plane, in world px under the isometric matrix.
+	draw_set_transform_matrix(IsoProjection.ground())
 	_draw_floor(arena)
 	draw_rect(Rect2(Vector2.ZERO, arena), COLOR_WALL, false, 4.0)
 	_draw_puffs()
-	_draw_gems()
 	_draw_zones()
 	_draw_telegraphs()
+	_draw_shadows()
+	_draw_ground_rings()
+	if driver.world.is_over():
+		draw_rect(Rect2(Vector2.ZERO, arena), COLOR_OVER)
+	# Upright things at their projected points.
+	draw_set_transform_matrix(Transform2D.IDENTITY)
+	_draw_gems()
 	_draw_bodies()
 	_draw_projectiles()
 	_draw_hero_overlay()
 	_draw_shots()
 	_draw_pickups()
-	if driver.world.is_over():
-		draw_rect(Rect2(Vector2.ZERO, arena), COLOR_OVER)
 	if _hud != null:
 		_hud.queue_redraw()
 
@@ -292,7 +328,7 @@ func _age_effects(delta: float) -> void:
 	_level_ring = maxf(_level_ring - delta, 0.0)
 
 
-## The floor texture repeated over the arena, or the flat floor and its grid.
+## The floor texture repeated over the arena, or the flat floor and its grid (ground pass).
 func _draw_floor(arena: Vector2) -> void:
 	var floor_texture: Texture2D = _sprites.texture(FLOOR_ASSET)
 	if floor_texture == null:
@@ -303,20 +339,34 @@ func _draw_floor(arena: Vector2) -> void:
 			draw_line(Vector2(0, y), Vector2(arena.x, y), COLOR_GRID, 1.0)
 		return
 	var repeat: float = _sprites.floor_repeat_px(FLOOR_ASSET, CELL_PX) / float(floor_texture.get_width())
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(repeat, repeat))
+	draw_set_transform_matrix(IsoProjection.ground() * Transform2D(0.0, Vector2(repeat, repeat), 0.0, Vector2.ZERO))
 	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, arena / repeat), true)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	draw_set_transform_matrix(IsoProjection.ground())
 
 
-## Enemies sorted by feet y (then slot), so a body nearer the bottom of the screen covers the
-## one behind it; the hero is drawn over all of them (readability before depth, PLAYABILITY
-## G3).
+## A soft contact shadow under every body (ground pass: the circle becomes a 2:1 ellipse).
+func _draw_shadows() -> void:
+	var world: WorldState = driver.world
+	var tint: Color = Color(1.0, 1.0, 1.0, SHADOW_ALPHA)
+	for slot: int in world.enemy_slots():
+		if world.enemy_uid[slot] != 0:
+			_draw_shadow(driver.enemy_position_px(slot), _kind_radius_px(world.enemy_kind[slot]), tint)
+	_draw_shadow(driver.hero_position_px(), HERO_RADIUS_PX, tint)
+
+
+func _draw_shadow(feet: Vector2, radius: float, tint: Color) -> void:
+	var half: float = radius * SHADOW_RADII
+	draw_texture_rect(_shadow_texture, Rect2(feet - Vector2(half, half), Vector2(half, half) * 2.0), false, tint)
+
+
+## Bodies sorted by depth (then slot), so a body nearer the viewer covers the one behind it;
+## the hero is drawn over all of them (readability before depth, PLAYABILITY G3).
 func _draw_bodies() -> void:
 	var world: WorldState = driver.world
 	var order: Array[Vector2i] = []
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
-			order.append(Vector2i(roundi(driver.enemy_position_px(slot).y * 16.0), slot))
+			order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
 	order.sort()
 	for key: Vector2i in order:
 		_draw_enemy(key.y)
@@ -328,11 +378,10 @@ func _draw_enemy(slot: int) -> void:
 	var kind: int = world.enemy_kind[slot]
 	var uid: int = world.enemy_uid[slot]
 	var radius: float = _kind_radius_px(kind)
-	var at: Vector2 = driver.enemy_position_px(slot)
+	var at: Vector2 = IsoProjection.to_screen(driver.enemy_position_px(slot))
 	var asset: String = _kind_assets[kind] if kind < _kind_assets.size() else ""
 	if _sprites.has(asset):
-		_draw_shadow(at, radius)
-		var dx: float = driver.hero_position_px().x - at.x
+		var dx: float = IsoProjection.to_screen(driver.hero_position_px()).x - at.x
 		if dx < -TURN_DEADBAND_PX:
 			_faces_left[uid] = true
 		elif dx > TURN_DEADBAND_PX:
@@ -345,24 +394,19 @@ func _draw_enemy(slot: int) -> void:
 	var color: Color = _enemy_color(kind)
 	if _enemy_flash.has(uid):
 		color = color.lerp(COLOR_ENEMY_HIT, 0.75)
-	draw_circle(at, radius, color)
-	draw_circle(at, radius, color.darkened(0.45), false, 2.0)
+	draw_circle(at - Vector2(0, radius), radius, color)
+	draw_circle(at - Vector2(0, radius), radius, color.darkened(0.45), false, 2.0)
 
 
-func _draw_shadow(feet: Vector2, radius: float) -> void:
-	draw_set_transform(feet, 0.0, Vector2(1.0, SHADOW_SQUASH))
-	draw_circle(Vector2.ZERO, radius, COLOR_SHADOW)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-
+## Hero projectiles fly above their ground point, pointing along their projected heading.
 func _draw_projectiles() -> void:
 	var world: WorldState = driver.world
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
 	for slot: int in world.projectile_slots():
 		if world.proj_damage[slot] == 0:
 			continue
-		var at: Vector2 = driver.projectile_position_px(slot)
-		var heading: Vector2 = Vector2(world.proj_vx[slot], world.proj_vy[slot]).normalized()
+		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
+		var heading: Vector2 = IsoProjection.to_screen(Vector2(world.proj_vx[slot], world.proj_vy[slot])).normalized()
 		draw_circle(at, radius * 1.3, COLOR_SWORD_GLOW)
 		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, COLOR_SWORD, radius * 0.6)
 		draw_circle(at + heading * radius * 1.2, radius * 0.35, COLOR_SWORD)
@@ -374,12 +418,13 @@ func _draw_shots() -> void:
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] == 0:
 			continue
-		var at: Vector2 = driver.shot_position_px(slot)
+		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
 		var radius: float = float(world.shot_radius[slot]) / Fx.FX_ONE
 		draw_circle(at, radius * 1.8, COLOR_WISP_GLOW)
 		draw_circle(at, radius, COLOR_WISP)
 
 
+## Death puffs spread on the ground (ground pass).
 func _draw_puffs() -> void:
 	for puff: Array in _puffs:
 		var share: float = puff[2] / PUFF_TIME
@@ -395,7 +440,7 @@ func _draw_gems() -> void:
 	var world: WorldState = driver.world
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0:
-			_draw_gem(self, driver.gem_position_px(slot), world.gem_value[slot], 1.0)
+			_draw_gem(self, IsoProjection.to_screen(driver.gem_position_px(slot)), world.gem_value[slot], 1.0)
 
 
 ## A diamond: 10 px across for value 10 and below, 13 px for more (ADR-010 section 8).
@@ -410,24 +455,33 @@ static func _draw_gem(canvas: CanvasItem, at: Vector2, value: int, alpha: float)
 	canvas.draw_polyline(points + PackedVector2Array([points[0]]), color.darkened(0.4), 1.5)
 
 
+## Gem flights and "+N" (screen pass).
 func _draw_pickups() -> void:
-	var hero: Vector2 = driver.hero_position_px()
+	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
 	var font: Font = ThemeDB.fallback_font
 	for pickup: Array in _pickups:
 		var age: float = pickup[2]
 		if age < PICKUP_FLY:
-			_draw_gem(self, (pickup[0] as Vector2).lerp(hero, age / PICKUP_FLY), pickup[1], 1.0)
+			var from: Vector2 = IsoProjection.to_screen(pickup[0])
+			_draw_gem(self, from.lerp(hero, age / PICKUP_FLY), pickup[1], 1.0)
 			continue
 		var share: float = (age - PICKUP_FLY) / PICKUP_TEXT
 		var color: Color = COLOR_GEM
 		color.a = 1.0 - share
-		var at: Vector2 = hero + Vector2(HERO_RADIUS_PX * 0.6, -HERO_RADIUS_PX - 18 - 24 * share)
+		var at: Vector2 = hero + Vector2(HERO_RADIUS_PX * 0.6, -_hero_height() - 6 - 24 * share)
 		draw_string(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
+
+
+## The level-up ring and the root ring lie on the ground around the hero (ground pass).
+func _draw_ground_rings() -> void:
+	var hero: Vector2 = driver.hero_position_px()
 	if _level_ring > 0.0:
 		var share: float = 1.0 - _level_ring / LEVEL_RING
 		var ring: Color = COLOR_GEM
 		ring.a = 1.0 - share
 		draw_circle(hero, HERO_RADIUS_PX * (1.2 + 1.6 * share), ring, false, 3.0)
+	if driver.world.root_left > 0:
+		draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
 
 
 ## XP bar along the top edge, then run time, kills and level in the top-left screen corner
@@ -483,7 +537,8 @@ func _kind_radius_px(kind: int) -> float:
 
 
 func _draw_hero() -> void:
-	var hero: Vector2 = driver.hero_position_px()
+	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
+	var facing: Vector2 = IsoProjection.to_screen(_facing).normalized()
 	var color: Color = COLOR_HERO_HIT if _flash > 0.0 else COLOR_HERO
 	var stacks: int = driver.world.venom_stacks
 	if _sprites.has(HERO_ASSET):
@@ -491,24 +546,25 @@ func _draw_hero() -> void:
 		if stacks > 0 and _flash <= 0.0:
 			tint = tint.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
 		var frame: int = SpriteSet.walk_frame(_anim_time, 0) if _hero_moving else 0
-		_draw_shadow(hero, HERO_RADIUS_PX)
-		if _sprites.draw_frame(self, HERO_ASSET, SpriteSet.four_way(_facing), frame, hero, tint):
+		if _sprites.draw_frame(self, HERO_ASSET, SpriteSet.four_way(facing), frame, hero, tint):
 			return
 	if stacks > 0 and _flash <= 0.0:
 		color = color.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
-	draw_circle(hero, HERO_RADIUS_PX, color)
-	draw_circle(hero + _facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
+	var body: Vector2 = hero - Vector2(0, HERO_RADIUS_PX)
+	draw_circle(body, HERO_RADIUS_PX, color)
+	draw_circle(body + facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
 
 
-## Root ring, venom pips and the HP bar, over every body. The bar sits above a sprite's head.
+## Screen px from the hero's feet to the top of its sprite (or of its primitive).
+func _hero_height() -> float:
+	return HERO_SPRITE_HEIGHT_PX if _sprites.has(HERO_ASSET) else HERO_RADIUS_PX * 2.0
+
+
+## Venom pips and the HP bar above the hero's head, over every body (screen pass).
 func _draw_hero_overlay() -> void:
-	var hero: Vector2 = driver.hero_position_px()
+	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
 	var stacks: int = driver.world.venom_stacks
-	if driver.world.root_left > 0:
-		draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
-	var top: float = -HERO_RADIUS_PX - 12.0
-	if _sprites.has(HERO_ASSET):
-		top = -HERO_SPRITE_HEIGHT_PX - 8.0
+	var top: float = -_hero_height() - 8.0
 	for pip: int in stacks:
 		draw_circle(hero + Vector2(-8.0 + 8.0 * pip, top - 6.0), 3.0, COLOR_VENOM)
 	var max_hp: int = driver.world.hero_hp_max

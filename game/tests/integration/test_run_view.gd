@@ -106,8 +106,10 @@ func test_scene_moves_hero_and_camera() -> void:
 	assert_lt(hero.y, start.y)
 	assert_eq(hero.x, start.x)
 	var camera: Camera2D = view.get_node("Camera")
-	assert_eq(camera.position, hero)
-	assert_eq(camera.limit_right, 32 * 48)
+	assert_eq(camera.position, IsoProjection.to_screen(hero), "the camera follows the projected hero")
+	var view_box: Rect2 = IsoProjection.bounds(Vector2(32 * 48, 20 * 48)).grow(RunView.CAMERA_MARGIN_PX)
+	assert_eq(camera.limit_right, ceili(view_box.end.x))
+	assert_eq(camera.limit_left, floori(view_box.position.x))
 
 
 func test_hero_cannot_leave_arena() -> void:

@@ -5,19 +5,19 @@
       "asset_id": "asset.char.hero_sword",
       "kind": "sprite_atlas",
       "path": "game/assets/characters/hero_sword/hero_sword.png",
-      "sha256": "9491066c47ac435dce50d0ed38de0fc5c773c40696319b6998938aabfde2042e",
-      "bytes": 465666,
+      "sha256": "1dc77824417f5b83adc1632cac41912f131335a355af92e7b06f7b1203015955",
+      "bytes": 499942,
       "size": [
         768,
         768
       ],
-      "asset_version": 1,
-      "art_bible_version": 2,
+      "asset_version": 2,
+      "art_bible_version": 3,
       "content_ids": [
         "class.sword"
       ],
       "layout": {
-        "anchor_x": "feet",
+        "anchor_x": "torso",
         "frame_size": 192,
         "directions": [
           "down",
@@ -30,7 +30,7 @@
           96,
           186
         ],
-        "scale": 0.5562
+        "scale": 0.5793
       },
       "source": {
         "path": "art_source/hero_sword/master.webp",
@@ -40,29 +40,30 @@
       },
       "qa": {
         "palette_group": "hero_sprite",
-        "opaque_px": 11840,
-        "palette_mean_delta_e": 7.41,
+        "opaque_px": 12906,
+        "palette_mean_delta_e": 7.45,
         "tones_pct": [
-          31.4,
-          38.8,
+          31.9,
+          38.4,
           29.8
         ],
         "chroma": 0.145,
-        "threat_colour_pct": 0.0
+        "threat_colour_pct": 0.0,
+        "median_l": 133.6
       }
     },
     {
       "asset_id": "asset.enemy.blood_wolf",
       "kind": "sprite_atlas",
       "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
-      "sha256": "c8b1dbfc5322908993909497f008d981e2099fab787b75bb5cd601fda8485514",
-      "bytes": 274868,
+      "sha256": "8e55eb22792979c6454fb51e09d95889caf8ca0f2f64c9d3d357f2902c10c739",
+      "bytes": 270936,
       "size": [
         768,
         384
       ],
-      "asset_version": 1,
-      "art_bible_version": 2,
+      "asset_version": 2,
+      "art_bible_version": 3,
       "content_ids": [
         "enemy.blood_wolf"
       ],
@@ -78,7 +79,12 @@
           96,
           186
         ],
-        "scale": 0.5137
+        "scale": 0.4749,
+        "rim": {
+          "colour": "#9db5ae",
+          "width_px": 2,
+          "alpha": 0.7
+        }
       },
       "source": {
         "path": "art_source/blood_wolf/master.webp",
@@ -88,34 +94,36 @@
       },
       "qa": {
         "palette_group": "characters",
-        "opaque_px": 7743,
-        "palette_mean_delta_e": 11.82,
+        "opaque_px": 6602,
+        "palette_mean_delta_e": 11.78,
         "tones_pct": [
           62.1,
           36.9,
           1.1
         ],
         "chroma": 0.153,
-        "threat_colour_pct": 0.0
+        "threat_colour_pct": 0.0,
+        "median_l": 73.4,
+        "rim_l": 175.4
       }
     },
     {
       "asset_id": "asset.enemy.yin_corpse",
       "kind": "sprite_atlas",
       "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
-      "sha256": "246e1d51e8ceb257fc5258b2317304c5ed673da54035d3f1b347d8d3b9ee5a9c",
-      "bytes": 299558,
+      "sha256": "7de47ce1b60c47cda6e6f4da2e595361e9fa447acac29a9a63ac3f3971def046",
+      "bytes": 199890,
       "size": [
         768,
         384
       ],
-      "asset_version": 1,
-      "art_bible_version": 2,
+      "asset_version": 2,
+      "art_bible_version": 3,
       "content_ids": [
         "enemy.yin_corpse"
       ],
       "layout": {
-        "anchor_x": "feet",
+        "anchor_x": "torso",
         "frame_size": 192,
         "directions": [
           "left",
@@ -126,7 +134,12 @@
           96,
           186
         ],
-        "scale": 0.399
+        "scale": 0.2898,
+        "rim": {
+          "colour": "#9db5ae",
+          "width_px": 2,
+          "alpha": 0.7
+        }
       },
       "source": {
         "path": "art_source/yin_corpse/master.webp",
@@ -136,15 +149,17 @@
       },
       "qa": {
         "palette_group": "characters",
-        "opaque_px": 8109,
+        "opaque_px": 4168,
         "palette_mean_delta_e": 12.01,
         "tones_pct": [
-          69.6,
-          29.2,
-          1.2
+          70.7,
+          28.3,
+          1.0
         ],
-        "chroma": 0.082,
-        "threat_colour_pct": 0.0
+        "chroma": 0.081,
+        "threat_colour_pct": 0.0,
+        "median_l": 67.0,
+        "rim_l": 175.4
       }
     },
     {
@@ -158,7 +173,7 @@
         768
       ],
       "asset_version": 1,
-      "art_bible_version": 2,
+      "art_bible_version": 3,
       "content_ids": [
         "stage.jade_grove"
       ],
@@ -183,7 +198,8 @@
           0.0
         ],
         "chroma": 0.019,
-        "threat_colour_pct": 0.0
+        "threat_colour_pct": 0.0,
+        "median_l": 52.6
       }
     }
   ]
