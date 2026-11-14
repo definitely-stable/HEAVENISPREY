@@ -3,7 +3,7 @@
   "asset_id": "asset.char.hero_sword",
   "kind": "sprite_atlas",
   "group": "characters",
-  "asset_version": 1,
+  "asset_version": 2,
   "content_ids": [
     "class.sword"
   ],
@@ -51,5 +51,6 @@
     186
   ],
   "margin_px": 2,
-  "figure_height_px": 168
+  "figure_height_px": 168,
+  "anchor_x": "torso"
 }

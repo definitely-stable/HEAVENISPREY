@@ -3,7 +3,7 @@
   "asset_id": "asset.enemy.blood_wolf",
   "kind": "sprite_atlas",
   "group": "enemies",
-  "asset_version": 1,
+  "asset_version": 2,
   "content_ids": [
     "enemy.blood_wolf"
   ],
@@ -43,7 +43,12 @@
     96,
     186
   ],
-  "margin_px": 2,
-  "figure_height_px": 150,
-  "anchor_x": "bbox_centre"
+  "margin_px": 4,
+  "figure_height_px": 104,
+  "anchor_x": "bbox_centre",
+  "rim": {
+    "colour": "#9db5ae",
+    "width_px": 2,
+    "alpha": 0.7
+  }
 }

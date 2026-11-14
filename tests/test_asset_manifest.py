@@ -156,13 +156,20 @@ class AssetManifestTests(unittest.TestCase):
         floor["qa"]["tones_pct"] = [80.0, 14.0, 6.0]
         self.fails("lights")
 
+    def test_enemy_rim_reads_on_the_floor(self):
+        corpse = self.entry("asset.enemy.yin_corpse")
+        corpse["qa"]["rim_l"] = self.entry("asset.tile.jade_grove_floor")["qa"]["median_l"] + 20
+        self.fails("above the floor")
+        del corpse["qa"]["rim_l"]
+        self.fails("needs a rim")
+
     def test_hero_is_lighter_than_the_world(self):
         self.entry()["qa"]["tones_pct"] = [70.0, 20.0, 10.0]
         self.fails("lights")
 
     def test_passport_version_must_match(self):
-        self.entry()["art_bible_version"] = 1
-        self.fails("passport v1")
+        self.entry()["art_bible_version"] = 2
+        self.fails("passport v2")
 
     def test_duplicate_and_order(self):
         self.manifest["assets"].append(copy.deepcopy(self.entry()))
