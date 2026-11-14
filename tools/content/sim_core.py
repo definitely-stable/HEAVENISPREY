@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 10
+VECTORS_SCHEMA_VERSION = 11
 
 
 def _load(name: str, file: str):
@@ -111,6 +111,14 @@ VENOM_STRIDE = 4
 # status.root_slow (ADR-011 section 4): (duration_ticks, hero speed multiplier fx), both 0
 # when no attack applies it.
 ROOT_STRIDE = 2
+# Roster windows (ADR-011 section 5): (start_tick, end_tick, max_control_near) + one spawn weight
+# per kind (kind order); contiguous from tick 0, the last window also covers later ticks.
+WINDOW_HEAD = 3
+# threat_caps (ADR-011 section 5): (projectile tells, charge tells, live ground zones, death
+# hazards = live death-zone kinds + live death zones, live projectile kinds, the radius of
+# max_control_near around the hero).
+CAPS_STRIDE = 6
+C_SHOT_TELLS, C_CHARGE_TELLS, C_CONTROL_ZONES, C_DEATH_HAZARDS, C_RANGED, C_NEAR = range(6)
 # round(16384 * cos(k degrees)) for k = 0..180, half away from zero (golden, = FxTables).
 COS_Q14 = (
     16384, 16382, 16374, 16362, 16344, 16322, 16294, 16262, 16225, 16182, 16135, 16083, 16026,
@@ -224,14 +232,20 @@ class Config:
     attacks (ADR-011 sections 2-3): empty (every kind hits by contact) or one ATTACK_STRIDE
     record per kind; venom: the status.venom values (VENOM_STRIDE); root: the
     status.root_slow values (ROOT_STRIDE).
+    windows (ADR-011 section 5): empty (the kind records' weights) or one record of
+    WINDOW_HEAD + len(kinds) values per roster window; caps: empty (no limit) or the
+    threat_caps (CAPS_STRIDE).
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
                  skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0, attacks=(),
-                 venom=(0,) * VENOM_STRIDE, root=(0,) * ROOT_STRIDE):
+                 venom=(0,) * VENOM_STRIDE, root=(0,) * ROOT_STRIDE, windows=(),
+                 caps=()):
         self.choice_mode = choice_mode
         self.root = list(root)
         self.root_duration, self.root_mult = (list(root) + [0] * ROOT_STRIDE)[:ROOT_STRIDE]
+        self.raw_windows = list(windows)
+        self.caps = list(caps)
         self.run_ticks = run_ticks
         self.raw_attacks = list(attacks)
         self.venom = list(venom)
@@ -266,7 +280,8 @@ class Config:
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
             + [self.choice_mode, self.run_ticks, len(self.raw_attacks)] + self.raw_attacks \
-            + self.venom + self.root
+            + self.venom + self.root + [len(self.raw_windows)] + self.raw_windows \
+            + [len(self.caps)] + self.caps
 
     def attack(self, kind: int) -> tuple:
         """The attack record of `kind`; all zeros (contact) without an attack table."""
@@ -298,6 +313,27 @@ class Config:
     def total_weight(self) -> int:
         return sum(kind[5] for kind in self.kinds)
 
+    def window_stride(self) -> int:
+        return WINDOW_HEAD + len(self.kinds)
+
+    def windows(self) -> list[list[int]]:
+        stride = self.window_stride()
+        return [self.raw_windows[i:i + stride]
+                for i in range(0, len(self.raw_windows) - stride + 1, stride)]
+
+    def window(self, tick: int) -> list[int]:
+        """The roster window of `tick`: start <= tick < end; the last one after its end."""
+        windows = self.windows()
+        for record in windows:
+            if tick < record[1]:
+                return record
+        return windows[-1]
+
+    def spawn_weights(self, tick: int) -> list[int]:
+        if not self.raw_windows:
+            return [kind[5] for kind in self.kinds]
+        return self.window(tick)[WINDOW_HEAD:]
+
     def spawn_rate(self, tick: int) -> int:
         if self.spawn_ramp <= 0:
             return RATE_ONE
@@ -324,9 +360,30 @@ class Config:
             return False
         if self.raw_attacks and not self._attacks_valid():
             return False
+        if self.raw_windows and not self._windows_valid():
+            return False
+        if self.caps and not (len(self.caps) == CAPS_STRIDE and self.raw_attacks
+                              and all(c > 0 for c in self.caps)):
+            return False
         if len(self.venom) != VENOM_STRIDE or len(self.root) != ROOT_STRIDE:
             return False
         return self.run_ticks >= 0
+
+    def _windows_valid(self) -> bool:
+        """Whole windows, contiguous from tick 0, each start < end, max_control_near >= 0,
+        weights >= 0 with a total in 1..2^32."""
+        stride = self.window_stride()
+        if not self.has_enemies() or len(self.raw_windows) % stride != 0:
+            return False
+        start = 0
+        for record in self.windows():
+            if record[0] != start or record[1] <= record[0] or record[2] < 0:
+                return False
+            weights = record[WINDOW_HEAD:]
+            if any(w < 0 for w in weights) or not 0 < sum(weights) <= BELOW_LIMIT:
+                return False
+            start = record[1]
+        return True
 
     def _death_zone_kind(self, kind: int) -> bool:
         """The kind leaves a zone on death and never attacks while alive (interval 0)."""
@@ -600,13 +657,21 @@ def spawn(config: Config, world: World) -> None:
         return
     world.spawn_acc -= config.spawn_period
     rng = hip_rng.HipRng(hip_rng.parse_u64(config.seed), "enemy", world.rng_cursor)
-    roll = rng.below(config.total_weight())
+    weights = config.spawn_weights(world.tick)
+    roll = rng.below(sum(weights))
     kind = len(config.kinds) - 1
-    for index, record in enumerate(config.kinds):
-        roll -= record[5]
+    for index, weight in enumerate(weights):
+        roll -= weight
         if roll < 0:
             kind = index
             break
+    kind = _allowed_kind(config, world, weights, kind)
+    if kind < 0:
+        # Every kind of the window is over its cap: no spawn, the roll is spent and the
+        # accumulator does not advance (ADR-011 section 5).
+        world.rng_cursor = rng.cursor
+        world.spawn_acc += config.spawn_period - rate
+        return
     r = config.kinds[kind][1]
     x0, y0, x1, y1 = config.min_x + r, config.min_y + r, config.max_x - r, config.max_y - r
     w, h = x1 - x0, y1 - y0
@@ -641,6 +706,59 @@ def spawn(config: Config, world: World) -> None:
         world.enemies[slot] = record
     world.next_enemy_uid += 1
     world.enemy_alive += 1
+
+
+def _spawn_capped(config: Config, world: World, kind: int) -> bool:
+    """threat_caps on spawns: live projectile kinds, and death hazards (live death-zone kinds
+    plus live death zones)."""
+    form = config.form(kind)
+    if form == FORM_PROJECTILE:
+        return _live_of_form(config, world, FORM_PROJECTILE) >= config.caps[C_RANGED]
+    if form == FORM_DEATH_ZONE:
+        zones = sum(1 for zone in world.zones if zone[Z_FORM] == FORM_DEATH_ZONE)
+        return _live_of_form(config, world, FORM_DEATH_ZONE) + zones >= config.caps[C_DEATH_HAZARDS]
+    return False
+
+
+def _allowed_kind(config: Config, world: World, weights: list[int], kind: int) -> int:
+    """The rolled kind, or over its cap the next kind in kind order (cyclic) with a weight in
+    the window and under its caps, without a new RNG word; -1 when there is none."""
+    if not config.caps:
+        return kind
+    count = len(config.kinds)
+    for step in range(count):
+        other = (kind + step) % count
+        if weights[other] > 0 and not _spawn_capped(config, world, other):
+            return other
+    return -1
+
+
+def _live_of_form(config: Config, world: World, form: int, state: int = -1) -> int:
+    """Live enemies whose attack has `form` (in attack `state` when given)."""
+    return sum(1 for enemy in world.enemies if _live(enemy) and config.form(enemy[E_KIND]) == form
+               and (state < 0 or enemy[E_STATE] == state))
+
+
+def _launch_capped(config: Config, world: World, form: int) -> bool:
+    """threat_caps on launches (ADR-011 section 5): projectile and charge tells; live ground
+    zones, and those within C_NEAR of the hero against the window's max_control_near."""
+    if not config.caps:
+        return False
+    if form == FORM_PROJECTILE:
+        return _live_of_form(config, world, FORM_PROJECTILE, ST_TELL) >= config.caps[C_SHOT_TELLS]
+    if form == FORM_CHARGE:
+        return _live_of_form(config, world, FORM_CHARGE, ST_TELL) >= config.caps[C_CHARGE_TELLS]
+    if form != FORM_GROUND_ZONE:
+        return False
+    zones = [zone for zone in world.zones if zone[Z_FORM] == FORM_GROUND_ZONE]
+    if len(zones) >= config.caps[C_CONTROL_ZONES]:
+        return True
+    if not config.raw_windows:
+        return False
+    near = config.caps[C_NEAR] ** 2
+    close = sum(1 for zone in zones
+                if _dist2(zone[Z_X], zone[Z_Y], world.player_x, world.player_y) <= near)
+    return close >= config.window(world.tick)[2]
 
 
 SEP_MAX_CHECKS = 4096
@@ -1076,7 +1194,8 @@ def enemy_attacks(config: Config, world: World) -> None:
             in_range = dx * dx + dy * dy <= reach * reach
         if form == FORM_GROUND_ZONE and _owns_zone(world, enemy[E_UID]):
             in_range = False
-        if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_range:
+        if enemy[E_STATE] == ST_APPROACH and enemy[E_CD] == 0 and in_range \
+                and not _launch_capped(config, world, form):
             enemy[E_STATE], enemy[E_LEFT], enemy[E_CD] = ST_TELL, tell, config.kinds[kind][4]
             enemy[E_DX], enemy[E_DY] = _aim(world, enemy)
             enemy[E_ATK] = world.next_attack_uid
@@ -1505,10 +1624,35 @@ ROOT_KIND = [3072, 25200, 11000, 0, 360, 1]
 ROOT_GROWTH = [FORM_GROUND_ZONE, 57, 165, 45, 384000, 0, 0, 0, 153600, 0]
 # status.root_slow: 90 ticks, hero speed x 0.72.
 P0_ROOT = [90, 720]
+
+# ADR-011 E6: the P0 run of roster.jade_grove (= P0Tuning.run_config). Kinds are the union of
+# the windows w0..w3 in the order of first appearance; a kind record carries the weight of its
+# first window (unused once windows are set). XP per kind = 5 + 5 x spawn_cost.
+#   wandering_spirit: speed 0.96, radius 0.75, hp 0.58, touch 0.55 every 45 ticks
+SPIRIT_KIND = [4608, 18000, 5800, 5500, 45, 2]
+P0_KINDS = W0_KINDS + SPIRIT_KIND + ARC_KINDS[0:5] + [2] + MANTIS_KIND \
+    + LANTERN_KIND[0:5] + [1] + PUPPET_KIND[0:5] + [1] + ARC_KINDS[6:11] + [1] \
+    + ARC_KINDS[12:17] + [1] + ROOT_KIND
+P0_ATTACKS = CONTACT_ATTACK * 3 + SNAKE_BITE + MANTIS_LUNGE + LANTERN_WISP + PUPPET_BURST \
+    + DISCIPLE_CLEAVE + JADE_STOMP + ROOT_GROWTH
+P0_KIND_XP = (10, 15, 15, 15, 15, 20, 15, 15, 20, 20)
+#   kinds: yin, wolf, spirit, snake, mantis, lantern, puppet, disciple, guardian, roots
+P0_WINDOWS = [0, 5100, 0, 8, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+              5100, 10500, 0, 5, 3, 2, 2, 0, 0, 0, 0, 0, 0,
+              10500, 15000, 1, 3, 3, 0, 0, 2, 1, 1, 1, 0, 0,
+              15000, 18000, 2, 3, 2, 0, 0, 1, 0, 0, 0, 1, 1]
+# roster.jade_grove threat_caps, max_control_near within 8 cells.
+P0_CAPS = [2, 2, 2, 3, 3, 384000]
 MIXED_KINDS = W0_KINDS + ARC_KINDS
 MIXED_ATTACKS = CONTACT_ATTACK * 2 + ARC_ATTACKS
 # status.venom: 3 stacks, 240 ticks, damage every 60 ticks, 1 HP per stack.
 P0_VENOM = [3, 240, 60, 1000]
+
+
+STRESS_ATTACKS = Config(BASE, STRESS_VALUES, P0_KINDS, SEED, P0_SKILL,
+                        ((48000, 512), P0_KIND_XP, P0_XP_COSTS), attacks=P0_ATTACKS,
+                        venom=P0_VENOM, root=P0_ROOT,
+                        windows=[0, 4000, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1], caps=P0_CAPS)
 
 
 def _attack_scenarios():
@@ -1553,6 +1697,18 @@ def _attack_scenarios():
                   attacks=MIXED_ATTACKS + PUPPET_BURST + ROOT_GROWTH, venom=P0_VENOM,
                   root=P0_ROOT)
     out.append(("zones_mixed_hero_circles", late, migrate_v1(_circle(30, 3600)), 3600))
+    # E6: the four P0 windows compressed to 10 s each with the threat_caps, and the 150-enemy
+    # stress crowd of every kind and attack (one window, the STRESS bot scenario).
+    windows = [v for i, v in enumerate(P0_WINDOWS)]
+    for index in range(4):
+        windows[index * 13] = index * 600
+        windows[index * 13 + 1] = (index + 1) * 600
+    compressed = Config(BASE, [TOUGH, 15000, 0, 1000, 48, 384000], P0_KINDS, SEED, P0_SKILL,
+                        ((48000, 512), P0_KIND_XP, P0_XP_COSTS), attacks=P0_ATTACKS,
+                        venom=P0_VENOM, root=P0_ROOT, windows=windows, caps=P0_CAPS)
+    out.append(("windows_compressed_hero_circles", compressed, migrate_v1(_circle(30, 2400)),
+                2400))
+    out.append(("stress_150_attacks", STRESS_ATTACKS, migrate_v1(_circle(30, 4000)), 4000))
     return out
 
 
@@ -1675,7 +1831,9 @@ def config_json(config: Config) -> dict:
     if config.raw_attacks:
         attacks = {"records": [str(v) for v in config.raw_attacks],
                    "venom": [str(v) for v in config.venom],
-                   "root": [str(v) for v in config.root]}
+                   "root": [str(v) for v in config.root],
+                   "windows": [str(v) for v in config.raw_windows],
+                   "caps": [str(v) for v in config.caps]}
     return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
             "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks,
             "attacks": attacks}

@@ -30,11 +30,14 @@ static func _ints(values: Array) -> PackedInt64Array:
 static func config_of(row: Dictionary) -> SimConfig:
 	var spec: Dictionary = row["enemies"]
 	var xp: Dictionary = row["xp"]
+	var attacks: Dictionary = row["attacks"]
 	return SimConfig.create(_ints(row["config"])).with_enemies(
 		_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"])
 	).with_skill(_ints(row["skill"])).with_xp(
 		_ints(xp["values"]), _ints(xp["kind_xp"]), _ints(xp["costs"])
-	).with_choice_mode(int(row["choice_mode"])).with_run_ticks(int(row["run_ticks"]))
+	).with_choice_mode(int(row["choice_mode"])).with_run_ticks(int(row["run_ticks"])).with_attacks(
+		_ints(attacks["records"]), _ints(attacks["venom"]), _ints(attacks["root"])
+	).with_windows(_ints(attacks["windows"]), _ints(attacks["caps"]))
 
 
 static func log_of(row: Dictionary) -> CommandLog:
@@ -101,7 +104,5 @@ func test_the_game_tuning_is_the_bot_config() -> void:
 	var row: Dictionary = (_upgrades.get("traces", []) as Array)[0]
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
 	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
-	var ints: PackedInt64Array = tuned.to_ints()
-	# choice_mode, run_ticks, the attack table size (0), four venom and two root values close the list.
-	ints[ints.size() - 9] = SimConfig.CHOICE_NONE
+	var ints: PackedInt64Array = tuned.with_choice_mode(SimConfig.CHOICE_NONE).to_ints()
 	assert_eq(ints, config_of(anchor).to_ints(), "anchors play it without the choice")

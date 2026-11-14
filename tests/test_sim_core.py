@@ -1012,8 +1012,9 @@ class SimRunEndReferenceTests(unittest.TestCase):
 
     def test_run_ticks_follows_the_choice_mode(self):
         config = p0(run_ticks=18000)
-        # choice_mode, run_ticks, then the attack table (empty), the venom and root values.
-        self.assertEqual(config.ints()[-9:], [0, 18000, 0, 0, 0, 0, 0, 0, 0])
+        # choice_mode, run_ticks, then the attack table (empty), the venom and root values and
+        # the windows and caps (both empty).
+        self.assertEqual(config.ints()[-11:], [0, 18000, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         self.assertTrue(config.valid())
         self.assertFalse(p0(run_ticks=-1).valid())
 
@@ -1669,6 +1670,223 @@ class SimEnemyZoneReferenceTests(unittest.TestCase):
             self.assertFalse(valid(sim.ROOT_GROWTH, sim.ROOT_KIND, root), root)
         self.assertFalse(sim.Config(BASE, NO_SPAWN, sim.PUPPET_KIND, "1").valid(),
                          "interval 0 without the death-zone record")
+
+
+
+def caps_config(kinds, attacks, windows=(), caps=(2, 2, 2, 3, 3, 384000), values=None):
+    """No hero skill (nothing dies unless a test sets its HP to 0); every_tick spawns."""
+    return sim.Config(BASE, values or every_tick(64), kinds, "7", attacks=attacks,
+                      venom=sim.P0_VENOM, root=sim.P0_ROOT, windows=windows, caps=caps)
+
+
+def kinds_of(world):
+    return [enemy[sim.E_KIND] for enemy in world.enemies if sim._live(enemy)]
+
+
+def in_tell(world, kind):
+    return sum(1 for enemy in world.enemies
+               if enemy[sim.E_KIND] == kind and enemy[sim.E_STATE] == sim.ST_TELL)
+
+
+class SimThreatCapsReferenceTests(unittest.TestCase):
+    """ADR-011 section 5 (E6): roster windows and threat_caps."""
+
+    YIN_LANTERN = sim.W0_KINDS[:6] + sim.LANTERN_KIND
+    YIN_LANTERN_ATTACKS = sim.CONTACT_ATTACK + sim.LANTERN_WISP
+
+    def test_window_of_a_tick(self):
+        config = sim.Config(BASE, sim.P0_VALUES, sim.P0_KINDS, "1", attacks=sim.P0_ATTACKS,
+                            venom=sim.P0_VENOM, root=sim.P0_ROOT, windows=sim.P0_WINDOWS,
+                            caps=sim.P0_CAPS)
+        self.assertTrue(config.valid())
+        starts = [config.window(tick)[0] for tick in (0, 5099, 5100, 10499, 10500, 17999,
+                                                      18000, 90000)]
+        self.assertEqual(starts, [0, 0, 5100, 5100, 10500, 15000, 15000, 15000])
+        self.assertEqual(config.spawn_weights(5100), [5, 3, 2, 2, 0, 0, 0, 0, 0, 0])
+        plain = sim.Config(BASE, sim.P0_VALUES, sim.P0_KINDS, "1", attacks=sim.P0_ATTACKS,
+                           venom=sim.P0_VENOM, root=sim.P0_ROOT)
+        self.assertEqual(plain.spawn_weights(0), [kind[5] for kind in plain.kinds])
+
+    def test_one_window_with_the_kind_weights_changes_nothing(self):
+        values = [TOUGH] + sim.P0_VALUES[1:]
+        plain = sim.Config(BASE, values, sim.W0_KINDS, sim.SEED, sim.P0_SKILL, sim.P0_XP)
+        windowed = sim.Config(BASE, values, sim.W0_KINDS, sim.SEED, sim.P0_SKILL, sim.P0_XP,
+                              windows=[0, 5100, 0, 8, 2])
+        self.assertTrue(windowed.valid())
+        moves = {0: (1, 0), 300: (0, 1), 600: (-1, 0), 900: (0, -1)}
+        a = run_moves(plain, sim.World(plain), moves, 3000)
+        b = run_moves(windowed, sim.World(windowed), moves, 3000)
+        self.assertEqual(a.digest(), b.digest(), "past its end the last window still applies")
+
+    def test_weights_follow_the_window(self):
+        config = caps_config(sim.W0_KINDS, (), windows=[0, 30, 0, 1, 0, 30, 90, 0, 0, 1], caps=())
+        world = run_moves(config, sim.World(config), {}, 60)
+        self.assertEqual([enemy[sim.E_KIND] for enemy in world.enemies], [0] * 30 + [1] * 30)
+
+    def test_capped_kind_gives_way_to_the_next_allowed_one(self):
+        """Past three live lanterns (ordinary_ranged_on_screen) a rolled lantern becomes the
+        next kind in cyclic order (yin, kind 0) with no extra RNG word: one word per spawn."""
+        config = caps_config(self.YIN_LANTERN, self.YIN_LANTERN_ATTACKS,
+                             windows=[0, 1000, 0, 1, 1])
+        free = caps_config(self.YIN_LANTERN, self.YIN_LANTERN_ATTACKS,
+                           windows=[0, 1000, 0, 1, 1], caps=())
+        world = run_moves(config, sim.World(config), {}, 40)
+        loose = run_moves(free, sim.World(free), {}, 40)
+        self.assertEqual(kinds_of(world).count(1), 3)
+        self.assertGreater(kinds_of(loose).count(1), 3)
+        self.assertEqual((world.enemy_alive, world.rng_cursor), (40, loose.rng_cursor))
+        rolled = kinds_of(loose)
+        first_over = [i for i, kind in enumerate(rolled) if kind == 1][3]
+        self.assertEqual(kinds_of(world)[:first_over], rolled[:first_over])
+        self.assertEqual(kinds_of(world)[first_over], 0)
+
+    def test_spawn_is_skipped_while_every_kind_is_capped(self):
+        """Only lanterns in the window and a cap of 2, one spawn per 3 ticks: from the third
+        spawn on every tick tries again, the roll is spent and the accumulator stays at
+        period - rate (it does not advance)."""
+        caps = (2, 2, 2, 3, 2, 384000)
+        config = caps_config(self.YIN_LANTERN, self.YIN_LANTERN_ATTACKS,
+                             windows=[0, 1000, 0, 0, 1], caps=caps,
+                             values=[TOUGH, 3000, 0, 1000, 64, 0])
+        world = run_moves(config, sim.World(config), {}, 9)
+        self.assertEqual(world.enemy_alive, 2, "spawns in ticks 2 and 5, skipped in tick 8")
+        self.assertEqual(world.spawn_acc, 2000)
+        for _ in range(5):
+            cursor = world.rng_cursor
+            run_moves(config, world, {}, 1)
+            self.assertEqual((world.enemy_alive, world.spawn_acc), (2, 2000))
+            self.assertGreater(world.rng_cursor, cursor, "each skipped spawn spends its roll")
+
+    def test_death_zones_count_as_death_hazards(self):
+        """Puppets fill active_death_hazards up to 3; two live puppets and a death zone left by
+        a third hold every spawn until the zone ends, then a new puppet may spawn."""
+        config = caps_config(sim.PUPPET_KIND, sim.PUPPET_BURST, windows=[0, 1000, 0, 1])
+        world = run_moves(config, sim.World(config), {}, 10)
+        self.assertEqual(world.enemy_alive, 3)
+        world = sim.World(config)
+        for y in (CY - 300000, CY + 300000):
+            place(world, 0, CX + 600000, y, 1000000)
+        world.enemy_alive = 2
+        world.zones.append([CX, CY, 96000, 36, 54, 3800, sim.FORM_DEATH_ZONE, 99, 0])
+        ticks = 0
+        while world.live_zones():
+            run_moves(config, world, {}, 1)
+            ticks += 1
+            if world.live_zones():
+                self.assertEqual(world.enemy_alive, 2, ticks)
+        self.assertEqual(ticks, 89, "36 + 54 ticks, the first one before tick 0")
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.enemy_alive, 3)
+
+    def test_shot_tells_are_capped(self):
+        config = sim.Config(BASE, NO_SPAWN, sim.LANTERN_KIND, "1", attacks=sim.LANTERN_WISP,
+                            caps=(1, 2, 2, 3, 3, 384000))
+        self.assertTrue(config.valid())
+        world = sim.World(config)
+        for _ in range(2):
+            place(world, 0, CX + 384000 + sim.LANTERN_KIND[0], CY, 1000000)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(in_tell(world, 0), 1, "the second lantern waits")
+        run_moves(config, world, {}, 36)
+        self.assertEqual(in_tell(world, 0), 1, "it winds up once the first one has released")
+        self.assertEqual(world.next_attack_uid - 1, 2)
+
+    def test_charge_tells_are_capped(self):
+        config = sim.Config(BASE, NO_SPAWN, sim.MANTIS_KIND, "1", attacks=sim.MANTIS_LUNGE,
+                            caps=(2, 1, 2, 3, 3, 384000))
+        world = sim.World(config)
+        for _ in range(2):
+            place(world, 0, CX + 108000 + sim.MANTIS_KIND[0], CY, 1000000)
+        run_moves(config, world, {}, 1)
+        self.assertEqual(in_tell(world, 0), 1)
+        run_moves(config, world, {}, 33)
+        self.assertEqual(world.next_attack_uid - 1, 2, "the second charge after the first tell")
+
+    def test_live_ground_zones_are_capped(self):
+        config = sim.Config(BASE, NO_SPAWN, sim.ROOT_KIND, "1", attacks=sim.ROOT_GROWTH,
+                            root=sim.P0_ROOT, caps=(2, 2, 1, 3, 3, 384000))
+        world = sim.World(config)
+        for _ in range(2):
+            place(world, 0, CX + 384000 + sim.ROOT_KIND[0], CY, 1000000)
+        run_moves(config, world, {}, 1)
+        self.assertEqual((world.next_attack_uid - 1, world.live_zones()), (1, 1))
+        run_moves(config, world, {}, 220)
+        self.assertEqual(world.next_attack_uid - 1, 1, "the zone lives ticks 0..221")
+        run_moves(config, world, {}, 1)
+        self.assertEqual(world.next_attack_uid - 1, 2)
+
+    def test_control_zones_near_the_hero_follow_the_window(self):
+        """max_control_enemies_near_player = 1: a second root zone waits while the first one
+        is within 8 cells of the hero (who walks past the casters); with 0 no root zone is ever
+        made."""
+        caps = (2, 2, 2, 3, 3, 384000)
+
+        def second_launch(near):
+            """The hero offset from the first zone (at CX) when the second zone is cast, or
+            None within 200 ticks; the hero walks +x from tick 1."""
+            config = sim.Config(BASE, NO_SPAWN, sim.ROOT_KIND, "1", attacks=sim.ROOT_GROWTH,
+                                root=sim.P0_ROOT, windows=[0, 1000, near, 1], caps=caps)
+            world = sim.World(config)
+            for _ in range(2):
+                place(world, 0, CX + 384000 + sim.ROOT_KIND[0], CY, 1000000)
+            log = sim.CommandLog()
+            self.assertEqual(log.append((1, 0, sim.MOVE, 1, 0), 0), sim.OK)
+            for _ in range(200):
+                sim.step(config, world, log)
+                if world.next_attack_uid - 1 == 2:
+                    return world.player_x - CX
+                if near == 0:
+                    self.assertEqual(world.next_attack_uid - 1, 0)
+            return None
+
+        self.assertIsNone(second_launch(0), "no root zone with a budget of 0")
+        self.assertEqual(second_launch(1), 388800, "the first tick past 8 cells (384 px)")
+        self.assertEqual(second_launch(2), 4800, "a budget of 2 lets the second one cast")
+
+    def test_windows_and_caps_are_validated(self):
+        def valid(windows=(), caps=sim.P0_CAPS, attacks=sim.P0_ATTACKS):
+            return sim.Config(BASE, sim.P0_VALUES, sim.P0_KINDS, "1", attacks=attacks,
+                              venom=sim.P0_VENOM, root=sim.P0_ROOT, windows=windows,
+                              caps=caps).valid()
+        self.assertTrue(valid(sim.P0_WINDOWS))
+        self.assertTrue(valid(caps=()))
+        self.assertFalse(sim.Config(BASE, sim.P0_VALUES, sim.W0_KINDS, "1",
+                                    caps=sim.P0_CAPS).valid(), "caps need an attack table")
+        for index in range(6):
+            caps = list(sim.P0_CAPS)
+            caps[index] = 0
+            self.assertFalse(valid(caps=caps), ("cap", index))
+        self.assertFalse(valid(caps=sim.P0_CAPS[:5]))
+        for index, value in ((0, 1), (1, 0), (2, -1), (3, -1), (13, 5000), (14, 5100)):
+            windows = list(sim.P0_WINDOWS)
+            windows[index] = value
+            self.assertFalse(valid(windows), ("window", index, value))
+        self.assertFalse(valid(sim.P0_WINDOWS[:-1]), "a partial window")
+        self.assertFalse(valid([0, 100, 0] + [0] * 10), "a window without weights")
+
+    def test_caps_hold_in_the_compressed_p0_run(self):
+        """The four P0 windows of the trace scenario: no cap is passed in any tick, and every
+        kind but the guardian (weight 1 of 10 in the last 600 ticks) comes up in this seed."""
+        config = next(c for name, c, _, _ in sim._attack_scenarios()
+                      if name == "windows_compressed_hero_circles")
+        log = sim.CommandLog()
+        for command in sim.migrate_v1(sim._circle(30, 2400)):
+            log.append(command, 0)
+        world, seen = sim.World(config), set()
+        for _ in range(2400):
+            sim.step(config, world, log)
+            seen.update(kinds_of(world))
+            forms = [config.form(kind) for kind in kinds_of(world)]
+            states = [(config.form(e[sim.E_KIND]), e[sim.E_STATE]) for e in world.enemies
+                      if sim._live(e)]
+            zone_forms = [zone[sim.Z_FORM] for zone in world.zones]
+            self.assertLessEqual(states.count((sim.FORM_PROJECTILE, sim.ST_TELL)), 2)
+            self.assertLessEqual(states.count((sim.FORM_CHARGE, sim.ST_TELL)), 2)
+            self.assertLessEqual(zone_forms.count(sim.FORM_GROUND_ZONE), 2)
+            self.assertLessEqual(forms.count(sim.FORM_DEATH_ZONE)
+                                 + zone_forms.count(sim.FORM_DEATH_ZONE), 3)
+            self.assertLessEqual(forms.count(sim.FORM_PROJECTILE), 3)
+        self.assertEqual(seen, set(range(10)) - {8})
 
 
 if __name__ == "__main__":

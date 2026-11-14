@@ -122,17 +122,39 @@ func test_hero_cannot_leave_arena() -> void:
 	assert_eq(view.driver.world.player_y, 24000)
 
 
-func test_tuning_reads_w0_roster_from_content() -> void:
+func test_tuning_reads_the_roster_windows_from_content() -> void:
 	var tuning: P0Tuning = P0Tuning.new()
 	var config: SimConfig = tuning.run_config(ContentRegistry.load_dir(), "20261113")
 	assert_not_null(config, tuning.error)
 	assert_true(config.is_valid())
-	assert_eq(tuning.enemy_ids, PackedStringArray(["enemy.yin_corpse", "enemy.blood_wolf"]))
-	# Catalog multipliers x placeholder bases; equal to the W0_KINDS trace input of sim_core.py.
+	# The union of w0..w3 in the order of first appearance (ADR-011 E6).
+	assert_eq(tuning.enemy_ids, PackedStringArray([
+		"enemy.yin_corpse", "enemy.blood_wolf", "enemy.wandering_spirit", "enemy.venom_spirit_snake",
+		"enemy.sickle_mantis", "enemy.cursed_spirit_lantern", "enemy.paper_puppet",
+		"enemy.fallen_sword_disciple", "enemy.ruined_jade_guardian", "enemy.root_abomination",
+	]))
+	# Catalog multipliers x placeholder bases; equal to the P0_KINDS trace input of sim_core.py
+	# (kinds 0 and 1 are the W0_KINDS of slice 4).
 	assert_eq(config.kinds, PackedInt64Array([
 		3264, 24000, 12800, 6500, 36, 8,
 		6144, 21600, 7800, 7600, 42, 2,
+		4608, 18000, 5800, 5500, 45, 2,
+		5856, 16800, 6500, 5000, 96, 2,
+		5280, 18720, 7200, 9500, 150, 2,
+		3936, 16800, 7000, 6400, 204, 1,
+		3984, 19680, 8200, 3800, 0, 1,
+		4944, 24000, 10500, 9000, 120, 1,
+		2592, 30720, 25000, 11800, 180, 1,
+		3072, 25200, 11000, 0, 360, 1,
 	]))
+	# start/end seconds x 60, max_control_enemies_near_player, a weight per kind.
+	assert_eq(config.windows, PackedInt64Array([
+		0, 5100, 0, 8, 2, 0, 0, 0, 0, 0, 0, 0, 0,
+		5100, 10500, 0, 5, 3, 2, 2, 0, 0, 0, 0, 0, 0,
+		10500, 15000, 1, 3, 3, 0, 0, 2, 1, 1, 1, 0, 0,
+		15000, 18000, 2, 3, 2, 0, 0, 1, 0, 0, 0, 1, 1,
+	]))
+	assert_eq(config.caps, PackedInt64Array([2, 2, 2, 3, 3, 384000]), "threat_caps, 8 cells near")
 	assert_eq(config.hero_hp_mhp, 100000)
 	assert_eq(config.spawn_min_distance_su, 384000)
 	assert_eq(tuning.skill_id, "skill.spirit_sword", "class.sword start skill")

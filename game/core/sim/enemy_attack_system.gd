@@ -19,7 +19,8 @@ extends RefCounted
 ## the shot lives active_ticks ticks. GROUND_ZONE (E5) launches within its reach while no zone
 ## of its own is alive; the zone is made at the launch on the hero centre
 ## (EnemyZoneSystem.launch) and the enemy is active for one tick. A death-zone kind never
-## attacks while alive (EnemyZoneSystem.on_death leaves its zone).
+## attacks while alive (EnemyZoneSystem.on_death leaves its zone). A launch over a threat cap
+## waits for a later tick (ThreatCaps.launch_capped, E6).
 
 const ST_APPROACH: int = 0
 const ST_TELL: int = 1
@@ -69,7 +70,8 @@ static func run(config: SimConfig, world: WorldState) -> void:
 			in_range = in_launch_range(reach, dx, dy)
 		if form == SimConfig.FORM_GROUND_ZONE and EnemyZoneSystem.owns_zone(world, world.enemy_uid[slot]):
 			in_range = false
-		if world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0 and in_range:
+		var ready: bool = world.enemy_state[slot] == ST_APPROACH and world.enemy_cooldown[slot] == 0
+		if ready and in_range and not ThreatCaps.launch_capped(config, world, form):
 			var unit: PackedInt64Array = aim(world, slot)
 			world.enemy_state[slot] = ST_TELL
 			world.enemy_left[slot] = config.attack_value(kind, SimConfig.ATTACK_TELEGRAPH)

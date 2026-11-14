@@ -164,10 +164,12 @@ func test_tuning_builds_the_arc_kinds_from_content() -> void:
 	assert_eq(tuning.venom_values(registry), PackedInt64Array(VENOM))
 
 
-func test_w0_run_has_no_attack_table() -> void:
+func test_p0_run_has_an_attack_per_kind() -> void:
 	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "101")
 	assert_not_null(config)
-	assert_true(config.attacks.is_empty(), "w0 enemies hit by contact only")
+	assert_eq(config.attacks.size(), config.kind_count() * SimConfig.ATTACK_STRIDE)
+	for kind: int in 3:
+		assert_eq(config.attack_value(kind, SimConfig.ATTACK_FORM), SimConfig.FORM_CONTACT, "w0/w1 touch")
 
 
 func test_telegraph_shape_follows_the_attack_state() -> void:

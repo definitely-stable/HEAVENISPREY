@@ -1,7 +1,8 @@
 """ADR-009 slice 2: scripted bot runs. Exact layer (committed fixture reproduces, logs replay
 to the recorded digests) and statistical layer (death-time corridors over 32 seeds and the
 idle < circle < kiter ordering) on the P0 placeholder tuning. ADR-010 section 7: the anchors
-keep their slice 4 outcomes with choice_mode 0; kiter_upgrades meets its smoke goal."""
+that end inside roster window w0 keep their slice 4 outcomes with choice_mode 0; kiter_upgrades
+meets its smoke goal."""
 import hashlib
 import importlib.util
 import json
@@ -21,10 +22,13 @@ sim = bots.sim
 MEDIAN = {"idle": (1500, 2100), "circle": (2700, 3900), "kiter": (4500, 6600)}
 PER_SEED = {"idle": (900, 3300), "circle": (1800, 5100), "kiter": (3300, 9000)}
 MEDIAN_RATIO = {("idle", "circle"): 1.4, ("circle", "kiter"): 1.3}
-# SHA-256 of the JSON list [id, death_tick, kills, command_count, xp_collected, level] of the 96
-# anchor survey rows of slice 4 (main e5ddffb); the command log schema changed the log digests
-# only.
-SLICE4_ANCHORS = "d5e2d2c2caaab550105aea5308ad20a0acc8d61027942dcad67bfc127d6ba639"
+# SHA-256 of the JSON list [id, death_tick, kills, command_count, xp_collected, level] of the
+# anchor survey rows of slice 4 (main e5ddffb) that end inside roster window w0 (the 82 rows with
+# death_tick < W0_END_TICK); the command log schema changed the log digests only. Since ADR-011
+# E6 the later windows change the rows that outlive w0 (13 kiter runs), so only the w0 prefix
+# is pinned to slice 4.
+SLICE4_ANCHORS = "8472328d7ba314990f363aaab3103481d84f83342dcf6bb02c5cdf4a332723c9"
+W0_END_TICK = 5100
 
 
 def load_runs() -> dict:
@@ -96,7 +100,9 @@ class SimBotExactTests(unittest.TestCase):
 
     def test_anchors_keep_their_slice_four_outcomes(self):
         rows = [[r["id"], r["death_tick"], r["kills"], r["command_count"], r["xp_collected"],
-                 r["level"]] for r in self.runs["survey"]]
+                 r["level"]] for r in self.runs["survey"] if r["death_tick"] < W0_END_TICK]
+        self.assertEqual(len(rows), 82)
+        self.assertEqual(sim.P0_WINDOWS[1], W0_END_TICK)
         self.assertEqual(hashlib.sha256(json.dumps(rows).encode()).hexdigest(), SLICE4_ANCHORS)
         self.assertTrue(all(r["choices"] == 0 for r in self.runs["survey"]))
 

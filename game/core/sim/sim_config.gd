@@ -14,6 +14,8 @@ extends RefCounted
 ## Enemy attacks (ADR-011 sections 2-4): empty (every kind hits by contact) or one
 ## ATTACK_STRIDE record per kind; the status.venom values (VENOM_STRIDE) and the
 ## status.root_slow values (ROOT_STRIDE).
+## Roster windows and threat_caps (ADR-011 section 5, ThreatCaps): empty windows use the kind
+## weights; empty caps set no limit.
 ## With no kinds the run has no enemies; with no skill damage the hero does not attack.
 
 ## Enemy kind record: [speed_su_per_tick, radius_su, hp_mhp, contact_damage_mhp,
@@ -118,6 +120,10 @@ var run_ticks: int = 0
 var attacks: PackedInt64Array = PackedInt64Array()
 var venom: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
 var root: PackedInt64Array = PackedInt64Array([0, 0])
+## ThreatCaps.WINDOW_HEAD + kind_count() values per roster window.
+var windows: PackedInt64Array = PackedInt64Array()
+## ThreatCaps.CAPS_STRIDE values, or empty.
+var caps: PackedInt64Array = PackedInt64Array()
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -206,8 +212,11 @@ func attack_value(kind: int, field: int) -> int:
 	return attacks[kind * ATTACK_STRIDE + field]
 
 
-func venom_value(field: int) -> int:
-	return venom[field]
+## Sets the roster windows and the threat_caps (both may be empty).
+func with_windows(p_windows: PackedInt64Array, p_caps: PackedInt64Array) -> SimConfig:
+	windows = p_windows.duplicate()
+	caps = p_caps.duplicate()
+	return self
 
 
 func kind_count() -> int:
@@ -274,6 +283,10 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(attacks)
 	out.append_array(venom)
 	out.append_array(root)
+	out.append(windows.size())
+	out.append_array(windows)
+	out.append(caps.size())
+	out.append_array(caps)
 	return out
 
 
@@ -310,7 +323,41 @@ func is_valid() -> bool:
 		return false
 	if venom.size() != VENOM_STRIDE or root.size() != ROOT_STRIDE:
 		return false
-	return run_ticks >= 0
+	if not windows.is_empty() and not _windows_valid():
+		return false
+	return run_ticks >= 0 and (caps.is_empty() or _caps_valid())
+
+
+## CAPS_STRIDE positive caps, only with an attack table.
+func _caps_valid() -> bool:
+	if caps.size() != ThreatCaps.CAPS_STRIDE or attacks.is_empty():
+		return false
+	for cap: int in caps:
+		if cap <= 0:
+			return false
+	return true
+
+
+## Whole windows, contiguous from tick 0, each start < end, max_control_near >= 0, weights >= 0
+## with a total in 1..2^32.
+func _windows_valid() -> bool:
+	var stride: int = ThreatCaps.WINDOW_HEAD + kind_count()
+	if not has_enemies() or Fx.floor_mod(windows.size(), stride) != 0:
+		return false
+	var start: int = 0
+	for offset: int in range(0, windows.size(), stride):
+		if windows[offset] != start or windows[offset + 1] <= start or windows[offset + 2] < 0:
+			return false
+		var total: int = 0
+		for kind: int in kind_count():
+			var weight: int = windows[offset + ThreatCaps.WINDOW_HEAD + kind]
+			if weight < 0:
+				return false
+			total += weight
+		if total <= 0 or total > BELOW_LIMIT:
+			return false
+		start = windows[offset + 1]
+	return true
 
 
 ## The kind leaves a zone on death and never attacks while alive (interval 0).
