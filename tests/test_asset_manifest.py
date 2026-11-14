@@ -79,6 +79,8 @@ class AssetManifestTests(unittest.TestCase):
     def test_lfs_pointer_with_the_same_identity_passes(self):
         for entry in self.manifest["assets"]:
             (self.root / entry["path"]).write_bytes(pointer(entry["sha256"], entry["bytes"]))
+            normal = entry["normal"]
+            (self.root / normal["path"]).write_bytes(pointer(normal["sha256"], normal["bytes"]))
             source = entry["source"]
             (self.root / source["path"]).write_bytes(pointer(source["sha256"], source["bytes"]))
         self.assertEqual(assets.validate()["real_files_checked"], 0)
@@ -97,6 +99,19 @@ class AssetManifestTests(unittest.TestCase):
         entry = self.entry()
         (self.root / entry["path"]).write_bytes(data)
         entry.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
+
+    def test_normal_map_identity_size_and_method(self):
+        normal = self.entry()["normal"]
+        path = self.root / normal["path"]
+        path.write_bytes(tiny_png(768, 384))
+        normal.update(sha256=hashlib.sha256(path.read_bytes()).hexdigest(), bytes=path.stat().st_size)
+        self.fails("normal map size")
+        self.entry()["normal"]["method"] = "luminance_sobel"
+        self.fails("silhouette_pillow")
+
+    def test_changed_normal_map_fails(self):
+        (self.root / self.entry("asset.tile.jade_grove_floor")["normal"]["path"]).write_bytes(tiny_png(768, 768, 2))
+        self.fails("normal map: sha256/bytes differ")
 
     def test_atlas_must_be_frames_by_directions(self):
         self.entry()["size"] = [768, 576]
@@ -156,12 +171,9 @@ class AssetManifestTests(unittest.TestCase):
         floor["qa"]["tones_pct"] = [80.0, 14.0, 6.0]
         self.fails("lights")
 
-    def test_enemy_rim_reads_on_the_floor(self):
-        corpse = self.entry("asset.enemy.yin_corpse")
-        corpse["qa"]["rim_l"] = self.entry("asset.tile.jade_grove_floor")["qa"]["median_l"] + 20
-        self.fails("above the floor")
-        del corpse["qa"]["rim_l"]
-        self.fails("needs a rim")
+    def test_baked_rim_is_rejected(self):
+        self.entry("asset.enemy.yin_corpse")["qa"]["rim_l"] = 150.0
+        self.fails("not baked")
 
     def test_hero_is_lighter_than_the_world(self):
         self.entry()["qa"]["tones_pct"] = [70.0, 20.0, 10.0]

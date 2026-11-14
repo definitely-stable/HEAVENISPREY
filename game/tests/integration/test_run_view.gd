@@ -107,9 +107,7 @@ func test_scene_moves_hero_and_camera() -> void:
 	assert_eq(hero.x, start.x)
 	var camera: Camera2D = view.get_node("Camera")
 	assert_eq(camera.position, IsoProjection.to_screen(hero), "the camera follows the projected hero")
-	var view_box: Rect2 = IsoProjection.bounds(Vector2(32 * 48, 20 * 48)).grow(RunView.CAMERA_MARGIN_PX)
-	assert_eq(camera.limit_right, ceili(view_box.end.x))
-	assert_eq(camera.limit_left, floori(view_box.position.x))
+	assert_eq(camera.zoom, Vector2(RunView.CAMERA_ZOOM, RunView.CAMERA_ZOOM))
 
 
 func test_hero_cannot_leave_arena() -> void:
@@ -122,6 +120,10 @@ func test_hero_cannot_leave_arena() -> void:
 		view.advance_frame(TICK, Vector2i(-1, -1))
 	assert_eq(view.driver.world.player_x, 24000)
 	assert_eq(view.driver.world.player_y, 24000)
+	var inset: float = RunView.CAMERA_INSET_CELLS * RunView.CELL_PX
+	assert_eq(view.camera_target(), IsoProjection.to_screen(Vector2(inset, inset)),
+		"at the wall the camera stops at the inset, so the view does not slide over the void")
+	assert_eq(view.get_node("Camera").position, view.camera_target())
 
 
 func test_tuning_reads_the_roster_windows_from_content() -> void:

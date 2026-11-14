@@ -6,6 +6,10 @@ extends RefCounted
 ## half size (double density for the 1280x720 window); the simulation position is the
 ## frame's feet_anchor. A missing or broken asset is skipped with an error, so the scene
 ## falls back to its primitives. Presentation only: nothing here reaches the simulation.
+## Each asset also carries its normal map (ADR-014 section 4) as a CanvasTexture, so 2D
+## lights and the rim shader see its shape; without a normal map the plain texture is used.
+## Sprite atlases are packed side by side into one shared CanvasTexture at load, so a horde
+## of mixed kinds sorted by depth is drawn in one batch instead of one per texture switch.
 
 const MANIFEST_PATH: String = "res://assets/manifest.json"
 ## Atlas pixels per screen pixel.
@@ -13,7 +17,10 @@ const DENSITY: float = 2.0
 ## Walk-cycle frames per second.
 const WALK_FPS: float = 8.0
 
-## asset_id -> {texture, kind, directions, frames, frame_size, feet_anchor, cells, texture_px}
+## Transparent px between packed atlases, so mipmaps do not bleed one into the next.
+const PACK_GAP_PX: int = 16
+
+## asset_id -> {texture, canvas, origin, kind, directions, frames, frame_size, feet_anchor, cells}
 var _assets: Dictionary = {}
 
 
@@ -31,6 +38,7 @@ static func from_manifest(path: String) -> SpriteSet:
 	for entry: Variant in (parsed as Dictionary).get("assets", []):
 		if entry is Dictionary:
 			sprites._add(entry as Dictionary)
+	sprites._pack_atlases()
 	return sprites
 
 
@@ -41,10 +49,21 @@ func _add(entry: Dictionary) -> void:
 	if texture == null:
 		push_error("SpriteSet: cannot load " + asset_id + " from " + res_path)
 		return
+	var canvas: Texture2D = texture
+	var normal: Dictionary = entry.get("normal", {})
+	var normal_path: String = "res://" + str(normal.get("path", "")).trim_prefix("game/")
+	if not normal.is_empty() and ResourceLoader.exists(normal_path):
+		var lit: CanvasTexture = CanvasTexture.new()
+		lit.diffuse_texture = texture
+		lit.normal_texture = load(normal_path) as Texture2D
+		lit.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		canvas = lit
 	var layout: Dictionary = entry.get("layout", {})
 	var anchor: Array = layout.get("feet_anchor", [0, 0])
 	_assets[asset_id] = {
 		"texture": texture,
+		"canvas": canvas,
+		"origin": Vector2.ZERO,
 		"kind": str(entry.get("kind", "")),
 		"directions": PackedStringArray(layout.get("directions", [])),
 		"frames": int(layout.get("frames", 1)),
@@ -54,12 +73,78 @@ func _add(entry: Dictionary) -> void:
 	}
 
 
+## Packs every sprite atlas with a normal map into one CanvasTexture (diffuse and normals at
+## the same offsets) and points the assets at it; a single atlas or a failed read stays as is.
+func _pack_atlases() -> void:
+	var ids: Array[String] = []
+	var width: int = 0
+	var height: int = 0
+	for asset_id: String in _assets:
+		if _assets[asset_id]["kind"] == "sprite_atlas" and has_normals(asset_id):
+			ids.append(asset_id)
+			var size: Vector2i = Vector2i(_assets[asset_id]["texture"].get_size())
+			width += size.x + (PACK_GAP_PX if width > 0 else 0)
+			height = maxi(height, size.y)
+	if ids.size() < 2:
+		return
+	var diffuse: Image = Image.create_empty(width, height, false, Image.FORMAT_RGBA8)
+	var normals: Image = Image.create_empty(width, height, false, Image.FORMAT_RGBA8)
+	normals.fill(Color(0.5, 0.5, 1.0, 0.0))
+	var origins: Dictionary = {}
+	var x: int = 0
+	for asset_id: String in ids:
+		var canvas: CanvasTexture = _assets[asset_id]["canvas"]
+		var colour: Image = _rgba(canvas.diffuse_texture)
+		var normal: Image = _rgba(canvas.normal_texture)
+		if colour == null or normal == null or colour.get_size() != normal.get_size():
+			push_error("SpriteSet: cannot pack " + asset_id)
+			return
+		diffuse.blit_rect(colour, Rect2i(Vector2i.ZERO, colour.get_size()), Vector2i(x, 0))
+		normals.blit_rect(normal, Rect2i(Vector2i.ZERO, normal.get_size()), Vector2i(x, 0))
+		origins[asset_id] = Vector2(x, 0)
+		x += colour.get_width() + PACK_GAP_PX
+	diffuse.generate_mipmaps()
+	normals.generate_mipmaps(true)
+	var shared: CanvasTexture = CanvasTexture.new()
+	shared.diffuse_texture = ImageTexture.create_from_image(diffuse)
+	shared.normal_texture = ImageTexture.create_from_image(normals)
+	for asset_id: String in ids:
+		_assets[asset_id]["canvas"] = shared
+		_assets[asset_id]["origin"] = origins[asset_id]
+
+
+static func _rgba(texture: Texture2D) -> Image:
+	var image: Image = texture.get_image() if texture != null else null
+	if image == null:
+		return null
+	if image.is_compressed():
+		image.decompress()
+	image.clear_mipmaps()
+	image.convert(Image.FORMAT_RGBA8)
+	return image
+
+
 func has(asset_id: String) -> bool:
 	return _assets.has(asset_id)
 
 
 func texture(asset_id: String) -> Texture2D:
 	return _assets[asset_id]["texture"] if _assets.has(asset_id) else null
+
+
+## The texture to draw with: diffuse plus normal map when the asset has one (for a packed
+## atlas, the shared texture; its frame regions start at atlas_origin()).
+func canvas_texture(asset_id: String) -> Texture2D:
+	return _assets[asset_id]["canvas"] if _assets.has(asset_id) else null
+
+
+## Where the asset's atlas starts inside canvas_texture().
+func atlas_origin(asset_id: String) -> Vector2:
+	return _assets[asset_id]["origin"] if _assets.has(asset_id) else Vector2.ZERO
+
+
+func has_normals(asset_id: String) -> bool:
+	return _assets.has(asset_id) and _assets[asset_id]["canvas"] is CanvasTexture
 
 
 func directions(asset_id: String) -> PackedStringArray:
@@ -87,9 +172,11 @@ func draw_frame(
 	var region: Rect2 = frame_region(asset_id, direction, frame)
 	if region.size == Vector2.ZERO:
 		return false
-	var anchor: Vector2 = _assets[asset_id]["feet_anchor"]
+	var asset: Dictionary = _assets[asset_id]
+	var anchor: Vector2 = asset["feet_anchor"]
 	var rect: Rect2 = Rect2(feet - anchor / DENSITY, region.size / DENSITY)
-	canvas.draw_texture_rect_region(_assets[asset_id]["texture"], rect, region, tint)
+	var source: Rect2 = Rect2(region.position + asset["origin"], region.size)
+	canvas.draw_texture_rect_region(asset["canvas"], rect, source, tint)
 	return true
 
 

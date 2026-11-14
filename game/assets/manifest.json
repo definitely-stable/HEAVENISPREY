@@ -32,6 +32,15 @@
         ],
         "scale": 0.5793
       },
+      "normal": {
+        "path": "game/assets/characters/hero_sword/hero_sword_n.png",
+        "sha256": "54106fd3160868b0c331548e3ad361e25be4697d48d785f03354a85618962702",
+        "bytes": 344043,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
       "source": {
         "path": "art_source/hero_sword/master.webp",
         "sha256": "4084ac303618fb9d11bf3f623e4c8d63d4bff52ffe3d3671697ec87f614cb002",
@@ -56,8 +65,8 @@
       "asset_id": "asset.enemy.blood_wolf",
       "kind": "sprite_atlas",
       "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
-      "sha256": "8e55eb22792979c6454fb51e09d95889caf8ca0f2f64c9d3d357f2902c10c739",
-      "bytes": 270936,
+      "sha256": "5dc52974348ddb562514e8955e021ac8351d60954f6eca56e227eb69a301f3a3",
+      "bytes": 240729,
       "size": [
         768,
         384
@@ -79,12 +88,16 @@
           96,
           186
         ],
-        "scale": 0.4749,
-        "rim": {
-          "colour": "#9db5ae",
-          "width_px": 2,
-          "alpha": 0.7
-        }
+        "scale": 0.4749
+      },
+      "normal": {
+        "path": "game/assets/enemies/blood_wolf/blood_wolf_n.png",
+        "sha256": "77512cf323b1b9a7f3e44ccb309747ad06ff87222233971e2583b538471ffd74",
+        "bytes": 181124,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
       },
       "source": {
         "path": "art_source/blood_wolf/master.webp",
@@ -103,16 +116,15 @@
         ],
         "chroma": 0.153,
         "threat_colour_pct": 0.0,
-        "median_l": 73.4,
-        "rim_l": 175.4
+        "median_l": 73.4
       }
     },
     {
       "asset_id": "asset.enemy.yin_corpse",
       "kind": "sprite_atlas",
       "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
-      "sha256": "7de47ce1b60c47cda6e6f4da2e595361e9fa447acac29a9a63ac3f3971def046",
-      "bytes": 199890,
+      "sha256": "21d400872dcd15a47b0885f9cb101891aa21ff75e69f273fe9f92cbb4e0137e3",
+      "bytes": 174766,
       "size": [
         768,
         384
@@ -134,12 +146,16 @@
           96,
           186
         ],
-        "scale": 0.2898,
-        "rim": {
-          "colour": "#9db5ae",
-          "width_px": 2,
-          "alpha": 0.7
-        }
+        "scale": 0.2898
+      },
+      "normal": {
+        "path": "game/assets/enemies/yin_corpse/yin_corpse_n.png",
+        "sha256": "85ebe694534ee360a0c13d69a273c13c179c4bc6ac4204afda2db0c486610df8",
+        "bytes": 139226,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
       },
       "source": {
         "path": "art_source/yin_corpse/master.webp",
@@ -158,8 +174,7 @@
         ],
         "chroma": 0.081,
         "threat_colour_pct": 0.0,
-        "median_l": 67.0,
-        "rim_l": 175.4
+        "median_l": 67.0
       }
     },
     {
@@ -181,6 +196,14 @@
         "texture_px": 768,
         "cells": 8,
         "tone_gain": 1.0
+      },
+      "normal": {
+        "path": "game/assets/tiles/jade_grove_floor/jade_grove_floor_n.png",
+        "sha256": "a806b668700f24117e84fa73168ed2c3d3ca79e8f6a2e9c040be272a566f62a8",
+        "bytes": 1084440,
+        "method": "luminance_sobel",
+        "blur_px": 1.0,
+        "strength": 6.0
       },
       "source": {
         "path": "art_source/jade_grove_floor/master.webp",

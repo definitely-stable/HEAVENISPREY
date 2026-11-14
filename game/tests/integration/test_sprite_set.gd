@@ -22,6 +22,36 @@ func test_manifest_textures_load_with_their_size() -> void:
 	assert_eq(listed, IDS)
 
 
+## ADR-014 section 4: every asset is drawn through a CanvasTexture with its normal map.
+func test_every_asset_has_a_normal_map_of_its_size() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	for asset_id: String in IDS:
+		assert_true(sprites.has_normals(asset_id), asset_id)
+		var canvas: CanvasTexture = sprites.canvas_texture(asset_id) as CanvasTexture
+		assert_not_null(canvas, asset_id)
+		assert_eq(canvas.normal_texture.get_size(), canvas.diffuse_texture.get_size(), asset_id)
+	assert_false(sprites.has_normals("asset.enemy.unknown"))
+	assert_null(sprites.canvas_texture("asset.enemy.unknown"))
+
+
+## Sprite atlases share one texture, side by side, so a mixed horde is one batch.
+func test_sprite_atlases_are_packed_into_one_texture() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var shared: Texture2D = sprites.canvas_texture("asset.char.hero_sword")
+	var right: float = -1.0
+	for asset_id: String in ["asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse"]:
+		assert_eq(sprites.canvas_texture(asset_id), shared, asset_id)
+		var origin: Vector2 = sprites.atlas_origin(asset_id)
+		assert_gt(origin.x, right, asset_id + " does not overlap the atlas before it")
+		right = origin.x + sprites.texture(asset_id).get_width() + SpriteSet.PACK_GAP_PX - 1
+		var packed: Image = (shared as CanvasTexture).diffuse_texture.get_image()
+		var own: Image = sprites.texture(asset_id).get_image()
+		var probe: Vector2i = Vector2i(96, 120)
+		assert_eq(packed.get_pixelv(Vector2i(origin) + probe), own.get_pixelv(probe), asset_id + " pixels are copied")
+	assert_ne(sprites.canvas_texture("asset.tile.jade_grove_floor"), shared, "the floor repeats on its own texture")
+	assert_eq(sprites.atlas_origin("asset.tile.jade_grove_floor"), Vector2.ZERO)
+
+
 func test_frame_regions_follow_the_layout() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	assert_eq(sprites.directions("asset.char.hero_sword"), PackedStringArray(["down", "left", "right", "up"]))

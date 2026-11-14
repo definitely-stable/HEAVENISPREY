@@ -7,8 +7,13 @@ feet_anchor) or a seamless floor texture. The builder writes game/assets/<group>
 <name>.png and the matching entry of game/assets/manifest.json, including the style
 metrics of ART-BIBLE-001 section 6 measured on the built file.
 
-Needs Pillow (local tool, like ref look-dev). CI does not rebuild: scripts/validate_assets.py
-checks the manifest, the LFS pointers and the recorded metrics without Pillow.
+Every asset also gets a normal map <name>_n.png for 2D lights (ADR-014 section 4): the floor
+from its luminance (Sobel, seamless), sprites from a soft distance-transform "pillow" of the
+silhouette only, because their painted shading must not turn into relief.
+
+Needs Pillow, numpy and scipy (local tool, like ref look-dev). CI does not rebuild:
+scripts/validate_assets.py checks the manifest, the LFS pointers and the recorded metrics
+without them.
 
 usage: python tools/art/build_sprites.py [name ...]   (no names: every art_source entry)
 """
@@ -21,7 +26,9 @@ import math
 import sys
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageFilter
+import numpy as np
+from PIL import Image, ImageFilter
+from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "art_source"
@@ -174,17 +181,50 @@ def check_margin(atlas: Image.Image, frame: int, cols: int, rows: int, margin: i
             raise ValueError(f"{label}: frame {index} breaks the {margin} px transparent margin")
 
 
-def add_rim(atlas: Image.Image, rim: dict) -> Image.Image:
-    """A light cold rim just outside the silhouette, under the sprite (ADR-014 section 2): an
-    ink outline does not read on the dark floor."""
-    alpha = atlas.getchannel("A")
-    solid = alpha.point(lambda a: 255 if a > EDGE_ALPHA else 0)
-    grown = solid.filter(ImageFilter.MaxFilter(2 * rim["width_px"] + 1)).filter(ImageFilter.GaussianBlur(0.6))
-    ring = ImageChops.subtract(grown, alpha).point(lambda v: round(v * rim["alpha"]))
-    out = Image.new("RGBA", atlas.size, hex_rgb(rim["colour"]) + (0,))
-    out.putalpha(ring)
-    out.alpha_composite(atlas)
-    return out
+## Normal maps (ADR-014 section 4). Strengths are start values, tuned on in-game captures.
+FLOOR_NORMAL = {"method": "luminance_sobel", "blur_px": 1.0, "strength": 6.0}
+SPRITE_NORMAL = {"method": "silhouette_pillow", "bevel_px": 14.0, "blur_px": 3.0, "strength": 2.0}
+
+
+def _encode_normals(n: np.ndarray, alpha: np.ndarray | None) -> Image.Image:
+    """Tangent-space normals, OpenGL convention as Godot expects (green = up the image)."""
+    n = n / np.linalg.norm(n, axis=2, keepdims=True)
+    rgb = np.clip(np.round((n * 0.5 + 0.5) * 255.0), 0, 255).astype(np.uint8)
+    if alpha is None:
+        return Image.fromarray(rgb, "RGB")
+    rgb[alpha == 0] = (128, 128, 255)
+    return Image.fromarray(np.dstack([rgb, alpha]), "RGBA")
+
+
+def floor_normals(texture: Image.Image) -> Image.Image:
+    """Seams and cracks are darker than the stone: luminance is height, wrapped like the tile."""
+    rgb = np.asarray(texture.convert("RGB"), dtype=np.float64) / 255.0
+    height = ndimage.gaussian_filter(rgb @ np.array([0.2126, 0.7152, 0.0722]), FLOOR_NORMAL["blur_px"], mode="wrap")
+    k = FLOOR_NORMAL["strength"]
+    gx = ndimage.sobel(height, axis=1, mode="wrap")
+    gy = ndimage.sobel(height, axis=0, mode="wrap")
+    return _encode_normals(np.dstack([-gx * k, gy * k, np.ones_like(height)]), None)
+
+
+def sprite_normals(atlas: Image.Image, frame: int) -> Image.Image:
+    """A rounded cushion per frame from the distance to the silhouette edge: lights wrap
+    around the figure and give it a rim, the painted detail stays as drawn."""
+    rgba = np.asarray(atlas.convert("RGBA"))
+    alpha = rgba[..., 3]
+    normals = np.zeros(alpha.shape + (3,), dtype=np.float64)
+    normals[..., 2] = 1.0
+    k = SPRITE_NORMAL["strength"]
+    for y0 in range(0, alpha.shape[0], frame):
+        for x0 in range(0, alpha.shape[1], frame):
+            inside = alpha[y0:y0 + frame, x0:x0 + frame] > 100
+            if not inside.any():
+                continue
+            height = np.sqrt(np.clip(ndimage.distance_transform_edt(inside) / SPRITE_NORMAL["bevel_px"], 0.0, 1.0))
+            height = ndimage.gaussian_filter(height, SPRITE_NORMAL["blur_px"])
+            gx = ndimage.sobel(height, axis=1)
+            gy = ndimage.sobel(height, axis=0)
+            normals[y0:y0 + frame, x0:x0 + frame] = np.dstack([-gx * k, gy * k, np.ones_like(height)])
+    return _encode_normals(normals, alpha)
 
 
 def resize_premultiplied(image: Image.Image, size: tuple[int, int]) -> Image.Image:
@@ -229,9 +269,6 @@ def build_atlas(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         oy = anchor_y - size[1]
         col, row = index % cols, index // cols
         atlas.alpha_composite(figure, (col * frame + ox, row * frame + oy))
-    if spec.get("rim"):
-        # The rim grows the silhouette: the margin must still hold after it.
-        check_margin(atlas, frame, cols, rows, margin + spec["rim"]["width_px"], spec["asset_id"])
     check_margin(atlas, frame, cols, rows, margin, spec["asset_id"])
     layout = {"anchor_x": spec.get("anchor_x", "feet"), "frame_size": frame, "directions": spec["directions"], "frames": cols,
               "feet_anchor": [anchor_x, anchor_y], "scale": round(scale, 4)}
@@ -278,17 +315,20 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_floor(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
-    # Style metrics describe the painted figure; the rim is measured on its own.
+    # The rim of characters is drawn by the scene shader (ADR-014 section 4), never baked.
     group = passport["groups"][spec["palette_group"]]
     metrics = style_metrics(image, group["colours"], passport["threat_colour"], passport["threat_delta_e"])
-    if spec.get("rim"):
-        image = add_rim(image, spec["rim"])
-        layout["rim"] = spec["rim"]
-        metrics["rim_l"] = round(luma_of(hex_rgb(spec["rim"]["colour"])), 1)
     out = ASSETS / spec["group"] / name / f"{name}.png"
     out.parent.mkdir(parents=True, exist_ok=True)
     image.save(out, optimize=True)
     data = out.read_bytes()
+    if spec["kind"] == "sprite_atlas":
+        normal_image, normal_spec = sprite_normals(image, layout["frame_size"]), SPRITE_NORMAL
+    else:
+        normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
+    normal_out = out.with_name(f"{name}_n.png")
+    normal_image.save(normal_out, optimize=True)
+    normal_data = normal_out.read_bytes()
     return {
         "asset_id": spec["asset_id"],
         "kind": spec["kind"],
@@ -300,6 +340,8 @@ def build(name: str, passport: dict) -> dict:
         "art_bible_version": passport["passport_version"],
         "content_ids": spec["content_ids"],
         "layout": layout,
+        "normal": {"path": normal_out.relative_to(ROOT).as_posix(), "sha256": sha256(normal_data),
+                   "bytes": len(normal_data), **normal_spec},
         "source": {"path": master_path.relative_to(ROOT).as_posix(), "sha256": sha256(master_bytes),
                    "bytes": len(master_bytes), "prompt_sha256": spec["generation"]["prompt_sha256"]},
         "qa": {"palette_group": spec["palette_group"], **metrics},
@@ -334,12 +376,12 @@ def render_card(name: str, entry: dict) -> str:
         f"- **Generation:** {gen['capability']} · {gen['tool_version']} · prompt sha256 `{gen['prompt_sha256'][:16]}` "
         f"([prompt.txt](prompt.txt)) · {gen['created']} · мастер [{spec['master']}]({spec['master']}) `{entry['source']['sha256'][:12]}`",
         f"- **Geometry:** {geometry}",
-        "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены"
-        + (f"; кант `{layout['rim']['colour']}` {layout['rim']['width_px']} px (L {qa['rim_l']})" if layout.get("rim") else ""),
+        "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены" + "; кант рисует шейдер сцены",
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
         f"цвет угрозы {qa['threat_colour_pct']} %",
         f"- **Build:** [{Path(entry['path']).name}](../../{entry['path']}) · {entry['size'][0]}×{entry['size'][1]} · "
-        f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}`",
+        f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}` · нормали "
+        f"[{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})",
         "- **Decision:** approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)",
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",

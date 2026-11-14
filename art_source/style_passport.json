@@ -27,8 +27,7 @@
         "#aa7d79",
         "#d6ae9d"
       ],
-      "max_palette_delta_e": 15,
-      "min_rim_contrast_l": 40
+      "max_palette_delta_e": 15
     },
     "hero_sprite": {
       "colours": [

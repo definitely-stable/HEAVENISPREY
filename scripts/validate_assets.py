@@ -10,10 +10,11 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
 - source.json names the same asset, its prompt.txt hashes to prompt_sha256, references
   exist in ref/catalog.json with the same sha256, content_ids exist in the v7 configs;
 - the recorded style metrics meet the thresholds of the passport group
-  (art_source/style_passport.json, ART-BIBLE-001 version 3); a group with
-  min_rim_contrast_l needs a rim at least that much lighter than the median L of the
-  lightest floor texture (ADR-014 section 2);
-- the LFS volume of the slice (built files + masters) stays within the budget.
+  (art_source/style_passport.json, ART-BIBLE-001 version 3); the rim of characters is not
+  baked but drawn by the scene shader (ADR-014 section 4), so no asset may carry one;
+- every asset has a normal map <name>_n.png next to it (ADR-014 section 4) with the method of
+  its kind, the same size, and the same identity rules as the built file;
+- the LFS volume of the art (built files, normal maps and masters) stays within the budget.
 """
 from __future__ import annotations
 
@@ -35,9 +36,11 @@ LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
 ASSET_ID = re.compile(r"^asset\.(char|enemy|tile)\.[a-z][a-z0-9_]*$")
 GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles"}
 KINDS = {"sprite_atlas", "floor_texture"}
-LFS_BUDGET_BYTES = 10 * 1024 * 1024
+## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
+LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
-            "content_ids", "layout", "source", "qa")
+            "content_ids", "layout", "normal", "source", "qa")
+NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "floor_texture": "luminance_sobel"}
 
 
 class AssetError(Exception):
@@ -106,11 +109,8 @@ def check_qa(entry: dict, passport: dict, floor_l: float | None) -> None:
         raise AssetError(f"{label}: lights {qa['tones_pct'][2]} % < {group['min_lights_pct']} %")
     if "max_threat_pct" in group and qa["threat_colour_pct"] > group["max_threat_pct"]:
         raise AssetError(f"{label}: threat colour {qa['threat_colour_pct']} % > {group['max_threat_pct']} %")
-    if "min_rim_contrast_l" in group:
-        if "rim_l" not in qa:
-            raise AssetError(f"{label}: group {qa['palette_group']} needs a rim")
-        if floor_l is not None and qa["rim_l"] - floor_l < group["min_rim_contrast_l"]:
-            raise AssetError(f"{label}: rim L {qa['rim_l']} is less than {group['min_rim_contrast_l']} above the floor")
+    if "rim_l" in qa:
+        raise AssetError(f"{label}: the rim is drawn by the scene shader, not baked")
 
 
 def check_layout(entry: dict) -> None:
@@ -163,6 +163,14 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     real = check_binary(built, entry["sha256"], entry["bytes"], asset_id)
     if real:
         check_png(entry, built)
+    normal = entry["normal"]
+    if normal["path"] != expected[:-len(".png")] + "_n.png" or normal.get("method") != NORMAL_METHODS[entry["kind"]]:
+        raise AssetError(f"{asset_id}: normal map must be {name}_n.png made by {NORMAL_METHODS[entry['kind']]}")
+    normal_path = ROOT / normal["path"]
+    if check_binary(normal_path, normal["sha256"], normal["bytes"], asset_id + " normal map"):
+        width, height, _colour = png_header(normal_path)
+        if [width, height] != entry["size"]:
+            raise AssetError(f"{asset_id}: normal map size differs from the texture")
     source = entry["source"]
     if source["path"] != f"art_source/{name}/" + Path(source["path"]).name:
         raise AssetError(f"{asset_id}: master must live in art_source/{name}/")
@@ -181,7 +189,7 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     if not (SOURCE / name / "ASSET_CARD.md").is_file():
         raise AssetError(f"{asset_id}: no ASSET_CARD.md")
     check_qa(entry, passport, floor_l)
-    return entry["bytes"] + source["bytes"], real
+    return entry["bytes"] + normal["bytes"] + source["bytes"], real
 
 
 def validate() -> dict:
