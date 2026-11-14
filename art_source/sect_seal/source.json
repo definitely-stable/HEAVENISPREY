@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.tile.sect_seal",
+  "kind": "decal_texture",
+  "group": "tiles",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    },
+    {
+      "id": "REF-056",
+      "file": "Панель арены заброшенного монастыря Иньян.png",
+      "sha256": "e685edac4188246e7c35c815a941336dd6c6a2ef8181ffaa23054f3feddb0933"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "244613b6045e99260d4d4c0e14393dd63c1ba15ab015dbf2bcdee34ed3e07abf",
+    "created": "2026-11-14T22:53:43+0500",
+    "master_sha256": "09555f864f6ed3a1c5d5b23e5c4926311ebb0603ccd1e74cd93bdeaf49a74541",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "inlay",
+  "texture_px": 1024,
+  "world_px": 672,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150
+  }
+}

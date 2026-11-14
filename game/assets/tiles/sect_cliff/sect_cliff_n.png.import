@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dpehwbbaf1hwp"
-path="res://.godot/imported/jade_grove_floor.png-e7084ee219527aba299bc0071ab8006a.ctex"
+uid="uid://bitxuhdqcsj2u"
+path="res://.godot/imported/sect_cliff_n.png-2826447b890b8ca7cc1c3034963ef9fd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/jade_grove_floor/jade_grove_floor.png"
-dest_files=["res://.godot/imported/jade_grove_floor.png-e7084ee219527aba299bc0071ab8006a.ctex"]
+source_file="res://assets/tiles/sect_cliff/sect_cliff_n.png"
+dest_files=["res://.godot/imported/sect_cliff_n.png-2826447b890b8ca7cc1c3034963ef9fd.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

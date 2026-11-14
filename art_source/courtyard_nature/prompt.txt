@@ -1,0 +1,10 @@
+Prop sprite sheet for a 2.5D isometric action game, all props drawn in exactly the same camera as the attached isometric arena kit and concept boards: orthographic, 30 degrees above the horizon, 45-degree isometric rotation, light from the upper left. Six separate props in a 3 x 2 grid, each standing upright on its own base, centred in its cell with wide empty space around it, never touching each other or the image edges:
+1) a large old red maple tree with a gnarled twisting dark trunk and a wide crown of crimson leaves (the biggest prop, fills its cell);
+2) a small young red maple tree;
+3) a square stone pillar with gold carved bands and a small stone cap;
+4) a broken stone pillar stump with moss, ivy and fallen red leaves;
+5) a cluster of mossy grey-purple boulders with red leaves;
+6) a weathered stone tombstone-shaped stele with a carved sect emblem.
+Materials and style exactly like the references: weathered purple-grey stone, crimson maple foliage, aged gold, olive moss, detailed hand-painted game art.
+
+Background: flat pure #00FF00 green everywhere, including between props and inside gaps of the tree crown. No ground plane, no floor tiles, no cast shadows on the background, no text, no labels, no numbers. Landscape 1536 x 1024.

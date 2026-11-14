@@ -12,16 +12,8 @@ func test_falloff_is_linear_and_clamped() -> void:
 	assert_eq(RunLighting.falloff(500.0, 200.0), 0.0)
 
 
-func test_lanterns_stand_inside_the_arena() -> void:
-	var lanterns: Array[Vector2] = RunLighting.lantern_positions(CELL)
-	assert_eq(lanterns.size(), RunLighting.LANTERN_CELLS.size())
-	for at: Vector2 in lanterns:
-		assert_true(Rect2(Vector2.ZERO, ARENA).grow(-CELL).has_point(at), str(at))
-	assert_eq(lanterns[0], Vector2(5.5, 4.5) * CELL)
-
-
 func test_upright_light_grows_towards_a_lantern() -> void:
-	var lanterns: Array[Vector2] = RunLighting.lantern_positions(CELL)
+	var lanterns: Array[Vector2] = [Vector2(5.5, 4.5) * CELL, Vector2(26.5, 15.5) * CELL]
 	var far_hero: Vector2 = Vector2(-10000, -10000)
 	var base: Color = RunLighting.light_at(ARENA * 0.5, far_hero, lanterns)
 	assert_eq(base, Color(RunLighting.AMBIENT + RunLighting.MOON_COLOR * RunLighting.MOON_FLAT, 1.0),

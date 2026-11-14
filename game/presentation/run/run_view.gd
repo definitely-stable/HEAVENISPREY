@@ -1,7 +1,7 @@
 class_name RunView
 extends Node2D
 ## P0 placeholder run scene: hero movement and auto-attack, jade_grove w0 enemies, contact
-## damage and kills in an empty arena, drawn with primitives. Reads simulation state only;
+## damage and kills in the courtyard of the ruined sect (ArenaDressing). Reads simulation state only;
 ## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
 ## (placeholder bases). Hit flashes, death puffs, gem pickup flights and the level-up ring
 ## are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
@@ -14,10 +14,11 @@ extends Node2D
 ## Isometric view (ADR-014 section 1): ground things are drawn in world px under
 ## IsoProjection.ground(), upright things at their projected feet; movement keys are read in
 ## screen axes. Light and shadow (ADR-014 sections 4-5), back to front:
-## - GroundLayer (canvas layer -2): the lit floor, walls, lanterns and the hero aura;
+## - GroundLayer (canvas layer -2, mist on -3): the lit courtyard floor, the seal, the cliff
+##   faces, the lights of the dressing props and the hero aura;
 ## - canvas layer -1: every shadow in one CanvasGroup composited once, then the unlit danger
 ##   marks (zones, telegraphs, puffs, rings) at their exact colours (PLAYABILITY G3);
-## - this node: gems, enemies and lantern posts by depth, projectiles, lit by
+## - this node: gems, enemies and the courtyard props (ArenaDressing) by depth, projectiles, lit by
 ##   RunLighting.light_at(feet) and a moon-side rim; then the hero item (warm rim), the item
 ##   over it (HP bar, enemy shots, pickups) and the additive glow item.
 
@@ -61,12 +62,12 @@ const COLOR_ROOTED: Color = Color(0.82, 0.2, 0.28, 0.9)
 ## Enemy shot (lantern wisp): a pale ghost-fire orb with a glow.
 const COLOR_WISP: Color = Color(0.72, 1.0, 0.86)
 const COLOR_WISP_GLOW: Color = Color(0.35, 0.8, 0.6, 0.9)
-## Placeholder lantern posts until stage props (slice A3).
-const COLOR_LANTERN_POST: Color = Color(0.16, 0.13, 0.12)
-const COLOR_LANTERN_FLAME: Color = Color(1.0, 0.78, 0.48)
+## Halo over the flame of a lantern or brazier prop.
 const COLOR_LANTERN_GLOW: Color = Color(0.85, 0.5, 0.22, 0.9)
 const HERO_ASSET: String = "asset.char.hero_sword"
-const FLOOR_ASSET: String = "asset.tile.jade_grove_floor"
+const FLOOR_ASSET: String = "asset.tile.sect_courtyard_floor"
+const SEAL_ASSET: String = "asset.tile.sect_seal"
+const CLIFF_ASSET: String = "asset.tile.sect_cliff"
 ## Enemy content id -> sprite asset_id; kinds not listed keep their circles.
 const ENEMY_ASSETS: Dictionary = {
 	"enemy.yin_corpse": "asset.enemy.yin_corpse",
@@ -95,6 +96,8 @@ const RIM_HERO: Color = Color(1.0, 0.86, 0.6)
 const RIM_HERO_STRENGTH: float = 0.65
 const RIM_SHADER: Shader = preload("res://presentation/run/shaders/sprite_rim.gdshader")
 const SHADOW_SHADER: Shader = preload("res://presentation/run/shaders/shadow_group.gdshader")
+## Lantern pools the shadow shader fills (its MAX_LIGHTS).
+const MAX_SHADOW_POOLS: int = 16
 ## Camera zoom and the inset (cells) from the walls inside which it follows the hero.
 const CAMERA_ZOOM: float = 1.3
 const CAMERA_INSET_CELLS: float = 4.0
@@ -142,7 +145,10 @@ var _flash_rest: float = 0.0
 var _halo_texture: Texture2D = GroundLayer._radial_texture(64)
 var _disc_texture: Texture2D = _make_disc_texture(32)
 var _ground: GroundLayer
-var _lanterns: Array[Vector2] = RunLighting.lantern_positions(CELL_PX)
+## Courtyard props (ArenaDressing.placements) and the ground points of the lit ones.
+var _props: Array[Dictionary] = []
+var _lanterns: Array[Vector2] = []
+var _flames: Array[Vector2] = []
 var _shadow_canvas: Node2D
 var _danger: Node2D
 var _hero_item: Node2D
@@ -182,7 +188,12 @@ func _ready() -> void:
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
 func _build_layers() -> void:
 	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
-	_ground = GroundLayer.new(_sprites, FLOOR_ASSET, arena, CELL_PX)
+	_props = ArenaDressing.placements(_sprites, ARENA_CELLS, CELL_PX)
+	var light_points: Array[Dictionary] = ArenaDressing.lights(_props)
+	for point: Dictionary in light_points:
+		_lanterns.append(point["at"])
+		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
+	_ground = GroundLayer.new(_sprites, FLOOR_ASSET, arena, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET)
 	add_child(_ground)
 	var under: CanvasLayer = CanvasLayer.new()
 	under.layer = -1
@@ -194,6 +205,12 @@ func _build_layers() -> void:
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
+	var pools: PackedVector2Array = PackedVector2Array()
+	for lantern: Vector2 in _lanterns.slice(0, MAX_SHADOW_POOLS):
+		pools.append(IsoProjection.to_screen(lantern))
+	shadow_material.set_shader_parameter("lanterns", pools)
+	shadow_material.set_shader_parameter("lantern_count", pools.size())
+	shadow_material.set_shader_parameter("lantern_radius", RunLighting.LANTERN_RADIUS_PX)
 	group.material = shadow_material
 	under.add_child(group)
 	_shadow_canvas = Node2D.new()
@@ -249,6 +266,11 @@ func camera_target() -> Vector2:
 	var inset: Vector2 = Vector2.ONE * CAMERA_INSET_CELLS * CELL_PX
 	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
 	return IsoProjection.to_screen(driver.hero_position_px().clamp(inset, arena - inset))
+
+
+## Ground points (world px) of the lit courtyard props.
+func lantern_positions() -> Array[Vector2]:
+	return _lanterns
 
 
 ## Starts a fresh run; falls back to the empty arena when content cannot be assembled.
@@ -458,17 +480,15 @@ func _draw_shadow_pass() -> void:
 		if world.enemy_uid[slot] != 0:
 			_cast_shadow(canvas, _enemy_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	for lantern: Vector2 in _lanterns:
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(lantern)))
-		canvas.draw_rect(Rect2(-3.0, -RunLighting.LANTERN_HEIGHT_PX, 6.0, RunLighting.LANTERN_HEIGHT_PX), Color.BLACK)
+	for prop: Dictionary in _props:
+		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(prop["at"])))
+		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
 			_contact(canvas, IsoProjection.to_screen(driver.enemy_position_px(slot)), radius)
 	_contact(canvas, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
-	for lantern: Vector2 in _lanterns:
-		_contact(canvas, IsoProjection.to_screen(lantern), 7.0)
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0:
 			_contact(canvas, IsoProjection.to_screen(driver.gem_position_px(slot)), 3.5)
@@ -539,20 +559,20 @@ func _draw_ground_rings(canvas: CanvasItem) -> void:
 
 # --- upright layer (this node, rim shader) ---
 
-## Bodies and lantern posts sorted by depth (then slot), so a body nearer the viewer covers the
-## one behind it; the hero is drawn over all of them on its own item (PLAYABILITY G3).
+## Bodies and courtyard props sorted by depth (then slot), so a thing nearer the viewer covers
+## the one behind it; the hero is drawn over all of them on its own item (PLAYABILITY G3).
 func _draw_bodies() -> void:
 	var world: WorldState = driver.world
 	var order: Array[Vector2i] = []
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
-	for index: int in _lanterns.size():
-		order.append(Vector2i(roundi(IsoProjection.depth(_lanterns[index]) * 16.0), -1 - index))
+	for index: int in _props.size():
+		order.append(Vector2i(roundi(IsoProjection.depth(_props[index]["at"]) * 16.0), -1 - index))
 	order.sort()
 	for key: Vector2i in order:
 		if key.y < 0:
-			_draw_lantern(_lanterns[-1 - key.y])
+			_draw_prop(_props[-1 - key.y])
 		else:
 			_draw_enemy(key.y)
 
@@ -578,13 +598,10 @@ func _draw_enemy(slot: int) -> void:
 	draw_circle(at - Vector2(0, radius), radius, color.darkened(0.45), false, 2.0)
 
 
-## A placeholder lantern post until stage props (slice A3): a dark post and a warm flame.
-func _draw_lantern(base_world: Vector2) -> void:
-	var base: Vector2 = IsoProjection.to_screen(base_world)
-	var height: float = RunLighting.LANTERN_HEIGHT_PX
-	draw_rect(Rect2(base + Vector2(-3.0, -height), Vector2(6.0, height)), COLOR_LANTERN_POST)
-	draw_rect(Rect2(base + Vector2(-7.0, -height - 12.0), Vector2(14.0, 14.0)), COLOR_LANTERN_POST)
-	draw_rect(Rect2(base + Vector2(-5.0, -height - 10.0), Vector2(10.0, 10.0)), COLOR_LANTERN_FLAME)
+## A courtyard prop at its base, lit like an upright body standing there.
+func _draw_prop(prop: Dictionary) -> void:
+	var feet: Vector2 = prop["at"]
+	_sprites.draw_prop(self, prop["asset"], prop["prop"], IsoProjection.to_screen(feet), _light_at(feet), prop["flip"])
 
 
 ## Hero projectiles fly above their ground point (their shadow dot marks it), blade along the
@@ -716,8 +733,7 @@ func _draw_over_pass() -> void:
 func _draw_glow_pass() -> void:
 	var canvas: Node2D = _glow
 	var world: WorldState = driver.world
-	for lantern: Vector2 in _lanterns:
-		var flame: Vector2 = IsoProjection.to_screen(lantern) - Vector2(0, RunLighting.LANTERN_HEIGHT_PX + 5.0)
+	for flame: Vector2 in _flames:
 		_halo(canvas, flame, 26.0, COLOR_LANTERN_GLOW)
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
 	for slot: int in world.projectile_slots():

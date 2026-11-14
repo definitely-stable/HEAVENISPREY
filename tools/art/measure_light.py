@@ -4,7 +4,7 @@
     python tools/art/measure_light.py out.json
 
 Per capture: the median luma of the arena floor away from every point light, the luma of each
-lantern spot next to its post and its ratio to that floor, and the share of the frame that is
+lantern spot on the arena floor in front of its prop and its ratio to that floor, and the share of the frame that is
 void. Needs numpy and Pillow (local tool, like build_sprites.py); CI does not render.
 """
 from __future__ import annotations
@@ -18,7 +18,8 @@ from PIL import Image
 ARENA = (32 * 48, 20 * 48)
 HUD_TOP_PX, HUD_BOTTOM_PX = 60, 90
 VOID_MAX_CHANNEL = 16
-LIMITS = {"floor": (35.0, 50.0), "spot": (95.0, 120.0), "spot_ratio": 2.2, "void_pct": 20.0}
+# A3: the dusk courtyard of REF-023 / REF-033 (floor L 80-90, mauve), warm pools by the lanterns.
+LIMITS = {"floor": (78.0, 92.0), "spot": (120.0, 190.0), "spot_ratio": 1.4, "void_pct": 20.0}
 
 
 def luma(rgb: np.ndarray) -> np.ndarray:
@@ -38,7 +39,8 @@ def measure(shot: dict) -> dict:
     def distance(point: np.ndarray) -> np.ndarray:
         return np.hypot(world[..., 0] - point[0], world[..., 1] - point[1])
 
-    floor = (world[..., 0] > 0) & (world[..., 0] < ARENA[0]) & (world[..., 1] > 0) & (world[..., 1] < ARENA[1])
+    inside = (world[..., 0] > 0) & (world[..., 0] < ARENA[0]) & (world[..., 1] > 0) & (world[..., 1] < ARENA[1])
+    floor = inside.copy()
     floor &= distance(to_world @ (np.array(shot["hero"]) - origin)) > shot["aura"] * 1.15
     lanterns = [to_world @ (np.array(p) - origin) for p in shot["lanterns"]]
     for lantern in lanterns:
@@ -49,9 +51,11 @@ def measure(shot: dict) -> dict:
     spots = []
     for lantern, (x, y) in zip(lanterns, shot["lanterns"]):
         if 180 < x < width - 180 and 110 < y < height - 110:
-            # A ring next to the post, below its base on screen (the post hides the rest).
-            ring = (distance(lantern) > 22) & (distance(lantern) < 42) & (ys > y)
-            spots.append(round(float(np.median(lum[ring])), 1))
+            # The arena floor the light reaches past the balustrade, nearer the viewer than the
+            # prop (the prop hides the floor behind it).
+            ring = (distance(lantern) > 50) & (distance(lantern) < 80) & inside & (ys > y)
+            if ring.sum() > 200:
+                spots.append(round(float(np.median(lum[ring])), 1))
     void = float(100.0 * (rgb.max(axis=2) < VOID_MAX_CHANNEL).mean())
     return {"floor_l": floor_l and round(floor_l, 1), "spots": spots, "void_pct": round(void, 1)}
 

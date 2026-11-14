@@ -6,7 +6,7 @@
 - **Content IDs:** `enemy.yin_corpse`
 - **Type / layer:** spritesheet
 - **Reference anchors:** `REF-044` `33890d805336`
-- **Style passport version:** ART-BIBLE-001 v3, группа `characters`
+- **Style passport version:** ART-BIBLE-001 v4, группа `characters`
 - **Generation:** GPT imagegen (Codex CLI image_generation, AGENTS.md p.3) · codex-cli 0.168.0 · prompt sha256 `bbfcafb4cede648b` ([prompt.txt](prompt.txt)) · 2026-11-14T15:02:20+0500 · мастер [master.webp](master.webp) `122f09f43e1a`
 - **Geometry:** кадр 192×192 px · 4 кадра × 2 направления (left, right) · feet_anchor [96, 186] (якорь по x: torso) · масштаб мастера 0.2898
 - **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены

@@ -7,21 +7,18 @@ extends RefCounted
 ## evaluated at their ground point. Shadows fall away from the moon. Presentation only.
 
 ## Night ambient of the grove (CanvasModulate of the ground; the base of upright light).
-const AMBIENT: Color = Color(0.56, 0.6, 0.72)
+const AMBIENT: Color = Color(0.79, 0.8, 0.9)
 ## Moonlight: colour, energy and height for normal mapping (0..1). It travels from the upper
 ## left to the lower right of the screen, along the cast shadows (moon_travel()).
 const MOON_COLOR: Color = Color(0.62, 0.72, 0.95)
-const MOON_ENERGY: float = 0.3
+const MOON_ENERGY: float = 0.18
 const MOON_HEIGHT: float = 0.55
 ## Upright sprites get a flat share of the moon (no normal on the ground point).
 const MOON_FLAT: float = 0.18
-## Lanterns of the arena until stage props arrive (slice A3): cell positions, warm light.
-const LANTERN_CELLS: Array[Vector2i] = [Vector2i(5, 4), Vector2i(26, 4), Vector2i(5, 15), Vector2i(26, 15)]
+## Warm light of the lanterns and braziers of the courtyard (ArenaDressing.LIGHT_PROPS).
 const LANTERN_COLOR: Color = Color(1.0, 0.7, 0.42)
-const LANTERN_ENERGY: float = 2.6
+const LANTERN_ENERGY: float = 2.3
 const LANTERN_RADIUS_PX: float = 240.0
-## Lantern height above the ground in screen px (the flame of the primitive post).
-const LANTERN_HEIGHT_PX: float = 46.0
 ## Aura of the hero: a soft gold light that follows them.
 const AURA_COLOR: Color = Color(1.0, 0.88, 0.62)
 const AURA_ENERGY: float = 0.55
@@ -49,13 +46,6 @@ static func moon_travel() -> Vector2:
 static func moon_rotation() -> float:
 	var travel: Vector2 = moon_travel()
 	return atan2(-travel.x, travel.y)
-
-
-static func lantern_positions(cell_px: int) -> Array[Vector2]:
-	var out: Array[Vector2] = []
-	for cell: Vector2i in LANTERN_CELLS:
-		out.append((Vector2(cell) + Vector2(0.5, 0.5)) * cell_px)
-	return out
 
 
 ## Linear fall-off of a radial light texture: 1 at the centre, 0 at `radius`.

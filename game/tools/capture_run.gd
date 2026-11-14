@@ -89,7 +89,7 @@ func _place_horde(view: RunView, count: int, rings: int = 3) -> void:
 func _capture_grid(view: RunView, out: String) -> void:
 	var world: WorldState = view.driver.world
 	var arena: Vector2 = Vector2(RunView.ARENA_CELLS * RunView.CELL_PX)
-	var lanterns: Array[Vector2] = RunLighting.lantern_positions(RunView.CELL_PX)
+	var lanterns: Array[Vector2] = view.lantern_positions()
 	var corners: Array[Vector2] = [Vector2.ZERO, Vector2(arena.x, 0.0), arena, Vector2(0.0, arena.y)]
 	var shots: Array = []
 	for index: int in 9:

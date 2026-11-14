@@ -73,7 +73,7 @@ class AssetManifestTests(unittest.TestCase):
 
     def test_repository_manifest_is_valid(self):
         report = assets.validate()
-        self.assertEqual(report["assets"], 4)
+        self.assertEqual(report["assets"], 9)
         self.assertLessEqual(report["lfs_bytes"], assets.LFS_BUDGET_BYTES)
 
     def test_lfs_pointer_with_the_same_identity_passes(self):
@@ -110,7 +110,7 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("silhouette_pillow")
 
     def test_changed_normal_map_fails(self):
-        (self.root / self.entry("asset.tile.jade_grove_floor")["normal"]["path"]).write_bytes(tiny_png(768, 768, 2))
+        (self.root / self.entry("asset.tile.sect_courtyard_floor")["normal"]["path"]).write_bytes(tiny_png(768, 768, 2))
         self.fails("normal map: sha256/bytes differ")
 
     def test_atlas_must_be_frames_by_directions(self):
@@ -164,12 +164,31 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("palette ΔE")
 
     def test_floor_stays_muted(self):
-        floor = self.entry("asset.tile.jade_grove_floor")
+        floor = self.entry("asset.tile.sect_courtyard_floor")
         floor["qa"]["chroma"] = 0.2
         self.fails("chroma")
         floor["qa"]["chroma"] = 0.02
         floor["qa"]["tones_pct"] = [80.0, 14.0, 6.0]
         self.fails("lights")
+
+    def test_prop_regions_stay_inside_the_atlas(self):
+        props = self.entry("asset.prop.courtyard_walls")["layout"]["props"]
+        props[0]["region"][0] = 1500
+        self.fails("region leaves the atlas")
+
+    def test_prop_anchor_stays_inside_its_region(self):
+        prop = self.entry("asset.prop.courtyard_lights")["layout"]["props"][0]
+        prop["feet"] = [prop["region"][0] - 1, prop["feet"][1]]
+        self.fails("anchor is outside its region")
+
+    def test_prop_names_are_unique(self):
+        props = self.entry("asset.prop.courtyard_nature")["layout"]["props"]
+        props[1]["name"] = props[0]["name"]
+        self.fails("unique names")
+
+    def test_strip_size_follows_its_layout(self):
+        self.entry("asset.tile.sect_cliff")["layout"]["texture_size"] = [1024, 512]
+        self.fails("strip size differs")
 
     def test_baked_rim_is_rejected(self):
         self.entry("asset.enemy.yin_corpse")["qa"]["rim_l"] = 150.0

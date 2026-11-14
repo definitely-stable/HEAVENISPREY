@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.courtyard_lights",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "bbb9d288092a4d76c63eb8d4d497418a5fbd1e0366d4153e37ee66f40c239120",
+    "created": "2026-11-14T22:55:40+0500",
+    "master_sha256": "f8e813be52ffe54ee8a091a9412bd9a0ed66a2942b452a2ad6ff1c29bfca0612",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      3,
+      2
+    ],
+    "join_px": 4,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "lantern_pagoda",
+      "height_px": 118
+    },
+    {
+      "name": "brazier",
+      "height_px": 78
+    },
+    {
+      "name": "banner",
+      "height_px": 124
+    },
+    {
+      "name": "incense",
+      "height_px": 62
+    },
+    {
+      "name": "lion",
+      "height_px": 104
+    },
+    {
+      "name": "stele",
+      "height_px": 92
+    }
+  ]
+}

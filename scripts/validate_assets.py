@@ -33,14 +33,18 @@ PASSPORT = SOURCE / "style_passport.json"
 CATALOG = ROOT / "ref" / "catalog.json"
 CONFIG = ROOT / ".work" / "config" / "v7"
 LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
-ASSET_ID = re.compile(r"^asset\.(char|enemy|tile)\.[a-z][a-z0-9_]*$")
-GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles"}
-KINDS = {"sprite_atlas", "floor_texture"}
+ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop)\.[a-z][a-z0-9_]*$")
+GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props"}
+KINDS = {"sprite_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture"}
+## Kinds drawn with transparency: their PNG must be RGBA.
+ALPHA_KINDS = {"sprite_atlas", "prop_atlas", "decal_texture"}
 ## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
 LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
             "content_ids", "layout", "normal", "source", "qa")
-NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "floor_texture": "luminance_sobel"}
+NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "floor_texture": "luminance_sobel",
+                  "prop_atlas": "silhouette_pillow", "decal_texture": "luminance_sobel",
+                  "strip_texture": "luminance_sobel"}
 
 
 class AssetError(Exception):
@@ -127,8 +131,22 @@ def check_layout(entry: dict) -> None:
             raise AssetError(f"{label}: feet_anchor leaves no transparent margin")
         if len(set(layout["directions"])) != len(layout["directions"]):
             raise AssetError(f"{label}: duplicate directions")
+    elif entry["kind"] == "prop_atlas":
+        names = [p["name"] for p in layout["props"]]
+        if not names or len(set(names)) != len(names):
+            raise AssetError(f"{label}: props need unique names")
+        for prop in layout["props"]:
+            x, y, w, h = prop["region"]
+            fx, fy = prop["feet"]
+            if x < 0 or y < 0 or w <= 0 or h <= 0 or x + w > width or y + h > height:
+                raise AssetError(f"{label}: {prop['name']} region leaves the atlas")
+            if not (x <= fx <= x + w and y <= fy <= y + h):
+                raise AssetError(f"{label}: {prop['name']} anchor is outside its region")
+    elif entry["kind"] == "strip_texture":
+        if [width, height] != layout["texture_size"]:
+            raise AssetError(f"{label}: strip size differs from texture_size")
     elif (width, height) != (layout["texture_px"], layout["texture_px"]):
-        raise AssetError(f"{label}: floor texture is not texture_px square")
+        raise AssetError(f"{label}: texture is not texture_px square")
 
 
 def check_png(entry: dict, path: Path) -> None:
@@ -136,8 +154,8 @@ def check_png(entry: dict, path: Path) -> None:
     width, height, colour = png_header(path)
     if [width, height] != entry["size"]:
         raise AssetError(f"{entry['asset_id']}: PNG size differs from the manifest")
-    if entry["kind"] == "sprite_atlas" and colour != 6:
-        raise AssetError(f"{entry['asset_id']}: a sprite atlas must be RGBA")
+    if entry["kind"] in ALPHA_KINDS and colour != 6:
+        raise AssetError(f"{entry['asset_id']}: a {entry['kind']} must be RGBA")
 
 
 def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str],

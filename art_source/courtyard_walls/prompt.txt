@@ -1,0 +1,10 @@
+Prop sprite sheet for a 2.5D isometric action game, all props drawn in exactly the same camera as the attached isometric arena kit and concept boards: orthographic, 30 degrees above the horizon, 45-degree isometric rotation, light from the upper left. Six separate props in a 3 x 2 grid, each centred in its cell with wide empty space around it, never touching each other or the image edges:
+1) a straight segment of stone balustrade (carved stone posts with small caps and a low railing between them, dark red lacquered wooden rail panels with gold studs), running diagonally from the upper left down to the lower right, about four posts long;
+2) a red-lacquered paifang sect gate (two dark red pillars on stone bases, a curved dark tile roof with gold ornaments, a hanging gold plaque, two small lanterns), seen from the front-left so it spans diagonally like the balustrade;
+3) a short flight of five wide stone steps with low side walls and a lantern post on each side, going up diagonally away from the viewer;
+4) a pair of hanging red sect banners on a dark wooden crossbar frame with gold emblems;
+5) a small stone shrine altar with candles and a gold engraved seal stone;
+6) a cluster of tall bamboo stems with a few leaves.
+Materials and style exactly like the references: weathered purple-grey stone, dark red lacquer, aged gold, olive moss, red maple leaves, detailed hand-painted game art.
+
+Background: flat pure #00FF00 green everywhere, including between props. No ground plane, no floor tiles, no cast shadows on the background, no text, no labels, no numbers. Landscape 1536 x 1024.
