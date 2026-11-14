@@ -1,0 +1,3 @@
+Seamless tileable ground texture for a 2D top-down action game arena, seen straight from above: the floor of a haunted jade bamboo grove at night. Dark weathered flagstones half sunk in packed earth, thin moss in the cracks, a few scattered dry bamboo leaves and small pebbles. Hand-painted ink-wash style matching the attached environment reference, very low contrast, desaturated cool grey-violet and dark jade tones, mostly dark values, soft even lighting with no cast shadows, no strong highlights.
+
+The texture must be even and uniform across the whole square with no focal point, no vignette, no border, no large single objects, no lanterns, no props, no characters, no text, no watermark. Square 1024 x 1024.

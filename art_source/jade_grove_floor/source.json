@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.tile.jade_grove_floor",
+  "kind": "floor_texture",
+  "group": "tiles",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-001",
+      "file": "HEAVEN_IS_PREY_Environment_Only_Concept_Reference.png",
+      "sha256": "f27b5bec1fb066d095e74c6523d24ff857afe63cdc2c5aa6a8e4cffe2cde70d5"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.168.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "2e8dd869e2b52b612c5228744dfc681eaf0778b81d91ed296c5a498e93054519",
+    "created": "2026-11-14T15:04:57+0500",
+    "master_sha256": "b85e368df22e62b844c6bd471019cb4a74a73637831cc55a8a9da69b0e20ce56",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "environment",
+  "texture_px": 768,
+  "cells": 8
+}

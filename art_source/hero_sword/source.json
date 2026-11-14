@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.char.hero_sword",
+  "kind": "sprite_atlas",
+  "group": "characters",
+  "asset_version": 1,
+  "content_ids": [
+    "class.sword"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-061",
+      "file": "Четыре мастера небесного пути.png",
+      "sha256": "ba5c8ebe4ddde365bbf4da38952b5b4091274fd6b774710315955cbe6003792b"
+    },
+    {
+      "id": "REF-035",
+      "file": "Культиватор Меча_ лист игровых анимаций.png",
+      "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.168.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "d3ccfb9d8de283dde968b1b2383fe063b64ca47296e0c7d1c8edbdaa56646d3f",
+    "created": "2026-11-14T15:00:26+0500",
+    "master_sha256": "3456541ac1899085862c441ff13016b07e8f2bb20bf360e29bb2d808fea524a8",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "hero_sprite",
+  "sheet": {
+    "grid": [
+      4,
+      4
+    ],
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150
+  },
+  "directions": [
+    "down",
+    "left",
+    "right",
+    "up"
+  ],
+  "frame_size": 192,
+  "feet_anchor": [
+    96,
+    186
+  ],
+  "margin_px": 2,
+  "figure_height_px": 168
+}
