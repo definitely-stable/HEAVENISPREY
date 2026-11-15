@@ -3,7 +3,7 @@
   "asset_id": "asset.enemy.blood_wolf",
   "kind": "anim_atlas",
   "group": "enemies",
-  "asset_version": 3,
+  "asset_version": 4,
   "content_ids": [
     "enemy.blood_wolf"
   ],
@@ -29,7 +29,7 @@
     "png_sha256": "30deebd9adad800ae36d4bbb55c2a8da44f70cecacaceccda208c5a5f8108bf2",
     "prompt_sha256": "819462b5b1554049c82f7649979916327b3e4d37fbac72e204bf815ca7d3b26d"
   },
-  "palette_group": "characters",
+  "palette_group": "enemies",
   "sheet": {
     "key_colour": "#00ff00",
     "key_low": 40,
@@ -39,13 +39,21 @@
       1024
     ]
   },
-  "frame_size": 192,
+  "frame_size": 240,
   "feet_anchor": [
-    96,
-    186
+    120,
+    234
   ],
   "margin_px": 4,
-  "figure_height_px": 104,
+  "figure_height_px": 114,
+  "grade": {
+    "gamma": 0.78,
+    "tint": [
+      1.0,
+      0.99,
+      1.03
+    ]
+  },
   "anchor_x": "torso",
   "directions": [
     "se",

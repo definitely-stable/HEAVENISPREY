@@ -24,8 +24,9 @@ const LEVEL_PILLAR_ALPHA: float = 0.55
 const MAX_SPARKS: int = 64
 const MAX_NUMBERS: int = 40
 const MAX_DEATHS: int = 32
-## Hits land at chest height of a body standing on the ground point (screen px).
-const BODY_LIFT_PX: float = 30.0
+## Hits land at chest height of a body standing on the ground point (screen px; the Yin
+## Corpse stands nearly as tall as the hero, the wolf at its chest).
+const BODY_LIFT_PX: float = 38.0
 const NUMBER_FONT_SIZE: int = 17
 const NUMBER_KILL_FONT_SIZE: int = 20
 ## Italic lean of the numbers (x shift per px of height), like the numbers of REF-023.
