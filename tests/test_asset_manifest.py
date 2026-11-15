@@ -19,6 +19,7 @@ spec.loader.exec_module(assets)
 
 HERO = "asset.char.hero_sword"
 YIN = "asset.enemy.yin_corpse"
+HUD = "asset.ui.hud_kit"
 
 
 def tiny_png(width: int, height: int, colour: int = 6) -> bytes:
@@ -74,14 +75,15 @@ class AssetManifestTests(unittest.TestCase):
 
     def test_repository_manifest_is_valid(self):
         report = assets.validate()
-        self.assertEqual(report["assets"], 11)
+        self.assertEqual(report["assets"], 12)
         self.assertLessEqual(report["lfs_bytes"], assets.LFS_BUDGET_BYTES)
 
     def test_lfs_pointer_with_the_same_identity_passes(self):
         for entry in self.manifest["assets"]:
             (self.root / entry["path"]).write_bytes(pointer(entry["sha256"], entry["bytes"]))
             normal = entry["normal"]
-            (self.root / normal["path"]).write_bytes(pointer(normal["sha256"], normal["bytes"]))
+            if normal:
+                (self.root / normal["path"]).write_bytes(pointer(normal["sha256"], normal["bytes"]))
             source = entry["source"]
             (self.root / source["path"]).write_bytes(pointer(source["sha256"], source["bytes"]))
         self.assertEqual(assets.validate()["real_files_checked"], 0)
@@ -240,6 +242,43 @@ class AssetManifestTests(unittest.TestCase):
     def test_path_follows_the_asset_id(self):
         self.entry()["path"] = "game/assets/enemies/hero_sword/hero_sword.png"
         self.fails("path must be")
+
+    def test_hud_kit_is_unlit(self):
+        self.entry(HUD)["normal"] = copy.deepcopy(self.entry()["normal"])
+        self.fails("drawn unlit and has no normal map")
+
+    def test_scene_assets_still_need_a_normal_map(self):
+        self.entry()["normal"] = None
+        self.fails("normal map must be")
+
+    def test_hud_pieces_have_unique_names(self):
+        pieces = self.entry(HUD)["layout"]["pieces"]
+        pieces[1]["name"] = pieces[0]["name"]
+        self.fails("unique names")
+
+    def test_hud_piece_stays_inside_the_atlas(self):
+        piece = self.entry(HUD)["layout"]["pieces"][0]
+        piece["region"][0] = self.entry(HUD)["size"][0]
+        self.fails("region leaves the atlas")
+
+    def test_hud_window_stays_inside_its_piece(self):
+        piece = next(p for p in self.entry(HUD)["layout"]["pieces"] if "inner" in p)
+        piece["inner"][2] = piece["region"][2] + 1
+        self.fails("window is outside its piece")
+
+    def test_hud_stretch_caps_are_narrower_than_the_piece(self):
+        piece = next(p for p in self.entry(HUD)["layout"]["pieces"] if "slice" in p)
+        piece["slice"] = [piece["region"][2], 4]
+        self.fails("stretch caps")
+
+    def test_hud_kit_must_be_rgba(self):
+        size = self.entry(HUD)["size"]
+        self.atlas(tiny_png(size[0], size[1], colour=2), HUD)
+        self.fails("RGBA")
+
+    def test_hud_kit_palette_threshold(self):
+        self.entry(HUD)["qa"]["palette_mean_delta_e"] = 16.5
+        self.fails("palette ΔE")
 
     def test_lfs_budget(self):
         saved = assets.LFS_BUDGET_BYTES

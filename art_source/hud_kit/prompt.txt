@@ -1,0 +1,35 @@
+## frames
+
+Game HUD asset sheet: six separate ornate gold UI elements for a dark xianxia action game, laid out as a strict grid of 2 columns x 3 rows of equal cells on a 1536 x 1024 canvas, exactly one element centred in each cell with a wide clear green gap to the cell edges and between elements, nothing touching or overlapping. Read left to right, top row first:
+1 (top left): a round portrait frame: a thick ring of coiled golden eastern dragon scales, the dragon head at the upper left biting its own tail, a small gold-and-black yin-yang medallion at the bottom of the ring and two short red silk tassels hanging below it; the inside of the ring is an empty circle filled with the same flat green.
+2 (top right): a round level medallion about 150 px wide: a gold rim with eight small points like a lotus seal, a smooth dark lacquer centre with nothing written on it.
+3 (middle left): a long thin horizontal resource bar frame about 680 x 56 px: a slim gold rim with pointed ornamental end caps (like a sheathed blade with small curls), the inside an empty smooth dark lacquer trough of even height, the middle of the frame plain and uniform so it can be stretched.
+4 (middle right): a wide title plaque about 680 x 120 px: a dark lacquer panel with a gold frame, pointed ends, a small diamond-shaped jewel finial centred on the top edge and small gold cloud curls in the lower corners, empty inside.
+5 (bottom left): a counter capsule about 520 x 84 px: a horizontal dark lacquer capsule with a thin gold rim, on its left end an empty round gold socket ring for an icon, the rest of the capsule plain and empty.
+6 (bottom right): a thin horizontal gold divider ornament about 600 px wide: two slender tapering gold strokes with a small golden lotus flower in the centre.
+
+Style: exactly the ornate gold xianxia game UI of the attached asset sheets (first image is the main reference): hand-painted polished antique gold metal with fine engraved cloud and dragon-scale detail, warm highlights and deep brown-gold shadows, inner panels of very dark warm brown-black lacquer with a faint grain, small red-and-gold accents. Crisp hard edges. Each element is lit softly from above and has NO outer glow, NO bloom, NO sparkles, NO drop shadow and NO light rays around it, so its silhouette ends cleanly against the background.
+
+Background: perfectly flat solid pure green #00FF00 everywhere around the elements, no gradient, no floor, no shadow. No text, no letters, no digits, no labels, no watermark anywhere.
+
+## fills
+
+Game HUD asset sheet: six separate elements for a dark xianxia action game, laid out as a strict grid of 3 columns x 2 rows of equal cells on a 1536 x 1024 canvas, exactly one element centred in each cell with a wide clear green gap to the cell edges, nothing touching. Read left to right, top row first:
+1: a long straight horizontal liquid bar fill strip, 440 x 36 px, rich crimson red with a lighter glossy band along its top third and a darker lower edge, flat square ends, no frame.
+2: the same strip shape in molten gold with a bright glossy band along its top third and faint flowing texture inside, flat square ends, no frame.
+3: the same strip shape in deep violet purple qi with a lighter glossy band along its top third, flat square ends, no frame.
+4: a round icon medallion about 120 px: a gold rim around a dark red disc with a fierce red-and-black demon mask (horned oni-like skull face) in the middle.
+5: a round icon medallion about 120 px: a gold rim around a dark disc with a small golden hourglass in the middle.
+6: a small round notification badge about 80 px: a glossy crimson red disc with a thin gold rim, empty, nothing written on it.
+
+Style: exactly the ornate gold xianxia game UI of the attached asset sheets (first image is the main reference): hand-painted polished antique gold metal with fine engraved cloud and dragon-scale detail, warm highlights and deep brown-gold shadows, inner panels of very dark warm brown-black lacquer with a faint grain, small red-and-gold accents. Crisp hard edges. Each element is lit softly from above and has NO outer glow, NO bloom, NO sparkles, NO drop shadow and NO light rays around it, so its silhouette ends cleanly against the background.
+
+Background: perfectly flat solid pure green #00FF00 everywhere around the elements, no gradient, no floor, no shadow. No text, no letters, no digits, no labels, no watermark anywhere.
+
+## portrait
+
+Game HUD hero portrait: a head-and-shoulders bust of the SAME young swordsman as in the attached model sheet (first image) and character board: long black hair in a high topknot with a gold hairpiece and red ribbons, pale face, calm fierce eyes, white hanfu with gold embroidery and dark under-robe, the gold guard of a sword hilt over his shoulder. Three-quarter view, the face turned toward the right of the image, looking up and to the right like the portrait in the top left of the third image. The bust fills a centred circle about 760 px wide on a 1024 x 1024 canvas; the head is inside the circle, the shoulders are cut by the bottom of the circle.
+
+Style: hand-painted dark xianxia game character portrait, painterly, soft cool moonlight from the upper left and a warm gold rim from the right, dark smoky background inside the circle in deep blue-grey.
+
+Background: everything outside the circle is perfectly flat solid pure green #00FF00. No frame, no ring, no text, no watermark.

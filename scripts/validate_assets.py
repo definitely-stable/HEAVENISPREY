@@ -12,8 +12,11 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
 - the recorded style metrics meet the thresholds of the passport group
   (art_source/style_passport.json, ART-BIBLE-001 version 3); the rim of characters is not
   baked but drawn by the scene shader (ADR-014 section 4), so no asset may carry one;
-- every asset has a normal map <name>_n.png next to it (ADR-014 section 4) with the method of
-  its kind, the same size, and the same identity rules as the built file;
+- every asset drawn in the lit scene has a normal map <name>_n.png next to it (ADR-014
+  section 4) with the method of its kind, the same size, and the same identity rules as the
+  built file; the HUD kit (ui_atlas) is drawn unlit over the scene and has none;
+- a HUD kit has uniquely named pieces inside the atlas, frame windows inside their piece and
+  stretch caps narrower than the piece (ADR-014 section 15);
 - the LFS volume of the art (built files, normal maps and masters) stays within the budget.
 """
 from __future__ import annotations
@@ -33,11 +36,11 @@ PASSPORT = SOURCE / "style_passport.json"
 CATALOG = ROOT / "ref" / "catalog.json"
 CONFIG = ROOT / ".work" / "config" / "v7"
 LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
-ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop)\.[a-z][a-z0-9_]*$")
-GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props"}
-KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture"}
+ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop|ui)\.[a-z][a-z0-9_]*$")
+GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props", "ui": "ui"}
+KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture", "ui_atlas"}
 ## Kinds drawn with transparency: their PNG must be RGBA.
-ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture"}
+ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture", "ui_atlas"}
 ## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
 LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
@@ -45,7 +48,7 @@ REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_versio
 NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "anim_atlas": "silhouette_pillow",
                   "floor_texture": "luminance_sobel",
                   "prop_atlas": "silhouette_pillow", "decal_texture": "luminance_sobel",
-                  "strip_texture": "luminance_sobel"}
+                  "strip_texture": "luminance_sobel", "ui_atlas": None}
 ## ADR-014 sections 7 and 13, A4: the loop seam against the median and the largest step between
 ## frames inside the loop, the body height of a clip across its directions, the torso against
 ## feet_anchor.x (atlas px).
@@ -182,6 +185,20 @@ def check_layout(entry: dict) -> None:
                 raise AssetError(f"{label}: {prop['name']} region leaves the atlas")
             if not (x <= fx <= x + w and y <= fy <= y + h):
                 raise AssetError(f"{label}: {prop['name']} anchor is outside its region")
+    elif entry["kind"] == "ui_atlas":
+        names = [p["name"] for p in layout["pieces"]]
+        if not names or len(set(names)) != len(names):
+            raise AssetError(f"{label}: HUD pieces need unique names")
+        for piece in layout["pieces"]:
+            x, y, w, h = piece["region"]
+            if x < 0 or y < 0 or w <= 0 or h <= 0 or x + w > width or y + h > height:
+                raise AssetError(f"{label}: {piece['name']} region leaves the atlas")
+            if "inner" in piece:
+                ix, iy, iw, ih = piece["inner"]
+                if iw <= 0 or ih <= 0 or ix < x or iy < y or ix + iw > x + w or iy + ih > y + h:
+                    raise AssetError(f"{label}: {piece['name']} window is outside its piece")
+            if "slice" in piece and (min(piece["slice"]) <= 0 or sum(piece["slice"]) >= w):
+                raise AssetError(f"{label}: {piece['name']} stretch caps must be narrower than the piece")
     elif entry["kind"] == "strip_texture":
         if [width, height] != layout["texture_size"]:
             raise AssetError(f"{label}: strip size differs from texture_size")
@@ -222,11 +239,14 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     if real:
         check_png(entry, built)
     normal = entry["normal"]
-    if normal["path"] != expected[:-len(".png")] + "_n.png" or normal.get("method") != NORMAL_METHODS[entry["kind"]]:
-        raise AssetError(f"{asset_id}: normal map must be {name}_n.png made by {NORMAL_METHODS[entry['kind']]}")
-    normal_path = ROOT / normal["path"]
-    if check_binary(normal_path, normal["sha256"], normal["bytes"], asset_id + " normal map"):
-        width, height, _colour = png_header(normal_path)
+    method = NORMAL_METHODS[entry["kind"]]
+    if method is None:
+        if normal is not None:
+            raise AssetError(f"{asset_id}: a {entry['kind']} is drawn unlit and has no normal map")
+    elif normal is None or normal["path"] != expected[:-len(".png")] + "_n.png" or normal.get("method") != method:
+        raise AssetError(f"{asset_id}: normal map must be {name}_n.png made by {method}")
+    elif check_binary(ROOT / normal["path"], normal["sha256"], normal["bytes"], asset_id + " normal map"):
+        width, height, _colour = png_header(ROOT / normal["path"])
         if [width, height] != entry["size"]:
             raise AssetError(f"{asset_id}: normal map size differs from the texture")
     source = entry["source"]
@@ -247,7 +267,7 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     if not (SOURCE / name / "ASSET_CARD.md").is_file():
         raise AssetError(f"{asset_id}: no ASSET_CARD.md")
     check_qa(entry, passport, floor_l)
-    return entry["bytes"] + normal["bytes"] + source["bytes"], real
+    return entry["bytes"] + (normal["bytes"] if normal else 0) + source["bytes"], real
 
 
 def validate() -> dict:
