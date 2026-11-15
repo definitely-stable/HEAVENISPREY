@@ -88,6 +88,9 @@ func test_defeat_results_in_russian() -> void:
 		guard += 1
 	var world: WorldState = view.driver.world
 	assert_eq([world.hero_dead, world.won], [1, 0])
+	for _i: int in 90:
+		view.advance_frame(TICK, Vector2i.ZERO)
+	assert_true(view.is_results_open(), "after the death clip")
 	var results: RunResults = view.get("_results")
 	assert_eq(results.title.text, "Поражение")
 	assert_string_contains(results.lines.text, "Убито врагов: %d" % world.kills)

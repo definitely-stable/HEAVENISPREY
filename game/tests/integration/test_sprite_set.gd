@@ -38,11 +38,12 @@ func test_every_asset_has_a_normal_map_of_its_size() -> void:
 	assert_null(sprites.canvas_texture("asset.enemy.unknown"))
 
 
-## Sprite atlases share one texture, side by side, so a mixed horde is one batch.
+## Sprite atlases share one texture (skyline packed, never overlapping), so a mixed horde is
+## one batch.
 func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var shared: Texture2D = sprites.canvas_texture("asset.char.hero_sword")
-	var right: float = -1.0
+	var placed: Array[Rect2] = []
 	for asset_id: String in [
 		"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
 		"asset.prop.courtyard_lights", "asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
@@ -50,8 +51,10 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	]:
 		assert_eq(sprites.canvas_texture(asset_id), shared, asset_id)
 		var origin: Vector2 = sprites.atlas_origin(asset_id)
-		assert_gt(origin.x, right, asset_id + " does not overlap the atlas before it")
-		right = origin.x + sprites.texture(asset_id).get_width() + SpriteSet.PACK_GAP_PX - 1
+		var rect: Rect2 = Rect2(origin, sprites.texture(asset_id).get_size())
+		for other: Rect2 in placed:
+			assert_false(rect.grow(SpriteSet.PACK_GAP_PX * 0.5 - 0.5).intersects(other), asset_id + " overlaps")
+		placed.append(rect)
 		var packed: Image = (shared as CanvasTexture).diffuse_texture.get_image()
 		var own: Image = sprites.texture(asset_id).get_image()
 		var probe: Vector2i = Vector2i(96, 120)
@@ -62,10 +65,11 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 
 func test_frame_regions_follow_the_layout() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
-	assert_eq(sprites.directions("asset.char.hero_sword"), PackedStringArray(["down", "left", "right", "up"]))
-	assert_eq(sprites.frame_region("asset.char.hero_sword", "down", 0), Rect2(0, 0, 192, 192))
-	assert_eq(sprites.frame_region("asset.char.hero_sword", "up", 3), Rect2(576, 576, 192, 192))
-	assert_eq(sprites.frame_region("asset.char.hero_sword", "left", 5), Rect2(192, 192, 192, 192), "frames wrap")
+	assert_eq(sprites.directions("asset.enemy.yin_corpse"), PackedStringArray(["left", "right"]))
+	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "left", 0), Rect2(0, 0, 192, 192))
+	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "right", 3), Rect2(576, 192, 192, 192))
+	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "left", 5), Rect2(192, 0, 192, 192), "frames wrap")
+	assert_eq(sprites.directions("asset.char.hero_sword"), PackedStringArray(["s", "se", "e", "ne", "n"]))
 	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "right", -1), Rect2(576, 192, 192, 192))
 	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "down", 0), Rect2(), "no such direction")
 	assert_eq(sprites.frame_region("asset.enemy.unknown", "left", 0), Rect2())
@@ -144,3 +148,56 @@ func test_floor_decal_and_strip_spans() -> void:
 	assert_eq(sprites.decal_world_px("asset.tile.sect_seal"), 672.0)
 	assert_eq(sprites.decal_world_px("asset.tile.sect_cliff"), 520.0)
 	assert_eq(sprites.decal_world_px("asset.tile.unknown"), 0.0)
+
+
+## ADR-014 A4: the hero is an animated atlas: clips loop or hold, west-facing directions are the
+## east-facing rows mirrored, a one-direction clip serves every direction.
+func test_hero_clips_loop_hold_and_mirror() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var hero: String = "asset.char.hero_sword"
+	for clip: String in ["idle", "run", "attack", "death"]:
+		assert_true(sprites.has_clip(hero, clip), clip)
+	assert_false(sprites.has_clip(hero, "fly"))
+	assert_false(sprites.has_clip("asset.enemy.blood_wolf", "run"), "a plain atlas has no clips")
+	var run: float = sprites.clip_length(hero, "run")
+	assert_almost_eq(run, 8.0 / 14.0, 1e-6)
+	assert_eq(sprites.clip_frame(hero, "run", 0.0), 0)
+	assert_eq(sprites.clip_frame(hero, "run", run * 1.5 + 1e-4), 4, "a loop wraps")
+	assert_eq(sprites.clip_frame(hero, "attack", 10.0), 5, "a one-shot holds its last frame")
+	assert_eq(sprites.clip_frame(hero, "fly", 1.0), 0)
+	var east: Array = sprites.clip_region(hero, "run", "e", 2)
+	var west: Array = sprites.clip_region(hero, "run", "w", 2)
+	assert_eq(west[0], east[0], "west is east mirrored")
+	assert_true(west[1])
+	assert_false(east[1])
+	assert_ne(sprites.clip_region(hero, "run", "se", 2)[0], east[0])
+	var south: Array = sprites.clip_region(hero, "death", "s", 3)
+	for direction: String in SpriteSet.EIGHT_WAY:
+		assert_eq(sprites.clip_region(hero, "death", direction, 3), [south[0], false], direction)
+	assert_eq(sprites.clip_region(hero, "fly", "s", 0)[0], Rect2())
+
+
+func test_eight_way_screen_directions() -> void:
+	var expected: Dictionary = {
+		Vector2(1, 0): "e", Vector2(1, 1): "se", Vector2(0, 1): "s", Vector2(-1, 1): "sw",
+		Vector2(-1, 0): "w", Vector2(-1, -1): "nw", Vector2(0, -1): "n", Vector2(1, -1): "ne",
+		Vector2(1, 0.3): "e", Vector2(0.3, 1): "s", Vector2.ZERO: "s",
+	}
+	for facing: Vector2 in expected:
+		assert_eq(SpriteSet.eight_way(facing), expected[facing], str(facing))
+
+
+func test_skyline_packing_stays_inside_and_apart() -> void:
+	var sizes: Array[Vector2i] = [
+		Vector2i(300, 400), Vector2i(500, 100), Vector2i(200, 200), Vector2i(700, 50), Vector2i(100, 300),
+		Vector2i(256, 256), Vector2i(1000, 120),
+	]
+	var places: Array[Vector2i] = SpriteSet.skyline_pack(sizes, 1000)
+	assert_eq(places.size(), sizes.size())
+	for index: int in sizes.size():
+		var rect: Rect2i = Rect2i(places[index], sizes[index])
+		assert_true(rect.position.x >= 0 and rect.position.y >= 0 and rect.end.x <= 1000, str(rect))
+		for other: int in index:
+			assert_false(rect.intersects(Rect2i(places[other], sizes[other])), "%d overlaps %d" % [index, other])
+	assert_eq(places[0], Vector2i.ZERO)
+	assert_eq(places[1], Vector2i(300, 0), "the next rect rests beside the first")

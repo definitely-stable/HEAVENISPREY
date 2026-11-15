@@ -9,6 +9,9 @@ extends SceneTree
 ## - "grid": light acceptance (ADR-014 section 7): the hero stands on a 3x3 grid of the arena,
 ##   one capture per point (out_<i>.png) and out.json with the screen points of the hero, the
 ##   lanterns and the arena corners in each capture;
+## - "hero": a contact sheet of the animated hero (ADR-014 A4) in game light: four frames of the
+##   run in each of the 8 directions (one row each, east first, clockwise), then idle, attacks
+##   on a horde and the death, cropped around the hero;
 ## - "perf": `count` enemies on rings around the hero walking left and right; prints the p50
 ##   and p95 frame time and the draw calls over 180 frames and writes them to out (JSON).
 ##   Run it with --disable-vsync (and at 1920x1080 for the ADR-014 A2 budget).
@@ -18,6 +21,9 @@ const STEP: float = 1.0 / 60.0
 const MAX_SECONDS: float = 200.0
 const HORDE_FRAMES: int = 40
 const RING_PX: float = 260.0
+## Hero contact sheet: crop size (px) and frames run per direction.
+const HERO_CROP: int = 200
+const HERO_RUN_FRAMES: int = 40
 const CIRCLE: Array[Vector2i] = [
 	Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1),
 	Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1),
@@ -44,6 +50,9 @@ func _capture() -> void:
 		return
 	if mode == "perf":
 		await _measure_frames(view, out, count)
+		return
+	if mode == "hero":
+		await _capture_hero(view, out)
 		return
 	if mode == "circles":
 		_walk_circles(view, count)
@@ -146,3 +155,68 @@ func _measure_frames(view: RunView, out: String, count: int) -> void:
 	file.close()
 	print("perf: ", result)
 	quit(0)
+
+
+func _capture_hero(view: RunView, out: String) -> void:
+	var world: WorldState = view.driver.world
+	var rows: Array = []
+	for direction: Vector2i in CIRCLE:
+		var row: Array[Image] = []
+		for frame: int in HERO_RUN_FRAMES:
+			await _hero_step(view, direction)
+			if frame >= HERO_RUN_FRAMES - 16 and frame % 4 == 0:
+				row.append(_hero_crop(view))
+		rows.append(row)
+	var idle: Array[Image] = []
+	for frame: int in 24:
+		await _hero_step(view, Vector2i.ZERO)
+		if frame % 6 == 5:
+			idle.append(_hero_crop(view))
+	rows.append(idle)
+	_place_horde(view, 24)
+	var attack: Array[Image] = []
+	var guard: int = 0
+	while attack.size() < 4 and guard < 600:
+		await _hero_step(view, Vector2i.ZERO)
+		if view._hero_pose()[1] == "attack" and guard % 3 == 0:
+			attack.append(_hero_crop(view))
+		guard += 1
+	rows.append(attack)
+	world.hero_hp = mini(world.hero_hp, 1)
+	guard = 0
+	while not world.is_over() and guard < 1200:
+		await _hero_step(view, Vector2i.ZERO)
+		guard += 1
+	var death: Array[Image] = []
+	for frame: int in 60:
+		await _hero_step(view, Vector2i.ZERO)
+		if frame in [2, 14, 26, 58]:
+			death.append(_hero_crop(view))
+	rows.append(death)
+	var sheet: Image = Image.create_empty(HERO_CROP * 4, HERO_CROP * rows.size(), false, Image.FORMAT_RGBA8)
+	for y: int in rows.size():
+		for x: int in (rows[y] as Array).size():
+			var crop: Image = rows[y][x]
+			sheet.blit_rect(crop, Rect2i(Vector2i.ZERO, crop.get_size()), Vector2i(x, y) * HERO_CROP)
+	var error: Error = sheet.save_png(out)
+	print("capture hero: ", out, " rows=", rows.size(), " error=", error)
+	quit(0 if error == OK else 1)
+
+
+func _hero_step(view: RunView, direction: Vector2i) -> void:
+	if view.driver.world.is_paused():
+		view.choose(0)
+	view.advance_frame(STEP, direction)
+	await process_frame
+
+
+## HERO_CROP px around the hero (its feet low in the crop) from the last drawn frame.
+func _hero_crop(view: RunView) -> Image:
+	var camera: Camera2D = root.get_viewport().get_camera_2d()
+	var feet: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px())
+	var pixel: Vector2 = (feet - camera.get_screen_center_position()) * camera.zoom
+	pixel += Vector2(root.get_visible_rect().size) * 0.5
+	var image: Image = root.get_texture().get_image()
+	var corner: Vector2i = Vector2i(pixel) - Vector2i(HERO_CROP / 2, HERO_CROP * 3 / 4)
+	corner = corner.clamp(Vector2i.ZERO, image.get_size() - Vector2i.ONE * HERO_CROP)
+	return image.get_region(Rect2i(corner, Vector2i.ONE * HERO_CROP))

@@ -1,56 +1,314 @@
 {
   "schema_version": 1,
   "asset_id": "asset.char.hero_sword",
-  "kind": "sprite_atlas",
+  "kind": "anim_atlas",
   "group": "characters",
-  "asset_version": 2,
+  "asset_version": 3,
   "content_ids": [
     "class.sword"
   ],
   "master": "master.webp",
   "references": [
     {
-      "id": "REF-061",
-      "file": "Четыре мастера небесного пути.png",
-      "sha256": "ba5c8ebe4ddde365bbf4da38952b5b4091274fd6b774710315955cbe6003792b"
-    },
-    {
       "id": "REF-035",
       "file": "Культиватор Меча_ лист игровых анимаций.png",
       "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901"
+    },
+    {
+      "id": "REF-030",
+      "file": "Кинематографичный лист культиватора с золотыми мечами.png",
+      "sha256": "2ceccd8003c0a363f1c22d31b5a4874906a0b011ac60f706c2f06d8d5be84be6"
+    },
+    {
+      "id": "REF-061",
+      "file": "Четыре мастера небесного пути.png",
+      "sha256": "ba5c8ebe4ddde365bbf4da38952b5b4091274fd6b774710315955cbe6003792b"
     }
   ],
   "generation": {
     "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
-    "tool_version": "codex-cli 0.168.0",
+    "tool_version": "codex-cli 0.169.0",
     "prompt_file": "prompt.txt",
-    "prompt_sha256": "d3ccfb9d8de283dde968b1b2383fe063b64ca47296e0c7d1c8edbdaa56646d3f",
-    "created": "2026-11-14T15:00:26+0500",
-    "master_sha256": "3456541ac1899085862c441ff13016b07e8f2bb20bf360e29bb2d808fea524a8",
-    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+    "prompt_sha256": "4708e1ca920de3d81e9b64dc229018cb6085cdafa8172828a625443c913df536",
+    "created": "2026-11-15T13:43:09+0500",
+    "master_sha256": "a7d982f873b0903ce357785361223b1f83a5a08cce4f7263f8412bfecef53564",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256), 4 per row; every request had the model sheet (model_sheet.webp) and REF-035 attached"
+  },
+  "model_sheet": {
+    "file": "model_sheet.webp",
+    "png_sha256": "e55d6c01008edf46d62abb4cf05a1de054561491da9f333e50e4c0b14353eb0d",
+    "prompt_sha256": "699ec3ccbc8c1bf0b255456cde28df9d287701a3880deb8409ed1d59ff220cb5"
   },
   "palette_group": "hero_sprite",
   "sheet": {
-    "grid": [
-      4,
-      4
-    ],
     "key_colour": "#00ff00",
     "key_low": 40,
-    "key_high": 150
+    "key_high": 150,
+    "tile": [
+      1536,
+      1024
+    ]
   },
-  "directions": [
-    "down",
-    "left",
-    "right",
-    "up"
-  ],
-  "frame_size": 192,
+  "frame_size": 256,
   "feet_anchor": [
-    96,
-    186
+    128,
+    250
   ],
   "margin_px": 2,
   "figure_height_px": 168,
-  "anchor_x": "torso"
+  "anchor_x": "torso",
+  "directions": [
+    "s",
+    "se",
+    "e",
+    "ne",
+    "n"
+  ],
+  "mirror": {
+    "sw": "se",
+    "w": "e",
+    "nw": "ne"
+  },
+  "clips": [
+    {
+      "name": "idle",
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "grid": [
+        4,
+        1
+      ]
+    },
+    {
+      "name": "run",
+      "frames": 8,
+      "fps": 14,
+      "loop": true,
+      "grid": [
+        4,
+        2
+      ],
+      "height": 0.96
+    },
+    {
+      "name": "attack",
+      "frames": 6,
+      "fps": 16,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ],
+      "height": 0.96
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "fps": 8,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ],
+      "directions": [
+        "s"
+      ],
+      "measure": "first"
+    }
+  ],
+  "sheets": [
+    {
+      "clip": "idle",
+      "direction": "s",
+      "tile": [
+        0,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "4aa7ce2b6d9275136996145344b154304f6f2fa990d6215bb0f2391f7fd9c3bd",
+      "prompt_sha256": "e99336d80addbd8d361eab3ec173b72a899c1107856a750bf96f3fabf44505d3",
+      "created": "2026-11-15T13:19:42+0500"
+    },
+    {
+      "clip": "idle",
+      "direction": "se",
+      "tile": [
+        1,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "c4f75b77c64fd5a9d2d0bb4809dd23b271b6d0d9cbe880bb704df14499010f5e",
+      "prompt_sha256": "1d897cc04d52f52664eb466e02d2003c3b54c1ef8f694eb233649adf854ae126",
+      "created": "2026-11-15T13:21:08+0500"
+    },
+    {
+      "clip": "idle",
+      "direction": "e",
+      "tile": [
+        2,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "0edc64379dad641fc2faba8de0070992e348e5a4370b1bbb23ead7bbbbda8103",
+      "prompt_sha256": "46a88df9e3461950e6ecf5a77f915e8f240499addf53b3ffabcc065c446bcc11",
+      "created": "2026-11-15T13:22:37+0500"
+    },
+    {
+      "clip": "idle",
+      "direction": "ne",
+      "tile": [
+        3,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "ab95b3bf460e89bd664590b221ce0d968e7d06354ca1b2b4f2599d9305e466ce",
+      "prompt_sha256": "cf3d96010674d4e76468235ee1d0b23ef16c74bd8b249cf84ecc790350da3154",
+      "created": "2026-11-15T13:24:04+0500"
+    },
+    {
+      "clip": "idle",
+      "direction": "n",
+      "tile": [
+        0,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "a7d0c3dffa3b131a4018e263c8ab1fbfdd604391dd6f2eef5b8a741dae66f19f",
+      "prompt_sha256": "5ee88995be0f7b6c144e166b62ae17e1cac5f7afb6409f4aa554421e5b7c59cb",
+      "created": "2026-11-15T13:26:17+0500"
+    },
+    {
+      "clip": "run",
+      "direction": "s",
+      "tile": [
+        1,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "6d827317705d98c2d7524ff9b3260d2e97925c88de37e08bc4f8cec419d573a7",
+      "prompt_sha256": "a62cde2af87a35bfce33ebd9056c220a788b7b02c289dcfc908d66901b940597",
+      "created": "2026-11-15T13:12:48+0500"
+    },
+    {
+      "clip": "run",
+      "direction": "se",
+      "tile": [
+        2,
+        1
+      ],
+      "candidate": "v3 of 3",
+      "png_sha256": "2c7a0c2a07ec6f42bf5c41b7054056a5eb1696ee79c1e219142d6c99c8e6a453",
+      "prompt_sha256": "4fa0def3a779e522a09bc2cc6fca0020380a702541dd99ab0d5e0ef1e6bf4636",
+      "created": "2026-11-15T13:43:09+0500"
+    },
+    {
+      "clip": "run",
+      "direction": "e",
+      "tile": [
+        3,
+        1
+      ],
+      "candidate": "v1 of 3",
+      "png_sha256": "c4325471fb063453d1fd3987488e5c62869d030b7949d2c804bc31f9dd162ffb",
+      "prompt_sha256": "db47c9e6984eae4ec1b3276004721f8bab7a2fcd5ff87297d97a9f692b97da4a",
+      "created": "2026-11-15T13:16:09+0500"
+    },
+    {
+      "clip": "run",
+      "direction": "ne",
+      "tile": [
+        0,
+        2
+      ],
+      "candidate": "v2 of 2",
+      "png_sha256": "fceed8cf20693b26521029826ef5f051671c534bbba9b6facde0e8d4613ee51c",
+      "prompt_sha256": "5e4c89b174797d0d4536c38e905694a6c8eba0ffb81b1daca24426f7d442998c",
+      "created": "2026-11-15T13:37:18+0500"
+    },
+    {
+      "clip": "run",
+      "direction": "n",
+      "tile": [
+        1,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "3908389748829ce338a97b6ec2d2d1a3f8919e508457756f0ea6bd5a21a575cf",
+      "prompt_sha256": "e6659730353c80fecc32895d67f4b36cfd12753c5516d54defd74a140ed327c3",
+      "created": "2026-11-15T13:18:18+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "s",
+      "tile": [
+        2,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "e6111b5401822228824d41dd2a411314764c7dee78257b89c73786f35c561c17",
+      "prompt_sha256": "4bdf709e0d282d72d55dc22e4a478b5a04ed845100a1f00b2be4c1e0bf414730",
+      "created": "2026-11-15T13:27:33+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "se",
+      "tile": [
+        3,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d8b7b3974ce07b329018ecdfdaf59475139e5295df201de4f2e6bd25586ea9db",
+      "prompt_sha256": "716b824b5e24f40529f4c1ae3e92f2e7985a5a9593681c10179e0160ffefc7dc",
+      "created": "2026-11-15T13:29:05+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "e",
+      "tile": [
+        0,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "1a64fc21382ae78a7633778f2cd37df7e5ed91bf5ff196648c2a94c95ad94958",
+      "prompt_sha256": "7db4383794593876607e83587ccfb6e6cbbcd11f733bea6cf1bf08a9638f50aa",
+      "created": "2026-11-15T13:30:22+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "ne",
+      "tile": [
+        1,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "7e06846c814eb870d947fa7e741df5f4bb072ed6079b1bb627250c46cccc61fe",
+      "prompt_sha256": "6d899634b0621c367044ab0fb3ccce7cd54f830581b5aa88a86bd45a51a11529",
+      "created": "2026-11-15T13:31:44+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "n",
+      "tile": [
+        2,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "ae3cd28da99bc6332c924bb138e8c8df3785b17e96133b8186a96f83d99402ff",
+      "prompt_sha256": "34a0a217397dbbe6625f093c7e11d5eb23d07a2e59f89e4a7000ceff835acbee",
+      "created": "2026-11-15T13:33:46+0500"
+    },
+    {
+      "clip": "death",
+      "direction": "s",
+      "tile": [
+        3,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "8e8579257e2417f70376b75871b22e12555fa8951773e43e9f05077ed1276556",
+      "prompt_sha256": "50bea6934af31254f103bc6f5c676e0ab498936e0054c21f1f50df5e74e973b8",
+      "created": "2026-11-15T13:35:40+0500"
+    }
+  ]
 }

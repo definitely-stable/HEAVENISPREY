@@ -172,6 +172,8 @@ def torso_x(cell: Image.Image, box: tuple[int, int, int, int]) -> float:
 
 
 ANCHORS = {"feet": feet_x, "torso": torso_x}
+## A row of a figure at least this share of its widest row is body, not a sword tip (body_height).
+BODY_ROW_SHARE = 0.12
 
 
 def check_margin(atlas: Image.Image, frame: int, cols: int, rows: int, margin: int, label: str) -> None:
@@ -306,6 +308,153 @@ def build_atlas(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     if rows != len(spec["directions"]):
         raise ValueError(f"{spec['asset_id']}: {rows} rows for {len(spec['directions'])} directions")
     return atlas, layout
+
+
+def key_out_fast(image: Image.Image, key: tuple[int, int, int], low: int, high: int) -> Image.Image:
+    """key_out() on whole arrays (the same lean, unmix and despill), for large sheets."""
+    rgb = np.asarray(image.convert("RGB"), dtype=np.float64)
+    channel = max(range(3), key=lambda i: key[i])
+    a, b = [i for i in range(3) if i != channel]
+    lean = rgb[..., channel] - np.maximum(rgb[..., a], rgb[..., b])
+    alpha = np.clip(1.0 - (lean - low) / (high - low), 0.0, 1.0)
+    safe = np.where(alpha > 0.0, alpha, 1.0)[..., None]
+    colour = (rgb - (1.0 - alpha)[..., None] * np.array(key, dtype=np.float64)) / safe
+    colour = np.where((alpha >= 1.0)[..., None], rgb, colour)
+    colour[..., channel] = np.minimum(colour[..., channel], np.maximum(colour[..., a], colour[..., b]))
+    out = np.dstack([np.clip(np.round(colour), 0, 255), np.round(alpha * 255.0)]).astype(np.uint8)
+    out[alpha <= 0.0] = 0
+    return Image.fromarray(out, "RGBA")
+
+
+def body_height(alpha: np.ndarray) -> int:
+    """Height of a figure from its lowest pixel to the first row at least BODY_ROW_SHARE as wide
+    as its widest row: a sword or a ribbon above the head does not count, the head does."""
+    widths = (alpha > SOLID_ALPHA).sum(axis=1)
+    rows = np.nonzero(widths)[0]
+    if rows.size == 0:
+        return 0
+    top = int(np.nonzero(widths >= widths.max() * BODY_ROW_SHARE)[0][0])
+    return int(rows[-1]) + 1 - top
+
+
+def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
+    """ADR-014 sections 3 and 6: an animated character from one generated sheet per clip and
+    direction. The master is a mosaic of the sheets (tile size `sheet.tile`); every sheet is a
+    grid of its clip's frames.
+
+    The generator draws every sheet at its own size, so every sheet (one atlas row) gets its own
+    scale: its median body height (the first frame for a clip that leaves the upright pose, like
+    a death) becomes figure_height_px x the clip's `height`. One fit factor then keeps every
+    frame inside its cell. Each frame is anchored at the torso on feet_anchor.x; vertically the
+    lowest foot of the sheet stands on feet_anchor.y and the other frames keep their height above
+    it (the bounce of a run). Atlas rows: the clips in order, one row per generated direction of
+    the clip; columns: the longest clip."""
+    sheet = spec["sheet"]
+    key = hex_rgb(sheet["key_colour"])
+    tile_w, tile_h = sheet["tile"]
+    frame = spec["frame_size"]
+    anchor_x, anchor_y = spec["feet_anchor"]
+    margin = spec["margin_px"]
+    anchor_of = ANCHORS[spec.get("anchor_x", "torso")]
+    by_key = {(s["clip"], s["direction"]): s for s in spec["sheets"]}
+    # (clip, direction, row scale, ground y, [(cell, bbox, anchor x)])
+    rows: list[tuple[str, str, float, int, list]] = []
+    clips_layout: dict = {}
+    for clip in spec["clips"]:
+        directions = clip.get("directions", spec["directions"])
+        clips_layout[clip["name"]] = {"row": len(rows), "frames": clip["frames"], "fps": clip["fps"],
+                                      "loop": clip["loop"], "directions": directions}
+        cols, grid_rows = clip["grid"]
+        if cols * grid_rows != clip["frames"]:
+            raise ValueError(f"{spec['asset_id']}: {clip['name']} grid is not {clip['frames']} frames")
+        for direction in directions:
+            entry = by_key.get((clip["name"], direction))
+            if entry is None:
+                raise ValueError(f"{spec['asset_id']}: no sheet for {clip['name']} {direction}")
+            tx, ty = entry["tile"]
+            keyed = key_out_fast(master.crop((tx * tile_w, ty * tile_h, (tx + 1) * tile_w, (ty + 1) * tile_h)),
+                                 key, sheet["key_low"], sheet["key_high"])
+            cw, ch = keyed.width / cols, keyed.height / grid_rows
+            cells, heights = [], []
+            for index in range(clip["frames"]):
+                col, row = index % cols, index // cols
+                box = (round(col * cw), round(row * ch), round((col + 1) * cw), round((row + 1) * ch))
+                cell = keyed.crop(box)
+                inner = bbox(cell)
+                label = f"{spec['asset_id']}: {clip['name']} {direction} frame {index}"
+                if inner is None:
+                    raise ValueError(label + " is empty")
+                left, top, right, bottom = inner
+                if left == 0 or top == 0 or right == cell.width or bottom == cell.height:
+                    raise ValueError(label + " touches the edge of its cell")
+                cells.append((cell, inner, anchor_of(cell, inner)))
+                heights.append(body_height(np.asarray(cell.getchannel("A"))))
+            measured = heights[0] if clip.get("measure", "median") == "first" else float(np.median(heights))
+            row_scale = spec["figure_height_px"] * clip.get("height", 1.0) / measured
+            ground = max(b[3] for _, b, _ in cells)
+            rows.append((clip["name"], direction, row_scale, ground, cells))
+    fit = 1.0
+    for _, _, row_scale, ground, cells in rows:
+        for _, (left, top, right, bottom), fx in cells:
+            fit = min(fit, (anchor_x - margin) / max((fx - left) * row_scale, 1),
+                      (frame - margin - anchor_x) / max((right - fx) * row_scale, 1),
+                      (anchor_y - margin) / max((ground - top) * row_scale, 1))
+    columns = max(clip["frames"] for clip in spec["clips"])
+    atlas = Image.new("RGBA", (frame * columns, frame * len(rows)), (0, 0, 0, 0))
+    for row_index, (_, _, row_scale, ground, cells) in enumerate(rows):
+        scale = row_scale * fit
+        for col, (cell, (left, top, right, bottom), fx) in enumerate(cells):
+            figure = cell.crop((left, top, right, bottom))
+            size = (max(1, round(figure.width * scale)), max(1, round(figure.height * scale)))
+            figure = resize_premultiplied(figure, size)
+            atlas.alpha_composite(figure, (col * frame + round(anchor_x - (fx - left) * scale),
+                                           row_index * frame + round(anchor_y - (ground - top) * scale)))
+    for row_index, (name, direction, _, _, cells) in enumerate(rows):
+        for col in range(len(cells)):
+            inner = bbox(atlas.crop((col * frame, row_index * frame, (col + 1) * frame, (row_index + 1) * frame)), 0)
+            if inner is None or min(inner[0], inner[1], frame - inner[2], frame - inner[3]) < margin:
+                raise ValueError(f"{spec['asset_id']}: {name} {direction} frame {col} breaks the {margin} px margin")
+    scales = [r[2] * fit for r in rows]
+    layout = {"anchor_x": spec.get("anchor_x", "torso"), "frame_size": frame, "feet_anchor": [anchor_x, anchor_y],
+              "scale": [round(min(scales), 4), round(max(scales), 4)], "frames": columns,
+              "directions": spec["directions"], "mirror": spec["mirror"], "clips": clips_layout}
+    return atlas, layout
+
+
+def anim_metrics(atlas: Image.Image, layout: dict, spec: dict) -> dict:
+    """ADR-014 sections 7 and 13, A4 acceptance on the built atlas: the loop seam (difference from
+    the last frame to the first over the median and over the largest difference between
+    neighbours inside the loop, worst row each), the body height spread of a clip across its directions (worst clip, %, frames measured as the build
+    does) and the torso drift from feet_anchor.x (worst frame, atlas px)."""
+    frame = layout["frame_size"]
+    pixels = np.asarray(atlas, dtype=np.float64) / 255.0
+    pixels = np.concatenate([pixels[..., :3] * pixels[..., 3:], pixels[..., 3:]], axis=2)
+    measure = {c["name"]: c.get("measure", "median") for c in spec["clips"]}
+    seam, seam_to_max, spread, drift = 0.0, 0.0, 0.0, 0.0
+    for name, clip in layout["clips"].items():
+        heights = []
+        for offset in range(len(clip["directions"])):
+            y = (clip["row"] + offset) * frame
+            cells = [pixels[y:y + frame, i * frame:(i + 1) * frame] for i in range(clip["frames"])]
+            alphas = [np.asarray(atlas.crop((i * frame, y, (i + 1) * frame, y + frame)).getchannel("A"))
+                      for i in range(clip["frames"])]
+            for i, alpha in enumerate(alphas):
+                cell = atlas.crop((i * frame, y, (i + 1) * frame, y + frame))
+                inner = bbox(cell)
+                drift = max(drift, abs(torso_x(cell, inner) - layout["feet_anchor"][0]))
+            row_heights = [body_height(a) for a in alphas]
+            heights.append(row_heights[0] if measure[name] == "first" else float(np.median(row_heights)))
+            if clip["loop"] and clip["frames"] > 2:
+                steps = [np.abs(cells[i + 1] - cells[i]).mean() for i in range(clip["frames"] - 1)]
+                closing = np.abs(cells[0] - cells[-1]).mean()
+                seam = max(seam, closing / max(float(np.median(steps)), 1e-9))
+                seam_to_max = max(seam_to_max, closing / max(max(steps), 1e-9))
+        if len(heights) > 1:
+            mean = float(np.mean(heights))
+            spread = max(spread, max(abs(h / mean - 1.0) for h in heights) * 100.0)
+    return {"loop_seam_ratio": round(float(seam), 3), "loop_seam_to_max": round(float(seam_to_max), 3),
+            "height_spread_pct": round(float(spread), 2),
+            "torso_drift_px": round(float(drift), 2)}
 
 
 ## Props are packed in shelves no wider than this, with this many transparent px around each.
@@ -449,16 +598,27 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_decal(spec, master)
     elif spec["kind"] == "strip_texture":
         image, layout = build_strip(spec, master)
+    elif spec["kind"] == "anim_atlas":
+        image, layout = build_anim(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
     # The rim of characters is drawn by the scene shader (ADR-014 section 4), never baked.
     group = passport["groups"][spec["palette_group"]]
-    metrics = style_metrics(image, group["colours"], passport["threat_colour"], passport["threat_delta_e"])
+    sample = image
+    if spec["kind"] == "anim_atlas":
+        # A 256 px thumbnail of the whole atlas shrinks a figure to a few px and blurs its lights
+        # into mid tones: the passport measures the first clip (the idle), as for a sprite atlas.
+        first = min(layout["clips"].values(), key=lambda clip: clip["row"])
+        size = layout["frame_size"]
+        sample = image.crop((0, 0, size * first["frames"], size * len(first["directions"])))
+    metrics = style_metrics(sample, group["colours"], passport["threat_colour"], passport["threat_delta_e"])
+    if spec["kind"] == "anim_atlas":
+        metrics.update(anim_metrics(image, layout, spec))
     out = ASSETS / spec["group"] / name / f"{name}.png"
     out.parent.mkdir(parents=True, exist_ok=True)
     image.save(out, optimize=True)
     data = out.read_bytes()
-    if spec["kind"] == "sprite_atlas":
+    if spec["kind"] in ("sprite_atlas", "anim_atlas"):
         normal_image, normal_spec = sprite_normals(image, layout["frame_size"]), SPRITE_NORMAL
     elif spec["kind"] == "prop_atlas":
         normal_image, normal_spec = region_normals(image, [p["region"] for p in layout["props"]]), SPRITE_NORMAL
@@ -502,6 +662,15 @@ def render_card(name: str, entry: dict) -> str:
                     f"{len(layout['directions'])} направления ({', '.join(layout['directions'])}) · feet_anchor "
                     f"{layout['feet_anchor']} (якорь по x: {layout['anchor_x']}) · масштаб мастера {layout['scale']}")
         kind = "spritesheet"
+    elif entry["kind"] == "anim_atlas":
+        clips = ", ".join(f"{name} {c['frames']} к. × {len(c['directions'])} напр. @ {c['fps']} fps"
+                          for name, c in layout["clips"].items())
+        mirror = ", ".join(f"{k} ← {v}" for k, v in layout["mirror"].items())
+        geometry = (f"кадр {layout['frame_size']}×{layout['frame_size']} px · клипы: {clips} · направления "
+                    f"{', '.join(layout['directions'])}, зеркало {mirror} · feet_anchor {layout['feet_anchor']} "
+                    f"(якорь по x: {layout['anchor_x']}) · масштаб листов мастера {layout['scale'][0]}–{layout['scale'][1]} · "
+                    f"{len(spec['sheets'])} листов в мозаике мастера")
+        kind = "animated spritesheet"
     elif entry["kind"] == "prop_atlas":
         geometry = (f"атлас пропсов {entry['size'][0]}×{entry['size'][1]} px, плотность {layout['density']}: "
                     + ", ".join(f"{p['name']} {p['region'][2]}×{p['region'][3]}" for p in layout["props"]))
@@ -530,11 +699,15 @@ def render_card(name: str, entry: dict) -> str:
         f"- **Geometry:** {geometry}",
         "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены" + "; кант рисует шейдер сцены",
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
-        f"цвет угрозы {qa['threat_colour_pct']} %",
+        f"цвет угрозы {qa['threat_colour_pct']} %" + (
+            f" · шов цикла {qa['loop_seam_ratio']} медианы / {qa['loop_seam_to_max']} наибольшего шага · "
+            f"разброс высоты {qa['height_spread_pct']} % · дрейф торса {qa['torso_drift_px']} px"
+            if entry["kind"] == "anim_atlas" else ""),
         f"- **Build:** [{Path(entry['path']).name}](../../{entry['path']}) · {entry['size'][0]}×{entry['size'][1]} · "
         f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}` · нормали "
         f"[{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})",
-        "- **Decision:** approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)",
+        "- **Decision:** " + ("approved для P0 (ADR-014 A4), ракурс 30°" if entry["kind"] == "anim_atlas"
+                              else "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",
     ]

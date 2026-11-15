@@ -23,6 +23,8 @@ var hit_uids: PackedInt64Array = PackedInt64Array()
 var killed: Array[Array] = []
 var collected: Array[Array] = []
 var levels_gained: int = 0
+## Aim (world direction) of every projectile fired, one per projectile (the hero's cast).
+var casts: Array[Vector2] = []
 
 var _accumulator: float = 0.0
 var _sequence: int = 0
@@ -133,11 +135,12 @@ func gem_position_px(slot: int) -> Vector2:
 
 
 ## Returns and clears the collected events: {"hit": PackedInt64Array, "killed": Array,
-## "collected": Array, "levels": int}.
+## "collected": Array, "levels": int, "casts": Array[Vector2]}.
 func take_events() -> Dictionary:
 	var events: Dictionary = {
-		"hit": hit_uids, "killed": killed, "collected": collected, "levels": levels_gained,
+		"hit": hit_uids, "killed": killed, "collected": collected, "levels": levels_gained, "casts": casts,
 	}
+	casts = []
 	hit_uids = PackedInt64Array()
 	killed = []
 	collected = []
@@ -163,6 +166,16 @@ func _collect_events() -> void:
 			var at: Vector2 = Vector2(previous.gem_x[slot], previous.gem_y[slot]) / float(Fx.FX_ONE)
 			collected.append([at, previous.gem_value[slot]])
 	levels_gained += world.level - previous.level
+	for slot: int in world.projectile_slots():
+		if world.proj_damage[slot] == 0:
+			continue
+		var flying: bool = (
+			slot < previous.projectile_slots()
+			and previous.proj_damage[slot] != 0
+			and previous.proj_ttl[slot] == world.proj_ttl[slot] + 1
+		)
+		if not flying:
+			casts.append(Vector2(world.proj_vx[slot], world.proj_vy[slot]).normalized())
 
 
 func _record(move: Vector2i) -> void:

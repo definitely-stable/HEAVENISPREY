@@ -207,6 +207,9 @@ func test_finished_run_waits_for_the_player() -> void:
 		guard += 1
 	var runs: int = view.runs_started
 	var finished: FixedTickDriver = view.driver
+	assert_false(view.is_results_open(), "the death clip plays first")
+	for _i: int in 90:
+		view.advance_frame(TICK, Vector2i.ZERO)
 	assert_true(view.is_results_open())
 	assert_false(view.confirm_results(), "the results are not skipped by a held button")
 	for _i: int in 600:
@@ -269,3 +272,46 @@ func test_scene_reports_gem_pickups_and_levels() -> void:
 	assert_lte(picked, driver.world.xp_collected_total, "never more than was credited")
 	assert_gt(driver.world.level, 1)
 	assert_eq(levels, driver.world.level - 1, "every level gained is reported once")
+
+
+## ADR-014 A4: every fired projectile is reported once as a cast with its aim.
+func test_driver_reports_casts_once() -> void:
+	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var driver: FixedTickDriver = FixedTickDriver.create(config)
+	var casts: int = 0
+	for _i: int in 900:
+		if driver.world.is_paused():
+			driver.choose(0)
+		driver.advance(TICK, Vector2i.ZERO)
+		for aim: Vector2 in driver.take_events()["casts"]:
+			assert_almost_eq(aim.length(), 1.0, 1e-4)
+			casts += 1
+	assert_gt(casts, 0, "the auto-attack fires")
+	assert_true((driver.take_events()["casts"] as Array).is_empty(), "events are cleared when taken")
+
+
+## ADR-014 A4: the hero idles, runs while moving, attacks toward the target after a cast while
+## standing and plays the death after a defeat, holding its last frame.
+func test_hero_clips_follow_the_run() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("20261113")
+	assert_eq(view._hero_pose()[1], "idle")
+	view.advance_frame(TICK, Vector2i(1, 0))
+	assert_eq(view._hero_pose()[1], "run")
+	var attacked: bool = false
+	var guard: int = 0
+	while not view.driver.world.is_over() and guard < 4000:
+		view.advance_frame(TICK, Vector2i.ZERO)
+		if view.driver.world.is_paused():
+			view.choose(0)
+		attacked = attacked or view._hero_pose()[1] == "attack"
+		guard += 1
+	assert_true(attacked, "a standing hero swings at each cast")
+	for _i: int in 120:
+		view.advance_frame(TICK, Vector2i.ZERO)
+	var pose: Array = view._hero_pose()
+	assert_eq(pose[1], "death")
+	assert_eq(pose[3], 5, "the death holds its last frame")
