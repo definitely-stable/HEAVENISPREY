@@ -1,0 +1,17 @@
+Game VFX sprite sheet for a 2.5D isometric xianxia action game, matching the golden sword effects and crimson yin effects of the attached screenshots (first image: the battle, second: the enemy VFX row, third: the sword cultivator skills). Twelve separate glowing effects laid out as a strict grid of 4 columns x 3 rows of equal cells on a 1536 x 1024 canvas, exactly one effect centred in each cell, filling most of the cell but with a wide clear black gap to the cell edges, nothing touching and nothing crossing into another cell. Read left to right, top row first:
+1: a single flying golden spirit jian sword, horizontal, point to the RIGHT, slim straight blade of white-gold light with an ornate gold guard and short hilt, a long thin streak of golden light trailing behind it to the left.
+2: a golden hit spark: a bright white-gold star burst with four long sharp rays and several short thin rays, a tiny hot white core.
+3: a golden crescent sword slash: one wide thin curved arc of golden light, sharp at both tips, brightest along its outer edge, with fine speed streaks.
+4: a golden ritual sword circle seen from directly above: a perfectly round thin ring of golden light with a second inner ring, small engraved runes and eight tiny sword marks between the rings, empty dark centre.
+5: a small qi wisp orb: a round glowing sky-blue and white spirit flame, soft, with a tiny bright white core and a short flame tip pointing up.
+6: a small golden lotus of qi essence: a glowing golden lotus flower with a bright warm core, seen from the side, slightly above.
+7: a loose cluster of tiny golden light motes and sparks of different sizes, some like small four-point stars.
+8: a vertical pillar of golden light rising from a small bright ring on the ground, with faint rising sparks and a few thin horizontal light rings around the pillar.
+9: a crimson yin decay burst: crimson and deep red spirit flames and wisps bursting upward from a small point on the ground, with a few dark red embers, as on the attached enemy sheet.
+10: a crimson ritual circle seen from directly above: a perfectly round thin ring of crimson red light with an inner star pattern of thin red lines and small glyph marks, empty dark centre.
+11: a crimson claw slash: three thin parallel curved crimson red claw marks of light, sharp tips.
+12: a curling wisp of crimson yin smoke: a soft S-shaped ribbon of red glowing mist fading at both ends.
+
+Style: luminous hand-painted game VFX, light only: every effect is made of glowing light, flame and mist that is brightest at its core and fades smoothly to nothing at its edges, crisp bright detail at the centre, golden effects warm white-gold and amber, the qi wisp sky blue, the yin effects crimson and blood red. No characters, no weapons held by anyone, no ground, no scenery, no dark outlines.
+
+Background: perfectly flat solid pure black #000000 everywhere around and between the effects, no gradient, no vignette, no texture, no grid lines. No text, no letters, no digits, no labels, no watermark anywhere.

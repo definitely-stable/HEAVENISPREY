@@ -18,8 +18,8 @@ func test_manifest_textures_load_with_their_size() -> void:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
 	var listed: Array = []
 	for entry: Dictionary in manifest["assets"]:
-		if entry["kind"] == "ui_atlas":
-			continue  # Drawn by HudKit (test_run_hud.gd), not a scene sprite.
+		if entry["kind"] in ["ui_atlas", "vfx_atlas"]:
+			continue  # Drawn through HudKit (test_run_hud.gd, test_combat_vfx.gd), not a scene sprite.
 		listed.append(entry["asset_id"])
 		assert_true(sprites.has(entry["asset_id"]), entry["asset_id"])
 		var texture: Texture2D = sprites.texture(entry["asset_id"])

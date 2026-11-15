@@ -149,6 +149,18 @@ def key_out(image: Image.Image, key: tuple[int, int, int], low: int, high: int) 
     return out
 
 
+def key_black(image: Image.Image, floor: int) -> Image.Image:
+    """Light painted on black (an additive effect): alpha is the brightest channel above the
+    black noise `floor`, the colour is unmixed from black (c = p / a), so drawing the piece with
+    additive blending adds back exactly the painted light."""
+    rgb = np.asarray(image.convert("RGB")).astype(np.float64)
+    peak = rgb.max(axis=2)
+    alpha = np.clip((peak - floor) / (255.0 - floor), 0.0, 1.0)
+    colour = np.where(alpha[..., None] > 0.0, rgb / np.maximum(peak, 1.0)[..., None] * 255.0, 0.0)
+    out = np.dstack([np.clip(np.round(colour), 0, 255), np.round(alpha * 255.0)]).astype(np.uint8)
+    return Image.fromarray(out, "RGBA")
+
+
 def bbox(image: Image.Image, threshold: int = EDGE_ALPHA) -> tuple[int, int, int, int] | None:
     return image.getchannel("A").point(lambda a: 255 if a > threshold else 0).getbbox()
 
@@ -582,7 +594,10 @@ def feather_edges(piece: Image.Image, width: float) -> Image.Image:
 def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     """HUD kit: each generated sheet is a tile of the master mosaic, cut into a grid; the one
     shape of a cell is a piece, scaled to its on-screen height x density. A frame records its
-    inner window; a stretchable bar records the left and right caps that keep their size."""
+    inner window; a stretchable bar records the left and right caps that keep their size.
+
+    An effects atlas (vfx_atlas) is painted on black: the light is unmixed from the black
+    (key_black) and each cell is one piece, however many sparks it holds (cut "cell")."""
     sheet = spec["sheet"]
     sheets = {s["name"]: s for s in spec["sheets"]}
     keyed_sheets: dict = {}
@@ -592,14 +607,20 @@ def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         if tile["name"] not in keyed_sheets:
             x, y = tile["origin"]
             w, h = tile["size"]
-            keyed = key_out(master.crop((x, y, x + w, y + h)).convert("RGB"), hex_rgb(sheet["key_colour"]),
-                            sheet["key_low"], sheet["key_high"])
+            crop = master.crop((x, y, x + w, y + h)).convert("RGB")
+            if sheet.get("background") == "black":
+                keyed = key_black(crop, sheet["black_floor"])
+            else:
+                keyed = key_out(crop, hex_rgb(sheet["key_colour"]), sheet["key_low"], sheet["key_high"])
             solid = np.asarray(keyed.getchannel("A")) > EDGE_ALPHA
             labels, _count = ndimage.label(ndimage.binary_dilation(solid, iterations=sheet.get("join_px", 4)))
             keyed_sheets[tile["name"]] = (labels, keyed)
         labels, keyed = keyed_sheets[tile["name"]]
         cols, rows = tile["grid"]
         cell_w, cell_h = keyed.width / cols, keyed.height / rows
+        if sheet.get("cut") == "cell":
+            pieces.append((item, grade(cell_piece(spec, keyed, item, cell_w, cell_h, cols), item.get("tint")), None))
+            continue
         members = []
         for index, box in enumerate(ndimage.find_objects(labels)):
             ys, xs = box
@@ -648,6 +669,35 @@ def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
                 record["slice"] = [inner[0] + cap, piece.width - inner[0] - inner[2] + cap]
         out.append(record)
     return atlas, {"density": spec["density"], "pieces": out}
+
+
+def grade(piece: Image.Image, tint: list[float] | None) -> Image.Image:
+    """Colour grade of a piece: each channel times `tint` (the light of a generated sheet moved to
+    the hue of its reference, e.g. a lemon gold to the amber gold of REF-023); alpha unchanged."""
+    if not tint:
+        return piece
+    pixels = np.asarray(piece.convert("RGBA")).astype(np.float64)
+    pixels[..., :3] = np.clip(np.round(pixels[..., :3] * np.asarray(tint, dtype=np.float64)), 0, 255)
+    return Image.fromarray(pixels.astype(np.uint8), "RGBA")
+
+
+def cell_piece(spec: dict, keyed: Image.Image, item: dict, cell_w: float, cell_h: float, cols: int) -> Image.Image:
+    """The whole content of one grid cell (an effect of many sparks is one piece), trimmed to its
+    light and scaled to height_px x density; its bright part must not reach the cell edge."""
+    column, row = item["cell"] % cols, item["cell"] // cols
+    inset = spec["sheet"].get("cell_inset_px", 6)
+    box = (round(column * cell_w) + inset, round(row * cell_h) + inset,
+           round((column + 1) * cell_w) - inset, round((row + 1) * cell_h) - inset)
+    cell = keyed.crop(box)
+    trim = bbox(cell)
+    if trim is None:
+        raise ValueError(f"{spec['asset_id']}: {item['name']} cell {item['cell']} is empty")
+    bright = bbox(cell, spec["sheet"].get("edge_alpha", 96))
+    if bright is not None and (bright[0] == 0 or bright[1] == 0 or bright[2] == cell.width or bright[3] == cell.height):
+        raise ValueError(f"{spec['asset_id']}: {item['name']} runs into the edge of its cell")
+    piece = cell.crop(trim)
+    scale = item["height_px"] * spec["density"] / piece.height
+    return resize_premultiplied(piece, (max(1, round(piece.width * scale)), max(1, round(piece.height * scale))))
 
 
 def build_decal(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
@@ -720,7 +770,7 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_strip(spec, master)
     elif spec["kind"] == "anim_atlas":
         image, layout = build_anim(spec, master)
-    elif spec["kind"] == "ui_atlas":
+    elif spec["kind"] in ("ui_atlas", "vfx_atlas"):
         image, layout = build_ui(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
@@ -748,8 +798,8 @@ def build(name: str, passport: dict) -> dict:
         normal_image, normal_spec = decal_normals(image), FLOOR_NORMAL
     elif spec["kind"] == "strip_texture":
         normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
-    elif spec["kind"] == "ui_atlas":
-        # Drawn over the scene, unlit: no normal map.
+    elif spec["kind"] in ("ui_atlas", "vfx_atlas"):
+        # Drawn over the scene, unlit (the HUD) or added as light (effects): no normal map.
         normal_image, normal_spec = None, None
     else:
         normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
@@ -811,6 +861,10 @@ def render_card(name: str, entry: dict) -> str:
                     + ", ".join(f"{p['name']} {p['region'][2]}×{p['region'][3]}" + (" (растяжимая)" if "slice" in p else "")
                                 for p in layout["pieces"]))
         kind = "HUD kit (экранный слой, без освещения)"
+    elif entry["kind"] == "vfx_atlas":
+        geometry = (f"атлас эффектов {entry['size'][0]}×{entry['size'][1]} px, плотность {layout['density']}: "
+                    + ", ".join(f"{p['name']} {p['region'][2]}×{p['region'][3]}" for p in layout["pieces"]))
+        kind = "VFX (свет, аддитивное смешение, без освещения сцены)"
     elif entry["kind"] == "strip_texture":
         geometry = f"полоса {layout['texture_size'][0]}×{layout['texture_size'][1]} px, повтор по горизонтали, {layout['world_px']} px мира"
         kind = "wall strip"
@@ -830,9 +884,11 @@ def render_card(name: str, entry: dict) -> str:
         f"- **Generation:** {gen['capability']} · {gen['tool_version']} · prompt sha256 `{gen['prompt_sha256'][:16]}` "
         f"([prompt.txt](prompt.txt)) · {gen['created']} · мастер [{spec['master']}]({spec['master']}) `{entry['source']['sha256'][:12]}`",
         f"- **Geometry:** {geometry}",
-        "- **Rules:** " + ("без запечённых свечения, теней и текста; фон снят хромакеем; рисуется поверх сцены без света и нормалей"
-                           if entry["kind"] == "ui_atlas" else
-                           "без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены"),
+        "- **Rules:** " + {
+            "ui_atlas": "без запечённых свечения, теней и текста; фон снят хромакеем; рисуется поверх сцены без света и нормалей",
+            "vfx_atlas": "только свет: нарисован на чёрном, альфа — яркость над чёрным, цвет отделён от чёрного; "
+                         "рисуется аддитивно, без нормалей и света сцены; без текста",
+        }.get(entry["kind"], "без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены"),
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
         f"цвет угрозы {qa['threat_colour_pct']} %" + (
             f" · шов цикла {qa['loop_seam_ratio']} медианы / {qa['loop_seam_to_max']} наибольшего шага · "
@@ -843,7 +899,8 @@ def render_card(name: str, entry: dict) -> str:
             f"нормали [{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})"
             if entry["normal"] else "без нормалей"),
         "- **Decision:** " + {"anim_atlas": "approved для P0 (ADR-014 A4, A5), ракурс 30°",
-                              "ui_atlas": "approved для P0 (ADR-014 §15–16: HUD по REF-022, меню выбора по REF-011)"}.get(
+                              "ui_atlas": "approved для P0 (ADR-014 §15–16: HUD по REF-022, меню выбора по REF-011)",
+                              "vfx_atlas": "approved для P0 (ADR-014 §18, A6: эффекты боя по REF-023, REF-035, REF-010)"}.get(
             entry["kind"], "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",

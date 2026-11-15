@@ -1275,6 +1275,153 @@
         "threat_colour_pct": 0.055,
         "median_l": 46.4
       }
+    },
+    {
+      "asset_id": "asset.vfx.combat",
+      "kind": "vfx_atlas",
+      "path": "game/assets/vfx/combat/combat.png",
+      "sha256": "61f6b7b140af04afaed2b340ab1b2fc6d1a8befc089cf96407a4287611782872",
+      "bytes": 357666,
+      "size": [
+        818,
+        508
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [],
+      "layout": {
+        "density": 2,
+        "pieces": [
+          {
+            "name": "sword",
+            "region": [
+              2,
+              2,
+              121,
+              24
+            ]
+          },
+          {
+            "name": "spark",
+            "region": [
+              127,
+              2,
+              83,
+              80
+            ]
+          },
+          {
+            "name": "slash",
+            "region": [
+              214,
+              2,
+              129,
+              100
+            ]
+          },
+          {
+            "name": "sword_circle",
+            "region": [
+              347,
+              2,
+              239,
+              240
+            ]
+          },
+          {
+            "name": "qi_wisp",
+            "region": [
+              590,
+              2,
+              36,
+              48
+            ]
+          },
+          {
+            "name": "qi_lotus",
+            "region": [
+              630,
+              2,
+              76,
+              48
+            ]
+          },
+          {
+            "name": "motes",
+            "region": [
+              710,
+              2,
+              103,
+              96
+            ]
+          },
+          {
+            "name": "light_pillar",
+            "region": [
+              2,
+              246,
+              219,
+              260
+            ]
+          },
+          {
+            "name": "yin_burst",
+            "region": [
+              225,
+              246,
+              140,
+              140
+            ]
+          },
+          {
+            "name": "yin_circle",
+            "region": [
+              369,
+              246,
+              246,
+              240
+            ]
+          },
+          {
+            "name": "yin_claw",
+            "region": [
+              619,
+              246,
+              94,
+              88
+            ]
+          },
+          {
+            "name": "yin_smoke",
+            "region": [
+              717,
+              246,
+              99,
+              120
+            ]
+          }
+        ]
+      },
+      "normal": null,
+      "source": {
+        "path": "art_source/combat/master.webp",
+        "sha256": "782af28c9f33950139abd1aff0246461db777068e950caf96de085bdbdf13c87",
+        "bytes": 103288,
+        "prompt_sha256": "6f2a9d4260da55186fd704e4e043e04fa9f0d04f43864e7893aa2e79dd923add"
+      },
+      "qa": {
+        "palette_group": "vfx",
+        "opaque_px": 1638,
+        "palette_mean_delta_e": 11.14,
+        "tones_pct": [
+          2.0,
+          12.0,
+          86.0
+        ],
+        "chroma": 0.506,
+        "threat_colour_pct": 6.166,
+        "median_l": 199.8
+      }
     }
   ]
 }

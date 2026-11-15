@@ -28,11 +28,9 @@ const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
 const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
 const HIT_FLASH: float = 0.15
 const ENEMY_HIT_FLASH: float = 0.1
-const PUFF_TIME: float = 0.35
 ## Seconds a collected gem flies to the hero (6 frames at 60 fps), then its "+N" floats.
 const PICKUP_FLY: float = 0.1
 const PICKUP_TEXT: float = 0.6
-const LEVEL_RING: float = 0.6
 ## After a defeat the results open once the hero's death clip has played and this long more (s).
 const DEATH_BEAT: float = 0.5
 
@@ -44,6 +42,8 @@ const COLOR_HP_BACK: Color = Color(0.0, 0.0, 0.0, 0.6)
 const COLOR_HP: Color = Color(0.85, 0.2, 0.2)
 const COLOR_OVER: Color = Color(0.0, 0.0, 0.0, 0.55)
 const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
+## A fallen enemy darkens to this crimson as it decays.
+const COLOR_DECAY: Color = Color(0.45, 0.04, 0.06)
 ## Spirit sword (metal element) projectile.
 const COLOR_SWORD: Color = Color(0.78, 0.92, 1.0)
 const COLOR_SWORD_GLOW: Color = Color(0.45, 0.62, 0.8, 0.9)
@@ -86,6 +86,7 @@ const GEM_LIFT_PX: float = 7.0
 const GEM_BOB_PX: float = 2.0
 const GEM_BOB_HZ: float = 0.8
 const GEM_REST_SCALE: float = 0.8
+const GEM_REST_ALPHA: float = 0.7
 const GEM_NEAR_RADII: float = 2.0
 ## Rim on the moon side of upright sprites (shaders/sprite_rim.gdshader): cold and thin for
 ## enemies, warm and brighter for the hero.
@@ -124,12 +125,12 @@ var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
 ## Enemy uid -> seconds of hit flash left.
 var _enemy_flash: Dictionary = {}
-## Death puffs: [position px, kind, age seconds].
-var _puffs: Array[Array] = []
 ## Gem pickups in flight: [from px, value, age seconds].
 var _pickups: Array[Array] = []
-## Seconds left of the level-up ring.
-var _level_ring: float = 0.0
+## Combat effects (ADR-014 section 18, A6).
+var _vfx: CombatVfx
+## Pose of each enemy drawn in the last frame by uid: an enemy killed next frame decays in it.
+var _body_poses: Dictionary = {}
 ## Screen-space layer for the HUD (not moved by the camera).
 var _hud: RunHud
 var _menu: ChoiceMenu
@@ -196,6 +197,7 @@ func _ready() -> void:
 	_results = RunResults.new()
 	_results.theme = theme
 	layer.add_child(_results)
+	_vfx = CombatVfx.load_default(_hud.kit.font)
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
 	start_run(str(randi()))
@@ -320,9 +322,10 @@ func start_run(seed_text: String) -> void:
 	if _results != null:
 		_results.close()
 	_enemy_flash.clear()
-	_puffs.clear()
 	_pickups.clear()
-	_level_ring = 0.0
+	_body_poses.clear()
+	if _vfx != null:
+		_vfx.clear()
 	_camera.position = camera_target()
 	_camera.reset_smoothing()
 	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
@@ -374,12 +377,9 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	var events: Dictionary = driver.take_events()
 	for uid: int in events["hit"]:
 		_enemy_flash[uid] = ENEMY_HIT_FLASH
-	for kill: Array in events["killed"]:
-		_puffs.append([kill[0], kill[1], 0.0])
 	for gem: Array in events["collected"]:
 		_pickups.append([gem[0], gem[1], 0.0])
-	if int(events["levels"]) > 0:
-		_level_ring = LEVEL_RING
+	_add_effects(events)
 	_flash = maxf(_flash - delta, 0.0)
 	_flash_rest = maxf(_flash_rest - delta, 0.0)
 	if driver.world.hero_hp < hp_before and _flash <= 0.0 and _flash_rest <= 0.0:
@@ -442,6 +442,7 @@ func _sync_menu() -> void:
 func _draw() -> void:
 	_queue_layers()
 	_draw_gems()
+	_draw_decay()
 	_draw_bodies()
 	_draw_projectiles()
 
@@ -452,6 +453,21 @@ func _queue_layers() -> void:
 			item.queue_redraw()
 
 
+## Effects of this frame's events: a spark and a number for every blow, decay where an enemy
+## fell, the sword circle of a cast and the pillar of a level.
+func _add_effects(events: Dictionary) -> void:
+	if _vfx == null:
+		return
+	for strike: Array in events["strikes"]:
+		_vfx.add_strike(strike[0], strike[1], strike[2], strike[3])
+	for kill: Array in events["killed"]:
+		_vfx.add_death(kill[0], _body_poses.get(kill[2], ["", "", "", 0]))
+	if not (events["casts"] as Array).is_empty():
+		_vfx.add_cast(driver.hero_position_px())
+	if int(events["levels"]) > 0:
+		_vfx.level_up(driver.hero_position_px())
+
+
 func _age_effects(delta: float) -> void:
 	for uid: Variant in _enemy_flash.keys():
 		var left: float = _enemy_flash[uid] - delta
@@ -459,13 +475,11 @@ func _age_effects(delta: float) -> void:
 			_enemy_flash.erase(uid)
 		else:
 			_enemy_flash[uid] = left
-	for puff: Array in _puffs:
-		puff[2] += delta
-	_puffs = _puffs.filter(func(puff: Array) -> bool: return puff[2] < PUFF_TIME)
 	for pickup: Array in _pickups:
 		pickup[2] += delta
 	_pickups = _pickups.filter(func(pickup: Array) -> bool: return pickup[2] < PICKUP_FLY + PICKUP_TEXT)
-	_level_ring = maxf(_level_ring - delta, 0.0)
+	if _vfx != null:
+		_vfx.age(delta)
 
 
 ## Enemies face the hero on screen; each axis turns with a deadband so a horde does not flicker.
@@ -627,7 +641,6 @@ func _contact(canvas: Node2D, at: Vector2, radius: float) -> void:
 
 func _draw_danger_pass() -> void:
 	_danger.draw_set_transform_matrix(IsoProjection.ground())
-	_draw_puffs(_danger)
 	for slot: int in driver.world.zone_slots():
 		var zone: Dictionary = AttackTelegraph.zone_shape(driver.config, driver.world, slot)
 		if not zone.is_empty():
@@ -641,26 +654,9 @@ func _draw_danger_pass() -> void:
 		_danger.draw_colored_polygon(GroundLayer.outline(Vector2(ARENA_CELLS * CELL_PX), CELL_PX), COLOR_OVER)
 
 
-## Death puffs spread on the ground.
-func _draw_puffs(canvas: CanvasItem) -> void:
-	for puff: Array in _puffs:
-		var share: float = puff[2] / PUFF_TIME
-		var radius: float = _kind_radius_px(puff[1]) * (1.0 + share)
-		var color: Color = _enemy_color(puff[1])
-		color.a = 1.0 - share
-		canvas.draw_circle(puff[0], radius, color, false, 3.0)
-		color.a *= 0.35
-		canvas.draw_circle(puff[0], radius * 0.6, color)
-
-
-## The level-up ring and the root ring lie on the ground around the hero.
+## The root ring lies on the ground around the hero.
 func _draw_ground_rings(canvas: CanvasItem) -> void:
 	var hero: Vector2 = driver.hero_position_px()
-	if _level_ring > 0.0:
-		var share: float = 1.0 - _level_ring / LEVEL_RING
-		var ring: Color = COLOR_GEM
-		ring.a = 1.0 - share
-		canvas.draw_circle(hero, HERO_RADIUS_PX * (1.2 + 1.6 * share), ring, false, 3.0)
 	if driver.world.root_left > 0:
 		canvas.draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
 
@@ -671,6 +667,7 @@ func _draw_ground_rings(canvas: CanvasItem) -> void:
 ## the one behind it; the hero is drawn over all of them on its own item (PLAYABILITY G3).
 func _draw_bodies() -> void:
 	var world: WorldState = driver.world
+	_body_poses.clear()
 	var order: Array[Vector2i] = []
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
@@ -693,6 +690,7 @@ func _draw_enemy(slot: int) -> void:
 	var at: Vector2 = IsoProjection.to_screen(feet)
 	var light: Color = _light_at(feet)
 	var pose: Array = _frame_pose(slot)
+	_body_poses[uid] = pose
 	if pose[0] != "":
 		var tint: Color = TINT_ENEMY_HIT if _enemy_flash.has(uid) else light
 		if _draw_pose(self, pose, at, tint):
@@ -712,9 +710,26 @@ func _draw_prop(prop: Dictionary) -> void:
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 
 
+## An enemy that just fell decays where it stood: its last pose sinks a little, darkens to the
+## crimson of the yin burst and fades (REF-010 "decay"); the burst itself is light (glow item).
+func _draw_decay() -> void:
+	if _vfx == null:
+		return
+	for death: Array in _vfx.deaths:
+		var pose: Array = death[2]
+		if pose[0] == "":
+			continue
+		var t: float = CombatVfx.share(death[1], CombatVfx.DEATH_TIME * 0.7)
+		var tint: Color = _light_at(death[0]).lerp(COLOR_DECAY, minf(t * 2.0, 1.0))
+		tint.a = 1.0 - t
+		_draw_pose(self, pose, IsoProjection.to_screen(death[0]) + Vector2(0.0, 6.0 * t), tint)
+
+
 ## Hero projectiles fly above their ground point (their shadow dot marks it), blade along the
-## projected heading.
+## projected heading; with the effects atlas the sword is light and is drawn on the glow item.
 func _draw_projectiles() -> void:
+	if _vfx != null and _vfx.kit.has("sword"):
+		return
 	var world: WorldState = driver.world
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
 	for slot: int in world.projectile_slots():
@@ -732,6 +747,8 @@ func _projectile_heading(slot: int) -> Vector2:
 
 
 func _draw_gems() -> void:
+	if _vfx != null and _vfx.kit.has("qi_wisp"):
+		return
 	var world: WorldState = driver.world
 	var hero: Vector2 = driver.hero_position_px()
 	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
@@ -822,18 +839,30 @@ func _draw_over_pass() -> void:
 			continue
 		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
 		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, COLOR_WISP)
-	var font: Font = ThemeDB.fallback_font
+	var font: Font = _hud.kit.font if _hud != null and _hud.kit != null else ThemeDB.fallback_font
+	var gem_light: bool = _vfx != null and _vfx.kit.has("qi_wisp")
 	for pickup: Array in _pickups:
 		var age: float = pickup[2]
 		if age < PICKUP_FLY:
-			var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, GEM_LIFT_PX)
-			_draw_gem(canvas, from.lerp(hero - Vector2(0, GEM_LIFT_PX), age / PICKUP_FLY), pickup[1], 1.0, GEM_REST_SCALE)
+			if not gem_light:
+				_draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0, GEM_REST_SCALE)
 			continue
 		var fade: float = (age - PICKUP_FLY) / PICKUP_TEXT
 		var color: Color = COLOR_GEM
 		color.a = 1.0 - fade
 		var at: Vector2 = hero + Vector2(HERO_RADIUS_PX * 0.6, -_hero_height() - 6 - 24 * fade)
+		canvas.draw_string_outline(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, 3,
+			Color(0.02, 0.06, 0.08, 0.8 * color.a))
 		canvas.draw_string(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
+	if _vfx != null:
+		_vfx.draw_numbers(canvas)
+
+
+## Where a collected gem is on its short flight to the hero (screen px).
+func _pickup_flight(pickup: Array) -> Vector2:
+	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px()) - Vector2(0, GEM_LIFT_PX)
+	var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, GEM_LIFT_PX)
+	return from.lerp(hero, clampf(pickup[2] / PICKUP_FLY, 0.0, 1.0))
 
 
 # --- glow item (additive): flames, blades and trails, wisps, gems near the hero ---
@@ -844,11 +873,17 @@ func _draw_glow_pass() -> void:
 	for flame: Vector2 in _flames:
 		_halo(canvas, flame, 26.0, COLOR_LANTERN_GLOW)
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
+	var light: bool = _vfx != null and _vfx.kit.has("sword")
+	if light:
+		_draw_vfx_light(canvas)
 	for slot: int in world.projectile_slots():
 		if world.proj_damage[slot] == 0:
 			continue
 		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
 		var heading: Vector2 = _projectile_heading(slot)
+		if light:
+			_vfx.draw_sword(canvas, at, heading)
+			continue
 		canvas.draw_line(at - heading * radius * 6.0, at, COLOR_SWORD_TRAIL, radius * 0.9)
 		_halo(canvas, at, radius * 2.6, COLOR_SWORD_GLOW)
 	for slot: int in world.shot_slots():
@@ -861,6 +896,27 @@ func _draw_glow_pass() -> void:
 		if world.gem_uid[slot] != 0 and driver.gem_position_px(slot).distance_to(hero) <= near_px:
 			var at: Vector2 = IsoProjection.to_screen(driver.gem_position_px(slot)) - Vector2(0, GEM_LIFT_PX)
 			_halo(canvas, at, 14.0, COLOR_GEM_GLOW)
+
+
+## Effects light of the atlas: bursts and circles, the gems (a qi wisp brighter near the hero, as
+## it is about to be drawn in) and the gems flying in.
+func _draw_vfx_light(canvas: Node2D) -> void:
+	_vfx.draw_light(canvas)
+	var world: WorldState = driver.world
+	var hero: Vector2 = driver.hero_position_px()
+	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
+	for slot: int in world.gem_slots():
+		var uid: int = world.gem_uid[slot]
+		if uid == 0:
+			continue
+		var ground: Vector2 = driver.gem_position_px(slot)
+		var bob: float = sin(_anim_time * GEM_BOB_HZ * TAU + float(uid)) * GEM_BOB_PX
+		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, GEM_LIFT_PX + bob)
+		var near: bool = ground.distance_to(hero) <= near_px
+		_vfx.draw_gem(canvas, at, world.gem_value[slot], 1.0 if near else GEM_REST_ALPHA, 1.0 if near else GEM_REST_SCALE)
+	for pickup: Array in _pickups:
+		if pickup[2] < PICKUP_FLY:
+			_vfx.draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0)
 
 
 func _halo(canvas: Node2D, at: Vector2, radius: float, color: Color) -> void:

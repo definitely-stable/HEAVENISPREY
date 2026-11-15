@@ -82,6 +82,23 @@
         "#eacdb5"
       ],
       "max_palette_delta_e": 16
+    },
+    "vfx": {
+      "colours": [
+        "#ffa16d",
+        "#ffd39b",
+        "#ffa054",
+        "#ffc371",
+        "#ff182a",
+        "#ff3d50",
+        "#ff6264",
+        "#feeac7",
+        "#ff3933",
+        "#ff6f83",
+        "#ff833e",
+        "#9387ff"
+      ],
+      "max_palette_delta_e": 16
     }
   }
 }
