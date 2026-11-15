@@ -14,8 +14,9 @@ extends Node2D
 ## Isometric view (ADR-014 section 1): ground things are drawn in world px under
 ## IsoProjection.ground(), upright things at their projected feet; movement keys are read in
 ## screen axes. Light and shadow (ADR-014 sections 4-5), back to front:
-## - GroundLayer (canvas layer -2, mist on -3): the lit courtyard floor, the seal, the cliff
-##   faces, the lights of the dressing props and the hero aura;
+## - GroundLayer (canvas layer -2; sky, distant spires and mist on -3): the lit paving of the
+##   terrace, the seal, the cliff faces with waterfalls, the lights of the dressing props and
+##   the hero aura;
 ## - canvas layer -1: every shadow in one CanvasGroup composited once, then the unlit danger
 ##   marks (zones, telegraphs, puffs, rings) at their exact colours (PLAYABILITY G3);
 ## - this node: gems, enemies and the courtyard props (ArenaDressing) by depth, projectiles, lit by
@@ -68,6 +69,7 @@ const HERO_ASSET: String = "asset.char.hero_sword"
 const FLOOR_ASSET: String = "asset.tile.sect_courtyard_floor"
 const SEAL_ASSET: String = "asset.tile.sect_seal"
 const CLIFF_ASSET: String = "asset.tile.sect_cliff"
+const WORN_FLOOR_ASSET: String = "asset.tile.sect_courtyard_floor_worn"
 ## Enemy content id -> sprite asset_id; kinds not listed keep their circles.
 const ENEMY_ASSETS: Dictionary = {
 	"enemy.yin_corpse": "asset.enemy.yin_corpse",
@@ -145,7 +147,8 @@ var _flash_rest: float = 0.0
 var _halo_texture: Texture2D = GroundLayer._radial_texture(64)
 var _disc_texture: Texture2D = _make_disc_texture(32)
 var _ground: GroundLayer
-## Courtyard props (ArenaDressing.placements) and the ground points of the lit ones.
+## Courtyard props (ArenaDressing.placements, plus their cached screen point, depth key and
+## fixed light: they never move) and the ground points of the lit ones.
 var _props: Array[Dictionary] = []
 var _lanterns: Array[Vector2] = []
 var _flames: Array[Vector2] = []
@@ -193,7 +196,14 @@ func _build_layers() -> void:
 	for point: Dictionary in light_points:
 		_lanterns.append(point["at"])
 		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
-	_ground = GroundLayer.new(_sprites, FLOOR_ASSET, arena, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET)
+	for index: int in _props.size():
+		var prop: Dictionary = _props[index]
+		prop["screen"] = IsoProjection.to_screen(prop["at"])
+		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
+		prop["fixed_light"] = RunLighting.fixed_light(prop["at"], _lanterns)
+	_ground = GroundLayer.new(
+		_sprites, FLOOR_ASSET, arena, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
+		ArenaDressing.backdrop(_sprites))
 	add_child(_ground)
 	var under: CanvasLayer = CanvasLayer.new()
 	under.layer = -1
@@ -297,6 +307,7 @@ func start_run(seed_text: String) -> void:
 	_level_ring = 0.0
 	_camera.position = camera_target()
 	_camera.reset_smoothing()
+	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
 	_sync_menu()
 	queue_redraw()
 
@@ -358,8 +369,8 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	if _hero_moving:
 		_facing = Vector2(move).normalized()
 	_update_facing()
-	_ground.follow(driver.hero_position_px())
 	_camera.position = camera_target()
+	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
 	_sync_menu()
 	if driver.world.is_over():
 		_show_results()
@@ -481,7 +492,7 @@ func _draw_shadow_pass() -> void:
 			_cast_shadow(canvas, _enemy_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(prop["at"])))
+		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
 		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 	for slot: int in world.enemy_slots():
@@ -528,9 +539,7 @@ func _draw_danger_pass() -> void:
 			AttackTelegraph.draw(_danger, telegraph, driver.enemy_position_px(slot))
 	_draw_ground_rings(_danger)
 	if driver.world.is_over():
-		var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
-		var apron: float = GroundLayer.APRON_CELLS * CELL_PX
-		_danger.draw_rect(Rect2(-Vector2.ONE * apron, arena + Vector2.ONE * apron * 2.0), COLOR_OVER)
+		_danger.draw_colored_polygon(GroundLayer.outline(Vector2(ARENA_CELLS * CELL_PX), CELL_PX), COLOR_OVER)
 
 
 ## Death puffs spread on the ground.
@@ -567,8 +576,8 @@ func _draw_bodies() -> void:
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
-	for index: int in _props.size():
-		order.append(Vector2i(roundi(IsoProjection.depth(_props[index]["at"]) * 16.0), -1 - index))
+	for prop: Dictionary in _props:
+		order.append(prop["order"])
 	order.sort()
 	for key: Vector2i in order:
 		if key.y < 0:
@@ -600,8 +609,8 @@ func _draw_enemy(slot: int) -> void:
 
 ## A courtyard prop at its base, lit like an upright body standing there.
 func _draw_prop(prop: Dictionary) -> void:
-	var feet: Vector2 = prop["at"]
-	_sprites.draw_prop(self, prop["asset"], prop["prop"], IsoProjection.to_screen(feet), _light_at(feet), prop["flip"])
+	var light: Color = RunLighting.with_aura(prop["fixed_light"], prop["at"], driver.hero_position_px())
+	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 
 
 ## Hero projectiles fly above their ground point (their shadow dot marks it), blade along the

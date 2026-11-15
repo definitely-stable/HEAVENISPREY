@@ -559,6 +559,107 @@
       }
     },
     {
+      "asset_id": "asset.prop.distant_peaks",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/distant_peaks/distant_peaks.png",
+      "sha256": "6980035735ed672fd894d0c454ed1e1a273dbc1eaf40e1f91954c7ad8c255fd1",
+      "bytes": 622135,
+      "size": [
+        803,
+        472
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 1,
+        "props": [
+          {
+            "name": "spire",
+            "region": [
+              6,
+              6,
+              123,
+              440
+            ],
+            "feet": [
+              70.0,
+              424.5
+            ]
+          },
+          {
+            "name": "pagoda_rock",
+            "region": [
+              141,
+              6,
+              218,
+              460
+            ],
+            "feet": [
+              229.5,
+              429.8
+            ]
+          },
+          {
+            "name": "waterfall_rock",
+            "region": [
+              371,
+              6,
+              191,
+              440
+            ],
+            "feet": [
+              462.0,
+              401.0
+            ]
+          },
+          {
+            "name": "gate_rock",
+            "region": [
+              574,
+              6,
+              223,
+              450
+            ],
+            "feet": [
+              682.5,
+              413.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/distant_peaks/distant_peaks_n.png",
+        "sha256": "3923396eabd6d41945c6dc8e0520e6ddc076ef4b744681c55fcd947eae97596b",
+        "bytes": 167693,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/distant_peaks/master.webp",
+        "sha256": "6270ee1682bb673b1138d162bea38f139177fabf72dc7f9b375bcbe302c8f1d6",
+        "bytes": 1608206,
+        "prompt_sha256": "0f39b293048be9c7fb86c3e324d6f3722f7ab170367ed4b2e4859f8b3aac425a"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 22406,
+        "palette_mean_delta_e": 12.71,
+        "tones_pct": [
+          84.0,
+          15.7,
+          0.3
+        ],
+        "chroma": 0.112,
+        "threat_colour_pct": 0.669,
+        "median_l": 58.2
+      }
+    },
+    {
       "asset_id": "asset.tile.sect_cliff",
       "kind": "strip_texture",
       "path": "game/assets/tiles/sect_cliff/sect_cliff.png",
@@ -654,6 +755,54 @@
         "chroma": 0.09,
         "threat_colour_pct": 0.0,
         "median_l": 97.1
+      }
+    },
+    {
+      "asset_id": "asset.tile.sect_courtyard_floor_worn",
+      "kind": "floor_texture",
+      "path": "game/assets/tiles/sect_courtyard_floor_worn/sect_courtyard_floor_worn.png",
+      "sha256": "ecee1e21d2b38d68250ad3371e4eab89668bf70380c65d67ac61c8ac9c05e6f8",
+      "bytes": 1947262,
+      "size": [
+        1024,
+        1024
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "texture_px": 1024,
+        "cells": 10,
+        "tone_gain": 1.0
+      },
+      "normal": {
+        "path": "game/assets/tiles/sect_courtyard_floor_worn/sect_courtyard_floor_worn_n.png",
+        "sha256": "3036ec9a81adf6c13fc04c19d60fee747aa6aefbfccfdfbe47f14a9cdd62a079",
+        "bytes": 2324854,
+        "method": "luminance_sobel",
+        "blur_px": 1.0,
+        "strength": 6.0
+      },
+      "source": {
+        "path": "art_source/sect_courtyard_floor_worn/master.webp",
+        "sha256": "d3280b6244b031d68e33794bfacd60963d892e176a3419978a9a466389192bf1",
+        "bytes": 2263048,
+        "prompt_sha256": "fee665fec3cbb9217f46d84ab4e3f202b25207af5dd878b0062ef79c0f5b594b"
+      },
+      "qa": {
+        "palette_group": "environment",
+        "opaque_px": 65536,
+        "palette_mean_delta_e": 9.37,
+        "tones_pct": [
+          27.2,
+          72.8,
+          0.0
+        ],
+        "chroma": 0.107,
+        "threat_colour_pct": 0.0,
+        "median_l": 91.4
       }
     },
     {

@@ -7,7 +7,8 @@ const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
 	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
 	"asset.prop.courtyard_lights", "asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
-	"asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor", "asset.tile.sect_seal",
+	"asset.prop.distant_peaks", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
+	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
 
@@ -45,6 +46,7 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	for asset_id: String in [
 		"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
 		"asset.prop.courtyard_lights", "asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
+		"asset.prop.distant_peaks",
 	]:
 		assert_eq(sprites.canvas_texture(asset_id), shared, asset_id)
 		var origin: Vector2 = sprites.atlas_origin(asset_id)
@@ -68,6 +70,8 @@ func test_frame_regions_follow_the_layout() -> void:
 	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "down", 0), Rect2(), "no such direction")
 	assert_eq(sprites.frame_region("asset.enemy.unknown", "left", 0), Rect2())
 	assert_eq(sprites.floor_repeat_px(FLOOR, 48), 384.0)
+	assert_eq(sprites.floor_repeat_px("asset.tile.sect_courtyard_floor_worn", 48), 480.0,
+		"the worn paving repeats with another period")
 
 
 func test_direction_and_walk_frame() -> void:
@@ -113,6 +117,26 @@ func test_props_are_named_regions_drawn_from_their_base() -> void:
 	var canvas: Node2D = Node2D.new()
 	add_child_autofree(canvas)
 	assert_false(sprites.draw_prop(canvas, lights, "gate", Vector2(10, 10), Color.WHITE), "nothing to draw")
+
+
+## ADR-014 A3 polish: a prop as a quad for draw_polygon (the distant scenery fades at its base).
+func test_prop_quad_follows_scale_and_flip() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var peaks: String = "asset.prop.distant_peaks"
+	assert_eq(sprites.prop_names(peaks), PackedStringArray(["spire", "pagoda_rock", "waterfall_rock", "gate_rock"]))
+	var size: Vector2 = sprites.prop_size(peaks, "spire")
+	var quad: Dictionary = sprites.prop_quad(peaks, "spire", Vector2(100, 200), 0.5)
+	var rect: Rect2 = quad["rect"]
+	assert_almost_eq(rect.size, size * 0.5, Vector2(0.01, 0.01), "half size")
+	assert_between(100.0, rect.position.x, rect.end.x, "the base centre lies under the quad")
+	assert_almost_eq(rect.end.y, 200.0, size.y * 0.5 * 0.2, "the base is at its foot")
+	var uv: Rect2 = quad["uv"]
+	assert_true(uv.position.x >= 0.0 and uv.end.x <= 1.0 and uv.position.y >= 0.0 and uv.end.y <= 1.0, "normalised")
+	assert_eq(quad["texture"], sprites.canvas_texture(peaks))
+	var mirrored: Rect2 = sprites.prop_quad(peaks, "spire", Vector2(100, 200), 0.5, true)["uv"]
+	assert_almost_eq(mirrored.position.x, uv.end.x, 1e-6, "mirrored: u runs right to left")
+	assert_almost_eq(mirrored.end.x, uv.position.x, 1e-6)
+	assert_true(sprites.prop_quad(peaks, "gate", Vector2.ZERO).is_empty())
 
 
 func test_floor_decal_and_strip_spans() -> void:

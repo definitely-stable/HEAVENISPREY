@@ -1,5 +1,5 @@
 extends GutTest
-## ADR-014 slice A3: the courtyard props around the P0 arena. Presentation only.
+## ADR-014 slice A3 and A3 polish: the courtyard props around the P0 arena. Presentation only.
 
 const CELL: int = 48
 const ARENA_CELLS: Vector2i = Vector2i(32, 20)
@@ -15,6 +15,24 @@ func test_props_stand_outside_the_walkable_field() -> void:
 	assert_gt(items.size(), ArenaDressing.FIXED.size(), "fixed props and balustrades")
 	for item: Dictionary in items:
 		assert_false(field.grow(-1.0).has_point(item["at"]), "%s at %s" % [item["prop"], item["at"]])
+
+
+## A3 polish: nothing floats over the mist. Every base stands on the terrace; only the stairs
+## leave it, and they start within three cells of its edge.
+func test_props_stand_on_the_terrace() -> void:
+	var arena: Vector2 = Vector2(ARENA_CELLS * CELL)
+	var outline: PackedVector2Array = GroundLayer.outline(arena, CELL)
+	var stairs: int = 0
+	for item: Dictionary in _items():
+		var at: Vector2 = item["at"]
+		if item["prop"] == ArenaDressing.STAIRS_PROP:
+			stairs += 1
+			assert_false(Geometry2D.is_point_in_polygon(at, outline), "the stairs hang on the cliff")
+			var edge: float = arena.y + GroundLayer.NEAR_APRON_CELLS * CELL
+			assert_between(at.y, edge, edge + 3.0 * CELL)
+			continue
+		assert_true(Geometry2D.is_point_in_polygon(at, outline), "%s at %s" % [item["prop"], at / CELL])
+	assert_eq(stairs, 1)
 
 
 func test_every_fixed_prop_exists_in_its_atlas() -> void:
@@ -48,5 +66,21 @@ func test_lights_come_from_lantern_props_with_their_flame_height() -> void:
 		assert_gt(light["flame"], 20.0)
 
 
+## A3 polish: the distant scenery is listed far to near and comes from its own atlas.
+func test_backdrop_is_sorted_far_to_near() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var items: Array[Dictionary] = ArenaDressing.backdrop(sprites)
+	assert_eq(items.size(), ArenaDressing.BACKDROP.size())
+	var last: float = -INF
+	for item: Dictionary in items:
+		assert_true(sprites.has_prop(item["asset"], item["prop"]), item["prop"])
+		assert_eq(item["asset"], ArenaDressing.PEAKS_ASSET)
+		assert_gte(item["at"].y, last, "drawn back to front")
+		last = item["at"].y
+		assert_between(item["scale"], 0.2, 1.0, "smaller than the courtyard props: it is far away")
+		assert_between(item["near"], 0.0, 1.0)
+
+
 func test_without_assets_there_is_no_dressing() -> void:
 	assert_eq(ArenaDressing.placements(SpriteSet.new(), ARENA_CELLS, CELL).size(), 0)
+	assert_eq(ArenaDressing.backdrop(SpriteSet.new()).size(), 0)

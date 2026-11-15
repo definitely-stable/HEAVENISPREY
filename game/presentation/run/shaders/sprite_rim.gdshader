@@ -10,7 +10,6 @@ uniform vec3 rim_color : source_color = vec3(0.6, 0.68, 0.72);
 uniform float rim_strength = 0.5;
 
 void fragment() {
-	vec4 albedo = texture(TEXTURE, UV);
 	vec3 n = texture(NORMAL_TEXTURE, UV).rgb * 2.0 - 1.0;
 	// Normal maps are y-up; the screen is y-down.
 	vec2 side = vec2(n.x, -n.y);
@@ -19,6 +18,7 @@ void fragment() {
 	bool shaped = n.z > 0.05 && length(side) > 0.0001;
 	float facing = shaped ? max(dot(normalize(side), to_moon), 0.0) : 0.0;
 	float rim = edge * facing * rim_strength;
-	vec3 lit = albedo.rgb * COLOR.rgb;
-	COLOR = vec4(mix(lit, rim_color, rim), albedo.a * COLOR.a);
+	// COLOR arrives as texture x modulate (the light of RunLighting.light_at): the painted
+	// colours are kept as they are, only the rim is mixed in.
+	COLOR = vec4(mix(COLOR.rgb, rim_color, rim), COLOR.a);
 }

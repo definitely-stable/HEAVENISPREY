@@ -1,0 +1,8 @@
+Prop sprite sheet for a 2.5D isometric action game: the distant mountain scenery that stands in the mist around the floating ruined sect courtyard, exactly as in the background of the attached concept boards (tall karst rock spires and small pagodas rising out of the fog behind the arena). All drawn in the same camera as the references: orthographic, seen from 30 degrees above the horizon, light from the upper left. Four separate tall props in a 4 x 1 row, each centred in its cell with wide empty space around it, never touching each other or the image edges:
+1) a tall slender karst rock spire of dark purple-grey stone with a small crimson maple and moss on its top;
+2) a wider rock pillar with a small dark-roofed sect pagoda (red lacquer columns, one warm lit window) standing on its flat top, a few maples beside it;
+3) two rock spires of different height joined at the base, a thin white waterfall falling down the taller one;
+4) a broad rock stack with a ruined stone gate and a tattered red banner on top, pines and maples on its ledges.
+Each rock runs straight down as a rough cliff column and is simply cut flat at the bottom (the game fades the base into mist). Materials and style exactly like the references: weathered purple-grey rock, crimson maple foliage, olive moss, dark tiled roofs, detailed hand-painted game art, muted dusk colours.
+
+Background: flat pure #00FF00 green everywhere, including between the rocks and inside gaps of foliage. No ground plane, no mist, no clouds, no cast shadows on the background, no text, no labels, no numbers. Landscape 1536 x 1024.

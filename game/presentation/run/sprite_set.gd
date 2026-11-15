@@ -241,6 +241,27 @@ func draw_prop(
 	return true
 
 
+## A prop as a textured quad for draw_polygon: {texture, rect (px, the centre of its base on
+## `feet`, sized by `scale`), uv (normalised region of the texture, mirrored when `flip`)}.
+## Empty when the prop is unknown.
+func prop_quad(asset_id: String, prop: String, feet: Vector2, scale: float = 1.0, flip: bool = false) -> Dictionary:
+	if not has_prop(asset_id, prop):
+		return {}
+	var asset: Dictionary = _assets[asset_id]
+	var region: Rect2 = asset["props"][prop]["region"]
+	var density: float = float(asset["density"]) / scale
+	var size: Vector2 = region.size / density
+	var offset: Vector2 = ((asset["props"][prop]["feet"] as Vector2) - region.position) / density
+	if flip:
+		offset.x = size.x - offset.x
+	var texture: Texture2D = asset["canvas"]
+	var full: Vector2 = texture.get_size()
+	var uv: Rect2 = Rect2((region.position + asset["origin"]) / full, region.size / full)
+	if flip:
+		uv = Rect2(Vector2(uv.end.x, uv.position.y), Vector2(-uv.size.x, uv.size.y))
+	return {"texture": texture, "rect": Rect2(feet - offset, size), "uv": uv}
+
+
 ## World px a floor decal spans (its texture covers a world square of this side).
 func decal_world_px(asset_id: String) -> float:
 	return float(_assets[asset_id]["world_px"]) if _assets.has(asset_id) else 0.0
