@@ -1,10 +1,265 @@
-2D game sprite sheet of the sword cultivator hero from the attached references (long black hair tied up, white and ivory robes with gold embroidery, dark sash, red ribbon accents, a slim jian sword held low in the right hand). Hand-painted ink-and-gold xianxia style, clean dark ink outline about 2 px, painted cel shading, key light from the top-left, readable silhouette at small size, moderate detail.
+## model sheet (attached to every request below)
 
-Layout: a strict 4 x 4 grid of equal square cells on a 1024 x 1024 canvas, no borders, no gutters drawn, no labels. Each cell holds one full-body figure, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, nothing crossing into a neighbouring cell.
-Row 1: walking toward the viewer (front three-quarter view), 4 walk-cycle frames.
-Row 2: walking to the left (side view facing left), 4 walk-cycle frames.
-Row 3: walking to the right (side view facing right), 4 walk-cycle frames.
-Row 4: walking away from the viewer (back three-quarter view), 4 walk-cycle frames.
-Camera: high three-quarter top-down game camera, like an action roguelite seen from above at about 45 degrees.
+Character model sheet of the Sword Cultivator hero exactly as in the attached reference boards: a young man with long flowing black hair tied in a high topknot with a small gold crown pin and a red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, a black inner robe and black-and-gold sash with a jade pendant and red tassels, dark boots, a slim straight jian sword with a gold guard held low in his right hand. Hand-painted xianxia game art, clean dark ink outline about 3 px, painted cel shading with soft neutral light from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
 
-Background: perfectly flat solid pure green #00FF00 everywhere behind the figures, no gradient, no floor, no shadow, no glow, no sparkles, no motion trails. No text, no numbers, no watermark.
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon, so the top of the head and the shoulders are visible and the figure is slightly foreshortened, exactly like an isometric action RPG.
+
+Layout: one row of five full-body standing poses on a 1536 x 1024 canvas, same scale, feet on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view), 4 facing up-right (north-east, three-quarter back), 5 facing away (north, back view). Relaxed ready stance, sword in the right hand pointing down.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## idle s
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing the viewer (south): front view, he looks toward the bottom of the image.
+
+Motion: a calm ready idle loop, 4 phases: 1 neutral, 2 breathing in (shoulders rise a little), 3 held, 4 breathing out; sleeves, hair and ribbon sway very slightly; the sword rests low in the right hand. The differences between frames are small; frame 4 flows into frame 1.
+
+Layout: a strict grid of 4 columns x 1 row of equal tall cells (4 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## idle se
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing down-right (south-east): three-quarter front view, his chest and face turned toward the lower right corner of the image.
+
+Motion: a calm ready idle loop, 4 phases: 1 neutral, 2 breathing in (shoulders rise a little), 3 held, 4 breathing out; sleeves, hair and ribbon sway very slightly; the sword rests low in the right hand. The differences between frames are small; frame 4 flows into frame 1.
+
+Layout: a strict grid of 4 columns x 1 row of equal tall cells (4 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## idle e
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing right (east): side view in profile, he looks toward the right edge of the image.
+
+Motion: a calm ready idle loop, 4 phases: 1 neutral, 2 breathing in (shoulders rise a little), 3 held, 4 breathing out; sleeves, hair and ribbon sway very slightly; the sword rests low in the right hand. The differences between frames are small; frame 4 flows into frame 1.
+
+Layout: a strict grid of 4 columns x 1 row of equal tall cells (4 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## idle ne
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing up-right (north-east): three-quarter back view, we see his back and right shoulder, he looks toward the upper right corner of the image.
+
+Motion: a calm ready idle loop, 4 phases: 1 neutral, 2 breathing in (shoulders rise a little), 3 held, 4 breathing out; sleeves, hair and ribbon sway very slightly; the sword rests low in the right hand. The differences between frames are small; frame 4 flows into frame 1.
+
+Layout: a strict grid of 4 columns x 1 row of equal tall cells (4 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## idle n
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing away from the viewer (north): back view, he looks toward the top of the image.
+
+Motion: a calm ready idle loop, 4 phases: 1 neutral, 2 breathing in (shoulders rise a little), 3 held, 4 breathing out; sleeves, hair and ribbon sway very slightly; the sword rests low in the right hand. The differences between frames are small; frame 4 flows into frame 1.
+
+Layout: a strict grid of 4 columns x 1 row of equal tall cells (4 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## run s
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing the viewer (south): front view, he looks toward the bottom of the image.
+
+Motion: a fast, light running loop of a sword cultivator, 8 evenly spaced phases of ONE stride read left to right, top row then bottom row: 1 right foot contact, 2 down, 3 passing, 4 up, 5 left foot contact, 6 down, 7 passing, 8 up; frame 8 flows back into frame 1. Running in place (no travel across the cell), body leaning slightly forward, arms swinging, the sword held low in the right hand pointing backward, robes, sleeves, ribbon and hair trailing behind with the motion.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells (8 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## run se
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing down-right (south-east): three-quarter front view, his chest and face turned toward the lower right corner of the image.
+
+Motion: a fast, light running loop of a sword cultivator, 8 evenly spaced phases of ONE stride read left to right, top row then bottom row: 1 right foot contact, 2 down, 3 passing, 4 up, 5 left foot contact, 6 down, 7 passing, 8 up; frame 8 flows back into frame 1. Running in place (no travel across the cell), body leaning slightly forward, arms swinging, the sword held low in the right hand pointing backward, robes, sleeves, ribbon and hair trailing behind with the motion.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells (8 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## run e
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing right (east): side view in profile, he looks toward the right edge of the image.
+
+Motion: a fast, light running loop of a sword cultivator, 8 evenly spaced phases of ONE stride read left to right, top row then bottom row: 1 right foot contact, 2 down, 3 passing, 4 up, 5 left foot contact, 6 down, 7 passing, 8 up; frame 8 flows back into frame 1. Running in place (no travel across the cell), body leaning slightly forward, arms swinging, the sword held low in the right hand pointing backward, robes, sleeves, ribbon and hair trailing behind with the motion.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells (8 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## run ne
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing up-right (north-east): three-quarter back view, we see his back and right shoulder, he looks toward the upper right corner of the image.
+
+Motion: a fast, light running loop of a sword cultivator, 8 evenly spaced phases of ONE stride read left to right, top row then bottom row: 1 right foot contact, 2 down, 3 passing, 4 up, 5 left foot contact, 6 down, 7 passing, 8 up; frame 8 flows back into frame 1. Running in place (no travel across the cell), body leaning slightly forward, arms swinging, the sword held low in the right hand pointing backward, robes, sleeves, ribbon and hair trailing behind with the motion.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells (8 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## run n
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing away from the viewer (north): back view, he looks toward the top of the image.
+
+Motion: a fast, light running loop of a sword cultivator, 8 evenly spaced phases of ONE stride read left to right, top row then bottom row: 1 right foot contact, 2 down, 3 passing, 4 up, 5 left foot contact, 6 down, 7 passing, 8 up; frame 8 flows back into frame 1. Running in place (no travel across the cell), body leaning slightly forward, arms swinging, the sword held low in the right hand pointing backward, robes, sleeves, ribbon and hair trailing behind with the motion.
+
+Layout: a strict grid of 4 columns x 2 rows of equal cells (8 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## attack s
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing the viewer (south): front view, he looks toward the bottom of the image.
+
+Motion: one fast sword strike in the facing direction, 6 phases read left to right, top row then bottom row: 1 anticipation, weight back, sword drawn back; 2 wind-up, left hand forming a sword seal; 3 lunge and thrust, sword arm fully extended forward; 4 follow-through, robes swinging; 5 recover, pulling the sword back; 6 back to the ready stance. No energy effects, no glow, no slash trail.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## attack se
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing down-right (south-east): three-quarter front view, his chest and face turned toward the lower right corner of the image.
+
+Motion: one fast sword strike in the facing direction, 6 phases read left to right, top row then bottom row: 1 anticipation, weight back, sword drawn back; 2 wind-up, left hand forming a sword seal; 3 lunge and thrust, sword arm fully extended forward; 4 follow-through, robes swinging; 5 recover, pulling the sword back; 6 back to the ready stance. No energy effects, no glow, no slash trail.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## attack e
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing right (east): side view in profile, he looks toward the right edge of the image.
+
+Motion: one fast sword strike in the facing direction, 6 phases read left to right, top row then bottom row: 1 anticipation, weight back, sword drawn back; 2 wind-up, left hand forming a sword seal; 3 lunge and thrust, sword arm fully extended forward; 4 follow-through, robes swinging; 5 recover, pulling the sword back; 6 back to the ready stance. No energy effects, no glow, no slash trail.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## attack ne
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing up-right (north-east): three-quarter back view, we see his back and right shoulder, he looks toward the upper right corner of the image.
+
+Motion: one fast sword strike in the facing direction, 6 phases read left to right, top row then bottom row: 1 anticipation, weight back, sword drawn back; 2 wind-up, left hand forming a sword seal; 3 lunge and thrust, sword arm fully extended forward; 4 follow-through, robes swinging; 5 recover, pulling the sword back; 6 back to the ready stance. No energy effects, no glow, no slash trail.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## attack n
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing away from the viewer (north): back view, he looks toward the top of the image.
+
+Motion: one fast sword strike in the facing direction, 6 phases read left to right, top row then bottom row: 1 anticipation, weight back, sword drawn back; 2 wind-up, left hand forming a sword seal; 3 lunge and thrust, sword arm fully extended forward; 4 follow-through, robes swinging; 5 recover, pulling the sword back; 6 back to the ready stance. No energy effects, no glow, no slash trail.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.
+
+## death s
+
+Animation sheet of the Sword Cultivator hero, the SAME character as in the attached model sheet (first image) and reference board: long black hair in a high topknot with a gold crown pin and red ribbon, layered white and ivory hanfu robes with wide sleeves and gold cloud embroidery, black inner robe, black-and-gold sash with jade pendant and red tassels, dark boots, slim straight jian sword with a gold guard in his right hand. Keep his face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and shoulders visible), the same camera in every frame.
+
+Direction: in every frame he is facing the viewer (south): front view, he looks toward the bottom of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, head thrown back; 2 stagger, sword slipping; 3 dropping to one knee; 4 collapsing forward onto the hands; 5 falling onto his side; 6 lying still on the ground, sword beside him. No blood, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole figure including the sword and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no numbers, no watermark.

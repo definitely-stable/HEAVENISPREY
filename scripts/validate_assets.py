@@ -35,16 +35,24 @@ CONFIG = ROOT / ".work" / "config" / "v7"
 LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
 ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop)\.[a-z][a-z0-9_]*$")
 GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props"}
-KINDS = {"sprite_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture"}
+KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture"}
 ## Kinds drawn with transparency: their PNG must be RGBA.
-ALPHA_KINDS = {"sprite_atlas", "prop_atlas", "decal_texture"}
+ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture"}
 ## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
 LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
             "content_ids", "layout", "normal", "source", "qa")
-NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "floor_texture": "luminance_sobel",
+NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "anim_atlas": "silhouette_pillow",
+                  "floor_texture": "luminance_sobel",
                   "prop_atlas": "silhouette_pillow", "decal_texture": "luminance_sobel",
                   "strip_texture": "luminance_sobel"}
+## ADR-014 sections 7 and 13, A4: the loop seam against the median and the largest step between
+## frames inside the loop, the body height of a clip across its directions, the torso against
+## feet_anchor.x (atlas px).
+ANIM_LOOP_SEAM_MAX = 1.35
+ANIM_LOOP_SEAM_TO_MAX = 1.2
+ANIM_HEIGHT_SPREAD_PCT = 2.0
+ANIM_TORSO_DRIFT_PX = 2.0
 
 
 class AssetError(Exception):
@@ -115,6 +123,15 @@ def check_qa(entry: dict, passport: dict, floor_l: float | None) -> None:
         raise AssetError(f"{label}: threat colour {qa['threat_colour_pct']} % > {group['max_threat_pct']} %")
     if "rim_l" in qa:
         raise AssetError(f"{label}: the rim is drawn by the scene shader, not baked")
+    if entry["kind"] == "anim_atlas":
+        if qa["loop_seam_ratio"] > ANIM_LOOP_SEAM_MAX:
+            raise AssetError(f"{label}: loop seam {qa['loop_seam_ratio']} > {ANIM_LOOP_SEAM_MAX} x the median step")
+        if qa["loop_seam_to_max"] > ANIM_LOOP_SEAM_TO_MAX:
+            raise AssetError(f"{label}: loop seam {qa['loop_seam_to_max']} > {ANIM_LOOP_SEAM_TO_MAX} x the largest step")
+        if qa["height_spread_pct"] > ANIM_HEIGHT_SPREAD_PCT:
+            raise AssetError(f"{label}: figure height spread {qa['height_spread_pct']} % > {ANIM_HEIGHT_SPREAD_PCT} %")
+        if qa["torso_drift_px"] > ANIM_TORSO_DRIFT_PX:
+            raise AssetError(f"{label}: torso drift {qa['torso_drift_px']} px > {ANIM_TORSO_DRIFT_PX} px")
 
 
 def check_layout(entry: dict) -> None:
@@ -131,6 +148,29 @@ def check_layout(entry: dict) -> None:
             raise AssetError(f"{label}: feet_anchor leaves no transparent margin")
         if len(set(layout["directions"])) != len(layout["directions"]):
             raise AssetError(f"{label}: duplicate directions")
+    elif entry["kind"] == "anim_atlas":
+        frame = layout["frame_size"]
+        anchor = layout["feet_anchor"]
+        directions = layout["directions"]
+        clips = sorted(layout["clips"].items(), key=lambda item: item[1]["row"])
+        row = 0
+        for name, clip in clips:
+            if clip["row"] != row:
+                raise AssetError(f"{label}: clip {name} does not start at row {row}")
+            if not 1 <= clip["frames"] <= layout["frames"] or clip["fps"] <= 0:
+                raise AssetError(f"{label}: clip {name} has a bad frame count or fps")
+            if not clip["directions"] or any(d not in directions for d in clip["directions"]):
+                raise AssetError(f"{label}: clip {name} has unknown directions")
+            row += len(clip["directions"])
+        if (width, height) != (frame * layout["frames"], frame * row):
+            raise AssetError(f"{label}: atlas size is not frames x clip rows of {frame} px")
+        if not (2 <= anchor[0] <= frame - 2 and 2 <= anchor[1] <= frame - 2):
+            raise AssetError(f"{label}: feet_anchor leaves no transparent margin")
+        if len(set(directions)) != len(directions):
+            raise AssetError(f"{label}: duplicate directions")
+        for mirrored, source in layout["mirror"].items():
+            if source not in directions or mirrored in directions:
+                raise AssetError(f"{label}: mirror {mirrored} <- {source} is not a generated direction")
     elif entry["kind"] == "prop_atlas":
         names = [p["name"] for p in layout["props"]]
         if not names or len(set(names)) != len(names):

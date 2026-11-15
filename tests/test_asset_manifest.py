@@ -18,6 +18,7 @@ assets = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(assets)
 
 HERO = "asset.char.hero_sword"
+YIN = "asset.enemy.yin_corpse"
 
 
 def tiny_png(width: int, height: int, colour: int = 6) -> bytes:
@@ -95,8 +96,8 @@ class AssetManifestTests(unittest.TestCase):
         path.write_bytes(tiny_png(768, 768))
         self.fails("sha256/bytes differ")
 
-    def atlas(self, data: bytes) -> None:
-        entry = self.entry()
+    def atlas(self, data: bytes, asset_id: str = HERO) -> None:
+        entry = self.entry(asset_id)
         (self.root / entry["path"]).write_bytes(data)
         entry.update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
 
@@ -114,17 +115,17 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("normal map: sha256/bytes differ")
 
     def test_atlas_must_be_frames_by_directions(self):
-        self.entry()["size"] = [768, 576]
+        self.entry(YIN)["size"] = [768, 576]
         self.fails("frames x directions")
 
     def test_layout_is_checked_on_an_lfs_pointer_checkout(self):
         for entry in self.manifest["assets"]:
             (self.root / entry["path"]).write_bytes(pointer(entry["sha256"], entry["bytes"]))
-        self.entry()["layout"]["feet_anchor"] = [96, 191]
+        self.entry(YIN)["layout"]["feet_anchor"] = [96, 191]
         self.fails("transparent margin")
 
     def test_atlas_must_be_rgba(self):
-        self.atlas(tiny_png(768, 768, colour=2))
+        self.atlas(tiny_png(768, 384, colour=2), YIN)
         self.fails("RGBA")
 
     def test_png_size_must_equal_the_manifest(self):
@@ -132,7 +133,11 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("PNG size differs")
 
     def test_feet_anchor_keeps_the_margin(self):
-        self.entry()["layout"]["feet_anchor"] = [96, 191]
+        self.entry(YIN)["layout"]["feet_anchor"] = [96, 191]
+        self.fails("transparent margin")
+
+    def test_anim_feet_anchor_keeps_the_margin(self):
+        self.entry()["layout"]["feet_anchor"] = [128, 255]
         self.fails("transparent margin")
 
     def test_prompt_must_hash_to_the_recorded_value(self):
@@ -189,6 +194,29 @@ class AssetManifestTests(unittest.TestCase):
     def test_strip_size_follows_its_layout(self):
         self.entry("asset.tile.sect_cliff")["layout"]["texture_size"] = [1024, 512]
         self.fails("strip size differs")
+
+    def test_anim_clips_follow_one_another(self):
+        clips = self.entry()["layout"]["clips"]
+        clips["run"]["row"] += 1
+        self.fails("does not start at row")
+
+    def test_anim_mirror_needs_a_generated_source(self):
+        self.entry()["layout"]["mirror"]["sw"] = "sw"
+        self.fails("is not a generated direction")
+
+    def test_anim_atlas_size_follows_its_clips(self):
+        self.entry()["size"] = [2048, 3840]
+        self.fails("frames x clip rows")
+
+    def test_anim_acceptance_limits(self):
+        for key, value, fragment in (("loop_seam_ratio", 1.4, "median step"), ("loop_seam_to_max", 1.25, "largest step"),
+                                     ("height_spread_pct", 2.5, "height spread"),
+                                     ("torso_drift_px", 2.5, "torso drift")):
+            with self.subTest(key):
+                saved = self.entry()["qa"][key]
+                self.entry()["qa"][key] = value
+                self.fails(fragment)
+                self.entry()["qa"][key] = saved
 
     def test_baked_rim_is_rejected(self):
         self.entry("asset.enemy.yin_corpse")["qa"]["rim_l"] = 150.0

@@ -35,6 +35,8 @@ const HUD_MARGIN: Vector2 = Vector2(20, 34)
 const PICKUP_FLY: float = 0.1
 const PICKUP_TEXT: float = 0.6
 const LEVEL_RING: float = 0.6
+## After a defeat the results open once the hero's death clip has played and this long more (s).
+const DEATH_BEAT: float = 0.5
 const XP_BAR_HEIGHT: float = 6.0
 
 ## Beyond the arena diamond (ADR-014 section 1; fog and cliffs come with slice A3).
@@ -143,6 +145,11 @@ var _faces_left: Dictionary = {}
 ## Seconds of walk animation (stops with the run).
 var _anim_time: float = 0.0
 var _hero_moving: bool = false
+## Hero clips (ADR-014 A4): seconds into the attack after a cast (< 0: none) and its aim (world),
+## seconds since a defeat started the death clip.
+var _attack_time: float = -1.0
+var _attack_aim: Vector2 = Vector2.RIGHT
+var _death_time: float = -1.0
 var _flash_rest: float = 0.0
 var _halo_texture: Texture2D = GroundLayer._radial_texture(64)
 var _disc_texture: Texture2D = _make_disc_texture(32)
@@ -296,6 +303,8 @@ func start_run(seed_text: String) -> void:
 		_kind_assets.append(str(ENEMY_ASSETS.get(enemy_id, "")))
 	_faces_left.clear()
 	_anim_time = 0.0
+	_attack_time = -1.0
+	_death_time = -1.0
 	_hero_moving = false
 	_flash = 0.0
 	_flash_rest = 0.0
@@ -344,8 +353,10 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		return 0
 	_age_effects(delta)
 	if driver.world.is_over():
+		_advance_hero_clips(delta, [])
 		_show_results()
-		_results.age(delta)
+		if _results.visible:
+			_results.age(delta)
 		queue_redraw()
 		return 0
 	var hp_before: int = driver.world.hero_hp
@@ -365,6 +376,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		_flash = HIT_FLASH
 		_flash_rest = HIT_FLASH + HIT_FLASH_REST
 	_anim_time += delta
+	_advance_hero_clips(delta, events["casts"])
 	_hero_moving = move != Vector2i.ZERO
 	if _hero_moving:
 		_facing = Vector2(move).normalized()
@@ -378,9 +390,13 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	return ticks
 
 
+## Opens the results; after a defeat only once the death clip has played (ADR-014 A4).
 func _show_results() -> void:
-	if _results != null and not _results.visible:
-		_results.open(driver.world)
+	if _results == null or _results.visible:
+		return
+	if _death_time >= 0.0 and _death_time < _sprites.clip_length(HERO_ASSET, "death") + DEATH_BEAT:
+		return
+	_results.open(driver.world)
 
 
 ## Picks card `index` of the shown hand (the menu's `picked`, tests and replays); false when
@@ -457,22 +473,65 @@ func _update_facing() -> void:
 			_faces_left[uid] = false
 
 
-## [asset_id, direction, frame] of an enemy sprite; asset "" draws the primitive.
+## [asset_id, clip, direction, frame] of an enemy sprite (clip "" for a plain atlas); asset ""
+## draws the primitive.
 func _enemy_pose(slot: int) -> Array:
 	var world: WorldState = driver.world
 	var kind: int = world.enemy_kind[slot]
 	var uid: int = world.enemy_uid[slot]
 	var asset: String = _kind_assets[kind] if kind < _kind_assets.size() else ""
 	if not _sprites.has(asset):
-		return ["", "", 0]
+		return ["", "", "", 0]
 	var direction: String = "left" if _faces_left.get(uid, false) else "right"
-	return [asset, direction, SpriteSet.walk_frame(_anim_time, posmod(uid, 4))]
+	return [asset, "", direction, SpriteSet.walk_frame(_anim_time, posmod(uid, 4))]
 
 
+## The hero's clip timers: a cast restarts the attack toward its aim, a defeat starts the death.
+func _advance_hero_clips(delta: float, casts: Array) -> void:
+	if _attack_time >= 0.0:
+		_attack_time += delta
+		if _attack_time >= _sprites.clip_length(HERO_ASSET, "attack"):
+			_attack_time = -1.0
+	if not casts.is_empty():
+		_attack_time = 0.0
+		_attack_aim = casts[-1]
+	if _death_time >= 0.0:
+		_death_time += delta
+	elif driver.world.is_over() and driver.world.hero_dead != 0:
+		_death_time = 0.0
+
+
+## [asset_id, clip, direction, frame] of the hero. An animated atlas (ADR-014 A4) plays death
+## after a defeat, run while moving, attack toward the target after a cast while standing, idle
+## otherwise, in eight screen directions; a plain atlas walks in four.
 func _hero_pose() -> Array:
-	var facing: Vector2 = IsoProjection.to_screen(_facing).normalized()
-	var frame: int = SpriteSet.walk_frame(_anim_time, 0) if _hero_moving else 0
-	return [HERO_ASSET if _sprites.has(HERO_ASSET) else "", SpriteSet.four_way(facing), frame]
+	if not _sprites.has(HERO_ASSET):
+		return ["", "", "", 0]
+	var facing: Vector2 = IsoProjection.to_screen(_facing)
+	if not _sprites.has_clip(HERO_ASSET, "idle"):
+		var frame: int = SpriteSet.walk_frame(_anim_time, 0) if _hero_moving else 0
+		return [HERO_ASSET, "", SpriteSet.four_way(facing.normalized()), frame]
+	var clip: String = "idle"
+	var seconds: float = _anim_time
+	if _death_time >= 0.0 and _sprites.has_clip(HERO_ASSET, "death"):
+		clip = "death"
+		seconds = _death_time
+	elif _hero_moving:
+		clip = "run"
+	elif _attack_time >= 0.0:
+		clip = "attack"
+		seconds = _attack_time
+		facing = IsoProjection.to_screen(_attack_aim)
+	return [HERO_ASSET, clip, SpriteSet.eight_way(facing), _sprites.clip_frame(HERO_ASSET, clip, seconds)]
+
+
+## Draws a pose from _hero_pose() / _enemy_pose() with its feet on `at`; false without a sprite.
+func _draw_pose(canvas: CanvasItem, pose: Array, at: Vector2, tint: Color) -> bool:
+	if pose[0] == "":
+		return false
+	if pose[1] != "":
+		return _sprites.draw_clip(canvas, pose[0], pose[1], pose[2], pose[3], at, tint)
+	return _sprites.draw_frame(canvas, pose[0], pose[2], pose[3], at, tint)
 
 
 ## Light on an upright thing standing at `feet` (world px), RunLighting model.
@@ -515,7 +574,7 @@ func _draw_shadow_pass() -> void:
 func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2) -> void:
 	if pose[0] != "":
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(feet_world)))
-		_sprites.draw_frame(canvas, pose[0], pose[1], pose[2], Vector2.ZERO, Color.BLACK)
+		_draw_pose(canvas, pose, Vector2.ZERO, Color.BLACK)
 
 
 ## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
@@ -596,7 +655,7 @@ func _draw_enemy(slot: int) -> void:
 	var pose: Array = _enemy_pose(slot)
 	if pose[0] != "":
 		var tint: Color = TINT_ENEMY_HIT if _enemy_flash.has(uid) else light
-		if _sprites.draw_frame(self, pose[0], pose[1], pose[2], at, tint):
+		if _draw_pose(self, pose, at, tint):
 			return
 	var radius: float = _kind_radius_px(kind)
 	var color: Color = _enemy_color(kind) * light
@@ -675,7 +734,7 @@ func _draw_hero_pass() -> void:
 		var tint: Color = light.lerp(TINT_HERO_HIT, _hero_flash_share())
 		if stacks > 0 and _flash <= 0.0:
 			tint = tint.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
-		if _sprites.draw_frame(canvas, pose[0], pose[1], pose[2], hero, tint):
+		if _draw_pose(canvas, pose, hero, tint):
 			return
 	var facing: Vector2 = IsoProjection.to_screen(_facing).normalized()
 	var color: Color = COLOR_HERO.lerp(Color.WHITE, _hero_flash_share())

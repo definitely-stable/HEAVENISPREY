@@ -3,39 +3,98 @@
   "assets": [
     {
       "asset_id": "asset.char.hero_sword",
-      "kind": "sprite_atlas",
+      "kind": "anim_atlas",
       "path": "game/assets/characters/hero_sword/hero_sword.png",
-      "sha256": "1dc77824417f5b83adc1632cac41912f131335a355af92e7b06f7b1203015955",
-      "bytes": 499942,
+      "sha256": "268b04608ea77c06245e518476f6737b52a7be80cb03b9ca547df4e994be286a",
+      "bytes": 3302757,
       "size": [
-        768,
-        768
+        2048,
+        4096
       ],
-      "asset_version": 2,
+      "asset_version": 3,
       "art_bible_version": 4,
       "content_ids": [
         "class.sword"
       ],
       "layout": {
         "anchor_x": "torso",
-        "frame_size": 192,
-        "directions": [
-          "down",
-          "left",
-          "right",
-          "up"
-        ],
-        "frames": 4,
+        "frame_size": 256,
         "feet_anchor": [
-          96,
-          186
+          128,
+          250
         ],
-        "scale": 0.5793
+        "scale": [
+          0.2615,
+          0.4383
+        ],
+        "frames": 8,
+        "directions": [
+          "s",
+          "se",
+          "e",
+          "ne",
+          "n"
+        ],
+        "mirror": {
+          "sw": "se",
+          "w": "e",
+          "nw": "ne"
+        },
+        "clips": {
+          "idle": {
+            "row": 0,
+            "frames": 4,
+            "fps": 6,
+            "loop": true,
+            "directions": [
+              "s",
+              "se",
+              "e",
+              "ne",
+              "n"
+            ]
+          },
+          "run": {
+            "row": 5,
+            "frames": 8,
+            "fps": 14,
+            "loop": true,
+            "directions": [
+              "s",
+              "se",
+              "e",
+              "ne",
+              "n"
+            ]
+          },
+          "attack": {
+            "row": 10,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "s",
+              "se",
+              "e",
+              "ne",
+              "n"
+            ]
+          },
+          "death": {
+            "row": 15,
+            "frames": 6,
+            "fps": 8,
+            "loop": false,
+            "directions": [
+              "s"
+            ]
+          }
+        }
       },
       "normal": {
         "path": "game/assets/characters/hero_sword/hero_sword_n.png",
-        "sha256": "54106fd3160868b0c331548e3ad361e25be4697d48d785f03354a85618962702",
-        "bytes": 344043,
+        "sha256": "96679a729b321b2c5c4eaa1c593801cf2aec5d10f2cafdd5a10b1934397f0dd5",
+        "bytes": 2184232,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -43,22 +102,26 @@
       },
       "source": {
         "path": "art_source/hero_sword/master.webp",
-        "sha256": "4084ac303618fb9d11bf3f623e4c8d63d4bff52ffe3d3671697ec87f614cb002",
-        "bytes": 1429152,
-        "prompt_sha256": "d3ccfb9d8de283dde968b1b2383fe063b64ca47296e0c7d1c8edbdaa56646d3f"
+        "sha256": "a7d982f873b0903ce357785361223b1f83a5a08cce4f7263f8412bfecef53564",
+        "bytes": 4188106,
+        "prompt_sha256": "4708e1ca920de3d81e9b64dc229018cb6085cdafa8172828a625443c913df536"
       },
       "qa": {
         "palette_group": "hero_sprite",
-        "opaque_px": 12906,
-        "palette_mean_delta_e": 7.45,
+        "opaque_px": 5527,
+        "palette_mean_delta_e": 7.02,
         "tones_pct": [
-          31.9,
-          38.4,
-          29.8
+          24.6,
+          39.9,
+          35.5
         ],
-        "chroma": 0.145,
+        "chroma": 0.191,
         "threat_colour_pct": 0.0,
-        "median_l": 133.6
+        "median_l": 144.7,
+        "loop_seam_ratio": 1.293,
+        "loop_seam_to_max": 1.118,
+        "height_spread_pct": 0.56,
+        "torso_drift_px": 1.0
       }
     },
     {
