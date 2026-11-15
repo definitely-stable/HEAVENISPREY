@@ -80,3 +80,33 @@ func test_hud_follows_the_run() -> void:
 	assert_between(share.y, 0.0, 1.0)
 	view.start_run("20261114")
 	assert_eq(hud.driver, view.driver, "a new run rebinds the HUD")
+
+
+## Long numbers and both locales stay inside their frames: the font shrinks, it never spills.
+func test_text_fits_its_frame_at_any_count() -> void:
+	var kit: HudKit = HudKit.load_default()
+	var at: Dictionary = RunHud.layout(kit, Vector2(1280, 720))
+	var count: Rect2 = RunHud.count_rect(kit, at["capsule"])
+	assert_gt(count.position.x, kit.window("counter_capsule", at["capsule"]).end.x, "count right of the icon")
+	assert_lt(count.end.x, (at["capsule"] as Rect2).end.x, "count left of the end cap")
+	var locale: String = TranslationServer.get_locale()
+	for lang: String in ["ru", "en"]:
+		TranslationServer.set_locale(lang)
+		for kills: int in [7, 4821, 99999]:
+			var text: String = UiText.text("UI_HUD_SLAIN") % kills
+			var size: int = kit.fit_size(text, count.size.x, RunHud.COUNT_FONT_SIZE)
+			assert_lte(kit.text_width(text, size), count.size.x, "%s fits" % text)
+			assert_gte(size, 12, "%s stays readable" % text)
+		var stage: String = UiText.text(RunHud.STAGE_NAME_KEY)
+		var plaque: Rect2 = kit.window("title_plaque", at["plaque"]).grow_individual(-RunHud.PLAQUE_INSET.x, 0,
+			-RunHud.PLAQUE_INSET.x, 0)
+		assert_eq(kit.fit_size(stage, plaque.size.x, RunHud.TITLE_FONT_SIZE), RunHud.TITLE_FONT_SIZE, stage)
+	TranslationServer.set_locale(locale)
+	var seal: Rect2 = kit.window("level_seal", at["seal"])
+	for level: String in ["9", "42"]:
+		assert_gte(kit.fit_size(level, seal.size.x - 6.0, RunHud.SEAL_FONT_SIZE), 16, "level %s" % level)
+	var trough: Rect2 = kit.window("bar_frame", at["hp"])
+	assert_eq(kit.fit_size("999 / 999", trough.size.x - 12.0, RunHud.BAR_FONT_SIZE), RunHud.BAR_FONT_SIZE)
+	assert_lt(kit.fit_size("a much longer label than any bar can hold", 60.0, 20), 20, "the font shrinks to fit")
+	assert_eq(kit.fit_size("a much longer label than any bar can hold", 1.0, 20), HudKit.MIN_FONT_SIZE)
+

@@ -20,22 +20,39 @@ const SEPARATION: int = 20
 const TITLE_FONT_SIZE: int = 28
 const NAME_FONT_SIZE: int = 23
 const LINE_FONT_SIZE: int = 16
+## The "before -> after" values, under the stat name.
+const CHANGE_FONT_SIZE: int = 20
 const RANK_FONT_SIZE: int = 16
 const BUTTON_FONT_SIZE: int = 22
 const COLOR_DIM: Color = Color(0.0, 0.0, 0.0, 0.62)
 const COLOR_TITLE: Color = Color(0.97, 0.85, 0.56)
 const COLOR_TEXT: Color = Color(0.95, 0.91, 0.84)
 const COLOR_RANK: Color = Color(0.93, 0.9, 0.98)
-## A card without focus is a little darker; the focused one glows like the chosen card of REF-011.
-const COLOR_IDLE: Color = Color(0.8, 0.78, 0.76)
-const COLOR_GLOW: Color = Color(1.0, 0.6, 0.18, 0.55)
-const GLOW_SIZE: int = 26
+const COLOR_CHANGE: Color = Color(1.0, 0.86, 0.52)
+## A card without focus is a little darker; the focused one glows like the chosen card of REF-011:
+## a warm halo shaped like its frame, added to the scene behind it, breathing slowly.
+const COLOR_IDLE: Color = Color(0.72, 0.7, 0.68)
+const COLOR_GLOW: Color = Color(1.0, 0.62, 0.24)
+## Two halos: a wide soft one and a tight one that makes the gold rim read as lit.
+const GLOW_SPREAD: float = 34.0
+const GLOW_RIM_SPREAD: float = 9.0
+const GLOW_PULSE_HZ: float = 0.8
+const GLOW_PULSE: Vector2 = Vector2(0.75, 1.0)
+## Text keeps this far (screen px) inside the dark panel of the card, clear of its gold border.
+const CARD_TEXT_INSET: float = 18.0
+## The lotus crest of the frame rises this far into the bottom of the panel.
+const CARD_BOTTOM_PAD: float = 24.0
+const ART_TOP: float = 18.0
+const DIVIDER_GAP: float = 3.0
+## The banner window runs under its cloud scrolls; the title stays between them.
+const BANNER_TEXT_INSET: float = 34.0
+const BUTTON_TEXT_INSET: float = 22.0
 const DIGIT_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3]
 
 ## build_revision the shown hand was built for (-1 when closed).
 var revision: int = -1
 var cards: Array[Button] = []
-## Text of each shown card: {"name", "stat", "rank", "art"}.
+## Text of each shown card: UpgradeCard.describe plus "art".
 var card_texts: Array[Dictionary] = []
 var kit: HudKit
 var choose_button: Button
@@ -45,18 +62,17 @@ var _title_text: String = ""
 var _banner: Control
 var _more: Label
 var _row: HBoxContainer
-var _glow: StyleBoxFlat
+## The halo behind each card, drawn with additive blending.
+var _glows: Array[Control] = []
+var _time: float = 0.0
 
 
 func _init() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	visible = false
-	_glow = StyleBoxFlat.new()
-	_glow.bg_color = Color(COLOR_GLOW, 0.0)
-	_glow.shadow_color = COLOR_GLOW
-	_glow.shadow_size = GLOW_SIZE
-	_glow.set_corner_radius_all(24)
+	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
+	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	var dim: ColorRect = ColorRect.new()
 	dim.color = COLOR_DIM
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -82,11 +98,18 @@ func _init() -> void:
 		card.pressed.connect(press.bind(index))
 		card.draw.connect(_draw_card.bind(index))
 		card.focus_entered.connect(_on_focus.bind(index))
-		card.focus_exited.connect(card.queue_redraw)
-		card.mouse_entered.connect(card.queue_redraw)
-		card.mouse_exited.connect(card.queue_redraw)
+		card.focus_exited.connect(_on_focus_lost.bind(index))
+		card.mouse_entered.connect(card.grab_focus)
+		var glow: Control = Control.new()
+		glow.set_anchors_preset(Control.PRESET_FULL_RECT)
+		glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		glow.show_behind_parent = true
+		glow.material = additive
+		glow.draw.connect(_draw_glow.bind(index))
+		card.add_child(glow)
 		_row.add_child(card)
 		cards.append(card)
+		_glows.append(glow)
 		card_texts.append({})
 	choose_button = _flat_button()
 	choose_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -121,7 +144,9 @@ func open(config: SimConfig, world: WorldState) -> void:
 		card_texts[index] = text
 		card.tooltip_text = "%d. %s\n%s" % [index + 1, text["name"], text["stat"]]
 		card.queue_redraw()
+		_glows[index].queue_redraw()
 	_arm_left = ARM_DELAY
+	_time = 0.0
 	_focused = 0
 	visible = true
 	_banner.queue_redraw()
@@ -140,8 +165,11 @@ func close() -> void:
 func age(delta: float) -> void:
 	var was_armed: bool = is_armed()
 	_arm_left = maxf(_arm_left - maxf(delta, 0.0), 0.0)
+	_time += maxf(delta, 0.0)
 	if is_armed() != was_armed:
 		choose_button.queue_redraw()
+	if visible and _focused < _glows.size():
+		_glows[_focused].queue_redraw()
 
 
 func is_armed() -> bool:
@@ -168,6 +196,18 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _on_focus(index: int) -> void:
 	_focused = index
 	cards[index].queue_redraw()
+	_glows[index].queue_redraw()
+
+
+func _on_focus_lost(index: int) -> void:
+	cards[index].queue_redraw()
+	_glows[index].queue_redraw()
+
+
+## Strength of the focused card's halo now (it breathes between GLOW_PULSE.x and .y).
+func glow_strength() -> float:
+	var wave: float = 0.5 - 0.5 * cos(_time * TAU * GLOW_PULSE_HZ)
+	return lerpf(GLOW_PULSE.x, GLOW_PULSE.y, wave)
 
 
 ## Sizes the banner, the cards and the button to their pieces of the kit.
@@ -182,9 +222,18 @@ func _fit_to_kit() -> void:
 func _draw_banner() -> void:
 	var rect: Rect2 = Rect2(Vector2.ZERO, _banner.size)
 	kit.draw(_banner, "title_banner", rect)
-	var panel: Rect2 = kit.window("title_banner", rect)
-	kit.draw_text(_banner, _title_text, panel.get_center().x, panel.get_center().y + TITLE_FONT_SIZE * 0.32,
-		TITLE_FONT_SIZE, COLOR_TITLE)
+	var panel: Rect2 = kit.window("title_banner", rect).grow_individual(-BANNER_TEXT_INSET, 0, -BANNER_TEXT_INSET, 0)
+	kit.draw_text_in(_banner, _title_text, panel, TITLE_FONT_SIZE, COLOR_TITLE)
+
+
+func _draw_glow(index: int) -> void:
+	var card: Button = cards[index]
+	if kit == null or card_texts[index].is_empty() or not card.has_focus():
+		return
+	var rect: Rect2 = Rect2(Vector2.ZERO, card.size)
+	var strength: float = glow_strength()
+	kit.draw_halo(_glows[index], "card_frame", rect, GLOW_SPREAD, Color(COLOR_GLOW, strength))
+	kit.draw_halo(_glows[index], "card_frame", rect, GLOW_RIM_SPREAD, Color(COLOR_GLOW, strength * 0.8))
 
 
 func _draw_card(index: int) -> void:
@@ -193,38 +242,60 @@ func _draw_card(index: int) -> void:
 	if text.is_empty() or kit == null:
 		return
 	var rect: Rect2 = Rect2(Vector2.ZERO, card.size)
-	var lit: bool = card.has_focus() or card.is_hovered()
-	if lit:
-		card.draw_style_box(_glow, rect.grow(-10))
-	kit.draw(card, "card_frame", rect, Color.WHITE if lit else COLOR_IDLE)
-	var panel: Rect2 = kit.window("card_frame", rect)
-	var side: float = panel.size.x - 20.0
-	var art: Rect2 = Rect2(panel.position.x + 10.0, panel.position.y + 18.0, side, side)
-	kit.draw(card, str(text["art"]), art, Color.WHITE if lit else COLOR_IDLE)
-	var ribbon_size: Vector2 = kit.size_of("rank_ribbon")
-	if not str(text["rank"]).is_empty() and ribbon_size != Vector2.ZERO:
-		var ribbon: Rect2 = Rect2(Vector2(rect.get_center().x - ribbon_size.x * 0.5, panel.position.y - 6.0), ribbon_size)
+	var tint: Color = Color.WHITE if card.has_focus() else COLOR_IDLE
+	kit.draw(card, "card_frame", rect, tint)
+	var at: Dictionary = card_layout(kit, rect, text)
+	kit.draw(card, str(text["art"]), at["art"], tint)
+	var ribbon: Rect2 = at["ribbon"]
+	if ribbon.has_area():
 		kit.draw(card, "rank_ribbon", ribbon)
-		var label: Rect2 = kit.window("rank_ribbon", ribbon)
-		kit.draw_text(card, str(text["rank"]), label.get_center().x, label.get_center().y + RANK_FONT_SIZE * 0.34,
+		kit.draw_text_in(card, str(text["rank"]), kit.window("rank_ribbon", ribbon).grow_individual(-4, 0, -4, 0),
 			RANK_FONT_SIZE, COLOR_RANK)
-	var width: float = panel.size.x - 12.0
-	var top: float = art.end.y + 6.0
-	top += kit.draw_paragraph(card, str(text["name"]), Vector2(panel.position.x + 6.0, top), width, NAME_FONT_SIZE,
-		COLOR_TITLE, 2)
-	var divider: Vector2 = kit.size_of("divider_lotus") * 0.8
-	kit.draw(card, "divider_lotus", Rect2(Vector2(rect.get_center().x - divider.x * 0.5, top + 2.0), divider))
-	top += divider.y + 6.0
-	kit.draw_paragraph(card, str(text["stat"]), Vector2(panel.position.x + 6.0, top), width, LINE_FONT_SIZE, COLOR_TEXT, 3)
+	var name_box: Rect2 = at["name"]
+	kit.draw_paragraph(card, str(text["name"]), name_box.position, name_box.size.x, NAME_FONT_SIZE, COLOR_TITLE, 2)
+	kit.draw(card, "divider_lotus", at["divider"])
+	kit.draw_text_in(card, str(text["label"]), at["label"], LINE_FONT_SIZE, COLOR_TEXT)
+	kit.draw_text_in(card, str(text["change"]), at["change"], CHANGE_FONT_SIZE, COLOR_CHANGE)
+
+
+## Rects of a card drawn into `rect`: the text block (name, divider, stat label, change) sits on
+## the bottom of the dark panel, each line fitted to its width; the illustration fills the panel
+## above it, as large as the text leaves room for. Keys: art, ribbon, name, divider, label, change.
+static func card_layout(hud_kit: HudKit, rect: Rect2, text: Dictionary) -> Dictionary:
+	var panel: Rect2 = hud_kit.window("card_frame", rect)
+	var left: float = panel.position.x + CARD_TEXT_INSET
+	var width: float = panel.size.x - CARD_TEXT_INSET * 2.0
+	var title: String = str(text.get("name", ""))
+	var name_size: int = hud_kit.fit_paragraph_size(title, width, NAME_FONT_SIZE, 2)
+	var name_height: float = hud_kit.paragraph_height(title, width, name_size)
+	var divider_size: Vector2 = hud_kit.size_of("divider_lotus") * 0.8
+	var label_height: float = 0.0
+	if not str(text.get("label", "")).is_empty():
+		label_height = hud_kit.font.get_height(LINE_FONT_SIZE)
+	var change_height: float = hud_kit.font.get_height(CHANGE_FONT_SIZE)
+	var bottom: float = panel.end.y - CARD_BOTTOM_PAD
+	var change: Rect2 = Rect2(left, bottom - change_height, width, change_height)
+	var label: Rect2 = Rect2(left, change.position.y - label_height, width, label_height)
+	var divider: Rect2 = Rect2(Vector2(rect.get_center().x - divider_size.x * 0.5,
+		label.position.y - DIVIDER_GAP - divider_size.y), divider_size)
+	var name_box: Rect2 = Rect2(left, divider.position.y - DIVIDER_GAP - name_height, width, name_height)
+	var art_top: float = panel.position.y + ART_TOP
+	var side: float = minf(panel.size.x - 20.0, name_box.position.y - 2.0 - art_top)
+	var art: Rect2 = Rect2(rect.get_center().x - side * 0.5, art_top, side, side)
+	var ribbon: Rect2 = Rect2()
+	var ribbon_size: Vector2 = hud_kit.size_of("rank_ribbon")
+	if not str(text.get("rank", "")).is_empty() and ribbon_size != Vector2.ZERO:
+		ribbon = Rect2(Vector2(rect.get_center().x - ribbon_size.x * 0.5, panel.position.y - 6.0), ribbon_size)
+	return {"art": art, "ribbon": ribbon, "name": name_box, "divider": divider, "label": label, "change": change}
 
 
 func _draw_choose() -> void:
 	var rect: Rect2 = Rect2(Vector2.ZERO, choose_button.size)
 	var lit: bool = is_armed() and (choose_button.has_focus() or choose_button.is_hovered())
 	kit.draw(choose_button, "choose_button", rect, Color.WHITE if lit or is_armed() else COLOR_IDLE)
-	var panel: Rect2 = kit.window("choose_button", rect)
-	kit.draw_text(choose_button, UiText.text("UI_CHOICE_PICK"), panel.get_center().x,
-		panel.get_center().y + BUTTON_FONT_SIZE * 0.32, BUTTON_FONT_SIZE, COLOR_TITLE if is_armed() else COLOR_IDLE)
+	var panel: Rect2 = kit.window("choose_button", rect).grow_individual(-BUTTON_TEXT_INSET, 0, -BUTTON_TEXT_INSET, 0)
+	kit.draw_text_in(choose_button, UiText.text("UI_CHOICE_PICK"), panel, BUTTON_FONT_SIZE,
+		COLOR_TITLE if is_armed() else COLOR_IDLE)
 
 
 ## A button that draws nothing itself: the card or the Choose plate is drawn by this menu.

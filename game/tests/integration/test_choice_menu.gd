@@ -133,6 +133,73 @@ func test_cards_come_from_the_gold_kit() -> void:
 	assert_eq(picked, [1] as Array[int], "Choose picks the focused card")
 
 
+## Every upgrade card in RU and EN keeps its text inside the dark panel of the frame, above the
+## lotus crest, at a readable size; long names take two lines and the illustration gives way.
+func test_every_card_text_stays_in_its_panel() -> void:
+	var kit: HudKit = HudKit.load_default()
+	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var world: WorldState = FixedTickDriver.create(config).world
+	var rect: Rect2 = Rect2(Vector2.ZERO, kit.size_of("card_frame"))
+	var panel: Rect2 = kit.window("card_frame", rect)
+	for lang: String in ["ru", "en"]:
+		TranslationServer.set_locale(lang)
+		for code: int in UpgradeSystem.MAX_RANKS.size() + 1:
+			var text: Dictionary = UpgradeCard.describe(config, world, code)
+			var tag: String = "%s %s" % [lang, text["name"]]
+			assert_eq(text["stat"].count("%"), 0, tag)
+			assert_false(str(text["change"]).is_empty(), tag)
+			assert_false(str(text["label"]).contains("%"), tag)
+			var at: Dictionary = ChoiceMenu.card_layout(kit, rect, text)
+			for key: String in ["art", "name", "label", "change"]:
+				assert_true(panel.encloses(at[key]), "%s: %s inside the panel" % [tag, key])
+			assert_lte((at["change"] as Rect2).end.y, panel.end.y - ChoiceMenu.CARD_BOTTOM_PAD, tag + " above the lotus")
+			assert_lte((at["art"] as Rect2).end.y, (at["name"] as Rect2).position.y, tag + " art above the name")
+			assert_gte((at["art"] as Rect2).size.x, 150.0, tag + " art stays large")
+			var width: float = (at["name"] as Rect2).size.x
+			assert_gte(kit.fit_paragraph_size(text["name"], width, ChoiceMenu.NAME_FONT_SIZE, 2), 18, tag + " name size")
+			for line: Array in [["label", ChoiceMenu.LINE_FONT_SIZE, 13], ["change", ChoiceMenu.CHANGE_FONT_SIZE, 16]]:
+				var box: Rect2 = at[line[0]]
+				var size: int = kit.fit_size(text[line[0]], box.size.x, line[1])
+				assert_lte(kit.text_width(text[line[0]], size), box.size.x, "%s %s fits" % [tag, line[0]])
+				assert_gte(size, line[2], "%s %s stays readable" % [tag, line[0]])
+	for lang: String in ["ru", "en"]:
+		TranslationServer.set_locale(lang)
+		var title: String = UiText.text("UI_LEVEL_UP_TITLE")
+		var banner: Rect2 = kit.window("title_banner", Rect2(Vector2.ZERO, kit.size_of("title_banner")))
+		var room: float = banner.size.x - ChoiceMenu.BANNER_TEXT_INSET * 2.0
+		assert_gte(kit.fit_size(title, room, ChoiceMenu.TITLE_FONT_SIZE), 22, "%s title between the scrolls" % lang)
+
+
+## The focused card glows with a halo shaped like its frame (not a box), breathing slowly.
+func test_focused_card_glows_with_the_frame_halo() -> void:
+	var kit: HudKit = HudKit.load_default()
+	var halo: Dictionary = kit.halo_of("card_frame", ChoiceMenu.GLOW_SPREAD)
+	assert_false(halo.is_empty(), "the halo is made from the frame")
+	var image: Image = (halo["texture"] as Texture2D).get_image()
+	var w: int = image.get_width()
+	var h: int = image.get_height()
+	assert_gt(image.get_pixel(w / 2, h / 2).a, 0.9, "solid behind the card")
+	assert_lt(image.get_pixel(1, 1).a, 0.02, "faded out at the edge of its pad")
+	assert_lt(image.get_pixel(w / 2, 1).a, image.get_pixel(w / 2, h / 2).a, "falls off outwards")
+	assert_gt(float(halo["pad"]), 0.0)
+	assert_eq(kit.halo_of("card_frame", ChoiceMenu.GLOW_SPREAD), halo, "made once")
+	var view: RunView = _view()
+	view.start_run(SEED)
+	_to_pause(view, Vector2i.ZERO)
+	await wait_process_frames(2)
+	var menu: ChoiceMenu = _menu(view)
+	var seen: Array[float] = []
+	for step: int in 8:
+		seen.append(menu.glow_strength())
+		menu.age(0.15)
+	assert_between(seen.min(), ChoiceMenu.GLOW_PULSE.x - 0.01, ChoiceMenu.GLOW_PULSE.y + 0.01)
+	assert_between(seen.max(), ChoiceMenu.GLOW_PULSE.x - 0.01, ChoiceMenu.GLOW_PULSE.y + 0.01)
+	assert_gt(seen.max() - seen.min(), 0.1, "the glow breathes")
+	menu.cards[2].grab_focus()
+	menu.cards[1].mouse_entered.emit()
+	assert_true(menu.cards[1].has_focus(), "hover moves the focus, so one card glows at a time")
+
+
 func test_driver_does_not_record_a_card_that_does_not_exist() -> void:
 	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
@@ -225,10 +292,12 @@ func test_card_texts_in_both_locales() -> void:
 	var world: WorldState = WorldState.initial(config)
 	TranslationServer.set_locale("en")
 	var damage: Dictionary = UpgradeCard.describe(config, world, UpgradeSystem.DAMAGE)
-	assert_eq(damage, {"name": "Honed Edge", "stat": "Sword damage 10 → 13", "rank": "Rank 1/2"})
+	assert_eq(damage, {"name": "Honed Edge", "stat": "Sword damage 10 → 13", "label": "Sword damage", "change": "10 → 13",
+		"rank": "Rank 1/2"})
 	TranslationServer.set_locale("ru")
 	damage = UpgradeCard.describe(config, world, UpgradeSystem.DAMAGE)
-	assert_eq(damage, {"name": "Отточенный клинок", "stat": "Урон меча 10 → 13", "rank": "Ранг 1/2"})
+	assert_eq(damage, {"name": "Отточенный клинок", "stat": "Урон меча 10 → 13", "label": "Урон меча", "change": "10 → 13",
+		"rank": "Ранг 1/2"})
 	world.hero_hp = 50000
 	var recover: Dictionary = UpgradeCard.describe(config, world, UpgradeSystem.RECOVER)
 	assert_eq([recover["stat"], recover["rank"]], ["Здоровье 50 → 70", ""])
