@@ -114,9 +114,9 @@ class AssetManifestTests(unittest.TestCase):
         (self.root / self.entry("asset.tile.sect_courtyard_floor")["normal"]["path"]).write_bytes(tiny_png(768, 768, 2))
         self.fails("normal map: sha256/bytes differ")
 
-    def test_atlas_must_be_frames_by_directions(self):
-        self.entry(YIN)["size"] = [768, 576]
-        self.fails("frames x directions")
+    def test_enemy_atlas_size_follows_its_clips(self):
+        self.entry(YIN)["size"] = [1152, 576]
+        self.fails("frames x clip rows")
 
     def test_layout_is_checked_on_an_lfs_pointer_checkout(self):
         for entry in self.manifest["assets"]:
@@ -125,7 +125,7 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("transparent margin")
 
     def test_atlas_must_be_rgba(self):
-        self.atlas(tiny_png(768, 384, colour=2), YIN)
+        self.atlas(tiny_png(1152, 768, colour=2), YIN)
         self.fails("RGBA")
 
     def test_png_size_must_equal_the_manifest(self):
