@@ -95,6 +95,44 @@ func test_menu_picks_only_once_armed_and_logs_choose() -> void:
 	assert_eq(view.is_menu_open(), world.is_paused(), "the menu follows the pause")
 
 
+## ADR-014 section 16: the menu is drawn from the gold kit after REF-011, each card with the
+## illustration of its upgrade, and Choose picks the focused card once armed.
+func test_cards_come_from_the_gold_kit() -> void:
+	var kit: HudKit = HudKit.load_default()
+	for piece: String in ["card_frame", "title_banner", "rank_ribbon", "choose_button"]:
+		assert_true(kit.has(piece), piece)
+	for code: int in UpgradeSystem.MAX_RANKS.size() + 1:
+		assert_true(kit.has(UpgradeCard.art_piece(code)), "illustration of upgrade %d" % code)
+	assert_eq(UpgradeCard.art_piece(UpgradeSystem.RECOVER), "art_recover")
+	assert_eq(UpgradeCard.art_piece(-1), "")
+	assert_eq(UpgradeCard.art_piece(99), "")
+	var view: RunView = _view()
+	view.start_run(SEED)
+	_to_pause(view, Vector2i.ZERO)
+	await wait_process_frames(2)
+	var menu: ChoiceMenu = _menu(view)
+	var world: WorldState = view.driver.world
+	assert_eq(menu.kit, view.get("_hud").kit, "the menu shares the HUD kit")
+	for index: int in world.hand.size():
+		assert_eq(menu.cards[index].custom_minimum_size, kit.size_of("card_frame"))
+		assert_eq(menu.card_texts[index]["art"], UpgradeCard.art_piece(world.hand[index]))
+		assert_eq(menu.cards[index].text, "", "the card draws its text itself")
+	assert_eq(menu.choose_button.custom_minimum_size, kit.size_of("choose_button"))
+	var top: float = menu.cards[0].get_global_rect().position.y
+	assert_gt(top, ChoiceMenu.TOP, "cards sit under the banner, below the HUD plaque")
+	var hud: Dictionary = RunHud.layout(kit, menu.get_viewport_rect().size)
+	assert_lt(menu.choose_button.get_global_rect().end.y, menu.get_viewport_rect().size.y, "Choose on screen")
+	assert_false(menu.cards[0].get_global_rect().intersects(hud["ring"]), "cards clear the portrait")
+	var picked: Array[int] = []
+	menu.picked.connect(func(index: int) -> void: picked.append(index))
+	menu.cards[1].grab_focus()
+	menu.choose_button.pressed.emit()
+	assert_eq(picked, [] as Array[int], "Choose waits for the arm delay")
+	menu.age(ChoiceMenu.ARM_DELAY)
+	menu.choose_button.pressed.emit()
+	assert_eq(picked, [1] as Array[int], "Choose picks the focused card")
+
+
 func test_driver_does_not_record_a_card_that_does_not_exist() -> void:
 	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
 	var driver: FixedTickDriver = FixedTickDriver.create(config)

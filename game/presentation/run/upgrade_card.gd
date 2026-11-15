@@ -5,6 +5,17 @@ extends RefCounted
 ## of the world, so the card always shows what the simulation will do. Presentation only.
 
 
+## HUD kit illustration of each upgrade code (ADR-014 section 16), in UpgradeSystem code order.
+const ART_PIECES: Array[String] = [
+	"art_speed", "art_vitality", "art_pickup", "art_count", "art_damage", "art_haste", "art_pierce", "art_recover",
+]
+
+
+## Name of the card illustration of `code` in the HUD kit.
+static func art_piece(code: int) -> String:
+	return ART_PIECES[code] if code >= 0 and code < ART_PIECES.size() else ""
+
+
 ## Translation key stem of a card: upgrade.p0.sword_damage -> UPGRADE_P0_SWORD_DAMAGE.
 static func key_stem(code: int) -> String:
 	return UpgradeSystem.card_id(code).replace(".", "_").to_upper()

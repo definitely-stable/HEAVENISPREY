@@ -985,140 +985,272 @@
       "asset_id": "asset.ui.hud_kit",
       "kind": "ui_atlas",
       "path": "game/assets/ui/hud_kit/hud_kit.png",
-      "sha256": "0fcfa0c12be78214131dd6400a3ba07386a8de62bc0de79f25bc29b1e3b84ded",
-      "bytes": 321611,
+      "sha256": "63c3cb8ae513e6991696917a30fafba5b68fe4729239dd16853a49cee00522e0",
+      "bytes": 1813057,
       "size": [
-        1018,
-        564
+        956,
+        2137
       ],
-      "asset_version": 1,
+      "asset_version": 2,
       "art_bible_version": 4,
       "content_ids": [],
       "layout": {
-        "density": 2,
+        "density": 1.5,
         "pieces": [
           {
             "name": "portrait_ring",
             "region": [
               2,
               2,
-              214,
-              244
+              160,
+              183
             ],
             "inner": [
+              31,
               40,
-              51,
-              146,
-              136
+              109,
+              100
             ]
           },
           {
             "name": "level_seal",
             "region": [
-              220,
+              166,
               2,
-              95,
-              92
+              71,
+              69
             ],
             "inner": [
-              233,
-              15,
-              69,
-              65
+              176,
+              12,
+              51,
+              48
             ]
           },
           {
             "name": "bar_frame",
             "region": [
-              319,
+              241,
               2,
-              378,
-              36
+              284,
+              27
             ],
             "inner": [
-              351,
-              10,
-              314,
-              21
+              265,
+              8,
+              236,
+              16
             ],
             "slice": [
-              40,
-              40
+              30.0,
+              30.0
             ]
           },
           {
             "name": "title_plaque",
             "region": [
+              529,
               2,
-              250,
-              418,
-              100
+              313,
+              75
             ],
             "inner": [
-              26,
-              275,
-              370,
-              68
+              547,
+              21,
+              277,
+              51
             ]
           },
           {
             "name": "counter_capsule",
             "region": [
-              424,
-              250,
-              286,
-              76
+              2,
+              189,
+              215,
+              57
             ],
             "inner": [
-              437,
-              265,
-              50,
-              49
+              12,
+              200,
+              37,
+              37
             ]
           },
           {
             "name": "divider_lotus",
             "region": [
-              714,
-              250,
-              302,
-              36
+              221,
+              189,
+              226,
+              27
             ]
           },
           {
             "name": "fill_red",
             "region": [
-              2,
-              354,
-              177,
-              20
+              451,
+              189,
+              133,
+              15
             ]
           },
           {
             "name": "fill_gold",
             "region": [
-              183,
-              354,
-              177,
-              20
+              588,
+              189,
+              132,
+              15
             ]
           },
           {
             "name": "icon_slain",
             "region": [
-              364,
-              354,
-              63,
-              68
+              724,
+              189,
+              48,
+              51
             ]
           },
           {
             "name": "portrait",
             "region": [
-              431,
-              354,
-              208,
-              208
+              776,
+              189,
+              156,
+              156
+            ]
+          },
+          {
+            "name": "card_frame",
+            "region": [
+              2,
+              349,
+              374,
+              570
+            ],
+            "inner": [
+              17,
+              381,
+              343,
+              491
+            ]
+          },
+          {
+            "name": "title_banner",
+            "region": [
+              380,
+              349,
+              574,
+              150
+            ],
+            "inner": [
+              441,
+              410,
+              454,
+              68
+            ]
+          },
+          {
+            "name": "rank_ribbon",
+            "region": [
+              2,
+              923,
+              113,
+              42
+            ],
+            "inner": [
+              10,
+              932,
+              97,
+              24
+            ]
+          },
+          {
+            "name": "choose_button",
+            "region": [
+              119,
+              923,
+              368,
+              75
+            ],
+            "inner": [
+              144,
+              934,
+              318,
+              52
+            ]
+          },
+          {
+            "name": "art_speed",
+            "region": [
+              491,
+              923,
+              303,
+              300
+            ]
+          },
+          {
+            "name": "art_vitality",
+            "region": [
+              2,
+              1227,
+              300,
+              300
+            ]
+          },
+          {
+            "name": "art_pickup",
+            "region": [
+              306,
+              1227,
+              301,
+              300
+            ]
+          },
+          {
+            "name": "art_count",
+            "region": [
+              611,
+              1227,
+              303,
+              300
+            ]
+          },
+          {
+            "name": "art_damage",
+            "region": [
+              2,
+              1531,
+              303,
+              300
+            ]
+          },
+          {
+            "name": "art_haste",
+            "region": [
+              309,
+              1531,
+              300,
+              300
+            ]
+          },
+          {
+            "name": "art_pierce",
+            "region": [
+              613,
+              1531,
+              301,
+              300
+            ]
+          },
+          {
+            "name": "art_recover",
+            "region": [
+              2,
+              1835,
+              303,
+              300
             ]
           }
         ]
@@ -1126,22 +1258,22 @@
       "normal": null,
       "source": {
         "path": "art_source/hud_kit/master.webp",
-        "sha256": "4ec091e350d49e04f2d58b537fc3730ecc5a8943c4c4aa34bc7d2fe33fc5bea5",
-        "bytes": 520950,
-        "prompt_sha256": "e2fdb0cfcbeb06acf893bb72b51e8b7f36802098caed348d841591085438a19e"
+        "sha256": "f9be73f7e452463bec9afa230ec8a055965afa7c3bb478b5485fb568b5a2c705",
+        "bytes": 904914,
+        "prompt_sha256": "52c6e7b50f53c756e03def668e80a2e7035a898213f0a99e28d4a7834d68cede"
       },
       "qa": {
         "palette_group": "ui",
-        "opaque_px": 7359,
-        "palette_mean_delta_e": 10.62,
+        "opaque_px": 12823,
+        "palette_mean_delta_e": 9.58,
         "tones_pct": [
-          59.6,
-          33.2,
-          7.2
+          68.2,
+          23.8,
+          8.0
         ],
-        "chroma": 0.252,
-        "threat_colour_pct": 0.421,
-        "median_l": 63.9
+        "chroma": 0.268,
+        "threat_colour_pct": 0.055,
+        "median_l": 46.4
       }
     }
   ]

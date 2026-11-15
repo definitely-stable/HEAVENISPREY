@@ -190,6 +190,7 @@ func _ready() -> void:
 	theme.default_font = _hud.kit.font
 	_menu = ChoiceMenu.new()
 	_menu.theme = theme
+	_menu.kit = _hud.kit
 	layer.add_child(_menu)
 	_menu.picked.connect(_on_card_picked)
 	_results = RunResults.new()

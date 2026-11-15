@@ -131,6 +131,21 @@ func draw_text(canvas: CanvasItem, text: String, center_x: float, baseline: floa
 	canvas.draw_string(font, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 
 
+## Wrapped, centred text of at most `max_lines` lines in `width` px from `top_left` (the top of
+## the first line); returns the height it took.
+func draw_paragraph(
+	canvas: CanvasItem, text: String, top_left: Vector2, width: float, size: int, color: Color, max_lines: int
+) -> float:
+	var block: Vector2 = font.get_multiline_string_size(
+		text, HORIZONTAL_ALIGNMENT_CENTER, width, size, max_lines
+	)
+	var at: Vector2 = Vector2(roundf(top_left.x), roundf(top_left.y + font.get_ascent(size)))
+	canvas.draw_multiline_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, width, size, max_lines,
+		maxi(2, size / 6), Color(0.06, 0.03, 0.02, 0.9))
+	canvas.draw_multiline_string(font, at, text, HORIZONTAL_ALIGNMENT_CENTER, width, size, max_lines, color)
+	return block.y
+
+
 static func _rect(values: Variant) -> Rect2:
 	if not values is Array or (values as Array).size() != 4:
 		return Rect2()

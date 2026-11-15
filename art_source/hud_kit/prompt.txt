@@ -33,3 +33,29 @@ Game HUD hero portrait: a head-and-shoulders bust of the SAME young swordsman as
 Style: hand-painted dark xianxia game character portrait, painterly, soft cool moonlight from the upper left and a warm gold rim from the right, dark smoky background inside the circle in deep blue-grey.
 
 Background: everything outside the circle is perfectly flat solid pure green #00FF00. No frame, no ring, no text, no watermark.
+
+## cards
+
+Game UI asset sheet for a level-up upgrade choice screen like the attached screenshot (first image): four separate ornate gold elements laid out as a strict grid of 2 columns x 2 rows of equal cells on a 1536 x 1024 canvas, exactly one element centred in each cell with a wide clear green gap to the cell edges, nothing touching. Read left to right, top row first:
+1 (top left): an empty upgrade card frame, portrait, about 300 x 440 px: a tall dark lacquer panel with a gold frame, rounded and notched corners with small gold cloud curls, a small gold diamond finial in the middle of the top edge and the bottom edge ending in a short downward point with a small gold lotus ornament, the whole inside plain dark lacquer, empty.
+2 (top right): a wide title banner, about 700 x 120 px: a horizontal dark lacquer plaque with a gold frame, both ends flaring into large curling gold cloud scrolls, a small vertical gold spire finial on the middle of the top edge, empty inside.
+3 (bottom left): a small rank ribbon tab, about 280 x 60 px: a horizontal deep navy blue lacquer plaque with a thin gold rim and pointed ends, empty inside.
+4 (bottom right): a wide button, about 480 x 92 px: a horizontal dark lacquer capsule with a thick gold rim and pointed arrow-like ends with small gold curls, empty inside.
+
+Style: exactly the ornate gold xianxia game UI of the attached references (the first image is the main reference): hand-painted polished antique gold metal with fine engraved cloud and scroll detail, warm highlights and deep brown-gold shadows, inner panels of very dark warm brown-black lacquer with a faint grain. Crisp hard edges. NO outer glow, NO bloom, NO sparkles, NO drop shadow, NO light rays around the elements, so every silhouette ends cleanly against the background.
+
+Background: perfectly flat solid pure green #00FF00 everywhere around the elements, no gradient, no shadow. No text, no letters, no digits, no labels, no watermark anywhere.
+
+## art
+
+Game card illustration sheet: eight separate square card illustrations in the luminous golden xianxia style of the card art in the attached screenshot (first image), laid out as a strict grid of 4 columns x 2 rows of equal cells on a 1536 x 1024 canvas. Each cell holds exactly one square illustration panel about 330 x 330 px, centred, with a clear green gap around it and between panels. Inside each panel: a dark smoky warm brown-black background (#1c120e) that becomes darker and plainer toward the panel edges, and in the middle one glowing golden-orange subject, painted, dramatic, readable at small size, the glow staying inside the panel. Read left to right, top row first:
+1: golden winged boots of light stepping across swirling clouds, with streaks of wind showing great speed.
+2: a radiant golden-red qi core shaped like a blooming heart-lotus, pulsing with warm life energy.
+3: a swirling vortex of small jade-blue qi orbs being drawn in toward an open golden glowing palm.
+4: a fan-shaped formation of seven golden spirit swords descending from the sky, points down, over a glowing circle.
+5: a single golden jian sword blade, its edge freshly honed and gleaming, a few golden sparks along the edge.
+6: three golden crescent sword slashes flowing in a fast circle, like a whirlwind of strikes.
+7: a golden spirit sword piercing straight through three faint dark red ghost silhouettes in a row.
+8: a serene golden cultivator meditating cross-legged on a glowing golden lotus, soft rings of qi around.
+
+Background: everything outside the eight square panels is perfectly flat solid pure green #00FF00. No frames, no borders, no text, no letters, no digits, no watermark.

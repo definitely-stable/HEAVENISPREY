@@ -287,6 +287,10 @@
    "en": "Extended Lightning",
    "ru": "Длинная молния"
   },
+  "UI_CHOICE_PICK": {
+   "en": "Choose",
+   "ru": "Выбрать"
+  },
   "UI_DIFFICULTY": {
    "en": "Challenge level",
    "ru": "Уровень испытания"
@@ -300,8 +304,8 @@
    "ru": "Ещё выборов: %d"
   },
   "UI_LEVEL_UP_TITLE": {
-   "en": "Level up: choose an upgrade",
-   "ru": "Новый уровень: выберите улучшение"
+   "en": "Choose an upgrade",
+   "ru": "Выберите улучшение"
   },
   "UI_RUN_DEFEAT": {
    "en": "Defeat",
