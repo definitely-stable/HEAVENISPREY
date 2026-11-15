@@ -6,8 +6,13 @@ extends RefCounted
 ## an enemy standing in front of it) but take modulate = light_at(feet), the same model
 ## evaluated at their ground point. Shadows fall away from the moon. Presentation only.
 
-## Night ambient of the grove (CanvasModulate of the ground; the base of upright light).
+## Night ambient on upright things (the base of light_at): bodies and props stand pale
+## against the paving, as on REF-023 and REF-044.
 const AMBIENT: Color = Color(0.79, 0.8, 0.9)
+## Night ambient of the ground (CanvasModulate of GroundLayer): the paving of REF-023 is dark
+## slate under a cold sky, so the lantern pools and the gold of the fight stand out of it
+## (ADR-014 section 20).
+const GROUND_AMBIENT: Color = Color(0.76, 0.77, 0.87)
 ## Moonlight: colour, energy and height for normal mapping (0..1). It travels from the upper
 ## left to the lower right of the screen, along the cast shadows (moon_travel()).
 const MOON_COLOR: Color = Color(0.62, 0.72, 0.95)

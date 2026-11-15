@@ -99,6 +99,8 @@ const RIM_SHADER: Shader = preload("res://presentation/run/shaders/sprite_rim.gd
 const SHADOW_SHADER: Shader = preload("res://presentation/run/shaders/shadow_group.gdshader")
 ## Lantern pools the shadow shader fills (its MAX_LIGHTS).
 const MAX_SHADOW_POOLS: int = 16
+## Canvas layer of the HUD, the menu and the results: above the frame grade.
+const HUD_LAYER: int = 2
 ## Camera zoom and the inset (cells) from the walls inside which it follows the hero.
 const CAMERA_ZOOM: float = 1.3
 const CAMERA_INSET_CELLS: float = 4.0
@@ -132,6 +134,8 @@ var _pickups: Array[Array] = []
 var _vfx: CombatVfx
 ## Pose of each enemy drawn in the last frame by uid: an enemy killed next frame decays in it.
 var _body_poses: Dictionary = {}
+## Tone of the world frame, over the scene and under the HUD (ADR-014 section 20).
+var _grade: FrameGrade
 ## Screen-space layer for the HUD (not moved by the camera).
 var _hud: RunHud
 var _menu: ChoiceMenu
@@ -182,7 +186,10 @@ func _ready() -> void:
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	RenderingServer.set_default_clear_color(COLOR_VOID)
+	_grade = FrameGrade.new()
+	add_child(_grade)
 	var layer: CanvasLayer = CanvasLayer.new()
+	layer.layer = HUD_LAYER
 	add_child(layer)
 	_hud = RunHud.new()
 	_hud.kit = HudKit.load_default()
