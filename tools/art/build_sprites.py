@@ -671,13 +671,20 @@ def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     return atlas, {"density": spec["density"], "pieces": out}
 
 
-def grade(piece: Image.Image, tint: list[float] | None) -> Image.Image:
-    """Colour grade of a piece: each channel times `tint` (the light of a generated sheet moved to
-    the hue of its reference, e.g. a lemon gold to the amber gold of REF-023); alpha unchanged."""
-    if not tint:
+def grade(piece: Image.Image, tint: list[float] | None, gamma: float | None = None) -> Image.Image:
+    """Colour grade of a piece or an atlas: each channel to the power `gamma` (below 1 lifts the
+    mid tones and keeps the black of the outline and the highlights), then times `tint` (the hue
+    of the generated sheet moved to its reference, e.g. a lemon gold to the amber gold of
+    REF-023, a brown robe to the slate of REF-044); alpha unchanged."""
+    if not tint and not gamma:
         return piece
     pixels = np.asarray(piece.convert("RGBA")).astype(np.float64)
-    pixels[..., :3] = np.clip(np.round(pixels[..., :3] * np.asarray(tint, dtype=np.float64)), 0, 255)
+    colour = pixels[..., :3] / 255.0
+    if gamma:
+        colour = np.power(colour, gamma)
+    if tint:
+        colour = colour * np.asarray(tint, dtype=np.float64)
+    pixels[..., :3] = np.clip(np.round(colour * 255.0), 0, 255)
     return Image.fromarray(pixels.astype(np.uint8), "RGBA")
 
 
@@ -774,6 +781,10 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_ui(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
+    if spec.get("grade"):
+        # The tone of the generated sheets moved to the tone of the reference board (ADR-014
+        # section 19): before the passport is measured, so the measure sees what the game draws.
+        image = grade(image, spec["grade"].get("tint"), spec["grade"].get("gamma"))
     # The rim of characters is drawn by the scene shader (ADR-014 section 4), never baked.
     group = passport["groups"][spec["palette_group"]]
     sample = image
@@ -848,6 +859,9 @@ def render_card(name: str, entry: dict) -> str:
                     f"{', '.join(layout['directions'])}, зеркало {mirror} · feet_anchor {layout['feet_anchor']} "
                     f"(якорь по x: {layout['anchor_x']}) · масштаб листов мастера {layout['scale'][0]}–{layout['scale'][1]} · "
                     f"{len(spec['sheets'])} листов в мозаике мастера")
+        if spec.get("grade"):
+            geometry += (f" · тон: гамма {spec['grade'].get('gamma', 1.0)}, множитель каналов "
+                         f"{spec['grade'].get('tint', [1.0, 1.0, 1.0])}")
         kind = "animated spritesheet"
     elif entry["kind"] == "prop_atlas":
         geometry = (f"атлас пропсов {entry['size'][0]}×{entry['size'][1]} px, плотность {layout['density']}: "
@@ -898,7 +912,7 @@ def render_card(name: str, entry: dict) -> str:
         f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}` · " + (
             f"нормали [{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})"
             if entry["normal"] else "без нормалей"),
-        "- **Decision:** " + {"anim_atlas": "approved для P0 (ADR-014 A4, A5), ракурс 30°",
+        "- **Decision:** " + {"anim_atlas": "approved для P0 (ADR-014 A4, A5, §19), ракурс 30°",
                               "ui_atlas": "approved для P0 (ADR-014 §15–16: HUD по REF-022, меню выбора по REF-011)",
                               "vfx_atlas": "approved для P0 (ADR-014 §18, A6: эффекты боя по REF-023, REF-035, REF-010)"}.get(
             entry["kind"], "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),

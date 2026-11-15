@@ -128,27 +128,27 @@
       "asset_id": "asset.enemy.blood_wolf",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
-      "sha256": "8364b041b9df68cee938ee78daffbe720f7ed2f8919e535b31fb77b1dfc0cc62",
-      "bytes": 497255,
+      "sha256": "33923abb8d8b0f7a74f45b8df2558bb56274094cf60c7044718cfe3ffbe57d88",
+      "bytes": 756967,
       "size": [
-        1152,
-        768
+        1440,
+        960
       ],
-      "asset_version": 3,
+      "asset_version": 4,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.blood_wolf"
       ],
       "layout": {
         "anchor_x": "torso",
-        "frame_size": 192,
+        "frame_size": 240,
         "feet_anchor": [
-          96,
-          186
+          120,
+          234
         ],
         "scale": [
-          0.2907,
-          0.3286
+          0.3666,
+          0.4143
         ],
         "frames": 6,
         "directions": [
@@ -184,8 +184,8 @@
       },
       "normal": {
         "path": "game/assets/enemies/blood_wolf/blood_wolf_n.png",
-        "sha256": "fa5c93b7440e589a8eddc93e7d0514f541175655f079e5d285ab74bafbec7e08",
-        "bytes": 365230,
+        "sha256": "a2de8e014c9474ca54ab3021eadd7b3fc3f085554dabeab16be6df98a07cef49",
+        "bytes": 509260,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -198,34 +198,34 @@
         "prompt_sha256": "cf16a3164da6c1c4bf109f9ca6dbed1f6e0514be7f6d15192123ef70aa891c16"
       },
       "qa": {
-        "palette_group": "characters",
-        "opaque_px": 2959,
-        "palette_mean_delta_e": 10.28,
+        "palette_group": "enemies",
+        "opaque_px": 3027,
+        "palette_mean_delta_e": 8.8,
         "tones_pct": [
-          77.6,
-          22.1,
-          0.3
+          48.9,
+          48.5,
+          2.6
         ],
-        "chroma": 0.158,
+        "chroma": 0.161,
         "threat_colour_pct": 0.0,
-        "median_l": 64.8,
-        "loop_seam_ratio": 0.605,
-        "loop_seam_to_max": 0.561,
-        "height_spread_pct": 0.3,
-        "torso_drift_px": 1.0
+        "median_l": 85.6,
+        "loop_seam_ratio": 0.557,
+        "loop_seam_to_max": 0.528,
+        "height_spread_pct": 0.24,
+        "torso_drift_px": 2.0
       }
     },
     {
       "asset_id": "asset.enemy.yin_corpse",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
-      "sha256": "2ac0e51c39ab170eaf97f150a3ca95c06bdda4986811bd161ae35363e19bd8d9",
-      "bytes": 503205,
+      "sha256": "8855563916aee135180b9f2398e199552c03d76d567107f911f3a793b46ad6ab",
+      "bytes": 816642,
       "size": [
         1152,
         768
       ],
-      "asset_version": 3,
+      "asset_version": 4,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.yin_corpse"
@@ -238,8 +238,8 @@
           186
         ],
         "scale": [
-          0.2618,
-          0.2649
+          0.3433,
+          0.3474
         ],
         "frames": 6,
         "directions": [
@@ -275,8 +275,8 @@
       },
       "normal": {
         "path": "game/assets/enemies/yin_corpse/yin_corpse_n.png",
-        "sha256": "2afb995d8807a99c8150cbea850584682b06fb93555fb04072b7767ec66320cb",
-        "bytes": 371192,
+        "sha256": "2a22710b95f3182acfa3468fe84e03669d50b91e420f3033b5763cc08835863c",
+        "bytes": 548623,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -289,20 +289,20 @@
         "prompt_sha256": "ede9f4bc855815f19137d9e4606801beb407e3c41dccbb46b33dc7d75affb12d"
       },
       "qa": {
-        "palette_group": "characters",
-        "opaque_px": 2645,
-        "palette_mean_delta_e": 9.68,
+        "palette_group": "enemies",
+        "opaque_px": 4707,
+        "palette_mean_delta_e": 6.44,
         "tones_pct": [
-          63.3,
-          36.7,
-          0.0
+          37.9,
+          59.8,
+          2.3
         ],
-        "chroma": 0.088,
+        "chroma": 0.071,
         "threat_colour_pct": 0.0,
-        "median_l": 71.5,
-        "loop_seam_ratio": 1.25,
-        "loop_seam_to_max": 1.144,
-        "height_spread_pct": 0.21,
+        "median_l": 96.7,
+        "loop_seam_ratio": 1.244,
+        "loop_seam_to_max": 1.131,
+        "height_spread_pct": 0.31,
         "torso_drift_px": 1.0
       }
     },

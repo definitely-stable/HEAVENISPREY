@@ -88,10 +88,11 @@ const GEM_BOB_HZ: float = 0.8
 const GEM_REST_SCALE: float = 0.8
 const GEM_REST_ALPHA: float = 0.7
 const GEM_NEAR_RADII: float = 2.0
-## Rim on the moon side of upright sprites (shaders/sprite_rim.gdshader): cold and thin for
-## enemies, warm and brighter for the hero.
-const RIM_ENEMY: Color = Color(0.42, 0.5, 0.54)
-const RIM_ENEMY_STRENGTH: float = 0.5
+## Rim on the moon side of upright sprites (shaders/sprite_rim.gdshader): moonlit blue on the
+## enemies, strong enough to cut each one out of the horde and the floor (ADR-014 section 19),
+## warm on the hero.
+const RIM_ENEMY: Color = Color(0.66, 0.76, 0.98)
+const RIM_ENEMY_STRENGTH: float = 0.6
 const RIM_HERO: Color = Color(1.0, 0.86, 0.6)
 const RIM_HERO_STRENGTH: float = 0.65
 const RIM_SHADER: Shader = preload("res://presentation/run/shaders/sprite_rim.gdshader")
