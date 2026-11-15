@@ -6,7 +6,7 @@
 - **Content IDs:** `class.sword`
 - **Type / layer:** spritesheet
 - **Reference anchors:** `REF-061` `ba5c8ebe4ddd` · `REF-035` `ee8cb2409d54`
-- **Style passport version:** ART-BIBLE-001 v3, группа `hero_sprite`
+- **Style passport version:** ART-BIBLE-001 v4, группа `hero_sprite`
 - **Generation:** GPT imagegen (Codex CLI image_generation, AGENTS.md p.3) · codex-cli 0.168.0 · prompt sha256 `d3ccfb9d8de283dd` ([prompt.txt](prompt.txt)) · 2026-11-14T15:00:26+0500 · мастер [master.webp](master.webp) `4084ac303618`
 - **Geometry:** кадр 192×192 px · 4 кадра × 4 направления (down, left, right, up) · feet_anchor [96, 186] (якорь по x: torso) · масштаб мастера 0.5793
 - **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены

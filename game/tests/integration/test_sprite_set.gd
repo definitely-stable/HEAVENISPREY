@@ -5,8 +5,11 @@ extends GutTest
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
-	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse", "asset.tile.jade_grove_floor",
+	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
+	"asset.prop.courtyard_lights", "asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
+	"asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor", "asset.tile.sect_seal",
 ]
+const FLOOR: String = "asset.tile.sect_courtyard_floor"
 
 
 func test_manifest_textures_load_with_their_size() -> void:
@@ -39,7 +42,10 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var shared: Texture2D = sprites.canvas_texture("asset.char.hero_sword")
 	var right: float = -1.0
-	for asset_id: String in ["asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse"]:
+	for asset_id: String in [
+		"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
+		"asset.prop.courtyard_lights", "asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
+	]:
 		assert_eq(sprites.canvas_texture(asset_id), shared, asset_id)
 		var origin: Vector2 = sprites.atlas_origin(asset_id)
 		assert_gt(origin.x, right, asset_id + " does not overlap the atlas before it")
@@ -48,8 +54,8 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 		var own: Image = sprites.texture(asset_id).get_image()
 		var probe: Vector2i = Vector2i(96, 120)
 		assert_eq(packed.get_pixelv(Vector2i(origin) + probe), own.get_pixelv(probe), asset_id + " pixels are copied")
-	assert_ne(sprites.canvas_texture("asset.tile.jade_grove_floor"), shared, "the floor repeats on its own texture")
-	assert_eq(sprites.atlas_origin("asset.tile.jade_grove_floor"), Vector2.ZERO)
+	assert_ne(sprites.canvas_texture(FLOOR), shared, "the floor repeats on its own texture")
+	assert_eq(sprites.atlas_origin(FLOOR), Vector2.ZERO)
 
 
 func test_frame_regions_follow_the_layout() -> void:
@@ -61,7 +67,7 @@ func test_frame_regions_follow_the_layout() -> void:
 	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "right", -1), Rect2(576, 192, 192, 192))
 	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "down", 0), Rect2(), "no such direction")
 	assert_eq(sprites.frame_region("asset.enemy.unknown", "left", 0), Rect2())
-	assert_eq(sprites.floor_repeat_px("asset.tile.jade_grove_floor", 48), 384.0)
+	assert_eq(sprites.floor_repeat_px(FLOOR, 48), 384.0)
 
 
 func test_direction_and_walk_frame() -> void:
@@ -90,3 +96,27 @@ func test_run_scene_draws_w0_kinds_as_sprites() -> void:
 	for frame: int in 120:
 		view.advance_frame(1.0 / 60.0, Vector2i(1, 0))
 	assert_gt(view.driver.world.tick, 0, "the run advances with sprites drawn")
+
+
+## ADR-014 slice A3: props are named regions of a prop atlas, drawn at density 2 from their base.
+func test_props_are_named_regions_drawn_from_their_base() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var lights: String = "asset.prop.courtyard_lights"
+	var names: PackedStringArray = PackedStringArray(["lantern_pagoda", "brazier", "banner", "incense", "lion", "stele"])
+	assert_eq(sprites.prop_names(lights), names)
+	assert_true(sprites.has_prop(lights, "brazier"))
+	assert_false(sprites.has_prop(lights, "gate"), "the gate is on the walls sheet")
+	assert_false(sprites.has_prop("asset.enemy.unknown", "brazier"))
+	var size: Vector2 = sprites.prop_size(lights, "lantern_pagoda")
+	assert_almost_eq(size.y, 118.0, 2.0, "drawn at its passport height")
+	assert_eq(sprites.prop_size(lights, "gate"), Vector2.ZERO)
+	var canvas: Node2D = Node2D.new()
+	add_child_autofree(canvas)
+	assert_false(sprites.draw_prop(canvas, lights, "gate", Vector2(10, 10), Color.WHITE), "nothing to draw")
+
+
+func test_floor_decal_and_strip_spans() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	assert_eq(sprites.decal_world_px("asset.tile.sect_seal"), 672.0)
+	assert_eq(sprites.decal_world_px("asset.tile.sect_cliff"), 520.0)
+	assert_eq(sprites.decal_world_px("asset.tile.unknown"), 0.0)

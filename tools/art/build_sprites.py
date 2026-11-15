@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""ART-01: build game sprites and floor textures from master sheets (ADR-013, ADR-014).
+"""ART-01: build game sprites, props and floor textures from master sheets (ADR-013, ADR-014).
 
 art_source/<name>/source.json describes one master image (Git LFS) and how it becomes a
 game asset: a sprite atlas (chroma key, grid slicing, one scale per asset, a fixed
-feet_anchor) or a seamless floor texture. The builder writes game/assets/<group>/<name>/
+feet_anchor), a prop atlas (chroma key, one prop per connected shape, each scaled to its
+height and packed with the centre of its base as anchor), a seamless floor texture, a floor
+decal (chroma key, square) or a wall strip (seamless left to right). The builder writes game/assets/<group>/<name>/
 <name>.png and the matching entry of game/assets/manifest.json, including the style
 metrics of ART-BIBLE-001 section 6 measured on the built file.
 
@@ -27,7 +29,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageChops, ImageFilter
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -227,6 +229,35 @@ def sprite_normals(atlas: Image.Image, frame: int) -> Image.Image:
     return _encode_normals(normals, alpha)
 
 
+def region_normals(atlas: Image.Image, regions: list[list[int]]) -> Image.Image:
+    """The silhouette pillow of sprite_normals for each prop region of an atlas."""
+    rgba = np.asarray(atlas.convert("RGBA"))
+    alpha = rgba[..., 3]
+    normals = np.zeros(alpha.shape + (3,), dtype=np.float64)
+    normals[..., 2] = 1.0
+    k = SPRITE_NORMAL["strength"]
+    for x0, y0, w, h in regions:
+        inside = alpha[y0:y0 + h, x0:x0 + w] > 100
+        height = np.sqrt(np.clip(ndimage.distance_transform_edt(inside) / SPRITE_NORMAL["bevel_px"], 0.0, 1.0))
+        height = ndimage.gaussian_filter(height, SPRITE_NORMAL["blur_px"])
+        gx = ndimage.sobel(height, axis=1)
+        gy = ndimage.sobel(height, axis=0)
+        normals[y0:y0 + h, x0:x0 + w] = np.dstack([-gx * k, gy * k, np.ones_like(height)])
+    return _encode_normals(normals, alpha)
+
+
+def decal_normals(decal: Image.Image) -> Image.Image:
+    """Luminance relief of an inlay: the gold stands proud of its engraved grooves."""
+    rgba = np.asarray(decal.convert("RGBA"), dtype=np.float64) / 255.0
+    height = ndimage.gaussian_filter((rgba[..., :3] @ np.array([0.2126, 0.7152, 0.0722])) * rgba[..., 3],
+                                     FLOOR_NORMAL["blur_px"])
+    k = FLOOR_NORMAL["strength"]
+    gx = ndimage.sobel(height, axis=1)
+    gy = ndimage.sobel(height, axis=0)
+    alpha = np.round(rgba[..., 3] * 255.0).astype(np.uint8)
+    return _encode_normals(np.dstack([-gx * k, gy * k, np.ones_like(height)]), alpha)
+
+
 def resize_premultiplied(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     return image.convert("RGBa").resize(size, Image.Resampling.LANCZOS).convert("RGBA")
 
@@ -277,6 +308,105 @@ def build_atlas(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     return atlas, layout
 
 
+## Props are packed in shelves no wider than this, with this many transparent px around each.
+PROP_ATLAS_WIDTH = 2048
+PROP_PAD_PX = 6
+
+
+def base_anchor(prop: Image.Image) -> tuple[float, float]:
+    """Centre of the ground footprint of an isometric prop: the solid pixels of its lowest
+    15 % give the base width w, and the centre of a 2:1 base diamond is w / 4 above its
+    lowest point."""
+    alpha = np.asarray(prop.getchannel("A")) > SOLID_ALPHA
+    rows = np.nonzero(alpha.any(axis=1))[0]
+    bottom = int(rows[-1]) + 1
+    band = alpha[max(0, bottom - max(2, round(len(rows) * 0.15))):bottom]
+    xs = np.nonzero(band.any(axis=0))[0]
+    width = float(xs[-1] - xs[0] + 1)
+    return float((xs[0] + xs[-1] + 1) / 2.0), bottom - width / 4.0
+
+
+def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
+    """One prop per connected shape of the keyed sheet, matched to spec props by grid cell."""
+    sheet = spec["sheet"]
+    keyed = key_out(master, hex_rgb(sheet["key_colour"]), sheet["key_low"], sheet["key_high"])
+    solid = np.asarray(keyed.getchannel("A")) > EDGE_ALPHA
+    # Smoke, tassels and leaves float a few px off the body: join them before labelling.
+    labels, count = ndimage.label(ndimage.binary_dilation(solid, iterations=sheet.get("join_px", 6)))
+    cols, rows = sheet["grid"]
+    cell_w, cell_h = keyed.width / cols, keyed.height / rows
+    # Every shape (smoke, a loose tassel) belongs to the grid cell its centre falls in.
+    groups: dict[int, list[int]] = {}
+    for index, box in enumerate(ndimage.find_objects(labels)):
+        ys, xs = box
+        if int((labels[box] == index + 1).sum()) < sheet.get("min_area_px", 400):
+            continue
+        cell = int((xs.start + xs.stop) / 2 // cell_w) + cols * int((ys.start + ys.stop) / 2 // cell_h)
+        groups.setdefault(cell, []).append(index + 1)
+    pieces = []
+    for cell, prop in enumerate(spec["props"]):
+        if cell not in groups:
+            raise ValueError(f"{spec['asset_id']}: no shape for {prop['name']} in grid cell {cell}")
+        inside = np.isin(labels, groups[cell])
+        ys, xs = np.nonzero(inside)
+        left, top, right, bottom = int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1
+        if left == 0 or top == 0 or right == keyed.width or bottom == keyed.height:
+            raise ValueError(f"{spec['asset_id']}: {prop['name']} touches the sheet edge")
+        mask = Image.fromarray(inside[top:bottom, left:right].astype(np.uint8) * 255)
+        piece = keyed.crop((left, top, right, bottom))
+        piece.putalpha(ImageChops.multiply(piece.getchannel("A"), mask))
+        piece = piece.crop(bbox(piece))
+        # height_px is the on-screen height; atlases hold DENSITY px per screen px.
+        scale = prop["height_px"] * spec["density"] / piece.height
+        piece = resize_premultiplied(piece, (max(1, round(piece.width * scale)), max(1, round(piece.height * scale))))
+        pieces.append((prop["name"], piece))
+    # Shelf packing in spec order.
+    placed = []
+    x = y = shelf = width = 0
+    for name, piece in pieces:
+        w, h = piece.width + 2 * PROP_PAD_PX, piece.height + 2 * PROP_PAD_PX
+        if x + w > PROP_ATLAS_WIDTH:
+            x, y, shelf = 0, y + shelf, 0
+        placed.append((name, piece, x + PROP_PAD_PX, y + PROP_PAD_PX))
+        x += w
+        shelf = max(shelf, h)
+        width = max(width, x)
+    atlas = Image.new("RGBA", (width, y + shelf), (0, 0, 0, 0))
+    props = []
+    for name, piece, px, py in placed:
+        atlas.alpha_composite(piece, (px, py))
+        fx, fy = base_anchor(piece)
+        props.append({"name": name, "region": [px, py, piece.width, piece.height],
+                      "feet": [round(px + fx, 1), round(py + fy, 1)]})
+    return atlas, {"density": spec["density"], "props": props}
+
+
+def build_decal(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
+    """A keyed floor inlay, square, drawn on the ground under the isometric matrix."""
+    sheet = spec["sheet"]
+    keyed = key_out(master, hex_rgb(sheet["key_colour"]), sheet["key_low"], sheet["key_high"])
+    side = min(keyed.size)
+    keyed = keyed.crop(((keyed.width - side) // 2, (keyed.height - side) // 2,
+                        (keyed.width + side) // 2, (keyed.height + side) // 2))
+    size = spec["texture_px"]
+    return resize_premultiplied(keyed, (size, size)), {"texture_px": size, "world_px": spec["world_px"]}
+
+
+def build_strip(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
+    """A texture seamless left to right: the right end is cross-faded into the left end."""
+    rgb = master.convert("RGB")
+    width, height = spec["texture_size"]
+    rgb = rgb.resize((round(rgb.width * height / rgb.height), height), Image.Resampling.LANCZOS)
+    blend = spec.get("blend_px", 96)
+    body = rgb.crop((0, 0, rgb.width - blend, height))
+    tail = rgb.crop((rgb.width - blend, 0, rgb.width, height))
+    head = body.crop((0, 0, blend, height))
+    ramp = Image.linear_gradient("L").rotate(90, expand=True).resize((blend, height))
+    body.paste(Image.composite(head, tail, ramp), (0, 0))
+    return body.resize((width, height), Image.Resampling.LANCZOS), {
+        "texture_size": [width, height], "world_px": spec["world_px"]}
+
+
 def build_floor(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     """A seamless square texture: centre crop, cross-faded with its half-offset copy."""
     rgb = master.convert("RGB")
@@ -313,6 +443,12 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_atlas(spec, master)
     elif spec["kind"] == "floor_texture":
         image, layout = build_floor(spec, master)
+    elif spec["kind"] == "prop_atlas":
+        image, layout = build_props(spec, master)
+    elif spec["kind"] == "decal_texture":
+        image, layout = build_decal(spec, master)
+    elif spec["kind"] == "strip_texture":
+        image, layout = build_strip(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
     # The rim of characters is drawn by the scene shader (ADR-014 section 4), never baked.
@@ -324,6 +460,12 @@ def build(name: str, passport: dict) -> dict:
     data = out.read_bytes()
     if spec["kind"] == "sprite_atlas":
         normal_image, normal_spec = sprite_normals(image, layout["frame_size"]), SPRITE_NORMAL
+    elif spec["kind"] == "prop_atlas":
+        normal_image, normal_spec = region_normals(image, [p["region"] for p in layout["props"]]), SPRITE_NORMAL
+    elif spec["kind"] == "decal_texture":
+        normal_image, normal_spec = decal_normals(image), FLOOR_NORMAL
+    elif spec["kind"] == "strip_texture":
+        normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
     else:
         normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
     normal_out = out.with_name(f"{name}_n.png")
@@ -360,6 +502,16 @@ def render_card(name: str, entry: dict) -> str:
                     f"{len(layout['directions'])} направления ({', '.join(layout['directions'])}) · feet_anchor "
                     f"{layout['feet_anchor']} (якорь по x: {layout['anchor_x']}) · масштаб мастера {layout['scale']}")
         kind = "spritesheet"
+    elif entry["kind"] == "prop_atlas":
+        geometry = (f"атлас пропсов {entry['size'][0]}×{entry['size'][1]} px, плотность {layout['density']}: "
+                    + ", ".join(f"{p['name']} {p['region'][2]}×{p['region'][3]}" for p in layout["props"]))
+        kind = "props"
+    elif entry["kind"] == "decal_texture":
+        geometry = f"декаль пола {layout['texture_px']}×{layout['texture_px']} px на {layout['world_px']} px мира"
+        kind = "decal"
+    elif entry["kind"] == "strip_texture":
+        geometry = f"полоса {layout['texture_size'][0]}×{layout['texture_size'][1]} px, повтор по горизонтали, {layout['world_px']} px мира"
+        kind = "wall strip"
     else:
         geometry = f"бесшовная текстура {layout['texture_px']}×{layout['texture_px']} px на {layout['cells']}×{layout['cells']} клеток"
         kind = "tile"

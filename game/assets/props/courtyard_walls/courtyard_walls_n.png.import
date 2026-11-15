@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dov7snojibxw5"
-path="res://.godot/imported/jade_grove_floor_n.png-2712d0bc3c391bc63450eb927fbd3017.ctex"
+uid="uid://dp7llgqw2n76v"
+path="res://.godot/imported/courtyard_walls_n.png-8d9149ab1b6bb67a72a9afe340ea72a9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/jade_grove_floor/jade_grove_floor_n.png"
-dest_files=["res://.godot/imported/jade_grove_floor_n.png-2712d0bc3c391bc63450eb927fbd3017.ctex"]
+source_file="res://assets/props/courtyard_walls/courtyard_walls_n.png"
+dest_files=["res://.godot/imported/courtyard_walls_n.png-8d9149ab1b6bb67a72a9afe340ea72a9.ctex"]
 
 [params]
 
@@ -23,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

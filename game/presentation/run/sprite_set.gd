@@ -17,6 +17,8 @@ const DENSITY: float = 2.0
 ## Walk-cycle frames per second.
 const WALK_FPS: float = 8.0
 
+## Kinds drawn standing up (packed together, lit like bodies).
+const UPRIGHT_KINDS: Array[String] = ["sprite_atlas", "prop_atlas"]
 ## Transparent px between packed atlases, so mipmaps do not bleed one into the next.
 const PACK_GAP_PX: int = 16
 
@@ -70,7 +72,24 @@ func _add(entry: Dictionary) -> void:
 		"frame_size": int(layout.get("frame_size", 0)),
 		"feet_anchor": Vector2(float(anchor[0]), float(anchor[1])),
 		"cells": int(layout.get("cells", 1)),
+		"density": float(layout.get("density", DENSITY)),
+		"world_px": float(layout.get("world_px", 0.0)),
+		"props": _props_of(layout),
 	}
+
+
+## name -> {region: Rect2, feet: Vector2} of a prop atlas (atlas px).
+static func _props_of(layout: Dictionary) -> Dictionary:
+	var props: Dictionary = {}
+	for prop: Variant in layout.get("props", []):
+		if prop is Dictionary:
+			var region: Array = prop.get("region", [0, 0, 0, 0])
+			var feet: Array = prop.get("feet", [0, 0])
+			props[str(prop.get("name", ""))] = {
+				"region": Rect2(float(region[0]), float(region[1]), float(region[2]), float(region[3])),
+				"feet": Vector2(float(feet[0]), float(feet[1])),
+			}
+	return props
 
 
 ## Packs every sprite atlas with a normal map into one CanvasTexture (diffuse and normals at
@@ -80,7 +99,7 @@ func _pack_atlases() -> void:
 	var width: int = 0
 	var height: int = 0
 	for asset_id: String in _assets:
-		if _assets[asset_id]["kind"] == "sprite_atlas" and has_normals(asset_id):
+		if _assets[asset_id]["kind"] in UPRIGHT_KINDS and has_normals(asset_id):
 			ids.append(asset_id)
 			var size: Vector2i = Vector2i(_assets[asset_id]["texture"].get_size())
 			width += size.x + (PACK_GAP_PX if width > 0 else 0)
@@ -178,6 +197,53 @@ func draw_frame(
 	var source: Rect2 = Rect2(region.position + asset["origin"], region.size)
 	canvas.draw_texture_rect_region(asset["canvas"], rect, source, tint)
 	return true
+
+
+## Prop names of a prop atlas, in atlas order.
+func prop_names(asset_id: String) -> PackedStringArray:
+	if not _assets.has(asset_id):
+		return PackedStringArray()
+	return PackedStringArray((_assets[asset_id]["props"] as Dictionary).keys())
+
+
+func has_prop(asset_id: String, prop: String) -> bool:
+	return _assets.has(asset_id) and (_assets[asset_id]["props"] as Dictionary).has(prop)
+
+
+## On-screen size of a prop (px).
+func prop_size(asset_id: String, prop: String) -> Vector2:
+	if not has_prop(asset_id, prop):
+		return Vector2.ZERO
+	var asset: Dictionary = _assets[asset_id]
+	return (asset["props"][prop]["region"] as Rect2).size / float(asset["density"])
+
+
+## Draws a prop with the centre of its base on `feet` (screen px), mirrored when `flip`.
+func draw_prop(
+	canvas: CanvasItem, asset_id: String, prop: String, feet: Vector2, tint: Color, flip: bool = false
+) -> bool:
+	if not has_prop(asset_id, prop):
+		return false
+	var asset: Dictionary = _assets[asset_id]
+	var region: Rect2 = asset["props"][prop]["region"]
+	var anchor: Vector2 = (asset["props"][prop]["feet"] as Vector2) - region.position
+	var density: float = asset["density"]
+	var size: Vector2 = region.size / density
+	var offset: Vector2 = anchor / density
+	if flip:
+		offset.x = size.x - offset.x
+	var rect: Rect2 = Rect2(feet - offset, size)
+	if flip:
+		# A negative width mirrors the region inside the same rect (the server flips it).
+		rect.size.x = -size.x
+	var source: Rect2 = Rect2(region.position + asset["origin"], region.size)
+	canvas.draw_texture_rect_region(asset["canvas"], rect, source, tint)
+	return true
+
+
+## World px a floor decal spans (its texture covers a world square of this side).
+func decal_world_px(asset_id: String) -> float:
+	return float(_assets[asset_id]["world_px"]) if _assets.has(asset_id) else 0.0
 
 
 ## Screen px covered by one repeat of a floor texture (cells x cell size).

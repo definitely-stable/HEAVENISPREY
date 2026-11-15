@@ -1,0 +1,10 @@
+Prop sprite sheet for a 2.5D isometric action game, all props drawn in exactly the same camera as the attached isometric arena kit and concept boards: orthographic, 30 degrees above the horizon, 45-degree isometric rotation, light from the upper left. Six separate props in a 3 x 2 grid, each standing upright on its own base, centred in its cell with wide empty space around it, never touching each other or the image edges:
+1) a tall stone pagoda lantern with a curved roof and a warm glowing amber flame window;
+2) a square stone pedestal brazier with a burning orange fire bowl on top;
+3) a red sect banner hanging from a dark lacquered wooden T-shaped frame, gold sect emblem, gold tassels;
+4) a bronze incense burner tripod on a low stone base, a thin wisp of purple smoke;
+5) a stone guardian lion sitting on a carved square stone pedestal;
+6) a carved stone stele with gold engraved runes and a little moss.
+Materials and style exactly like the references: weathered purple-grey stone, dark red lacquer, aged gold trim, small patches of moss and a few red maple leaves, detailed hand-painted game art.
+
+Background: flat pure #00FF00 green everywhere, including between props. No ground plane, no floor tiles, no cast shadows on the background, no glow halos spilling onto the background, no text, no labels, no numbers. Landscape 1536 x 1024.

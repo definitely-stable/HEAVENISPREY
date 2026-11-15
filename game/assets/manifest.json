@@ -12,7 +12,7 @@
         768
       ],
       "asset_version": 2,
-      "art_bible_version": 3,
+      "art_bible_version": 4,
       "content_ids": [
         "class.sword"
       ],
@@ -72,7 +72,7 @@
         384
       ],
       "asset_version": 2,
-      "art_bible_version": 3,
+      "art_bible_version": 4,
       "content_ids": [
         "enemy.blood_wolf"
       ],
@@ -130,7 +130,7 @@
         384
       ],
       "asset_version": 2,
-      "art_bible_version": 3,
+      "art_bible_version": 4,
       "content_ids": [
         "enemy.yin_corpse"
       ],
@@ -178,51 +178,529 @@
       }
     },
     {
-      "asset_id": "asset.tile.jade_grove_floor",
-      "kind": "floor_texture",
-      "path": "game/assets/tiles/jade_grove_floor/jade_grove_floor.png",
-      "sha256": "cfb63f19aee40c62cc1448da570146cc2d2d110bbb766532417dfaf77587a687",
-      "bytes": 776200,
+      "asset_id": "asset.prop.courtyard_lights",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_lights/courtyard_lights.png",
+      "sha256": "639d484e4e1e58fafd197e45c053b6a58fe9a2c84a3a0a6bfb60fa4023c10675",
+      "bytes": 247534,
       "size": [
-        768,
-        768
+        776,
+        260
       ],
       "asset_version": 1,
-      "art_bible_version": 3,
+      "art_bible_version": 4,
       "content_ids": [
         "stage.jade_grove"
       ],
       "layout": {
-        "texture_px": 768,
-        "cells": 8,
-        "tone_gain": 1.0
+        "density": 2,
+        "props": [
+          {
+            "name": "lantern_pagoda",
+            "region": [
+              6,
+              6,
+              117,
+              236
+            ],
+            "feet": [
+              63.5,
+              216.2
+            ]
+          },
+          {
+            "name": "brazier",
+            "region": [
+              135,
+              6,
+              98,
+              156
+            ],
+            "feet": [
+              184.5,
+              137.8
+            ]
+          },
+          {
+            "name": "banner",
+            "region": [
+              245,
+              6,
+              167,
+              248
+            ],
+            "feet": [
+              331.5,
+              213.2
+            ]
+          },
+          {
+            "name": "incense",
+            "region": [
+              424,
+              6,
+              69,
+              124
+            ],
+            "feet": [
+              458.5,
+              112.8
+            ]
+          },
+          {
+            "name": "lion",
+            "region": [
+              505,
+              6,
+              129,
+              208
+            ],
+            "feet": [
+              569.5,
+              180.8
+            ]
+          },
+          {
+            "name": "stele",
+            "region": [
+              646,
+              6,
+              124,
+              184
+            ],
+            "feet": [
+              708.0,
+              158.0
+            ]
+          }
+        ]
       },
       "normal": {
-        "path": "game/assets/tiles/jade_grove_floor/jade_grove_floor_n.png",
-        "sha256": "a806b668700f24117e84fa73168ed2c3d3ca79e8f6a2e9c040be272a566f62a8",
-        "bytes": 1084440,
+        "path": "game/assets/props/courtyard_lights/courtyard_lights_n.png",
+        "sha256": "ee21e41eb22a892315e80831a8b0d1ddd4440b223cf8178b32245a2446455b5a",
+        "bytes": 120078,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_lights/master.webp",
+        "sha256": "a25d3bc1c3c5d34e9f0fceffcc349ff3678a5fe82201e25d732b1e6085c65121",
+        "bytes": 1230832,
+        "prompt_sha256": "bbb9d288092a4d76c63eb8d4d497418a5fbd1e0366d4153e37ee66f40c239120"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 8210,
+        "palette_mean_delta_e": 11.3,
+        "tones_pct": [
+          47.3,
+          51.2,
+          1.5
+        ],
+        "chroma": 0.225,
+        "threat_colour_pct": 0.061,
+        "median_l": 86.7
+      }
+    },
+    {
+      "asset_id": "asset.prop.courtyard_nature",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_nature/courtyard_nature.png",
+      "sha256": "50102c5481c4e17e961570511c81da968971331b6e48b891ad16973efaf80424",
+      "bytes": 984996,
+      "size": [
+        1622,
+        612
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "maple_large",
+            "region": [
+              6,
+              6,
+              738,
+              600
+            ],
+            "feet": [
+              328.5,
+              488.2
+            ]
+          },
+          {
+            "name": "maple_small",
+            "region": [
+              756,
+              6,
+              290,
+              300
+            ],
+            "feet": [
+              891.5,
+              261.8
+            ]
+          },
+          {
+            "name": "pillar",
+            "region": [
+              1058,
+              6,
+              125,
+              280
+            ],
+            "feet": [
+              1120.0,
+              254.0
+            ]
+          },
+          {
+            "name": "pillar_broken",
+            "region": [
+              1195,
+              6,
+              114,
+              156
+            ],
+            "feet": [
+              1252.5,
+              133.8
+            ]
+          },
+          {
+            "name": "rocks",
+            "region": [
+              1321,
+              6,
+              163,
+              112
+            ],
+            "feet": [
+              1398.0,
+              85.5
+            ]
+          },
+          {
+            "name": "tombstone",
+            "region": [
+              1496,
+              6,
+              120,
+              164
+            ],
+            "feet": [
+              1547.5,
+              143.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/courtyard_nature/courtyard_nature_n.png",
+        "sha256": "fc8d772640c6147199dfbca69507e32b60b6bc27f6723d07a349e96c9179bff5",
+        "bytes": 473369,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_nature/master.webp",
+        "sha256": "534ff2e6c119eb5bb103673a625984fcc873410fd175155400137d72ed3663e0",
+        "bytes": 1366158,
+        "prompt_sha256": "3826e165c27a6645eb491a166c915863bb6dfe3cc06d290002a1f56e9ebf09d1"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 6968,
+        "palette_mean_delta_e": 14.89,
+        "tones_pct": [
+          65.9,
+          33.8,
+          0.3
+        ],
+        "chroma": 0.327,
+        "threat_colour_pct": 5.095,
+        "median_l": 70.6
+      }
+    },
+    {
+      "asset_id": "asset.prop.courtyard_walls",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_walls/courtyard_walls.png",
+      "sha256": "fbf982107fa6642dbabf6f4312991d36bf84387434784f96d358c68c7347560e",
+      "bytes": 607963,
+      "size": [
+        1511,
+        484
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "balustrade",
+            "region": [
+              6,
+              6,
+              158,
+              132
+            ],
+            "feet": [
+              140.0,
+              126.0
+            ]
+          },
+          {
+            "name": "gate",
+            "region": [
+              176,
+              6,
+              422,
+              472
+            ],
+            "feet": [
+              486.5,
+              449.2
+            ]
+          },
+          {
+            "name": "stairs",
+            "region": [
+              610,
+              6,
+              231,
+              220
+            ],
+            "feet": [
+              745.0,
+              199.0
+            ]
+          },
+          {
+            "name": "banner_pair",
+            "region": [
+              853,
+              6,
+              215,
+              280
+            ],
+            "feet": [
+              1037.0,
+              270.5
+            ]
+          },
+          {
+            "name": "shrine",
+            "region": [
+              1080,
+              6,
+              158,
+              184
+            ],
+            "feet": [
+              1158.0,
+              156.5
+            ]
+          },
+          {
+            "name": "bamboo",
+            "region": [
+              1250,
+              6,
+              255,
+              340
+            ],
+            "feet": [
+              1386.5,
+              311.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/courtyard_walls/courtyard_walls_n.png",
+        "sha256": "a33bf46084a21d7027b74c8c2d47e25780a4f7aa4fbb862bb52a581b1869f13f",
+        "bytes": 292848,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_walls/master.webp",
+        "sha256": "b4f46ef81adec28cb208e500c2c926a2d80fee887d06690fd0bb61b4ef10ec8a",
+        "bytes": 1381620,
+        "prompt_sha256": "6a2f19f89e469ec83b8839e256a398945adf5c5dc809174e7624386db3216e4b"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 4670,
+        "palette_mean_delta_e": 14.7,
+        "tones_pct": [
+          55.5,
+          42.7,
+          1.8
+        ],
+        "chroma": 0.252,
+        "threat_colour_pct": 0.0,
+        "median_l": 79.3
+      }
+    },
+    {
+      "asset_id": "asset.tile.sect_cliff",
+      "kind": "strip_texture",
+      "path": "game/assets/tiles/sect_cliff/sect_cliff.png",
+      "sha256": "3a9c1861bd6f2b28671e279e40bb63a2c1c8a425e65515b96f9b225a6232100f",
+      "bytes": 1052038,
+      "size": [
+        1536,
+        512
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "texture_size": [
+          1536,
+          512
+        ],
+        "world_px": 520
+      },
+      "normal": {
+        "path": "game/assets/tiles/sect_cliff/sect_cliff_n.png",
+        "sha256": "25523fd0a096094367d6fd1de6b15d7b5a8c20ca7a5dbffe5a49a6f190de0681",
+        "bytes": 1362927,
         "method": "luminance_sobel",
         "blur_px": 1.0,
         "strength": 6.0
       },
       "source": {
-        "path": "art_source/jade_grove_floor/master.webp",
-        "sha256": "f4a65bb9b90d35181906443bd24f3eaa3db0ed20706ccb646219e107bdf2fb78",
-        "bytes": 1590028,
-        "prompt_sha256": "2e8dd869e2b52b612c5228744dfc681eaf0778b81d91ed296c5a498e93054519"
+        "path": "art_source/sect_cliff/master.webp",
+        "sha256": "8dc9be96909b62e8812ae955fbac6008042bcf531cf51f976419b5e8a6c53e71",
+        "bytes": 1564938,
+        "prompt_sha256": "a7fd06a16fb16988fe59ce986fc3d85d279f93b94272cf5bbe23b4088632e6cd"
+      },
+      "qa": {
+        "palette_group": "environment",
+        "opaque_px": 21760,
+        "palette_mean_delta_e": 9.6,
+        "tones_pct": [
+          86.7,
+          13.2,
+          0.1
+        ],
+        "chroma": 0.099,
+        "threat_colour_pct": 0.0,
+        "median_l": 65.0
+      }
+    },
+    {
+      "asset_id": "asset.tile.sect_courtyard_floor",
+      "kind": "floor_texture",
+      "path": "game/assets/tiles/sect_courtyard_floor/sect_courtyard_floor.png",
+      "sha256": "58043f3c5f9537f82790a4a4ca48ed28f262ba9b59104b47fbb91e1f82379672",
+      "bytes": 1475735,
+      "size": [
+        1024,
+        1024
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "texture_px": 1024,
+        "cells": 8,
+        "tone_gain": 1.0
+      },
+      "normal": {
+        "path": "game/assets/tiles/sect_courtyard_floor/sect_courtyard_floor_n.png",
+        "sha256": "7c7a2ae5fcd0cc00d5354b566a5ffc22e6bc63ddc6c8a38ef87556b56e98ebfe",
+        "bytes": 1944134,
+        "method": "luminance_sobel",
+        "blur_px": 1.0,
+        "strength": 6.0
+      },
+      "source": {
+        "path": "art_source/sect_courtyard_floor/master.webp",
+        "sha256": "18b1ba13ba5dfb1b9fe37712b751bdab7faf3f330b95c774ebc0c1b1f6d2532f",
+        "bytes": 1676476,
+        "prompt_sha256": "e2bcb7b0bdf249e860996b3689cd1987fb89031573c3f7793c53fc1064b1a20c"
       },
       "qa": {
         "palette_group": "environment",
         "opaque_px": 65536,
-        "palette_mean_delta_e": 4.74,
+        "palette_mean_delta_e": 8.7,
         "tones_pct": [
-          100.0,
-          0.0,
+          8.1,
+          91.9,
           0.0
         ],
-        "chroma": 0.019,
+        "chroma": 0.09,
         "threat_colour_pct": 0.0,
-        "median_l": 52.6
+        "median_l": 97.1
+      }
+    },
+    {
+      "asset_id": "asset.tile.sect_seal",
+      "kind": "decal_texture",
+      "path": "game/assets/tiles/sect_seal/sect_seal.png",
+      "sha256": "3a9a507060c6374f338e67e90fb1a9159cf2661b42f9a9ef2e17cf5da7ac6ab8",
+      "bytes": 1085898,
+      "size": [
+        1024,
+        1024
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "texture_px": 1024,
+        "world_px": 672
+      },
+      "normal": {
+        "path": "game/assets/tiles/sect_seal/sect_seal_n.png",
+        "sha256": "911f49e334bdcb19e9a2b31aea9e6f65110159e213242cec006802f9c0817f7d",
+        "bytes": 1126091,
+        "method": "luminance_sobel",
+        "blur_px": 1.0,
+        "strength": 6.0
+      },
+      "source": {
+        "path": "art_source/sect_seal/master.webp",
+        "sha256": "05a68792c9792f534e09dee22112cce61981845c47e77826972a7b7f152a44d4",
+        "bytes": 1688680,
+        "prompt_sha256": "244613b6045e99260d4d4c0e14393dd63c1ba15ab015dbf2bcdee34ed3e07abf"
+      },
+      "qa": {
+        "palette_group": "inlay",
+        "opaque_px": 13895,
+        "palette_mean_delta_e": 14.71,
+        "tones_pct": [
+          5.6,
+          58.1,
+          36.3
+        ],
+        "chroma": 0.57,
+        "threat_colour_pct": 0.0,
+        "median_l": 159.7
       }
     }
   ]
