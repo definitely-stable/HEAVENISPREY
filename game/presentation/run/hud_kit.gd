@@ -30,12 +30,7 @@ var _halos: Dictionary = {}
 
 
 static func load_default() -> HudKit:
-	var kit: HudKit = HudKit.new()
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST_PATH))
-	if parsed is Dictionary:
-		for entry: Variant in (parsed as Dictionary).get("assets", []):
-			if entry is Dictionary and str((entry as Dictionary).get("asset_id", "")) == ASSET_ID:
-				kit._read(entry as Dictionary)
+	var kit: HudKit = load_kit(ASSET_ID)
 	if ResourceLoader.exists(FONT_PATH):
 		var file: Font = load(FONT_PATH) as Font
 		if file != null:
@@ -46,6 +41,18 @@ static func load_default() -> HudKit:
 			# Lining figures: the old-style digits of the face read "0" as "o" in counters.
 			weighted.opentype_features = {server.name_to_tag("lnum"): 1}
 			kit.font = weighted
+	return kit
+
+
+## The pieces of any atlas of named pieces in the manifest (the HUD kit, the effects atlas), with
+## the fallback font.
+static func load_kit(asset_id: String) -> HudKit:
+	var kit: HudKit = HudKit.new()
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MANIFEST_PATH))
+	if parsed is Dictionary:
+		for entry: Variant in (parsed as Dictionary).get("assets", []):
+			if entry is Dictionary and str((entry as Dictionary).get("asset_id", "")) == asset_id:
+				kit._read(entry as Dictionary)
 	return kit
 
 

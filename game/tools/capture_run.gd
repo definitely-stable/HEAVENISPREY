@@ -14,6 +14,9 @@ extends SceneTree
 ##   on a horde and the death, cropped around the hero;
 ## - "choice": the P0 run with the hero walking circles until the first level-up, then the open
 ##   choice menu (ADR-014 section 16) after it has armed;
+## - "fight": combat effects (ADR-014 section 18): `count` enemies with their real HP on rings
+##   around the hero, which stands and fights and is kept at full HP; four captures out_<i>.png over FIGHT_SECONDS
+##   (sword volleys, hits, numbers, falls, a level), the gems left on the ground included;
 ## - "perf": `count` enemies on rings around the hero walking left and right; prints the p50
 ##   and p95 frame time and the draw calls over 180 frames and writes them to out (JSON).
 ##   Run it with --disable-vsync (and at 1920x1080 for the ADR-014 A2 budget).
@@ -23,6 +26,7 @@ const STEP: float = 1.0 / 60.0
 const MAX_SECONDS: float = 200.0
 const HORDE_FRAMES: int = 40
 const RING_PX: float = 260.0
+const FIGHT_SECONDS: Array[float] = [1.4, 2.6, 4.0, 6.5]
 ## Hero contact sheet: crop size (px) and frames run per direction.
 const HERO_CROP: int = 200
 const HERO_RUN_FRAMES: int = 40
@@ -59,6 +63,9 @@ func _capture() -> void:
 	if mode == "choice":
 		await _capture_choice(view, out)
 		return
+	if mode == "fight":
+		await _capture_fight(view, out, count)
+		return
 	if mode == "circles":
 		_walk_circles(view, count)
 	else:
@@ -88,6 +95,25 @@ func _capture_choice(view: RunView, out: String) -> void:
 	quit(0 if error == OK else 1)
 
 
+func _capture_fight(view: RunView, out: String, count: int) -> void:
+	_place_horde(view, count, 3, 1.4, true)
+	var seconds: float = 0.0
+	for index: int in FIGHT_SECONDS.size():
+		while seconds < FIGHT_SECONDS[index] and not view.driver.world.is_over():
+			if view.driver.world.is_paused():
+				view.choose(0)
+			# The hero holds the ground: the capture is about the effects, not the outcome.
+			view.driver.world.hero_hp = view.driver.world.hero_hp_max
+			view.advance_frame(STEP, Vector2i.ZERO)
+			seconds += STEP
+			await process_frame
+		var path: String = out.get_basename() + "_%d.png" % index
+		var error: Error = root.get_texture().get_image().save_png(path)
+		print("capture fight: ", path, " t=", snappedf(seconds, 0.1), " alive=", view.driver.world.enemy_alive,
+			" kills=", view.driver.world.kills, " level=", view.driver.world.level, " error=", error)
+	quit(0)
+
+
 func _walk_circles(view: RunView, count: int) -> void:
 	var seconds: float = 0.0
 	while seconds < MAX_SECONDS and view.driver.world.enemy_alive < count and not view.driver.world.is_over():
@@ -97,18 +123,20 @@ func _walk_circles(view: RunView, count: int) -> void:
 		seconds += STEP
 
 
-func _place_horde(view: RunView, count: int, rings: int = 3) -> void:
+## `count` enemies on `rings` rings around the hero, `near` times RING_PX away; with `real_hp`
+## they have the HP of their kind (they fall), otherwise they are unkillable.
+func _place_horde(view: RunView, count: int, rings: int = 3, near: float = 1.0, real_hp: bool = false) -> void:
 	var world: WorldState = view.driver.world
 	var hero: Vector2 = Vector2(world.player_x, world.player_y)
 	for index: int in count:
 		var angle: float = TAU * index / count
-		var ring: float = RING_PX * (1.0 + 0.7 * (index % rings) / maxf(rings - 1, 1)) * Fx.FX_ONE
+		var ring: float = RING_PX * near * (1.0 + 0.7 * (index % rings) / maxf(rings - 1, 1)) * Fx.FX_ONE
 		var slot: int = world.append_enemy_slot()
 		world.enemy_uid[slot] = world.next_enemy_uid
 		world.enemy_kind[slot] = index % 2
 		world.enemy_x[slot] = int(hero.x + cos(angle) * ring)
 		world.enemy_y[slot] = int(hero.y + sin(angle) * ring * 0.6)
-		world.enemy_hp[slot] = 1000000
+		world.enemy_hp[slot] = view.driver.config.kind_value(index % 2, SimConfig.KIND_HP) if real_hp else 1000000
 		world.next_enemy_uid += 1
 		world.enemy_alive += 1
 

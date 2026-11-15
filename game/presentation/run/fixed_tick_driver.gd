@@ -17,10 +17,13 @@ var world: WorldState
 var previous: WorldState
 var commands: CommandLog = CommandLog.new()
 ## Presentation events since the last take_events(), in tick order: enemies hit (uids),
-## enemies killed ([position px, kind]), gems collected ([position px, value]) and levels
+## enemies killed ([position px, kind, uid]), gems collected ([position px, value]) and levels
 ## gained. Read-only views of the simulation, never inputs.
 var hit_uids: PackedInt64Array = PackedInt64Array()
 var killed: Array[Array] = []
+## Every blow on an enemy: [position px, damage in milli-HP, uid, killed]. A killing blow
+## counts the HP the enemy had left.
+var strikes: Array[Array] = []
 var collected: Array[Array] = []
 var levels_gained: int = 0
 ## Aim (world direction) of every projectile fired, one per projectile (the hero's cast).
@@ -135,12 +138,14 @@ func gem_position_px(slot: int) -> Vector2:
 
 
 ## Returns and clears the collected events: {"hit": PackedInt64Array, "killed": Array,
-## "collected": Array, "levels": int, "casts": Array[Vector2]}.
+## "strikes": Array, "collected": Array, "levels": int, "casts": Array[Vector2]}.
 func take_events() -> Dictionary:
 	var events: Dictionary = {
-		"hit": hit_uids, "killed": killed, "collected": collected, "levels": levels_gained, "casts": casts,
+		"hit": hit_uids, "killed": killed, "strikes": strikes, "collected": collected, "levels": levels_gained,
+		"casts": casts,
 	}
 	casts = []
+	strikes = []
 	hit_uids = PackedInt64Array()
 	killed = []
 	collected = []
@@ -153,11 +158,13 @@ func _collect_events() -> void:
 		var uid: int = previous.enemy_uid[slot]
 		if uid == 0:
 			continue
+		var at: Vector2 = Vector2(previous.enemy_x[slot], previous.enemy_y[slot]) / float(Fx.FX_ONE)
 		if world.enemy_uid[slot] != uid:
-			var at: Vector2 = Vector2(previous.enemy_x[slot], previous.enemy_y[slot]) / float(Fx.FX_ONE)
-			killed.append([at, previous.enemy_kind[slot]])
+			killed.append([at, previous.enemy_kind[slot], uid])
+			strikes.append([at, previous.enemy_hp[slot], uid, true])
 		elif world.enemy_hp[slot] < previous.enemy_hp[slot]:
 			hit_uids.append(uid)
+			strikes.append([at, previous.enemy_hp[slot] - world.enemy_hp[slot], uid, false])
 	# A gem collected this tick: its uid is gone from the slot (a gem dropped and collected in
 	# the same tick never shows up on the ground, so it is not animated).
 	for slot: int in previous.gem_slots():

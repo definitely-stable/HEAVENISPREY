@@ -20,6 +20,7 @@ spec.loader.exec_module(assets)
 HERO = "asset.char.hero_sword"
 YIN = "asset.enemy.yin_corpse"
 HUD = "asset.ui.hud_kit"
+VFX = "asset.vfx.combat"
 
 
 def tiny_png(width: int, height: int, colour: int = 6) -> bytes:
@@ -75,7 +76,7 @@ class AssetManifestTests(unittest.TestCase):
 
     def test_repository_manifest_is_valid(self):
         report = assets.validate()
-        self.assertEqual(report["assets"], 12)
+        self.assertEqual(report["assets"], 13)
         self.assertLessEqual(report["lfs_bytes"], assets.LFS_BUDGET_BYTES)
 
     def test_lfs_pointer_with_the_same_identity_passes(self):
@@ -279,6 +280,24 @@ class AssetManifestTests(unittest.TestCase):
     def test_hud_kit_palette_threshold(self):
         self.entry(HUD)["qa"]["palette_mean_delta_e"] = 16.5
         self.fails("palette ΔE")
+
+    def test_effects_are_light_without_a_normal_map(self):
+        self.entry(VFX)["normal"] = copy.deepcopy(self.entry()["normal"])
+        self.fails("drawn unlit and has no normal map")
+
+    def test_effects_must_be_rgba(self):
+        size = self.entry(VFX)["size"]
+        self.atlas(tiny_png(size[0], size[1], colour=2), VFX)
+        self.fails("RGBA")
+
+    def test_effects_palette_threshold(self):
+        self.entry(VFX)["qa"]["palette_mean_delta_e"] = 16.5
+        self.fails("palette ΔE")
+
+    def test_effects_pieces_have_unique_names(self):
+        pieces = self.entry(VFX)["layout"]["pieces"]
+        pieces[1]["name"] = pieces[0]["name"]
+        self.fails("unique names")
 
     def test_lfs_budget(self):
         saved = assets.LFS_BUDGET_BYTES

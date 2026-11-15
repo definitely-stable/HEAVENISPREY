@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.vfx.combat",
+  "kind": "vfx_atlas",
+  "group": "vfx",
+  "asset_version": 1,
+  "content_ids": [],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-010",
+      "file": "Бестиарий «Мертвец Инь»_ окружение и анимации.png",
+      "sha256": "a9651315f4b859e6e7c53c6b79ecaaab81bb547cc210be17eacd51fe99a593ee"
+    },
+    {
+      "id": "REF-023",
+      "file": "Золотой натиск Древней Секты.png",
+      "sha256": "dd5923b04f7b636d063ecdde4f4188083ecc6a0c28394997859363ff0b5fc94f"
+    },
+    {
+      "id": "REF-035",
+      "file": "Культиватор Меча_ лист игровых анимаций.png",
+      "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "6f2a9d4260da55186fd704e4e043e04fa9f0d04f43864e7893aa2e79dd923add",
+    "created": "2026-11-16T01:37:58+0500",
+    "master_sha256": "782af28c9f33950139abd1aff0246461db777068e950caf96de085bdbdf13c87",
+    "master_note": "WebP q92 of the generated sheet (candidate 2 of 2, png sha256 a06922643a4f41c6); the request had crops of REF-023 (battle centre), REF-010 (VFX row) and REF-035 (sword skills) attached"
+  },
+  "palette_group": "vfx",
+  "density": 2,
+  "sheet": {
+    "background": "black",
+    "black_floor": 10,
+    "cut": "cell",
+    "cell_inset_px": 6,
+    "edge_alpha": 96
+  },
+  "sheets": [
+    {
+      "name": "effects",
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        4,
+        3
+      ],
+      "png_sha256": "a06922643a4f41c6972cc9f127c7e387af825a777a8599ab7d7de617cc9552e0",
+      "prompt_sha256": "6f2a9d4260da55186fd704e4e043e04fa9f0d04f43864e7893aa2e79dd923add",
+      "created": "2026-11-16T01:37:58+0500"
+    }
+  ],
+  "pieces": [
+    {
+      "name": "sword",
+      "sheet": "effects",
+      "cell": 0,
+      "height_px": 12,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "spark",
+      "sheet": "effects",
+      "cell": 1,
+      "height_px": 40,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "slash",
+      "sheet": "effects",
+      "cell": 2,
+      "height_px": 50,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "sword_circle",
+      "sheet": "effects",
+      "cell": 3,
+      "height_px": 120,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "qi_wisp",
+      "sheet": "effects",
+      "cell": 4,
+      "height_px": 24
+    },
+    {
+      "name": "qi_lotus",
+      "sheet": "effects",
+      "cell": 5,
+      "height_px": 24,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "motes",
+      "sheet": "effects",
+      "cell": 6,
+      "height_px": 48,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "light_pillar",
+      "sheet": "effects",
+      "cell": 7,
+      "height_px": 130,
+      "tint": [
+        1.0,
+        0.92,
+        1.2
+      ]
+    },
+    {
+      "name": "yin_burst",
+      "sheet": "effects",
+      "cell": 8,
+      "height_px": 70
+    },
+    {
+      "name": "yin_circle",
+      "sheet": "effects",
+      "cell": 9,
+      "height_px": 120
+    },
+    {
+      "name": "yin_claw",
+      "sheet": "effects",
+      "cell": 10,
+      "height_px": 44
+    },
+    {
+      "name": "yin_smoke",
+      "sheet": "effects",
+      "cell": 11,
+      "height_px": 60
+    }
+  ]
+}

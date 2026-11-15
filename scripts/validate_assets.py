@@ -14,9 +14,10 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
   baked but drawn by the scene shader (ADR-014 section 4), so no asset may carry one;
 - every asset drawn in the lit scene has a normal map <name>_n.png next to it (ADR-014
   section 4) with the method of its kind, the same size, and the same identity rules as the
-  built file; the HUD kit (ui_atlas) is drawn unlit over the scene and has none;
-- a HUD kit has uniquely named pieces inside the atlas, frame windows inside their piece and
-  stretch caps narrower than the piece (ADR-014 section 15);
+  built file; the HUD kit (ui_atlas) and the effects atlas (vfx_atlas) are drawn unlit over
+  the scene and have none;
+- a HUD kit or an effects atlas has uniquely named pieces inside the atlas, frame windows
+  inside their piece and stretch caps narrower than the piece (ADR-014 sections 15 and 18);
 - the LFS volume of the art (built files, normal maps and masters) stays within the budget.
 """
 from __future__ import annotations
@@ -36,11 +37,12 @@ PASSPORT = SOURCE / "style_passport.json"
 CATALOG = ROOT / "ref" / "catalog.json"
 CONFIG = ROOT / ".work" / "config" / "v7"
 LFS_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
-ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop|ui)\.[a-z][a-z0-9_]*$")
-GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props", "ui": "ui"}
-KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture", "ui_atlas"}
+ASSET_ID = re.compile(r"^asset\.(char|enemy|tile|prop|ui|vfx)\.[a-z][a-z0-9_]*$")
+GROUPS = {"char": "characters", "enemy": "enemies", "tile": "tiles", "prop": "props", "ui": "ui", "vfx": "vfx"}
+KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_texture", "strip_texture", "ui_atlas",
+         "vfx_atlas"}
 ## Kinds drawn with transparency: their PNG must be RGBA.
-ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture", "ui_atlas"}
+ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture", "ui_atlas", "vfx_atlas"}
 ## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
 LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
@@ -48,7 +50,8 @@ REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_versio
 NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "anim_atlas": "silhouette_pillow",
                   "floor_texture": "luminance_sobel",
                   "prop_atlas": "silhouette_pillow", "decal_texture": "luminance_sobel",
-                  "strip_texture": "luminance_sobel", "ui_atlas": None}
+                  "strip_texture": "luminance_sobel", "ui_atlas": None,
+                  "vfx_atlas": None}
 ## ADR-014 sections 7 and 13, A4: the loop seam against the median and the largest step between
 ## frames inside the loop, the body height of a clip across its directions, the torso against
 ## feet_anchor.x (atlas px).
@@ -185,7 +188,7 @@ def check_layout(entry: dict) -> None:
                 raise AssetError(f"{label}: {prop['name']} region leaves the atlas")
             if not (x <= fx <= x + w and y <= fy <= y + h):
                 raise AssetError(f"{label}: {prop['name']} anchor is outside its region")
-    elif entry["kind"] == "ui_atlas":
+    elif entry["kind"] in ("ui_atlas", "vfx_atlas"):
         names = [p["name"] for p in layout["pieces"]]
         if not names or len(set(names)) != len(names):
             raise AssetError(f"{label}: HUD pieces need unique names")
