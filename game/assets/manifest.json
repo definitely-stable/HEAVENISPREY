@@ -126,37 +126,66 @@
     },
     {
       "asset_id": "asset.enemy.blood_wolf",
-      "kind": "sprite_atlas",
+      "kind": "anim_atlas",
       "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
-      "sha256": "5dc52974348ddb562514e8955e021ac8351d60954f6eca56e227eb69a301f3a3",
-      "bytes": 240729,
+      "sha256": "8364b041b9df68cee938ee78daffbe720f7ed2f8919e535b31fb77b1dfc0cc62",
+      "bytes": 497255,
       "size": [
-        768,
-        384
+        1152,
+        768
       ],
-      "asset_version": 2,
+      "asset_version": 3,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.blood_wolf"
       ],
       "layout": {
-        "anchor_x": "bbox_centre",
+        "anchor_x": "torso",
         "frame_size": 192,
-        "directions": [
-          "left",
-          "right"
-        ],
-        "frames": 4,
         "feet_anchor": [
           96,
           186
         ],
-        "scale": 0.4749
+        "scale": [
+          0.2907,
+          0.3286
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 12,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
       },
       "normal": {
         "path": "game/assets/enemies/blood_wolf/blood_wolf_n.png",
-        "sha256": "77512cf323b1b9a7f3e44ccb309747ad06ff87222233971e2583b538471ffd74",
-        "bytes": 181124,
+        "sha256": "fa5c93b7440e589a8eddc93e7d0514f541175655f079e5d285ab74bafbec7e08",
+        "bytes": 365230,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -164,35 +193,39 @@
       },
       "source": {
         "path": "art_source/blood_wolf/master.webp",
-        "sha256": "e1545a9b4ffdf3772d61bed05da3d697d4d794d5fc8d23169d24551f42893d0b",
-        "bytes": 1162560,
-        "prompt_sha256": "bca2252d04dc85eee313c87e32846bad99ca721257e894daf9ef41fc163178f3"
+        "sha256": "5fc2ebc861acbed76bb7dc33bd3fef12579aec20368fa44a0d5844bf5db29233",
+        "bytes": 733488,
+        "prompt_sha256": "cf16a3164da6c1c4bf109f9ca6dbed1f6e0514be7f6d15192123ef70aa891c16"
       },
       "qa": {
         "palette_group": "characters",
-        "opaque_px": 6602,
-        "palette_mean_delta_e": 11.78,
+        "opaque_px": 2959,
+        "palette_mean_delta_e": 10.28,
         "tones_pct": [
-          62.1,
-          36.9,
-          1.1
+          77.6,
+          22.1,
+          0.3
         ],
-        "chroma": 0.153,
+        "chroma": 0.158,
         "threat_colour_pct": 0.0,
-        "median_l": 73.4
+        "median_l": 64.8,
+        "loop_seam_ratio": 0.605,
+        "loop_seam_to_max": 0.561,
+        "height_spread_pct": 0.3,
+        "torso_drift_px": 1.0
       }
     },
     {
       "asset_id": "asset.enemy.yin_corpse",
-      "kind": "sprite_atlas",
+      "kind": "anim_atlas",
       "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
-      "sha256": "21d400872dcd15a47b0885f9cb101891aa21ff75e69f273fe9f92cbb4e0137e3",
-      "bytes": 174766,
+      "sha256": "2ac0e51c39ab170eaf97f150a3ca95c06bdda4986811bd161ae35363e19bd8d9",
+      "bytes": 503205,
       "size": [
-        768,
-        384
+        1152,
+        768
       ],
-      "asset_version": 2,
+      "asset_version": 3,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.yin_corpse"
@@ -200,21 +233,50 @@
       "layout": {
         "anchor_x": "torso",
         "frame_size": 192,
-        "directions": [
-          "left",
-          "right"
-        ],
-        "frames": 4,
         "feet_anchor": [
           96,
           186
         ],
-        "scale": 0.2898
+        "scale": [
+          0.2618,
+          0.2649
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 8,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
       },
       "normal": {
         "path": "game/assets/enemies/yin_corpse/yin_corpse_n.png",
-        "sha256": "85ebe694534ee360a0c13d69a273c13c179c4bc6ac4204afda2db0c486610df8",
-        "bytes": 139226,
+        "sha256": "2afb995d8807a99c8150cbea850584682b06fb93555fb04072b7767ec66320cb",
+        "bytes": 371192,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -222,22 +284,26 @@
       },
       "source": {
         "path": "art_source/yin_corpse/master.webp",
-        "sha256": "122f09f43e1a761c8e278a45a6101468946859978e99a8eea27167d5fb6d3fe0",
-        "bytes": 1511436,
-        "prompt_sha256": "bbfcafb4cede648ba9efea0947223c8b053e7f0c86285562c89856eff5c6420f"
+        "sha256": "df93b1d47e8e862ab8768c86faf7733ab2ef5390f6f9232ced51385e795369a0",
+        "bytes": 1075650,
+        "prompt_sha256": "ede9f4bc855815f19137d9e4606801beb407e3c41dccbb46b33dc7d75affb12d"
       },
       "qa": {
         "palette_group": "characters",
-        "opaque_px": 4168,
-        "palette_mean_delta_e": 12.01,
+        "opaque_px": 2645,
+        "palette_mean_delta_e": 9.68,
         "tones_pct": [
-          70.7,
-          28.3,
-          1.0
+          63.3,
+          36.7,
+          0.0
         ],
-        "chroma": 0.081,
+        "chroma": 0.088,
         "threat_colour_pct": 0.0,
-        "median_l": 67.0
+        "median_l": 71.5,
+        "loop_seam_ratio": 1.25,
+        "loop_seam_to_max": 1.144,
+        "height_spread_pct": 0.21,
+        "torso_drift_px": 1.0
       }
     },
     {

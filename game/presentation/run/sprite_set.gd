@@ -33,10 +33,10 @@ var _assets: Dictionary = {}
 
 
 static func load_default() -> SpriteSet:
-	return SpriteSet.from_manifest(MANIFEST_PATH)
+	return SpriteSet._from_manifest(MANIFEST_PATH)
 
 
-static func from_manifest(path: String) -> SpriteSet:
+static func _from_manifest(path: String) -> SpriteSet:
 	var sprites: SpriteSet = SpriteSet.new()
 	var text: String = FileAccess.get_file_as_string(path)
 	var parsed: Variant = JSON.parse_string(text)
@@ -239,10 +239,6 @@ func has_normals(asset_id: String) -> bool:
 	return _assets.has(asset_id) and _assets[asset_id]["canvas"] is CanvasTexture
 
 
-func directions(asset_id: String) -> PackedStringArray:
-	return _assets[asset_id]["directions"] if _assets.has(asset_id) else PackedStringArray()
-
-
 ## Atlas region of `frame` (wrapped) facing `direction`; an empty Rect2 for an unknown asset
 ## or direction.
 func frame_region(asset_id: String, direction: String, frame: int) -> Rect2:
@@ -274,6 +270,11 @@ func draw_frame(
 
 func has_clip(asset_id: String, clip: String) -> bool:
 	return _assets.has(asset_id) and (_assets[asset_id]["clips"] as Dictionary).has(clip)
+
+
+## Frames of a clip (0 for an unknown asset or clip).
+func clip_frames(asset_id: String, clip: String) -> int:
+	return int(_assets[asset_id]["clips"][clip]["frames"]) if has_clip(asset_id, clip) else 0
 
 
 ## Seconds a clip takes once through.
@@ -417,6 +418,12 @@ static func eight_way(facing: Vector2) -> String:
 		return "s"
 	var sector: int = posmod(roundi(facing.angle() / (PI / 4.0)), 8)
 	return EIGHT_WAY[sector]
+
+
+## The screen diagonal (se, sw, ne, nw) of a facing given as screen signs (x, y; y grows down):
+## the four directions of a rank-and-file enemy (ADR-014 section 3).
+static func diagonal(signs: Vector2i) -> String:
+	return ("n" if signs.y < 0 else "s") + ("w" if signs.x < 0 else "e")
 
 
 static func four_way(facing: Vector2) -> String:

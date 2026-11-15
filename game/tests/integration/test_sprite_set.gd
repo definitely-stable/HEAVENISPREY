@@ -65,13 +65,6 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 
 func test_frame_regions_follow_the_layout() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
-	assert_eq(sprites.directions("asset.enemy.yin_corpse"), PackedStringArray(["left", "right"]))
-	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "left", 0), Rect2(0, 0, 192, 192))
-	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "right", 3), Rect2(576, 192, 192, 192))
-	assert_eq(sprites.frame_region("asset.enemy.yin_corpse", "left", 5), Rect2(192, 0, 192, 192), "frames wrap")
-	assert_eq(sprites.directions("asset.char.hero_sword"), PackedStringArray(["s", "se", "e", "ne", "n"]))
-	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "right", -1), Rect2(576, 192, 192, 192))
-	assert_eq(sprites.frame_region("asset.enemy.blood_wolf", "down", 0), Rect2(), "no such direction")
 	assert_eq(sprites.frame_region("asset.enemy.unknown", "left", 0), Rect2())
 	assert_eq(sprites.floor_repeat_px(FLOOR, 48), 384.0)
 	assert_eq(sprites.floor_repeat_px("asset.tile.sect_courtyard_floor_worn", 48), 480.0,
@@ -158,7 +151,7 @@ func test_hero_clips_loop_hold_and_mirror() -> void:
 	for clip: String in ["idle", "run", "attack", "death"]:
 		assert_true(sprites.has_clip(hero, clip), clip)
 	assert_false(sprites.has_clip(hero, "fly"))
-	assert_false(sprites.has_clip("asset.enemy.blood_wolf", "run"), "a plain atlas has no clips")
+	assert_false(sprites.has_clip("asset.prop.courtyard_lights", "run"), "a prop atlas has no clips")
 	var run: float = sprites.clip_length(hero, "run")
 	assert_almost_eq(run, 8.0 / 14.0, 1e-6)
 	assert_eq(sprites.clip_frame(hero, "run", 0.0), 0)
@@ -201,3 +194,22 @@ func test_skyline_packing_stays_inside_and_apart() -> void:
 			assert_false(rect.intersects(Rect2i(places[other], sizes[other])), "%d overlaps %d" % [index, other])
 	assert_eq(places[0], Vector2i.ZERO)
 	assert_eq(places[1], Vector2i(300, 0), "the next rect rests beside the first")
+
+
+## ADR-014 A5: the horde walks and strikes in four diagonals, SE and NE drawn, SW and NW mirrored.
+func test_horde_walks_and_strikes_in_four_diagonals() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	for enemy: String in ["asset.enemy.yin_corpse", "asset.enemy.blood_wolf"]:
+		for clip: String in ["walk", "attack"]:
+			assert_true(sprites.has_clip(enemy, clip), enemy + " " + clip)
+			assert_eq(sprites.clip_frames(enemy, clip), 6)
+			var se: Array = sprites.clip_region(enemy, clip, "se", 1)
+			var ne: Array = sprites.clip_region(enemy, clip, "ne", 1)
+			assert_ne(se[0], ne[0], "two drawn diagonals")
+			assert_eq(sprites.clip_region(enemy, clip, "sw", 1), [se[0], true], "sw mirrors se")
+			assert_eq(sprites.clip_region(enemy, clip, "nw", 1), [ne[0], true], "nw mirrors ne")
+	assert_eq(sprites.clip_frames("asset.enemy.yin_corpse", "fly"), 0)
+	assert_eq(SpriteSet.diagonal(Vector2i(1, 1)), "se")
+	assert_eq(SpriteSet.diagonal(Vector2i(-1, 1)), "sw")
+	assert_eq(SpriteSet.diagonal(Vector2i(1, -1)), "ne")
+	assert_eq(SpriteSet.diagonal(Vector2i(-1, -1)), "nw")

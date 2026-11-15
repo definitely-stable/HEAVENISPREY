@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "asset_id": "asset.enemy.blood_wolf",
-  "kind": "sprite_atlas",
+  "kind": "anim_atlas",
   "group": "enemies",
-  "asset_version": 2,
+  "asset_version": 3,
   "content_ids": [
     "enemy.blood_wolf"
   ],
@@ -17,27 +17,28 @@
   ],
   "generation": {
     "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
-    "tool_version": "codex-cli 0.168.0",
+    "tool_version": "codex-cli 0.169.0",
     "prompt_file": "prompt.txt",
-    "prompt_sha256": "bca2252d04dc85eee313c87e32846bad99ca721257e894daf9ef41fc163178f3",
-    "created": "2026-11-14T15:02:15+0500",
-    "master_sha256": "f222e2beb61c0268a027a9bf17d39d6cef597f3fab2c282b6c3bee4e73c603ff",
-    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+    "prompt_sha256": "cf16a3164da6c1c4bf109f9ca6dbed1f6e0514be7f6d15192123ef70aa891c16",
+    "created": "2026-11-15T18:04:15+0500",
+    "master_sha256": "5fc2ebc861acbed76bb7dc33bd3fef12579aec20368fa44a0d5844bf5db29233",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256), 2 per row; every request had the model sheet (model_sheet.webp) and REF-034 attached"
+  },
+  "model_sheet": {
+    "file": "model_sheet.webp",
+    "png_sha256": "30deebd9adad800ae36d4bbb55c2a8da44f70cecacaceccda208c5a5f8108bf2",
+    "prompt_sha256": "819462b5b1554049c82f7649979916327b3e4d37fbac72e204bf815ca7d3b26d"
   },
   "palette_group": "characters",
   "sheet": {
-    "grid": [
-      4,
-      2
-    ],
     "key_colour": "#00ff00",
     "key_low": 40,
-    "key_high": 150
+    "key_high": 150,
+    "tile": [
+      1536,
+      1024
+    ]
   },
-  "directions": [
-    "left",
-    "right"
-  ],
   "frame_size": 192,
   "feet_anchor": [
     96,
@@ -45,5 +46,85 @@
   ],
   "margin_px": 4,
   "figure_height_px": 104,
-  "anchor_x": "bbox_centre"
+  "anchor_x": "torso",
+  "directions": [
+    "se",
+    "ne"
+  ],
+  "mirror": {
+    "sw": "se",
+    "nw": "ne"
+  },
+  "clips": [
+    {
+      "name": "walk",
+      "frames": 6,
+      "fps": 12,
+      "loop": true,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "attack",
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        3,
+        2
+      ]
+    }
+  ],
+  "sheets": [
+    {
+      "clip": "walk",
+      "direction": "se",
+      "tile": [
+        0,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "b1d6f235941c75d9b20b3933736b47f16d6941fd0ddcf92bbc59dac5e6a9167c",
+      "prompt_sha256": "02a504be4b1741d79fd4fb08c005c44433370bf0334c20584d7693be88510e93",
+      "created": "2026-11-15T17:59:18+0500"
+    },
+    {
+      "clip": "walk",
+      "direction": "ne",
+      "tile": [
+        1,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "8a1a34b3ef5cead65f41547fa64586fc35184ddd1937e8100cf94f9b97601d20",
+      "prompt_sha256": "bed20df6092f09d93c20bfa5352f5fd13975884ff00bd8bd0281304548eb774c",
+      "created": "2026-11-15T18:01:10+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "se",
+      "tile": [
+        0,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "090754575d7e2e182321eb59573cee838ecac3fe1cca1e721f957d6f1a2ca00a",
+      "prompt_sha256": "e4c858f5531ab193285ca400c7fe408fa45fa4ea39a65e08e68f95d52fe47145",
+      "created": "2026-11-15T18:02:35+0500"
+    },
+    {
+      "clip": "attack",
+      "direction": "ne",
+      "tile": [
+        1,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "b233e11d22a6e2fe293e644f49a0ade3485bd4e55d977ed016877e74792bc5ea",
+      "prompt_sha256": "256c1fc2cb4250f55d123d01cd5e1763baa49f45eb66839c425b82bf148a0eb6",
+      "created": "2026-11-15T18:04:15+0500"
+    }
+  ]
 }

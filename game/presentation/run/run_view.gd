@@ -109,6 +109,8 @@ const CAMERA_INSET_CELLS: float = 4.0
 const FLIGHT_LIFT_PX: float = 26.0
 ## Px of horizontal hero offset before an enemy turns to face the other way.
 const TURN_DEADBAND_PX: float = 6.0
+## Frame of an enemy attack clip on which its contact damage lands (the claw fully extended).
+const CONTACT_STRIKE_FRAME: int = 2
 ## Screen px from the hero's feet to the top of its sprite (168 atlas px at half size).
 const HERO_SPRITE_HEIGHT_PX: float = 84.0
 ## Placeholder enemy colours by kind index (yin corpse, blood wolf, then fallbacks).
@@ -141,7 +143,10 @@ var _sprites: SpriteSet = SpriteSet.new()
 ## Sprite asset_id per enemy kind of the current run ("" = primitive).
 var _kind_assets: PackedStringArray = PackedStringArray()
 ## Enemy uid -> true while it faces left.
-var _faces_left: Dictionary = {}
+## Screen facing of each enemy as signs (x, y), turned with a deadband per axis (uid -> Vector2i).
+var _faces: Dictionary = {}
+## Enemy poses of the current frame (slot -> pose): the shadow and the body draw share one.
+var _poses: Dictionary = {}
 ## Seconds of walk animation (stops with the run).
 var _anim_time: float = 0.0
 var _hero_moving: bool = false
@@ -301,7 +306,8 @@ func start_run(seed_text: String) -> void:
 	_kind_assets = PackedStringArray()
 	for enemy_id: String in tuning.enemy_ids:
 		_kind_assets.append(str(ENEMY_ASSETS.get(enemy_id, "")))
-	_faces_left.clear()
+	_faces.clear()
+	_poses.clear()
 	_anim_time = 0.0
 	_attack_time = -1.0
 	_death_time = -1.0
@@ -352,6 +358,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		_menu.age(delta)
 		return 0
 	_age_effects(delta)
+	_poses.clear()
 	if driver.world.is_over():
 		_advance_hero_clips(delta, [])
 		_show_results()
@@ -458,19 +465,30 @@ func _age_effects(delta: float) -> void:
 	_level_ring = maxf(_level_ring - delta, 0.0)
 
 
-## Enemies face the hero on screen; the turn has a deadband so a horde does not flicker.
+## Enemies face the hero on screen; each axis turns with a deadband so a horde does not flicker.
 func _update_facing() -> void:
 	var world: WorldState = driver.world
-	var hero_x: float = IsoProjection.to_screen(driver.hero_position_px()).x
+	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
 	for slot: int in world.enemy_slots():
 		var uid: int = world.enemy_uid[slot]
 		if uid == 0:
 			continue
-		var dx: float = hero_x - IsoProjection.to_screen(driver.enemy_position_px(slot)).x
-		if dx < -TURN_DEADBAND_PX:
-			_faces_left[uid] = true
-		elif dx > TURN_DEADBAND_PX:
-			_faces_left[uid] = false
+		var to_hero: Vector2 = hero - IsoProjection.to_screen(driver.enemy_position_px(slot))
+		var signs: Vector2i = _faces.get(uid, Vector2i(1, 1))
+		if absf(to_hero.x) > TURN_DEADBAND_PX:
+			signs.x = 1 if to_hero.x > 0.0 else -1
+		if absf(to_hero.y) > TURN_DEADBAND_PX:
+			signs.y = 1 if to_hero.y > 0.0 else -1
+		_faces[uid] = signs
+
+
+## _enemy_pose() once per frame and slot.
+func _frame_pose(slot: int) -> Array:
+	var pose: Variant = _poses.get(slot)
+	if pose == null:
+		pose = _enemy_pose(slot)
+		_poses[slot] = pose
+	return pose
 
 
 ## [asset_id, clip, direction, frame] of an enemy sprite (clip "" for a plain atlas); asset ""
@@ -482,8 +500,27 @@ func _enemy_pose(slot: int) -> Array:
 	var asset: String = _kind_assets[kind] if kind < _kind_assets.size() else ""
 	if not _sprites.has(asset):
 		return ["", "", "", 0]
-	var direction: String = "left" if _faces_left.get(uid, false) else "right"
-	return [asset, "", direction, SpriteSet.walk_frame(_anim_time, posmod(uid, 4))]
+	var signs: Vector2i = _faces.get(uid, Vector2i(1, 1))
+	if not _sprites.has_clip(asset, "walk"):
+		return [asset, "", "left" if signs.x < 0 else "right", SpriteSet.walk_frame(_anim_time, posmod(uid, 4))]
+	var direction: String = SpriteSet.diagonal(signs)
+	if _sprites.has_clip(asset, "attack") and EnemySystem.touching(driver.config, world, slot):
+		return [asset, "attack", direction, _contact_frame(asset, slot)]
+	# Each enemy starts its stride at its own phase, so a horde does not march in step.
+	var offset: float = posmod(uid * 7, 16) / 16.0 * _sprites.clip_length(asset, "walk")
+	return [asset, "walk", direction, _sprites.clip_frame(asset, "walk", _anim_time + offset)]
+
+
+## Attack frame of an enemy in contact (ADR-014 A5): the strike frame (CONTACT_STRIKE_FRAME) is
+## the tick the contact damage lands, the cooldown to the next hit plays the rest of the swing.
+func _contact_frame(asset: String, slot: int) -> int:
+	var world: WorldState = driver.world
+	var interval: int = maxi(driver.config.kind_value(world.enemy_kind[slot], SimConfig.KIND_INTERVAL), 1)
+	var since: float = float(interval - world.enemy_cooldown[slot]) / float(interval)
+	if world.enemy_cooldown[slot] == 0:
+		since = 1.0 - 1.0 / float(interval)
+	var frames: int = _sprites.clip_frames(asset, "attack")
+	return posmod(CONTACT_STRIKE_FRAME + floori(since * frames), frames)
 
 
 ## The hero's clip timers: a cast restarts the attack toward its aim, a defeat starts the death.
@@ -548,7 +585,7 @@ func _draw_shadow_pass() -> void:
 	# is free, and grouping keeps one texture per run of draws (a batch, not one per body).
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
-			_cast_shadow(canvas, _enemy_pose(slot), driver.enemy_position_px(slot))
+			_cast_shadow(canvas, _frame_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
@@ -652,7 +689,7 @@ func _draw_enemy(slot: int) -> void:
 	var feet: Vector2 = driver.enemy_position_px(slot)
 	var at: Vector2 = IsoProjection.to_screen(feet)
 	var light: Color = _light_at(feet)
-	var pose: Array = _enemy_pose(slot)
+	var pose: Array = _frame_pose(slot)
 	if pose[0] != "":
 		var tint: Color = TINT_ENEMY_HIT if _enemy_flash.has(uid) else light
 		if _draw_pose(self, pose, at, tint):

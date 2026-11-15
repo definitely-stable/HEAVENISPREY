@@ -315,3 +315,46 @@ func test_hero_clips_follow_the_run() -> void:
 	var pose: Array = view._hero_pose()
 	assert_eq(pose[1], "death")
 	assert_eq(pose[3], 5, "the death holds its last frame")
+
+
+## ADR-014 A5: an enemy faces the hero by screen diagonal, walks while apart and swings while in
+## contact, the strike frame on the tick its contact damage lands.
+func test_enemy_walks_then_strikes_on_the_damage_tick() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("20261113")
+	var world: WorldState = view.driver.world
+	var guard: int = 0
+	while world.enemy_alive == 0 and guard < 600:
+		view.advance_frame(TICK, Vector2i.ZERO)
+		guard += 1
+	var slot: int = 0
+	while world.enemy_uid[slot] == 0:
+		slot += 1
+	var uid: int = world.enemy_uid[slot]
+	var pose: Array = view._enemy_pose(slot)
+	assert_eq(pose[1], "walk", "apart from the hero")
+	var to_hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px()) - IsoProjection.to_screen(
+		view.driver.enemy_position_px(slot))
+	assert_eq((pose[2] as String).right(1), "e" if to_hero.x > 0.0 else "w", "faces the hero")
+	var struck: bool = false
+	guard = 0
+	while not struck and guard < 3000 and not world.is_over():
+		var hp: int = world.hero_hp
+		view.advance_frame(TICK, Vector2i.ZERO)
+		if world.is_paused():
+			view.choose(0)
+		guard += 1
+		if world.hero_hp < hp:
+			for index: int in world.enemy_slots():
+				if world.enemy_uid[index] != 0 and world.enemy_cooldown[index] == view.driver.config.kind_value(
+					world.enemy_kind[index], SimConfig.KIND_INTERVAL
+				):
+					var strike: Array = view._enemy_pose(index)
+					assert_eq(strike[1], "attack")
+					assert_eq(strike[3], RunView.CONTACT_STRIKE_FRAME, "the claw lands with the damage")
+					struck = true
+	assert_true(struck, "an enemy reaches the standing hero")
+	assert_gt(uid, 0)
