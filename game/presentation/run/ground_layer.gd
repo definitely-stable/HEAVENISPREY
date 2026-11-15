@@ -31,11 +31,12 @@ const COLOR_CLIFF_FLAT: Color = Color(0.22, 0.18, 0.25)
 const MIST_SHADER: Shader = preload("res://presentation/run/shaders/mist.gdshader")
 const FLOOR_SHADER: Shader = preload("res://presentation/run/shaders/floor.gdshader")
 const WATERFALL_SHADER: Shader = preload("res://presentation/run/shaders/waterfall.gdshader")
-## Seal decal over the centre of the arena, and its additive glow.
-const SEAL_TINT: Color = Color(0.84, 0.7, 0.5, 0.74)
-const SEAL_GLOW: Color = Color(1.0, 0.7, 0.36, 0.13)
+## Seal decal over the centre of the arena, and its additive glow: an engraving in the
+## paving, as on REF-023, not a gold plate that outshines the fight (ADR-014 section 20).
+const SEAL_TINT: Color = Color(0.8, 0.66, 0.48, 0.46)
+const SEAL_GLOW: Color = Color(1.0, 0.7, 0.36, 0.06)
 ## Gold inlay lines from the seal to the four sides (REF-033): a pair of thin lines per side.
-const INLAY_COLOR: Color = Color(0.77, 0.6, 0.28, 0.62)
+const INLAY_COLOR: Color = Color(0.77, 0.6, 0.28, 0.4)
 const INLAY_WIDTH_PX: float = 3.0
 const INLAY_GAP_PX: float = 11.0
 ## The lines start at this share of the seal radius and stop this many cells before the wall.
@@ -97,7 +98,7 @@ func _init(
 	_backdrop_items = backdrop
 	_build_mist()
 	var ambient: CanvasModulate = CanvasModulate.new()
-	ambient.color = RunLighting.AMBIENT
+	ambient.color = RunLighting.GROUND_AMBIENT
 	add_child(ambient)
 	_build_cliffs(sprites, cliff_asset)
 	_iso = Node2D.new()
