@@ -21,7 +21,10 @@ static func key_stem(code: int) -> String:
 	return UpgradeSystem.card_id(code).replace(".", "_").to_upper()
 
 
-## {"name", "stat", "rank"} in the current locale; "rank" is empty for recover.
+## {"name", "stat", "label", "change", "rank"} in the current locale. "stat" is the whole line
+## ("Max health 100 -> 120 and heal"); "change" is its values ("100 -> 120") and "label" the
+## words around them ("Max health and heal"), so a card can set them on two lines. "rank" is empty for
+## recover.
 static func describe(config: SimConfig, world: WorldState, code: int) -> Dictionary:
 	var after: WorldState = world.copy()
 	UpgradeSystem.apply_upgrade(after, code)
@@ -29,9 +32,20 @@ static func describe(config: SimConfig, world: WorldState, code: int) -> Diction
 	var rank: String = ""
 	if code < UpgradeSystem.MAX_RANKS.size():
 		rank = UiText.text("UI_UPGRADE_RANK") % [after.ranks[code], UpgradeSystem.MAX_RANKS[code]]
+	var values: Array = [stat(config, world, code), stat(config, after, code)]
+	var template: String = UiText.text(stem + "_DESC")
+	var first: int = template.find("%s")
+	var last: int = template.rfind("%s")
+	var label: String = template
+	var change: String = ""
+	if first >= 0:
+		label = (template.substr(0, first).strip_edges() + " " + template.substr(last + 2).strip_edges()).strip_edges()
+		change = template.substr(first, last + 2 - first) % values
 	return {
 		"name": UiText.text(stem + "_NAME"),
-		"stat": UiText.text(stem + "_DESC") % [stat(config, world, code), stat(config, after, code)],
+		"stat": template % values,
+		"label": label,
+		"change": change,
 		"rank": rank,
 	}
 

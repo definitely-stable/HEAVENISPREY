@@ -17,6 +17,12 @@ const TITLE_FONT_SIZE: int = 18
 const COUNT_FONT_SIZE: int = 17
 const BAR_FONT_SIZE: int = 15
 const SEAL_FONT_SIZE: int = 22
+## Text keeps this far (screen px) inside the window of its frame, clear of the ornament.
+const TEXT_INSET: Vector2 = Vector2(6, 0)
+## The plaque window runs under its scrolls; the stage name stays between them.
+const PLAQUE_INSET: Vector2 = Vector2(18, 0)
+## The capsule ends in a rounded gold cap on the right; the count stays left of it.
+const CAPSULE_RIGHT_CAP: float = 14.0
 const COLOR_GOLD_TEXT: Color = Color(0.97, 0.85, 0.56)
 const COLOR_TEXT: Color = Color(0.97, 0.94, 0.88)
 ## The stage of the P0 run (stage.jade_grove).
@@ -65,14 +71,12 @@ func _draw() -> void:
 		_draw_bar(at["xp"], "fill_gold", share.y, "%d%%" % floori(share.y * 100.0))
 		var seal: Rect2 = at["seal"]
 		kit.draw(self, "level_seal", seal)
-		var inside: Rect2 = kit.window("level_seal", seal)
-		kit.draw_text(self, str(world.level), inside.get_center().x, inside.get_center().y + SEAL_FONT_SIZE * 0.32,
-			SEAL_FONT_SIZE, COLOR_GOLD_TEXT)
+		var inside: Rect2 = kit.window("level_seal", seal).grow_individual(-3, 0, -3, 0)
+		kit.draw_text_in(self, str(world.level), inside, SEAL_FONT_SIZE, COLOR_GOLD_TEXT)
 	var plaque: Rect2 = at["plaque"]
 	kit.draw(self, "title_plaque", plaque)
-	var panel: Rect2 = kit.window("title_plaque", plaque)
-	kit.draw_text(self, UiText.text(STAGE_NAME_KEY), panel.get_center().x, panel.get_center().y + TITLE_FONT_SIZE * 0.32,
-		TITLE_FONT_SIZE, COLOR_GOLD_TEXT)
+	var panel: Rect2 = _inset(kit.window("title_plaque", plaque), PLAQUE_INSET)
+	kit.draw_text_in(self, UiText.text(STAGE_NAME_KEY), panel, TITLE_FONT_SIZE, COLOR_GOLD_TEXT)
 	var clock: String = RunResults.clock(world.tick)
 	kit.draw_text(self, clock, plaque.get_center().x, plaque.end.y + 29.0, TIMER_FONT_SIZE, COLOR_TEXT)
 	kit.draw(self, "divider_lotus", at["divider"])
@@ -90,8 +94,7 @@ func _draw_bar(rect: Rect2, fill: String, share: float, label: String) -> void:
 	kit.draw(self, "bar_frame", rect)
 	var trough: Rect2 = kit.window("bar_frame", rect)
 	kit.draw_fill(self, fill, trough, share)
-	var baseline: float = trough.get_center().y + BAR_FONT_SIZE * 0.34
-	kit.draw_text(self, label, trough.get_center().x, baseline, BAR_FONT_SIZE, COLOR_TEXT)
+	kit.draw_text_in(self, label, _inset(trough, TEXT_INSET), BAR_FONT_SIZE, COLOR_TEXT)
 
 
 func _draw_counter(capsule: Rect2, text: String) -> void:
@@ -99,5 +102,15 @@ func _draw_counter(capsule: Rect2, text: String) -> void:
 	var socket: Rect2 = kit.window("counter_capsule", capsule)
 	var side: float = maxf(socket.size.x, socket.size.y) + 4.0
 	kit.draw(self, "icon_slain", Rect2(socket.get_center() - Vector2(side, side) * 0.5, Vector2(side, side)))
-	var text_x: float = (socket.end.x + capsule.end.x - 8.0) * 0.5
-	kit.draw_text(self, text, text_x, capsule.get_center().y + COUNT_FONT_SIZE * 0.32, COUNT_FONT_SIZE, COLOR_TEXT)
+	kit.draw_text_in(self, text, count_rect(kit, capsule), COUNT_FONT_SIZE, COLOR_TEXT)
+
+
+## Where the slain count sits in the capsule: right of the icon socket, left of the end cap.
+static func count_rect(hud_kit: HudKit, capsule: Rect2) -> Rect2:
+	var socket: Rect2 = hud_kit.window("counter_capsule", capsule)
+	var left: float = socket.end.x + TEXT_INSET.x
+	return Rect2(left, socket.position.y, capsule.end.x - CAPSULE_RIGHT_CAP - left, socket.size.y)
+
+
+static func _inset(rect: Rect2, by: Vector2) -> Rect2:
+	return rect.grow_individual(-by.x, -by.y, -by.x, -by.y)
