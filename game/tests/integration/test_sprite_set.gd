@@ -215,3 +215,56 @@ func test_horde_walks_and_strikes_in_four_diagonals() -> void:
 	assert_eq(SpriteSet.diagonal(Vector2i(-1, 1)), "sw")
 	assert_eq(SpriteSet.diagonal(Vector2i(1, -1)), "ne")
 	assert_eq(SpriteSet.diagonal(Vector2i(-1, -1)), "nw")
+
+
+## ADR-014 section 19: the horde at the height of its boards, measured on the atlases as the
+## build measures it (lowest solid pixel to the first row 12 % as wide as the widest): the Yin
+## Corpse nearly as tall as the hero (REF-044), the wolf at the hero's chest (REF-034).
+func test_horde_stands_at_the_height_of_its_boards() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
+	var hero: float = _clip_height(sprites, manifest, "asset.char.hero_sword", "idle")
+	assert_gt(hero, 0.0)
+	var corpse: float = _clip_height(sprites, manifest, "asset.enemy.yin_corpse", "walk") / hero
+	var wolf: float = _clip_height(sprites, manifest, "asset.enemy.blood_wolf", "walk") / hero
+	assert_between(corpse, 0.9, 1.0, "Yin Corpse / hero")
+	assert_between(wolf, 0.6, 0.75, "wolf / hero")
+
+
+## Median body height (atlas px) of a clip over its frames and generated directions.
+static func _clip_height(sprites: SpriteSet, manifest: Dictionary, asset_id: String, clip: String) -> float:
+	var layout: Dictionary = {}
+	for entry: Dictionary in manifest["assets"]:
+		if entry["asset_id"] == asset_id:
+			layout = entry["layout"]
+	var frame: int = int(layout["frame_size"])
+	var info: Dictionary = layout["clips"][clip]
+	var image: Image = sprites.texture(asset_id).get_image()
+	if image.is_compressed():
+		image.decompress()
+	var heights: Array[float] = []
+	for offset: int in (info["directions"] as Array).size():
+		for index: int in int(info["frames"]):
+			heights.append(_body_height(image, Rect2i(index * frame, (int(info["row"]) + offset) * frame, frame, frame)))
+	heights.sort()
+	return heights[heights.size() / 2]
+
+
+static func _body_height(image: Image, cell: Rect2i) -> float:
+	var widths: Array[int] = []
+	var widest: int = 0
+	for y: int in cell.size.y:
+		var width: int = 0
+		for x: int in cell.size.x:
+			if image.get_pixel(cell.position.x + x, cell.position.y + y).a8 > 200:
+				width += 1
+		widths.append(width)
+		widest = maxi(widest, width)
+	var top: int = -1
+	var bottom: int = -1
+	for y: int in widths.size():
+		if top < 0 and widths[y] >= widest * 0.12:
+			top = y
+		if widths[y] > 0:
+			bottom = y
+	return 0.0 if top < 0 else float(bottom + 1 - top)
