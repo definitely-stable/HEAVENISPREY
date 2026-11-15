@@ -97,3 +97,4 @@ UI_RUN_KILLS,Enemies slain: %d,Убито врагов: %d
 UI_RUN_LEVEL,Level: %d,Уровень: %d
 UI_RUN_XP,Experience gathered: %d,Собрано опыта: %d
 UI_RUN_RESTART,R or Enter: new run,R или Enter — новый забег
+UI_HUD_SLAIN,Slain: %d,Убито: %d

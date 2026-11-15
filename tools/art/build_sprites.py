@@ -5,13 +5,15 @@ art_source/<name>/source.json describes one master image (Git LFS) and how it be
 game asset: a sprite atlas (chroma key, grid slicing, one scale per asset, a fixed
 feet_anchor), a prop atlas (chroma key, one prop per connected shape, each scaled to its
 height and packed with the centre of its base as anchor), a seamless floor texture, a floor
-decal (chroma key, square) or a wall strip (seamless left to right). The builder writes game/assets/<group>/<name>/
+decal (chroma key, square), a wall strip (seamless left to right) or a HUD kit (chroma key,
+one piece per grid cell of each generated sheet, with the inner window of every frame). The builder writes game/assets/<group>/<name>/
 <name>.png and the matching entry of game/assets/manifest.json, including the style
 metrics of ART-BIBLE-001 section 6 measured on the built file.
 
-Every asset also gets a normal map <name>_n.png for 2D lights (ADR-014 section 4): the floor
+Every asset drawn in the lit scene also gets a normal map <name>_n.png for 2D lights (ADR-014 section 4): the floor
 from its luminance (Sobel, seamless), sprites from a soft distance-transform "pillow" of the
-silhouette only, because their painted shading must not turn into relief.
+silhouette only, because their painted shading must not turn into relief. The HUD kit is drawn
+over the scene, unlit, and has none.
 
 Needs Pillow, numpy and scipy (local tool, like ref look-dev). CI does not rebuild:
 scripts/validate_assets.py checks the manifest, the LFS pointers and the recorded metrics
@@ -530,6 +532,108 @@ def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     return atlas, {"density": spec["density"], "props": props}
 
 
+UI_ATLAS_WIDTH = 1024
+UI_PAD_PX = 2
+## Inner window of a frame: the trough or panel is the dark lacquer under this luma.
+UI_DARK_LUMA = 70
+
+
+def inner_window(piece: Image.Image, mode: str) -> list[int]:
+    """[x, y, w, h] of the window a frame holds, in piece px: "hole", the largest transparent
+    region enclosed by the frame (portrait ring, icon socket); "dark", the dark lacquer region
+    under the centre of the piece (bar trough, plaque panel)."""
+    alpha = np.asarray(piece.getchannel("A"))
+    if mode == "hole":
+        labels, count = ndimage.label(alpha <= EDGE_ALPHA)
+        border = set(np.unique(np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]]))) - {0}
+        sizes = [(int((labels == k).sum()), k) for k in range(1, count + 1) if k not in border]
+        if not sizes:
+            raise ValueError("no enclosed hole")
+        region = labels == max(sizes)[1]
+    elif mode == "dark":
+        rgb = np.asarray(piece.convert("RGB")).astype(float)
+        luma = rgb @ np.array([0.2126, 0.7152, 0.0722])
+        dark = (luma < UI_DARK_LUMA) & (alpha > SOLID_ALPHA)
+        labels, _count = ndimage.label(ndimage.binary_opening(dark, iterations=2))
+        centre = labels[piece.height // 2, piece.width // 2]
+        if centre == 0:
+            raise ValueError("no dark panel under the centre")
+        region = labels == centre
+    else:
+        raise ValueError(f"unknown inner mode {mode}")
+    ys, xs = np.nonzero(region)
+    return [int(xs.min()), int(ys.min()), int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1)]
+
+
+def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
+    """HUD kit: each generated sheet is a tile of the master mosaic, cut into a grid; the one
+    shape of a cell is a piece, scaled to its on-screen height x density. A frame records its
+    inner window; a stretchable bar records the left and right caps that keep their size."""
+    sheet = spec["sheet"]
+    sheets = {s["name"]: s for s in spec["sheets"]}
+    keyed_sheets: dict = {}
+    pieces = []
+    for item in spec["pieces"]:
+        tile = sheets[item["sheet"]]
+        if tile["name"] not in keyed_sheets:
+            x, y = tile["origin"]
+            w, h = tile["size"]
+            keyed = key_out(master.crop((x, y, x + w, y + h)).convert("RGB"), hex_rgb(sheet["key_colour"]),
+                            sheet["key_low"], sheet["key_high"])
+            solid = np.asarray(keyed.getchannel("A")) > EDGE_ALPHA
+            labels, _count = ndimage.label(ndimage.binary_dilation(solid, iterations=sheet.get("join_px", 4)))
+            keyed_sheets[tile["name"]] = (labels, keyed)
+        labels, keyed = keyed_sheets[tile["name"]]
+        cols, rows = tile["grid"]
+        cell_w, cell_h = keyed.width / cols, keyed.height / rows
+        members = []
+        for index, box in enumerate(ndimage.find_objects(labels)):
+            ys, xs = box
+            if int((labels[box] == index + 1).sum()) < sheet.get("min_area_px", 400):
+                continue
+            cell = int((xs.start + xs.stop) / 2 // cell_w) + cols * int((ys.start + ys.stop) / 2 // cell_h)
+            if cell == item["cell"]:
+                members.append(index + 1)
+        if not members:
+            raise ValueError(f"{spec['asset_id']}: no shape for {item['name']} in {tile['name']} cell {item['cell']}")
+        inside = np.isin(labels, members)
+        ys, xs = np.nonzero(inside)
+        left, top, right, bottom = int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1
+        if left == 0 or top == 0 or right == keyed.width or bottom == keyed.height:
+            raise ValueError(f"{spec['asset_id']}: {item['name']} touches the sheet edge")
+        mask = Image.fromarray(inside[top:bottom, left:right].astype(np.uint8) * 255)
+        piece = keyed.crop((left, top, right, bottom))
+        piece.putalpha(ImageChops.multiply(piece.getchannel("A"), mask))
+        piece = piece.crop(bbox(piece))
+        scale = item["height_px"] * spec["density"] / piece.height
+        piece = resize_premultiplied(piece, (max(1, round(piece.width * scale)), max(1, round(piece.height * scale))))
+        inner = inner_window(piece, item["inner"]) if "inner" in item else None
+        pieces.append((item, piece, inner))
+    placed = []
+    x = y = shelf = width = 0
+    for item, piece, inner in pieces:
+        w, h = piece.width + 2 * UI_PAD_PX, piece.height + 2 * UI_PAD_PX
+        if x + w > UI_ATLAS_WIDTH:
+            x, y, shelf = 0, y + shelf, 0
+        placed.append((item, piece, inner, x + UI_PAD_PX, y + UI_PAD_PX))
+        x += w
+        shelf = max(shelf, h)
+        width = max(width, x)
+    atlas = Image.new("RGBA", (width, y + shelf), (0, 0, 0, 0))
+    out = []
+    for item, piece, inner, px, py in placed:
+        atlas.alpha_composite(piece, (px, py))
+        record: dict = {"name": item["name"], "region": [px, py, piece.width, piece.height]}
+        if inner is not None:
+            record["inner"] = [px + inner[0], py + inner[1], inner[2], inner[3]]
+            if item.get("stretch"):
+                # The caps end a few px inside the trough, so the stretched middle is plain trough and rim.
+                cap = item.get("cap_px", 4) * spec["density"]
+                record["slice"] = [inner[0] + cap, piece.width - inner[0] - inner[2] + cap]
+        out.append(record)
+    return atlas, {"density": spec["density"], "pieces": out}
+
+
 def build_decal(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     """A keyed floor inlay, square, drawn on the ground under the isometric matrix."""
     sheet = spec["sheet"]
@@ -600,6 +704,8 @@ def build(name: str, passport: dict) -> dict:
         image, layout = build_strip(spec, master)
     elif spec["kind"] == "anim_atlas":
         image, layout = build_anim(spec, master)
+    elif spec["kind"] == "ui_atlas":
+        image, layout = build_ui(spec, master)
     else:
         raise ValueError(f"{name}: unknown kind {spec['kind']}")
     # The rim of characters is drawn by the scene shader (ADR-014 section 4), never baked.
@@ -626,11 +732,18 @@ def build(name: str, passport: dict) -> dict:
         normal_image, normal_spec = decal_normals(image), FLOOR_NORMAL
     elif spec["kind"] == "strip_texture":
         normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
+    elif spec["kind"] == "ui_atlas":
+        # Drawn over the scene, unlit: no normal map.
+        normal_image, normal_spec = None, None
     else:
         normal_image, normal_spec = floor_normals(image), FLOOR_NORMAL
-    normal_out = out.with_name(f"{name}_n.png")
-    normal_image.save(normal_out, optimize=True)
-    normal_data = normal_out.read_bytes()
+    normal = None
+    if normal_image is not None:
+        normal_out = out.with_name(f"{name}_n.png")
+        normal_image.save(normal_out, optimize=True)
+        normal_data = normal_out.read_bytes()
+        normal = {"path": normal_out.relative_to(ROOT).as_posix(), "sha256": sha256(normal_data),
+                  "bytes": len(normal_data), **normal_spec}
     return {
         "asset_id": spec["asset_id"],
         "kind": spec["kind"],
@@ -642,8 +755,7 @@ def build(name: str, passport: dict) -> dict:
         "art_bible_version": passport["passport_version"],
         "content_ids": spec["content_ids"],
         "layout": layout,
-        "normal": {"path": normal_out.relative_to(ROOT).as_posix(), "sha256": sha256(normal_data),
-                   "bytes": len(normal_data), **normal_spec},
+        "normal": normal,
         "source": {"path": master_path.relative_to(ROOT).as_posix(), "sha256": sha256(master_bytes),
                    "bytes": len(master_bytes), "prompt_sha256": spec["generation"]["prompt_sha256"]},
         "qa": {"palette_group": spec["palette_group"], **metrics},
@@ -678,6 +790,11 @@ def render_card(name: str, entry: dict) -> str:
     elif entry["kind"] == "decal_texture":
         geometry = f"декаль пола {layout['texture_px']}×{layout['texture_px']} px на {layout['world_px']} px мира"
         kind = "decal"
+    elif entry["kind"] == "ui_atlas":
+        geometry = (f"атлас HUD {entry['size'][0]}×{entry['size'][1]} px, плотность {layout['density']}: "
+                    + ", ".join(f"{p['name']} {p['region'][2]}×{p['region'][3]}" + (" (растяжимая)" if "slice" in p else "")
+                                for p in layout["pieces"]))
+        kind = "HUD kit (экранный слой, без освещения)"
     elif entry["kind"] == "strip_texture":
         geometry = f"полоса {layout['texture_size'][0]}×{layout['texture_size'][1]} px, повтор по горизонтали, {layout['world_px']} px мира"
         kind = "wall strip"
@@ -697,17 +814,21 @@ def render_card(name: str, entry: dict) -> str:
         f"- **Generation:** {gen['capability']} · {gen['tool_version']} · prompt sha256 `{gen['prompt_sha256'][:16]}` "
         f"([prompt.txt](prompt.txt)) · {gen['created']} · мастер [{spec['master']}]({spec['master']}) `{entry['source']['sha256'][:12]}`",
         f"- **Geometry:** {geometry}",
-        "- **Rules:** без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены" + "; кант рисует шейдер сцены",
+        "- **Rules:** " + ("без запечённых свечения, теней и текста; фон снят хромакеем; рисуется поверх сцены без света и нормалей"
+                           if entry["kind"] == "ui_atlas" else
+                           "без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены"),
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
         f"цвет угрозы {qa['threat_colour_pct']} %" + (
             f" · шов цикла {qa['loop_seam_ratio']} медианы / {qa['loop_seam_to_max']} наибольшего шага · "
             f"разброс высоты {qa['height_spread_pct']} % · дрейф торса {qa['torso_drift_px']} px"
             if entry["kind"] == "anim_atlas" else ""),
         f"- **Build:** [{Path(entry['path']).name}](../../{entry['path']}) · {entry['size'][0]}×{entry['size'][1]} · "
-        f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}` · нормали "
-        f"[{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})",
-        "- **Decision:** " + ("approved для P0 (ADR-014 A4), ракурс 30°" if entry["kind"] == "anim_atlas"
-                              else "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),
+        f"{entry['bytes']} байт · sha256 `{entry['sha256'][:12]}` · " + (
+            f"нормали [{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})"
+            if entry["normal"] else "без нормалей"),
+        "- **Decision:** " + {"anim_atlas": "approved для P0 (ADR-014 A4, A5), ракурс 30°",
+                              "ui_atlas": "approved для P0 (ADR-014 §15, HUD по REF-022)"}.get(
+            entry["kind"], "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",
     ]

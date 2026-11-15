@@ -52,6 +52,8 @@ static func _from_manifest(path: String) -> SpriteSet:
 
 func _add(entry: Dictionary) -> void:
 	var asset_id: String = str(entry.get("asset_id", ""))
+	if str(entry.get("kind", "")) == "ui_atlas":
+		return  # The HUD kit is drawn by HudKit over the scene, unlit.
 	var res_path: String = "res://" + str(entry.get("path", "")).trim_prefix("game/")
 	var texture: Texture2D = load(res_path) as Texture2D if ResourceLoader.exists(res_path) else null
 	if texture == null:

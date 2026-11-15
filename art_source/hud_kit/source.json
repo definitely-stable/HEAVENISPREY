@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.ui.hud_kit",
+  "kind": "ui_atlas",
+  "group": "ui",
+  "asset_version": 1,
+  "content_ids": [],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-008",
+      "file": "Атлас золотого интерфейса Heaven Is Prey.png",
+      "sha256": "b352a3a5e56fffe9fc3f8c0059948b31017f923919aeaecfb03656eaa5a89db8"
+    },
+    {
+      "id": "REF-022",
+      "file": "Золотой набор интерфейса для сянься HUD.png",
+      "sha256": "f346cac6dcc2ecc3be002ac9c48dae265b9695b4d1592f3b110a86f8ab3d6a0d"
+    },
+    {
+      "id": "REF-023",
+      "file": "Золотой натиск Древней Секты.png",
+      "sha256": "dd5923b04f7b636d063ecdde4f4188083ecc6a0c28394997859363ff0b5fc94f"
+    },
+    {
+      "id": "REF-035",
+      "file": "Культиватор Меча_ лист игровых анимаций.png",
+      "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "e2fdb0cfcbeb06acf893bb72b51e8b7f36802098caed348d841591085438a19e",
+    "created": "2026-11-15T19:11:46+0500",
+    "master_sha256": "4ec091e350d49e04f2d58b537fc3730ecc5a8943c4c4aa34bc7d2fe33fc5bea5",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035"
+  },
+  "palette_group": "ui",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "join_px": 4,
+    "min_area_px": 400
+  },
+  "sheets": [
+    {
+      "name": "frames",
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        2,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d42c453659c0c2e6b9a215fc88342e664b6dab52465abfa6608fa15115ec6759",
+      "prompt_sha256": "168cd77ac300524cb16c603a7873ad60e7965009eb9f68c33dba68c13d8cb638",
+      "created": "2026-11-15T19:09:15+0500"
+    },
+    {
+      "name": "fills",
+      "origin": [
+        1536,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "18e5f8b695dab07857ca499140baf5e4116d9a04843149dbee0bff8b55e151b4",
+      "prompt_sha256": "473785f7ef58a88fab265cd4cfe3da6829cd06e3d4dcf4601d037ef46bf0272a",
+      "created": "2026-11-15T19:10:27+0500"
+    },
+    {
+      "name": "portrait",
+      "origin": [
+        3072,
+        0
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "bd0f40ffa476a19b7533964ebb2d6af5acaef21a8848595322b8d82870993509",
+      "prompt_sha256": "46d1d477f864948ffb15b4bb4c0ec61e16a088da55c68a0a70ec261203dc287c",
+      "created": "2026-11-15T19:11:46+0500"
+    }
+  ],
+  "pieces": [
+    {
+      "name": "portrait_ring",
+      "sheet": "frames",
+      "cell": 0,
+      "height_px": 122,
+      "inner": "hole"
+    },
+    {
+      "name": "level_seal",
+      "sheet": "frames",
+      "cell": 1,
+      "height_px": 46,
+      "inner": "dark"
+    },
+    {
+      "name": "bar_frame",
+      "sheet": "frames",
+      "cell": 2,
+      "height_px": 18,
+      "inner": "dark",
+      "stretch": true
+    },
+    {
+      "name": "title_plaque",
+      "sheet": "frames",
+      "cell": 3,
+      "height_px": 50,
+      "inner": "dark"
+    },
+    {
+      "name": "counter_capsule",
+      "sheet": "frames",
+      "cell": 4,
+      "height_px": 38,
+      "inner": "hole"
+    },
+    {
+      "name": "divider_lotus",
+      "sheet": "frames",
+      "cell": 5,
+      "height_px": 18
+    },
+    {
+      "name": "fill_red",
+      "sheet": "fills",
+      "cell": 0,
+      "height_px": 10
+    },
+    {
+      "name": "fill_gold",
+      "sheet": "fills",
+      "cell": 1,
+      "height_px": 10
+    },
+    {
+      "name": "icon_slain",
+      "sheet": "fills",
+      "cell": 3,
+      "height_px": 34
+    },
+    {
+      "name": "portrait",
+      "sheet": "portrait",
+      "cell": 0,
+      "height_px": 104
+    }
+  ]
+}

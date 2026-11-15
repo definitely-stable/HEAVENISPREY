@@ -29,15 +29,12 @@ const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
 const HIT_FLASH: float = 0.15
 const ENEMY_HIT_FLASH: float = 0.1
 const PUFF_TIME: float = 0.35
-const HUD_FONT_SIZE: int = 22
-const HUD_MARGIN: Vector2 = Vector2(20, 34)
 ## Seconds a collected gem flies to the hero (6 frames at 60 fps), then its "+N" floats.
 const PICKUP_FLY: float = 0.1
 const PICKUP_TEXT: float = 0.6
 const LEVEL_RING: float = 0.6
 ## After a defeat the results open once the hero's death clip has played and this long more (s).
 const DEATH_BEAT: float = 0.5
-const XP_BAR_HEIGHT: float = 6.0
 
 ## Beyond the arena diamond (ADR-014 section 1; fog and cliffs come with slice A3).
 const COLOR_VOID: Color = Color(0.03, 0.03, 0.04)
@@ -51,13 +48,11 @@ const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
 const COLOR_SWORD: Color = Color(0.78, 0.92, 1.0)
 const COLOR_SWORD_GLOW: Color = Color(0.45, 0.62, 0.8, 0.9)
 const COLOR_SWORD_TRAIL: Color = Color(0.3, 0.42, 0.55, 0.55)
-const COLOR_HUD: Color = Color(0.95, 0.92, 0.85)
 ## XP gems: jade blue (red stays reserved for enemies).
 const COLOR_GEM: Color = Color(0.36, 0.84, 0.78)
 ## A gem resting on the ground away from the hero: dimmer (L ~120), bright again in reach.
 const COLOR_GEM_REST: Color = Color(0.24, 0.56, 0.52)
 const COLOR_GEM_GLOW: Color = Color(0.2, 0.55, 0.5, 0.8)
-const COLOR_XP_BACK: Color = Color(0.0, 0.0, 0.0, 0.55)
 ## status.venom on the hero: tint and one pip per stack above the HP bar.
 const COLOR_VENOM: Color = Color(0.45, 0.85, 0.3)
 ## status.root_slow on the hero: a ring of roots.
@@ -136,7 +131,7 @@ var _pickups: Array[Array] = []
 ## Seconds left of the level-up ring.
 var _level_ring: float = 0.0
 ## Screen-space layer for the HUD (not moved by the camera).
-var _hud: Node2D
+var _hud: RunHud
 var _menu: ChoiceMenu
 var _results: RunResults
 var _sprites: SpriteSet = SpriteSet.new()
@@ -187,13 +182,18 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(COLOR_VOID)
 	var layer: CanvasLayer = CanvasLayer.new()
 	add_child(layer)
-	_hud = Node2D.new()
+	_hud = RunHud.new()
+	_hud.kit = HudKit.load_default()
 	layer.add_child(_hud)
-	_hud.draw.connect(_draw_hud)
+	# The level-up menu and the results speak in the HUD font.
+	var theme: Theme = Theme.new()
+	theme.default_font = _hud.kit.font
 	_menu = ChoiceMenu.new()
+	_menu.theme = theme
 	layer.add_child(_menu)
 	_menu.picked.connect(_on_card_picked)
 	_results = RunResults.new()
+	_results.theme = theme
 	layer.add_child(_results)
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
@@ -302,6 +302,8 @@ func start_run(seed_text: String) -> void:
 		push_error("P0 run without enemies: " + tuning.error)
 		config = placeholder_config()
 	driver = FixedTickDriver.create(config)
+	if _hud != null:
+		_hud.driver = driver
 	runs_started += 1
 	_kind_assets = PackedStringArray()
 	for enemy_id: String in tuning.enemy_ids:
@@ -863,32 +865,6 @@ func _draw_glow_pass() -> void:
 func _halo(canvas: Node2D, at: Vector2, radius: float, color: Color) -> void:
 	var box: Rect2 = Rect2(at - Vector2(radius, radius), Vector2(radius, radius) * 2.0)
 	canvas.draw_texture_rect(_halo_texture, box, false, color)
-
-
-## XP bar along the top edge, then run time, kills and level in the top-left screen corner
-## (digits and icons only, no text keys yet).
-func _draw_hud() -> void:
-	if driver == null:
-		return
-	var width: float = _hud.get_viewport_rect().size.x
-	_hud.draw_rect(Rect2(0, 0, width, XP_BAR_HEIGHT), COLOR_XP_BACK)
-	if driver.config.has_xp():
-		var cost: int = driver.config.xp_cost(driver.world.level)
-		var share: float = clampf(float(driver.world.xp_bank) / float(cost), 0.0, 1.0)
-		_hud.draw_rect(Rect2(0, 0, width * share, XP_BAR_HEIGHT), COLOR_GEM)
-	var corner: Vector2 = HUD_MARGIN
-	var font: Font = ThemeDB.fallback_font
-	var clock: String = RunResults.clock(driver.world.tick)
-	_hud.draw_string(font, corner, clock, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
-	var icon: Vector2 = corner + Vector2(90, -HUD_FONT_SIZE * 0.35)
-	_hud.draw_circle(icon, 8.0, ENEMY_COLORS[1])
-	_hud.draw_circle(icon, 8.0, ENEMY_COLORS[1].darkened(0.45), false, 2.0)
-	var kills: String = str(driver.world.kills)
-	_hud.draw_string(font, corner + Vector2(104, 0), kills, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
-	if driver.config.has_xp():
-		_draw_gem(_hud, corner + Vector2(170, -HUD_FONT_SIZE * 0.35), 15, 1.0)
-		var level: String = str(driver.world.level)
-		_hud.draw_string(font, corner + Vector2(184, 0), level, HORIZONTAL_ALIGNMENT_LEFT, -1, HUD_FONT_SIZE, COLOR_HUD)
 
 
 func _enemy_color(kind: int) -> Color:

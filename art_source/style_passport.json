@@ -68,6 +68,20 @@
         "#f3dc9a"
       ],
       "max_palette_delta_e": 16
+    },
+    "ui": {
+      "colours": [
+        "#261713",
+        "#6b2c0d",
+        "#432d3a",
+        "#a04c18",
+        "#835d4f",
+        "#c97f34",
+        "#9265be",
+        "#e7b25b",
+        "#eacdb5"
+      ],
+      "max_palette_delta_e": 16
     }
   }
 }
