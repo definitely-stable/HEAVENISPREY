@@ -12,6 +12,8 @@ extends SceneTree
 ## - "hero": a contact sheet of the animated hero (ADR-014 A4) in game light: four frames of the
 ##   run in each of the 8 directions (one row each, east first, clockwise), then idle, attacks
 ##   on a horde and the death, cropped around the hero;
+## - "choice": the P0 run with the hero walking circles until the first level-up, then the open
+##   choice menu (ADR-014 section 16) after it has armed;
 ## - "perf": `count` enemies on rings around the hero walking left and right; prints the p50
 ##   and p95 frame time and the draw calls over 180 frames and writes them to out (JSON).
 ##   Run it with --disable-vsync (and at 1920x1080 for the ADR-014 A2 budget).
@@ -54,6 +56,9 @@ func _capture() -> void:
 	if mode == "hero":
 		await _capture_hero(view, out)
 		return
+	if mode == "choice":
+		await _capture_choice(view, out)
+		return
 	if mode == "circles":
 		_walk_circles(view, count)
 	else:
@@ -67,6 +72,19 @@ func _capture() -> void:
 	var error: Error = image.save_png(out)
 	print("capture: ", out, " ", image.get_size(), " alive=", view.driver.world.enemy_alive,
 		" tick=", view.driver.world.tick, " error=", error)
+	quit(0 if error == OK else 1)
+
+
+func _capture_choice(view: RunView, out: String) -> void:
+	var seconds: float = 0.0
+	while seconds < MAX_SECONDS and not view.driver.world.is_paused() and not view.driver.world.is_over():
+		view.advance_frame(STEP, CIRCLE[int(seconds / 0.75) % CIRCLE.size()])
+		seconds += STEP
+	for index: int in HORDE_FRAMES:
+		view.advance_frame(STEP, Vector2i.ZERO)
+		await process_frame
+	var error: Error = root.get_texture().get_image().save_png(out)
+	print("capture choice: ", out, " open=", view.is_menu_open(), " level=", view.driver.world.level, " error=", error)
 	quit(0 if error == OK else 1)
 
 

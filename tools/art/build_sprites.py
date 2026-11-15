@@ -538,10 +538,10 @@ UI_PAD_PX = 2
 UI_DARK_LUMA = 70
 
 
-def inner_window(piece: Image.Image, mode: str) -> list[int]:
+def inner_window(piece: Image.Image, mode: str, seed: tuple[float, float] = (0.5, 0.5)) -> list[int]:
     """[x, y, w, h] of the window a frame holds, in piece px: "hole", the largest transparent
     region enclosed by the frame (portrait ring, icon socket); "dark", the dark lacquer region
-    under the centre of the piece (bar trough, plaque panel)."""
+    under `seed` (fractions of the piece; the centre unless a finial shifts the panel)."""
     alpha = np.asarray(piece.getchannel("A"))
     if mode == "hole":
         labels, count = ndimage.label(alpha <= EDGE_ALPHA)
@@ -555,14 +555,28 @@ def inner_window(piece: Image.Image, mode: str) -> list[int]:
         luma = rgb @ np.array([0.2126, 0.7152, 0.0722])
         dark = (luma < UI_DARK_LUMA) & (alpha > SOLID_ALPHA)
         labels, _count = ndimage.label(ndimage.binary_opening(dark, iterations=2))
-        centre = labels[piece.height // 2, piece.width // 2]
+        centre = labels[int(piece.height * seed[1]), int(piece.width * seed[0])]
         if centre == 0:
-            raise ValueError("no dark panel under the centre")
+            raise ValueError(f"no dark panel under {seed}")
         region = labels == centre
     else:
         raise ValueError(f"unknown inner mode {mode}")
     ys, xs = np.nonzero(region)
     return [int(xs.min()), int(ys.min()), int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1)]
+
+
+def feather_edges(piece: Image.Image, width: float) -> Image.Image:
+    """Fades the alpha to zero over `width` px at the edges of a square illustration, so it melts
+    into the dark panel of the card that holds it (REF-011)."""
+    h, w = piece.height, piece.width
+    ys, xs = np.mgrid[0:h, 0:w]
+    edge = np.minimum(np.minimum(xs + 0.5, w - xs - 0.5), np.minimum(ys + 0.5, h - ys - 0.5))
+    ramp = np.clip(edge / max(width, 1.0), 0.0, 1.0)
+    ramp = ramp * ramp * (3.0 - 2.0 * ramp)
+    alpha = np.asarray(piece.getchannel("A")).astype(float) * ramp
+    out = piece.copy()
+    out.putalpha(Image.fromarray(np.round(alpha).astype(np.uint8)))
+    return out
 
 
 def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
@@ -607,7 +621,9 @@ def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         piece = piece.crop(bbox(piece))
         scale = item["height_px"] * spec["density"] / piece.height
         piece = resize_premultiplied(piece, (max(1, round(piece.width * scale)), max(1, round(piece.height * scale))))
-        inner = inner_window(piece, item["inner"]) if "inner" in item else None
+        if "feather_px" in item:
+            piece = feather_edges(piece, item["feather_px"] * spec["density"])
+        inner = inner_window(piece, item["inner"], tuple(item.get("inner_seed", (0.5, 0.5)))) if "inner" in item else None
         pieces.append((item, piece, inner))
     placed = []
     x = y = shelf = width = 0
@@ -827,7 +843,7 @@ def render_card(name: str, entry: dict) -> str:
             f"нормали [{Path(entry['normal']['path']).name}](../../{entry['normal']['path']}) ({entry['normal']['method']})"
             if entry["normal"] else "без нормалей"),
         "- **Decision:** " + {"anim_atlas": "approved для P0 (ADR-014 A4, A5), ракурс 30°",
-                              "ui_atlas": "approved для P0 (ADR-014 §15, HUD по REF-022)"}.get(
+                              "ui_atlas": "approved для P0 (ADR-014 §15–16: HUD по REF-022, меню выбора по REF-011)"}.get(
             entry["kind"], "approved для P0 (ADR-013, ADR-014 A0), до перегенерации под ракурс 30° (A4, A5)"),
         "- **License / provenance:** сгенерировано утверждённой GPT imagegen capability (AGENTS.md п.3) по референсам проекта",
         "",

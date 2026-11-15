@@ -3,7 +3,7 @@
   "asset_id": "asset.ui.hud_kit",
   "kind": "ui_atlas",
   "group": "ui",
-  "asset_version": 1,
+  "asset_version": 2,
   "content_ids": [],
   "master": "master.webp",
   "references": [
@@ -11,6 +11,11 @@
       "id": "REF-008",
       "file": "Атлас золотого интерфейса Heaven Is Prey.png",
       "sha256": "b352a3a5e56fffe9fc3f8c0059948b31017f923919aeaecfb03656eaa5a89db8"
+    },
+    {
+      "id": "REF-011",
+      "file": "Выберите улучшение_ Небесный клинковый ливень.png",
+      "sha256": "c9b679bbb8a3454abb955815a583315b675e253826368aef3fe5e46096e2a45e"
     },
     {
       "id": "REF-022",
@@ -32,13 +37,13 @@
     "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
     "tool_version": "codex-cli 0.169.0",
     "prompt_file": "prompt.txt",
-    "prompt_sha256": "e2fdb0cfcbeb06acf893bb72b51e8b7f36802098caed348d841591085438a19e",
-    "created": "2026-11-15T19:11:46+0500",
-    "master_sha256": "4ec091e350d49e04f2d58b537fc3730ecc5a8943c4c4aa34bc7d2fe33fc5bea5",
-    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035"
+    "prompt_sha256": "52c6e7b50f53c756e03def668e80a2e7035a898213f0a99e28d4a7834d68cede",
+    "created": "2026-11-15T20:30:23+0500",
+    "master_sha256": "f9be73f7e452463bec9afa230ec8a055965afa7c3bb478b5485fb568b5a2c705",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035, the cards and card art REF-011"
   },
   "palette_group": "ui",
-  "density": 2,
+  "density": 1.5,
   "sheet": {
     "key_colour": "#00ff00",
     "key_low": 40,
@@ -103,6 +108,44 @@
       "png_sha256": "bd0f40ffa476a19b7533964ebb2d6af5acaef21a8848595322b8d82870993509",
       "prompt_sha256": "46d1d477f864948ffb15b4bb4c0ec61e16a088da55c68a0a70ec261203dc287c",
       "created": "2026-11-15T19:11:46+0500"
+    },
+    {
+      "name": "cards",
+      "origin": [
+        4326,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        2,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "75748ba59a66966a6fac853d36a718fce4d2eac2144b7fe4e3ac6751bf4d9f67",
+      "prompt_sha256": "22f00f68bdf56e9743332fa7f70665be408a468c4433789c69d3136ac6baf149",
+      "created": "2026-11-15T20:28:36+0500"
+    },
+    {
+      "name": "art",
+      "origin": [
+        5862,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "c14e1bd47e372452c5aafa4e04dfba96a2aba8d8460f62323a700c9290809a47",
+      "prompt_sha256": "b833ee839eb675e8599782ec3b1671fb97e8507a3fcb0de2387300f62723e088",
+      "created": "2026-11-15T20:30:23+0500"
     }
   ],
   "pieces": [
@@ -171,6 +214,94 @@
       "sheet": "portrait",
       "cell": 0,
       "height_px": 104
+    },
+    {
+      "name": "card_frame",
+      "sheet": "cards",
+      "cell": 0,
+      "height_px": 380,
+      "inner": "dark"
+    },
+    {
+      "name": "title_banner",
+      "sheet": "cards",
+      "cell": 1,
+      "height_px": 100,
+      "inner": "dark",
+      "inner_seed": [
+        0.5,
+        0.68
+      ]
+    },
+    {
+      "name": "rank_ribbon",
+      "sheet": "cards",
+      "cell": 2,
+      "height_px": 28,
+      "inner": "dark"
+    },
+    {
+      "name": "choose_button",
+      "sheet": "cards",
+      "cell": 3,
+      "height_px": 50,
+      "inner": "dark"
+    },
+    {
+      "name": "art_speed",
+      "sheet": "art",
+      "cell": 0,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_vitality",
+      "sheet": "art",
+      "cell": 1,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_pickup",
+      "sheet": "art",
+      "cell": 2,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_count",
+      "sheet": "art",
+      "cell": 3,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_damage",
+      "sheet": "art",
+      "cell": 4,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_haste",
+      "sheet": "art",
+      "cell": 5,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_pierce",
+      "sheet": "art",
+      "cell": 6,
+      "height_px": 200,
+      "feather_px": 14
+    },
+    {
+      "name": "art_recover",
+      "sheet": "art",
+      "cell": 7,
+      "height_px": 200,
+      "feather_px": 14
     }
   ]
 }
