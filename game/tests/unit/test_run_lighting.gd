@@ -29,6 +29,26 @@ func test_upright_light_grows_towards_a_lantern() -> void:
 	assert_eq(RunLighting.light_at(ARENA * 0.5, far_hero, lanterns).a, 1.0)
 
 
+## A3 polish: things that stand still keep the fixed part and add only the aura each frame.
+func test_fixed_light_plus_aura_is_light_at() -> void:
+	var lanterns: Array[Vector2] = [Vector2(5.5, 4.5) * CELL, Vector2(26.5, 15.5) * CELL]
+	var feet: Vector2 = lanterns[0] + Vector2(60.0, 20.0)
+	var hero: Vector2 = feet + Vector2(40.0, 0.0)
+	var fixed: Color = RunLighting.fixed_light(feet, lanterns)
+	assert_eq(fixed, RunLighting.light_at(feet, Vector2(-10000, -10000), lanterns), "no aura far from the hero")
+	assert_eq(RunLighting.with_aura(fixed, feet, hero), RunLighting.light_at(feet, hero, lanterns))
+	assert_gt(RunLighting.with_aura(fixed, feet, hero).r, fixed.r)
+
+
+## A3 polish: a prop standing at its own lantern is not blown out by it (the sprite shader
+## multiplies the painted colours by this light once).
+func test_upright_light_at_a_lantern_stays_moderate() -> void:
+	var lanterns: Array[Vector2] = [ARENA * 0.5]
+	var peak: Color = RunLighting.fixed_light(ARENA * 0.5, lanterns)
+	assert_lt(peak.r, 1.6)
+	assert_gt(peak.r, peak.b, "warm")
+
+
 func test_hero_aura_lights_the_hero() -> void:
 	var lanterns: Array[Vector2] = []
 	var hero: Vector2 = ARENA * 0.5

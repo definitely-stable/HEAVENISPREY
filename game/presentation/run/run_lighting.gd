@@ -16,8 +16,8 @@ const MOON_HEIGHT: float = 0.55
 ## Upright sprites get a flat share of the moon (no normal on the ground point).
 const MOON_FLAT: float = 0.18
 ## Warm light of the lanterns and braziers of the courtyard (ArenaDressing.LIGHT_PROPS).
-const LANTERN_COLOR: Color = Color(1.0, 0.7, 0.42)
-const LANTERN_ENERGY: float = 2.3
+const LANTERN_COLOR: Color = Color(1.0, 0.68, 0.26)
+const LANTERN_ENERGY: float = 3.4
 const LANTERN_RADIUS_PX: float = 240.0
 ## Aura of the hero: a soft gold light that follows them.
 const AURA_COLOR: Color = Color(1.0, 0.88, 0.62)
@@ -25,7 +25,7 @@ const AURA_ENERGY: float = 0.55
 const AURA_RADIUS_PX: float = 150.0
 ## Share of a point light an upright sprite takes: its faces stand across the light that
 ## falls from above onto the floor, so they catch less of it than the ground below.
-const UPRIGHT_SHARE: float = 0.45
+const UPRIGHT_SHARE: float = 0.14
 ## Height of point lights for normal mapping, px.
 const LIGHT_HEIGHT_PX: float = 40.0
 ## Cast shadow of an upright sprite: squash of its height and horizontal shear per unit of
@@ -56,10 +56,22 @@ static func falloff(distance: float, radius: float) -> float:
 ## Light on an upright sprite whose feet stand at `feet` (world px); `hero` (world px) carries
 ## the aura. Ambient plus the flat moon share plus UPRIGHT_SHARE of every point light there.
 static func light_at(feet: Vector2, hero: Vector2, lanterns: Array[Vector2]) -> Color:
+	return with_aura(fixed_light(feet, lanterns), feet, hero)
+
+
+## The part of light_at() that does not move: ambient, the flat moon and the lanterns. Things
+## that stand still (the courtyard props) keep it and add only the aura each frame.
+static func fixed_light(feet: Vector2, lanterns: Array[Vector2]) -> Color:
 	var light: Color = AMBIENT + MOON_COLOR * MOON_FLAT
 	for lantern: Vector2 in lanterns:
 		light += LANTERN_COLOR * (LANTERN_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(lantern), LANTERN_RADIUS_PX))
-	light += AURA_COLOR * (AURA_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(hero), AURA_RADIUS_PX))
+	light.a = 1.0
+	return light
+
+
+## `fixed` (a fixed_light() at `feet`) plus the hero aura.
+static func with_aura(fixed: Color, feet: Vector2, hero: Vector2) -> Color:
+	var light: Color = fixed + AURA_COLOR * (AURA_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(hero), AURA_RADIUS_PX))
 	light.a = 1.0
 	return light
 
