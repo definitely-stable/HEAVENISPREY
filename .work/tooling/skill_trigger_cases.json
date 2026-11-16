@@ -20,6 +20,7 @@
     {"prompt": "Закрыть срез: дождаться CI, merge и обновить CURRENT_STATE", "expect": "hip-ci-closeout"},
     {"prompt": "PR is waiting on CI; merge to main and record evidence in CURRENT_STATE", "expect": "hip-ci-closeout"},
     {"prompt": "Сгенерируй новый проп по доске референсов: изометрия, атлас спрайтов, проекция основания", "expect": "hip-art-asset"},
-    {"prompt": "Generate a prop sprite atlas from the reference board in the isometric projection", "expect": "hip-art-asset"}
+    {"prompt": "Generate a prop sprite atlas from the reference board in the isometric projection", "expect": "hip-art-asset"},
+    {"prompt": "Анимация бега героя: ноги скользят, клип дёргается, собрать атлас заново", "expect": "hip-art-asset"}
   ]
 }

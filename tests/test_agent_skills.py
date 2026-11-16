@@ -150,6 +150,38 @@ class AgentSkillTests(unittest.TestCase):
         self.assertEqual(skills.route("zzz qqq", {"a": "alpha", "b": "beta"})[0], None)
         self.assertEqual(skills.route("shared words", {"a": "shared words", "b": "shared words"})[0], None)
 
+    def test_supporting_files_follow_the_skill_rules(self):
+        art = self.dir / "hip-art-asset"
+        self.run_check()
+        orphan = art / "reference" / "orphan.md"
+        orphan.write_text("# notes\n", encoding="utf-8")
+        with self.assertRaisesRegex(skills.ContractError, "not linked from SKILL.md"):
+            self.run_check()
+        orphan.unlink()
+        reference = art / "reference" / "animation.md"
+        reference.write_text(reference.read_text(encoding="utf-8") + "\n[gone](../missing.md)\n", encoding="utf-8")
+        with self.assertRaisesRegex(skills.ContractError, "broken link"):
+            self.run_check()
+
+    def test_evals_need_matching_name_and_expectations(self):
+        evals = self.dir / "hip-art-asset" / "evals" / "evals.json"
+        data = json.loads(evals.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(data["evals"]), 2)
+        data["evals"][0]["expectations"] = []
+        evals.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(skills.ContractError, "expectations"):
+            self.run_check()
+        data["skill_name"] = "hip-other"
+        evals.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaisesRegex(skills.ContractError, "skill_name"):
+            self.run_check()
+
+    def test_skill_body_has_a_line_budget(self):
+        skill = self.dir / "hip-art-asset" / "SKILL.md"
+        skill.write_text(skill.read_text(encoding="utf-8") + "- filler\n" * skills.MAX_SKILL_LINES, encoding="utf-8")
+        with self.assertRaisesRegex(skills.ContractError, "over 500 lines"):
+            self.run_check()
+
     def test_unlisted_third_party_skill_is_checked_as_project_skill(self):
         folder = self.dir / "random-skill"
         folder.mkdir()

@@ -10,6 +10,7 @@
 | Git, GitHub CLI | `winget install Git.Git GitHub.cli` | пакетный менеджер ОС |
 | Клон | `git clone https://github.com/definitely-stable/HEAVENISPREY.git` | то же |
 | Проверка | `python scripts/dev/doctor.py` | то же |
+| Все шаги CI перед push | `python scripts/dev/local_ci.py --gdlint <venv>/Scripts/gdlint.exe` | `python scripts/dev/local_ci.py` |
 
 Python-скрипты проекта используют только stdlib: `pip install` не нужен.
 
