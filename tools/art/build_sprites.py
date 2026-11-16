@@ -548,6 +548,20 @@ UI_ATLAS_WIDTH = 1024
 UI_PAD_PX = 2
 ## Inner window of a frame: the trough or panel is the dark lacquer under this luma.
 UI_DARK_LUMA = 70
+# A component that reaches the sheet edge and is this thin (px, after the join dilation) or fills
+# less of its box is a drawn grid line or a dark seam along the border of the sheet.
+EDGE_LINE_PX = 12
+EDGE_LINE_FILL = 0.1
+
+
+def edge_line(box: tuple, area: int, size: tuple[int, int]) -> bool:
+    """A line from the edge of a sheet (the grid the generator drew between its cells, a dark seam
+    along the border): it reaches the sheet edge and is under EDGE_LINE_PX thick or covers under
+    EDGE_LINE_FILL of its bounding box."""
+    ys, xs = box
+    width, height = xs.stop - xs.start, ys.stop - ys.start
+    touches = xs.start == 0 or ys.start == 0 or xs.stop == size[0] or ys.stop == size[1]
+    return touches and (min(width, height) <= EDGE_LINE_PX or area < EDGE_LINE_FILL * width * height)
 
 
 def inner_window(piece: Image.Image, mode: str, seed: tuple[float, float] = (0.5, 0.5)) -> list[int]:
@@ -624,7 +638,10 @@ def build_ui(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         members = []
         for index, box in enumerate(ndimage.find_objects(labels)):
             ys, xs = box
-            if int((labels[box] == index + 1).sum()) < sheet.get("min_area_px", 400):
+            area = int((labels[box] == index + 1).sum())
+            if area < sheet.get("min_area_px", 400):
+                continue
+            if tile.get("drop_edge_lines") and edge_line(box, area, keyed.size):
                 continue
             cell = int((xs.start + xs.stop) / 2 // cell_w) + cols * int((ys.start + ys.stop) / 2 // cell_h)
             if cell == item["cell"]:

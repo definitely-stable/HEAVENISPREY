@@ -75,6 +75,7 @@ UI_LEVEL_UP_TITLE,Choose an upgrade,Выберите улучшение
 UI_CHOICE_PICK,Choose,Выбрать
 UI_LEVEL_UP_MORE,More choices waiting: %d,Ещё выборов: %d
 UI_UPGRADE_RANK,Rank %d/%d,Ранг %d/%d
+UI_UPGRADE_UNCHANGED,"%s, already full","%s, уже полное"
 UPGRADE_P0_HERO_SPEED_NAME,Swift Steps,Быстрый шаг
 UPGRADE_P0_HERO_SPEED_DESC,Move speed %s → %s,Скорость движения %s → %s
 UPGRADE_P0_HERO_VITALITY_NAME,Vital Qi,Жизненная ци
@@ -98,4 +99,6 @@ UI_RUN_KILLS,Enemies slain: %d,Убито врагов: %d
 UI_RUN_LEVEL,Level: %d,Уровень: %d
 UI_RUN_XP,Experience gathered: %d,Собрано опыта: %d
 UI_RUN_RESTART,R or Enter: new run,R или Enter — новый забег
-UI_HUD_SLAIN,Slain: %d,Убито: %d
+UI_HUD_LEVEL,Lv. %d,Ур. %d
+UI_HUD_SLAIN,Slain: %s,Убито: %s
+UI_HUD_THOUSANDS,%sk,%s тыс.

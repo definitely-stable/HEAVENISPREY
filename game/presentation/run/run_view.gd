@@ -445,6 +445,8 @@ func _sync_menu() -> void:
 			_menu.close()
 	elif not _menu.visible or _menu.revision != world.build_revision:
 		_menu.open(driver.config, world)
+	if _grade != null:
+		_grade.dim = ChoiceMenu.DIM if _menu.visible else 0.0
 
 
 func _draw() -> void:
