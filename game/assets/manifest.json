@@ -981,11 +981,11 @@
       "asset_id": "asset.prop.seal_ruins",
       "kind": "prop_atlas",
       "path": "game/assets/props/seal_ruins/seal_ruins.png",
-      "sha256": "4f9ee821909659f6dc5adea0669f13024ba336b526eb430eb1efd92e08fff405",
-      "bytes": 1193577,
+      "sha256": "355400178584c8ac495ae07575e1d42fcf946caf2b2f2d49610e63c21b87d31d",
+      "bytes": 1781601,
       "size": [
-        1684,
-        794
+        1537,
+        986
       ],
       "asset_version": 1,
       "art_bible_version": 4,
@@ -993,92 +993,92 @@
         "stage.jade_grove"
       ],
       "layout": {
-        "density": 1.6,
+        "density": 2,
         "props": [
           {
             "name": "ruin_0",
             "region": [
               6,
               6,
-              436,
-              306
+              545,
+              382
             ],
             "feet": [
-              218.3,
-              246.2
+              271.4,
+              305.8
             ]
           },
           {
             "name": "ruin_1",
             "region": [
-              454,
+              563,
               6,
-              436,
-              358
+              546,
+              448
             ],
             "feet": [
-              676.1,
-              261.7
+              841.2,
+              326.0
             ]
           },
           {
             "name": "ruin_2",
             "region": [
-              902,
+              1121,
               6,
-              328,
-              388
+              410,
+              485
             ],
             "feet": [
-              1065.3,
-              277.6
+              1325.1,
+              345.5
             ]
           },
           {
             "name": "ruin_3",
             "region": [
-              1242,
               6,
-              436,
-              304
+              503,
+              546,
+              380
             ],
             "feet": [
-              1464.7,
-              239.3
+              284.9,
+              794.6
             ]
           },
           {
             "name": "ruin_4",
             "region": [
-              6,
-              406,
-              436,
-              305
+              564,
+              503,
+              546,
+              381
             ],
             "feet": [
-              219.2,
-              623.8
+              831.0,
+              775.1
             ]
           },
           {
             "name": "ruin_5",
             "region": [
-              454,
-              406,
-              327,
-              382
+              1122,
+              503,
+              409,
+              477
             ],
             "feet": [
-              617.5,
-              660.3
+              1326.5,
+              820.6
             ]
           }
         ]
       },
       "normal": {
         "path": "game/assets/props/seal_ruins/seal_ruins_n.png",
-        "sha256": "943c40c633ba627771044f6a5de4ebf37a077288afdda92786eaf9164a366a84",
-        "bytes": 284723,
+        "sha256": "200a60f8eba57b20ea575fa3747d04609822180adf41b1c74e0b6894b015ab7d",
+        "bytes": 353941,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -1092,16 +1092,16 @@
       },
       "qa": {
         "palette_group": "props",
-        "opaque_px": 9211,
-        "palette_mean_delta_e": 9.63,
+        "opaque_px": 17379,
+        "palette_mean_delta_e": 10.07,
         "tones_pct": [
-          65.2,
-          34.4,
-          0.3
+          65.3,
+          34.1,
+          0.6
         ],
-        "chroma": 0.141,
-        "threat_colour_pct": 0.195,
-        "median_l": 72.8
+        "chroma": 0.144,
+        "threat_colour_pct": 0.265,
+        "median_l": 71.7
       }
     },
     {
