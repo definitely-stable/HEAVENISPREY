@@ -41,6 +41,9 @@ static func describe(config: SimConfig, world: WorldState, code: int) -> Diction
 	if first >= 0:
 		label = (template.substr(0, first).strip_edges() + " " + template.substr(last + 2).strip_edges()).strip_edges()
 		change = template.substr(first, last + 2 - first) % values
+		if values[0] == values[1]:
+			# Recovery at full health: the card says the value stays, not "100 -> 100".
+			change = UiText.text("UI_UPGRADE_UNCHANGED") % values[0]
 	return {
 		"name": UiText.text(stem + "_NAME"),
 		"stat": template % values,

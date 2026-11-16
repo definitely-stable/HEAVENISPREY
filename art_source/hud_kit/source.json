@@ -3,7 +3,7 @@
   "asset_id": "asset.ui.hud_kit",
   "kind": "ui_atlas",
   "group": "ui",
-  "asset_version": 2,
+  "asset_version": 3,
   "content_ids": [],
   "master": "master.webp",
   "references": [
@@ -37,10 +37,10 @@
     "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
     "tool_version": "codex-cli 0.169.0",
     "prompt_file": "prompt.txt",
-    "prompt_sha256": "52c6e7b50f53c756e03def668e80a2e7035a898213f0a99e28d4a7834d68cede",
-    "created": "2026-11-15T20:30:23+0500",
-    "master_sha256": "f9be73f7e452463bec9afa230ec8a055965afa7c3bb478b5485fb568b5a2c705",
-    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035, the cards and card art REF-011"
+    "prompt_sha256": "49bd13ed369a53482a9a9e3f7673b5256df75bfc574dc6fdca9c80410310415d",
+    "created": "2026-11-16T12:30:58+0500",
+    "master_sha256": "fa56dbb918b9c7b0a0c69e4dad2add20dc2e7ffc62924b1c2f2aea4913550e9d",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035, the cards and card art REF-011, the plate (portrait ring, status plaque, slim bar) crops of the ring plaque and the slim bars of REF-022 and the whole REF-022 board"
   },
   "palette_group": "ui",
   "density": 1.5,
@@ -146,28 +146,52 @@
       "png_sha256": "c14e1bd47e372452c5aafa4e04dfba96a2aba8d8460f62323a700c9290809a47",
       "prompt_sha256": "b833ee839eb675e8599782ec3b1671fb97e8507a3fcb0de2387300f62723e088",
       "created": "2026-11-15T20:30:23+0500"
+    },
+    {
+      "name": "plate",
+      "origin": [
+        7398,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        2,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "a8f768b496918c70b7fdbf62dbc91b3340c0eddd94fc3a1740ff592cb19a4e25",
+      "prompt_sha256": "a034242ce196ccd171e16dd9c96f5b1492c474c6e64abf47cfdbbda072cbb77a",
+      "created": "2026-11-16T12:30:58+0500",
+      "drop_edge_lines": true
     }
   ],
   "pieces": [
     {
       "name": "portrait_ring",
-      "sheet": "frames",
+      "sheet": "plate",
       "cell": 0,
-      "height_px": 122,
+      "height_px": 104,
       "inner": "hole"
     },
     {
-      "name": "level_seal",
-      "sheet": "frames",
+      "name": "status_plaque",
+      "sheet": "plate",
       "cell": 1,
-      "height_px": 46,
-      "inner": "dark"
+      "height_px": 80,
+      "inner": "dark",
+      "inner_seed": [
+        0.3,
+        0.5
+      ]
     },
     {
-      "name": "bar_frame",
-      "sheet": "frames",
+      "name": "bar_slim",
+      "sheet": "plate",
       "cell": 2,
-      "height_px": 18,
+      "height_px": 22,
       "inner": "dark",
       "stretch": true
     },

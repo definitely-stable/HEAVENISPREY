@@ -51,6 +51,11 @@ func test_scene_grades_the_world_under_the_hud() -> void:
 	assert_gt(hud_layer, grade.layer, "the HUD, the menu and the results are not graded")
 	assert_eq(hud_layer, RunView.HUD_LAYER)
 	assert_true(grade.rect.material is ShaderMaterial)
+	assert_eq(grade.dim, 0.0, "the fight is not dimmed")
+	grade.dim = 1.5
+	assert_eq(grade.dim, 1.0, "dim is a share of the light")
+	assert_eq((grade.rect.material as ShaderMaterial).get_shader_parameter("dim"), 1.0)
+	grade.dim = 0.0
 	assert_eq(ground_ambient, RunLighting.GROUND_AMBIENT)
 	var ground: float = RunLighting.GROUND_AMBIENT.get_luminance()
 	assert_lt(ground, RunLighting.AMBIENT.get_luminance(), "the paving is darker than the bodies on it")

@@ -59,3 +59,19 @@ Game card illustration sheet: eight separate square card illustrations in the lu
 8: a serene golden cultivator meditating cross-legged on a glowing golden lotus, soft rings of qi around.
 
 Background: everything outside the eight square panels is perfectly flat solid pure green #00FF00. No frames, no borders, no text, no letters, no digits, no watermark.
+
+## plate
+
+Game HUD asset sheet for a dark xianxia action game: four separate ornate gold UI elements in the exact style of the attached reference (first image: a gold dragon portrait ring joined to a dark lacquer name plaque with a gold cloud scroll; second image: slim gold bar frames). 1536 x 1024 canvas split into a strict grid of 2 columns x 2 rows of equal cells, exactly one element centred in each cell with a wide clear gap to the cell edges, nothing touching or overlapping. Read left to right, top row first:
+
+1 (top left): a round portrait ring like the ring in the first image: a slim ring of coiled golden eastern dragon scales, the small dragon head at the top right of the ring, one short red silk tassel hanging at the lower left, a small gold clasp at the bottom. Outer diameter about 420 px, the ring band only about 40 px thick so the opening is large. The inside of the ring is an empty circle filled with the same flat green as the background.
+
+2 (top right): a long horizontal plaque like the plaque in the first image, about 700 x 190 px: a slim gold rim around a smooth dark brown-black lacquer panel with a very faint misty violet pagoda and pine silhouette in its right third; the left end of the plaque is a plain straight gold edge (a portrait ring will overlap it); the right end is finished by a large curling gold cloud scroll that sticks out past the rim. The panel is empty: no text, no bar.
+
+3 (bottom left): a slim horizontal bar frame like the empty bar in the second image, about 700 x 46 px: a thin gold rim with softly pointed ends carrying a small gold leaf ornament, the inside an empty smooth dark lacquer trough of even height; the middle of the frame is plain and uniform so it can be stretched.
+
+4 (bottom right): nothing, only the flat green background.
+
+Style: hand-painted premium gold, warm amber gold with soft highlights and dark brown shadows, crisp clean edges, front view, no perspective.
+
+Background: every pixel outside the elements, and the inside of the ring, is perfectly flat solid pure green #00FF00. No text, no letters, no numbers, no watermark, no glow onto the background.

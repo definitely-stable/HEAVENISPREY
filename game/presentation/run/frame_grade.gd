@@ -22,6 +22,13 @@ const HIGHLIGHT_LOW: float = 0.55
 const HIGHLIGHT_HIGH: float = 0.85
 
 var rect: ColorRect
+## Share of light the world loses (the paused run under the level-up menu); the HUD above is
+## not touched.
+var dim: float = 0.0:
+	set(value):
+		dim = clampf(value, 0.0, 1.0)
+		if rect != null:
+			(rect.material as ShaderMaterial).set_shader_parameter("dim", dim)
 
 
 func _init() -> void:

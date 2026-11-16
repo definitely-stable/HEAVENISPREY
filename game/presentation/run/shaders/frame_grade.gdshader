@@ -14,6 +14,8 @@ uniform float vignette_outer = 0.95;
 uniform float aspect = 1.7778;
 uniform float highlight_low = 0.55;
 uniform float highlight_high = 0.85;
+// Share of light the world loses under the level-up menu (the HUD above is not graded).
+uniform float dim = 0.0;
 
 vec3 s_curve(vec3 c) {
 	vec3 low = pivot * pow(clamp(c / pivot, 0.0, 1.0), vec3(2.0));
@@ -29,5 +31,5 @@ void fragment() {
 	float edge = smoothstep(vignette_inner, vignette_outer, length(d) / (0.5 * length(vec2(aspect, 1.0))));
 	// Lights keep their heat in the corners: the vignette darkens the stone, not the flames.
 	float bright = smoothstep(highlight_low, highlight_high, dot(c, vec3(0.2126, 0.7152, 0.0722)));
-	COLOR = vec4(c * (1.0 - vignette * edge * (1.0 - bright)), 1.0);
+	COLOR = vec4(c * (1.0 - vignette * edge * (1.0 - bright)) * (1.0 - dim), 1.0);
 }

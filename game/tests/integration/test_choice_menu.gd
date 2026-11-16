@@ -95,6 +95,35 @@ func test_menu_picks_only_once_armed_and_logs_choose() -> void:
 	assert_eq(view.is_menu_open(), world.is_paused(), "the menu follows the pause")
 
 
+## ADR-014 section 21: the paused run dims through the frame grade under the HUD layer, so the HUD
+## stays bright over the menu (REF-011); the "more choices" line is drawn in the kit font.
+func test_menu_dims_the_run_and_not_the_hud() -> void:
+	var view: RunView = _view()
+	view.start_run(SEED)
+	var grade: FrameGrade = view.get("_grade")
+	assert_eq(grade.dim, 0.0, "a running fight is not dimmed")
+	_to_pause(view, Vector2i.ZERO)
+	var menu: ChoiceMenu = _menu(view)
+	assert_almost_eq(grade.dim, ChoiceMenu.DIM, 1e-6, "the world under the menu is dimmed")
+	assert_almost_eq(
+		float((grade.rect.material as ShaderMaterial).get_shader_parameter("dim")), ChoiceMenu.DIM, 1e-6
+	)
+	for child: Node in menu.get_children():
+		assert_false(child is ColorRect, "no dimming rect over the HUD")
+	assert_false(menu.find_children("*", "Label", true, false).any(
+		func(node: Node) -> bool: return (node as Label).visible and not (node as Label).text.is_empty()
+	), "menu text is drawn in the kit, not in plain labels")
+	var waiting: int = view.driver.world.pending_level_choices - 1
+	assert_eq(menu.more_text().is_empty(), waiting <= 0)
+	if waiting > 0:
+		assert_eq(menu.more_text(), UiText.text("UI_LEVEL_UP_MORE") % waiting)
+	while view.driver.world.is_paused():
+		view.advance_frame(ChoiceMenu.ARM_DELAY * 2.0, Vector2i.ZERO)
+		assert_true(menu.press(0))
+	view.advance_frame(TICK, Vector2i.ZERO)
+	assert_eq(grade.dim, 0.0, "the fight is bright again after the choice")
+
+
 ## ADR-014 section 16: the menu is drawn from the gold kit after REF-011, each card with the
 ## illustration of its upgrade, and Choose picks the focused card once armed.
 func test_cards_come_from_the_gold_kit() -> void:
@@ -141,11 +170,13 @@ func test_every_card_text_stays_in_its_panel() -> void:
 	var world: WorldState = FixedTickDriver.create(config).world
 	var rect: Rect2 = Rect2(Vector2.ZERO, kit.size_of("card_frame"))
 	var panel: Rect2 = kit.window("card_frame", rect)
+	var arts: Dictionary = {}
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
 		for code: int in UpgradeSystem.MAX_RANKS.size() + 1:
 			var text: Dictionary = UpgradeCard.describe(config, world, code)
 			var tag: String = "%s %s" % [lang, text["name"]]
+			arts[(ChoiceMenu.card_layout(kit, rect, text)["art"] as Rect2).size] = tag
 			assert_eq(text["stat"].count("%"), 0, tag)
 			assert_false(str(text["change"]).is_empty(), tag)
 			assert_false(str(text["label"]).contains("%"), tag)
@@ -162,6 +193,7 @@ func test_every_card_text_stays_in_its_panel() -> void:
 				var size: int = kit.fit_size(text[line[0]], box.size.x, line[1])
 				assert_lte(kit.text_width(text[line[0]], size), box.size.x, "%s %s fits" % [tag, line[0]])
 				assert_gte(size, line[2], "%s %s stays readable" % [tag, line[0]])
+	assert_eq(arts.size(), 1, "every card of a hand has the same illustration size: %s" % [arts])
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
 		var title: String = UiText.text("UI_LEVEL_UP_TITLE")
@@ -301,6 +333,11 @@ func test_card_texts_in_both_locales() -> void:
 	world.hero_hp = 50000
 	var recover: Dictionary = UpgradeCard.describe(config, world, UpgradeSystem.RECOVER)
 	assert_eq([recover["stat"], recover["rank"]], ["Здоровье 50 → 70", ""])
+	world.hero_hp = world.hero_hp_max
+	assert_eq(UpgradeCard.describe(config, world, UpgradeSystem.RECOVER)["change"], "100, уже полное",
+		"recovery at full health does not read 100 -> 100")
+	TranslationServer.set_locale("en")
+	assert_eq(UpgradeCard.describe(config, world, UpgradeSystem.RECOVER)["change"], "100, already full")
 
 
 func test_card_stat_lines_follow_the_simulation() -> void:

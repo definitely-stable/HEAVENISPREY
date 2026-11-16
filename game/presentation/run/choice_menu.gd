@@ -2,7 +2,8 @@ class_name ChoiceMenu
 extends Control
 ## Level-up choice menu (ADR-010 section 6) in the gold kit after REF-011 (ADR-014 section 16): a
 ## title banner, up to three cards (rank ribbon, illustration, name, lotus divider, "before ->
-## after" line) and the Choose button over the dimmed, paused run, below the HUD stage plaque.
+## after" line) and the Choose button over the paused run, below the HUD stage plaque. The run
+## behind is dimmed by RunView through the frame grade (DIM), so the HUD above stays bright.
 ## Keyboard and gamepad move the focus (ui_left / ui_right) and pick with ui_accept; 1-3 pick
 ## directly; the mouse clicks a card or Choose. A pick is ignored for ARM_DELAY seconds after the
 ## menu opens so a button held from combat does not choose blindly. The menu only reports
@@ -24,7 +25,8 @@ const LINE_FONT_SIZE: int = 16
 const CHANGE_FONT_SIZE: int = 20
 const RANK_FONT_SIZE: int = 16
 const BUTTON_FONT_SIZE: int = 22
-const COLOR_DIM: Color = Color(0.0, 0.0, 0.0, 0.62)
+## Share of light the paused run behind the menu loses (FrameGrade.dim).
+const DIM: float = 0.62
 const COLOR_TITLE: Color = Color(0.97, 0.85, 0.56)
 const COLOR_TEXT: Color = Color(0.95, 0.91, 0.84)
 const COLOR_RANK: Color = Color(0.93, 0.9, 0.98)
@@ -48,6 +50,9 @@ const DIVIDER_GAP: float = 3.0
 const BANNER_TEXT_INSET: float = 34.0
 const BUTTON_TEXT_INSET: float = 22.0
 const DIGIT_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3]
+## The line under Choose that says how many level-ups wait (screen px tall).
+const MORE_HEIGHT: float = 26.0
+const MORE_FONT_SIZE: int = 18
 
 ## build_revision the shown hand was built for (-1 when closed).
 var revision: int = -1
@@ -60,7 +65,8 @@ var _arm_left: float = 0.0
 var _focused: int = 0
 var _title_text: String = ""
 var _banner: Control
-var _more: Label
+var _more: Control
+var _more_text: String = ""
 var _row: HBoxContainer
 ## The halo behind each card, drawn with additive blending.
 var _glows: Array[Control] = []
@@ -73,11 +79,6 @@ func _init() -> void:
 	visible = false
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	var dim: ColorRect = ColorRect.new()
-	dim.color = COLOR_DIM
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(dim)
 	var column: VBoxContainer = VBoxContainer.new()
 	column.set_anchors_preset(Control.PRESET_FULL_RECT)
 	column.offset_top = TOP
@@ -116,10 +117,10 @@ func _init() -> void:
 	choose_button.pressed.connect(func() -> void: press(_focused))
 	choose_button.draw.connect(_draw_choose)
 	column.add_child(choose_button)
-	_more = Label.new()
-	_more.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_more.add_theme_font_size_override("font_size", LINE_FONT_SIZE)
-	_more.add_theme_color_override("font_color", COLOR_TEXT)
+	_more = Control.new()
+	_more.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_more.custom_minimum_size = Vector2(0, MORE_HEIGHT)
+	_more.draw.connect(_draw_more)
 	column.add_child(_more)
 
 
@@ -131,7 +132,8 @@ func open(config: SimConfig, world: WorldState) -> void:
 	revision = world.build_revision
 	_title_text = UiText.text("UI_LEVEL_UP_TITLE")
 	var waiting: int = world.pending_level_choices - 1
-	_more.text = UiText.text("UI_LEVEL_UP_MORE") % waiting if waiting > 0 else ""
+	_more_text = UiText.text("UI_LEVEL_UP_MORE") % waiting if waiting > 0 else ""
+	_more.queue_redraw()
 	for index: int in cards.size():
 		var card: Button = cards[index]
 		card.visible = index < world.hand.size()
@@ -268,10 +270,11 @@ static func card_layout(hud_kit: HudKit, rect: Rect2, text: Dictionary) -> Dicti
 	var title: String = str(text.get("name", ""))
 	var name_size: int = hud_kit.fit_paragraph_size(title, width, NAME_FONT_SIZE, 2)
 	var name_height: float = hud_kit.paragraph_height(title, width, name_size)
+	# Every card keeps room for two name lines and the stat label, so the illustrations of one
+	# hand are the same size whatever the names; a one-line name sits low, on the divider.
+	var name_room: float = hud_kit.font.get_height(NAME_FONT_SIZE) * 2.0
 	var divider_size: Vector2 = hud_kit.size_of("divider_lotus") * 0.8
-	var label_height: float = 0.0
-	if not str(text.get("label", "")).is_empty():
-		label_height = hud_kit.font.get_height(LINE_FONT_SIZE)
+	var label_height: float = hud_kit.font.get_height(LINE_FONT_SIZE)
 	var change_height: float = hud_kit.font.get_height(CHANGE_FONT_SIZE)
 	var bottom: float = panel.end.y - CARD_BOTTOM_PAD
 	var change: Rect2 = Rect2(left, bottom - change_height, width, change_height)
@@ -280,13 +283,25 @@ static func card_layout(hud_kit: HudKit, rect: Rect2, text: Dictionary) -> Dicti
 		label.position.y - DIVIDER_GAP - divider_size.y), divider_size)
 	var name_box: Rect2 = Rect2(left, divider.position.y - DIVIDER_GAP - name_height, width, name_height)
 	var art_top: float = panel.position.y + ART_TOP
-	var side: float = minf(panel.size.x - 20.0, name_box.position.y - 2.0 - art_top)
+	var name_top: float = divider.position.y - DIVIDER_GAP - maxf(name_room, name_height)
+	var side: float = minf(panel.size.x - 20.0, name_top - 2.0 - art_top)
 	var art: Rect2 = Rect2(rect.get_center().x - side * 0.5, art_top, side, side)
 	var ribbon: Rect2 = Rect2()
 	var ribbon_size: Vector2 = hud_kit.size_of("rank_ribbon")
 	if not str(text.get("rank", "")).is_empty() and ribbon_size != Vector2.ZERO:
 		ribbon = Rect2(Vector2(rect.get_center().x - ribbon_size.x * 0.5, panel.position.y - 6.0), ribbon_size)
 	return {"art": art, "ribbon": ribbon, "name": name_box, "divider": divider, "label": label, "change": change}
+
+
+## How many level-ups wait after this one, in the kit font with its outline.
+func more_text() -> String:
+	return _more_text
+
+
+func _draw_more() -> void:
+	if kit == null or _more_text.is_empty():
+		return
+	kit.draw_text_in(_more, _more_text, Rect2(Vector2.ZERO, _more.size), MORE_FONT_SIZE, COLOR_TITLE)
 
 
 func _draw_choose() -> void:

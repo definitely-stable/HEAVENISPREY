@@ -15,6 +15,8 @@ const MIN_FONT_SIZE: int = 10
 ## The baseline of a line centred in a window sits this share of the font size below the centre
 ## (half the cap height of the face).
 const CAP_CENTER: float = 0.33
+## Cap height of the face (OS/2 sCapHeight 625 of 1000): the lining figures stand this tall.
+const CAP_HEIGHT: float = 0.625
 ## A halo is blurred at 1 / HALO_STEP of the atlas resolution: it is soft, it needs no detail.
 const HALO_STEP: int = 3
 const OUTLINE_COLOR: Color = Color(0.06, 0.03, 0.02, 0.9)
@@ -39,7 +41,9 @@ static func load_default() -> HudKit:
 			var server: TextServer = TextServerManager.get_primary_interface()
 			weighted.variation_opentype = {server.name_to_tag("wght"): FONT_WEIGHT}
 			# Lining figures: the old-style digits of the face read "0" as "o" in counters.
-			weighted.opentype_features = {server.name_to_tag("lnum"): 1}
+			# Tabular figures: every digit is as wide as the others, so a counter does not shift
+			# as it counts.
+			weighted.opentype_features = {server.name_to_tag("lnum"): 1, server.name_to_tag("tnum"): 1}
 			kit.font = weighted
 	return kit
 
@@ -140,22 +144,46 @@ func draw_fill(canvas: CanvasItem, piece: String, rect: Rect2, share: float) -> 
 
 
 ## Text with a dark outline, horizontally centred on `center_x` with its baseline at `baseline`.
-## With a `width` the text is set smaller until it fits that many px.
+## With a `width` the text is set smaller until it fits that many px. `outline` adds px to the
+## outline (numbers over a bright fill).
 func draw_text(
-	canvas: CanvasItem, text: String, center_x: float, baseline: float, size: int, color: Color, width: float = -1.0
+	canvas: CanvasItem, text: String, center_x: float, baseline: float, size: int, color: Color, width: float = -1.0,
+	outline: int = 0
 ) -> void:
 	if width > 0.0:
 		size = fit_size(text, width, size)
 	var span: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
 	var at: Vector2 = Vector2(roundf(center_x - span * 0.5), roundf(baseline))
-	canvas.draw_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, outline_size(size), OUTLINE_COLOR)
+	canvas.draw_string_outline(font, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, outline_size(size) + outline,
+		OUTLINE_COLOR)
 	canvas.draw_string(font, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 
 
-## One line centred in `rect` (both ways), set smaller when it is wider than the rect.
-func draw_text_in(canvas: CanvasItem, text: String, rect: Rect2, size: int, color: Color) -> void:
-	size = fit_size(text, rect.size.x, size)
-	draw_text(canvas, text, rect.get_center().x, rect.get_center().y + size * CAP_CENTER, size, color)
+## One line centred in `rect` (both ways), set smaller when it is wider or taller than the rect.
+## With a `sample` (the widest text the place can hold, e.g. "99999") the size is fitted to the
+## sample, so it stays the same while the value changes; a text wider still is fitted on its own.
+func draw_text_in(
+	canvas: CanvasItem, text: String, rect: Rect2, size: int, color: Color, sample: String = "", outline: int = 0
+) -> void:
+	size = line_size(text, rect, size, sample, outline)
+	draw_text(canvas, text, rect.get_center().x, rect.get_center().y + size * CAP_CENTER, size, color, -1.0, outline)
+
+
+## The size draw_text_in sets `text` at in `rect` (see there).
+func line_size(text: String, rect: Rect2, size: int, sample: String = "", outline: int = 0) -> int:
+	size = mini(size, fit_height(rect.size.y, size, outline))
+	if not sample.is_empty():
+		size = fit_size(sample, rect.size.x - outline, size)
+	return fit_size(text, rect.size.x - outline, size)
+
+
+## The largest size, at most `size`, at which capitals and lining figures with their outline
+## stand inside `height` px.
+func fit_height(height: float, size: int, outline: int = 0) -> int:
+	var fitted: int = size
+	while fitted > MIN_FONT_SIZE and fitted * CAP_HEIGHT + 2.0 * (outline_size(fitted) + outline) > height + 0.5:
+		fitted -= 1
+	return fitted
 
 
 ## The largest size, at most `size`, at which `text` with its outline is at most `width` px wide.

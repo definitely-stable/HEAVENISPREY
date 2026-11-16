@@ -295,9 +295,17 @@
    "en": "Challenge level",
    "ru": "Уровень испытания"
   },
+  "UI_HUD_LEVEL": {
+   "en": "Lv. %d",
+   "ru": "Ур. %d"
+  },
   "UI_HUD_SLAIN": {
-   "en": "Slain: %d",
-   "ru": "Убито: %d"
+   "en": "Slain: %s",
+   "ru": "Убито: %s"
+  },
+  "UI_HUD_THOUSANDS": {
+   "en": "%sk",
+   "ru": "%s тыс."
   },
   "UI_LEVEL_UP_MORE": {
    "en": "More choices waiting: %d",
@@ -342,6 +350,10 @@
   "UI_UPGRADE_RANK": {
    "en": "Rank %d/%d",
    "ru": "Ранг %d/%d"
+  },
+  "UI_UPGRADE_UNCHANGED": {
+   "en": "%s, already full",
+   "ru": "%s, уже полное"
   },
   "UPGRADE_P0_HERO_SPEED_DESC": {
    "en": "Move speed %s → %s",
