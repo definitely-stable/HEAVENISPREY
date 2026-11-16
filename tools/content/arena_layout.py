@@ -118,13 +118,21 @@ def draw() -> dict:
     k.region_prop(maple, "maple_large")
     # 5. Seal ring: six ruin fragments at grid radius 9.6-12.2 with wide gaps (the inner loop runs
     #    through them), pillar ends; brazier columns between them at radius 14.5.
+    #    Each fragment is one painted prop ("seal_ruin") at the centre of its cells.
+    fragments: dict[int, list[tuple[int, int]]] = {}
     for x, y in k.cells():
         dx, dy = x - c, y - c
         r = math.hypot(dx, dy)
         if 9.6 <= r <= 12.2 and g[y][x] == ".":
-            a = (math.degrees(math.atan2(dy, dx)) - 15) % 60
+            turn = (math.degrees(math.atan2(dy, dx)) - 15) % 360
+            a = turn % 60
             if a <= 26:
                 g[y][x] = "#" if a <= 4 or a >= 22 else "w"
+                fragments.setdefault(int(turn // 60), []).append((x, y))
+    for index in sorted(fragments):
+        cells = fragments[index]
+        k.props.append(("seal_ruin", sum(x for x, _ in cells) / len(cells) + 0.5,
+                        sum(y for _, y in cells) / len(cells) + 0.5))
     for i in range(6):
         a = math.radians(i * 60 + 50)
         x, y = round(c + 14.5 * math.cos(a)), round(c + 14.5 * math.sin(a))

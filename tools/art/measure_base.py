@@ -16,6 +16,7 @@ from pathlib import Path
 
 SLOPE = 0.5
 TOLERANCE = 0.06
+INLIER_PX = 2.5
 
 
 def median(values: list[float]) -> float:
@@ -24,10 +25,28 @@ def median(values: list[float]) -> float:
 
 
 def median_slope(bottom: list[int], start: int, stop: int) -> float:
-    """Median of (bottom[x + step] - bottom[x]) / step over [start, stop), step a quarter of it."""
+    """Slope of the lower contour over [start, stop), robust and finer than a pixel step.
+
+    A median of local slopes (step a quarter of the range) ignores leaves and chips but is
+    quantised to 1 / step, which on a small base (a 16 px step) is coarser than the tolerance.
+    So it only seeds a line; the columns within INLIER_PX of that line are refitted by least
+    squares twice, and a leaf or a chip off the edge never enters the fit."""
     step = max(4, (stop - start) // 4)
-    return median([(bottom[x + step] - bottom[x]) / step for x in range(start, stop - step)
-                   if bottom[x] >= 0 and bottom[x + step] >= 0])
+    xs = [x for x in range(start, stop) if bottom[x] >= 0]
+    slope = median([(bottom[x + step] - bottom[x]) / step for x in range(start, stop - step)
+                    if bottom[x] >= 0 and bottom[x + step] >= 0])
+    for _ in range(2):
+        offset = median([bottom[x] - slope * x for x in xs])
+        inliers = [x for x in xs if abs(bottom[x] - slope * x - offset) <= INLIER_PX]
+        if len(inliers) < 8:
+            break
+        mean_x = sum(inliers) / len(inliers)
+        mean_y = sum(bottom[x] for x in inliers) / len(inliers)
+        spread = sum((x - mean_x) ** 2 for x in inliers)
+        if spread == 0:
+            break
+        slope = sum((x - mean_x) * (bottom[x] - mean_y) for x in inliers) / spread
+    return slope
 
 
 def measure(bottom: list[int], top: int) -> dict:

@@ -3,9 +3,12 @@ extends RefCounted
 ## ADR-014 slice A3, ADR-015 A1: the things that stand in arena 07 of stage.jade_grove
 ## (REF-033 "Руины секты Юнхэ", REF-029 kit, REF-056, REF-023). The arena file lists the named
 ## props on their solid cells (the gate hall, the guardian lions, the columns, the braziers
-## that carry the point lights, the old maple); every other wall cell stands as a placeholder
-## stone block until the wall kit of slice A2: tall for solid cells, low for balustrades and
-## ruins. Far behind, rock spires and pagodas stand in the mist (BACKDROP). Presentation only.
+## that carry the point lights, the old maple). The six fragments of the ruin ring around the seal
+## are painted props on their cells (ADR-015 section 11), drawn in strips that sort by depth. The
+## other low wall cells are a balustrade after REF-029 (section 10): posts on the cells, red
+## rails between them. Every other solid cell stands as a placeholder stone block until the rest
+## of the wall kit of slice A2. Far behind, rock spires and pagodas stand in the mist (BACKDROP).
+## Presentation only.
 
 const LIGHTS_ASSET: String = "asset.prop.courtyard_lights"
 const NATURE_ASSET: String = "asset.prop.courtyard_nature"
@@ -14,6 +17,31 @@ const PEAKS_ASSET: String = "asset.prop.distant_peaks"
 ## Guardian lions and the columns of the ruined sect after REF-033 and REF-029: monumental,
 ## the lion on its plinth about 2.25 hero heights, a column about 2.6.
 const GUARDIANS_ASSET: String = "asset.prop.courtyard_guardians"
+## The balustrade after REF-029: a stone post with a gold cap (0.8 hero heights), the post broken
+## and the front elevation of one rail bay (0.5 hero heights).
+const BALUSTRADE_ASSET: String = "asset.prop.courtyard_balustrade"
+## The prop name of a rail bay: a vertical plane between two posts, textured with "rail".
+const RAIL_PROP: String = "rail_span"
+## Directions of a straight balustrade run on the grid and the cells between its posts: along a
+## grid axis the run climbs the screen at 2:1 and posts every second cell keep the rail readable;
+## along a cell diagonal it runs flat across the screen (a post on every cell, 68 px apart) or
+## straight up it, where the rail is edge-on and posts on every second cell (68 px apart, as tall
+## as their spacing) carry the line without stacking into a ladder.
+const RUN_DIRS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 1)]
+const RUN_STEPS: Array[int] = [2, 2, 1, 2]
+## Half the side of a post's square base (world px, 0.4 of a cell): rails stop at the post faces.
+const POST_HALF_PX: float = 9.6
+## The ruin ring around the seal (ADR-015 section 11): each "seal_ruin" of the arena file is the
+## painted fragment "ruin_<n>" of RUINS_ASSET, n its place on the ring (arena_layout.py step 5:
+## fragment n starts RING_START_DEG + n RING_STEP_DEG around the seal). It covers the low and
+## solid cells of its fragment and is drawn in vertical strips, one per half cell of screen
+## width, each sorted at the nearest cell of the fragment under it.
+const RUINS_ASSET: String = "asset.prop.seal_ruins"
+const RUIN_PROP: String = "seal_ruin"
+const RING_START_DEG: float = 15.0
+const RING_STEP_DEG: float = 60.0
+## The contact shadow of a fragment: its cells grown around their centres by this factor.
+const RUIN_CONTACT_GROW: float = 1.15
 ## Each named prop of the arena file: [atlas, sprite of the first of a pair, of the second].
 const PROP_SPRITES: Dictionary = {
 	"gate": [WALLS_ASSET, "gate", "gate"],
@@ -55,18 +83,23 @@ const BACKDROP: Array = [
 
 
 ## Every placement: {asset, prop, at (world px), flip, light (bool), flame (screen px above the
-## base)}; a placeholder block also carries its cell rectangle (world px) and screen height.
+## base)}; a placeholder block also carries its cell rectangle (world px) and screen height, a strip
+## of a ruin its "base" (world px, where the whole prop stands and is lit), "clip" (screen x range)
+## and, on the first strip, "footprint" (screen polygons of its contact shadow).
 ## The lions stand in pairs: the first with the ball, the second with the cub, mirrored to face
 ## the first.
 static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var anchors: Array[Vector2] = []
+	var ruin_at: Array[Vector2] = []
 	var lions: int = 0
 	for item: Dictionary in data.get("props", []):
 		var prop: String = str(item.get("prop", ""))
 		var at: Array = item.get("at", [0, 0])
 		var cell: Vector2 = Vector2(float(at[0]), float(at[1]))
 		anchors.append(cell)
+		if prop == RUIN_PROP:
+			ruin_at.append(cell)
 		var second: bool = false
 		if prop == "lion":
 			second = lions % 2 == 1
@@ -76,15 +109,160 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 			_add(out, sprites, sprite[0], sprite[2] if second else sprite[1], cell * cell_px, second)
 	var rows: Array = data.get("rows", [])
 	var propped: Dictionary = _propped(rows, anchors)
+	var centre: Array = data.get("centre", [0, 0])
+	for at: Vector2 in ruin_at:
+		var index: int = ruin_index(at, Vector2i(int(centre[0]), int(centre[1])))
+		if sprites.has_prop(RUINS_ASSET, "ruin_%d" % index):
+			var cells: Array = ruin_cells(rows, at)
+			for cell: Vector2i in cells:
+				propped[cell] = true
+			_add_ruin(out, "ruin_%d" % index, cells, at * cell_px, cell_px)
+	var walls: bool = sprites.has_prop(BALUSTRADE_ASSET, "post") and sprites.has_prop(BALUSTRADE_ASSET, "rail")
+	if walls:
+		_add_balustrade(out, sprites, balustrade(rows, propped), cell_px)
 	for y: int in rows.size():
 		var row: String = rows[y]
 		for x: int in row.length():
-			if row[x] == LOW_CHAR or (row[x] == SOLID_CHAR and not propped.has(Vector2i(x, y))):
+			if propped.has(Vector2i(x, y)):
+				continue
+			if (row[x] == LOW_CHAR and not walls) or row[x] == SOLID_CHAR:
 				var rect: Rect2 = Rect2(Vector2(x, y) * cell_px, Vector2.ONE * cell_px)
 				out.append({
 					"asset": "", "prop": BLOCK_PROP, "at": rect.get_center(), "flip": false, "light": false,
 					"flame": 0.0, "rect": rect, "height": BLOCK_LOW_PX if row[x] == LOW_CHAR else BLOCK_SOLID_PX,
 				})
+	return out
+
+
+## The balustrade of the low wall cells of `rows` but those in `skip` (cells of the ruins):
+## {"posts": cells, "broken": cells (dead ends of a line), "rails": [[cell, cell], ...] between
+## neighbouring posts of a straight run, "edge_on": the same for runs straight up the screen (no
+## rail is drawn: it is edge-on and the posts carry the line)}. Cells link to their neighbours
+## along RUN_DIRS; a diagonal link is dropped where an axis link already joins the two cells
+## through a corner cell, so a staircase on the grid is one run, not a zigzag.
+static func balustrade(rows: Array, skip: Dictionary = {}) -> Dictionary:
+	var lines: Dictionary = {}
+	for y: int in rows.size():
+		var row: String = rows[y]
+		for x: int in row.length():
+			if row[x] == LOW_CHAR and not skip.has(Vector2i(x, y)):
+				lines[Vector2i(x, y)] = true
+	var cells: Array = _sorted(lines.keys())
+	var posts: Dictionary = {}
+	var rails: Array = []
+	var edge_on: Array = []
+	var links: Dictionary = {}
+	for index: int in RUN_DIRS.size():
+		var dir: Vector2i = RUN_DIRS[index]
+		for cell: Vector2i in cells:
+			if not _linked(lines, cell, dir) or _linked(lines, cell - dir, dir):
+				continue
+			var run: Array[Vector2i] = [cell]
+			while _linked(lines, run[-1], dir):
+				run.append(run[-1] + dir)
+			var last_post: int = 0
+			for i: int in run.size():
+				links[run[i]] = int(links.get(run[i], 0)) + (1 if i == 0 or i == run.size() - 1 else 2)
+				if i % RUN_STEPS[index] != 0 and i != run.size() - 1:
+					continue
+				posts[run[i]] = true
+				if i > 0:
+					(edge_on if dir == Vector2i(1, 1) else rails).append([run[last_post], run[i]])
+				last_post = i
+	var broken: Array = []
+	for cell: Vector2i in cells:
+		if not links.has(cell):
+			posts[cell] = true  # a lone post
+		elif int(links[cell]) == 1:
+			broken.append(cell)
+	return {"posts": _sorted(posts.keys()), "broken": broken, "rails": rails, "edge_on": edge_on}
+
+
+## Which fragment of the ruin ring a "seal_ruin" at `at` (cells) is: its turn around the seal.
+static func ruin_index(at: Vector2, centre: Vector2i) -> int:
+	var angle: float = rad_to_deg(atan2(at.y - centre.y - 0.5, at.x - centre.x - 0.5))
+	return int(fposmod(angle - RING_START_DEG, 360.0) / RING_STEP_DEG)
+
+
+## The wall cells ('w' and '#', eight neighbours) of the fragment nearest to `at` (cells), in row
+## order: the cells its painted prop covers.
+static func ruin_cells(rows: Array, at: Vector2) -> Array:
+	var start: Vector2i = Vector2i(-1, -1)
+	var best: float = INF
+	for y: int in rows.size():
+		var row: String = rows[y]
+		for x: int in row.length():
+			if row[x] != LOW_CHAR and row[x] != SOLID_CHAR:
+				continue
+			var d: float = (Vector2(x, y) + Vector2(0.5, 0.5)).distance_squared_to(at)
+			if d < best:
+				best = d
+				start = Vector2i(x, y)
+	if start.x < 0:
+		return []
+	var seen: Dictionary = {start: true}
+	var todo: Array[Vector2i] = [start]
+	while not todo.is_empty():
+		var cell: Vector2i = todo.pop_back()
+		for dy: int in [-1, 0, 1]:
+			for dx: int in [-1, 0, 1]:
+				var next: Vector2i = cell + Vector2i(dx, dy)
+				if seen.has(next) or next.y < 0 or next.y >= rows.size() or next.x < 0:
+					continue
+				var row: String = rows[next.y]
+				if next.x < row.length() and (row[next.x] == LOW_CHAR or row[next.x] == SOLID_CHAR):
+					seen[next] = true
+					todo.append(next)
+	return _sorted(seen.keys())
+
+
+## The screen strips of a fragment on `cells`: [{"clip": Vector2(from, to) screen x, "front": the
+## nearest cell under it}], left to right. Strip m spans m to m + 1 half cells of screen width
+## (cells with x - y = m or m + 1 lie under it); the outer strips reach to the ends of the sprite.
+static func ruin_strips(cells: Array, cell_px: int) -> Array[Dictionary]:
+	var half: float = IsoProjection.to_screen(Vector2(cell_px, 0.0)).x
+	var front: Dictionary = {}
+	for cell: Vector2i in cells:
+		for m: int in [cell.x - cell.y - 1, cell.x - cell.y]:
+			if not front.has(m) or _nearer(cell, front[m]):
+				front[m] = cell
+	var columns: Array = front.keys()
+	columns.sort()
+	var out: Array[Dictionary] = []
+	for m: int in columns:
+		var from: float = -INF if m == columns[0] else m * half
+		var to: float = INF if m == columns[-1] else (m + 1) * half
+		out.append({"clip": Vector2(from, to), "front": front[m]})
+	return out
+
+
+## Draws a rail bay on `canvas` (screen space): the "rail" elevation stretched on the vertical
+## plane from `from` to `to` (world px, already stopped at the post faces), in whole bays.
+static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, light: Color) -> void:
+	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
+	if quad.is_empty():
+		return
+	var uv: Rect2 = quad["uv"]
+	var uvs: PackedVector2Array = PackedVector2Array([
+		Vector2(uv.position.x, uv.end.y), uv.end, Vector2(uv.end.x, uv.position.y), uv.position,
+	])
+	var colors: PackedColorArray = PackedColorArray([light, light, light, light])
+	for bay: PackedVector2Array in rail_quads(item, (quad["rect"] as Rect2).size):
+		canvas.draw_polygon(bay, colors, uvs, quad["texture"])
+
+
+## The screen quads [base from, base to, top to, top from] of the bays of a rail: as many whole
+## bays as fit the run at the elevation's own width (`bay`, screen px of a front view).
+static func rail_quads(item: Dictionary, bay: Vector2) -> Array[PackedVector2Array]:
+	var from: Vector2 = item["from"]
+	var to: Vector2 = item["to"]
+	var count: int = maxi(1, roundi(from.distance_to(to) / bay.x))
+	var lift: Vector2 = Vector2(0.0, -bay.y)
+	var out: Array[PackedVector2Array] = []
+	for i: int in count:
+		var a: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i) / count))
+		var b: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i + 1) / count))
+		out.append(PackedVector2Array([a, b, b + lift, a + lift]))
 	return out
 
 
@@ -121,6 +299,64 @@ static func lights(items: Array[Dictionary]) -> Array[Dictionary]:
 		if item["light"]:
 			out.append({"at": item["at"], "flame": item["flame"]})
 	return out
+
+
+static func _linked(lines: Dictionary, cell: Vector2i, dir: Vector2i) -> bool:
+	if not lines.has(cell) or not lines.has(cell + dir):
+		return false
+	if dir.x == 0 or dir.y == 0:
+		return true
+	return not lines.has(cell + Vector2i(dir.x, 0)) and not lines.has(cell + Vector2i(0, dir.y))
+
+
+## Cells in row order (y, then x), so the placements do not depend on dictionary order.
+static func _sorted(cells: Array) -> Array:
+	cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	return cells
+
+
+static func _nearer(a: Vector2i, b: Vector2i) -> bool:
+	return a.x + a.y > b.x + b.y or (a.x + a.y == b.x + b.y and a.x > b.x)
+
+
+## The strips of a ruin fragment as placements; the first carries the contact shadow.
+static func _add_ruin(out: Array[Dictionary], prop: String, cells: Array, base: Vector2, cell_px: int) -> void:
+	var half: Vector2 = Vector2(0.5, 0.5)
+	var footprint: Array[PackedVector2Array] = []
+	for cell: Vector2i in cells:
+		var centre: Vector2 = (Vector2(cell) + half) * cell_px
+		var diamond: PackedVector2Array = PackedVector2Array()
+		for corner: Vector2 in [Vector2(-0.5, -0.5), Vector2(0.5, -0.5), Vector2(0.5, 0.5), Vector2(-0.5, 0.5)]:
+			diamond.append(IsoProjection.to_screen(centre + corner * cell_px * RUIN_CONTACT_GROW))
+		footprint.append(diamond)
+	for strip: Dictionary in ruin_strips(cells, cell_px):
+		var item: Dictionary = {
+			"asset": RUINS_ASSET, "prop": prop, "at": (Vector2(strip["front"]) + half) * cell_px, "base": base,
+			"clip": strip["clip"], "flip": false, "light": false, "flame": 0.0, "wall": true,
+		}
+		if not footprint.is_empty():
+			item["footprint"] = footprint
+			footprint = []
+		out.append(item)
+
+
+## Posts, broken posts and rail bays of `wall` (balustrade()) as placements.
+static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int) -> void:
+	var half: Vector2 = Vector2(0.5, 0.5)
+	for pair: Array in wall["rails"]:
+		var a: Vector2 = (Vector2(pair[0]) + half) * cell_px
+		var b: Vector2 = (Vector2(pair[1]) + half) * cell_px
+		var along: Vector2 = (b - a).normalized()
+		var diagonal: bool = absf(along.x) > 0.01 and absf(along.y) > 0.01
+		var reach: float = POST_HALF_PX * (sqrt(2.0) if diagonal else 1.0)
+		out.append({
+			"asset": BALUSTRADE_ASSET, "prop": RAIL_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
+			"flame": 0.0, "from": a + along * reach, "to": b - along * reach, "wall": true,
+		})
+	for cell: Vector2i in wall["posts"]:
+		var prop: String = "post_broken" if (wall["broken"] as Array).has(cell) else "post"
+		_add(out, sprites, BALUSTRADE_ASSET, prop, (Vector2(cell) + half) * cell_px, false)
+		out[-1]["wall"] = true
 
 
 ## The solid cells (keys Vector2i) of every group of solid cells that a named prop stands on.

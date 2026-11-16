@@ -357,12 +357,17 @@ func prop_size(asset_id: String, prop: String) -> Vector2:
 	return (asset["props"][prop]["region"] as Rect2).size / float(asset["density"])
 
 
-## Draws a prop with the centre of its base on `feet` (screen px), mirrored when `flip`.
+## Draws a prop with the centre of its base on `feet` (screen px), mirrored when `flip`; with
+## `clip` only its part between screen x clip.x and clip.y (not mirrored): one strip of a large
+## prop sorted by depth strip by strip.
 func draw_prop(
-	canvas: CanvasItem, asset_id: String, prop: String, feet: Vector2, tint: Color, flip: bool = false
+	canvas: CanvasItem, asset_id: String, prop: String, feet: Vector2, tint: Color, flip: bool = false,
+	clip: Vector2 = Vector2(-INF, INF)
 ) -> bool:
 	if not has_prop(asset_id, prop):
 		return false
+	if clip.x > -INF or clip.y < INF:
+		return _draw_strip(canvas, asset_id, prop, feet, tint, clip.x, clip.y)
 	var asset: Dictionary = _assets[asset_id]
 	var region: Rect2 = asset["props"][prop]["region"]
 	var anchor: Vector2 = (asset["props"][prop]["feet"] as Vector2) - region.position
@@ -377,6 +382,27 @@ func draw_prop(
 		rect.size.x = -size.x
 	var source: Rect2 = Rect2(region.position + asset["origin"], region.size)
 	canvas.draw_texture_rect_region(asset["canvas"], rect, source, tint)
+	return true
+
+
+## The part of a prop between screen x `from` and `to`. The cut falls on a whole texel, so
+## neighbouring strips meet without a gap or an overlap, and the texture is sampled across it
+## (no clamp).
+func _draw_strip(
+	canvas: CanvasItem, asset_id: String, prop: String, feet: Vector2, tint: Color, from: float, to: float
+) -> bool:
+	var asset: Dictionary = _assets[asset_id]
+	var region: Rect2 = asset["props"][prop]["region"]
+	var density: float = asset["density"]
+	var left: float = feet.x - ((asset["props"][prop]["feet"] as Vector2).x - region.position.x) / density
+	var a: float = clampf(roundf((from - left) * density), 0.0, region.size.x)
+	var b: float = clampf(roundf((to - left) * density), 0.0, region.size.x)
+	if b <= a:
+		return false
+	var top: float = feet.y - ((asset["props"][prop]["feet"] as Vector2).y - region.position.y) / density
+	var rect: Rect2 = Rect2(left + a / density, top, (b - a) / density, region.size.y / density)
+	var source: Rect2 = Rect2(region.position + asset["origin"] + Vector2(a, 0.0), Vector2(b - a, region.size.y))
+	canvas.draw_texture_rect_region(asset["canvas"], rect, source, tint, false, false)
 	return true
 
 

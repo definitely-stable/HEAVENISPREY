@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.seal_ruins",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "1f9508adb8818e8151f6b80506ac88fbd5395ac6e10d38f50609701f3b7c0e4b",
+    "created": "2026-11-17T02:39:14+0500",
+    "master_sha256": "8d63333fc31716a78569b6cc31fca9bc8f967740c995debcc0fa9a837fe4c6f7",
+    "master_note": "WebP q92 of the PNG mosaic (master_sha256) of the three generated sheets stacked top to bottom (sheets[].png_sha256), one prompt for all three. Each sheet was painted over its geometry template (sheets[].template: the footprint of two fragments of the seal ring of game/content/arena/jade_grove.json, the broken wall and the pillar stumps) with crops of the ruined walls and pillars of REF-029 and the courtyard of REF-033 attached. The anchor and sheet_scale of every prop come from the template (iso_template.ruin_layout)."
+  },
+  "sheets": [
+    {
+      "name": "seal_ruins_1",
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "template": "python tools/art/iso_template.py seal_ruins_1",
+      "candidate": "v1 of 1",
+      "png_sha256": "75512f867c19092f50740319cb587dfbebd0064e4b6dd46063ccbabb94914546",
+      "created": "2026-11-17T02:39:14+0500"
+    },
+    {
+      "name": "seal_ruins_2",
+      "origin": [
+        0,
+        1024
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "template": "python tools/art/iso_template.py seal_ruins_2",
+      "candidate": "v1 of 1",
+      "png_sha256": "1f1a23effe2dc559213e4f15c2f1a0fd8017a5d7b95eecd3420f23c20751ff9d",
+      "created": "2026-11-17T02:39:14+0500"
+    },
+    {
+      "name": "seal_ruins_3",
+      "origin": [
+        0,
+        2048
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "template": "python tools/art/iso_template.py seal_ruins_3",
+      "candidate": "v1 of 1",
+      "png_sha256": "9c8a718ca8c25a888a4e8af52e52bdd5f584c8d9ee4dd278830e7dbbd4df6a59",
+      "created": "2026-11-17T02:39:14+0500"
+    }
+  ],
+  "palette_group": "props",
+  "density": 1.6,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      3
+    ],
+    "join_px": 6,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "ruin_0",
+      "cell": 0,
+      "anchor": [
+        377.62,
+        644.44
+      ],
+      "sheet_scale": 2.35
+    },
+    {
+      "name": "ruin_1",
+      "cell": 1,
+      "anchor": [
+        1157.58,
+        629.68
+      ],
+      "sheet_scale": 2.35
+    },
+    {
+      "name": "ruin_2",
+      "cell": 2,
+      "anchor": [
+        384.0,
+        1674.02
+      ],
+      "sheet_scale": 2.35
+    },
+    {
+      "name": "ruin_3",
+      "cell": 3,
+      "anchor": [
+        1158.38,
+        1662.06
+      ],
+      "sheet_scale": 2.35
+    },
+    {
+      "name": "ruin_4",
+      "cell": 4,
+      "anchor": [
+        378.42,
+        2660.93
+      ],
+      "sheet_scale": 2.35
+    },
+    {
+      "name": "ruin_5",
+      "cell": 5,
+      "anchor": [
+        1152.0,
+        2680.48
+      ],
+      "sheet_scale": 2.35
+    }
+  ]
+}

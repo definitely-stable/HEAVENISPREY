@@ -507,7 +507,9 @@ def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         cell = int((xs.start + xs.stop) / 2 // cell_w) + cols * int((ys.start + ys.stop) / 2 // cell_h)
         groups.setdefault(cell, []).append(index + 1)
     pieces = []
-    for cell, prop in enumerate(spec["props"]):
+    for index, prop in enumerate(spec["props"]):
+        # A prop may name its grid cell; a cell no prop names is left out of the atlas.
+        cell = prop.get("cell", index)
         if cell not in groups:
             raise ValueError(f"{spec['asset_id']}: no shape for {prop['name']} in grid cell {cell}")
         inside = np.isin(labels, groups[cell])
@@ -518,27 +520,40 @@ def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         mask = Image.fromarray(inside[top:bottom, left:right].astype(np.uint8) * 255)
         piece = keyed.crop((left, top, right, bottom))
         piece.putalpha(ImageChops.multiply(piece.getchannel("A"), mask))
-        piece = piece.crop(bbox(piece))
-        # height_px is the on-screen height; atlases hold DENSITY px per screen px.
-        scale = prop["height_px"] * spec["density"] / piece.height
-        piece = resize_premultiplied(piece, (max(1, round(piece.width * scale)), max(1, round(piece.height * scale))))
-        pieces.append((prop["name"], piece))
+        box = bbox(piece)
+        piece = piece.crop(box)
+        origin = (left + box[0], top + box[1])
+        if "anchor" in prop:
+            # Painted over a template (iso_template.py): the template's scale (sheet px per screen
+            # px) and the sheet point of the prop's base fix the size and the anchor, not the
+            # painted outline (leaves and chips may stick out of it).
+            scale = spec["density"] / prop["sheet_scale"]
+        else:
+            # height_px is the on-screen height; atlases hold DENSITY px per screen px.
+            scale = prop["height_px"] * spec["density"] / piece.height
+        size = (max(1, round(piece.width * scale)), max(1, round(piece.height * scale)))
+        anchor = None
+        if "anchor" in prop:
+            anchor = ((prop["anchor"][0] - origin[0]) * size[0] / piece.width,
+                      (prop["anchor"][1] - origin[1]) * size[1] / piece.height)
+        piece = resize_premultiplied(piece, size)
+        pieces.append((prop["name"], piece, anchor))
     # Shelf packing in spec order.
     placed = []
     x = y = shelf = width = 0
-    for name, piece in pieces:
+    for name, piece, anchor in pieces:
         w, h = piece.width + 2 * PROP_PAD_PX, piece.height + 2 * PROP_PAD_PX
         if x + w > PROP_ATLAS_WIDTH:
             x, y, shelf = 0, y + shelf, 0
-        placed.append((name, piece, x + PROP_PAD_PX, y + PROP_PAD_PX))
+        placed.append((name, piece, anchor, x + PROP_PAD_PX, y + PROP_PAD_PX))
         x += w
         shelf = max(shelf, h)
         width = max(width, x)
     atlas = Image.new("RGBA", (width, y + shelf), (0, 0, 0, 0))
     props = []
-    for name, piece, px, py in placed:
+    for name, piece, anchor, px, py in placed:
         atlas.alpha_composite(piece, (px, py))
-        fx, fy = base_anchor(piece)
+        fx, fy = anchor or base_anchor(piece)
         props.append({"name": name, "region": [px, py, piece.width, piece.height],
                       "feet": [round(px + fx, 1), round(py + fy, 1)]})
     return atlas, {"density": spec["density"], "props": props}

@@ -220,9 +220,11 @@ func _build_layers() -> void:
 		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
 	for index: int in _props.size():
 		var prop: Dictionary = _props[index]
-		prop["screen"] = IsoProjection.to_screen(prop["at"])
+		# A strip of a large prop sorts at its own cell but stands and is lit where the prop does.
+		var base: Vector2 = prop.get("base", prop["at"])
+		prop["screen"] = IsoProjection.to_screen(base)
 		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
-		prop["fixed_light"] = RunLighting.fixed_light(prop["at"], _lanterns)
+		prop["fixed_light"] = RunLighting.fixed_light(base, _lanterns)
 	_ground = GroundLayer.new(
 		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
 		ArenaDressing.backdrop(_sprites))
@@ -614,11 +616,16 @@ func _draw_shadow_pass() -> void:
 			_cast_shadow(canvas, _frame_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.BLOCK_PROP:
+		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
 			continue
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
 		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
+	# A ruin as wide as several cells has no single base point to lay its silhouette from: its
+	# cells darken the ground around its foot instead.
+	for prop: Dictionary in _props:
+		for polygon: PackedVector2Array in prop.get("footprint", []):
+			canvas.draw_colored_polygon(polygon, Color.BLACK)
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
@@ -718,9 +725,16 @@ func _draw_enemy(slot: int) -> void:
 
 ## A courtyard prop at its base, lit like an upright body standing there.
 func _draw_prop(prop: Dictionary) -> void:
-	var light: Color = RunLighting.with_aura(prop["fixed_light"], prop["at"], driver.hero_position_px())
+	var base: Vector2 = prop.get("base", prop["at"])
+	var light: Color = RunLighting.with_aura(prop["fixed_light"], base, driver.hero_position_px())
+	if prop.has("clip"):
+		_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, false, prop["clip"])
+		return
 	if prop["prop"] == ArenaDressing.BLOCK_PROP:
 		ArenaDressing.draw_block(self, prop, light)
+		return
+	if prop["prop"] == ArenaDressing.RAIL_PROP:
+		ArenaDressing.draw_rail(self, _sprites, prop, light)
 		return
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 
