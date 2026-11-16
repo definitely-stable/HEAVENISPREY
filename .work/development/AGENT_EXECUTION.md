@@ -24,7 +24,7 @@ acceptance: scripts/validate_agent_skills.py, tests/test_agent_skills.py, client
 | Seed / Replay / Save / негативные контроли | `hip-deterministic-qa` | [FOUNDATION-2026](../spec/v7/foundation-research-2026.md) |
 | Ревью diff | `hip-code-review` | [WORKFLOW](../guides/WORKFLOW.md) |
 | PR → CI → merge → статус | `hip-ci-closeout` | [EVIDENCE](../templates/EVIDENCE.md) |
-| Арт-ассет: доски, шаблон проекции, сборка, масштаб, кадр в игре | `hip-art-asset` | [ADR-015 §9](../decisions/ADR-015-arena-07-sect-ruins.md) · [ART-BIBLE-001](../spec/v7/art-bible-001.md) |
+| Арт-ассет и анимационные клипы: доски, шаблон проекции, сборка, масштаб, пороги клипов, кадр в игре | `hip-art-asset` | [ADR-015 §9](../decisions/ADR-015-arena-07-sect-ruins.md) · [ART-BIBLE-001](../spec/v7/art-bible-001.md) |
 
 Режимы усилия (лёгкий вопрос / исследование / ограниченная реализация с независимым ревью) выбираются по задаче, а не по модели; параллельные агенты — только для независимых частей с отдельными файлами.
 

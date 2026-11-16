@@ -33,6 +33,7 @@ MODEL_ROLE = re.compile(r"\b(Codex|Claude|Opus|Sonnet|OpenCode|GPT-\d)\b")
 SECRET = re.compile(r"(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16})")
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 SCRIPT_REF = re.compile(r"\b(scripts/[\w./-]+\.py)\b")
+MAX_SKILL_LINES = 500
 
 
 class ContractError(ValueError):
@@ -93,12 +94,54 @@ def check_project_skill(folder: Path, root: Path) -> dict:
         raise ContractError(where + ": project skills must not name or assign AI models")
     if SECRET.search(text):
         raise ContractError(where + ": secret-like token")
+    if len(text.splitlines()) > MAX_SKILL_LINES:
+        raise ContractError(where + ": SKILL.md over %d lines; move detail to a linked reference file"
+                            % MAX_SKILL_LINES)
+    if check_text(body, folder, root, where) == 0:
+        raise ContractError(where + ": no link to canonical .work documents")
+    # Supporting files (progressive disclosure) follow the same rules, and each one is linked from
+    # SKILL.md directly, so a reader never needs more than one hop.
+    linked = {(folder / target.split("#")[0]).resolve() for target in LINK.findall(body)}
+    for extra in sorted(folder.rglob("*.md")):
+        if extra.name == "SKILL.md":
+            continue
+        label = where + "/" + extra.relative_to(folder).as_posix()
+        extra_text = extra.read_text(encoding="utf-8")
+        if MODEL_ROLE.search(extra_text):
+            raise ContractError(label + ": project skills must not name or assign AI models")
+        if SECRET.search(extra_text):
+            raise ContractError(label + ": secret-like token")
+        check_text(extra_text, extra.parent, root, label)
+        if extra.resolve() not in linked:
+            raise ContractError(label + ": not linked from SKILL.md (keep references one level deep)")
+    evals = folder / "evals" / "evals.json"
+    if evals.is_file():
+        check_evals(json.loads(evals.read_text(encoding="utf-8")), name, where)
+    return {"name": name, "lines": len(text.splitlines())}
+
+
+def check_evals(data: dict, name: str, where: str) -> None:
+    """evals/evals.json: the scenarios a skill is judged by, run with and without the skill."""
+    if data.get("skill_name") != name:
+        raise ContractError(where + ": evals.json skill_name must equal the skill name")
+    cases = data.get("evals") or []
+    ids = [case.get("id") for case in cases]
+    if not cases or len(set(ids)) != len(ids):
+        raise ContractError(where + ": evals.json needs evals with unique ids")
+    for case in cases:
+        if not case.get("prompt") or not case.get("expectations"):
+            raise ContractError(where + ": eval %s needs a prompt and expectations" % case.get("id"))
+
+
+def check_text(text: str, base: Path, root: Path, where: str) -> int:
+    """Links resolve inside the repository and outside the v6 archive, named scripts exist;
+    returns the number of links into .work/."""
     work_links = 0
-    for target in LINK.findall(body):
+    for target in LINK.findall(text):
         if "://" in target or target.startswith("#"):
             continue
         ref = target.split("#")[0]
-        resolved = (folder / ref).resolve()
+        resolved = (base / ref).resolve()
         if not resolved.exists():
             raise ContractError(where + ": broken link " + target)
         rel = resolved.relative_to(root.resolve()).as_posix() if resolved.is_relative_to(root.resolve()) else ""
@@ -108,12 +151,10 @@ def check_project_skill(folder: Path, root: Path) -> dict:
             raise ContractError(where + ": archived v6 is not active canon: " + target)
         if rel.startswith(".work/"):
             work_links += 1
-    if work_links == 0:
-        raise ContractError(where + ": no link to canonical .work documents")
-    for script in SCRIPT_REF.findall(body):
+    for script in SCRIPT_REF.findall(text):
         if not (root / script).is_file():
             raise ContractError(where + ": references missing tool " + script)
-    return {"name": name, "lines": len(text.splitlines())}
+    return work_links
 
 
 STOP = {"the", "and", "for", "with", "this", "что", "как", "для", "это", "the", "before", "into"}

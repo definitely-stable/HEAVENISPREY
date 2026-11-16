@@ -1,0 +1,44 @@
+{
+  "skill_name": "hip-art-asset",
+  "how_to_run": "Manual. Give each prompt to a fresh session twice, with and without the skill, on a branch from main. Grade every expectation pass or fail from the transcript and the diff, not from the summary. A skill change is kept when it raises passes without new failures; record the table in the PR.",
+  "evals": [
+    {
+      "id": "prop-off-the-floor",
+      "prompt": "Каменные фонари во дворе стоят не по плоскости пола, перерисуй их.",
+      "expected_output": "A regenerated lantern sheet whose bases measure on the 2:1 floor, heights derived from the cells they stand on, an in-game crop next to the board and a GUT geometry test that fails on the old atlas.",
+      "expectations": [
+        "Writes acceptance criteria from the complaint before editing, including the base slope 0.5 +- 0.06",
+        "Generates over tools/art/iso_template.py with the template as the first image and the slope stated in numbers",
+        "Runs tools/art/measure_base.py with --check on the new master and regenerates until exit 0, never stretches the image",
+        "Derives height_px from the footprint against the cell diamond, then reports the height in hero heights",
+        "Captures the arena in game (capture_run grid) and shows the crop next to the reference board",
+        "Adds or extends a GUT test over the atlas alpha and shows that the previous atlas fails it"
+      ]
+    },
+    {
+      "id": "hero-hit-clip",
+      "prompt": "Добавь герою клип получения удара по всем направлениям.",
+      "expected_output": "A hit clip in the hero anim_atlas built from one imagegen sheet per drawn direction with the model sheet attached, passing the ANIM_* thresholds, wired to the simulation event and checked on a contact sheet.",
+      "expectations": [
+        "Attaches the model sheet and the main board to every generation request",
+        "Decides which directions are drawn and which are mirrored, and records it in source.json",
+        "Generates one sheet per clip and direction and records the chosen candidate number for each",
+        "validate_assets passes with the loop seam, height spread and torso drift reported in the PR",
+        "Ties the clip to a simulation event and adds a GUT test that the event plays it once",
+        "Captures the capture_run hero contact sheet and checks identity and common rhythm across directions"
+      ]
+    },
+    {
+      "id": "wolf-feet-slide",
+      "prompt": "Волк при беге скользит ногами по полу.",
+      "expected_output": "A measured stride against the wolf's on-screen speed, a fps change in source.json (not a simulation speed change), a rebuilt atlas and a contact sheet that shows the planted foot holding its place.",
+      "expectations": [
+        "Computes the expected foot travel per half cycle from the on-screen speed, frame count and fps",
+        "Changes the clip fps in source.json or regenerates the sheet, and leaves the simulation speed untouched",
+        "Rebuilds with tools/art/build_sprites.py and passes scripts/validate_assets.py",
+        "Shows a contact sheet or an in-game sequence where the planted foot does not slide",
+        "Adds the case to the skill's 'Уже случалось' if it was a new kind of defect"
+      ]
+    }
+  ]
+}

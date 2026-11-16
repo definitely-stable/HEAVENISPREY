@@ -10,6 +10,8 @@ ROUTING = ROOT / ".work/indexes/AGENT_ROUTING.md"
 START = ROOT / ".work/guides/START_HERE.md"
 LINK = re.compile(r"\]\(([^)#]+)(?:#[^)]*)?\)")
 SCRIPT = re.compile(r"`python (scripts/[\w/.-]+\.py)")
+# Routed scripts that run the CI steps themselves rather than being one of them.
+RUNNERS = {"scripts/dev/local_ci.py"}
 
 # (task, words that must all appear in the row's first column, specs and validators the row must reach)
 CASES = (
@@ -25,6 +27,10 @@ CASES = (
      {"settings.example.cfg", "localization_context.json"}, {"scripts/validate_content.py"}),
     ("style of a new hero sprite", ("стиль", "ассетов"),
      {"art-bible-001.md", "ART_LOOKDEV.md"}, set()),
+    ("courtyard props do not lie on the floor plane", ("генерация", "ассетов"),
+     {"SKILL.md", "ADR-015-arena-07-sect-ruins.md"}, {"scripts/validate_assets.py"}),
+    ("run every CI step before a push", ("Тестирование", "CI"),
+     {"WORKFLOW.md"}, {"scripts/dev/local_ci.py"}),
 )
 
 
@@ -70,7 +76,7 @@ class AgentRoutingTests(unittest.TestCase):
     def test_routed_validators_run_in_ci(self):
         ci = "\n".join(p.read_text(encoding="utf-8")
                        for p in sorted((ROOT / ".github/workflows").glob("*.yml")))
-        for script in set(SCRIPT.findall(ROUTING.read_text(encoding="utf-8"))):
+        for script in set(SCRIPT.findall(ROUTING.read_text(encoding="utf-8"))) - RUNNERS:
             with self.subTest(script=script):
                 self.assertIn(script, ci)
 
