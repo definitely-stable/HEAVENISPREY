@@ -615,7 +615,7 @@
  "policy_id": "hip-fx-v1",
  "recover_id": "upgrade.p0.recover",
  "rng_policy_id": "hip-rng-v1",
- "schema_version": 11,
+ "schema_version": 12,
  "sector_cases": [
   [
    96000,
@@ -764,6 +764,7 @@
  ],
  "traces": [
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -903,6 +904,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1027,6 +1029,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1151,6 +1154,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1305,6 +1309,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1475,6 +1480,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1645,6 +1651,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -1783,6 +1790,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -2669,6 +2677,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -2823,6 +2832,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -5720,6 +5730,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -6090,6 +6101,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -7137,6 +7149,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -7323,6 +7336,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -7517,6 +7531,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -14078,6 +14093,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -14503,6 +14519,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -19183,6 +19200,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -21473,6 +21491,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -28043,6 +28062,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -31344,6 +31364,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -31754,6 +31775,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -32841,6 +32863,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -35145,6 +35168,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -36290,6 +36314,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -43159,6 +43184,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -45605,6 +45631,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -46441,6 +46468,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -46782,6 +46810,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": null,
    "checkpoints": [
     {
@@ -48056,6 +48085,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -48431,6 +48461,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -49604,6 +49635,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -50898,6 +50930,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -51241,6 +51274,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -52641,6 +52675,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -52984,6 +53019,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -54168,6 +54204,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -54520,6 +54557,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -55713,6 +55751,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -56056,6 +56095,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -56960,6 +57000,7 @@
    "xp": null
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [],
     "records": [
@@ -58377,6 +58418,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [
      "2",
@@ -59533,6 +59575,7 @@
    }
   },
   {
+   "arena": null,
    "attacks": {
     "caps": [
      "2",
@@ -61164,6 +61207,4237 @@
      "512"
     ]
    }
+  },
+  {
+   "arena": {
+    "body_su": "18000",
+    "digest": "ee14e83fcb746cdb7c0b593419457b83068c80435924da6f9c151cb96ac238f3",
+    "path": "res://content/arena/jade_grove.json"
+   },
+   "attacks": null,
+   "checkpoints": [
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "5c9c3e70f921c34bd1a0a6ad22b456d7aff292594aa2033eb17d91c528a54092",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "411394",
+     "player_y": "3044606",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1,
+     "tick": 1,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "389016f70c3bf09654c2693a902111d684d6cd07f3897fdb43c19da6886e541c",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "414788",
+     "player_y": "3041212",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2,
+     "tick": 2,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "687786eb20b28c59a34a75b22f4f547d29dad83905c1e07b08a49c13a60f94dc",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "509820",
+     "player_y": "2946180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 30,
+     "tick": 30,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "aead77ac03c1f6014a5888b24ce46c3ae895d0177af160c679dfdc64c5a7e0fb",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "611640",
+     "player_y": "2844360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 60,
+     "tick": 60,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "48c78bd10e21d0f2598e99848dbb43ceac700a085f521d355af0b5f7f13ba6c8",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1426200",
+     "player_y": "2034000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 300,
+     "tick": 300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "f07319c77c35964c525345b401b60999d252b2f7591f74ecc0ad4d70b464e678",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2190000",
+     "player_y": "1314000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 600,
+     "tick": 600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4d928abd29673b2a662f38896ee4c87c254c04f769d373711a1ab28864cd8fb0",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2295698",
+     "player_y": "1710000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 900,
+     "tick": 900,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "30eb17085f42a4852dd69b8a3a83a8e3c1dfb11daadd0df836453ab300978bc1",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1354598",
+     "player_y": "1506000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1200,
+     "tick": 1200,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "5d1e256f4f5aafa7f479023bb89b3791f34e3882f35e3660439855eda1a91cdd",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2339820",
+     "player_y": "1560304",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1500,
+     "tick": 1500,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "12e1eed3ff440707d54be57afba30cfe3e74431e9ad61b7809ec3ce5efb7b736",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1516666",
+     "player_y": "1862730",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1800,
+     "tick": 1800,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "870be5ee76ac9859342c9600704b316ec7b34445cdff5149953d76d3eb6eb129",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1953034",
+     "player_y": "1248056",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2100,
+     "tick": 2100,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "eec4788086d58ced869f7146f2515481abba2d13d078574adeb6b2d5e8774f07",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2027572",
+     "player_y": "1971338",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2400,
+     "tick": 2400,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "fa6616dab61f1bd649353ef31adbceadefdd1ccb6045121b2fb8b70eb716d7ec",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1468182",
+     "player_y": "1444908",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2700,
+     "tick": 2700,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "0cdb2529367a7b51c5305c798afed6f819d2fd2bbd1d8175582cec50d3e861a7",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2326244",
+     "player_y": "1710000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3000,
+     "tick": 3000,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "cf020ee0b40c63d5f0a880404559b51104a37eaf6715734d9038cc98ffca62f3",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1373150",
+     "player_y": "1672666",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3300,
+     "tick": 3300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "30b0e4460f4abd9dae89a90bad4e059dc461824566f4163bcdaba0d27deb191b",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2162364",
+     "player_y": "1336300",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3600,
+     "tick": 3600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "8fc45f795f2c7db0490d9e055329b051dab2fe69a1c750f006b69082ba00e85e",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1725996",
+     "player_y": "1984914",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3900,
+     "tick": 3900,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "0b8cce4323fffdb64b7fbbe7a1bb774507e111440ff779302eeae3118310abbd",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "0",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1685398",
+     "player_y": "1227692",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 4200,
+     "tick": 4200,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    }
+   ],
+   "choice_mode": 0,
+   "commands": [
+    [
+     "0",
+     "0",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "600",
+     "1",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "690",
+     "2",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "780",
+     "3",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "870",
+     "4",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "960",
+     "5",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1050",
+     "6",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1140",
+     "7",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1230",
+     "8",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1320",
+     "9",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1410",
+     "10",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1500",
+     "11",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1590",
+     "12",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1680",
+     "13",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1770",
+     "14",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1860",
+     "15",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1950",
+     "16",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2040",
+     "17",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2130",
+     "18",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2220",
+     "19",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2310",
+     "20",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2400",
+     "21",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2490",
+     "22",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2580",
+     "23",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2670",
+     "24",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2760",
+     "25",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2850",
+     "26",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2940",
+     "27",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3030",
+     "28",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3120",
+     "29",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3210",
+     "30",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "3300",
+     "31",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "3390",
+     "32",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "3480",
+     "33",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "3570",
+     "34",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "3660",
+     "35",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "3750",
+     "36",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "3840",
+     "37",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "3930",
+     "38",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "4020",
+     "39",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "4110",
+     "40",
+     "0",
+     "1",
+     "-1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "3648000",
+    "3408000",
+    "408000",
+    "3048000"
+   ],
+   "enemies": null,
+   "log_digest": "89187d6625fff804cfe7396019e64bf508200a17312c43acf53cb1af625bb0bb",
+   "name": "arena_hero_walls",
+   "run_ticks": 0,
+   "skill": null,
+   "ticks": 4200,
+   "xp": null
+  },
+  {
+   "arena": {
+    "body_su": "18000",
+    "digest": "ee14e83fcb746cdb7c0b593419457b83068c80435924da6f9c151cb96ac238f3",
+    "path": "res://content/arena/jade_grove.json"
+   },
+   "attacks": null,
+   "checkpoints": [
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "69981d15afaa49f051334df82634d95e8314f2716005d610ac81baf4b374a2ce",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1,
+     "tick": 1,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4774a50f42b78aa92e1921c43567034739d6e82237d0a7adae7aa60f97884d63",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2,
+     "tick": 2,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "7fde1ec437c76a0046dfd4e084447b841e082da2eec3cd231c60d6ea31e4bb4c",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 30,
+     "tick": 30,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "1b4c85242362db37c7c39b6a4d739e74b2da00928ae5cd40694819c9eb932585",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 60,
+     "tick": 60,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "9a28e618b475435bc43fcebc3ad21e38b0f9900300dd68c8e05bf6394c55eabe",
+     "enemy_alive": 3,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 300,
+     "tick": 300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "9f88255a7ddd906d441ecde48b1ae320e6367dda464e6d5823ae2e10b67df8d3",
+     "enemy_alive": 6,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 600,
+     "tick": 600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "e3cf17e7f1cbecb8d7f337e69ce23c9d2775ce41301d42e8921e0780c4e18ae9",
+     "enemy_alive": 8,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 2,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 900,
+     "tick": 900,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "0fad8f5717d8d5b07ac0a0f955cbcee75f8aabe94f01bfeea66b3de16dc2bd4f",
+     "enemy_alive": 9,
+     "gems": 5,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 5,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 1200,
+     "tick": 1200,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "9dcd4cb21ee83d9af67a04f44378d203995d3012a92624b0a40305d7df2b8939",
+     "enemy_alive": 6,
+     "gems": 11,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 11,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1500,
+     "tick": 1500,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "8b3beb280fa6091b4be1ba7bf98d021d1690cd5c937cca2c97be159772118d38",
+     "enemy_alive": 8,
+     "gems": 13,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 13,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1800,
+     "tick": 1800,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "08b4458e2ddafefc2927f755222f09fd8982b74da8fac65393809204e69b7cf9",
+     "enemy_alive": 9,
+     "gems": 16,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 16,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2100,
+     "tick": 2100,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "28b5ab2ce0719e3c1c9dfa85b95c489f2dd72999913b1160dac32f0aee6584da",
+     "enemy_alive": 8,
+     "gems": 21,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 21,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 2400,
+     "tick": 2400,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "9838ed5f71fa3b9f6fa1c10f063a91299331f7f16dd2675793f2948d61ed5d30",
+     "enemy_alive": 8,
+     "gems": 25,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 25,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 2700,
+     "tick": 2700,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "18762b7b6f61dd260e5f26215ff88fc415beb6b1871f8b8c0363eda9209c11c6",
+     "enemy_alive": 7,
+     "gems": 30,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 30,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 3000,
+     "tick": 3000,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "e010082190540af35d374749e4ac20c7e945fdb4e07d4abd1de4f8c44af1bd85",
+     "enemy_alive": 9,
+     "gems": 33,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 33,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 3300,
+     "tick": 3300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "2e0d4f1feca0598d1d218a32460c9f885b96ed3f6a4d5b939876c45686b1ab44",
+     "enemy_alive": 8,
+     "gems": 38,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 38,
+     "level": 1,
+     "paused": 0,
+     "player_x": "408000",
+     "player_y": "3048000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3600,
+     "tick": 3600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    }
+   ],
+   "choice_mode": 0,
+   "commands": [],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "3648000",
+    "3408000",
+    "408000",
+    "3048000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "20261113",
+    "values": [
+     "100000",
+     "90000",
+     "10800",
+     "2000",
+     "48",
+     "384000"
+    ]
+   },
+   "log_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "name": "arena_w0_hero_stands_still",
+   "run_ticks": 0,
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 3600,
+   "xp": {
+    "costs": [
+     "20",
+     "35",
+     "55",
+     "80",
+     "110",
+     "145",
+     "185",
+     "230",
+     "280",
+     "335",
+     "395",
+     "460",
+     "530",
+     "605",
+     "685",
+     "770",
+     "860",
+     "955",
+     "1055",
+     "1160"
+    ],
+    "kind_xp": [
+     "10",
+     "15"
+    ],
+    "values": [
+     "48000",
+     "512"
+    ]
+   }
+  },
+  {
+   "arena": {
+    "body_su": "18000",
+    "digest": "ee14e83fcb746cdb7c0b593419457b83068c80435924da6f9c151cb96ac238f3",
+    "path": "res://content/arena/jade_grove.json"
+   },
+   "attacks": null,
+   "checkpoints": [
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4c6373d6e74783a62db329a0bf7d021cb2b45a5e2e2db46ddbf78bcc70f9782a",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "411394",
+     "player_y": "3044606",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1,
+     "tick": 1,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "094fd095f3331a78704cc999cf6847b8ea5ea342f7b9a34b105813798058c8b8",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "414788",
+     "player_y": "3041212",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2,
+     "tick": 2,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "76a9229e1e0636d11c830d580ba4d33d17fd73cfe6b8bd9e12fe16cb9d58129a",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "509820",
+     "player_y": "2946180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 30,
+     "tick": 30,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "890c1cb4a06b3e19b1623a3552978c5fb01ff8396f4599432f90c7a85856db57",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "611640",
+     "player_y": "2844360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 60,
+     "tick": 60,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "73797a3fcebba6a2db18b98c1c0a602ccf81c79796593c05e85bc9f9e66bcb87",
+     "enemy_alive": 3,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1426200",
+     "player_y": "2034000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 300,
+     "tick": 300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "1d7bb3294a698e34505e512e8a06ca5131fa9aa8054ec11695bb2e806576b03c",
+     "enemy_alive": 5,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "100000",
+     "kills": 1,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1731660",
+     "player_y": "1944180",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 600,
+     "tick": 600,
+     "venom": 0,
+     "won": 0,
+     "xp": 10,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "2ecfa2797f02c0099befea4e0f9236aba0b3d9d62f187455e0b7624ee5a007fa",
+     "enemy_alive": 6,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "80500",
+     "kills": 4,
+     "level": 2,
+     "paused": 0,
+     "player_x": "1833480",
+     "player_y": "1698360",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 900,
+     "tick": 900,
+     "venom": 0,
+     "won": 0,
+     "xp": 20,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "70042f197cb934f5055afe1714d8bd8f50b52fbec5823de77fd59f4d533094b9",
+     "enemy_alive": 5,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "59900",
+     "kills": 9,
+     "level": 3,
+     "paused": 0,
+     "player_x": "2079300",
+     "player_y": "1800180",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 1200,
+     "tick": 1200,
+     "venom": 0,
+     "won": 0,
+     "xp": 55,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "f3e5fa3c2bc51caea6890f393b8cf81d8f660ab3f31b49c6fed781d71e15f6d8",
+     "enemy_alive": 5,
+     "gems": 4,
+     "hero_dead": 0,
+     "hero_hp": "45800",
+     "kills": 12,
+     "level": 3,
+     "paused": 0,
+     "player_x": "1977480",
+     "player_y": "2046000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 1500,
+     "tick": 1500,
+     "venom": 0,
+     "won": 0,
+     "xp": 90,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "b67cfde0c790907d464afc5f856b4f1b1d0c972e5cbf4123841ba533cbd002f8",
+     "enemy_alive": 4,
+     "gems": 7,
+     "hero_dead": 0,
+     "hero_hp": "31700",
+     "kills": 17,
+     "level": 4,
+     "paused": 0,
+     "player_x": "1731660",
+     "player_y": "1944180",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 1800,
+     "tick": 1800,
+     "venom": 0,
+     "won": 0,
+     "xp": 115,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "18212f5c31c2172bb3b289c12151c0c4ae27f9d7e8a3f761d42d22f032f7157d",
+     "enemy_alive": 5,
+     "gems": 8,
+     "hero_dead": 0,
+     "hero_hp": "12200",
+     "kills": 20,
+     "level": 4,
+     "paused": 0,
+     "player_x": "1833480",
+     "player_y": "1698360",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 2100,
+     "tick": 2100,
+     "venom": 0,
+     "won": 0,
+     "xp": 135,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "17a9cf76a93f7ed7359530416d17abf6b0c24b8686e2522aaefcb062a15b9ef3",
+     "enemy_alive": 5,
+     "gems": 9,
+     "hero_dead": 0,
+     "hero_hp": "12200",
+     "kills": 24,
+     "level": 4,
+     "paused": 0,
+     "player_x": "2079300",
+     "player_y": "1800180",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 2400,
+     "tick": 2400,
+     "venom": 0,
+     "won": 0,
+     "xp": 165,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "8053e6bfff0d6c1addaba1bc82395ade5ed39b4cf09444c90eaeff2e93569df6",
+     "enemy_alive": 6,
+     "gems": 11,
+     "hero_dead": 0,
+     "hero_hp": "12200",
+     "kills": 27,
+     "level": 4,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2700,
+     "tick": 2700,
+     "venom": 0,
+     "won": 0,
+     "xp": 180,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "9a076af107364d4cd745cee38797351cd5616dd319b1bac25aadba9fbf6bfbab",
+     "enemy_alive": 8,
+     "gems": 13,
+     "hero_dead": 0,
+     "hero_hp": "12200",
+     "kills": 29,
+     "level": 4,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3000,
+     "tick": 3000,
+     "venom": 0,
+     "won": 0,
+     "xp": 180,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4584d5c15b6f2b8053b2026708b89b511fd2241b6a38fb90658f042fd12f9fc1",
+     "enemy_alive": 9,
+     "gems": 13,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "kills": 29,
+     "level": 4,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3300,
+     "tick": 3040,
+     "venom": 0,
+     "won": 0,
+     "xp": 180,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4584d5c15b6f2b8053b2026708b89b511fd2241b6a38fb90658f042fd12f9fc1",
+     "enemy_alive": 9,
+     "gems": 13,
+     "hero_dead": 1,
+     "hero_hp": "0",
+     "kills": 29,
+     "level": 4,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 3600,
+     "tick": 3040,
+     "venom": 0,
+     "won": 0,
+     "xp": 180,
+     "zones": 0
+    }
+   ],
+   "choice_mode": 0,
+   "commands": [
+    [
+     "0",
+     "0",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "420",
+     "1",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "450",
+     "2",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "480",
+     "3",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "510",
+     "4",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "540",
+     "5",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "570",
+     "6",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "600",
+     "7",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "630",
+     "8",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "660",
+     "9",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "690",
+     "10",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "720",
+     "11",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "750",
+     "12",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "780",
+     "13",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "810",
+     "14",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "840",
+     "15",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "870",
+     "16",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "900",
+     "17",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "930",
+     "18",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "960",
+     "19",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "990",
+     "20",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1020",
+     "21",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1050",
+     "22",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1080",
+     "23",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1110",
+     "24",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1140",
+     "25",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1170",
+     "26",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1200",
+     "27",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1230",
+     "28",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1260",
+     "29",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1290",
+     "30",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1320",
+     "31",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1350",
+     "32",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1380",
+     "33",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1410",
+     "34",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1440",
+     "35",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1470",
+     "36",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1500",
+     "37",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1530",
+     "38",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1560",
+     "39",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1590",
+     "40",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1620",
+     "41",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1650",
+     "42",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1680",
+     "43",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1710",
+     "44",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1740",
+     "45",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1770",
+     "46",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1800",
+     "47",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1830",
+     "48",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1860",
+     "49",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1890",
+     "50",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1920",
+     "51",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1950",
+     "52",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1980",
+     "53",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2010",
+     "54",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2040",
+     "55",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2070",
+     "56",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2100",
+     "57",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2130",
+     "58",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2160",
+     "59",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2190",
+     "60",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2220",
+     "61",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2250",
+     "62",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2280",
+     "63",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2310",
+     "64",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2340",
+     "65",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2370",
+     "66",
+     "0",
+     "1",
+     "1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "3648000",
+    "3408000",
+    "408000",
+    "3048000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2"
+    ],
+    "seed": "20261113",
+    "values": [
+     "100000",
+     "90000",
+     "10800",
+     "2000",
+     "48",
+     "384000"
+    ]
+   },
+   "log_digest": "a50beea5a536fd13fccebc3f841e9c3365060ee73c7bce31b33ff7cbc9a834d1",
+   "name": "arena_w0_into_court",
+   "run_ticks": 0,
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 3600,
+   "xp": {
+    "costs": [
+     "20",
+     "35",
+     "55",
+     "80",
+     "110",
+     "145",
+     "185",
+     "230",
+     "280",
+     "335",
+     "395",
+     "460",
+     "530",
+     "605",
+     "685",
+     "770",
+     "860",
+     "955",
+     "1055",
+     "1160"
+    ],
+    "kind_xp": [
+     "10",
+     "15"
+    ],
+    "values": [
+     "48000",
+     "512"
+    ]
+   }
+  },
+  {
+   "arena": {
+    "body_su": "18000",
+    "digest": "ee14e83fcb746cdb7c0b593419457b83068c80435924da6f9c151cb96ac238f3",
+    "path": "res://content/arena/jade_grove.json"
+   },
+   "attacks": {
+    "caps": [
+     "2",
+     "2",
+     "2",
+     "3",
+     "3",
+     "384000"
+    ],
+    "records": [
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "1",
+     "20",
+     "6",
+     "27",
+     "96000",
+     "85",
+     "1",
+     "0",
+     "0",
+     "0",
+     "2",
+     "33",
+     "10",
+     "36",
+     "108000",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "3",
+     "36",
+     "240",
+     "27",
+     "384000",
+     "0",
+     "0",
+     "2784",
+     "8000",
+     "288000",
+     "4",
+     "36",
+     "54",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "96000",
+     "0",
+     "1",
+     "30",
+     "10",
+     "37",
+     "129600",
+     "125",
+     "0",
+     "0",
+     "0",
+     "0",
+     "1",
+     "48",
+     "12",
+     "40",
+     "153600",
+     "130",
+     "0",
+     "0",
+     "0",
+     "0",
+     "5",
+     "57",
+     "165",
+     "45",
+     "384000",
+     "0",
+     "0",
+     "0",
+     "153600",
+     "0"
+    ],
+    "root": [
+     "90",
+     "720"
+    ],
+    "venom": [
+     "3",
+     "240",
+     "60",
+     "1000"
+    ],
+    "windows": [
+     "0",
+     "600",
+     "0",
+     "8",
+     "2",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "600",
+     "1200",
+     "0",
+     "5",
+     "3",
+     "2",
+     "2",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "1200",
+     "1800",
+     "1",
+     "3",
+     "3",
+     "0",
+     "0",
+     "2",
+     "1",
+     "1",
+     "1",
+     "0",
+     "0",
+     "1800",
+     "2400",
+     "2",
+     "3",
+     "2",
+     "0",
+     "0",
+     "1",
+     "0",
+     "0",
+     "0",
+     "1",
+     "1"
+    ]
+   },
+   "checkpoints": [
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "563654cb5814fc33e05740246d681ebf3d335551f162971a9b2a685cef62aaf3",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "411394",
+     "player_y": "3044606",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1,
+     "tick": 1,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "db72033fded8e252c0bab5fb4c53da310b67431ab3df717bd8acdc702ba1729c",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "414788",
+     "player_y": "3041212",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2,
+     "tick": 2,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "e6f9fb6fa242768e012add47b887d184db661a497c59b648b6e480e12a77e7ed",
+     "enemy_alive": 2,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "509820",
+     "player_y": "2946180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 30,
+     "tick": 30,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "4fd0add56c80423d79eacd7b4770069a2eb2dd585f69fcd0c307329ce731877c",
+     "enemy_alive": 4,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "611640",
+     "player_y": "2844360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 60,
+     "tick": 60,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "26f3430c9fe0102f111ecb06447d2721753e66b400729b6f13b86b586ebed4d1",
+     "enemy_alive": 18,
+     "gems": 2,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 2,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1426200",
+     "player_y": "2034000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 300,
+     "tick": 300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "a4879f482ee11c2f5288afa7731ba27bad974bd5d0c78dd402937e60d6565eb7",
+     "enemy_alive": 34,
+     "gems": 6,
+     "hero_dead": 0,
+     "hero_hp": "499974000",
+     "kills": 6,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1731660",
+     "player_y": "1944180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 600,
+     "tick": 600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 1,
+     "choices": 0,
+     "digest": "c7942e42b002e153246c2ab1239bd807f8bec126dc7224611587dc2be5095235",
+     "enemy_alive": 48,
+     "gems": 8,
+     "hero_dead": 0,
+     "hero_hp": "499853700",
+     "kills": 11,
+     "level": 2,
+     "paused": 0,
+     "player_x": "1833480",
+     "player_y": "1698360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 900,
+     "tick": 900,
+     "venom": 0,
+     "won": 0,
+     "xp": 45,
+     "zones": 0
+    },
+    {
+     "attacks": 5,
+     "choices": 0,
+     "digest": "9209f3105ec94ce048508b06856fc27980a1cca9a2aac26ccaf0e45922c17a14",
+     "enemy_alive": 48,
+     "gems": 10,
+     "hero_dead": 0,
+     "hero_hp": "499672400",
+     "kills": 17,
+     "level": 3,
+     "paused": 0,
+     "player_x": "2079300",
+     "player_y": "1800180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1200,
+     "tick": 1200,
+     "venom": 0,
+     "won": 0,
+     "xp": 95,
+     "zones": 0
+    },
+    {
+     "attacks": 9,
+     "choices": 0,
+     "digest": "767986e9ffa5e48caa2167cf5a8d93eeac21fa134ad09b405490af14fbb28bdd",
+     "enemy_alive": 48,
+     "gems": 11,
+     "hero_dead": 0,
+     "hero_hp": "499491300",
+     "kills": 25,
+     "level": 4,
+     "paused": 0,
+     "player_x": "1977480",
+     "player_y": "2046000",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1500,
+     "tick": 1500,
+     "venom": 0,
+     "won": 0,
+     "xp": 180,
+     "zones": 0
+    },
+    {
+     "attacks": 20,
+     "choices": 0,
+     "digest": "6ab3935c808ccc8991ba3e7cbc007879532e3847273c09fd662154227232e130",
+     "enemy_alive": 48,
+     "gems": 13,
+     "hero_dead": 0,
+     "hero_hp": "499302800",
+     "kills": 31,
+     "level": 5,
+     "paused": 0,
+     "player_x": "1731660",
+     "player_y": "1944180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 3,
+     "step": 1800,
+     "tick": 1800,
+     "venom": 0,
+     "won": 0,
+     "xp": 225,
+     "zones": 0
+    },
+    {
+     "attacks": 36,
+     "choices": 0,
+     "digest": "e34fe1c30be6f0a6fec4840f18c0f1388d32660f6476e8b0f0849ae05e7e5b6d",
+     "enemy_alive": 47,
+     "gems": 15,
+     "hero_dead": 0,
+     "hero_hp": "499124000",
+     "kills": 40,
+     "level": 6,
+     "paused": 0,
+     "player_x": "1833480",
+     "player_y": "1698360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 3,
+     "step": 2100,
+     "tick": 2100,
+     "venom": 0,
+     "won": 0,
+     "xp": 305,
+     "zones": 0
+    },
+    {
+     "attacks": 65,
+     "choices": 0,
+     "digest": "259b3681b2cfb882002494943afc39012027671794741447e6f73cdbe1ef4271",
+     "enemy_alive": 48,
+     "gems": 17,
+     "hero_dead": 0,
+     "hero_hp": "498940800",
+     "kills": 48,
+     "level": 6,
+     "paused": 0,
+     "player_x": "2079300",
+     "player_y": "1800180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 3,
+     "step": 2400,
+     "tick": 2400,
+     "venom": 0,
+     "won": 0,
+     "xp": 380,
+     "zones": 0
+    }
+   ],
+   "choice_mode": 0,
+   "commands": [
+    [
+     "0",
+     "0",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "420",
+     "1",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "450",
+     "2",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "480",
+     "3",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "510",
+     "4",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "540",
+     "5",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "570",
+     "6",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "600",
+     "7",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "630",
+     "8",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "660",
+     "9",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "690",
+     "10",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "720",
+     "11",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "750",
+     "12",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "780",
+     "13",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "810",
+     "14",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "840",
+     "15",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "870",
+     "16",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "900",
+     "17",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "930",
+     "18",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "960",
+     "19",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "990",
+     "20",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1020",
+     "21",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1050",
+     "22",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1080",
+     "23",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1110",
+     "24",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1140",
+     "25",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1170",
+     "26",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1200",
+     "27",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1230",
+     "28",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1260",
+     "29",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1290",
+     "30",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1320",
+     "31",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1350",
+     "32",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1380",
+     "33",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1410",
+     "34",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1440",
+     "35",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1470",
+     "36",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1500",
+     "37",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1530",
+     "38",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1560",
+     "39",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1590",
+     "40",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1620",
+     "41",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1650",
+     "42",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1680",
+     "43",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1710",
+     "44",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1740",
+     "45",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1770",
+     "46",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1800",
+     "47",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1830",
+     "48",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1860",
+     "49",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1890",
+     "50",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1920",
+     "51",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1950",
+     "52",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1980",
+     "53",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2010",
+     "54",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2040",
+     "55",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2070",
+     "56",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2100",
+     "57",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2130",
+     "58",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2160",
+     "59",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2190",
+     "60",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2220",
+     "61",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2250",
+     "62",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2280",
+     "63",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2310",
+     "64",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2340",
+     "65",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2370",
+     "66",
+     "0",
+     "1",
+     "1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "3648000",
+    "3408000",
+    "408000",
+    "3048000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2",
+     "4608",
+     "18000",
+     "5800",
+     "5500",
+     "45",
+     "2",
+     "5856",
+     "16800",
+     "6500",
+     "5000",
+     "96",
+     "2",
+     "5280",
+     "18720",
+     "7200",
+     "9500",
+     "150",
+     "2",
+     "3936",
+     "16800",
+     "7000",
+     "6400",
+     "204",
+     "1",
+     "3984",
+     "19680",
+     "8200",
+     "3800",
+     "0",
+     "1",
+     "4944",
+     "24000",
+     "10500",
+     "9000",
+     "120",
+     "1",
+     "2592",
+     "30720",
+     "25000",
+     "11800",
+     "180",
+     "1",
+     "3072",
+     "25200",
+     "11000",
+     "0",
+     "360",
+     "1"
+    ],
+    "seed": "20261113",
+    "values": [
+     "500000000",
+     "15000",
+     "0",
+     "1000",
+     "48",
+     "384000"
+    ]
+   },
+   "log_digest": "a50beea5a536fd13fccebc3f841e9c3365060ee73c7bce31b33ff7cbc9a834d1",
+   "name": "arena_windows_compressed",
+   "run_ticks": 0,
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 2400,
+   "xp": {
+    "costs": [
+     "20",
+     "35",
+     "55",
+     "80",
+     "110",
+     "145",
+     "185",
+     "230",
+     "280",
+     "335",
+     "395",
+     "460",
+     "530",
+     "605",
+     "685",
+     "770",
+     "860",
+     "955",
+     "1055",
+     "1160"
+    ],
+    "kind_xp": [
+     "10",
+     "15",
+     "15",
+     "15",
+     "15",
+     "20",
+     "15",
+     "15",
+     "20",
+     "20"
+    ],
+    "values": [
+     "48000",
+     "512"
+    ]
+   }
+  },
+  {
+   "arena": {
+    "body_su": "18000",
+    "digest": "ee14e83fcb746cdb7c0b593419457b83068c80435924da6f9c151cb96ac238f3",
+    "path": "res://content/arena/jade_grove.json"
+   },
+   "attacks": {
+    "caps": [
+     "2",
+     "2",
+     "2",
+     "3",
+     "3",
+     "384000"
+    ],
+    "records": [
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "1",
+     "20",
+     "6",
+     "27",
+     "96000",
+     "85",
+     "1",
+     "0",
+     "0",
+     "0",
+     "2",
+     "33",
+     "10",
+     "36",
+     "108000",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "3",
+     "36",
+     "240",
+     "27",
+     "384000",
+     "0",
+     "0",
+     "2784",
+     "8000",
+     "288000",
+     "4",
+     "36",
+     "54",
+     "0",
+     "0",
+     "0",
+     "0",
+     "0",
+     "96000",
+     "0",
+     "1",
+     "30",
+     "10",
+     "37",
+     "129600",
+     "125",
+     "0",
+     "0",
+     "0",
+     "0",
+     "1",
+     "48",
+     "12",
+     "40",
+     "153600",
+     "130",
+     "0",
+     "0",
+     "0",
+     "0",
+     "5",
+     "57",
+     "165",
+     "45",
+     "384000",
+     "0",
+     "0",
+     "0",
+     "153600",
+     "0"
+    ],
+    "root": [
+     "90",
+     "720"
+    ],
+    "venom": [
+     "3",
+     "240",
+     "60",
+     "1000"
+    ],
+    "windows": [
+     "0",
+     "4000",
+     "2",
+     "3",
+     "2",
+     "1",
+     "1",
+     "1",
+     "1",
+     "1",
+     "1",
+     "1",
+     "1"
+    ]
+   },
+   "checkpoints": [
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "563654cb5814fc33e05740246d681ebf3d335551f162971a9b2a685cef62aaf3",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "411394",
+     "player_y": "3044606",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 1,
+     "tick": 1,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "db72033fded8e252c0bab5fb4c53da310b67431ab3df717bd8acdc702ba1729c",
+     "enemy_alive": 0,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "414788",
+     "player_y": "3041212",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 2,
+     "tick": 2,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "f0b862ee0371a8f75be37e547d0c6f98707470df158deed8848693c037db98e7",
+     "enemy_alive": 5,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "509820",
+     "player_y": "2946180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 30,
+     "tick": 30,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 0,
+     "choices": 0,
+     "digest": "2a24766cca22fbdbc4fbab3fc36d5d139a28857d6cca20ff5af8470c598c8e89",
+     "enemy_alive": 10,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "500000000",
+     "kills": 0,
+     "level": 1,
+     "paused": 0,
+     "player_x": "611640",
+     "player_y": "2844360",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 0,
+     "step": 60,
+     "tick": 60,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 0
+    },
+    {
+     "attacks": 2,
+     "choices": 0,
+     "digest": "7530bdfe56d336ac8b9cef6264acf18d9b2d4e228e128b77d82c9c3ec5da811c",
+     "enemy_alive": 49,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "499985900",
+     "kills": 1,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1426200",
+     "player_y": "2034000",
+     "projectiles": 1,
+     "root": 0,
+     "shots": 0,
+     "step": 300,
+     "tick": 300,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 1
+    },
+    {
+     "attacks": 28,
+     "choices": 0,
+     "digest": "28d6ba382b1f00761d88c4c6213aad82faea39cbc9581bac7dacdb21969ce2c1",
+     "enemy_alive": 93,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "499916700",
+     "kills": 7,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1731660",
+     "player_y": "1944180",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 3,
+     "step": 600,
+     "tick": 600,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 1
+    },
+    {
+     "attacks": 101,
+     "choices": 0,
+     "digest": "db79fe7fff4521f7c380f807280b3bac891ccfbe5847f05ab269127521039287",
+     "enemy_alive": 137,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "499505100",
+     "kills": 13,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1721835",
+     "player_y": "1781475",
+     "projectiles": 0,
+     "root": 83,
+     "shots": 3,
+     "step": 900,
+     "tick": 900,
+     "venom": 0,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 214,
+     "choices": 0,
+     "digest": "a1f91cfc95f85918aacc50712d82274a310f0a73120119566536b1ba59df398c",
+     "enemy_alive": 149,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "498842400",
+     "kills": 22,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1862211",
+     "player_y": "1869030",
+     "projectiles": 0,
+     "root": 4,
+     "shots": 3,
+     "step": 1200,
+     "tick": 1200,
+     "venom": 1,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 353,
+     "choices": 0,
+     "digest": "9ee54211419fe149ac4d87ef6ba2279142507fa579b1a7380bc6378e452dd446",
+     "enemy_alive": 150,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "498223800",
+     "kills": 25,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1783215",
+     "player_y": "2046000",
+     "projectiles": 0,
+     "root": 89,
+     "shots": 4,
+     "step": 1500,
+     "tick": 1500,
+     "venom": 2,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 501,
+     "choices": 0,
+     "digest": "fcb8ebd93df8bc98b4ad3b8cd5083ed23408c8cf1063c0eb68de5928e7a7668d",
+     "enemy_alive": 150,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "497570600",
+     "kills": 32,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1640151",
+     "player_y": "1972710",
+     "projectiles": 0,
+     "root": 67,
+     "shots": 3,
+     "step": 1800,
+     "tick": 1800,
+     "venom": 3,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 650,
+     "choices": 0,
+     "digest": "ef80b333f9396244cc32e35f4da0f42949e73ed5d4e0893f1f0a43bf079b2b16",
+     "enemy_alive": 150,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "496902400",
+     "kills": 38,
+     "level": 1,
+     "paused": 0,
+     "player_x": "1784295",
+     "player_y": "1784328",
+     "projectiles": 0,
+     "root": 0,
+     "shots": 4,
+     "step": 2100,
+     "tick": 2100,
+     "venom": 3,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 797,
+     "choices": 0,
+     "digest": "dec3d3c39f6f6117bda39fe9caff39c3ca2a02f3f55616b6c142fade5c1623d7",
+     "enemy_alive": 150,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "496308500",
+     "kills": 47,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2069688",
+     "player_y": "1839156",
+     "projectiles": 0,
+     "root": 77,
+     "shots": 2,
+     "step": 2400,
+     "tick": 2400,
+     "venom": 3,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 840,
+     "choices": 0,
+     "digest": "7cc1728ce589e68282120ee46fcdea66a08266a2461c5614b37726d85d5010ee",
+     "enemy_alive": 149,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "496040200",
+     "kills": 59,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 89,
+     "shots": 0,
+     "step": 2700,
+     "tick": 2700,
+     "venom": 3,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    },
+    {
+     "attacks": 922,
+     "choices": 0,
+     "digest": "7572a3fb468b26668355bae2f0ed20c08505ca49997cabef1e52b0126030ea93",
+     "enemy_alive": 149,
+     "gems": 0,
+     "hero_dead": 0,
+     "hero_hp": "495350400",
+     "kills": 71,
+     "level": 1,
+     "paused": 0,
+     "player_x": "2574000",
+     "player_y": "2286000",
+     "projectiles": 0,
+     "root": 89,
+     "shots": 1,
+     "step": 3000,
+     "tick": 3000,
+     "venom": 3,
+     "won": 0,
+     "xp": 0,
+     "zones": 2
+    }
+   ],
+   "choice_mode": 0,
+   "commands": [
+    [
+     "0",
+     "0",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "420",
+     "1",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "450",
+     "2",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "480",
+     "3",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "510",
+     "4",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "540",
+     "5",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "570",
+     "6",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "600",
+     "7",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "630",
+     "8",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "660",
+     "9",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "690",
+     "10",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "720",
+     "11",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "750",
+     "12",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "780",
+     "13",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "810",
+     "14",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "840",
+     "15",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "870",
+     "16",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "900",
+     "17",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "930",
+     "18",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "960",
+     "19",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "990",
+     "20",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1020",
+     "21",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1050",
+     "22",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1080",
+     "23",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1110",
+     "24",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1140",
+     "25",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1170",
+     "26",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1200",
+     "27",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1230",
+     "28",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1260",
+     "29",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1290",
+     "30",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1320",
+     "31",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1350",
+     "32",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1380",
+     "33",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1410",
+     "34",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1440",
+     "35",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1470",
+     "36",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1500",
+     "37",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1530",
+     "38",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1560",
+     "39",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1590",
+     "40",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1620",
+     "41",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1650",
+     "42",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1680",
+     "43",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1710",
+     "44",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1740",
+     "45",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "1770",
+     "46",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "1800",
+     "47",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "1830",
+     "48",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "1860",
+     "49",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "1890",
+     "50",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1920",
+     "51",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "1950",
+     "52",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "1980",
+     "53",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2010",
+     "54",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2040",
+     "55",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2070",
+     "56",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2100",
+     "57",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2130",
+     "58",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "2160",
+     "59",
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "2190",
+     "60",
+     "0",
+     "-1",
+     "1"
+    ],
+    [
+     "2220",
+     "61",
+     "0",
+     "-1",
+     "0"
+    ],
+    [
+     "2250",
+     "62",
+     "0",
+     "-1",
+     "-1"
+    ],
+    [
+     "2280",
+     "63",
+     "0",
+     "0",
+     "-1"
+    ],
+    [
+     "2310",
+     "64",
+     "0",
+     "1",
+     "-1"
+    ],
+    [
+     "2340",
+     "65",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "2370",
+     "66",
+     "0",
+     "1",
+     "1"
+    ]
+   ],
+   "config": [
+    "4800",
+    "24000",
+    "0",
+    "0",
+    "3648000",
+    "3408000",
+    "408000",
+    "3048000"
+   ],
+   "enemies": {
+    "kinds": [
+     "3264",
+     "24000",
+     "12800",
+     "6500",
+     "36",
+     "8",
+     "6144",
+     "21600",
+     "7800",
+     "7600",
+     "42",
+     "2",
+     "4608",
+     "18000",
+     "5800",
+     "5500",
+     "45",
+     "2",
+     "5856",
+     "16800",
+     "6500",
+     "5000",
+     "96",
+     "2",
+     "5280",
+     "18720",
+     "7200",
+     "9500",
+     "150",
+     "2",
+     "3936",
+     "16800",
+     "7000",
+     "6400",
+     "204",
+     "1",
+     "3984",
+     "19680",
+     "8200",
+     "3800",
+     "0",
+     "1",
+     "4944",
+     "24000",
+     "10500",
+     "9000",
+     "120",
+     "1",
+     "2592",
+     "30720",
+     "25000",
+     "11800",
+     "180",
+     "1",
+     "3072",
+     "25200",
+     "11000",
+     "0",
+     "360",
+     "1"
+    ],
+    "seed": "20261113",
+    "values": [
+     "500000000",
+     "6000",
+     "0",
+     "1000",
+     "150",
+     "384000"
+    ]
+   },
+   "log_digest": "a50beea5a536fd13fccebc3f841e9c3365060ee73c7bce31b33ff7cbc9a834d1",
+   "name": "arena_stress_150_attacks",
+   "run_ticks": 0,
+   "skill": [
+    "50000",
+    "384000",
+    "10000",
+    "12000",
+    "10000",
+    "40",
+    "1",
+    "64"
+   ],
+   "ticks": 3000,
+   "xp": null
   }
  ],
  "upgrades": [

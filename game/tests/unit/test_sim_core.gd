@@ -79,6 +79,13 @@ static func _config(row: Dictionary) -> SimConfig:
 		var spec_attacks: Dictionary = attacks
 		config.with_attacks(_ints(spec_attacks["records"]), _ints(spec_attacks["venom"]), _ints(spec_attacks["root"]))
 		config.with_windows(_ints(spec_attacks["windows"]), _ints(spec_attacks["caps"]))
+	var arena: Variant = row.get("arena")
+	if typeof(arena) == TYPE_DICTIONARY:
+		var spec_arena: Dictionary = arena
+		var data: Dictionary = P0Tuning.arena_data(str(spec_arena["path"]))
+		config.with_arena(ArenaTopology.from_rows(
+			PackedStringArray(data["rows"]), int(data["cell_px"]) * Fx.FX_ONE, str(spec_arena["body_su"]).to_int()
+		))
 	return config.with_choice_mode(int(row.get("choice_mode", 0))).with_run_ticks(int(row.get("run_ticks", 0)))
 
 
@@ -92,6 +99,11 @@ func test_traces_match_reference() -> void:
 		var name: String = str(row["name"])
 		var config: SimConfig = _config(row)
 		assert_true(config.is_valid(), name + " config")
+		if row.get("arena") is Dictionary:
+			assert_eq(
+				ContentRegistry.sha256_hex(config.arena.to_ints().to_byte_array()), str(row["arena"]["digest"]),
+				name + " arena"
+			)
 		var commands: CommandLog = CommandLog.new()
 		for record: Variant in row["commands"]:
 			assert_eq(commands.append(_command(record), 0), CommandLog.OK, name)

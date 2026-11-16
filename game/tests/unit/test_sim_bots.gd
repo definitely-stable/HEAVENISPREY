@@ -31,13 +31,21 @@ static func config_of(row: Dictionary) -> SimConfig:
 	var spec: Dictionary = row["enemies"]
 	var xp: Dictionary = row["xp"]
 	var attacks: Dictionary = row["attacks"]
-	return SimConfig.create(_ints(row["config"])).with_enemies(
+	var config: SimConfig = SimConfig.create(_ints(row["config"])).with_enemies(
 		_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"])
 	).with_skill(_ints(row["skill"])).with_xp(
 		_ints(xp["values"]), _ints(xp["kind_xp"]), _ints(xp["costs"])
 	).with_choice_mode(int(row["choice_mode"])).with_run_ticks(int(row["run_ticks"])).with_attacks(
 		_ints(attacks["records"]), _ints(attacks["venom"]), _ints(attacks["root"])
 	).with_windows(_ints(attacks["windows"]), _ints(attacks["caps"]))
+	# ADR-015 A1: the arena file and wall body of the run; its digest is checked by the replay.
+	var arena: Variant = row.get("arena")
+	if arena is Dictionary:
+		var data: Dictionary = P0Tuning.arena_data(str(arena["path"]))
+		config.with_arena(ArenaTopology.from_rows(
+			PackedStringArray(data["rows"]), int(data["cell_px"]) * Fx.FX_ONE, str(arena["body_su"]).to_int()
+		))
+	return config
 
 
 static func log_of(row: Dictionary) -> CommandLog:
@@ -59,6 +67,9 @@ func test_bot_logs_replay_bit_exact() -> void:
 		var name: String = str(row["id"])
 		var config: SimConfig = config_of(row)
 		assert_true(config.is_valid(), name)
+		assert_eq(
+			ContentRegistry.sha256_hex(config.arena.to_ints().to_byte_array()), str(row["arena"]["digest"]), name + " arena"
+		)
 		var commands: CommandLog = log_of(row)
 		assert_eq(commands.size(), int(row["command_count"]), name)
 		assert_eq(commands.digest(), str(row["log_digest"]), name + " log digest")
@@ -69,7 +80,7 @@ func test_bot_logs_replay_bit_exact() -> void:
 			SimKernel.run(config, world, commands, int(mark["step"]) - steps)
 			steps = int(mark["step"])
 			assert_eq(world.digest(), str(mark["digest"]), name + " @" + str(steps))
-		assert_eq(world.tick, int(row["death_tick"]), name + " death tick")
+		assert_eq(world.tick if world.hero_dead == 1 else -1, int(row["death_tick"]), name + " death tick")
 		assert_true(world.is_over(), name + " hero died")
 		assert_eq(world.kills, int(row["kills"]), name + " kills")
 

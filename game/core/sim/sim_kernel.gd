@@ -13,7 +13,8 @@ extends RefCounted
 ##   1. apply every logged command whose tick <= world.tick, in log order (last MOVE wins; a
 ##      CHOOSE outside a pause is skipped);
 ##   2. move the hero by the held direction (Q14 unit vector x speed with upgrades and
-##      status.root_slow, symmetric rounding) and clamp inside the arena rectangle;
+##      status.root_slow, symmetric rounding) through the arena walls (ADR-015 A1) and clamp
+##      inside the arena rectangle;
 ##   3. spawn at most one enemy into the lowest free slot (EnemySystem.spawn);
 ##   4. move enemies toward the hero with separation, capped at their speed
 ##      (SeparationSystem.chase_and_separate);
@@ -61,6 +62,12 @@ static func step(config: SimConfig, world: WorldState, commands: CommandLog) -> 
 	var speed: int = StatusSystem.move_speed(config, world)
 	var next_x: int = world.player_x + Fx.mul_q14(speed, direction[0])
 	var next_y: int = world.player_y + Fx.mul_q14(speed, direction[1])
+	if config.arena != null:
+		var moved: PackedInt64Array = config.arena.move(
+			world.player_x, world.player_y, next_x - world.player_x, next_y - world.player_y
+		)
+		next_x = moved[0]
+		next_y = moved[1]
 	world.player_x = clampi(next_x, config.arena_min_x + r, config.arena_max_x - r)
 	world.player_y = clampi(next_y, config.arena_min_y + r, config.arena_max_y - r)
 	if config.has_enemies():

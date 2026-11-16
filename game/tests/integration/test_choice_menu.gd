@@ -100,6 +100,7 @@ func test_menu_picks_only_once_armed_and_logs_choose() -> void:
 func test_menu_dims_the_run_and_not_the_hud() -> void:
 	var view: RunView = _view()
 	view.start_run(SEED)
+	_to_centre(view)
 	var grade: FrameGrade = view.get("_grade")
 	assert_eq(grade.dim, 0.0, "a running fight is not dimmed")
 	_to_pause(view, Vector2i.ZERO)
@@ -258,7 +259,8 @@ func test_menu_open_five_seconds_at_60_and_15_fps_gives_the_same_run() -> void:
 		assert_eq(driver.world.digest(), frozen, str(fps) + " menu changes nothing")
 		while driver.world.is_paused():
 			assert_true(driver.choose(0))
-		while driver.world.tick < 1800 and not driver.world.is_over():
+		var until: int = driver.world.tick + 600
+		while driver.world.tick < until and not driver.world.is_over():
 			if driver.world.is_paused():
 				driver.choose(0)
 			else:
@@ -400,3 +402,12 @@ static func _replay(config: SimConfig, commands: CommandLog, tick: int) -> World
 		SimKernel.step(config, world, commands)
 		guard += 1
 	return world
+
+
+## The hero stands at the arena centre, written into the world before the first tick (a
+## presentation check): in the open court the horde reaches a standing hero quickly.
+static func _to_centre(view: RunView) -> void:
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
+	for state: WorldState in [view.driver.world, view.driver.previous]:
+		state.player_x = int(centre.x) * Fx.FX_ONE
+		state.player_y = int(centre.y) * Fx.FX_ONE

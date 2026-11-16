@@ -1,8 +1,13 @@
 extends GutTest
-## ADR-014 section 4, A3 and A3 polish: the lit ground layer of the run scene. Presentation only.
+## ADR-014 section 4, A3 and A3 polish, ADR-015 A1: the lit ground layer of the run scene on
+## arena 07. Presentation only.
 
 const CELL: int = 48
-const ARENA: Vector2 = Vector2(32 * 48, 20 * 48)
+## A small arena: a 5 x 4 court with a void notch and a bridge cell.
+const SMALL: Dictionary = {
+	"cells": [6, 5], "centre": [2, 2],
+	"rows": ["      ", " ..#. ", " .... ", " .wB  ", "      "],
+}
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
 const WORN: String = "asset.tile.sect_courtyard_floor_worn"
 const SEAL: String = "asset.tile.sect_seal"
@@ -13,47 +18,57 @@ func _ground(
 	sprites: SpriteSet, floor_asset: String, points: Array[Dictionary] = [], seal: String = "", cliff: String = "",
 	worn: String = "", backdrop: Array[Dictionary] = []
 ) -> GroundLayer:
-	var ground: GroundLayer = GroundLayer.new(sprites, floor_asset, ARENA, CELL, points, seal, cliff, worn, backdrop)
+	var ground: GroundLayer = GroundLayer.new(sprites, floor_asset, _data(), CELL, points, seal, cliff, worn, backdrop)
 	add_child_autofree(ground)
 	return ground
 
 
-## A3 polish: the terrace is the field plus its aprons with the far and near corners cut.
-func test_outline_holds_the_field_and_cuts_two_corners() -> void:
-	var outline: PackedVector2Array = GroundLayer.outline(ARENA, CELL)
-	assert_eq(outline.size(), 6)
-	var far: float = GroundLayer.FAR_APRON_CELLS * CELL
-	var near: float = GroundLayer.NEAR_APRON_CELLS * CELL
-	for corner: Vector2 in [Vector2.ZERO, Vector2(ARENA.x, 0.0), ARENA, Vector2(0.0, ARENA.y)]:
-		assert_true(Geometry2D.is_point_in_polygon(corner, outline), "field corner %s" % corner)
-	assert_true(Geometry2D.is_point_in_polygon(Vector2(ARENA.x + near - 4.0, -far + 4.0), outline), "right tip stays")
-	assert_true(Geometry2D.is_point_in_polygon(Vector2(-far + 4.0, ARENA.y + near - 4.0), outline), "left tip stays")
-	assert_false(Geometry2D.is_point_in_polygon(Vector2(-far + 4.0, -far + 4.0), outline), "far corner is cut")
-	assert_false(Geometry2D.is_point_in_polygon(ARENA + Vector2.ONE * (near - 4.0), outline), "near corner is cut")
-	# The balustrades (ArenaDressing.RAIL_OUTSET) stay on the terrace at every corner.
-	var rail: float = ArenaDressing.RAIL_OUTSET * CELL
-	for corner: Vector2 in [Vector2(-rail, -rail), ARENA + Vector2(rail, rail)]:
-		assert_true(Geometry2D.is_point_in_polygon(corner, outline), "rail corner %s" % corner)
+func _data() -> Dictionary:
+	return P0Tuning.arena_data()
 
 
-## The cliff shows under the three near edges, left to right on screen, joined end to end.
-func test_near_edges_run_left_to_right() -> void:
-	var edges: Array[PackedVector2Array] = GroundLayer.near_edges(ARENA, CELL)
-	assert_eq(edges.size(), 3)
-	var last: Vector2 = edges[0][0]
-	for edge: PackedVector2Array in edges:
-		assert_eq(edge[0], last, "faces share their corners")
-		assert_gt(IsoProjection.to_screen(edge[1]).x, IsoProjection.to_screen(edge[0]).x)
-		last = edge[1]
-	var front: PackedVector2Array = edges[1]
-	assert_almost_eq(IsoProjection.to_screen(front[0]).y, IsoProjection.to_screen(front[1]).y, 0.01,
-		"the cut corner faces the viewer")
+func _arena() -> Vector2:
+	return Vector2(GroundLayer.cells_of(_data()) * CELL)
 
 
-func test_paving_is_one_polygon_over_the_outline() -> void:
+func _centre() -> Vector2:
+	return GroundLayer.centre_of(_data(), CELL)
+
+
+## ADR-015 A1: the paving covers every cell that is not void, one rectangle per row run.
+func test_footprint_covers_every_paved_cell_once() -> void:
+	assert_eq(GroundLayer.footprint(SMALL, CELL), [
+		Rect2(Vector2(1, 1) * CELL, Vector2(4, 1) * CELL),
+		Rect2(Vector2(1, 2) * CELL, Vector2(4, 1) * CELL),
+		Rect2(Vector2(1, 3) * CELL, Vector2(3, 1) * CELL),
+	])
+	var area: float = 0.0
+	for rect: Rect2 in GroundLayer.footprint(_data(), CELL):
+		area += rect.get_area()
+	var paved: int = 0
+	for row: String in _data()["rows"]:
+		paved += row.length() - row.count(GroundLayer.VOID_CHAR)
+	assert_eq(int(area), paved * CELL * CELL)
+
+
+## The cliff shows under every near edge over the void: the +x and +y sides of paved cells.
+func test_near_faces_hang_under_the_void_edges() -> void:
+	var faces: Array[PackedVector2Array] = GroundLayer.near_faces(SMALL, CELL)
+	assert_eq(faces.size(), 3 + 4, "a +x face on each paved row, +y faces under the notch and the last row")
+	assert_has(faces, PackedVector2Array([Vector2(5, 1) * CELL, Vector2(5, 2) * CELL]))
+	assert_has(faces, PackedVector2Array([Vector2(4, 3) * CELL, Vector2(5, 3) * CELL]), "the notch under (4, 2)")
+	assert_has(faces, PackedVector2Array([Vector2(3, 4) * CELL, Vector2(4, 4) * CELL]), "under the bridge")
+	for face: PackedVector2Array in GroundLayer.near_faces(_data(), CELL):
+		assert_almost_eq(face[0].distance_to(face[1]), float(CELL), 0.01)
+
+
+func test_paving_is_one_polygon_over_the_footprint() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
-	assert_eq(ground.paving.polygon, GroundLayer.outline(ARENA, CELL))
+	var rects: Array[Rect2] = GroundLayer.footprint(_data(), CELL)
+	assert_eq(ground.paving.polygons.size(), rects.size())
+	assert_eq(ground.paving.polygon.size(), rects.size() * 4)
+	assert_eq(ground.paving.polygon[0], rects[0].position)
 	assert_true(ground.paving.texture is CanvasTexture, "the paving carries the normal map")
 	var texels_per_px: float = float(ground.paving.texture.get_width()) / sprites.floor_repeat_px(FLOOR, CELL)
 	for index: int in ground.paving.polygon.size():
@@ -62,7 +77,8 @@ func test_paving_is_one_polygon_over_the_outline() -> void:
 	assert_not_null(wear, "two floor textures are blended by the floor shader")
 	assert_eq(wear.shader, GroundLayer.FLOOR_SHADER)
 	assert_eq(wear.get_shader_parameter("worn_repeat_px"), sprites.floor_repeat_px(WORN, CELL))
-	assert_eq(wear.get_shader_parameter("mask_origin"), -Vector2.ONE * GroundLayer.FAR_APRON_CELLS * CELL)
+	assert_eq(wear.get_shader_parameter("mask_origin"), Vector2.ZERO)
+	assert_eq(wear.get_shader_parameter("mask_size"), _arena())
 	var clean: float = sprites.floor_repeat_px(FLOOR, CELL)
 	var periods: Array[float] = [
 		clean, clean / float(wear.get_shader_parameter("alt_scale")), sprites.floor_repeat_px(WORN, CELL),
@@ -83,14 +99,13 @@ func test_without_a_floor_texture_one_flat_polygon() -> void:
 ## A3 polish: the wear mask is the same on every run, clean at the seal, more worn at the walls.
 func test_wear_mask_is_fixed_clean_at_the_seal_and_worn_at_the_walls() -> void:
 	var clear: float = 336.0
-	var mask: Image = GroundLayer.wear_mask(ARENA, CELL, clear)
-	var cells: Vector2 = Vector2(32, 20) + Vector2.ONE * (GroundLayer.FAR_APRON_CELLS + GroundLayer.NEAR_APRON_CELLS)
-	assert_eq(mask.get_size(), Vector2i((cells * GroundLayer.MASK_TEXELS_PER_CELL).ceil()))
-	assert_eq(mask.get_data(), GroundLayer.wear_mask(ARENA, CELL, clear).get_data(), "fixed seed")
+	var mask: Image = GroundLayer.wear_mask(_data(), CELL, clear)
+	assert_eq(mask.get_size(), GroundLayer.cells_of(_data()) * GroundLayer.MASK_TEXELS_PER_CELL)
+	assert_eq(mask.get_data(), GroundLayer.wear_mask(_data(), CELL, clear).get_data(), "fixed seed")
 	var texel: float = float(CELL) / GroundLayer.MASK_TEXELS_PER_CELL
-	var origin: Vector2 = -Vector2.ONE * GroundLayer.FAR_APRON_CELLS * CELL
-	var centre: Vector2i = Vector2i((ARENA * 0.5 - origin) / texel)
-	assert_eq(mask.get_pixelv(centre).r, 0.0, "the seal lies on clean stone")
+	assert_eq(mask.get_pixelv(Vector2i(_centre() / texel)).r, 0.0, "the seal lies on clean stone")
+	var walls: PackedInt32Array = GroundLayer.wall_distance(_data())
+	var cells: Vector2i = GroundLayer.cells_of(_data())
 	var inner: float = 0.0
 	var inner_count: int = 0
 	var edge: float = 0.0
@@ -100,25 +115,39 @@ func test_wear_mask_is_fixed_clean_at_the_seal_and_worn_at_the_walls() -> void:
 	var field: int = 0
 	for y: int in mask.get_height():
 		for x: int in mask.get_width():
-			var at: Vector2 = origin + (Vector2(x, y) + Vector2(0.5, 0.5)) * texel
-			if at.x < 0.0 or at.y < 0.0 or at.x > ARENA.x or at.y > ARENA.y:
+			var cell: int = (y / GroundLayer.MASK_TEXELS_PER_CELL) * cells.x + x / GroundLayer.MASK_TEXELS_PER_CELL
+			if walls[cell] == 0:
+				continue
+			var at: Vector2 = (Vector2(x, y) + Vector2(0.5, 0.5)) * texel
+			if at.distance_to(_centre()) < clear + GroundLayer.WEAR_EDGE_CELLS * CELL:
 				continue
 			var wear: float = mask.get_pixel(x, y).r
 			field += 1
 			worn += int(wear > 0.5)
 			second += int(mask.get_pixel(x, y).b > 0.5)
-			var inside: float = minf(minf(at.x, at.y), minf(ARENA.x - at.x, ARENA.y - at.y))
-			if inside < CELL:
+			if walls[cell] == 1:
 				edge += wear
 				edge_count += 1
-			elif inside > 5.0 * CELL:
+			elif walls[cell] > 4:
 				inner += wear
 				inner_count += 1
 	assert_gt(edge_count, 0)
 	assert_gt(inner_count, 0)
-	assert_between(float(worn) / field, 0.1, 0.5, "worn patches are accents, not the whole field")
+	assert_between(float(worn) / field, 0.1, 0.6, "worn patches are accents, not the whole field")
 	assert_between(float(second) / field, 0.3, 0.7, "both layers of the clean paving show")
 	assert_gt(edge / edge_count, inner / inner_count, "more wear along the walls")
+
+
+func test_wall_distance_counts_cells_from_walls_and_void() -> void:
+	var dist: PackedInt32Array = GroundLayer.wall_distance(SMALL)
+	assert_eq(dist[1 * 6 + 1], 1, "a corner of the court")
+	assert_eq(dist[1 * 6 + 3], 0, "the solid cell")
+	assert_eq(dist[2 * 6 + 2], 1, "next to the low wall")
+	var data: Dictionary = _data()
+	var centre: Array = data["centre"]
+	var seal: int = int(centre[1]) * GroundLayer.cells_of(data).x + int(centre[0])
+	assert_gt(GroundLayer.wall_distance(data)[seal], 5, "the seal lies far from the walls")
+	assert_eq(dist[3 * 6 + 3], 1, "the bridge is walkable")
 
 
 func test_lights_reach_the_ground_layer_only() -> void:
@@ -136,24 +165,25 @@ func test_lights_reach_the_ground_layer_only() -> void:
 
 
 ## ADR-014 slice A3: the seal lies at the centre of the arena at its world size with a glow over
-## it and gold lines to the four walls; the mist sits on its own canvas layer behind the ground.
+## it and gold lines towards the walls; the mist sits on its own canvas layer behind the ground.
 func test_seal_inlay_and_mist() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
 	var seals: Array = ground.find_children("*", "Sprite2D", true, false)
 	assert_eq(seals.size(), 2, "the seal and its glow")
 	for seal: Sprite2D in seals:
-		assert_eq(seal.position, ARENA * 0.5)
+		assert_eq(seal.position, _centre())
 		assert_almost_eq(seal.scale.x * seal.texture.get_width(), sprites.decal_world_px(SEAL), 0.01)
 	var glow: Sprite2D = seals[1]
 	assert_eq((glow.material as CanvasItemMaterial).blend_mode, CanvasItemMaterial.BLEND_MODE_ADD)
-	assert_eq(ground.inlay.size(), 4 * 3, "two lines and a knot to each wall")
-	var field: Rect2 = Rect2(Vector2.ZERO, ARENA)
+	assert_eq(ground.inlay.size(), 4 * 3, "two lines and a knot to each side")
 	var radius: float = sprites.decal_world_px(SEAL) * 0.5
+	var rows: Array = _data()["rows"]
 	for line: PackedVector2Array in ground.inlay:
 		for point: Vector2 in line:
-			assert_true(field.has_point(point), "the inlay stays inside the walls: %s" % point)
-			assert_gt(point.distance_to(ARENA * 0.5), radius * 0.9, "and outside the seal")
+			var cell: Vector2i = Vector2i((point / CELL).floor())
+			assert_true(GroundLayer.FLOOR_CHARS.contains((rows[cell.y] as String)[cell.x]), "on open floor: %s" % point)
+			assert_gt(point.distance_to(_centre()), radius * 0.9, "and outside the seal")
 	var mist: Array = ground.find_children("*", "CanvasLayer", true, false)
 	assert_eq(mist.size(), 1)
 	var back: CanvasLayer = mist[0]
@@ -167,16 +197,21 @@ func test_seal_inlay_and_mist() -> void:
 	assert_true((back.get_child(2) as ColorRect).material.get_shader_parameter("veil"))
 
 
-## A3 polish: waterfalls hang on the near cliff faces, under the edge of the terrace.
-func test_waterfalls_start_under_the_near_edges() -> void:
+## A3 polish: waterfalls hang on the near cliff faces, under the edge of the paving.
+func test_waterfalls_start_under_the_near_faces() -> void:
 	var ground: GroundLayer = _ground(SpriteSet.load_default(), FLOOR, [], SEAL, CLIFF, WORN)
-	var edges: Array[PackedVector2Array] = GroundLayer.near_edges(ARENA, CELL)
 	assert_eq(ground.waterfalls.size(), GroundLayer.WATERFALLS.size())
+	var tops: Array[Vector2] = []
+	for face: PackedVector2Array in GroundLayer.near_faces(_data(), CELL):
+		tops.append(IsoProjection.to_screen((face[0] + face[1]) * 0.5))
+	var last: float = -INF
 	for index: int in ground.waterfalls.size():
 		var rect: ColorRect = ground.waterfalls[index]
 		var fall: Array = GroundLayer.WATERFALLS[index]
-		var edge: PackedVector2Array = edges[fall[0]]
-		var top: Vector2 = IsoProjection.to_screen(edge[0]).lerp(IsoProjection.to_screen(edge[1]), fall[1])
+		var top: Vector2 = GroundLayer.waterfall_top(_data(), CELL, fall[0])
+		assert_has(tops, top, "the top of a near face")
+		assert_gt(top.x, last, "left to right")
+		last = top.x
 		assert_almost_eq(rect.position.x + rect.size.x * 0.5, top.x, 0.01)
 		assert_almost_eq(rect.position.y, top.y + GroundLayer.WATERFALL_TOP_PX, 0.01)
 		assert_eq((rect.material as ShaderMaterial).shader, GroundLayer.WATERFALL_SHADER)
@@ -188,7 +223,7 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN, ArenaDressing.backdrop(sprites))
 	var size: Vector2 = Vector2(1280, 720)
-	var centre: Vector2 = IsoProjection.to_screen(ARENA * 0.5)
+	var centre: Vector2 = IsoProjection.to_screen(_centre())
 	assert_eq(ground.backdrop_origin(centre, 1.3, size), size * 0.5, "centred view: the scenery is centred")
 	var moved: Vector2 = ground.backdrop_origin(centre + Vector2(200, -100), 1.3, size)
 	assert_almost_eq(moved, size * 0.5 - Vector2(200, -100) * GroundLayer.BACKDROP_PARALLAX * 1.3, Vector2(0.01, 0.01))

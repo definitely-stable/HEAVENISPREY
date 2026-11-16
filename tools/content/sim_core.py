@@ -3,7 +3,8 @@ movement (P0-01b); enemy spawn, chase, contact damage and hero death (P0-01E); h
 auto-attack with projectiles, enemy deaths and kills (P0-01F); enemy separation (ADR-009 2);
 XP gems, pickup and level progression (ADR-010); level-up choice: command log schema 2
 (MOVE / CHOOSE), the pause at the tick boundary, the offers hand and the seven P0 upgrades
-(ADR-010 section 6).
+(ADR-010 section 6); the arena topology of ADR-015 A1: walls, a flow field for the chase, spawn
+points, shots that die in solids (Arena).
 
 Oracle for game/core/sim/*.gd. Integers only (hip-fx-v1 via tools/content/fx.py, hip-rng-v1
 via tools/content/hip_rng.py). Golden traces:
@@ -18,12 +19,14 @@ import json
 import math
 import struct
 import sys
+from collections import deque
 from itertools import chain
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 11
+VECTORS_SCHEMA_VERSION = 12
+ARENA_PATH = ROOT / "game" / "content" / "arena" / "jade_grove.json"
 
 
 def _load(name: str, file: str):
@@ -235,12 +238,14 @@ class Config:
     windows (ADR-011 section 5): empty (the kind records' weights) or one record of
     WINDOW_HEAD + len(kinds) values per roster window; caps: empty (no limit) or the
     threat_caps (CAPS_STRIDE).
+    arena (ADR-015 A1): None (the open rectangle) or an Arena whose grid is the rectangle.
     """
 
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
                  skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0, attacks=(),
                  venom=(0,) * VENOM_STRIDE, root=(0,) * ROOT_STRIDE, windows=(),
-                 caps=()):
+                 caps=(), arena=None):
+        self.arena = arena
         self.choice_mode = choice_mode
         self.root = list(root)
         self.root_duration, self.root_mult = (list(root) + [0] * ROOT_STRIDE)[:ROOT_STRIDE]
@@ -281,7 +286,7 @@ class Config:
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
             + [self.choice_mode, self.run_ticks, len(self.raw_attacks)] + self.raw_attacks \
             + self.venom + self.root + [len(self.raw_windows)] + self.raw_windows \
-            + [len(self.caps)] + self.caps
+            + [len(self.caps)] + self.caps + (self.arena.ints() if self.arena else [])
 
     def attack(self, kind: int) -> tuple:
         """The attack record of `kind`; all zeros (contact) without an attack table."""
@@ -366,6 +371,8 @@ class Config:
                               and all(c > 0 for c in self.caps)):
             return False
         if len(self.venom) != VENOM_STRIDE or len(self.root) != ROOT_STRIDE:
+            return False
+        if self.arena is not None and not self.arena.fits(self):
             return False
         return self.run_ticks >= 0
 
@@ -499,6 +506,171 @@ class Config:
                 and all(0 <= v <= MAX_KIND_XP for v in self.kind_xp)
                 and self.pickup_radius >= max(0, self.radius - min_radius)
                 and 0 < self.max_gems <= MAX_GEMS_LIMIT)
+
+
+# ADR-015 A1: the arena topology. Cell codes: walkable floor, low wall (blocks bodies, not
+# shots), solid (blocks bodies and shots; the void counts as solid). Cells outside the grid
+# are solid.
+A_WALK, A_LOW, A_SOLID = 0, 1, 2
+ARENA_WALK = ".HB^SE"
+ARENA_LOW = "w"
+ARENA_SPAWN = "S"
+ARENA_STEPS = ((1, 0), (-1, 0), (0, 1), (0, -1))
+
+
+class Arena:
+    """The walkable grid of a stage (ADR-015): `w` x `h` cells of `cell` su from (0, 0); bodies
+    collide with walls as squares of half-size `body` (smaller than any combat radius, so a body
+    passes a one-cell gap); `spawns` are the enemy spawn points (S) in row-major order.
+
+    Flow fields (breadth-first distances in cells from the hero's cell over walkable cells,
+    four neighbours, -1 where unreachable) are a pure function of the hero's cell and are
+    cached per cell; they are not part of the world state."""
+
+    def __init__(self, w: int, h: int, cell: int, body: int, codes, spawns):
+        self.w, self.h, self.cell, self.body = w, h, cell, body
+        self.codes = list(codes)
+        self.spawns = [tuple(s) for s in spawns]
+        self._fields: dict[int, list[int]] = {}
+
+    @classmethod
+    def from_rows(cls, rows, cell: int, body: int) -> "Arena":
+        codes = [A_WALK if ch in ARENA_WALK else A_LOW if ch in ARENA_LOW else A_SOLID
+                 for row in rows for ch in row]
+        spawns = [(x, y) for y, row in enumerate(rows) for x, ch in enumerate(row) if ch in ARENA_SPAWN]
+        return cls(len(rows[0]), len(rows), cell, body, codes, spawns)
+
+    def ints(self) -> list[int]:
+        return [self.w, self.h, self.cell, self.body] + self.codes + [len(self.spawns)] \
+            + [v for spawn in self.spawns for v in spawn]
+
+    def fits(self, config) -> bool:
+        """The grid is the arena rectangle, every code is known, the border is not walkable,
+        the body passes a cell, the start and every spawn point stand on walkable cells."""
+        w, h, c = self.w, self.h, self.cell
+        if not (w > 0 and h > 0 and c > 0 and 0 < self.body <= c // 2 and len(self.codes) == w * h):
+            return False
+        if (config.min_x, config.min_y, config.max_x, config.max_y) != (0, 0, w * c, h * c):
+            return False
+        if any(code not in (A_WALK, A_LOW, A_SOLID) for code in self.codes) or not self.spawns:
+            return False
+        border = ([(x, 0) for x in range(w)] + [(x, h - 1) for x in range(w)]
+                  + [(0, y) for y in range(h)] + [(w - 1, y) for y in range(h)])
+        if any(self.code(x, y) == A_WALK for x, y in border):
+            return False
+        if self.code_at(config.start_x, config.start_y) != A_WALK:
+            return False
+        return all(0 <= x < w and 0 <= y < h and self.codes[y * w + x] == A_WALK for x, y in self.spawns)
+
+    def code(self, cx: int, cy: int) -> int:
+        if 0 <= cx < self.w and 0 <= cy < self.h:
+            return self.codes[cy * self.w + cx]
+        return A_SOLID
+
+    def code_at(self, x: int, y: int) -> int:
+        return self.code(x // self.cell, y // self.cell)
+
+    def _column_blocked(self, cx: int, cy0: int, cy1: int) -> bool:
+        return any(self.code(cx, cy) != A_WALK for cy in range(cy0, cy1 + 1))
+
+    def _row_blocked(self, cy: int, cx0: int, cx1: int) -> bool:
+        return any(self.code(cx, cy) != A_WALK for cx in range(cx0, cx1 + 1))
+
+    def move(self, x: int, y: int, mx: int, my: int) -> tuple[int, int]:
+        """A body at (x, y) moved by (mx, my): along x first, then along y from the new x; on
+        each axis it stops flush against the first blocked cell its leading edge would enter
+        (it slides along the wall on the other axis)."""
+        c, b = self.cell, self.body
+        if mx != 0:
+            nx = x + mx
+            cy0, cy1 = (y - b) // c, (y + b - 1) // c
+            if mx > 0:
+                for cx in range((x + b - 1) // c + 1, (nx + b - 1) // c + 1):
+                    if self._column_blocked(cx, cy0, cy1):
+                        nx = cx * c - b
+                        break
+            else:
+                for cx in range((x - b) // c - 1, (nx - b) // c - 1, -1):
+                    if self._column_blocked(cx, cy0, cy1):
+                        nx = (cx + 1) * c + b
+                        break
+            x = nx
+        if my != 0:
+            ny = y + my
+            cx0, cx1 = (x - b) // c, (x + b - 1) // c
+            if my > 0:
+                for cy in range((y + b - 1) // c + 1, (ny + b - 1) // c + 1):
+                    if self._row_blocked(cy, cx0, cx1):
+                        ny = cy * c - b
+                        break
+            else:
+                for cy in range((y - b) // c - 1, (ny - b) // c - 1, -1):
+                    if self._row_blocked(cy, cx0, cx1):
+                        ny = (cy + 1) * c + b
+                        break
+            y = ny
+        return x, y
+
+    def field(self, cx: int, cy: int) -> list[int]:
+        """Breadth-first distances (cells, four neighbours) to cell (cx, cy) over walkable
+        cells; -1 where unreachable or not walkable."""
+        start = cy * self.w + cx
+        cached = self._fields.get(start)
+        if cached is not None:
+            return cached
+        w, h, codes = self.w, self.h, self.codes
+        dist = [-1] * (w * h)
+        dist[start] = 0
+        queue = deque([start])
+        while queue:
+            cell = queue.popleft()
+            d = dist[cell] + 1
+            x, y = cell % w, cell // w
+            for ox, oy in ARENA_STEPS:
+                nx, ny = x + ox, y + oy
+                if 0 <= nx < w and 0 <= ny < h:
+                    n = ny * w + nx
+                    if dist[n] < 0 and codes[n] == A_WALK:
+                        dist[n] = d
+                        queue.append(n)
+        self._fields[start] = dist
+        return dist
+
+    def chase_target(self, ex: int, ey: int, hx: int, hy: int) -> tuple[int, int]:
+        """Where an enemy at (ex, ey) heads for the hero at (hx, hy) (ADR-015 A1): the hero
+        itself when it shares the cell, is unreachable, or when the field descends towards it
+        on each axis it is apart on and on no other (nothing in the way of the straight step);
+        else the centre of the next cell of the field (x neighbour +1 before -1, y the same;
+        the diagonal one when both axes descend)."""
+        c, w, h = self.cell, self.w, self.h
+        ecx, ecy, hcx, hcy = ex // c, ey // c, hx // c, hy // c
+        dist = self.field(hcx, hcy)
+        e = ecy * w + ecx
+        d = dist[e]
+        if d <= 0:
+            return hx, hy
+        sx = sy = 0
+        for s in (1, -1):
+            if 0 <= ecx + s < w and dist[e + s] == d - 1:
+                sx = s
+                break
+        for s in (1, -1):
+            if 0 <= ecy + s < h and dist[e + s * w] == d - 1:
+                sy = s
+                break
+        if sx == fx.sign(hcx - ecx) and sy == fx.sign(hcy - ecy):
+            return hx, hy
+        return (ecx + sx) * c + c // 2, (ecy + sy) * c + c // 2
+
+    def spawn_point(self, index: int) -> tuple[int, int]:
+        x, y = self.spawns[index]
+        return x * self.cell + self.cell // 2, y * self.cell + self.cell // 2
+
+
+def load_arena(path: Path = ARENA_PATH, body: int = 18000) -> tuple[Arena, dict]:
+    """The arena of the game file (tools/content/arena_layout.py) and its JSON."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return Arena.from_rows(data["rows"], data["cell_px"] * fx.FX_ONE, body), data
 
 
 def config_valid(movement: list[int]) -> bool:
@@ -672,7 +844,48 @@ def spawn(config: Config, world: World) -> None:
         world.rng_cursor = rng.cursor
         world.spawn_acc += config.spawn_period - rate
         return
-    r = config.kinds[kind][1]
+    if config.arena is not None:
+        spot = _arena_spot(config, world, rng)
+    else:
+        spot = _edge_spot(config, world, rng, config.kinds[kind][1])
+    world.rng_cursor = rng.cursor
+    record = [world.next_enemy_uid, kind, spot[0], spot[1], config.kinds[kind][2]] \
+        + [0] * (ENEMY_FIELDS - E_CD)
+    slot = _lowest_free(world.enemies, E_UID)
+    if slot < 0:
+        world.enemies.append(record)
+    else:
+        world.enemies[slot] = record
+    world.next_enemy_uid += 1
+    world.enemy_alive += 1
+
+
+def _arena_spot(config: Config, world: World, rng) -> tuple[int, int]:
+    """ADR-015 A1: up to SPAWN_ATTEMPTS spawn points (uniform index) until one is at least
+    spawn_min_distance from the hero, else the farthest (first in order on ties); then a jitter
+    of up to cell/2 - body on each axis keeps the body inside the cell."""
+    arena = config.arena
+    min_d2 = config.spawn_min_distance ** 2
+    spot = None
+    for _ in range(SPAWN_ATTEMPTS):
+        candidate = arena.spawn_point(rng.below(len(arena.spawns)))
+        if _dist2(*candidate, world.player_x, world.player_y) >= min_d2:
+            spot = candidate
+            break
+    if spot is None:
+        best = -1
+        for index in range(len(arena.spawns)):
+            candidate = arena.spawn_point(index)
+            d2 = _dist2(*candidate, world.player_x, world.player_y)
+            if d2 > best:
+                best, spot = d2, candidate
+    jitter = arena.cell // 2 - arena.body
+    return (spot[0] + rng.below(2 * jitter + 1) - jitter, spot[1] + rng.below(2 * jitter + 1) - jitter)
+
+
+def _edge_spot(config: Config, world: World, rng, r: int) -> tuple[int, int]:
+    """The open rectangle: up to SPAWN_ATTEMPTS points on the perimeter inset by the enemy
+    radius until one is far enough from the hero, else the farthest inset corner."""
     x0, y0, x1, y1 = config.min_x + r, config.min_y + r, config.max_x - r, config.max_y - r
     w, h = x1 - x0, y1 - y0
     min_d2 = config.spawn_min_distance ** 2
@@ -696,16 +909,7 @@ def spawn(config: Config, world: World) -> None:
             d2 = _dist2(*corner, world.player_x, world.player_y)
             if d2 > best:
                 best, spot = d2, corner
-    world.rng_cursor = rng.cursor
-    record = [world.next_enemy_uid, kind, spot[0], spot[1], config.kinds[kind][2]] \
-        + [0] * (ENEMY_FIELDS - E_CD)
-    slot = _lowest_free(world.enemies, E_UID)
-    if slot < 0:
-        world.enemies.append(record)
-    else:
-        world.enemies[slot] = record
-    world.next_enemy_uid += 1
-    world.enemy_alive += 1
+    return spot
 
 
 def _spawn_capped(config: Config, world: World, kind: int) -> bool:
@@ -782,25 +986,23 @@ def separate(config: Config, world: World, push_x, push_y) -> None:
     rows = (config.max_y - config.min_y) // cell + 1
     cells = cols * rows
     min_x, min_y, kinds = config.min_x, config.min_y, config.kinds
-    buckets: list[list[tuple[int, int, int, int]]] = [[] for _ in range(cells)]
+    buckets: dict[int, list[tuple[int, int, int, int]]] = {}
     for slot, enemy in enumerate(world.enemies):
         if enemy[E_UID] == 0 or enemy[E_STATE] != ST_APPROACH:
             continue
         cx = min(max((enemy[E_X] - min_x) // cell, 0), cols - 1)
         cy = min(max((enemy[E_Y] - min_y) // cell, 0), rows - 1)
-        buckets[cy * cols + cx].append((slot, enemy[E_X], enemy[E_Y], kinds[enemy[E_KIND]][1]))
+        buckets.setdefault(cy * cols + cx, []).append(
+            (slot, enemy[E_X], enemy[E_Y], kinds[enemy[E_KIND]][1]))
     checks = 0
-    index = world.sep_cursor if world.sep_cursor < cells else 0
-    while index < cells:
-        if checks >= SEP_MAX_CHECKS:
-            world.sep_cursor = index
-            return
+    start = world.sep_cursor if world.sep_cursor < cells else 0
+    # Empty cells add no pairs and no checks: visiting only the occupied ones, in cell order,
+    # gives the same pushes, and a pass that runs out of checks after cell `index` stops where
+    # the full scan would test the budget next (index + 1, or completes at the last cell).
+    for index in sorted(key for key in buckets if key >= start):
         items = buckets[index]
-        if not items:
-            index += 1
-            continue
         cy, cx = divmod(index, cols)
-        near = [buckets[(cy + oy) * cols + cx + ox] for ox, oy in SEP_NEIGHBOURS
+        near = [buckets.get((cy + oy) * cols + cx + ox, ()) for ox, oy in SEP_NEIGHBOURS
                 if 0 <= cx + ox < cols and cy + oy < rows]
         near_count = sum(len(bucket) for bucket in near)
         count = len(items)
@@ -832,7 +1034,9 @@ def separate(config: Config, world: World, push_x, push_y) -> None:
                 push_y[i] += hy
                 push_x[j] -= hx
                 push_y[j] -= hy
-        index += 1
+        if checks >= SEP_MAX_CHECKS:
+            world.sep_cursor = index + 1 if index + 1 < cells else 0
+            return
     world.sep_cursor = 0
 
 
@@ -849,7 +1053,10 @@ def chase_and_separate(config: Config, world: World) -> None:
         if _keeps_distance(config, world, enemy):
             continue
         speed = config.kinds[enemy[E_KIND]][0]
-        qx, qy = normalize_q14(world.player_x - enemy[E_X], world.player_y - enemy[E_Y])
+        gx, gy = world.player_x, world.player_y
+        if config.arena is not None:
+            gx, gy = config.arena.chase_target(enemy[E_X], enemy[E_Y], gx, gy)
+        qx, qy = normalize_q14(gx - enemy[E_X], gy - enemy[E_Y])
         tx[slot] += mul_q14(speed, qx)
         ty[slot] += mul_q14(speed, qy)
     push_x = [0] * len(world.enemies)
@@ -864,8 +1071,17 @@ def chase_and_separate(config: Config, world: World) -> None:
         if mx * mx + my * my > speed * speed:
             qx, qy = normalize_q14(mx, my)
             mx, my = mul_q14(speed, qx), mul_q14(speed, qy)
-        enemy[E_X] = min(max(enemy[E_X] + mx, config.min_x + r), config.max_x - r)
-        enemy[E_Y] = min(max(enemy[E_Y] + my, config.min_y + r), config.max_y - r)
+        _move_enemy(config, enemy, r, mx, my)
+
+
+def _move_enemy(config: Config, enemy: list[int], r: int, mx: int, my: int) -> None:
+    """Moves an enemy by (mx, my): through the arena walls (ADR-015 A1), then clamped into the
+    arena rectangle inset by its radius."""
+    x, y = enemy[E_X] + mx, enemy[E_Y] + my
+    if config.arena is not None:
+        x, y = config.arena.move(enemy[E_X], enemy[E_Y], mx, my)
+    enemy[E_X] = min(max(x, config.min_x + r), config.max_x - r)
+    enemy[E_Y] = min(max(y, config.min_y + r), config.max_y - r)
 
 
 # Derived stats of the build (ADR-010 section 6): config base + rank x step.
@@ -984,11 +1200,17 @@ def fly_and_hit(config: Config, world: World) -> None:
             continue
         x, y = projectile[P_X] + projectile[P_VX], projectile[P_Y] + projectile[P_VY]
         projectile[P_TTL] -= 1
-        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y:
+        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y \
+                or _in_solid(config, x, y):
             _free_projectile(world, slot)
             continue
         projectile[P_X], projectile[P_Y] = x, y
         _resolve_hits(config, world, slot)
+
+
+def _in_solid(config: Config, x: int, y: int) -> bool:
+    """ADR-015 A1: shots fly over low walls and die in solids and the void."""
+    return config.arena is not None and config.arena.code_at(x, y) == A_SOLID
 
 
 def contact(config: Config, world: World) -> None:
@@ -1042,7 +1264,8 @@ def fly_shots(config: Config, world: World) -> None:
         shot[S_Y] += shot[S_VY]
         shot[S_TTL] -= 1
         x, y = shot[S_X], shot[S_Y]
-        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y:
+        if x < config.min_x or x > config.max_x or y < config.min_y or y > config.max_y \
+                or _in_solid(config, x, y):
             world.shots[slot] = [0] * SHOT_FIELDS
             continue
         reach = config.radius + shot[S_RADIUS]
@@ -1106,9 +1329,8 @@ def _aim(world: World, enemy: list[int]) -> tuple[int, int]:
 def _dash(config: Config, world: World, enemy: list[int], step: int) -> None:
     """One active tick of a charge (ADR-011 section 3): `step` su along the fixed direction,
     clamped into the arena; the first touch of the hero in this instance deals the damage."""
-    r = config.kinds[enemy[E_KIND]][1]
-    enemy[E_X] = min(max(enemy[E_X] + mul_q14(step, enemy[E_DX]), config.min_x + r), config.max_x - r)
-    enemy[E_Y] = min(max(enemy[E_Y] + mul_q14(step, enemy[E_DY]), config.min_y + r), config.max_y - r)
+    _move_enemy(config, enemy, config.kinds[enemy[E_KIND]][1], mul_q14(step, enemy[E_DX]),
+                mul_q14(step, enemy[E_DY]))
     if enemy[E_HIT] == 0 and _touching(config, world, enemy):
         world.hero_hp -= config.kinds[enemy[E_KIND]][3]
         enemy[E_HIT] = 1
@@ -1374,10 +1596,11 @@ def step(config: Config, world: World, log: CommandLog) -> None:
         world.command_cursor += 1
     qx, qy = direction_q14(world.move_x, world.move_y)
     r, speed = config.radius, move_speed(config, world)
-    world.player_x = min(max(world.player_x + mul_q14(speed, qx), config.min_x + r),
-                         config.max_x - r)
-    world.player_y = min(max(world.player_y + mul_q14(speed, qy), config.min_y + r),
-                         config.max_y - r)
+    x, y = world.player_x + mul_q14(speed, qx), world.player_y + mul_q14(speed, qy)
+    if config.arena is not None:
+        x, y = config.arena.move(world.player_x, world.player_y, x - world.player_x, y - world.player_y)
+    world.player_x = min(max(x, config.min_x + r), config.max_x - r)
+    world.player_y = min(max(y, config.min_y + r), config.max_y - r)
     if config.has_enemies():
         spawn(config, world)
         chase_and_separate(config, world)
@@ -1417,6 +1640,12 @@ def _void_choices(world: World) -> None:
 # Movement hypothesis for traces only (not canon): 0.1 cell/tick with cell = 2 radii
 # (GAME-ARCH-02 fixture assumptions), radius 24 px -> 4800 su/tick.
 BASE = [4800, 24000, 0, 0, 1536000, 960000, 768000, 480000]
+# ADR-015 A1: arena 07 (game/content/arena/jade_grove.json) with the wall body of P0Tuning
+# (18 px), the hero at the centre of its start cell (the west entry).
+ARENA_BODY_SU = 18000
+P0_ARENA, P0_ARENA_DATA = load_arena(body=ARENA_BODY_SU)
+ARENA_BASE = [4800, 24000, 0, 0, P0_ARENA.w * P0_ARENA.cell, P0_ARENA.h * P0_ARENA.cell] + [
+    v * P0_ARENA.cell + P0_ARENA.cell // 2 for v in P0_ARENA_DATA["start"]]
 # Enemy trace inputs (not canon): jade_grove.w0 kinds; catalog multipliers applied to
 # hero speed/radius and to base 10 HP / 10 contact damage (mhp).
 #   yin_corpse: speed 0.68, radius 1.0, hp 1.28, damage 0.65, interval 36, weight 8
@@ -1714,6 +1943,38 @@ def _attack_scenarios():
 
 ATTACK_SCENARIOS = _attack_scenarios()
 
+
+def _arena_scenarios():
+    """ADR-015 A1, arena 07 from its west entry: the hero alone against the walls (over the
+    bridge, then eight directions in turn: stops, slides, corners), the w0 crowd with the skill
+    and XP (spawn points, the chase over the bridge and around the ruins), the four P0
+    windows compressed to 10 s with every attack (charges and shots against walls and solids),
+    and the 150-enemy stress crowd."""
+    walk = [(0, 0, 1, -1)] + [(600 + 90 * i, 1 + i, *DIRS8[i % 8]) for i in range(40)]
+    into_court = [(0, 0, 1, -1)] + [(t, 1 + i, *DIRS8[i % 8]) for i, t in enumerate(range(420, 2400, 30))]
+    w0 = Config(ARENA_BASE, P0_VALUES, W0_KINDS, SEED, P0_SKILL, P0_XP, arena=P0_ARENA)
+    windows = list(P0_WINDOWS)
+    for index in range(4):
+        windows[index * 13] = index * 600
+        windows[index * 13 + 1] = (index + 1) * 600
+    compressed = Config(ARENA_BASE, [TOUGH, 15000, 0, 1000, 48, 384000], P0_KINDS, SEED, P0_SKILL,
+                        ((48000, 512), P0_KIND_XP, P0_XP_COSTS), attacks=P0_ATTACKS,
+                        venom=P0_VENOM, root=P0_ROOT, windows=windows, caps=P0_CAPS, arena=P0_ARENA)
+    stress = Config(ARENA_BASE, STRESS_VALUES, P0_KINDS, SEED, P0_SKILL, attacks=P0_ATTACKS,
+                    venom=P0_VENOM, root=P0_ROOT, windows=STRESS_ATTACKS.raw_windows,
+                    caps=STRESS_ATTACKS.caps, arena=P0_ARENA)
+    return [
+        ("arena_hero_walls", Config(ARENA_BASE, arena=P0_ARENA), migrate_v1(walk), 4200),
+        ("arena_w0_hero_stands_still", w0, [], 3600),
+        ("arena_w0_into_court", w0, migrate_v1(into_court), 3600),
+        ("arena_windows_compressed", compressed, migrate_v1(into_court), 2400),
+        ("arena_stress_150_attacks", stress, migrate_v1(into_court), 3000),
+    ]
+
+
+DIRS8 = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
+ARENA_SCENARIOS = _arena_scenarios()
+
 # Golden sector tests (reach, arc, ux, uy, dx, dy): edges of the radius and of the half arc,
 # behind the enemy, the centre, a diagonal direction.
 SECTOR_CASES = [
@@ -1834,15 +2095,19 @@ def config_json(config: Config) -> dict:
                    "root": [str(v) for v in config.root],
                    "windows": [str(v) for v in config.raw_windows],
                    "caps": [str(v) for v in config.caps]}
+    arena = None
+    if config.arena is not None:
+        arena = {"path": "res://" + ARENA_PATH.relative_to(ROOT / "game").as_posix(),
+                 "body_su": str(config.arena.body), "digest": ints_digest(config.arena.ints())}
     return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
             "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks,
-            "attacks": attacks}
+            "attacks": attacks, "arena": arena}
 
 
 def build_vectors() -> dict:
     traces = []
     for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS + RUN_END_SCENARIOS \
-            + ATTACK_SCENARIOS:
+            + ATTACK_SCENARIOS + ARENA_SCENARIOS:
         assert config.valid(), name
         log, _, checkpoints = run_trace(config, commands, steps)
         traces.append({"name": name, **config_json(config),

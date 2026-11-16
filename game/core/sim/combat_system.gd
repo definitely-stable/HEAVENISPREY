@@ -58,12 +58,20 @@ static func fly_and_hit(config: SimConfig, world: WorldState) -> void:
 		var x: int = world.proj_x[slot] + world.proj_vx[slot]
 		var y: int = world.proj_y[slot] + world.proj_vy[slot]
 		world.proj_ttl[slot] -= 1
-		if x < config.arena_min_x or x > config.arena_max_x or y < config.arena_min_y or y > config.arena_max_y:
+		if (
+			x < config.arena_min_x or x > config.arena_max_x or y < config.arena_min_y or y > config.arena_max_y
+			or in_solid(config, x, y)
+		):
 			_free_projectile(world, slot)
 			continue
 		world.proj_x[slot] = x
 		world.proj_y[slot] = y
 		_resolve_hits(config, world, slot)
+
+
+## ADR-015 A1: shots fly over low walls and die in solids and the void.
+static func in_solid(config: SimConfig, x: int, y: int) -> bool:
+	return config.arena != null and config.arena.code_at(x, y) == ArenaTopology.SOLID
 
 
 ## Death phase, projectiles: the ones whose lifetime ran out are freed.

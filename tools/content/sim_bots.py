@@ -6,8 +6,9 @@ only changes are logged as MOVE records, so a bot run is fully described by its 
 and replays bit for bit in GDScript (GUT replays the logs).
 
 Observation contract: hero position, position and radius of every enemy in a slot, gems,
-arena bounds and, while the run is paused for a level-up choice, the offered hand (upgrade
-IDs) with its build_revision. Bots never see the RNG cursor, accumulators, cooldowns or HP. A
+the arena (its cells: walkable or blocked, ADR-015) and its seal centre and, while the run is
+paused for a level-up choice, the offered hand (upgrade IDs) with its build_revision; and the
+bot's own held direction. Bots never see the RNG cursor, accumulators, cooldowns or HP. A
 bot with a chooser answers every hand with one CHOOSE before the paused step. Any change to a
 policy or its constants bumps BOT_POLICY_VERSION and regenerates the fixtures.
 
@@ -28,8 +29,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_runs.json"
 UPGRADE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_upgrade_runs.json"
-RUNS_SCHEMA_VERSION = 4
-BOT_POLICY_VERSION = 2
+RUNS_SCHEMA_VERSION = 5
+BOT_POLICY_VERSION = 3
 
 
 def _load(name: str, file: str):
@@ -42,21 +43,26 @@ def _load(name: str, file: str):
 sim = _load("sim_core", "sim_core.py")
 fx = sim.fx
 
+# The seal at the centre of arena 07 (su), where an idle kiter returns.
+ARENA_CENTRE = tuple(v * sim.P0_ARENA.cell + sim.P0_ARENA.cell // 2 for v in sim.P0_ARENA_DATA["centre"])
+
 # Eight directions in turn order, starting east.
 DIRS = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 CIRCLE_TURN_TICKS = 40
 KITER_SENSE_SU = 288000      # 6 cells: enemies closer than this push the kiter away
-KITER_WALL_SU = 144000       # 3 cells: walls closer than this push inward
+KITER_WALL_SU = 96000        # 2 cells: blocked cells closer than this push away
+KITER_WALL_Q14 = 6144        # push of one blocked cell at distance 0 (each wall cell adds up)
 KITER_REST_SU = 96000        # 2 cells: no threat and this close to the centre -> stand
+KITER_KEEP = (3, 4)          # the held direction stays while its dot is >= 3/4 of the best
 GEM_PULL_SU = 480000         # 10 cells: kiter_gems is drawn to the nearest gem this close
 GEM_PULL_THREAT_Q14 = 6000   # pull weight while an enemy is within KITER_SENSE_SU
 
 MAX_TICKS = 18000            # 300 s
 EXACT_SEED = "101"
 SURVEY_SEEDS = [str(seed) for seed in range(101, 133)]
-MAX_COMMANDS = 700
+MAX_COMMANDS = 2000          # arena 07: the kiter turns along walls (~1200 changes per run)
 MAX_UPGRADE_COMMANDS = 2500
-MAX_FILE_BYTES = 150 * 1024
+MAX_FILE_BYTES = 256 * 1024
 MAX_UPGRADE_FILE_BYTES = 256 * 1024   # the exact kiter_upgrades log has ~1400 commands
 MAX_UPGRADE_FILE_BYTES = 256 * 1024   # the kiter_upgrades log has ~1500 commands
 SMOKE_MIN_SURVIVORS = 28     # ADR-010 section 7: kiter_upgrades reaches MAX_TICKS on 28/32
@@ -72,8 +78,9 @@ class Observation:
         self.enemies = [(e[sim.E_X], e[sim.E_Y], config.kinds[e[sim.E_KIND]][1])
                         for e in world.enemies if e[sim.E_UID] != 0]
         self.gems = [(g[sim.G_X], g[sim.G_Y]) for g in world.gems if g[sim.G_UID] != 0]
-        self.min_x, self.min_y, self.max_x, self.max_y = (
-            config.min_x, config.min_y, config.max_x, config.max_y)
+        self.arena = config.arena
+        self.centre_x, self.centre_y = ARENA_CENTRE
+        self.held = (world.move_x, world.move_y)
         self.hand = [sim.upgrade_id(code) for code in world.hand]
         self.build_revision = world.build_revision
 
@@ -102,32 +109,50 @@ def _flee(seen: Observation) -> tuple[int, int, bool]:
         qx, qy = sim.normalize_q14(dx, dy)
         vx += fx.floor_div(qx * weight, KITER_SENSE_SU)
         vy += fx.floor_div(qy * weight, KITER_SENSE_SU)
-    for gap, axis, sign in ((hx - seen.min_x, 0, 1), (seen.max_x - hx, 0, -1),
-                            (hy - seen.min_y, 1, 1), (seen.max_y - hy, 1, -1)):
-        if gap < KITER_WALL_SU:
-            push = sign * fx.floor_div((KITER_WALL_SU - gap) * fx.Q14, KITER_WALL_SU)
-            if axis == 0:
-                vx += push
-            else:
-                vy += push
+    arena = seen.arena
+    c = arena.cell
+    reach = KITER_WALL_SU // c + 1
+    hcx, hcy = hx // c, hy // c
+    for cy in range(hcy - reach, hcy + reach + 1):
+        for cx in range(hcx - reach, hcx + reach + 1):
+            if arena.code(cx, cy) == sim.A_WALK:
+                continue
+            # The nearest point of the blocked cell.
+            dx = hx - min(max(hx, cx * c), cx * c + c - 1)
+            dy = hy - min(max(hy, cy * c), cy * c + c - 1)
+            d2 = dx * dx + dy * dy
+            if d2 >= KITER_WALL_SU * KITER_WALL_SU or d2 == 0:
+                continue
+            weight = fx.floor_div((KITER_WALL_SU - sim.isqrt(d2)) * KITER_WALL_Q14, KITER_WALL_SU)
+            qx, qy = sim.normalize_q14(dx, dy)
+            vx += fx.floor_div(qx * weight, fx.Q14)
+            vy += fx.floor_div(qy * weight, fx.Q14)
     return vx, vy, threat
 
 
 def _steer(seen: Observation, vx: int, vy: int) -> tuple[int, int]:
-    """No pull at all: drift to the centre, or stand near it; else the best of the eight
-    directions (largest dot product, first in DIRS on ties)."""
+    """No pull at all: walk the flow field to the seal, or stand near it; else the best of the
+    eight directions (largest dot product, first in DIRS on ties) among those whose cell one
+    step ahead is walkable (all eight when none is)."""
+    arena = seen.arena
     if vx == 0 and vy == 0:
-        cx = fx.floor_div(seen.min_x + seen.max_x, 2) - seen.hero_x
-        cy = fx.floor_div(seen.min_y + seen.max_y, 2) - seen.hero_y
+        cx, cy = seen.centre_x - seen.hero_x, seen.centre_y - seen.hero_y
         if abs(cx) + abs(cy) < KITER_REST_SU:
             return (0, 0)
-        vx, vy = cx, cy
-    best, best_dot = DIRS[0], None
-    for move in DIRS:
+        gx, gy = arena.chase_target(seen.hero_x, seen.hero_y, seen.centre_x, seen.centre_y)
+        vx, vy = gx - seen.hero_x, gy - seen.hero_y
+    free = [move for move in DIRS
+            if arena.code_at(seen.hero_x + move[0] * arena.cell, seen.hero_y + move[1] * arena.cell) == sim.A_WALK]
+    best, best_dot = None, None
+    dots = {}
+    for move in free or DIRS:
         qx, qy = sim.direction_q14(*move)
-        dot = qx * vx + qy * vy
-        if best_dot is None or dot > best_dot:
-            best, best_dot = move, dot
+        dots[move] = qx * vx + qy * vy
+        if best_dot is None or dots[move] > best_dot:
+            best, best_dot = move, dots[move]
+    held = dots.get(seen.held)
+    if held is not None and best_dot > 0 and held * KITER_KEEP[1] >= best_dot * KITER_KEEP[0]:
+        return seen.held
     return best
 
 
@@ -176,7 +201,7 @@ def first_id_chooser(seen: Observation) -> int:
 
 
 # name -> (move policy, decide every N ticks, chooser or None). A chooser plays choice_mode 1.
-POLICIES = {"idle": (idle, 1, None), "circle": (circle, 1, None), "kiter": (kiter, 6, None),
+POLICIES = {"idle": (idle, 1, None), "circle": (circle, 1, None), "kiter": (kiter, 12, None),
             "kiter_upgrades": (kiter_gems, 6, priority_chooser),
             "diag_first_id": (kiter_gems, 6, first_id_chooser),
             "diag_utility_first": (kiter_gems, 6, utility_chooser)}
@@ -187,11 +212,12 @@ UPGRADE_BOTS = ["kiter_upgrades", "diag_first_id", "diag_utility_first"]
 def p0_config(seed: str, choice_mode: int = 0):
     """The P0 placeholder run, ending in victory after MAX_TICKS (equal to P0Tuning in the
     game, choice_mode aside): roster windows w0..w3 with every attack, threat_caps, venom and
-    root (ADR-011 E6)."""
-    return sim.Config(sim.BASE, sim.P0_VALUES, sim.P0_KINDS, seed, sim.P0_SKILL,
+    root (ADR-011 E6), in arena 07 from its west entry (ADR-015 A1)."""
+    return sim.Config(sim.ARENA_BASE, sim.P0_VALUES, sim.P0_KINDS, seed, sim.P0_SKILL,
                       (sim.P0_XP[0], sim.P0_KIND_XP, sim.P0_XP[2]), choice_mode=choice_mode,
                       run_ticks=MAX_TICKS, attacks=sim.P0_ATTACKS, venom=sim.P0_VENOM,
-                      root=sim.P0_ROOT, windows=sim.P0_WINDOWS, caps=sim.P0_CAPS)
+                      root=sim.P0_ROOT, windows=sim.P0_WINDOWS, caps=sim.P0_CAPS,
+                      arena=sim.P0_ARENA)
 
 
 def config_for(name: str, seed: str):

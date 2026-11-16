@@ -124,6 +124,9 @@ var root: PackedInt64Array = PackedInt64Array([0, 0])
 var windows: PackedInt64Array = PackedInt64Array()
 ## ThreatCaps.CAPS_STRIDE values, or empty.
 var caps: PackedInt64Array = PackedInt64Array()
+## ADR-015 A1: the arena topology (walls, flow field, spawn points), or null for the open
+## rectangle.
+var arena: ArenaTopology = null
 
 
 static func create(values: PackedInt64Array) -> SimConfig:
@@ -185,6 +188,12 @@ func with_xp(p_values: PackedInt64Array, p_kind_xp: PackedInt64Array, p_costs: P
 ## Sets the level-up choice mode (CHOICE_NONE or CHOICE_IMMEDIATE).
 func with_choice_mode(p_mode: int) -> SimConfig:
 	choice_mode = p_mode
+	return self
+
+
+## Sets the arena topology (ADR-015 A1); its grid must be the arena rectangle.
+func with_arena(p_arena: ArenaTopology) -> SimConfig:
+	arena = p_arena
 	return self
 
 
@@ -287,6 +296,8 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(windows)
 	out.append(caps.size())
 	out.append_array(caps)
+	if arena != null:
+		out.append_array(arena.to_ints())
 	return out
 
 
@@ -324,6 +335,8 @@ func is_valid() -> bool:
 	if venom.size() != VENOM_STRIDE or root.size() != ROOT_STRIDE:
 		return false
 	if not windows.is_empty() and not _windows_valid():
+		return false
+	if arena != null and not arena.fits(self):
 		return false
 	return run_ticks >= 0 and (caps.is_empty() or _caps_valid())
 

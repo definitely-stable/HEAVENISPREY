@@ -1,9 +1,9 @@
 """ADR-009 slice 2: scripted bot runs. Exact layer (committed fixture reproduces, logs replay
 to the recorded digests) and statistical layer (death-time corridors over 32 seeds and the
-idle < circle < kiter ordering) on the P0 placeholder tuning. ADR-010 section 7: the anchors
-that end inside roster window w0 keep their slice 4 outcomes with choice_mode 0; kiter_upgrades
-meets its smoke goal."""
-import hashlib
+kiter outliving the others) on the P0 placeholder tuning. ADR-010 section 7: the anchors take
+no choices; kiter_upgrades meets its smoke goal. ADR-015 A1: every run plays in arena 07 from
+its west entry, so the corridors were re-anchored there (a run alive at the stage end counts
+as MAX_TICKS)."""
 import importlib.util
 import json
 import statistics
@@ -17,18 +17,16 @@ spec.loader.exec_module(bots)
 sim = bots.sim
 
 # Corridors in ticks (60 per second). Recalibration rule: median x [0.85, 1.20], per-seed
-# bounds [0.75 x min, 1.25 x max] of a fresh 32-seed survey, rounded to 300 ticks; change
-# them by hand only, with a before/after table in the PR.
-MEDIAN = {"idle": (1500, 2100), "circle": (2700, 3900), "kiter": (4500, 6600)}
-PER_SEED = {"idle": (900, 3300), "circle": (1800, 5100), "kiter": (3300, 9000)}
-MEDIAN_RATIO = {("idle", "circle"): 1.4, ("circle", "kiter"): 1.3}
-# SHA-256 of the JSON list [id, death_tick, kills, command_count, xp_collected, level] of the
-# anchor survey rows of slice 4 (main e5ddffb) that end inside roster window w0 (the 82 rows with
-# death_tick < W0_END_TICK); the command log schema changed the log digests only. Since ADR-011
-# E6 the later windows change the rows that outlive w0 (13 kiter runs), so only the w0 prefix
-# is pinned to slice 4.
-SLICE4_ANCHORS = "8472328d7ba314990f363aaab3103481d84f83342dcf6bb02c5cdf4a332723c9"
-W0_END_TICK = 5100
+# bounds [0.75 x min, 1.25 x max] of a fresh 32-seed survey, rounded out to 300 ticks and at
+# most MAX_TICKS; change them by hand only, with a before/after table in the PR. ADR-015 A1
+# (arena 07): idle 28 -> 100 s, circle 53 -> 78 s, kiter 84 -> 249 s (median).
+MEDIAN = {"idle": (4800, 7200), "circle": (3900, 5700), "kiter": (12600, 18000)}
+PER_SEED = {"idle": (2400, 18000), "circle": (2100, 8400), "kiter": (4200, 18000)}
+# The kiter outlives the others; in arena 07 the circle leaves the west landing and meets the
+# horde on the bridge, so it no longer outlives the idle bot (ADR-015 A1).
+MEDIAN_RATIO = {("idle", "kiter"): 2.0, ("circle", "kiter"): 2.5}
+# Idle and circle never reach the stage end; the kiter may, on a few seeds.
+MAX_KITER_SURVIVORS = 8
 
 
 def load_runs() -> dict:
@@ -79,9 +77,10 @@ class SimBotExactTests(unittest.TestCase):
         config = bots.p0_config("101")
         world, _, _ = bots.play("idle", config, 400)
         seen = bots.Observation(config, world)
-        self.assertEqual(set(vars(seen)), {"hero_x", "hero_y", "enemies", "gems", "min_x",
-                                           "min_y", "max_x", "max_y", "hand",
+        self.assertEqual(set(vars(seen)), {"hero_x", "hero_y", "enemies", "gems", "arena",
+                                           "centre_x", "centre_y", "held", "hand",
                                            "build_revision"})
+        self.assertIs(seen.arena, config.arena, "the cells of the arena, not the world")
         self.assertEqual(len(seen.enemies), world.enemy_alive)
         kiter_move = bots.kiter(seen, world.tick)
         world.rng_cursor, world.spawn_acc, world.skill_acc = 0, 0, 0
@@ -90,20 +89,26 @@ class SimBotExactTests(unittest.TestCase):
     def test_kiter_flees_and_avoids_walls(self):
         config = bots.p0_config("1")
         world = sim.World(config)
+        world.player_x, world.player_y = bots.ARENA_CENTRE
         world.enemies.append([1, 0, world.player_x + 100000, world.player_y, 10000, 0])
         self.assertEqual(bots.kiter(bots.Observation(config, world), 0), (-1, 0))
         world.enemies.clear()
-        world.player_x = config.min_x + 30000
-        self.assertEqual(bots.kiter(bots.Observation(config, world), 0), (1, 0))
-        world.player_x = (config.min_x + config.max_x) // 2
-        self.assertEqual(bots.kiter(bots.Observation(config, world), 0), (0, 0))
+        self.assertEqual(bots.kiter(bots.Observation(config, world), 0), (0, 0), "rests at the seal")
+        # Next to the first wall east of the seal: pushed back west.
+        arena, cell = config.arena, config.arena.cell
+        x = world.player_x
+        while arena.code_at(x + cell, world.player_y) == sim.A_WALK:
+            x += cell
+        world.player_x = x
+        self.assertEqual(bots.kiter(bots.Observation(config, world), 0)[0], -1)
+        # At the west entry with no threat: down the flow field towards the seal.
+        start = sim.World(config)
+        move = bots.kiter(bots.Observation(config, start), 0)
+        gx, gy = arena.chase_target(start.player_x, start.player_y, *bots.ARENA_CENTRE)
+        self.assertNotEqual(move, (0, 0))
+        self.assertGreater(move[0] * (gx - start.player_x) + move[1] * (gy - start.player_y), 0)
 
-    def test_anchors_keep_their_slice_four_outcomes(self):
-        rows = [[r["id"], r["death_tick"], r["kills"], r["command_count"], r["xp_collected"],
-                 r["level"]] for r in self.runs["survey"] if r["death_tick"] < W0_END_TICK]
-        self.assertEqual(len(rows), 82)
-        self.assertEqual(sim.P0_WINDOWS[1], W0_END_TICK)
-        self.assertEqual(hashlib.sha256(json.dumps(rows).encode()).hexdigest(), SLICE4_ANCHORS)
+    def test_anchors_take_no_choices(self):
         self.assertTrue(all(r["choices"] == 0 for r in self.runs["survey"]))
 
     def test_logs_stay_small(self):
@@ -116,14 +121,21 @@ class SimBotCorridorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         survey = load_runs()["survey"]
-        cls.ticks = {name: [r["death_tick"] for r in survey if r["bot_policy"] == name]
-                     for name in bots.ANCHORS}
-        cls.by_seed = {(r["bot_policy"], r["seed"]): r["death_tick"] for r in survey}
+        def tick(row):
+            return bots.MAX_TICKS if row["death_tick"] == -1 else row["death_tick"]
 
-    def test_every_bot_dies_before_five_minutes(self):
+        cls.ticks = {name: [tick(r) for r in survey if r["bot_policy"] == name]
+                     for name in bots.ANCHORS}
+        cls.by_seed = {(r["bot_policy"], r["seed"]): tick(r) for r in survey}
+
+    def test_idle_and_circle_die_before_five_minutes(self):
         for name, ticks in self.ticks.items():
             self.assertEqual(len(ticks), 32, name)
-            self.assertTrue(all(0 < t < bots.MAX_TICKS for t in ticks), name)
+            self.assertTrue(all(0 < t <= bots.MAX_TICKS for t in ticks), name)
+        for name in ("idle", "circle"):
+            self.assertTrue(all(t < bots.MAX_TICKS for t in self.ticks[name]), name)
+        survivors = self.ticks["kiter"].count(bots.MAX_TICKS)
+        self.assertLessEqual(survivors, MAX_KITER_SURVIVORS)
 
     def test_median_corridors(self):
         for name, (low, high) in MEDIAN.items():
@@ -140,10 +152,9 @@ class SimBotCorridorTests(unittest.TestCase):
             got = statistics.median(self.ticks[better]) / statistics.median(self.ticks[worse])
             self.assertGreaterEqual(got, ratio, (worse, better, got))
         seeds = bots.SURVEY_SEEDS
-        self.assertEqual(sum(self.by_seed[("idle", s)] < self.by_seed[("kiter", s)] for s in seeds), 32)
-        for worse, better in (("idle", "circle"), ("circle", "kiter")):
-            wins = sum(self.by_seed[(worse, s)] < self.by_seed[(better, s)] for s in seeds)
-            self.assertGreaterEqual(wins, 29, (worse, better))
+        self.assertEqual(sum(self.by_seed[("circle", s)] < self.by_seed[("kiter", s)] for s in seeds), 32)
+        wins = sum(self.by_seed[("idle", s)] < self.by_seed[("kiter", s)] for s in seeds)
+        self.assertGreaterEqual(wins, 29, ("idle", "kiter"))
 
 
 class SimBotUpgradeTests(unittest.TestCase):
@@ -211,6 +222,7 @@ class SimBotUpgradeTests(unittest.TestCase):
     def test_gem_pull(self):
         config = bots.p0_config("1")
         world = sim.World(config)
+        world.player_x, world.player_y = bots.ARENA_CENTRE
         world.gems.append([1, world.player_x, world.player_y - 200000, 10])
         seen = bots.Observation(config, world)
         self.assertEqual(bots.kiter_gems(seen, 0), (0, -1), "no threat: straight to the gem")

@@ -24,7 +24,6 @@ extends Node2D
 ##   over it (HP bar, enemy shots, pickups) and the additive glow item.
 
 const CELL_PX: int = P0Tuning.CELL_PX
-const ARENA_CELLS: Vector2i = P0Tuning.ARENA_CELLS
 const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
 const HIT_FLASH: float = 0.15
 const ENEMY_HIT_FLASH: float = 0.1
@@ -213,8 +212,8 @@ func _ready() -> void:
 
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
 func _build_layers() -> void:
-	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
-	_props = ArenaDressing.placements(_sprites, ARENA_CELLS, CELL_PX)
+	var data: Dictionary = P0Tuning.arena_data()
+	_props = ArenaDressing.placements(_sprites, data, CELL_PX)
 	var light_points: Array[Dictionary] = ArenaDressing.lights(_props)
 	for point: Dictionary in light_points:
 		_lanterns.append(point["at"])
@@ -225,7 +224,7 @@ func _build_layers() -> void:
 		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
 		prop["fixed_light"] = RunLighting.fixed_light(prop["at"], _lanterns)
 	_ground = GroundLayer.new(
-		_sprites, FLOOR_ASSET, arena, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
+		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
 		ArenaDressing.backdrop(_sprites))
 	add_child(_ground)
 	var under: CanvasLayer = CanvasLayer.new()
@@ -297,7 +296,7 @@ static func _rim_material(color: Color, strength: float) -> ShaderMaterial:
 ## view does not slide over the void.
 func camera_target() -> Vector2:
 	var inset: Vector2 = Vector2.ONE * CAMERA_INSET_CELLS * CELL_PX
-	var arena: Vector2 = Vector2(ARENA_CELLS * CELL_PX)
+	var arena: Vector2 = Vector2(P0Tuning.arena_cells() * CELL_PX)
 	return IsoProjection.to_screen(driver.hero_position_px().clamp(inset, arena - inset))
 
 
@@ -615,6 +614,8 @@ func _draw_shadow_pass() -> void:
 			_cast_shadow(canvas, _frame_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
+		if prop["prop"] == ArenaDressing.BLOCK_PROP:
+			continue
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
 		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
@@ -661,7 +662,8 @@ func _draw_danger_pass() -> void:
 			AttackTelegraph.draw(_danger, telegraph, driver.enemy_position_px(slot))
 	_draw_ground_rings(_danger)
 	if driver.world.is_over():
-		_danger.draw_colored_polygon(GroundLayer.outline(Vector2(ARENA_CELLS * CELL_PX), CELL_PX), COLOR_OVER)
+		for rect: Rect2 in GroundLayer.footprint(P0Tuning.arena_data(), CELL_PX):
+			_danger.draw_rect(rect, COLOR_OVER)
 
 
 ## The root ring lies on the ground around the hero.
@@ -717,6 +719,9 @@ func _draw_enemy(slot: int) -> void:
 ## A courtyard prop at its base, lit like an upright body standing there.
 func _draw_prop(prop: Dictionary) -> void:
 	var light: Color = RunLighting.with_aura(prop["fixed_light"], prop["at"], driver.hero_position_px())
+	if prop["prop"] == ArenaDressing.BLOCK_PROP:
+		ArenaDressing.draw_block(self, prop, light)
+		return
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 
 

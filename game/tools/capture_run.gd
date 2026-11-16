@@ -6,8 +6,8 @@ extends SceneTree
 ##   around the hero, which then stands still for 40 frames while they close in;
 ## - "circles": the P0 run with the hero walking circles and taking the first card of every
 ##   hand, saved once `count` enemies are alive or after 200 s;
-## - "grid": light acceptance (ADR-014 section 7): the hero stands on a 3x3 grid of the arena,
-##   one capture per point (out_<i>.png) and out.json with the screen points of the hero, the
+## - "grid": light acceptance (ADR-014 section 7): the hero stands at the arena centre and at
+##   each spawn point, one capture per point (out_<i>.png) and out.json with the screen points of the hero, the
 ##   lanterns and the arena corners in each capture;
 ## - "hero": a contact sheet of the animated hero (ADR-014 A4) in game light: four frames of the
 ##   run in each of the 8 directions (one row each, east first, clockwise), then idle, attacks
@@ -143,12 +143,12 @@ func _place_horde(view: RunView, count: int, rings: int = 3, near: float = 1.0, 
 
 func _capture_grid(view: RunView, out: String) -> void:
 	var world: WorldState = view.driver.world
-	var arena: Vector2 = Vector2(RunView.ARENA_CELLS * RunView.CELL_PX)
+	var arena: Vector2 = Vector2(P0Tuning.arena_cells() * RunView.CELL_PX)
 	var lanterns: Array[Vector2] = view.lantern_positions()
 	var corners: Array[Vector2] = [Vector2.ZERO, Vector2(arena.x, 0.0), arena, Vector2(0.0, arena.y)]
 	var shots: Array = []
-	for index: int in 9:
-		var at: Vector2 = arena * Vector2(0.15 + 0.35 * (index % 3), 0.15 + 0.35 * (index / 3))
+	for at: Vector2 in _grid_points():
+		var index: int = shots.size()
 		world.player_x = int(at.x * Fx.FX_ONE)
 		world.player_y = int(at.y * Fx.FX_ONE)
 		for frame: int in HORDE_FRAMES:
@@ -173,6 +173,19 @@ func _capture_grid(view: RunView, out: String) -> void:
 	file.close()
 	print("capture grid: ", out, " shots=", shots.size())
 	quit(0)
+
+
+## The arena centre and its spawn points (world px): walkable spots across the courtyard.
+func _grid_points() -> Array[Vector2]:
+	var data: Dictionary = P0Tuning.arena_data()
+	var centre: Array = data.get("centre", [0, 0])
+	var out: Array[Vector2] = [(Vector2(float(centre[0]), float(centre[1])) + Vector2(0.5, 0.5)) * RunView.CELL_PX]
+	var rows: Array = data.get("rows", [])
+	for y: int in rows.size():
+		for x: int in (rows[y] as String).length():
+			if (rows[y] as String)[x] == ArenaTopology.SPAWN_CHARS:
+				out.append((Vector2(x, y) + Vector2(0.5, 0.5)) * RunView.CELL_PX)
+	return out
 
 
 func _measure_frames(view: RunView, out: String, count: int) -> void:

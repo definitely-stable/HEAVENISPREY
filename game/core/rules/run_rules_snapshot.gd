@@ -29,7 +29,9 @@ extends RefCounted
 ## 10: enemy projectiles, the shot pool in the world digest, the 10-field attack record (ADR-011 E4).
 ## 11: death and ground zones, the zone pool and status.root_slow in the digest (ADR-011 E5).
 ## 12: roster windows by spawn tick and threat_caps on spawns and launches (ADR-011 E6).
-const SIM_SCHEMA_VERSION: int = 12
+## 13: the arena topology: walls, flow-field chase, spawn points, shots die in solids
+##     (ADR-015 A1).
+const SIM_SCHEMA_VERSION: int = 13
 
 var error: String:
 	get:

@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TOPOLOGY = ROOT / ".work/proposals/arena-07-sect-ruins/topology.json"
+TOPOLOGY = ROOT / "game/content/arena/jade_grove.json"
 _spec = importlib.util.spec_from_file_location("hip_encounter", ROOT / "scripts/validate_encounter_proposal.py")
 encounter = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(encounter)

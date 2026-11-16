@@ -132,15 +132,14 @@ static func aim(world: WorldState, slot: int) -> PackedInt64Array:
 	return unit
 
 
-## One active tick of a charge: `step` su along the fixed direction, clamped into the arena;
-## the first touch of the hero in this attack instance deals the kind damage.
+## One active tick of a charge: `step` su along the fixed direction, through the arena walls
+## and clamped into the arena; the first touch of the hero in this attack instance deals the
+## kind damage.
 static func _dash(config: SimConfig, world: WorldState, slot: int, step: int) -> void:
 	var kind: int = world.enemy_kind[slot]
-	var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
-	var x: int = world.enemy_x[slot] + Fx.mul_q14(step, world.enemy_dir_x[slot])
-	var y: int = world.enemy_y[slot] + Fx.mul_q14(step, world.enemy_dir_y[slot])
-	world.enemy_x[slot] = clampi(x, config.arena_min_x + r, config.arena_max_x - r)
-	world.enemy_y[slot] = clampi(y, config.arena_min_y + r, config.arena_max_y - r)
+	SeparationSystem.move_enemy(
+		config, world, slot, Fx.mul_q14(step, world.enemy_dir_x[slot]), Fx.mul_q14(step, world.enemy_dir_y[slot])
+	)
 	if world.enemy_hit[slot] == 0 and EnemySystem.touching(config, world, slot):
 		world.hero_hp -= config.kind_value(kind, SimConfig.KIND_DAMAGE)
 		world.enemy_hit[slot] = 1

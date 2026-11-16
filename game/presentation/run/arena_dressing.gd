@@ -1,81 +1,37 @@
 class_name ArenaDressing
 extends RefCounted
-## ADR-014 slice A3: the courtyard of the ruined sect around the P0 arena (stage.jade_grove,
-## REF-033 "Руины секты Юнхэ", REF-029 kit, REF-056, REF-023). Props stand outside the
-## walkable field, on the terrace of GroundLayer.outline(), so the simulation (no prop
-## collisions) and the picture agree: balustrades along the edges, the sect gate with guardian
-## lions at the back, lanterns and braziers that carry the point lights, maples at the corners,
-## the stairs down the cliff between two lions. Far behind, rock spires and pagodas stand in
-## the mist (BACKDROP). Presentation only.
+## ADR-014 slice A3, ADR-015 A1: the things that stand in arena 07 of stage.jade_grove
+## (REF-033 "Руины секты Юнхэ", REF-029 kit, REF-056, REF-023). The arena file lists the named
+## props on their solid cells (the gate hall, the guardian lions, the columns, the braziers
+## that carry the point lights, the old maple); every other wall cell stands as a placeholder
+## stone block until the wall kit of slice A2: tall for solid cells, low for balustrades and
+## ruins. Far behind, rock spires and pagodas stand in the mist (BACKDROP). Presentation only.
 
 const LIGHTS_ASSET: String = "asset.prop.courtyard_lights"
 const NATURE_ASSET: String = "asset.prop.courtyard_nature"
 const WALLS_ASSET: String = "asset.prop.courtyard_walls"
 const PEAKS_ASSET: String = "asset.prop.distant_peaks"
+## The atlas of each named prop of the arena file.
+const PROP_ASSETS: Dictionary = {
+	"gate": WALLS_ASSET, "lion": LIGHTS_ASSET, "pillar": NATURE_ASSET, "brazier": LIGHTS_ASSET,
+	"maple_large": NATURE_ASSET,
+}
 ## Props that carry a warm point light, and the height of their flame above the base (px).
 const LIGHT_PROPS: Dictionary = {"lantern_pagoda": 0.62, "brazier": 0.85, "gate": 0.55}
-## The one prop that leaves the terrace: the stairs run down the cliff face.
-const STAIRS_PROP: String = "stairs"
-## Balustrades stand this many cells outside the wall line.
-const RAIL_OUTSET: float = 0.45
-## Fixed placements: [asset, prop, cell (x, y), flip]. Cells may lie outside 0..32 x 0..20.
-const FIXED: Array = [
-	# Back edge along y = 0 (upper right on screen): the sect gate between two lions.
-	[WALLS_ASSET, "gate", Vector2(16.0, -1.8), false],
-	[LIGHTS_ASSET, "lion", Vector2(12.6, -1.2), false],
-	[LIGHTS_ASSET, "lion", Vector2(19.4, -1.2), true],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(4.5, -1.1), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(9.5, -1.1), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(22.5, -1.1), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(27.5, -1.1), false],
-	[LIGHTS_ASSET, "banner", Vector2(7.0, -1.7), false],
-	[LIGHTS_ASSET, "banner", Vector2(25.0, -1.7), false],
-	[LIGHTS_ASSET, "incense", Vector2(14.3, -2.6), false],
-	[LIGHTS_ASSET, "incense", Vector2(17.7, -2.6), false],
-	# The back row of the far terrace: a stele, a pillar and rocks behind the lanterns.
-	[LIGHTS_ASSET, "stele", Vector2(10.9, -2.7), false],
-	[NATURE_ASSET, "pillar", Vector2(21.2, -2.8), false],
-	[NATURE_ASSET, "tombstone", Vector2(23.8, -2.7), true],
-	[NATURE_ASSET, "rocks", Vector2(29.6, -2.6), false],
-	[NATURE_ASSET, "maple_small", Vector2(30.8, -2.0), false],
-	[NATURE_ASSET, "pillar_broken", Vector2(2.4, -1.5), false],
-	# Back edge along x = 0 (upper left on screen): banners, a stele, a shrine and bamboo.
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(-1.1, 4.5), true],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(-1.1, 15.5), true],
-	[WALLS_ASSET, "banner_pair", Vector2(-1.7, 10.0), true],
-	[LIGHTS_ASSET, "stele", Vector2(-1.5, 7.2), true],
-	[WALLS_ASSET, "shrine", Vector2(-2.0, 12.8), true],
-	[WALLS_ASSET, "bamboo", Vector2(-2.5, 18.2), false],
-	[NATURE_ASSET, "pillar", Vector2(-1.4, 1.9), false],
-	[NATURE_ASSET, "tombstone", Vector2(-2.6, 5.8), false],
-	[NATURE_ASSET, "rocks", Vector2(-2.7, 8.8), true],
-	[NATURE_ASSET, "maple_small", Vector2(-2.6, 15.2), false],
-	# Corners: old maples, rocks.
-	[NATURE_ASSET, "maple_large", Vector2(-1.7, -1.7), false],
-	[NATURE_ASSET, "maple_small", Vector2(-2.2, 21.0), true],
-	[NATURE_ASSET, "maple_large", Vector2(33.0, -2.0), false],
-	[NATURE_ASSET, "maple_small", Vector2(33.0, 20.6), true],
-	[NATURE_ASSET, "rocks", Vector2(-2.0, 20.0), false],
-	[NATURE_ASSET, "rocks", Vector2(33.3, -0.4), true],
-	[NATURE_ASSET, "rocks", Vector2(33.6, 19.2), true],
-	# Front edges: stairs down the cliff in the middle of the left side (their head at the edge
-	# of the terrace, STAIRS_PROP) between two lions and two braziers, a brazier at the middle of
-	# the right side, lanterns and low ruins along both.
-	[WALLS_ASSET, "stairs", Vector2(16.6, 24.4), false],
-	[LIGHTS_ASSET, "lion", Vector2(13.9, 21.8), false],
-	[LIGHTS_ASSET, "lion", Vector2(18.1, 21.8), true],
-	[LIGHTS_ASSET, "brazier", Vector2(12.4, 21.1), false],
-	[LIGHTS_ASSET, "brazier", Vector2(19.6, 21.1), false],
-	[LIGHTS_ASSET, "brazier", Vector2(33.2, 10.0), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(33.2, 16.5), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(33.2, 3.8), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(26.5, 21.2), false],
-	[LIGHTS_ASSET, "lantern_pagoda", Vector2(5.5, 21.2), false],
-	[NATURE_ASSET, "pillar_broken", Vector2(23.0, 21.7), true],
-	[NATURE_ASSET, "pillar_broken", Vector2(33.7, 13.4), false],
-	[NATURE_ASSET, "rocks", Vector2(2.0, 21.7), false],
-	[NATURE_ASSET, "tombstone", Vector2(9.2, 21.7), false],
-]
+## The prop name of a placeholder wall block.
+const BLOCK_PROP: String = "block"
+## Arena cells of tall walls (solid) and low walls (balustrades, ruins).
+const SOLID_CHAR: String = "#"
+const LOW_CHAR: String = "w"
+## A group of solid cells (four neighbours) with a cell within this many cells (on both axes)
+## of a named prop belongs to that prop.
+const PROP_REACH_CELLS: float = 1.5
+## Screen height of the placeholder blocks (px) and their stone tones (top, lit side, far side).
+const BLOCK_SOLID_PX: float = 46.0
+const BLOCK_LOW_PX: float = 16.0
+const BLOCK_TOP: Color = Color(0.34, 0.3, 0.37)
+const BLOCK_SIDE_X: Color = Color(0.23, 0.2, 0.26)
+const BLOCK_SIDE_Y: Color = Color(0.17, 0.15, 0.2)
 ## Distant scenery in the mist (REF-033, REF-056: rock spires and pagodas behind the arena):
 ## [prop, base (px from the arena centre in the backdrop's own plane, which follows the view
 ## with GroundLayer.BACKDROP_PARALLAX), scale, flip, nearness 0..1 (less haze)].
@@ -93,18 +49,48 @@ const BACKDROP: Array = [
 
 
 ## Every placement: {asset, prop, at (world px), flip, light (bool), flame (screen px above the
-## base)}; balustrades are laid along all four edges between the fixed props.
-static func placements(sprites: SpriteSet, arena_cells: Vector2i, cell_px: int) -> Array[Dictionary]:
+## base)}; a placeholder block also carries its cell rectangle (world px) and screen height.
+## The second lion of each pair is mirrored to face the first.
+static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	for item: Array in FIXED:
-		_add(out, sprites, item[0], item[1], (item[2] as Vector2) * cell_px, item[3])
-	var arena: Vector2 = Vector2(arena_cells * cell_px)
-	var outset: float = RAIL_OUTSET * cell_px
-	_rail(out, sprites, Vector2(0.0, -outset), Vector2(arena.x, -outset), false, [12.0, 20.0], cell_px)
-	_rail(out, sprites, Vector2(-outset, 0.0), Vector2(-outset, arena.y), true, [], cell_px)
-	_rail(out, sprites, Vector2(0.0, arena.y + outset), Vector2(arena.x, arena.y + outset), false, [14.0, 18.0], cell_px)
-	_rail(out, sprites, Vector2(arena.x + outset, 0.0), Vector2(arena.x + outset, arena.y), true, [], cell_px)
+	var anchors: Array[Vector2] = []
+	var lions: int = 0
+	for item: Dictionary in data.get("props", []):
+		var prop: String = str(item.get("prop", ""))
+		var at: Array = item.get("at", [0, 0])
+		var cell: Vector2 = Vector2(float(at[0]), float(at[1]))
+		anchors.append(cell)
+		var flip: bool = false
+		if prop == "lion":
+			flip = lions % 2 == 1
+			lions += 1
+		if PROP_ASSETS.has(prop):
+			_add(out, sprites, PROP_ASSETS[prop], prop, cell * cell_px, flip)
+	var rows: Array = data.get("rows", [])
+	var propped: Dictionary = _propped(rows, anchors)
+	for y: int in rows.size():
+		var row: String = rows[y]
+		for x: int in row.length():
+			if row[x] == LOW_CHAR or (row[x] == SOLID_CHAR and not propped.has(Vector2i(x, y))):
+				var rect: Rect2 = Rect2(Vector2(x, y) * cell_px, Vector2.ONE * cell_px)
+				out.append({
+					"asset": "", "prop": BLOCK_PROP, "at": rect.get_center(), "flip": false, "light": false,
+					"flame": 0.0, "rect": rect, "height": BLOCK_LOW_PX if row[x] == LOW_CHAR else BLOCK_SOLID_PX,
+				})
 	return out
+
+
+## Draws a placeholder block on `canvas` (screen space): its two near faces and its top.
+static func draw_block(canvas: CanvasItem, item: Dictionary, light: Color) -> void:
+	var rect: Rect2 = item["rect"]
+	var lift: Vector2 = Vector2(0.0, -float(item["height"]))
+	var a: Vector2 = IsoProjection.to_screen(rect.position)
+	var b: Vector2 = IsoProjection.to_screen(Vector2(rect.end.x, rect.position.y))
+	var c: Vector2 = IsoProjection.to_screen(rect.end)
+	var d: Vector2 = IsoProjection.to_screen(Vector2(rect.position.x, rect.end.y))
+	canvas.draw_colored_polygon(PackedVector2Array([b, c, c + lift, b + lift]), BLOCK_SIDE_X * light)
+	canvas.draw_colored_polygon(PackedVector2Array([d, c, c + lift, d + lift]), BLOCK_SIDE_Y * light)
+	canvas.draw_colored_polygon(PackedVector2Array([a + lift, b + lift, c + lift, d + lift]), BLOCK_TOP * light)
 
 
 ## The distant scenery, far to near: {asset, prop, at (px in the backdrop plane), scale, flip,
@@ -129,6 +115,37 @@ static func lights(items: Array[Dictionary]) -> Array[Dictionary]:
 	return out
 
 
+## The solid cells (keys Vector2i) of every group of solid cells that a named prop stands on.
+static func _propped(rows: Array, anchors: Array[Vector2]) -> Dictionary:
+	var out: Dictionary = {}
+	for y: int in rows.size():
+		var row: String = rows[y]
+		for x: int in row.length():
+			if row[x] != SOLID_CHAR or out.has(Vector2i(x, y)) or not _near(anchors, Vector2(x, y)):
+				continue
+			var queue: Array[Vector2i] = [Vector2i(x, y)]
+			out[Vector2i(x, y)] = true
+			while not queue.is_empty():
+				var at: Vector2i = queue.pop_back()
+				for step: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+					var next: Vector2i = at + step
+					if next.y < 0 or next.y >= rows.size() or next.x < 0 or next.x >= (rows[next.y] as String).length():
+						continue
+					if (rows[next.y] as String)[next.x] == SOLID_CHAR and not out.has(next):
+						out[next] = true
+						queue.append(next)
+	return out
+
+
+## Whether the cell at (x, y) lies within PROP_REACH_CELLS of a named prop (cell units).
+static func _near(anchors: Array[Vector2], cell: Vector2) -> bool:
+	var centre: Vector2 = cell + Vector2(0.5, 0.5)
+	for anchor: Vector2 in anchors:
+		if absf(anchor.x - centre.x) <= PROP_REACH_CELLS and absf(anchor.y - centre.y) <= PROP_REACH_CELLS:
+			return true
+	return false
+
+
 static func _add(
 	out: Array[Dictionary], sprites: SpriteSet, asset: String, prop: String, at: Vector2, flip: bool
 ) -> void:
@@ -136,23 +153,3 @@ static func _add(
 		return
 	var flame: float = sprites.prop_size(asset, prop).y * float(LIGHT_PROPS.get(prop, 0.0))
 	out.append({"asset": asset, "prop": prop, "at": at, "flip": flip, "light": LIGHT_PROPS.has(prop), "flame": flame})
-
-
-## Balustrade segments end to end from `from` to `to` (world px), leaving gaps (cells along the
-## edge) for the gate. A segment's world length is its screen width over the projection's K
-## (it runs along one world axis).
-static func _rail(
-	out: Array[Dictionary], sprites: SpriteSet, from: Vector2, to: Vector2, flip: bool, gap: Array, cell_px: int
-) -> void:
-	if not sprites.has_prop(WALLS_ASSET, "balustrade"):
-		return
-	var length: float = sprites.prop_size(WALLS_ASSET, "balustrade").x / IsoProjection.K
-	var edge: float = from.distance_to(to)
-	var direction: Vector2 = (to - from) / edge
-	var count: int = maxi(1, roundi(edge / length))
-	var step: float = edge / count
-	for index: int in count:
-		var along: float = (index + 0.5) * step
-		if gap.size() == 2 and along > float(gap[0]) * cell_px and along < float(gap[1]) * cell_px:
-			continue
-		_add(out, sprites, WALLS_ASSET, "balustrade", from + direction * along, flip)
