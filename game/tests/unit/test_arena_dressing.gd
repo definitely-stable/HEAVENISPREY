@@ -28,13 +28,15 @@ func test_named_props_stand_on_solid_cells() -> void:
 		named += 1
 		assert_true(sprites.has_prop(item["asset"], item["prop"]), "%s/%s" % [item["asset"], item["prop"]])
 		assert_eq(_char_at(item["at"]), ArenaDressing.SOLID_CHAR, "%s at %s" % [item["prop"], item["at"] / CELL])
-	assert_eq(named, (_data()["props"] as Array).size(), "every prop of the file has a sprite")
+	assert_eq(named, (_data()["props"] as Array).size() - _ruins().size(), "every prop has a sprite")
 
 
 func test_every_prop_of_the_file_has_its_sprites() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	for item: Dictionary in _data()["props"]:
 		var prop: String = item["prop"]
+		if prop == ArenaDressing.RUIN_PROP:
+			continue
 		assert_true(ArenaDressing.PROP_SPRITES.has(prop), prop)
 		var sprite: Array = ArenaDressing.PROP_SPRITES[prop]
 		assert_true(sprites.has_prop(sprite[0], sprite[1]) and sprites.has_prop(sprite[0], sprite[2]), prop)
@@ -172,18 +174,40 @@ func _median(values: Array[float]) -> float:
 	return values[values.size() / 2] if not values.is_empty() else 0.0
 
 
-## ADR-015 section 10: the low wall cells are a balustrade. Every cell of a line is a post or lies
-## on a rail bay between two posts of its run; every cell of a 2 x 2 square of low walls is a heap
-## of ruin; no low wall is left as a placeholder block.
+## The seal_ruin props of the arena file: [{index, at (cells), cells}].
+func _ruins() -> Array[Dictionary]:
+	var data: Dictionary = _data()
+	var centre: Vector2i = Vector2i(int(data["centre"][0]), int(data["centre"][1]))
+	var out: Array[Dictionary] = []
+	for item: Dictionary in data["props"]:
+		if item["prop"] == ArenaDressing.RUIN_PROP:
+			var at: Vector2 = Vector2(float(item["at"][0]), float(item["at"][1]))
+			out.append({
+				"index": ArenaDressing.ruin_index(at, centre), "at": at,
+				"cells": ArenaDressing.ruin_cells(data["rows"], at),
+			})
+	return out
+
+
+## Every cell of the six ruin fragments.
+func _ruin_cells() -> Dictionary:
+	var out: Dictionary = {}
+	for ruin: Dictionary in _ruins():
+		for cell: Vector2i in ruin["cells"]:
+			out[cell] = ruin["index"]
+	return out
+
+
+## ADR-015 section 10: the low wall cells outside the ruin ring are a balustrade. Every cell of a
+## line is a post or lies on a rail bay between two posts of its run; no low wall is left as a
+## placeholder block.
 func test_balustrade_covers_every_low_wall_cell() -> void:
 	var rows: Array = _data()["rows"]
-	var wall: Dictionary = ArenaDressing.balustrade(rows)
+	var ruined: Dictionary = _ruin_cells()
+	var wall: Dictionary = ArenaDressing.balustrade(rows, ruined)
 	var covered: Dictionary = {}
 	for cell: Vector2i in wall["posts"]:
 		covered[cell] = "post"
-	for cell: Vector2i in wall["ruins"]:
-		assert_false(covered.has(cell), "a heap is not a post: %s" % cell)
-		covered[cell] = "ruin"
 	for pair: Array in (wall["rails"] as Array) + (wall["edge_on"] as Array):
 		var a: Vector2i = pair[0]
 		var b: Vector2i = pair[1]
@@ -197,11 +221,10 @@ func test_balustrade_covers_every_low_wall_cell() -> void:
 	var low: int = 0
 	for y: int in rows.size():
 		for x: int in (rows[y] as String).length():
-			if (rows[y] as String)[x] == ArenaDressing.LOW_CHAR:
+			if (rows[y] as String)[x] == ArenaDressing.LOW_CHAR and not ruined.has(Vector2i(x, y)):
 				low += 1
 				assert_true(covered.has(Vector2i(x, y)), "low wall %s is drawn" % Vector2i(x, y))
-	assert_eq(covered.size(), low, "nothing outside the low walls")
-	assert_gt((wall["ruins"] as Array).size(), 0, "the ruins inside the court")
+	assert_eq(covered.size(), low, "nothing outside the low walls, nothing on the ruins")
 	for item: Dictionary in _items():
 		if item["prop"] == ArenaDressing.BLOCK_PROP:
 			assert_ne(_char_at(item["at"]), ArenaDressing.LOW_CHAR, "no placeholder block on a low wall")
@@ -224,15 +247,108 @@ func test_staircase_is_one_run() -> void:
 	assert_eq((corner["rails"] as Array).size(), 2, "an L joins through its corner, no diagonal")
 
 
-## The ruins mix heaps, mirrored heaps and broken posts by a hash of the cell: no two neighbours
-## in a row of the same kind in every row of a square, so a square of ruins does not tile.
-func test_ruins_do_not_repeat_in_step() -> void:
-	var kinds: Dictionary = {}
-	for cell: Vector2i in ArenaDressing.balustrade(_data()["rows"])["ruins"]:
-		kinds[ArenaDressing.ruin_pick(cell)] = int(kinds.get(ArenaDressing.ruin_pick(cell), 0)) + 1
-	assert_eq(kinds.size(), 3, "all three kinds are used")
-	for count: int in kinds.values():
-		assert_gt(count, 5)
+## ADR-015 section 11: the ring of ruins around the seal is six painted fragments, each on all
+## its low and solid cells (a broken wall between two pillar stumps) and each its own picture;
+## nothing else (no post, rail or block) stands on those cells.
+func test_ruin_ring_is_six_painted_fragments() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var rows: Array = _data()["rows"]
+	var ruins: Array[Dictionary] = _ruins()
+	assert_eq(ruins.size(), 6)
+	var indices: Dictionary = {}
+	for ruin: Dictionary in ruins:
+		indices[ruin["index"]] = true
+		assert_true(sprites.has_prop(ArenaDressing.RUINS_ASSET, "ruin_%d" % ruin["index"]), str(ruin["index"]))
+		var codes: Dictionary = {}
+		for cell: Vector2i in ruin["cells"]:
+			codes[(rows[cell.y] as String)[cell.x]] = true
+		assert_eq(codes.keys().size(), 2, "low wall and pillar cells")
+		assert_between((ruin["cells"] as Array).size(), 10, 16)
+	assert_eq(indices.keys().size(), 6, "six different fragments")
+	var ruined: Dictionary = _ruin_cells()
+	var centre: Vector2 = Vector2(float(_data()["centre"][0]), float(_data()["centre"][1]))
+	for y: int in rows.size():
+		for x: int in (rows[y] as String).length():
+			var code: String = (rows[y] as String)[x]
+			var ring: float = Vector2(x, y).distance_to(centre)
+			if (code == ArenaDressing.LOW_CHAR or code == ArenaDressing.SOLID_CHAR) and ring > 9.5 and ring < 12.3:
+				assert_true(ruined.has(Vector2i(x, y)), "ring cell %s belongs to a fragment" % Vector2i(x, y))
+	var strips: int = 0
+	for item: Dictionary in _items():
+		if item.has("clip"):
+			strips += 1
+			continue
+		var cell: Vector2i = Vector2i((item["at"] / CELL).floor())
+		if item["prop"] == ArenaDressing.RAIL_PROP:
+			cell = Vector2i(-1, -1)
+		assert_false(ruined.has(cell), "%s stands on a ruin cell %s" % [item["prop"], cell])
+	assert_gt(strips, 6 * 4)
+
+
+## A fragment is drawn in strips half a cell wide on the screen, edge to edge; each sorts at the
+## nearest cell under it, so a body in front of that cell is drawn over the strip and a body
+## behind it under the strip.
+func test_ruin_strips_sort_at_their_nearest_cell() -> void:
+	var half: float = IsoProjection.to_screen(Vector2(CELL, 0)).x
+	for ruin: Dictionary in _ruins():
+		var strips: Array[Dictionary] = ArenaDressing.ruin_strips(ruin["cells"], CELL)
+		assert_eq((strips[0]["clip"] as Vector2).x, -INF)
+		assert_eq((strips[-1]["clip"] as Vector2).y, INF)
+		for i: int in strips.size():
+			var clip: Vector2 = strips[i]["clip"]
+			if i > 0:
+				assert_eq(clip.x, (strips[i - 1]["clip"] as Vector2).y, "strips meet")
+			if i > 0 and i < strips.size() - 1:
+				assert_almost_eq(clip.y - clip.x, half, 0.001)
+			var m: int = roundi(clip.x / half) if i > 0 else roundi(clip.y / half) - 1
+			var front: Vector2i = strips[i]["front"]
+			for cell: Vector2i in ruin["cells"]:
+				if cell.x - cell.y == m or cell.x - cell.y == m + 1:
+					assert_true(cell.x + cell.y <= front.x + front.y, "%s is the nearest" % front)
+			var strip: float = IsoProjection.depth((Vector2(front) + Vector2(0.5, 0.5)) * CELL)
+			var ahead: float = IsoProjection.depth((Vector2(front) + Vector2(1.3, 1.3)) * CELL)
+			var behind: float = IsoProjection.depth((Vector2(front) + Vector2(-0.3, -0.3)) * CELL)
+			assert_true(ahead > strip and behind < strip)
+
+
+## A fragment stands on its cells, it does not float: the lowest painted stones of the sprite end
+## on the nearest corner of its cells, its sides at the outer corners of its cells (leaves and
+## chips may stick out a little), and its pillars stand about 1.3 hero heights tall.
+func test_ruins_stand_on_their_cells() -> void:
+	var entry: Dictionary = _manifest_entry(ArenaDressing.RUINS_ASSET)
+	var image: Image = _atlas_image(entry)
+	var density: float = float(entry["layout"]["density"])
+	var regions: Dictionary = {}
+	for prop: Dictionary in entry["layout"]["props"]:
+		regions[prop["name"]] = prop
+	var hero: float = RunView.HERO_SPRITE_HEIGHT_PX
+	for ruin: Dictionary in _ruins():
+		var prop: Dictionary = regions["ruin_%d" % ruin["index"]]
+		var region: Array = prop["region"]
+		var feet: Vector2 = Vector2(float(prop["feet"][0]), float(prop["feet"][1]))
+		var base: Vector2 = IsoProjection.to_screen(ruin["at"] * CELL)
+		var low: float = -INF
+		var far: float = INF
+		var left: float = INF
+		var right: float = -INF
+		for cell: Vector2i in ruin["cells"]:
+			low = maxf(low, IsoProjection.to_screen(Vector2(cell + Vector2i.ONE) * CELL).y - base.y)
+			far = minf(far, IsoProjection.to_screen(Vector2(cell) * CELL).y - base.y)
+			left = minf(left, IsoProjection.to_screen(Vector2(cell + Vector2i(0, 1)) * CELL).x - base.x)
+			right = maxf(right, IsoProjection.to_screen(Vector2(cell + Vector2i(1, 0)) * CELL).x - base.x)
+		var box: Rect2i = image.get_region(Rect2i(region[0], region[1], region[2], region[3])).get_used_rect()
+		var painted_low: float = (region[1] + box.end.y - feet.y) / density
+		var painted_top: float = (region[1] + box.position.y - feet.y) / density
+		var painted_left: float = (region[0] + box.position.x - feet.x) / density
+		var painted_right: float = (region[0] + box.end.x - feet.x) / density
+		var name: String = "ruin_%d" % ruin["index"]
+		assert_almost_eq(painted_low, low, 4.0, "%s rests on its nearest corner" % name)
+		assert_almost_eq(painted_left, left, 12.0, "%s left end" % name)
+		assert_almost_eq(painted_right, right, 12.0, "%s right end" % name)
+		# The pillars (1.3 hero heights) rise over the farthest corner of the cells; the whole ruin
+		# with the depth of its cells stays within three hero heights.
+		assert_gt((far - painted_top) / hero, 0.75, "%s pillars over its farthest corner" % name)
+		assert_lt((low - painted_top) / hero, 3.0, "%s height over its nearest corner" % name)
 
 
 ## Rail bays stand on the line between the post centres and stop at the post faces; the quads of
@@ -270,7 +386,7 @@ func _cross(a: Vector2, b: Vector2, point: Vector2) -> float:
 	return (b - a).normalized().cross(point - a)
 
 
-## REF-029: a post reaches the chest of the hero, the rail the waist, a heap of ruin stays low; the
+## REF-029: a post reaches the chest of the hero, the rail the waist; the
 ## post's square base lies on the 2:1 floor and covers about 0.4 of a cell diamond. A base seen
 ## from the front (the slope of the first guardian sheet) fails the same measure.
 func test_balustrade_heights_and_post_base() -> void:
@@ -280,7 +396,6 @@ func test_balustrade_heights_and_post_base() -> void:
 	assert_between(sprites.prop_size(asset, "post").y / hero, 0.7, 0.9, "post")
 	assert_between(sprites.prop_size(asset, "rail").y / hero, 0.45, 0.55, "rail")
 	assert_lt(sprites.prop_size(asset, "post_broken").y, sprites.prop_size(asset, "rail").y, "broken below the rail")
-	assert_between(sprites.prop_size(asset, "rubble").y / hero, 0.35, 0.55, "rubble")
 	var entry: Dictionary = _manifest_entry(asset)
 	var image: Image = _atlas_image(entry)
 	var cell_diamond: float = IsoProjection.to_screen(Vector2(CELL, 0)).x * 2.0
@@ -325,6 +440,8 @@ func test_blocks_cover_the_walls_without_props() -> void:
 	assert_gt(blocks.values().count(ArenaDressing.SOLID_CHAR), 0, "ruin fragments of the seal ring")
 	# The gate hall and the brazier columns are props, not blocks.
 	for item: Dictionary in _data()["props"]:
+		if item["prop"] == ArenaDressing.RUIN_PROP:
+			continue
 		var at: Array = item["at"]
 		var cell: Vector2 = (Vector2(float(at[0]), float(at[1])) - Vector2(0.5, 0.5)).floor() * CELL
 		assert_false(blocks.has(cell), "%s stands on its own cells" % item["prop"])

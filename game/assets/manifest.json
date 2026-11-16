@@ -310,10 +310,10 @@
       "asset_id": "asset.prop.courtyard_balustrade",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_balustrade/courtyard_balustrade.png",
-      "sha256": "16fef39c08de2d6ab1e6d38aeb9665e5b96cabfef52ee8fa5bcd0520a97708e1",
-      "bytes": 63124,
+      "sha256": "aadb3846931988f4b2327be643a18d71ec01568c13a723afa8dfac96f0b995f8",
+      "bytes": 44868,
       "size": [
-        410,
+        279,
         144
       ],
       "asset_version": 1,
@@ -351,28 +351,15 @@
             ]
           },
           {
-            "name": "rubble",
-            "region": [
-              139,
-              6,
-              119,
-              78
-            ],
-            "feet": [
-              199.0,
-              72.5
-            ]
-          },
-          {
             "name": "rail",
             "region": [
-              270,
+              139,
               6,
               134,
               84
             ],
             "feet": [
-              337.0,
+              206.0,
               56.5
             ]
           }
@@ -380,8 +367,8 @@
       },
       "normal": {
         "path": "game/assets/props/courtyard_balustrade/courtyard_balustrade_n.png",
-        "sha256": "fc7daad06d1b2ecc328ecb3008e9f66c7254364edc55f857903e0f6e8c158363",
-        "bytes": 27871,
+        "sha256": "30ccdef5f3f4823691b3f5fa2846c8f25a3b8fa02715ba5a063c32fbe382a1e2",
+        "bytes": 20000,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -389,22 +376,22 @@
       },
       "source": {
         "path": "art_source/courtyard_balustrade/master.webp",
-        "sha256": "9d2d172cd91fea14248008f84c59c98742d46ed30be3e6defb383c34fdec7b6a",
-        "bytes": 1016912,
+        "sha256": "fefd472d3a38316bbf34f3fafb5c1733f4262caeee2d6de454727726ea42df66",
+        "bytes": 108576,
         "prompt_sha256": "ccc6159b95c5e775d084699d1bc822b4a2563c58e894735a23cc9d4890e5bfce"
       },
       "qa": {
         "palette_group": "props",
-        "opaque_px": 7804,
-        "palette_mean_delta_e": 11.09,
+        "opaque_px": 12323,
+        "palette_mean_delta_e": 11.47,
         "tones_pct": [
-          58.0,
-          39.5,
-          2.4
+          61.7,
+          35.0,
+          3.2
         ],
-        "chroma": 0.221,
-        "threat_colour_pct": 0.384,
-        "median_l": 77.0
+        "chroma": 0.237,
+        "threat_colour_pct": 0.008,
+        "median_l": 74.5
       }
     },
     {
@@ -988,6 +975,133 @@
         "chroma": 0.112,
         "threat_colour_pct": 0.669,
         "median_l": 58.2
+      }
+    },
+    {
+      "asset_id": "asset.prop.seal_ruins",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/seal_ruins/seal_ruins.png",
+      "sha256": "4f9ee821909659f6dc5adea0669f13024ba336b526eb430eb1efd92e08fff405",
+      "bytes": 1193577,
+      "size": [
+        1684,
+        794
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 1.6,
+        "props": [
+          {
+            "name": "ruin_0",
+            "region": [
+              6,
+              6,
+              436,
+              306
+            ],
+            "feet": [
+              218.3,
+              246.2
+            ]
+          },
+          {
+            "name": "ruin_1",
+            "region": [
+              454,
+              6,
+              436,
+              358
+            ],
+            "feet": [
+              676.1,
+              261.7
+            ]
+          },
+          {
+            "name": "ruin_2",
+            "region": [
+              902,
+              6,
+              328,
+              388
+            ],
+            "feet": [
+              1065.3,
+              277.6
+            ]
+          },
+          {
+            "name": "ruin_3",
+            "region": [
+              1242,
+              6,
+              436,
+              304
+            ],
+            "feet": [
+              1464.7,
+              239.3
+            ]
+          },
+          {
+            "name": "ruin_4",
+            "region": [
+              6,
+              406,
+              436,
+              305
+            ],
+            "feet": [
+              219.2,
+              623.8
+            ]
+          },
+          {
+            "name": "ruin_5",
+            "region": [
+              454,
+              406,
+              327,
+              382
+            ],
+            "feet": [
+              617.5,
+              660.3
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/seal_ruins/seal_ruins_n.png",
+        "sha256": "943c40c633ba627771044f6a5de4ebf37a077288afdda92786eaf9164a366a84",
+        "bytes": 284723,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/seal_ruins/master.webp",
+        "sha256": "fea0e3e60424ce7d53f30b58cb74b3da1e40700f2e9b59534be4e46d635c659b",
+        "bytes": 461230,
+        "prompt_sha256": "1f9508adb8818e8151f6b80506ac88fbd5395ac6e10d38f50609701f3b7c0e4b"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 9211,
+        "palette_mean_delta_e": 9.63,
+        "tones_pct": [
+          65.2,
+          34.4,
+          0.3
+        ],
+        "chroma": 0.141,
+        "threat_colour_pct": 0.195,
+        "median_l": 72.8
       }
     },
     {

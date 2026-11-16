@@ -27,7 +27,7 @@
     "prompt_sha256": "ccc6159b95c5e775d084699d1bc822b4a2563c58e894735a23cc9d4890e5bfce",
     "created": "2026-11-17T01:52:11+0500",
     "master_sha256": "118f673d9418924281693ec8d6c976c9a4b2123e55d2dec6bce2fd2440b97e8b",
-    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical. Painted over the geometry template of tools/art/iso_template.py courtyard_balustrade (first attached image). Candidate v2 of 2: in v1 the stone chips at the foot of the broken post take half of its base side at game scale (base slope -0.28 in the atlas test); v2 measures +0.465/-0.486 (post) and +0.468/-0.489 (broken post) with tools/art/measure_base.py"
+    "master_note": "WebP q92 of the generated PNG (master_sha256). Painted over the geometry template of tools/art/iso_template.py courtyard_balustrade (first attached image). Candidate v2 of 2: in v1 the stone chips at the foot of the broken post take half of its base side at game scale (base slope -0.28 in the atlas test); v2 measures +0.465/-0.486 (post) and +0.468/-0.489 (broken post) with tools/art/measure_base.py"
   },
   "palette_group": "props",
   "density": 2,
@@ -45,18 +45,17 @@
   "props": [
     {
       "name": "post",
+      "cell": 0,
       "height_px": 66
     },
     {
       "name": "post_broken",
+      "cell": 1,
       "height_px": 38
     },
     {
-      "name": "rubble",
-      "height_px": 39
-    },
-    {
       "name": "rail",
+      "cell": 3,
       "height_px": 42
     }
   ]

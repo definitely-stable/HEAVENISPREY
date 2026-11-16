@@ -3,6 +3,7 @@ the pixel check runs where Pillow is installed)."""
 from __future__ import annotations
 
 import importlib.util
+import json
 import unittest
 from pathlib import Path
 
@@ -64,6 +65,68 @@ class IsoTemplateTests(unittest.TestCase):
         for name, layout in iso.LAYOUTS.items():
             for prop in layout:
                 self.assertNotEqual("blocks" in prop, "flat" in prop, name)
+
+    # ADR-015 section 11: the ruin ring around the seal, drawn from the arena file.
+
+    def test_the_ring_is_six_fragments_of_low_wall_and_pillars(self):
+        data = iso.load_arena()
+        ruins = iso.ruins(data)
+        self.assertEqual([r["index"] for r in ruins], list(range(6)))
+        rows = data["rows"]
+        every = set()
+        for ruin in ruins:
+            codes = {rows[y][x] for x, y in ruin["cells"]}
+            self.assertEqual(codes, {"w", "#"}, ruin["index"])
+            self.assertTrue(ruin["solid"], ruin["index"])
+            self.assertFalse(every & set(ruin["cells"]), "fragments do not share cells")
+            every |= set(ruin["cells"])
+        cx, cy = data["centre"]
+        ring = {(x, y) for y, row in enumerate(rows) for x, ch in enumerate(row)
+                if ch in "w#" and 9.5 < ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5 < 12.3}
+        self.assertEqual(ring, every, "every wall cell of the ring belongs to a fragment")
+
+    def test_pillar_groups_have_one_outline(self):
+        self.assertEqual(iso.outline([(0, 0)]), [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)])
+        self.assertEqual(len(iso.outline([(0, 0), (1, 0), (1, 1)])), 6, "an L has six corners")
+        with self.assertRaises(ValueError):
+            iso.outline([(0, 0), (1, 1)])
+        self.assertEqual(iso.cell_groups([(0, 0), (1, 0), (3, 3)]), [[(0, 0), (1, 0)], [(3, 3)]])
+
+    def test_ruin_sheets_fit_and_anchor_at_the_prop(self):
+        data = iso.load_arena()
+        layout = iso.ruin_layout(data)
+        self.assertEqual(len(layout["fragments"]), 6)
+        self.assertEqual({f["sheet"] for f in layout["fragments"]}, set(range(1, iso.RUIN_SHEETS + 1)))
+        half = iso.SIZE[0] / 2
+        for frag, ruin in zip(layout["fragments"], layout["ruins"]):
+            x0, y0, x1, y1 = iso._extent(ruin)
+            ox, oy = frag["origin"]
+            s = layout["scale"]
+            self.assertGreater(ox + s * x0, half * frag["slot"] + 8, frag["index"])
+            self.assertLess(ox + s * x1, half * (frag["slot"] + 1) - 8, frag["index"])
+            self.assertGreater(oy + s * y0, 8)
+            self.assertLess(oy + s * y1, iso.SIZE[1] - 8)
+            u, v = iso.iso_screen(*ruin["at"])
+            self.assertAlmostEqual(frag["anchor"][0], ox + s * u, places=1)
+            self.assertAlmostEqual(frag["anchor"][1], oy + s * v, places=1)
+        # Every floor edge of the template lies on the 2:1 floor.
+        for points, _, line in iso.ruin_polygons(1, data):
+            if line:
+                (ax, ay), (bx, by) = points
+                self.assertAlmostEqual(abs(slope((ax, ay), (bx, by))), 0.5)
+
+    def test_ruin_source_matches_the_template(self):
+        path = ROOT / "art_source" / "seal_ruins" / "source.json"
+        source = json.loads(path.read_text(encoding="utf-8"))
+        layout = iso.ruin_layout()
+        self.assertEqual(source["sheet"]["grid"], [2, iso.RUIN_SHEETS])
+        props = {p["name"]: p for p in source["props"]}
+        for frag in layout["fragments"]:
+            prop = props[f"ruin_{frag['index']}"]
+            self.assertEqual(prop["cell"], frag["slot"] + 2 * (frag["sheet"] - 1))
+            self.assertEqual(prop["sheet_scale"], layout["scale"])
+            self.assertAlmostEqual(prop["anchor"][0], frag["anchor"][0], places=2)
+            self.assertAlmostEqual(prop["anchor"][1], frag["anchor"][1] + iso.SIZE[1] * (frag["sheet"] - 1), places=2)
 
     @unittest.skipUnless(importlib.util.find_spec("PIL"), "Pillow is not installed")
     def test_render_draws_the_lowest_corner_of_every_base(self):
