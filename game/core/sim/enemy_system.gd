@@ -7,7 +7,10 @@ extends RefCounted
 ## the tick does not advance the accumulator). The `enemy` stream draws the kind (by weight),
 ## then up to SPAWN_ATTEMPTS points on the arena perimeter (inset by the enemy radius) until
 ## one is at least `spawn_min_distance_su` from the hero; else the inset corner farthest from
-## the hero (first in corner order on ties). The weights are those of the roster window of the
+## the hero (first in corner order on ties). In an arena (ADR-015 A1) the points are its spawn
+## points (uniform index) and the fallback is the farthest one (first in order on ties); a
+## jitter of up to cell/2 - body on each axis keeps the body inside the cell. The weights are
+## those of the roster window of the
 ## tick; a kind over its threat cap gives way to the next allowed one, and with none the spawn
 ## is skipped (the roll is spent, the accumulator does not advance; ThreatCaps).
 ## Chase and separation: SeparationSystem.
@@ -39,7 +42,54 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 		world.enemy_rng_cursor = rng.cursor()
 		world.spawn_acc += config.spawn_period_mt - rate
 		return
-	var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
+	var spot: PackedInt64Array = (
+		_arena_spot(config, world, rng) if config.arena != null
+		else _edge_spot(config, world, rng, config.kind_value(kind, SimConfig.KIND_RADIUS))
+	)
+	world.enemy_rng_cursor = rng.cursor()
+	var slot: int = world.enemy_uid.find(0)
+	if slot < 0:
+		slot = world.append_enemy_slot()
+	world.enemy_uid[slot] = world.next_enemy_uid
+	world.enemy_kind[slot] = kind
+	world.enemy_x[slot] = spot[0]
+	world.enemy_y[slot] = spot[1]
+	world.enemy_hp[slot] = config.kind_value(kind, SimConfig.KIND_HP)
+	world.enemy_cooldown[slot] = 0
+	world.enemy_state[slot] = 0
+	world.enemy_left[slot] = 0
+	world.enemy_dir_x[slot] = 0
+	world.enemy_dir_y[slot] = 0
+	world.enemy_attack_uid[slot] = 0
+	world.enemy_hit[slot] = 0
+	world.next_enemy_uid += 1
+	world.enemy_alive += 1
+
+
+static func _arena_spot(config: SimConfig, world: WorldState, rng: HipRng) -> PackedInt64Array:
+	var arena: ArenaTopology = config.arena
+	var min_d2: int = config.spawn_min_distance_su * config.spawn_min_distance_su
+	var spot: PackedInt64Array = PackedInt64Array()
+	for _attempt: int in SPAWN_ATTEMPTS:
+		var candidate: PackedInt64Array = arena.spawn_point(rng.below(arena.spawn_count()))
+		if dist2(candidate[0], candidate[1], world.player_x, world.player_y) >= min_d2:
+			spot = candidate
+			break
+	if spot.is_empty():
+		var best: int = -1
+		for index: int in arena.spawn_count():
+			var candidate: PackedInt64Array = arena.spawn_point(index)
+			var d2: int = dist2(candidate[0], candidate[1], world.player_x, world.player_y)
+			if d2 > best:
+				best = d2
+				spot = candidate
+	var jitter: int = (arena.cell >> 1) - arena.body
+	var jx: int = rng.below(2 * jitter + 1) - jitter
+	var jy: int = rng.below(2 * jitter + 1) - jitter
+	return PackedInt64Array([spot[0] + jx, spot[1] + jy])
+
+
+static func _edge_spot(config: SimConfig, world: WorldState, rng: HipRng, r: int) -> PackedInt64Array:
 	var x0: int = config.arena_min_x + r
 	var y0: int = config.arena_min_y + r
 	var x1: int = config.arena_max_x - r
@@ -78,24 +128,7 @@ static func spawn(config: SimConfig, world: WorldState) -> void:
 				best = d2
 				sx = corner[0]
 				sy = corner[1]
-	world.enemy_rng_cursor = rng.cursor()
-	var slot: int = world.enemy_uid.find(0)
-	if slot < 0:
-		slot = world.append_enemy_slot()
-	world.enemy_uid[slot] = world.next_enemy_uid
-	world.enemy_kind[slot] = kind
-	world.enemy_x[slot] = sx
-	world.enemy_y[slot] = sy
-	world.enemy_hp[slot] = config.kind_value(kind, SimConfig.KIND_HP)
-	world.enemy_cooldown[slot] = 0
-	world.enemy_state[slot] = 0
-	world.enemy_left[slot] = 0
-	world.enemy_dir_x[slot] = 0
-	world.enemy_dir_y[slot] = 0
-	world.enemy_attack_uid[slot] = 0
-	world.enemy_hit[slot] = 0
-	world.next_enemy_uid += 1
-	world.enemy_alive += 1
+	return PackedInt64Array([sx, sy])
 
 
 static func contact(config: SimConfig, world: WorldState) -> void:

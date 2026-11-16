@@ -20,9 +20,14 @@ extends RefCounted
 ## settings of ADR-010 (pickup radius, gem cap, level costs, XP per kind = XP_BASE +
 ## XP_PER_SPAWN_COST x the enemy's content spawn_cost). They are placeholders until combat
 ## bases enter content; nothing here writes content.
+## The arena is arena 07 of stage.jade_grove (ADR-015 A1, res://content/arena/jade_grove.json,
+## drawn by tools/content/arena_layout.py): the hero starts at the centre of its start cell
+## (the west entry); the wall body half-size is a placeholder.
 
 const CELL_PX: int = 48
-const ARENA_CELLS: Vector2i = Vector2i(32, 20)
+const ARENA_PATH: String = "res://content/arena/jade_grove.json"
+## Half-size of the square that collides with walls (px, ADR-015 A1, placeholder).
+const WALL_BODY_PX: int = 18
 const HERO_RADIUS_PX: int = 24
 const HERO_SPEED_SU_PER_TICK: int = 4800
 const HERO_HP_MHP: int = 100000
@@ -71,6 +76,8 @@ const XP_COSTS: Array[int] = [
 	20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460, 530, 605, 685, 770, 860, 955, 1055, 1160,
 ]
 
+static var _arena_data: Dictionary = {}
+
 var error: String = ""
 ## Enemy IDs in kind order (kind index = position).
 var enemy_ids: PackedStringArray = PackedStringArray()
@@ -78,13 +85,46 @@ var enemy_ids: PackedStringArray = PackedStringArray()
 var skill_id: String = ""
 
 
-## Movement only: the hero in the empty arena.
+
+## The arena file (tools/content/arena_layout.py): rows, cells, centre, start, entries,
+## props; empty when it cannot be read.
+static func arena_data(path: String = ARENA_PATH) -> Dictionary:
+	if path == ARENA_PATH and not _arena_data.is_empty():
+		return _arena_data
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = parsed if parsed is Dictionary else {}
+	if path == ARENA_PATH:
+		_arena_data = data
+	return data
+
+
+## The topology of an arena file (null when it is missing or ragged).
+static func arena_topology(data: Dictionary) -> ArenaTopology:
+	var rows: Array = data.get("rows", [])
+	if rows.is_empty():
+		return null
+	return ArenaTopology.from_rows(
+		PackedStringArray(rows), int(data.get("cell_px", CELL_PX)) * Fx.FX_ONE, WALL_BODY_PX * Fx.FX_ONE
+	)
+
+
+## Arena size in cells.
+static func arena_cells() -> Vector2i:
+	var cells: Array = arena_data().get("cells", [0, 0])
+	return Vector2i(int(cells[0]), int(cells[1]))
+
+
+## Movement only: the hero at the start of the arena, with its walls.
 static func movement_config() -> SimConfig:
-	var w: int = ARENA_CELLS.x * CELL_PX * Fx.FX_ONE
-	var h: int = ARENA_CELLS.y * CELL_PX * Fx.FX_ONE
+	var data: Dictionary = arena_data()
+	var arena: ArenaTopology = arena_topology(data)
+	var cells: Vector2i = arena_cells()
+	var start: Array = data.get("start", [0, 0])
+	var cell: int = CELL_PX * Fx.FX_ONE
 	return SimConfig.create(PackedInt64Array([
-		HERO_SPEED_SU_PER_TICK, HERO_RADIUS_PX * Fx.FX_ONE, 0, 0, w, h, w >> 1, h >> 1,
-	]))
+		HERO_SPEED_SU_PER_TICK, HERO_RADIUS_PX * Fx.FX_ONE, 0, 0, cells.x * cell, cells.y * cell,
+		int(start[0]) * cell + (cell >> 1), int(start[1]) * cell + (cell >> 1),
+	])).with_arena(arena)
 
 
 ## Movement, the enemies of every roster window, the class start skill, XP, the immediate

@@ -49,7 +49,10 @@ static func fly(config: SimConfig, world: WorldState) -> void:
 		world.shot_ttl[slot] -= 1
 		var x: int = world.shot_x[slot]
 		var y: int = world.shot_y[slot]
-		if x < config.arena_min_x or x > config.arena_max_x or y < config.arena_min_y or y > config.arena_max_y:
+		if (
+			x < config.arena_min_x or x > config.arena_max_x or y < config.arena_min_y or y > config.arena_max_y
+			or CombatSystem.in_solid(config, x, y)
+		):
 			_free(world, slot)
 			continue
 		var reach: int = config.player_radius_su + world.shot_radius[slot]

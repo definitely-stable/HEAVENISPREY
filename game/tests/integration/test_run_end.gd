@@ -36,7 +36,12 @@ func test_stage_duration_comes_from_content() -> void:
 	assert_eq(config.run_ticks, 5 * 60 * 60, "stage.jade_grove: 5 minutes")
 	# run_ticks, then the attack table, four venom and two root values (ADR-011 E2, E5), the
 	# windows and the caps (E6), each table after its size.
-	var tail: int = 1 + config.attacks.size() + 4 + 2 + 1 + config.windows.size() + 1 + config.caps.size()
+	# The arena topology closes the list (ADR-015 A1).
+	assert_not_null(config.arena)
+	var tail: int = (
+		1 + config.attacks.size() + 4 + 2 + 1 + config.windows.size() + 1 + config.caps.size()
+		+ config.arena.to_ints().size()
+	)
 	assert_eq(config.to_ints()[config.to_ints().size() - tail - 1], config.run_ticks)
 
 
@@ -79,6 +84,7 @@ func test_defeat_results_in_russian() -> void:
 	var view: RunView = _view()
 	TranslationServer.set_locale("ru")  # after _ready, which follows the OS language
 	view.start_run("20261113")
+	_to_centre(view)
 	var guard: int = 0
 	while not view.driver.world.is_over() and guard < 5000:
 		if view.driver.world.is_paused():
@@ -103,3 +109,12 @@ func test_clock_format() -> void:
 	assert_eq(RunResults.clock(59), "00:00")
 	assert_eq(RunResults.clock(3600), "01:00")
 	assert_eq(RunResults.clock(18000), "05:00")
+
+
+## The hero stands at the arena centre, written into the world before the first tick (a
+## presentation check): in the open court the horde reaches a standing hero quickly.
+static func _to_centre(view: RunView) -> void:
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
+	for state: WorldState in [view.driver.world, view.driver.previous]:
+		state.player_x = int(centre.x) * Fx.FX_ONE
+		state.player_y = int(centre.y) * Fx.FX_ONE

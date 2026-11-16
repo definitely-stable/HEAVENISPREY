@@ -4,23 +4,30 @@ extends RefCounted
 ## tools/content/sim_core.py.
 ##
 ## 1. Chase writes tentative positions (tx, ty) without clamping; an enemy touching the hero
-##    stays where it is. An enemy in an attack (state other than approach, ADR-011 section 2)
-##    neither moves nor takes part in the separation. A projectile kind within its keep
+##    stays where it is. In an arena the chase heads for ArenaTopology.chase_target (the hero,
+##    or the next cell of the flow field around walls, ADR-015 A1). An enemy in an attack
+##    (state other than approach, ADR-011 section 2) neither moves nor takes part in the
+##    separation. A projectile kind within its keep
 ##    distance does not chase (it is still pushed apart, ADR-011 section 3).
 ## 2. A uniform grid (cell = 2 x the largest kind radius, index clamped to the grid) is built
-##    from the positions of tick N by counting sort over slots (cell_start, cell_items).
+##    from the positions of tick N: only the occupied cells, as keys cell x KEY_SPAN + slot
+##    sorted (cell order, then slot order).
 ## 3. Pairs are visited cell by cell, row-major: the cell itself (later items only), then the
 ##    neighbours (+1,0), (-1,+1), (0,+1), (+1,+1). An overlapping pair pushes both enemies apart
 ##    by half the overlap each; coincident centres push along x, the larger slot towards +x.
 ##    Positions are not changed during the pass.
 ## 4. At most SEP_MAX_CHECKS pair checks per tick, counted between cells (a started cell is
 ##    always finished); the next tick resumes from the cell where the pass stopped
-##    (world.sep_cursor, 0 once a pass completes).
-## 5. Per slot: move = (tx - x, ty - y) + push, capped at the kind speed, then clamped into
-##    the arena. An enemy never moves further than its speed in one tick; the hero is not
-##    pushed.
+##    (world.sep_cursor, 0 once a pass completes). Empty cells add no pairs and no checks, so
+##    the pass visits only occupied cells: one that runs out of checks after cell i stops at
+##    i + 1, where a scan of every cell would test the budget next (0 after the last cell).
+## 5. Per slot: move = (tx - x, ty - y) + push, capped at the kind speed, then through the
+##    arena walls and clamped into the arena (move_enemy). An enemy never moves further than
+##    its speed in one tick; the hero is not pushed.
 
 const SEP_MAX_CHECKS: int = 4096
+## Sort key span per grid cell: above every slot index (MAX_ENEMIES_LIMIT).
+const KEY_SPAN: int = 8192
 ## Neighbour cells visited after the cell itself: (dx, dy) pairs.
 const NEIGHBOURS: Array[int] = [1, 0, -1, 1, 0, 1, 1, 1]
 
@@ -34,9 +41,15 @@ static func chase_and_separate(config: SimConfig, world: WorldState) -> void:
 			continue
 		if EnemySystem.touching(config, world, slot) or EnemyShotSystem.keeps_distance(config, world, slot):
 			continue
-		var direction: PackedInt64Array = Fx.normalize_q14(
-			world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot]
-		)
+		var goal_x: int = world.player_x
+		var goal_y: int = world.player_y
+		if config.arena != null:
+			var goal: PackedInt64Array = config.arena.chase_target(
+				world.enemy_x[slot], world.enemy_y[slot], goal_x, goal_y
+			)
+			goal_x = goal[0]
+			goal_y = goal[1]
+		var direction: PackedInt64Array = Fx.normalize_q14(goal_x - world.enemy_x[slot], goal_y - world.enemy_y[slot])
 		var speed: int = config.kind_value(world.enemy_kind[slot], SimConfig.KIND_SPEED)
 		tx[slot] += Fx.mul_q14(speed, direction[0])
 		ty[slot] += Fx.mul_q14(speed, direction[1])
@@ -58,9 +71,21 @@ static func chase_and_separate(config: SimConfig, world: WorldState) -> void:
 			var unit: PackedInt64Array = Fx.normalize_q14(mx, my)
 			mx = Fx.mul_q14(speed, unit[0])
 			my = Fx.mul_q14(speed, unit[1])
-		var r: int = config.kind_value(kind, SimConfig.KIND_RADIUS)
-		world.enemy_x[slot] = clampi(world.enemy_x[slot] + mx, config.arena_min_x + r, config.arena_max_x - r)
-		world.enemy_y[slot] = clampi(world.enemy_y[slot] + my, config.arena_min_y + r, config.arena_max_y - r)
+		move_enemy(config, world, slot, mx, my)
+
+
+## Moves the enemy in `slot` by (mx, my): through the arena walls (ADR-015 A1), then clamped
+## into the arena rectangle inset by its radius.
+static func move_enemy(config: SimConfig, world: WorldState, slot: int, mx: int, my: int) -> void:
+	var r: int = config.kind_value(world.enemy_kind[slot], SimConfig.KIND_RADIUS)
+	var x: int = world.enemy_x[slot] + mx
+	var y: int = world.enemy_y[slot] + my
+	if config.arena != null:
+		var moved: PackedInt64Array = config.arena.move(world.enemy_x[slot], world.enemy_y[slot], mx, my)
+		x = moved[0]
+		y = moved[1]
+	world.enemy_x[slot] = clampi(x, config.arena_min_x + r, config.arena_max_x - r)
+	world.enemy_y[slot] = clampi(y, config.arena_min_y + r, config.arena_max_y - r)
 
 
 static func cell_size(config: SimConfig) -> int:
@@ -77,56 +102,61 @@ static func _separate(
 	var cols: int = Fx.floor_div(config.arena_max_x - config.arena_min_x, cell) + 1
 	var rows: int = Fx.floor_div(config.arena_max_y - config.arena_min_y, cell) + 1
 	var cells: int = cols * rows
-	var home: PackedInt64Array = PackedInt64Array()
-	home.resize(world.enemy_slots())
-	var cell_start: PackedInt64Array = PackedInt64Array()
-	cell_start.resize(cells + 1)
-	cell_start.fill(0)
-	var live: int = 0
+	var keys: PackedInt64Array = PackedInt64Array()
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
 			continue
 		var cx: int = clampi(Fx.floor_div(world.enemy_x[slot] - config.arena_min_x, cell), 0, cols - 1)
 		var cy: int = clampi(Fx.floor_div(world.enemy_y[slot] - config.arena_min_y, cell), 0, rows - 1)
-		home[slot] = cy * cols + cx
-		cell_start[home[slot] + 1] += 1
-		live += 1
-	for index: int in cells:
-		cell_start[index + 1] += cell_start[index]
-	# Items in cell order with their positions and radii side by side (structure of arrays).
+		keys.append((cy * cols + cx) * KEY_SPAN + slot)
+	keys.sort()
+	# Items in cell order, then slot order, with their positions and radii side by side.
+	var live: int = keys.size()
 	var cell_items: PackedInt64Array = PackedInt64Array()
+	var item_home: PackedInt64Array = PackedInt64Array()
 	var item_x: PackedInt64Array = PackedInt64Array()
 	var item_y: PackedInt64Array = PackedInt64Array()
 	var item_r: PackedInt64Array = PackedInt64Array()
 	cell_items.resize(live)
+	item_home.resize(live)
 	item_x.resize(live)
 	item_y.resize(live)
 	item_r.resize(live)
-	var fill: PackedInt64Array = cell_start.slice(0, cells)
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] == 0 or world.enemy_state[slot] != EnemyAttackSystem.ST_APPROACH:
-			continue
-		var at: int = fill[home[slot]]
+	for at: int in live:
+		var home: int = Fx.floor_div(keys[at], KEY_SPAN)
+		var slot: int = keys[at] - home * KEY_SPAN
 		cell_items[at] = slot
+		item_home[at] = home
 		item_x[at] = world.enemy_x[slot]
 		item_y[at] = world.enemy_y[slot]
 		item_r[at] = config.kind_value(world.enemy_kind[slot], SimConfig.KIND_RADIUS)
-		fill[home[slot]] = at + 1
 	var checks: int = 0
-	var index: int = world.sep_cursor if world.sep_cursor < cells else 0
-	while index < cells:
-		if checks >= SEP_MAX_CHECKS:
-			world.sep_cursor = index
-			return
+	var start: int = world.sep_cursor if world.sep_cursor < cells else 0
+	var first: int = keys.bsearch(start * KEY_SPAN)
+	var near_first: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
+	var near_last: PackedInt64Array = PackedInt64Array([0, 0, 0, 0])
+	while first < live:
+		var index: int = item_home[first]
+		var last: int = keys.bsearch((index + 1) * KEY_SPAN)
 		var cy: int = Fx.floor_div(index, cols)
 		var cx: int = index - cy * cols
-		var first: int = cell_start[index]
-		var last: int = cell_start[index + 1]
+		var near_count: int = 0
+		for n: int in 4:
+			var nx: int = cx + NEIGHBOURS[2 * n]
+			var ny: int = cy + NEIGHBOURS[2 * n + 1]
+			near_first[n] = 0
+			near_last[n] = 0
+			if nx < 0 or nx >= cols or ny >= rows:
+				continue
+			var other: int = ny * cols + nx
+			near_first[n] = keys.bsearch(other * KEY_SPAN)
+			near_last[n] = keys.bsearch((other + 1) * KEY_SPAN)
+			near_count += near_last[n] - near_first[n]
 		for a: int in range(first, last):
 			var xi: int = item_x[a]
 			var yi: int = item_y[a]
 			var ri: int = item_r[a]
-			checks += last - a - 1
+			checks += last - a - 1 + near_count
 			for b: int in range(a + 1, last):
 				var dx: int = xi - item_x[b]
 				var dy: int = yi - item_y[b]
@@ -134,19 +164,16 @@ static func _separate(
 				if dx * dx + dy * dy < reach * reach:
 					_push(cell_items[a], cell_items[b], dx, dy, reach, push_x, push_y)
 			for n: int in 4:
-				var nx: int = cx + NEIGHBOURS[2 * n]
-				var ny: int = cy + NEIGHBOURS[2 * n + 1]
-				if nx < 0 or nx >= cols or ny >= rows:
-					continue
-				var other: int = ny * cols + nx
-				checks += cell_start[other + 1] - cell_start[other]
-				for b: int in range(cell_start[other], cell_start[other + 1]):
+				for b: int in range(near_first[n], near_last[n]):
 					var dx: int = xi - item_x[b]
 					var dy: int = yi - item_y[b]
 					var reach: int = ri + item_r[b]
 					if dx * dx + dy * dy < reach * reach:
 						_push(cell_items[a], cell_items[b], dx, dy, reach, push_x, push_y)
-		index += 1
+		if checks >= SEP_MAX_CHECKS:
+			world.sep_cursor = index + 1 if index + 1 < cells else 0
+			return
+		first = last
 	world.sep_cursor = 0
 
 

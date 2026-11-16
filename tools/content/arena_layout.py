@@ -2,8 +2,8 @@
 """Arena 07 "Руины секты Юнхэ" (REF-033): the walkable grid of stage.jade_grove, drawn after the
 collision, loop and spawn panels of the board (ADR-015).
 
-Writes .work/proposals/arena-07-sect-ruins/topology.json; `--check` fails when the file differs
-from what this script draws. Stdlib only.
+Writes game/content/arena/jade_grove.json, the arena the simulation and the scene load (ADR-015
+A1); `--check` fails when the file differs from what this script draws. Stdlib only.
 
 Legend: '.' floor, 'H' raised floor, '^' stairs, 'B' bridge, 'S' spawn point, 'E' entry / start,
 'w' low wall, balustrade or ruin (blocks movement, not sight), '#' solid (pillar, statue, brazier
@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / ".work/proposals/arena-07-sect-ruins/topology.json"
+OUT = ROOT / "game/content/arena/jade_grove.json"
 CELL_PX = 48
 BOSS_RADIUS_CELLS = 7
 SIDE = 76
@@ -41,6 +41,7 @@ class Canvas:
     def __init__(self) -> None:
         self.c = SIDE // 2
         self.g = [[" "] * SIDE for _ in range(SIDE)]
+        self.props: list[tuple[str, float, float]] = []
 
     def uv(self, x: int, y: int) -> tuple[int, int]:
         dx, dy = x - self.c, y - self.c
@@ -54,12 +55,20 @@ class Canvas:
             if pred(*self.uv(x, y)):
                 self.g[y][x] = ch
 
-    def block(self, u: int, v: int, ch: str, size: int = 2) -> None:
-        """size x size cells whose top cell sits at screen (u, v)."""
+    def block(self, u: int, v: int, ch: str, size: int = 2, prop: str = "") -> None:
+        """size x size cells whose top cell sits at screen (u, v); a named prop stands on it."""
         x0, y0 = self.c + (u + v) // 2, self.c + (v - u) // 2
         for a in range(size):
             for b in range(size):
                 self.g[y0 + b][x0 + a] = ch
+        if prop:
+            self.props.append((prop, x0 + size / 2, y0 + size / 2))
+
+    def region_prop(self, pred, prop: str) -> None:
+        """A prop at the centre of the cells where pred(u, v) holds."""
+        cells = [(x, y) for x, y in self.cells() if pred(*self.uv(x, y))]
+        self.props.append((prop, sum(x for x, _ in cells) / len(cells) + 0.5,
+                           sum(y for _, y in cells) / len(cells) + 0.5))
 
     def touches(self, x: int, y: int, chars: str) -> bool:
         for a, b in STEPS:
@@ -98,10 +107,15 @@ def draw() -> dict:
     k.fill(lambda u, v: 13 <= v <= 20 and 30 <= u <= 37, "^")
     k.fill(lambda u, v: 27 <= v <= 33 and -14 <= u <= -4, "^")
     # 4. The gate hall, statues and columns of the wings.
-    k.fill(lambda u, v: -42 <= v <= -37 and 0 <= u <= 14, "#")
-    for u, v in [(-1, -30), (15, -30), (-6, -40), (20, -40), (-17, 28), (-1, 28), (31, 11), (31, 22)]:
-        k.block(u, v, "#")
-    k.fill(lambda u, v: -26 <= v <= -21 and -48 <= u <= -43, "#")
+    gate = (lambda u, v: -42 <= v <= -37 and 0 <= u <= 14)
+    k.fill(gate, "#")
+    k.region_prop(gate, "gate")
+    for u, v, prop in [(-1, -30, "lion"), (15, -30, "lion"), (-6, -40, "pillar"), (20, -40, "pillar"),
+                       (-17, 28, "lion"), (-1, 28, "lion"), (31, 11, "lion"), (31, 22, "lion")]:
+        k.block(u, v, "#", prop=prop)
+    maple = (lambda u, v: -26 <= v <= -21 and -48 <= u <= -43)
+    k.fill(maple, "#")
+    k.region_prop(maple, "maple_large")
     # 5. Seal ring: six ruin fragments at grid radius 9.6-12.2 with wide gaps (the inner loop runs
     #    through them), pillar ends; brazier columns between them at radius 14.5.
     for x, y in k.cells():
@@ -117,9 +131,10 @@ def draw() -> dict:
         for b in range(2):
             for d in range(2):
                 g[y + b][x + d] = "#"
+        k.props.append(("brazier", x + 1.0, y + 1.0))
     # 6. Pillars and obelisks along the parapet, the main loop stays at least 6 cells wide.
     for u, v in [(-26, -20), (26, -22), (-30, 12), (28, 16), (-14, -28), (18, -26), (8, 28), (-24, 22)]:
-        k.block(u, v, "#")
+        k.block(u, v, "#", prop="pillar")
     # 7. Spawn points: six on the main loop (the red rings of REF-033), one on the south landing
     #    and one on the west platform; entries on the west and east landings.
     for degrees in (100, 160, 220, 280, 340, 40):
@@ -147,11 +162,12 @@ def draw() -> dict:
     y0, y1 = min(y for _, y in used) - 1, max(y for _, y in used) + 1
     rows = ["".join(g[y][x0:x1 + 1]) for y in range(y0, y1 + 1)]
     entries = [[x, y] for y, r in enumerate(rows) for x, ch in enumerate(r) if ch == "E"]
+    props = [{"prop": name, "at": [round(x - x0, 2), round(y - y0, 2)]} for name, x, y in k.props]
     return {
-        "schema_version": 1, "kind": "stage_topology", "status": "DESIGN PROPOSAL (ADR-015)",
+        "schema_version": 1, "kind": "stage_topology", "status": "ADR-015",
         "stage_id": "stage.jade_grove", "reference": "REF-033", "legend": LEGEND, "cell_px": CELL_PX,
         "cells": [len(rows[0]), len(rows)], "centre": [c - x0, c - y0], "boss_radius_cells": BOSS_RADIUS_CELLS,
-        "start": entries[0], "entries": entries, "rows": rows,
+        "start": min(entries, key=lambda e: e[0] - e[1]), "entries": entries, "props": props, "rows": rows,
     }
 
 

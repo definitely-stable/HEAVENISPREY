@@ -36,7 +36,8 @@ func test_input_actions_are_bound() -> void:
 
 
 func test_driver_runs_sixty_ticks_per_second() -> void:
-	var config: SimConfig = RunView.placeholder_config()
+	# Without the walls: the hero walks the full minute.
+	var config: SimConfig = RunView.placeholder_config().with_arena(null)
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	var ticks: int = 0
 	for _i: int in 60:
@@ -99,7 +100,9 @@ func test_scene_moves_hero_and_camera() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	var start: Vector2 = view.driver.hero_position_px()
-	assert_eq(start, Vector2(768, 480), "hero starts at the arena centre")
+	var cell: Array = P0Tuning.arena_data()["start"]
+	assert_eq(start, (Vector2(float(cell[0]), float(cell[1])) + Vector2(0.5, 0.5)) * RunView.CELL_PX,
+		"hero starts at the centre of the start cell (the west entry, ADR-015 A1)")
 	for _i: int in 30:
 		view.advance_frame(TICK, Vector2i(0, -1))
 	var hero: Vector2 = view.driver.hero_position_px()
@@ -116,13 +119,23 @@ func test_hero_cannot_leave_arena() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.driver = FixedTickDriver.create(RunView.placeholder_config())
+	var arena: ArenaTopology = view.driver.config.arena
 	for _i: int in 600:
 		view.advance_frame(TICK, Vector2i(-1, -1))
-	assert_eq(view.driver.world.player_x, 24000)
-	assert_eq(view.driver.world.player_y, 24000)
-	var inset: float = RunView.CAMERA_INSET_CELLS * RunView.CELL_PX
-	assert_eq(view.camera_target(), IsoProjection.to_screen(Vector2(inset, inset)),
-		"at the wall the camera stops at the inset, so the view does not slide over the void")
+	var world: WorldState = view.driver.world
+	var stopped: Vector2i = Vector2i(world.player_x, world.player_y)
+	for _i: int in 60:
+		view.advance_frame(TICK, Vector2i(-1, -1))
+	assert_eq(Vector2i(world.player_x, world.player_y), stopped, "the walls of the landing stop the hero")
+	# The wall body covers [x - body, x + body - 1] on each axis.
+	for dx: int in [-arena.body, arena.body - 1]:
+		for dy: int in [-arena.body, arena.body - 1]:
+			var code: int = arena.code_at(world.player_x + dx, world.player_y + dy)
+			assert_eq(code, ArenaTopology.WALK, "the wall body stays on walkable cells")
+	var inset: Vector2 = Vector2.ONE * RunView.CAMERA_INSET_CELLS * RunView.CELL_PX
+	var room: Vector2 = Vector2(P0Tuning.arena_cells() * RunView.CELL_PX) - inset
+	assert_eq(view.camera_target(), IsoProjection.to_screen(view.driver.hero_position_px().clamp(inset, room)),
+		"the camera stops at the inset, so the view does not slide over the void")
 	assert_eq(view.get_node("Camera").position, view.camera_target())
 
 
@@ -183,6 +196,7 @@ func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.start_run("20261113")
+	_to_centre(view)
 	for _i: int in 90:
 		view.advance_frame(TICK, Vector2i.ZERO)
 	assert_eq(view.driver.world.enemy_alive, 1, "first enemy at tick 89")
@@ -201,6 +215,7 @@ func test_finished_run_waits_for_the_player() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.start_run("20261113")
+	_to_centre(view)
 	var guard: int = 0
 	while not view.driver.world.is_over() and guard < 3000:
 		_frame(view, Vector2i.ZERO)
@@ -298,6 +313,7 @@ func test_hero_clips_follow_the_run() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.start_run("20261113")
+	_to_centre(view)
 	assert_eq(view._hero_pose()[1], "idle")
 	view.advance_frame(TICK, Vector2i(1, 0))
 	assert_eq(view._hero_pose()[1], "run")
@@ -325,6 +341,7 @@ func test_enemy_walks_then_strikes_on_the_damage_tick() -> void:
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.start_run("20261113")
+	_to_centre(view)
 	var world: WorldState = view.driver.world
 	var guard: int = 0
 	while world.enemy_alive == 0 and guard < 600:
@@ -358,3 +375,12 @@ func test_enemy_walks_then_strikes_on_the_damage_tick() -> void:
 					struck = true
 	assert_true(struck, "an enemy reaches the standing hero")
 	assert_gt(uid, 0)
+
+
+## The hero stands at the arena centre, written into the world before the first tick (a
+## presentation check): in the open court the horde reaches a standing hero quickly.
+static func _to_centre(view: RunView) -> void:
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
+	for state: WorldState in [view.driver.world, view.driver.previous]:
+		state.player_x = int(centre.x) * Fx.FX_ONE
+		state.player_y = int(centre.y) * Fx.FX_ONE

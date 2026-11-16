@@ -1889,5 +1889,128 @@ class SimThreatCapsReferenceTests(unittest.TestCase):
         self.assertEqual(seen, set(range(10)) - {8})
 
 
+class ArenaTests(unittest.TestCase):
+    """ADR-015 A1: walls, the flow field, the chase target, spawn points and the invariants
+    of the arena traces."""
+
+    CELL = 48000
+    ROWS = ["#####",
+            "#...#",
+            "#.#.#",
+            "#S#.#",
+            "#####"]
+
+    def small(self):
+        return sim.Arena.from_rows(self.ROWS, self.CELL, 18000)
+
+    def centre(self, cx, cy):
+        return cx * self.CELL + self.CELL // 2, cy * self.CELL + self.CELL // 2
+
+    def body_on_walkable(self, arena, x, y):
+        b, c = arena.body, arena.cell
+        return all(arena.code(cx, cy) == sim.A_WALK
+                   for cy in range((y - b) // c, (y + b - 1) // c + 1)
+                   for cx in range((x - b) // c, (x + b - 1) // c + 1))
+
+    def test_codes_and_spawns(self):
+        arena = self.small()
+        self.assertEqual((arena.w, arena.h), (5, 5))
+        self.assertEqual(arena.code(1, 1), sim.A_WALK)
+        self.assertEqual(arena.code(2, 2), sim.A_SOLID)
+        self.assertEqual(arena.code(-1, 0), sim.A_SOLID, "outside the grid is solid")
+        self.assertEqual(arena.spawns, [(1, 3)])
+        low = sim.Arena.from_rows(["###", "#w#", "###"], self.CELL, 18000)
+        self.assertEqual(low.code(1, 1), sim.A_LOW)
+
+    def test_move_stops_flush_and_slides(self):
+        arena = self.small()
+        x, y = self.centre(1, 1)
+        self.assertEqual(arena.move(x, y, 100000, 0), (x + 100000, y), "the edge stays in cell 3")
+        self.assertEqual(arena.move(x, y, 150000, 0), (4 * self.CELL - 18000, y), "flush with the east wall")
+        self.assertEqual(arena.move(x, y, -100000, 0), (self.CELL + 18000, y), "flush with the west wall")
+        # Down and a little right: x moves first, then y stops flush on the solid (2, 2).
+        self.assertEqual(arena.move(x, y, 10000, 100000), (x + 10000, 2 * self.CELL - 18000))
+        # Straight down the open column: no stop.
+        self.assertEqual(arena.move(x, y, 0, 30000), (x, y + 30000))
+
+    def test_random_moves_never_enter_a_wall(self):
+        arena, rng = sim.P0_ARENA, random.Random(15)
+        x, y = sim.ARENA_BASE[6], sim.ARENA_BASE[7]
+        for _ in range(4000):
+            x, y = arena.move(x, y, rng.randint(-30000, 30000), rng.randint(-30000, 30000))
+            self.assertTrue(self.body_on_walkable(arena, x, y), (x, y))
+
+    def test_field_is_breadth_first_over_walkable_cells(self):
+        dist = self.small().field(3, 3)
+        w = 5
+        self.assertEqual([dist[3 * w + 3], dist[2 * w + 3], dist[1 * w + 3], dist[1 * w + 2], dist[1 * w + 1],
+                          dist[2 * w + 1], dist[3 * w + 1]], [0, 1, 2, 3, 4, 5, 6])
+        self.assertEqual(dist[2 * w + 2], -1, "walls are not walkable")
+
+    def test_chase_target(self):
+        arena = self.small()
+        hero = self.centre(3, 3)
+        self.assertEqual(arena.chase_target(*self.centre(1, 3), *hero), self.centre(1, 2),
+                         "the wall between them: up the field")
+        self.assertEqual(arena.chase_target(*self.centre(3, 1), *hero), hero,
+                         "straight down the open column: the hero itself")
+        self.assertEqual(arena.chase_target(hero[0] - 5000, hero[1], *hero), hero, "same cell")
+        self.assertEqual(arena.chase_target(*self.centre(1, 1), *self.centre(3, 1)), self.centre(3, 1))
+
+    def test_spawn_points_and_jitter(self):
+        config = sim.Config(sim.ARENA_BASE, sim.P0_VALUES, sim.W0_KINDS, sim.SEED, arena=sim.P0_ARENA)
+        world = sim.World(config)
+        arena = config.arena
+        jitter = arena.cell // 2 - arena.body
+        rng = sim.hip_rng.HipRng(sim.hip_rng.parse_u64(config.seed), "enemy", 0)
+        points = [arena.spawn_point(i) for i in range(len(arena.spawns))]
+        far = max(sim._dist2(*p, world.player_x, world.player_y) for p in points)
+        for _ in range(200):
+            x, y = sim._arena_spot(config, world, rng)
+            home = min(points, key=lambda p: abs(p[0] - x) + abs(p[1] - y))
+            self.assertLessEqual(max(abs(home[0] - x), abs(home[1] - y)), jitter)
+            self.assertTrue(self.body_on_walkable(arena, x, y))
+            d2 = sim._dist2(*home, world.player_x, world.player_y)
+            self.assertTrue(d2 >= config.spawn_min_distance ** 2 or d2 == far)
+
+    def test_arena_traces_keep_bodies_out_of_walls(self):
+        names = {"arena_hero_walls", "arena_w0_into_court", "arena_windows_compressed"}
+        for name, config, commands, steps in sim.ARENA_SCENARIOS:
+            if name not in names:
+                continue
+            arena = config.arena
+            log, world = sim.CommandLog(), sim.World(config)
+            for command in commands:
+                log.append(command, 0)
+            spawned = 0
+            for _ in range(steps):
+                sim.step(config, world, log)
+                if world.over():
+                    break
+                self.assertTrue(self.body_on_walkable(arena, world.player_x, world.player_y), name)
+                for e in world.enemies:
+                    if e[sim.E_UID] != 0:
+                        self.assertTrue(self.body_on_walkable(arena, e[sim.E_X], e[sim.E_Y]), (name, e))
+                for p in world.projectiles:
+                    if p[sim.P_DAMAGE] != 0:
+                        self.assertNotEqual(arena.code_at(p[sim.P_X], p[sim.P_Y]), sim.A_SOLID, name)
+                for s in world.shots:
+                    if s[sim.S_DAMAGE] != 0:
+                        self.assertNotEqual(arena.code_at(s[sim.S_X], s[sim.S_Y]), sim.A_SOLID, name)
+                spawned = max(spawned, world.next_enemy_uid - 1)
+            if name != "arena_hero_walls":
+                self.assertGreater(spawned, 20, name)
+
+    def test_config_rejects_an_arena_that_does_not_fit(self):
+        good = sim.Config(sim.ARENA_BASE, arena=sim.P0_ARENA)
+        self.assertTrue(good.valid())
+        moved = list(sim.ARENA_BASE)
+        moved[6], moved[7] = 24000, 24000
+        self.assertFalse(sim.Config(moved, arena=sim.P0_ARENA).valid(), "start in a wall")
+        wide = list(sim.ARENA_BASE)
+        wide[4] += 48000
+        self.assertFalse(sim.Config(wide, arena=sim.P0_ARENA).valid(), "grid != rectangle")
+
+
 if __name__ == "__main__":
     unittest.main()
