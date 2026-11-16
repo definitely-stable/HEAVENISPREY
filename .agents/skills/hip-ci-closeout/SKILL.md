@@ -16,12 +16,22 @@ description: Close a HEAVEN IS PREY slice - push, PR, GitHub-hosted CI on Ubuntu
 - [design-validation.yml](../../../.github/workflows/design-validation.yml) · [toolchain-smoke.yml](../../../.github/workflows/toolchain-smoke.yml)
 
 ## Procedure
-1. Локально: `python scripts/validate_work.py`, `python scripts/validate_agent_skills.py`, `python -m unittest discover -s tests -v`.
+1. Локально — все шаги CI:
+   - `python scripts/validate_work.py`, `python scripts/validate_agent_skills.py` и остальные шаги `design-validation.yml` с их аргументами;
+   - `python -m unittest discover -s tests -v`;
+   - `python scripts/dev/godot_tool.py test` (GUT);
+   - gdlint закреплённой версии (`pip install gdtoolkit==4.5.0` в отдельном venv) по `game/core game/presentation game/tests game/tools`.
 2. `git push -u origin <branch>`; `gh pr create` с Summary / Evidence / Non-goals.
 3. `gh pr checks <n> --watch`; при падении читать лог (`gh run view <id> --log-failed`), чинить причину, не отключать проверку.
 4. Из логов взять фактические строки (число тестов, PASS-маркеры) для обеих ОС.
 5. Обычный согласованный PR после зелёного CI и ревью — `gh pr merge <n> --merge --delete-branch`; не оставлять открытым.
 6. Проверить push-CI на `main` и обновить CURRENT_STATE отдельным маленьким PR: HEAD, PR, run ID, acceptance, blockers, next action, дата.
+
+## Уже случалось
+- **Вывод тестов съедал итог.** `unittest | tail` показывал печать тестов вместо итога, а код выхода был от `tail`. Итог брать из stderr: `python -m unittest discover -s tests 2>&1 >/dev/null | tail -3`.
+- **Скрипт CI без аргументов** (`content_impact.py`, `ref_catalog.py`) падает локально. Запускать с аргументами из workflow.
+- **Python-тест импортировал numpy.** Job Validate ставит только stdlib, и тест упал на импорте, хотя локально был зелёным. Тесты в `tests/` пишутся на stdlib, а Pillow и numpy нужны только под `skipUnless`.
+- **Новый ассет или трасса меняют счётчики в тестах.** Grep по ID до пуша, а не после красного CI.
 
 ## Acceptance
 - PR merged, post-merge run на `main` SUCCESS, CURRENT_STATE соответствует live-фактам.

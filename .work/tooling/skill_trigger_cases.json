@@ -18,6 +18,8 @@
     {"prompt": "Сделай ревью diff перед merge", "expect": "hip-code-review"},
     {"prompt": "Review this PR diff for reward and RNG exactly-once regressions before merge", "expect": "hip-code-review"},
     {"prompt": "Закрыть срез: дождаться CI, merge и обновить CURRENT_STATE", "expect": "hip-ci-closeout"},
-    {"prompt": "PR is waiting on CI; merge to main and record evidence in CURRENT_STATE", "expect": "hip-ci-closeout"}
+    {"prompt": "PR is waiting on CI; merge to main and record evidence in CURRENT_STATE", "expect": "hip-ci-closeout"},
+    {"prompt": "Сгенерируй новый проп по доске референсов: изометрия, атлас спрайтов, проекция основания", "expect": "hip-art-asset"},
+    {"prompt": "Generate a prop sprite atlas from the reference board in the isometric projection", "expect": "hip-art-asset"}
   ]
 }
