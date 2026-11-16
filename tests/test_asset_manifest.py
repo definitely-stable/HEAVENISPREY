@@ -77,7 +77,7 @@ class AssetManifestTests(unittest.TestCase):
     def test_repository_manifest_is_valid(self):
         report = assets.validate()
         self.assertEqual(report["assets"], 16)
-        self.assertLessEqual(report["lfs_bytes"], assets.LFS_BUDGET_BYTES)
+        self.assertGreater(report["lfs_bytes"], 0)
 
     def test_lfs_pointer_with_the_same_identity_passes(self):
         for entry in self.manifest["assets"]:
@@ -298,12 +298,6 @@ class AssetManifestTests(unittest.TestCase):
         pieces = self.entry(VFX)["layout"]["pieces"]
         pieces[1]["name"] = pieces[0]["name"]
         self.fails("unique names")
-
-    def test_lfs_budget(self):
-        saved = assets.LFS_BUDGET_BYTES
-        assets.LFS_BUDGET_BYTES = 1000
-        self.addCleanup(setattr, assets, "LFS_BUDGET_BYTES", saved)
-        self.fails("exceeds")
 
 
 if __name__ == "__main__":

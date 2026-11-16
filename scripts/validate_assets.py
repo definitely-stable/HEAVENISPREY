@@ -18,7 +18,8 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
   the scene and have none;
 - a HUD kit or an effects atlas has uniquely named pieces inside the atlas, frame windows
   inside their piece and stretch caps narrower than the piece (ADR-014 sections 15 and 18);
-- the LFS volume of the art (built files, normal maps and masters) stays within the budget.
+- the report gives the LFS volume of the art (built files, normal maps and masters); there is
+  no cap on it (ADR-014 section 8).
 """
 from __future__ import annotations
 
@@ -43,8 +44,6 @@ KINDS = {"sprite_atlas", "anim_atlas", "floor_texture", "prop_atlas", "decal_tex
          "vfx_atlas"}
 ## Kinds drawn with transparency: their PNG must be RGBA.
 ALPHA_KINDS = {"sprite_atlas", "anim_atlas", "prop_atlas", "decal_texture", "ui_atlas", "vfx_atlas"}
-## ADR-014 section 8: the P0 art budget (ADR-009 had 10 MiB for the first slice).
-LFS_BUDGET_BYTES = 48 * 1024 * 1024
 REQUIRED = ("asset_id", "kind", "path", "sha256", "bytes", "size", "asset_version", "art_bible_version",
             "content_ids", "layout", "normal", "source", "qa")
 NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "anim_atlas": "silhouette_pillow",
@@ -298,8 +297,6 @@ def validate() -> dict:
     folders = sorted(p.name for p in SOURCE.iterdir() if (p / "source.json").exists())
     if folders != sorted(a.split(".", 2)[2] for a in seen):
         raise AssetError("art_source folders and manifest assets differ")
-    if volume > LFS_BUDGET_BYTES:
-        raise AssetError(f"LFS volume {volume} bytes exceeds {LFS_BUDGET_BYTES}")
     return {"assets": len(seen), "real_files_checked": real, "lfs_bytes": volume}
 
 
