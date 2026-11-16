@@ -310,13 +310,13 @@
       "asset_id": "asset.prop.courtyard_guardians",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_guardians/courtyard_guardians.png",
-      "sha256": "84e040588b0eedbf709acd015c2cc6f5482e2245b1849b9bbf178533fb8ceb8f",
-      "bytes": 637869,
+      "sha256": "88fd654eb29b7ebcbb79de008717694ebdaf332fc122437dea86ee6ab3ea1dce",
+      "bytes": 735919,
       "size": [
-        994,
-        452
+        1053,
+        512
       ],
-      "asset_version": 1,
+      "asset_version": 2,
       "art_bible_version": 4,
       "content_ids": [
         "stage.jade_grove"
@@ -329,59 +329,59 @@
             "region": [
               6,
               6,
-              293,
-              380
+              276,
+              424
             ],
             "feet": [
-              151.0,
-              312.5
+              144.0,
+              366.5
             ]
           },
           {
             "name": "lion_cub",
             "region": [
-              311,
-              6,
               294,
-              380
+              6,
+              276,
+              424
             ],
             "feet": [
-              456.0,
-              312.5
+              432.5,
+              365.8
             ]
           },
           {
             "name": "pillar",
             "region": [
-              617,
+              582,
               6,
-              166,
-              440
+              200,
+              500
             ],
             "feet": [
-              699.5,
-              404.8
+              682.5,
+              456.2
             ]
           },
           {
             "name": "pillar_broken",
             "region": [
-              795,
+              794,
               6,
-              193,
-              240
+              253,
+              294
             ],
             "feet": [
-              891.5,
-              197.8
+              920.5,
+              236.8
             ]
           }
         ]
       },
       "normal": {
         "path": "game/assets/props/courtyard_guardians/courtyard_guardians_n.png",
-        "sha256": "9c3edbfffed588291e5156c92e03e0c7d0221159a4f0b3fcf0c2d40a74a873f3",
-        "bytes": 142788,
+        "sha256": "92d10c4d50730c9da3835614a239b3d4b74913dce8a4ab314193218de866f9e1",
+        "bytes": 152072,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -389,22 +389,22 @@
       },
       "source": {
         "path": "art_source/courtyard_guardians/master.webp",
-        "sha256": "714c0d2d90b1a3043dffd8e5247eb6a29db3dfd9495fe70c458fdb4ca1ab7bb3",
-        "bytes": 1192274,
-        "prompt_sha256": "12c905bec829e89338b4b0faaf6453ce0e29b9a16c732de873d5f4dd4fa95919"
+        "sha256": "d37c6296d4cde2cba5ba6940fc63e5f4e4d50d2063e2dc14dab6c4eef28bbd39",
+        "bytes": 1070966,
+        "prompt_sha256": "26ab0c1f2193b72587a59e214b9bccb741149f98fbf45be6697203be485303ab"
       },
       "qa": {
         "palette_group": "props",
-        "opaque_px": 14375,
-        "palette_mean_delta_e": 9.65,
+        "opaque_px": 15714,
+        "palette_mean_delta_e": 10.82,
         "tones_pct": [
-          62.8,
-          32.4,
-          4.8
+          62.2,
+          34.7,
+          3.1
         ],
-        "chroma": 0.152,
-        "threat_colour_pct": 0.237,
-        "median_l": 72.0
+        "chroma": 0.174,
+        "threat_colour_pct": 0.21,
+        "median_l": 73.1
       }
     },
     {

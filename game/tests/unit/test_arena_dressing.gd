@@ -40,13 +40,88 @@ func test_every_prop_of_the_file_has_its_sprites() -> void:
 		assert_true(sprites.has_prop(sprite[0], sprite[1]) and sprites.has_prop(sprite[0], sprite[2]), prop)
 
 
-## REF-033, REF-029: the guardian lions and the columns are monumental next to the hero.
+## REF-033, REF-029: the guardian lions and the columns are monumental next to the hero
+## (ADR-015 section 5: a column 2-3 hero heights; the lion figure itself about 1.3 on its plinth).
 func test_guardians_tower_over_the_hero() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var hero: float = RunView.HERO_SPRITE_HEIGHT_PX
 	for lion: String in ["lion_ball", "lion_cub"]:
-		assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, lion).y / hero, 2.0, 2.5, lion)
-	assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, "pillar").y / hero, 2.3, 3.0, "pillar")
+		assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, lion).y / hero, 2.2, 2.7, lion)
+	assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, "pillar").y / hero, 2.5, 3.0, "pillar")
+
+
+## ADR-015 section 9: the square base of a lion or a column lies on the 2:1 floor, corner-on to
+## the viewer: its lower edges rise 1 px per 2 px on both sides, and it covers its 2 x 2 solid cells
+## (lions 0.85-1.05 of the cell diamond width, columns 0.65-1.0).
+func test_guardian_bases_lie_on_the_floor() -> void:
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
+	var entry: Dictionary = {}
+	for asset: Dictionary in manifest["assets"]:
+		if asset["asset_id"] == ArenaDressing.GUARDIANS_ASSET:
+			entry = asset
+	var image: Image = (load("res://" + (entry["path"] as String).trim_prefix("game/")) as Texture2D).get_image()
+	if image.is_compressed():
+		image.decompress()
+	var footprint: float = IsoProjection.to_screen(Vector2(2 * CELL, 0)).x * 2.0
+	var cover: Dictionary = {"lion_ball": [0.85, 1.05], "lion_cub": [0.85, 1.05], "pillar": [0.65, 1.0]}
+	for prop: Dictionary in entry["layout"]["props"]:
+		var name: String = prop["name"]
+		if not cover.has(name):
+			continue
+		var region: Array = prop["region"]
+		var base: Array = _base_of(image, Rect2i(region[0], region[1], region[2], region[3]))
+		assert_almost_eq(base[0], 0.5, 0.06, "%s left edge" % name)
+		assert_almost_eq(base[1], -0.5, 0.06, "%s right edge" % name)
+		assert_between(base[2] / float(entry["layout"]["density"]) / footprint, cover[name][0], cover[name][1], name)
+
+
+## [slope left of the lowest point, slope right of it, base width] of the opaque shape in `rect`:
+## slopes are medians over steps of a quarter of each side (a leaf or a chip does not move them);
+## the base width is taken over the lowest 15 % of the rows, as the sprite builder anchors it.
+func _base_of(image: Image, rect: Rect2i) -> Array:
+	var bottom: PackedInt32Array = PackedInt32Array()
+	var lowest: int = 0
+	var first: int = -1
+	var last: int = -1
+	var top: int = rect.size.y
+	for x: int in rect.size.x:
+		var y_low: int = -1
+		for y: int in rect.size.y:
+			if image.get_pixel(rect.position.x + x, rect.position.y + y).a > 0.5:
+				y_low = y
+				top = mini(top, y)
+		bottom.append(y_low)
+		if y_low >= 0:
+			last = x
+			if first < 0:
+				first = x
+			if y_low > bottom[lowest]:
+				lowest = x
+	var band: int = maxi(2, roundi((bottom[lowest] + 1 - top) * 0.15))
+	var left_x: int = -1
+	var right_x: int = -1
+	for x: int in rect.size.x:
+		if bottom[x] > bottom[lowest] - band:
+			right_x = x
+			if left_x < 0:
+				left_x = x
+	var left_span: int = lowest - first
+	var right_span: int = last - lowest
+	return [
+		_median_slope(bottom, first + left_span / 10, lowest - left_span / 10),
+		_median_slope(bottom, lowest + right_span / 10, last - right_span / 10),
+		float(right_x - left_x + 1),
+	]
+
+
+func _median_slope(bottom: PackedInt32Array, from: int, to: int) -> float:
+	var step: int = maxi(4, (to - from) / 4)
+	var slopes: Array[float] = []
+	for x: int in range(from, to - step):
+		if bottom[x] >= 0 and bottom[x + step] >= 0:
+			slopes.append(float(bottom[x + step] - bottom[x]) / step)
+	slopes.sort()
+	return slopes[slopes.size() / 2] if not slopes.is_empty() else 0.0
 
 
 ## Placeholder blocks: one on every low wall cell, one on every solid cell that no named prop
