@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.courtyard_guardians",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 2,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "26ab0c1f2193b72587a59e214b9bccb741149f98fbf45be6697203be485303ab",
+    "created": "2026-11-16T18:35:00+0500",
+    "master_sha256": "995a96f59f0a631be04cf1df96af16cd319375ee203ba3597dfd2d96550028dd",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical. Painted over the geometry template of tools/art/iso_template.py courtyard_guardians (first attached image)"
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 4,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "lion_ball",
+      "height_px": 212
+    },
+    {
+      "name": "lion_cub",
+      "height_px": 212
+    },
+    {
+      "name": "pillar",
+      "height_px": 250
+    },
+    {
+      "name": "pillar_broken",
+      "height_px": 147
+    }
+  ]
+}

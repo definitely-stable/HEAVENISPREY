@@ -11,10 +11,16 @@ const LIGHTS_ASSET: String = "asset.prop.courtyard_lights"
 const NATURE_ASSET: String = "asset.prop.courtyard_nature"
 const WALLS_ASSET: String = "asset.prop.courtyard_walls"
 const PEAKS_ASSET: String = "asset.prop.distant_peaks"
-## The atlas of each named prop of the arena file.
-const PROP_ASSETS: Dictionary = {
-	"gate": WALLS_ASSET, "lion": LIGHTS_ASSET, "pillar": NATURE_ASSET, "brazier": LIGHTS_ASSET,
-	"maple_large": NATURE_ASSET,
+## Guardian lions and the columns of the ruined sect after REF-033 and REF-029: monumental,
+## the lion on its plinth about 2.25 hero heights, a column about 2.6.
+const GUARDIANS_ASSET: String = "asset.prop.courtyard_guardians"
+## Each named prop of the arena file: [atlas, sprite of the first of a pair, of the second].
+const PROP_SPRITES: Dictionary = {
+	"gate": [WALLS_ASSET, "gate", "gate"],
+	"lion": [GUARDIANS_ASSET, "lion_ball", "lion_cub"],
+	"pillar": [GUARDIANS_ASSET, "pillar", "pillar"],
+	"brazier": [LIGHTS_ASSET, "brazier", "brazier"],
+	"maple_large": [NATURE_ASSET, "maple_large", "maple_large"],
 }
 ## Props that carry a warm point light, and the height of their flame above the base (px).
 const LIGHT_PROPS: Dictionary = {"lantern_pagoda": 0.62, "brazier": 0.85, "gate": 0.55}
@@ -50,7 +56,8 @@ const BACKDROP: Array = [
 
 ## Every placement: {asset, prop, at (world px), flip, light (bool), flame (screen px above the
 ## base)}; a placeholder block also carries its cell rectangle (world px) and screen height.
-## The second lion of each pair is mirrored to face the first.
+## The lions stand in pairs: the first with the ball, the second with the cub, mirrored to face
+## the first.
 static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var anchors: Array[Vector2] = []
@@ -60,12 +67,13 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 		var at: Array = item.get("at", [0, 0])
 		var cell: Vector2 = Vector2(float(at[0]), float(at[1]))
 		anchors.append(cell)
-		var flip: bool = false
+		var second: bool = false
 		if prop == "lion":
-			flip = lions % 2 == 1
+			second = lions % 2 == 1
 			lions += 1
-		if PROP_ASSETS.has(prop):
-			_add(out, sprites, PROP_ASSETS[prop], prop, cell * cell_px, flip)
+		if PROP_SPRITES.has(prop):
+			var sprite: Array = PROP_SPRITES[prop]
+			_add(out, sprites, sprite[0], sprite[2] if second else sprite[1], cell * cell_px, second)
 	var rows: Array = data.get("rows", [])
 	var propped: Dictionary = _propped(rows, anchors)
 	for y: int in rows.size():
