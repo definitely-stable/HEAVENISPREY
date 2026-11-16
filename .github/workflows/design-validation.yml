@@ -54,6 +54,10 @@ jobs:
         run: python scripts/validate_effect_chain_proposal.py
       - name: Verify GAME-ARCH-02 arena, telegraphs, boss pattern and reward order (design-only)
         run: python scripts/validate_encounter_proposal.py
+      - name: Verify ADR-015 arena 07 topology after REF-033 (drawing and rules, design-only)
+        run: |
+          python tools/content/arena_layout.py --check
+          python scripts/validate_arena_layout.py
       - name: Verify P0-00 generated ContentRegistry equals v7 sources (digest parity)
         run: python tools/content/generate_registry.py --check
       - name: Verify RU/EN UI strings for the game equal translations.csv
