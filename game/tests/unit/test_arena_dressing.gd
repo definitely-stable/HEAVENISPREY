@@ -31,12 +31,22 @@ func test_named_props_stand_on_solid_cells() -> void:
 	assert_eq(named, (_data()["props"] as Array).size(), "every prop of the file has a sprite")
 
 
-func test_every_prop_of_the_file_has_an_atlas() -> void:
+func test_every_prop_of_the_file_has_its_sprites() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	for item: Dictionary in _data()["props"]:
 		var prop: String = item["prop"]
-		assert_true(ArenaDressing.PROP_ASSETS.has(prop), prop)
-		assert_true(sprites.has_prop(ArenaDressing.PROP_ASSETS[prop], prop), prop)
+		assert_true(ArenaDressing.PROP_SPRITES.has(prop), prop)
+		var sprite: Array = ArenaDressing.PROP_SPRITES[prop]
+		assert_true(sprites.has_prop(sprite[0], sprite[1]) and sprites.has_prop(sprite[0], sprite[2]), prop)
+
+
+## REF-033, REF-029: the guardian lions and the columns are monumental next to the hero.
+func test_guardians_tower_over_the_hero() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var hero: float = RunView.HERO_SPRITE_HEIGHT_PX
+	for lion: String in ["lion_ball", "lion_cub"]:
+		assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, lion).y / hero, 2.0, 2.5, lion)
+	assert_between(sprites.prop_size(ArenaDressing.GUARDIANS_ASSET, "pillar").y / hero, 2.3, 3.0, "pillar")
 
 
 ## Placeholder blocks: one on every low wall cell, one on every solid cell that no named prop
@@ -69,11 +79,12 @@ func test_blocks_cover_the_walls_without_props() -> void:
 
 
 func test_lions_face_each_other_in_pairs() -> void:
-	var flips: Array = []
+	var lions: Array = []
 	for item: Dictionary in _items():
-		if item["prop"] == "lion":
-			flips.append(item["flip"])
-	assert_eq(flips, [false, true, false, true, false, true])
+		if item["asset"] == ArenaDressing.GUARDIANS_ASSET and (item["prop"] as String).begins_with("lion"):
+			lions.append([item["prop"], item["flip"]])
+	var pair: Array = [["lion_ball", false], ["lion_cub", true]]
+	assert_eq(lions, pair + pair + pair)
 
 
 func test_lights_come_from_lantern_props_with_their_flame_height() -> void:

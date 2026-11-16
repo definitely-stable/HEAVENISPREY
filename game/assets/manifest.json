@@ -307,6 +307,107 @@
       }
     },
     {
+      "asset_id": "asset.prop.courtyard_guardians",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_guardians/courtyard_guardians.png",
+      "sha256": "84e040588b0eedbf709acd015c2cc6f5482e2245b1849b9bbf178533fb8ceb8f",
+      "bytes": 637869,
+      "size": [
+        994,
+        452
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "lion_ball",
+            "region": [
+              6,
+              6,
+              293,
+              380
+            ],
+            "feet": [
+              151.0,
+              312.5
+            ]
+          },
+          {
+            "name": "lion_cub",
+            "region": [
+              311,
+              6,
+              294,
+              380
+            ],
+            "feet": [
+              456.0,
+              312.5
+            ]
+          },
+          {
+            "name": "pillar",
+            "region": [
+              617,
+              6,
+              166,
+              440
+            ],
+            "feet": [
+              699.5,
+              404.8
+            ]
+          },
+          {
+            "name": "pillar_broken",
+            "region": [
+              795,
+              6,
+              193,
+              240
+            ],
+            "feet": [
+              891.5,
+              197.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/courtyard_guardians/courtyard_guardians_n.png",
+        "sha256": "9c3edbfffed588291e5156c92e03e0c7d0221159a4f0b3fcf0c2d40a74a873f3",
+        "bytes": 142788,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_guardians/master.webp",
+        "sha256": "714c0d2d90b1a3043dffd8e5247eb6a29db3dfd9495fe70c458fdb4ca1ab7bb3",
+        "bytes": 1192274,
+        "prompt_sha256": "12c905bec829e89338b4b0faaf6453ce0e29b9a16c732de873d5f4dd4fa95919"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 14375,
+        "palette_mean_delta_e": 9.65,
+        "tones_pct": [
+          62.8,
+          32.4,
+          4.8
+        ],
+        "chroma": 0.152,
+        "threat_colour_pct": 0.237,
+        "median_l": 72.0
+      }
+    },
+    {
       "asset_id": "asset.prop.courtyard_lights",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_lights/courtyard_lights.png",
