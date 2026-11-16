@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.courtyard_balustrade",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "ccc6159b95c5e775d084699d1bc822b4a2563c58e894735a23cc9d4890e5bfce",
+    "created": "2026-11-17T01:52:11+0500",
+    "master_sha256": "118f673d9418924281693ec8d6c976c9a4b2123e55d2dec6bce2fd2440b97e8b",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical. Painted over the geometry template of tools/art/iso_template.py courtyard_balustrade (first attached image). Candidate v2 of 2: in v1 the stone chips at the foot of the broken post take half of its base side at game scale (base slope -0.28 in the atlas test); v2 measures +0.465/-0.486 (post) and +0.468/-0.489 (broken post) with tools/art/measure_base.py"
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 4,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "post",
+      "height_px": 66
+    },
+    {
+      "name": "post_broken",
+      "height_px": 38
+    },
+    {
+      "name": "rubble",
+      "height_px": 39
+    },
+    {
+      "name": "rail",
+      "height_px": 42
+    }
+  ]
+}

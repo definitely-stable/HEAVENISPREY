@@ -307,6 +307,107 @@
       }
     },
     {
+      "asset_id": "asset.prop.courtyard_balustrade",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_balustrade/courtyard_balustrade.png",
+      "sha256": "16fef39c08de2d6ab1e6d38aeb9665e5b96cabfef52ee8fa5bcd0520a97708e1",
+      "bytes": 63124,
+      "size": [
+        410,
+        144
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "post",
+            "region": [
+              6,
+              6,
+              53,
+              132
+            ],
+            "feet": [
+              32.5,
+              124.8
+            ]
+          },
+          {
+            "name": "post_broken",
+            "region": [
+              71,
+              6,
+              56,
+              76
+            ],
+            "feet": [
+              99.0,
+              71.0
+            ]
+          },
+          {
+            "name": "rubble",
+            "region": [
+              139,
+              6,
+              119,
+              78
+            ],
+            "feet": [
+              199.0,
+              72.5
+            ]
+          },
+          {
+            "name": "rail",
+            "region": [
+              270,
+              6,
+              134,
+              84
+            ],
+            "feet": [
+              337.0,
+              56.5
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/courtyard_balustrade/courtyard_balustrade_n.png",
+        "sha256": "fc7daad06d1b2ecc328ecb3008e9f66c7254364edc55f857903e0f6e8c158363",
+        "bytes": 27871,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_balustrade/master.webp",
+        "sha256": "9d2d172cd91fea14248008f84c59c98742d46ed30be3e6defb383c34fdec7b6a",
+        "bytes": 1016912,
+        "prompt_sha256": "ccc6159b95c5e775d084699d1bc822b4a2563c58e894735a23cc9d4890e5bfce"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 7804,
+        "palette_mean_delta_e": 11.09,
+        "tones_pct": [
+          58.0,
+          39.5,
+          2.4
+        ],
+        "chroma": 0.221,
+        "threat_colour_pct": 0.384,
+        "median_l": 77.0
+      }
+    },
+    {
       "asset_id": "asset.prop.courtyard_guardians",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_guardians/courtyard_guardians.png",

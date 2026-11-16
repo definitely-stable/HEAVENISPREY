@@ -6,8 +6,8 @@ extends GutTest
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
 	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
-	"asset.prop.courtyard_guardians", "asset.prop.courtyard_lights", "asset.prop.courtyard_nature",
-	"asset.prop.courtyard_walls",
+	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
+	"asset.prop.courtyard_nature", "asset.prop.courtyard_walls",
 	"asset.prop.distant_peaks", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]

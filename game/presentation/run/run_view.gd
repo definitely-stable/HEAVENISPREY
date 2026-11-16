@@ -614,7 +614,7 @@ func _draw_shadow_pass() -> void:
 			_cast_shadow(canvas, _frame_pose(slot), driver.enemy_position_px(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.BLOCK_PROP:
+		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP:
 			continue
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
 		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
@@ -721,6 +721,9 @@ func _draw_prop(prop: Dictionary) -> void:
 	var light: Color = RunLighting.with_aura(prop["fixed_light"], prop["at"], driver.hero_position_px())
 	if prop["prop"] == ArenaDressing.BLOCK_PROP:
 		ArenaDressing.draw_block(self, prop, light)
+		return
+	if prop["prop"] == ArenaDressing.RAIL_PROP:
+		ArenaDressing.draw_rail(self, _sprites, prop, light)
 		return
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 

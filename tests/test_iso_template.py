@@ -36,6 +36,8 @@ class IsoTemplateTests(unittest.TestCase):
         for name, layout in iso.LAYOUTS.items():
             for prop in layout:
                 stack = iso.blocks(prop)
+                if not stack:
+                    continue
                 self.assertEqual(stack[0]["left"][1], (prop["x"], prop["y"]), "front corner of the base")
                 for below, above in zip(stack, stack[1:]):
                     top, base = below["top"], above["left"]
@@ -49,10 +51,19 @@ class IsoTemplateTests(unittest.TestCase):
         for name, layout in iso.LAYOUTS.items():
             for prop in layout:
                 points = [p for block in iso.blocks(prop) for face in block.values() for p in face]
+                rect = iso.flat_rect(prop)
+                if rect:
+                    points += [(rect[0], rect[1]), (rect[2], rect[3])]
+                self.assertTrue(points, name)
                 col, row = int(prop["x"] // cell_w), int(prop["y"] // cell_h)
                 for x, y in points:
                     self.assertTrue(col * cell_w < x < (col + 1) * cell_w, (name, x))
                     self.assertTrue(row * cell_h < y <= (row + 1) * cell_h - 4, (name, y))
+
+    def test_every_prop_is_blocks_or_a_flat_elevation(self):
+        for name, layout in iso.LAYOUTS.items():
+            for prop in layout:
+                self.assertNotEqual("blocks" in prop, "flat" in prop, name)
 
     @unittest.skipUnless(importlib.util.find_spec("PIL"), "Pillow is not installed")
     def test_render_draws_the_lowest_corner_of_every_base(self):
