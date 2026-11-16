@@ -14,8 +14,6 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageDraw
-
 SIZE = (1536, 1024)
 KEY = (0, 255, 0)
 TOP, LEFT, RIGHT, EDGE = (150, 146, 160), (110, 104, 122), (62, 58, 72), (40, 36, 48)
@@ -32,27 +30,46 @@ LAYOUTS: dict[str, list[dict]] = {
 }
 
 
-def block(draw: ImageDraw.ImageDraw, cx: float, by: float, width: float, height: float) -> float:
-    """A square block with its front corner at (cx, by); returns the y of its top face centre."""
+Point = tuple[float, float]
+
+
+def faces(cx: float, by: float, width: float, height: float) -> dict[str, list[Point]]:
+    """The visible faces of a square block with its front corner at (cx, by)."""
     a, b = width / 2, width / 4
-    draw.polygon([(cx - a, by - b), (cx, by), (cx, by - height), (cx - a, by - b - height)], fill=LEFT, outline=EDGE)
-    draw.polygon([(cx, by), (cx + a, by - b), (cx + a, by - b - height), (cx, by - height)], fill=RIGHT, outline=EDGE)
-    draw.polygon([(cx, by - height), (cx - a, by - b - height), (cx, by - 2 * b - height), (cx + a, by - b - height)],
-                 fill=TOP, outline=EDGE)
-    return by - b - height
+    return {
+        "left": [(cx - a, by - b), (cx, by), (cx, by - height), (cx - a, by - b - height)],
+        "right": [(cx, by), (cx + a, by - b), (cx + a, by - b - height), (cx, by - height)],
+        "top": [(cx, by - height), (cx - a, by - b - height), (cx, by - 2 * b - height), (cx + a, by - b - height)],
+    }
 
 
-def render(name: str) -> Image.Image:
+def blocks(prop: dict) -> list[dict[str, list[Point]]]:
+    """The faces of the stacked blocks of a prop, bottom to top; each next block stands coaxially on
+    the centre of the top face of the one below."""
+    out = []
+    cx, by = prop["x"], prop["y"]
+    for width, height in prop["blocks"]:
+        if out:
+            top = out[-1]["top"]
+            by = (top[0][1] + top[2][1]) / 2 + width / 4
+        out.append(faces(cx, by, width, height))
+    return out
+
+
+def render(name: str):
+    """The template as a PIL image (Pillow is needed only here)."""
+    from PIL import Image, ImageDraw
+
     image = Image.new("RGB", SIZE, KEY)
     draw = ImageDraw.Draw(image)
     for prop in LAYOUTS[name]:
-        cx, by = prop["x"], prop["y"]
-        centre = None
-        for width, height in prop["blocks"]:
-            if centre is not None:
-                by = centre + width / 4  # coaxial: the next block stands on the centre of this one
-            centre = block(draw, cx, by, width, height)
+        stack = blocks(prop)
+        for block in stack:
+            for face, fill in (("left", LEFT), ("right", RIGHT), ("top", TOP)):
+                draw.polygon(block[face], fill=fill, outline=EDGE)
         if "seat" in prop:
+            top = stack[-1]["top"]
+            cx, centre = prop["x"], (top[0][1] + top[2][1]) / 2
             rx, ry = prop["seat"]
             draw.ellipse([cx - rx, centre - ry - 5, cx + rx, centre + ry - 5], outline=EDGE, width=2)
     return image
