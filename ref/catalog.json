@@ -1303,6 +1303,110 @@
    ],
    "readiness": "R0-reference",
    "production_ready": false
+  },
+  {
+   "id": "REF-064",
+   "file": "Обзор арены «Нефритовая роща» по сетке.png",
+   "category": "environment",
+   "summary": "Обзор арены 07 по сетке ADR-015 §12: двор-восьмиугольник, печать, кольцо из 4 жаровен и 4 обломанных столбов, львы у лестниц, фонари на углах балюстрады, ворота, клён, мост",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 2957877,
+   "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123",
+   "content_ids": [
+    "stage.jade_grove"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Stage",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-065",
+   "file": "Кадр арены «Нефритовая роща» у печати.png",
+   "category": "screen-mockup",
+   "summary": "Игровой кадр без HUD у печати: кольцо жаровен на золотых линиях, обломанные столбы, фонари на углах балюстрады, влажный камень с отблесками огня, масштаб пропсов к герою",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 3552004,
+   "sha256": "8518cb7d57296f406ef1f9c01c822d2bad86ddba7e8853177236e750fa22c185",
+   "content_ids": [
+    "stage.jade_grove",
+    "class.sword"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Stage",
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-066",
+   "file": "Кадр арены «Нефритовая роща» с открытым двором.png",
+   "category": "screen-mockup",
+   "summary": "Вариант игрового кадра у печати: открытый двор, жаровни и столбы кольцом, знамёна у балюстрады, орда подходит справа",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 3803001,
+   "sha256": "a5a48945dce66013c5092eead5e1f51ba3d00a27638d0c9efc97f608c8246fe0",
+   "content_ids": [
+    "stage.jade_grove",
+    "class.sword"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Stage",
+    "Combat"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-067",
+   "file": "HUD боя_ медальон, полосы HP и Ци, таймер.png",
+   "category": "screen-mockup",
+   "summary": "HUD боя: медальон с драконом и печатью уровня, полоса HP с лотосами (полная, половина, низкая с трещиной), полоса Ци, картуш таймера, счётчик убийств, миникарта, слоты техник; разбор деталей",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 2829053,
+   "sha256": "5ac4dcb05ee14a0b65daa7a902beb5d3642d086be38d8fefbd485806053652d2",
+   "content_ids": [],
+   "hypotheses": [],
+   "systems": [
+    "UX/HUD"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
+  },
+  {
+   "id": "REF-068",
+   "file": "Набор пропсов двора в изометрии 2_1.png",
+   "category": "environment",
+   "summary": "Пропсы двора в строгой изометрии 2:1 и одном масштабе с силуэтом героя: жаровня, каменный фонарь, обломанный столб, балюстрада, лев, знамя, стела, обломок стены",
+   "width": 1536,
+   "height": 1024,
+   "has_alpha": false,
+   "bytes": 2144283,
+   "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970",
+   "content_ids": [
+    "stage.jade_grove"
+   ],
+   "hypotheses": [],
+   "systems": [
+    "Stage",
+    "Asset Pipeline"
+   ],
+   "readiness": "R0-reference",
+   "production_ready": false
   }
  ],
  "findings": [

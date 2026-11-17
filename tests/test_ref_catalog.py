@@ -33,7 +33,7 @@ class RefCatalogTests(unittest.TestCase):
 
     def test_repository_catalog_is_valid(self):
         summary = refcat.validate(self.cat)
-        self.assertEqual(summary["entries"], 63)
+        self.assertEqual(summary["entries"], 68)
         self.assertEqual(summary["duplicates"], 2)
         self.assertEqual(summary["categories"], len(refcat.CATEGORIES))
 
