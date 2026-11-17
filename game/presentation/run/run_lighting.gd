@@ -24,6 +24,15 @@ const MOON_FLAT: float = 0.18
 const LANTERN_COLOR: Color = Color(1.0, 0.68, 0.26)
 const LANTERN_ENERGY: float = 3.4
 const LANTERN_RADIUS_PX: float = 240.0
+## Fire flickers: each flame's energy is 1 plus two slow waves of FLICKER_DEPTH in all, out of
+## step from flame to flame (ADR-014 section 26).
+const FLICKER_DEPTH: float = 0.09
+const FLICKER_HZ: Vector2 = Vector2(1.3, 3.7)
+## Warm rim a flame casts on the side of an upright sprite that faces it (sprite_rim.gdshader).
+const WARM_RIM_STRENGTH: float = 0.9
+const RIM_SHADER: Shader = preload("res://presentation/run/shaders/sprite_rim.gdshader")
+## The shader's array of flames.
+const MAX_FLAMES: int = 16
 ## Aura of the hero: a soft gold light that follows them.
 const AURA_COLOR: Color = Color(1.0, 0.88, 0.62)
 const AURA_ENERGY: float = 0.55
@@ -86,3 +95,38 @@ static func with_aura(fixed: Color, feet: Vector2, hero: Vector2) -> Color:
 ## and lean to the right along the moon.
 static func shadow_transform(feet_screen: Vector2) -> Transform2D:
 	return Transform2D(Vector2(1.0, 0.0), Vector2(SHADOW_SHEAR, -SHADOW_SQUASH), feet_screen)
+
+
+## Energy factor of flame `index` at `seconds` of the run: within 1 +- FLICKER_DEPTH, the same
+## for the same time, different from flame to flame.
+static func flicker(seconds: float, index: int) -> float:
+	var phase: float = float(index) * 0.618
+	var slow: float = sin(TAU * (FLICKER_HZ.x * seconds + phase))
+	var quick: float = sin(TAU * (FLICKER_HZ.y * seconds + phase * 1.7))
+	return 1.0 + FLICKER_DEPTH * (0.62 * slow + 0.38 * quick)
+
+
+## The rim material of upright sprites: `color` on the moon side at `strength`, and the warm
+## rim of every flame in `flames` (screen px, at most MAX_FLAMES).
+static func rim_material(color: Color, strength: float, flames: Array[Vector2]) -> ShaderMaterial:
+	var rim: ShaderMaterial = ShaderMaterial.new()
+	rim.shader = RIM_SHADER
+	rim.set_shader_parameter("to_moon", -moon_travel())
+	rim.set_shader_parameter("rim_color", color)
+	rim.set_shader_parameter("rim_strength", strength)
+	var points: PackedVector2Array = PackedVector2Array(flames.slice(0, MAX_FLAMES))
+	rim.set_shader_parameter("flames", points)
+	rim.set_shader_parameter("flame_count", points.size())
+	rim.set_shader_parameter("flame_radius", LANTERN_RADIUS_PX)
+	rim.set_shader_parameter("warm_color", LANTERN_COLOR)
+	rim.set_shader_parameter("warm_strength", WARM_RIM_STRENGTH)
+	set_flicker(rim, 0.0, points.size())
+	return rim
+
+
+## Sets the flicker of `count` flames at `seconds` on a rim material.
+static func set_flicker(rim: ShaderMaterial, seconds: float, count: int) -> void:
+	var energy: PackedFloat32Array = PackedFloat32Array()
+	for index: int in mini(count, MAX_FLAMES):
+		energy.append(flicker(seconds, index))
+	rim.set_shader_parameter("flame_energy", energy)
