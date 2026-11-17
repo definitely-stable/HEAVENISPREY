@@ -70,6 +70,8 @@ const ENEMY_ASSETS: Dictionary = {
 	"enemy.blood_wolf": "asset.enemy.blood_wolf",
 	"enemy.wandering_spirit": "asset.enemy.wandering_spirit",
 	"enemy.venom_spirit_snake": "asset.enemy.venom_spirit_snake",
+	"enemy.sickle_mantis": "asset.enemy.sickle_mantis",
+	"enemy.fallen_sword_disciple": "asset.enemy.fallen_sword_disciple",
 }
 ## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
 ## hue stays reserved for enemies (ADR-014 section 2).
@@ -543,7 +545,7 @@ func _enemy_pose(slot: int) -> Array:
 		return [asset, "hit", direction, _sprites.clip_frame(asset, "hit", since)]
 	var strike: int = EnemyMotion.attack_frame(driver.config, world, slot, _sprites.clip_frames(asset, "attack"))
 	if strike >= 0:
-		return [asset, "attack", SpriteSet.diagonal(EnemyMotion.attack_signs(world, slot)), strike]
+		return [asset, "attack", SpriteSet.diagonal(EnemyMotion.attack_signs(driver.config, world, slot)), strike]
 	var contact: bool = driver.config.attack_value(kind, SimConfig.ATTACK_FORM) == SimConfig.FORM_CONTACT
 	if contact and _sprites.has_clip(asset, "attack") and EnemySystem.touching(driver.config, world, slot):
 		return [asset, "attack", direction, _contact_frame(asset, slot)]

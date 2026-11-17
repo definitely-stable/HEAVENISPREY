@@ -236,6 +236,228 @@
       }
     },
     {
+      "asset_id": "asset.enemy.fallen_sword_disciple",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/fallen_sword_disciple/fallen_sword_disciple.png",
+      "sha256": "5f86d8d41225abe2ddd2350bf77d5bd8a10980c013455b77591b86318f4f4bdf",
+      "bytes": 1416717,
+      "size": [
+        1536,
+        2048
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.fallen_sword_disciple"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 256,
+        "feet_anchor": [
+          128,
+          250
+        ],
+        "scale": [
+          0.3554,
+          0.3665
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 10,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/fallen_sword_disciple/fallen_sword_disciple_n.png",
+        "sha256": "aaf9eb4fd7b38bb7daeba1af5a208d35fcfcb6b7244c574a2994d88b286185cb",
+        "bytes": 1021442,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/fallen_sword_disciple/master.webp",
+        "sha256": "2c078cd3fd3a64e41009f303bcae6adeecb63744ede6490a43d93d02f362a355",
+        "bytes": 10142576,
+        "prompt_sha256": "75ac7972c564074d960a4a72e1428729582b2ddc3c76d28497967fe49720b021"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 1945,
+        "palette_mean_delta_e": 6.24,
+        "tones_pct": [
+          56.4,
+          43.2,
+          0.4
+        ],
+        "chroma": 0.106,
+        "threat_colour_pct": 0.0,
+        "median_l": 81.9,
+        "loop_seam_ratio": 0.922,
+        "loop_seam_to_max": 0.797,
+        "height_spread_pct": 0.15,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
+      "asset_id": "asset.enemy.sickle_mantis",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/sickle_mantis/sickle_mantis.png",
+      "sha256": "b86f88980c8c5d8908f31d2ee2a88307f143a54e7aae6b7b89a078b1643fffea",
+      "bytes": 1105966,
+      "size": [
+        1920,
+        2560
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.sickle_mantis"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 320,
+        "feet_anchor": [
+          160,
+          314
+        ],
+        "scale": [
+          0.2153,
+          0.5324
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 14,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/sickle_mantis/sickle_mantis_n.png",
+        "sha256": "b71b323aa4ceb0a396aff262aa61d9ddec8b86190a86b3c80fa6d25476d8d221",
+        "bytes": 860493,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/sickle_mantis/master.webp",
+        "sha256": "c52bef4a909c3b307de9ecc8621297d006162b06d94980b993b715aa14ea1df1",
+        "bytes": 10013286,
+        "prompt_sha256": "14d1c2b2903cd591660ee39584c1b59d85263e1c140a56e9b7f1aa053890d5d4"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 838,
+        "palette_mean_delta_e": 11.56,
+        "tones_pct": [
+          39.0,
+          58.5,
+          2.5
+        ],
+        "chroma": 0.159,
+        "threat_colour_pct": 0.0,
+        "median_l": 92.8,
+        "loop_seam_ratio": 0.807,
+        "loop_seam_to_max": 0.744,
+        "height_spread_pct": 1.23,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
       "asset_id": "asset.enemy.venom_spirit_snake",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/venom_spirit_snake/venom_spirit_snake.png",

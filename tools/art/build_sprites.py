@@ -528,6 +528,36 @@ def body_height(alpha: np.ndarray) -> int:
     return int(rows[-1]) + 1 - top
 
 
+def fit_rows(rows: list, frame: int, anchor_x: int, anchor_y: int, margin: int) -> float:
+    """One factor (at most 1) that keeps every frame of every row inside its cell."""
+    fit = 1.0
+    for _, _, row_scale, cells in rows:
+        for _, (left, top, right, bottom), fx, ground in cells:
+            fit = min(fit, (anchor_x - margin) / max((fx - left) * row_scale, 1),
+                      (frame - margin - anchor_x) / max((right - fx) * row_scale, 1),
+                      (anchor_y - margin) / max((ground - top) * row_scale, 1))
+    return fit
+
+
+def scaled_row_scale(clip: dict, figure_height: float, row_scale: float, cells: list, fit: float) -> float:
+    """Row scale whose scaled frames measure figure_height x the clip's height (x fit) by the
+    clip's measure (first frame or median), within 1 px; at most 8 corrections."""
+    target = figure_height * clip.get("height", 1.0) * fit
+    for _ in range(8):
+        heights = []
+        for cell, (left, top, right, bottom), _, _ in cells:
+            figure = cell.crop((left, top, right, bottom))
+            scale = row_scale * fit
+            size = (max(1, round(figure.width * scale)), max(1, round(figure.height * scale)))
+            heights.append(body_height(np.asarray(resize_premultiplied(figure, size).getchannel("A"))))
+        measured = heights[0] if clip.get("measure", "median") == "first" else float(np.median(heights))
+        if abs(measured - target) <= 1.0:
+            break
+        # Damped: the measure can jump when the widest row changes.
+        row_scale *= 1.0 + 0.6 * (target / max(measured, 1.0) - 1.0)
+    return row_scale
+
+
 def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     """ADR-014 sections 3 and 6: an animated character from one generated sheet per clip and
     direction. The master is a mosaic of the sheets (tile size `sheet.tile`); every sheet is a
@@ -542,8 +572,10 @@ def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     back edge of the body where it stood: every frame keeps frame 0's distance from its rear edge
     (the left one: the sheets face right) to the anchor, so the body falls forward rather than
     sliding back under its torso, and with "settle" every frame rests its own lowest pixel on
-    feet_anchor.y. Atlas rows: the clips in order, one row per generated direction of
-    the clip; columns: the longest clip."""
+    feet_anchor.y. With "measure_scaled" (a leggy creature) each row's height is measured again
+    on its scaled frames and its scale corrected, since thin legs lose solid pixels unevenly when
+    scaled down. Atlas rows: the clips in order, one row per generated direction of the clip;
+    columns: the longest clip."""
     sheet = spec["sheet"]
     key = hex_rgb(sheet["key_colour"])
     tile_w, tile_h = sheet["tile"]
@@ -595,12 +627,22 @@ def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
             ground = max(b[3] for _, b, _ in cells)
             cells = [(cell, inner, fx, inner[3] if clip.get("settle") else ground) for cell, inner, fx in cells]
             rows.append((clip["name"], direction, row_scale, cells))
-    fit = 1.0
-    for _, _, row_scale, cells in rows:
-        for _, (left, top, right, bottom), fx, ground in cells:
-            fit = min(fit, (anchor_x - margin) / max((fx - left) * row_scale, 1),
-                      (frame - margin - anchor_x) / max((right - fx) * row_scale, 1),
-                      (anchor_y - margin) / max((ground - top) * row_scale, 1))
+    fit = fit_rows(rows, frame, anchor_x, anchor_y, margin)
+    if spec.get("measure_scaled"):
+        # Thin legs lose their solid pixels when a sheet is scaled down, and not by the same share
+        # in every direction: measured on the source, two directions of one clip end up at
+        # different heights in the atlas. Each row is measured again on its scaled frames and its
+        # scale corrected until it is within 1 px of the target (the measure is not linear in the
+        # scale: the widest row can change), then the fit is taken again.
+        clip_of = {c["name"]: c for c in spec["clips"]}
+        for _ in range(3):
+            rows = [(name, direction, scaled_row_scale(clip_of[name], spec["figure_height_px"], row_scale, cells,
+                                                       fit), cells)
+                    for name, direction, row_scale, cells in rows]
+            refit = fit_rows(rows, frame, anchor_x, anchor_y, margin)
+            if refit >= fit - 1e-6:
+                break
+            fit = refit
     columns = max(clip["frames"] for clip in spec["clips"])
     atlas = Image.new("RGBA", (frame * columns, frame * len(rows)), (0, 0, 0, 0))
     for row_index, (_, _, row_scale, cells) in enumerate(rows):
