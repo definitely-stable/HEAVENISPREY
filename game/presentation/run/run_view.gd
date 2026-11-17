@@ -3,8 +3,8 @@ extends Node2D
 ## P0 placeholder run scene: hero movement and auto-attack, jade_grove w0 enemies, contact
 ## damage and kills in the courtyard of the ruined sect (ArenaDressing). Reads simulation state only;
 ## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
-## (placeholder bases). Hit flashes, death puffs, gem pickup flights and the level-up ring
-## are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
+## (placeholder bases). Hit reactions, falls and decay (EnemyReactions), gem pickup flights and
+## the level-up ring are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
 ## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
 ## A finished run (victory after the stage duration or defeat) stays under RunResults until
 ## the player starts a new one (ADR-011 section 1).
@@ -19,6 +19,7 @@ extends Node2D
 ##   the hero aura;
 ## - canvas layer -1: every shadow in one CanvasGroup composited once, then the unlit danger
 ##   marks (zones, telegraphs, puffs, rings) at their exact colours (PLAYABILITY G3);
+## - the fallen bodies decaying (EnemyReactions), behind this node;
 ## - this node: gems, enemies and the courtyard props (ArenaDressing) by depth, projectiles, lit by
 ##   RunLighting.light_at(feet) and a moon-side rim; then the hero item (warm rim), the item
 ##   over it (HP bar, enemy shots, pickups) and the additive glow item.
@@ -26,7 +27,6 @@ extends Node2D
 const CELL_PX: int = P0Tuning.CELL_PX
 const HERO_RADIUS_PX: int = P0Tuning.HERO_RADIUS_PX
 const HIT_FLASH: float = 0.15
-const ENEMY_HIT_FLASH: float = 0.1
 ## Seconds a collected gem flies to the hero (6 frames at 60 fps), then its "+N" floats.
 const PICKUP_FLY: float = 0.1
 const PICKUP_TEXT: float = 0.6
@@ -41,8 +41,6 @@ const COLOR_HP_BACK: Color = Color(0.0, 0.0, 0.0, 0.6)
 const COLOR_HP: Color = Color(0.85, 0.2, 0.2)
 const COLOR_OVER: Color = Color(0.0, 0.0, 0.0, 0.55)
 const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
-## A fallen enemy darkens to this crimson as it decays.
-const COLOR_DECAY: Color = Color(0.45, 0.04, 0.06)
 ## Spirit sword (metal element) projectile.
 const COLOR_SWORD: Color = Color(0.78, 0.92, 1.0)
 const COLOR_SWORD_GLOW: Color = Color(0.45, 0.62, 0.8, 0.9)
@@ -125,8 +123,10 @@ var runs_started: int = 0
 var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
-## Enemy uid -> seconds of hit flash left.
-var _enemy_flash: Dictionary = {}
+## Blows on the enemies: flash, push and recoil clip (ADR-014 A5b).
+var _reactions: EnemyReactions = EnemyReactions.new()
+## Seconds of the longest enemy hit clip of the run.
+var _hit_keep: float = 0.0
 ## Gem pickups in flight: [from px, value, age seconds].
 var _pickups: Array[Array] = []
 ## Combat effects (ADR-014 section 18, A6).
@@ -169,6 +169,7 @@ var _danger: Node2D
 var _hero_item: Node2D
 var _over: Node2D
 var _glow: Node2D
+var _decay: Node2D
 
 @onready var _camera: Camera2D = $Camera
 
@@ -254,6 +255,8 @@ func _build_layers() -> void:
 	_danger.draw.connect(_draw_danger_pass)
 	under.add_child(_danger)
 	material = _rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH)
+	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
+	_decay.show_behind_parent = true
 	_hero_item = _item(_draw_hero_pass, _rim_material(RIM_HERO, RIM_HERO_STRENGTH))
 	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
@@ -318,8 +321,10 @@ func start_run(seed_text: String) -> void:
 		_hud.driver = driver
 	runs_started += 1
 	_kind_assets = PackedStringArray()
+	_hit_keep = 0.0
 	for enemy_id: String in tuning.enemy_ids:
 		_kind_assets.append(str(ENEMY_ASSETS.get(enemy_id, "")))
+		_hit_keep = maxf(_hit_keep, _sprites.clip_length(_kind_assets[-1], "hit"))
 	_faces.clear()
 	_poses.clear()
 	_anim_time = 0.0
@@ -330,7 +335,7 @@ func start_run(seed_text: String) -> void:
 	_flash_rest = 0.0
 	if _results != null:
 		_results.close()
-	_enemy_flash.clear()
+	_reactions.clear()
 	_pickups.clear()
 	_body_poses.clear()
 	if _vfx != null:
@@ -385,7 +390,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	var ticks: int = driver.advance(delta, move)
 	var events: Dictionary = driver.take_events()
 	for uid: int in events["hit"]:
-		_enemy_flash[uid] = ENEMY_HIT_FLASH
+		_reactions.hit(uid, _hit_keep)
 	for gem: Array in events["collected"]:
 		_pickups.append([gem[0], gem[1], 0.0])
 	_add_effects(events)
@@ -453,13 +458,12 @@ func _sync_menu() -> void:
 func _draw() -> void:
 	_queue_layers()
 	_draw_gems()
-	_draw_decay()
 	_draw_bodies()
 	_draw_projectiles()
 
 
 func _queue_layers() -> void:
-	for item: CanvasItem in [_shadow_canvas, _danger, _hero_item, _over, _glow, _hud]:
+	for item: CanvasItem in [_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
 		if item != null:
 			item.queue_redraw()
 
@@ -472,7 +476,12 @@ func _add_effects(events: Dictionary) -> void:
 	for strike: Array in events["strikes"]:
 		_vfx.add_strike(strike[0], strike[1], strike[2], strike[3])
 	for kill: Array in events["killed"]:
-		_vfx.add_death(kill[0], _body_poses.get(kill[2], ["", "", "", 0]))
+		# The pose it was drawn in, or (not drawn yet) its kind facing its last diagonal.
+		var asset: String = _kind_assets[kill[1]] if kill[1] < _kind_assets.size() else ""
+		var standing: Array = [asset, "walk", SpriteSet.diagonal(_faces.get(kill[2], Vector2i(1, 1))), 0]
+		var fell: Array = EnemyReactions.death_pose(_sprites, _body_poses.get(kill[2], standing))
+		_vfx.add_death(kill[0], fell[0], fell[1])
+		_reactions.fallen(kill[2])
 	if not (events["casts"] as Array).is_empty():
 		_vfx.add_cast(driver.hero_position_px())
 	if int(events["levels"]) > 0:
@@ -480,12 +489,7 @@ func _add_effects(events: Dictionary) -> void:
 
 
 func _age_effects(delta: float) -> void:
-	for uid: Variant in _enemy_flash.keys():
-		var left: float = _enemy_flash[uid] - delta
-		if left <= 0.0:
-			_enemy_flash.erase(uid)
-		else:
-			_enemy_flash[uid] = left
+	_reactions.age(delta, _hit_keep)
 	for pickup: Array in _pickups:
 		pickup[2] += delta
 	_pickups = _pickups.filter(func(pickup: Array) -> bool: return pickup[2] < PICKUP_FLY + PICKUP_TEXT)
@@ -532,6 +536,9 @@ func _enemy_pose(slot: int) -> Array:
 	if not _sprites.has_clip(asset, "walk"):
 		return [asset, "", "left" if signs.x < 0 else "right", SpriteSet.walk_frame(_anim_time, posmod(uid, 4))]
 	var direction: String = SpriteSet.diagonal(signs)
+	var since: float = _reactions.since(uid)
+	if since < _sprites.clip_length(asset, "hit"):
+		return [asset, "hit", direction, _sprites.clip_frame(asset, "hit", since)]
 	if _sprites.has_clip(asset, "attack") and EnemySystem.touching(driver.config, world, slot):
 		return [asset, "attack", direction, _contact_frame(asset, slot)]
 	# Each enemy starts its stride at its own phase, so a horde does not march in step.
@@ -613,7 +620,7 @@ func _draw_shadow_pass() -> void:
 	# is free, and grouping keeps one texture per run of draws (a batch, not one per body).
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
-			_cast_shadow(canvas, _frame_pose(slot), driver.enemy_position_px(slot))
+			_cast_shadow(canvas, _frame_pose(slot), _enemy_feet(slot))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
 		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
@@ -629,7 +636,11 @@ func _draw_shadow_pass() -> void:
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
-			_contact(canvas, IsoProjection.to_screen(driver.enemy_position_px(slot)), radius)
+			_contact(canvas, IsoProjection.to_screen(_enemy_feet(slot)), radius)
+	if _vfx != null:
+		for death: Array in _vfx.deaths:
+			var left: float = 1.0 - CombatVfx.decay(death)
+			_contact(canvas, IsoProjection.to_screen(death[0]), HERO_RADIUS_PX * 0.9 * left)
 	_contact(canvas, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0:
@@ -705,19 +716,16 @@ func _draw_enemy(slot: int) -> void:
 	var world: WorldState = driver.world
 	var kind: int = world.enemy_kind[slot]
 	var uid: int = world.enemy_uid[slot]
-	var feet: Vector2 = driver.enemy_position_px(slot)
+	var feet: Vector2 = _enemy_feet(slot)
 	var at: Vector2 = IsoProjection.to_screen(feet)
 	var light: Color = _light_at(feet)
 	var pose: Array = _frame_pose(slot)
+	var flash: float = _reactions.flash(uid)
 	_body_poses[uid] = pose
-	if pose[0] != "":
-		var tint: Color = TINT_ENEMY_HIT if _enemy_flash.has(uid) else light
-		if _draw_pose(self, pose, at, tint):
-			return
+	if pose[0] != "" and _draw_pose(self, pose, at, light.lerp(TINT_ENEMY_HIT, flash)):
+		return
 	var radius: float = _kind_radius_px(kind)
-	var color: Color = _enemy_color(kind) * light
-	if _enemy_flash.has(uid):
-		color = color.lerp(COLOR_ENEMY_HIT, 0.75)
+	var color: Color = (_enemy_color(kind) * light).lerp(COLOR_ENEMY_HIT, 0.75 * flash)
 	color.a = 1.0
 	draw_circle(at - Vector2(0, radius), radius, color)
 	draw_circle(at - Vector2(0, radius), radius, color.darkened(0.45), false, 2.0)
@@ -739,19 +747,17 @@ func _draw_prop(prop: Dictionary) -> void:
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])
 
 
-## An enemy that just fell decays where it stood: its last pose sinks a little, darkens to the
-## crimson of the yin burst and fades (REF-010 "decay"); the burst itself is light (glow item).
-func _draw_decay() -> void:
-	if _vfx == null:
-		return
-	for death: Array in _vfx.deaths:
-		var pose: Array = death[2]
-		if pose[0] == "":
-			continue
-		var t: float = CombatVfx.share(death[1], CombatVfx.DEATH_TIME * 0.7)
-		var tint: Color = _light_at(death[0]).lerp(COLOR_DECAY, minf(t * 2.0, 1.0))
-		tint.a = 1.0 - t
-		_draw_pose(self, pose, IsoProjection.to_screen(death[0]) + Vector2(0.0, 6.0 * t), tint)
+## Feet of an enemy sprite (world px): its simulation point, pushed back for a moment by a blow.
+func _enemy_feet(slot: int) -> Vector2:
+	var feet: Vector2 = driver.enemy_position_px(slot)
+	return feet + _reactions.knock(driver.world.enemy_uid[slot], feet - driver.hero_position_px())
+
+
+## A fallen enemy plays its death clip where it stood and decays there (EnemyReactions), behind
+## the living; the yin burst over it is light (glow item).
+func _draw_decay_pass() -> void:
+	if _vfx != null:
+		EnemyReactions.draw_fallen(_decay, _sprites, _vfx.deaths, _light_at)
 
 
 ## Hero projectiles fly above their ground point (their shadow dot marks it), blade along the

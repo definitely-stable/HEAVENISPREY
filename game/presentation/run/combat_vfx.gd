@@ -14,6 +14,8 @@ const NUMBER_TIME: float = 0.8
 const NUMBER_POP_TIME: float = 0.09
 const NUMBER_RISE_PX: float = 26.0
 const DEATH_TIME: float = 0.55
+## Seconds a fallen body takes to decay once its death clip has played (EnemyReactions).
+const DECAY_TIME: float = 0.7
 const CAST_TIME: float = 0.45
 const LEVEL_TIME: float = 0.9
 ## The level pillar: width share of its piece and peak strength (levels come often early on;
@@ -23,7 +25,7 @@ const LEVEL_PILLAR_ALPHA: float = 0.55
 ## Older effects give way once this many are alive (a horde under a sword fan).
 const MAX_SPARKS: int = 64
 const MAX_NUMBERS: int = 40
-const MAX_DEATHS: int = 32
+const MAX_DEATHS: int = 64
 ## Hits land at chest height of a body standing on the ground point (screen px; the Yin
 ## Corpse stands nearly as tall as the hero, the wolf at its chest).
 const BODY_LIFT_PX: float = 38.0
@@ -93,8 +95,10 @@ func add_strike(at: Vector2, damage_mhp: int, uid: int, kill: bool) -> void:
 			numbers.pop_front()
 
 
-func add_death(at: Vector2, pose: Array) -> void:
-	deaths.append([at, 0.0, pose])
+## An enemy fell at `at` (world) in `pose`; its body decays and the yin burst rises once `fall`
+## seconds of its death clip have played.
+func add_death(at: Vector2, pose: Array, fall: float = 0.0) -> void:
+	deaths.append([at, 0.0, pose, fall])
 	if deaths.size() > MAX_DEATHS:
 		deaths.pop_front()
 
@@ -115,7 +119,7 @@ func age(delta: float) -> void:
 			effect[1] += delta
 	sparks = sparks.filter(func(effect: Array) -> bool: return effect[1] < SPARK_TIME)
 	numbers = numbers.filter(func(effect: Array) -> bool: return effect[1] < NUMBER_TIME)
-	deaths = deaths.filter(func(effect: Array) -> bool: return effect[1] < DEATH_TIME)
+	deaths = deaths.filter(func(effect: Array) -> bool: return effect[1] < effect[3] + maxf(DEATH_TIME, DECAY_TIME))
 	casts = casts.filter(func(effect: Array) -> bool: return effect[1] < CAST_TIME)
 	if level_age >= 0.0:
 		level_age += delta
@@ -126,6 +130,11 @@ func age(delta: float) -> void:
 ## 0-1 share of a fading effect's life.
 static func share(effect_age: float, life: float) -> float:
 	return clampf(effect_age / life, 0.0, 1.0)
+
+
+## 0-1 decay of a fallen body: 0 while its death clip plays, 1 when it is gone.
+static func decay(death: Array) -> float:
+	return share(death[1] - death[3], DECAY_TIME)
 
 
 ## Ground marks and bursts (additive): cast and level circles flat on the ground, yin decay,
@@ -148,7 +157,9 @@ func draw_light(canvas: CanvasItem) -> void:
 		kit.draw(canvas, "light_pillar", Rect2(foot - Vector2(size.x * 0.5, size.y), size),
 			Color(1.0, 1.0, 1.0, LEVEL_PILLAR_ALPHA * (1.0 - t * t)))
 	for death: Array in deaths:
-		var t: float = share(death[1], DEATH_TIME)
+		if death[1] < death[3]:
+			continue
+		var t: float = share(death[1] - death[3], DEATH_TIME)
 		var burst: Vector2 = kit.size_of("yin_burst") * (0.7 + 0.5 * _ease_out(t))
 		var foot: Vector2 = IsoProjection.to_screen(death[0]) + Vector2(0.0, 4.0)
 		kit.draw(canvas, "yin_burst", Rect2(foot - Vector2(burst.x * 0.5, burst.y), burst),

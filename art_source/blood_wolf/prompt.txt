@@ -73,3 +73,75 @@ Motion: one bite and claw strike repeated as a loop, 6 phases read left to right
 Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
 
 Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Blood Demon Wolf (血狼) exactly as on the attached reference board: a large lean wolf with shaggy charcoal-black and ash-grey fur, a pale grey chest and muzzle, crimson-red markings and streaks along the fur, small bone spikes along the spine, red eyes (painted, no glow), bared fangs, long legs with dark claws, a bushy tail: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking up and aside, the jaws open in a yelp; 2 recoil, the body twisting and shrinking back, the hind legs braced, the ears flat; 3 skidding back a little; 4 shaking it off, the fur bristling; 5 the head lowering again; 6 back to the low ready stance. The paws stay on the baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap of at least 40 px to the cell edges: draw the wolf small enough that its jaws, paws and tail stay well inside its own cell in every frame, as in the walk sheet.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Blood Demon Wolf (血狼) exactly as on the attached reference board: a large lean wolf with shaggy charcoal-black and ash-grey fur, a pale grey chest and muzzle, crimson-red markings and streaks along the fur, small bone spikes along the spine, red eyes (painted, no glow), bared fangs, long legs with dark claws, a bushy tail: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking up and aside, the jaws open in a yelp; 2 recoil, the body twisting and shrinking back, the hind legs braced, the ears flat; 3 skidding back a little; 4 shaking it off, the fur bristling; 5 the head lowering again; 6 back to the low ready stance. The paws stay on the baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap of at least 40 px to the cell edges: draw the wolf small enough that its jaws, paws and tail stay well inside its own cell in every frame, as in the walk sheet.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Blood Demon Wolf (血狼) exactly as on the attached reference board: a large lean wolf with shaggy charcoal-black and ash-grey fur, a pale grey chest and muzzle, crimson-red markings and streaks along the fur, small bone spikes along the spine, red eyes (painted, no glow), bared fangs, long legs with dark claws, a bushy tail: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown up, the jaws open; 2 the legs buckling, staggering; 3 the front legs giving way, the chest dropping to the ground; 4 rolling onto its flank; 5 lying on its side, the legs limp; 6 lying still on its side, the head and the bushy tail on the ground. It lies inside its cell on the same baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Blood Demon Wolf (血狼) exactly as on the attached reference board: a large lean wolf with shaggy charcoal-black and ash-grey fur, a pale grey chest and muzzle, crimson-red markings and streaks along the fur, small bone spikes along the spine, red eyes (painted, no glow), bared fangs, long legs with dark claws, a bushy tail: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown up, the jaws open; 2 the legs buckling, staggering; 3 the front legs giving way, the chest dropping to the ground; 4 rolling onto its flank; 5 lying on its side, the legs limp; 6 lying still on its side, the head and the bushy tail on the ground. It lies inside its cell on the same baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.

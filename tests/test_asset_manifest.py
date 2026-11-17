@@ -118,17 +118,17 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("normal map: sha256/bytes differ")
 
     def test_enemy_atlas_size_follows_its_clips(self):
-        self.entry(YIN)["size"] = [1152, 576]
+        self.entry(YIN)["size"] = [1536, 1536]
         self.fails("frames x clip rows")
 
     def test_layout_is_checked_on_an_lfs_pointer_checkout(self):
         for entry in self.manifest["assets"]:
             (self.root / entry["path"]).write_bytes(pointer(entry["sha256"], entry["bytes"]))
-        self.entry(YIN)["layout"]["feet_anchor"] = [96, 191]
+        self.entry(YIN)["layout"]["feet_anchor"] = [128, 255]
         self.fails("transparent margin")
 
     def test_atlas_must_be_rgba(self):
-        self.atlas(tiny_png(1152, 768, colour=2), YIN)
+        self.atlas(tiny_png(1536, 2048, colour=2), YIN)
         self.fails("RGBA")
 
     def test_png_size_must_equal_the_manifest(self):
@@ -136,7 +136,7 @@ class AssetManifestTests(unittest.TestCase):
         self.fails("PNG size differs")
 
     def test_feet_anchor_keeps_the_margin(self):
-        self.entry(YIN)["layout"]["feet_anchor"] = [96, 191]
+        self.entry(YIN)["layout"]["feet_anchor"] = [128, 255]
         self.fails("transparent margin")
 
     def test_anim_feet_anchor_keeps_the_margin(self):

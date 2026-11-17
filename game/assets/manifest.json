@@ -128,27 +128,27 @@
       "asset_id": "asset.enemy.blood_wolf",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/blood_wolf/blood_wolf.png",
-      "sha256": "33923abb8d8b0f7a74f45b8df2558bb56274094cf60c7044718cfe3ffbe57d88",
-      "bytes": 756967,
+      "sha256": "eb299bef3552a01c53385b46685fb02e6bbe3c37d28ecdb1bdb793afdcea01f6",
+      "bytes": 1621953,
       "size": [
-        1440,
-        960
+        1536,
+        2048
       ],
-      "asset_version": 4,
+      "asset_version": 5,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.blood_wolf"
       ],
       "layout": {
         "anchor_x": "torso",
-        "frame_size": 240,
+        "frame_size": 256,
         "feet_anchor": [
-          120,
-          234
+          128,
+          250
         ],
         "scale": [
-          0.3666,
-          0.4143
+          0.3403,
+          0.4427
         ],
         "frames": 6,
         "directions": [
@@ -179,13 +179,33 @@
               "se",
               "ne"
             ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
           }
         }
       },
       "normal": {
         "path": "game/assets/enemies/blood_wolf/blood_wolf_n.png",
-        "sha256": "a2de8e014c9474ca54ab3021eadd7b3fc3f085554dabeab16be6df98a07cef49",
-        "bytes": 509260,
+        "sha256": "c5ce3bdf88e413aaa21f2aa8b0c6b9fc4635f581f803665482a2f49c7adca8dc",
+        "bytes": 1065790,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -193,53 +213,53 @@
       },
       "source": {
         "path": "art_source/blood_wolf/master.webp",
-        "sha256": "5fc2ebc861acbed76bb7dc33bd3fef12579aec20368fa44a0d5844bf5db29233",
-        "bytes": 733488,
-        "prompt_sha256": "cf16a3164da6c1c4bf109f9ca6dbed1f6e0514be7f6d15192123ef70aa891c16"
+        "sha256": "f107c6b66483e3708898afb3d3465c1e1c70ef5a8191276d079ea202ae65e007",
+        "bytes": 7997670,
+        "prompt_sha256": "48f71d3f6d65944a813397ec88710ae3faa8782a672a6f2bac06649fd3d73625"
       },
       "qa": {
         "palette_group": "enemies",
-        "opaque_px": 3027,
-        "palette_mean_delta_e": 8.8,
+        "opaque_px": 3033,
+        "palette_mean_delta_e": 8.77,
         "tones_pct": [
-          48.9,
-          48.5,
-          2.6
+          50.2,
+          47.4,
+          2.3
         ],
         "chroma": 0.161,
         "threat_colour_pct": 0.0,
-        "median_l": 85.6,
-        "loop_seam_ratio": 0.557,
-        "loop_seam_to_max": 0.528,
-        "height_spread_pct": 0.24,
-        "torso_drift_px": 2.0
+        "median_l": 84.9,
+        "loop_seam_ratio": 0.635,
+        "loop_seam_to_max": 0.611,
+        "height_spread_pct": 0.22,
+        "torso_drift_px": 1.0
       }
     },
     {
       "asset_id": "asset.enemy.yin_corpse",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/yin_corpse/yin_corpse.png",
-      "sha256": "8855563916aee135180b9f2398e199552c03d76d567107f911f3a793b46ad6ab",
-      "bytes": 816642,
+      "sha256": "28ab6ff41c27a952c7f552dbcca51d9121a1cfccabe12987a5ca0f0791f947b0",
+      "bytes": 1707770,
       "size": [
-        1152,
-        768
+        1536,
+        2048
       ],
-      "asset_version": 4,
+      "asset_version": 5,
       "art_bible_version": 4,
       "content_ids": [
         "enemy.yin_corpse"
       ],
       "layout": {
         "anchor_x": "torso",
-        "frame_size": 192,
+        "frame_size": 256,
         "feet_anchor": [
-          96,
-          186
+          128,
+          250
         ],
         "scale": [
-          0.3433,
-          0.3474
+          0.3412,
+          0.3612
         ],
         "frames": 6,
         "directions": [
@@ -270,13 +290,33 @@
               "se",
               "ne"
             ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
           }
         }
       },
       "normal": {
         "path": "game/assets/enemies/yin_corpse/yin_corpse_n.png",
-        "sha256": "2a22710b95f3182acfa3468fe84e03669d50b91e420f3033b5763cc08835863c",
-        "bytes": 548623,
+        "sha256": "e2e01446b58fc61acafbe6153f0baa1cffb450db4c2ea7a69972e911d72764a9",
+        "bytes": 1144931,
         "method": "silhouette_pillow",
         "bevel_px": 14.0,
         "blur_px": 3.0,
@@ -284,22 +324,22 @@
       },
       "source": {
         "path": "art_source/yin_corpse/master.webp",
-        "sha256": "df93b1d47e8e862ab8768c86faf7733ab2ef5390f6f9232ced51385e795369a0",
-        "bytes": 1075650,
-        "prompt_sha256": "ede9f4bc855815f19137d9e4606801beb407e3c41dccbb46b33dc7d75affb12d"
+        "sha256": "fe9fcde2bc1c621fc344e18b82ecc467182d81a95d03a23277310b12a438fe59",
+        "bytes": 9909806,
+        "prompt_sha256": "ced70aa578c1a7fe23995e8f615477261dd81300c1ed3b0815ce66c4eb5ad837"
       },
       "qa": {
         "palette_group": "enemies",
-        "opaque_px": 4707,
-        "palette_mean_delta_e": 6.44,
+        "opaque_px": 2575,
+        "palette_mean_delta_e": 6.29,
         "tones_pct": [
-          37.9,
-          59.8,
-          2.3
+          35.8,
+          63.3,
+          0.9
         ],
-        "chroma": 0.071,
+        "chroma": 0.069,
         "threat_colour_pct": 0.0,
-        "median_l": 96.7,
+        "median_l": 97.0,
         "loop_seam_ratio": 1.244,
         "loop_seam_to_max": 1.131,
         "height_spread_pct": 0.31,

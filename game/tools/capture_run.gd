@@ -20,6 +20,9 @@ extends SceneTree
 ## - "perf": `count` enemies on rings around the hero walking left and right; prints the p50
 ##   and p95 frame time and the draw calls over 180 frames and writes them to out (JSON).
 ##   Run it with --disable-vsync (and at 1920x1080 for the ADR-014 A2 budget).
+## - "reactions": a contact sheet of the hit and death reactions (ADR-014 A5b): a corpse and a
+##   wolf on each side of the hero at the arena centre (rows: four diagonals), cropped around each
+##   while it walks, recoils from a blow and falls and decays;
 ## Placing enemies writes the world directly: a presentation check, not a gameplay trace.
 
 const STEP: float = 1.0 / 60.0
@@ -30,6 +33,12 @@ const FIGHT_SECONDS: Array[float] = [1.4, 2.6, 4.0, 6.5]
 ## Hero contact sheet: crop size (px) and frames run per direction.
 const HERO_CROP: int = 200
 const HERO_RUN_FRAMES: int = 40
+## Reaction sheet: crop size (px), world offsets of the four enemies from the hero (each faces
+## another diagonal) and the seconds after the blow and after the fall of each column.
+const REACT_CROP: int = 150
+const REACT_AT: Array[Vector2] = [Vector2(-230, 0), Vector2(0, 230), Vector2(0, -230), Vector2(230, 0)]
+const REACT_HIT: Array[float] = [0.03, 0.1, 0.2, 0.32]
+const REACT_FALL: Array[float] = [0.08, 0.25, 0.5, 0.75, 0.95, 1.1]
 const CIRCLE: Array[Vector2i] = [
 	Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1),
 	Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1),
@@ -65,6 +74,9 @@ func _capture() -> void:
 		return
 	if mode == "fight":
 		await _capture_fight(view, out, count)
+		return
+	if mode == "reactions":
+		await _capture_reactions(view, out)
 		return
 	if mode == "circles":
 		_walk_circles(view, count)
@@ -279,3 +291,70 @@ func _hero_crop(view: RunView) -> Image:
 	var corner: Vector2i = Vector2i(pixel) - Vector2i(HERO_CROP / 2, HERO_CROP * 3 / 4)
 	corner = corner.clamp(Vector2i.ZERO, image.get_size() - Vector2i.ONE * HERO_CROP)
 	return image.get_region(Rect2i(corner, Vector2i.ONE * HERO_CROP))
+
+
+func _capture_reactions(view: RunView, out: String) -> void:
+	var world: WorldState = view.driver.world
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
+	for state: WorldState in [world, view.driver.previous]:
+		state.player_x = int(centre.x) * Fx.FX_ONE
+		state.player_y = int(centre.y) * Fx.FX_ONE
+	var slots: Array[int] = []
+	for index: int in REACT_AT.size():
+		var slot: int = world.append_enemy_slot()
+		world.enemy_uid[slot] = world.next_enemy_uid
+		world.enemy_kind[slot] = index % 2
+		world.enemy_x[slot] = int((centre.x + REACT_AT[index].x) * Fx.FX_ONE)
+		world.enemy_y[slot] = int((centre.y + REACT_AT[index].y) * Fx.FX_ONE)
+		world.enemy_hp[slot] = 1000000
+		world.next_enemy_uid += 1
+		world.enemy_alive += 1
+		slots.append(slot)
+	var rows: Array = [[], [], [], []]
+	for _frame: int in 8:
+		await _hero_step(view, Vector2i.ZERO)
+	for index: int in slots.size():
+		rows[index].append(_crop_at(view.driver.enemy_position_px(slots[index]), REACT_CROP))
+		view._reactions.hit(world.enemy_uid[slots[index]], view._hit_keep)
+	var seconds: float = 0.0
+	for at: float in REACT_HIT:
+		while seconds < at:
+			await _hero_step(view, Vector2i.ZERO)
+			seconds += STEP
+		for index: int in slots.size():
+			rows[index].append(_crop_at(view.driver.enemy_position_px(slots[index]), REACT_CROP))
+	var fallen: Array[Vector2] = []
+	for slot: int in slots:
+		var feet: Vector2 = view.driver.enemy_position_px(slot)
+		var fell: Array = EnemyReactions.death_pose(view._sprites, view._frame_pose(slot))
+		view._vfx.add_death(feet, fell[0], fell[1])
+		fallen.append(feet)
+		world.enemy_uid[slot] = 0
+		world.enemy_alive -= 1
+	seconds = 0.0
+	for at: float in REACT_FALL:
+		while seconds < at:
+			await _hero_step(view, Vector2i.ZERO)
+			seconds += STEP
+		for index: int in fallen.size():
+			rows[index].append(_crop_at(fallen[index], REACT_CROP))
+	var columns: int = (rows[0] as Array).size()
+	var sheet: Image = Image.create_empty(REACT_CROP * columns, REACT_CROP * rows.size(), false, Image.FORMAT_RGBA8)
+	for y: int in rows.size():
+		for x: int in columns:
+			var crop: Image = rows[y][x]
+			sheet.blit_rect(crop, Rect2i(Vector2i.ZERO, crop.get_size()), Vector2i(x, y) * REACT_CROP)
+	var error: Error = sheet.save_png(out)
+	print("capture reactions: ", out, " columns=", columns, " error=", error)
+	quit(0 if error == OK else 1)
+
+
+## `size` px around a world point (its feet low in the crop) from the last drawn frame.
+func _crop_at(world_point: Vector2, size: int) -> Image:
+	var camera: Camera2D = root.get_viewport().get_camera_2d()
+	var pixel: Vector2 = (IsoProjection.to_screen(world_point) - camera.get_screen_center_position()) * camera.zoom
+	pixel += Vector2(root.get_visible_rect().size) * 0.5
+	var image: Image = root.get_texture().get_image()
+	var corner: Vector2i = Vector2i(pixel) - Vector2i(size / 2, size * 3 / 4)
+	corner = corner.clamp(Vector2i.ZERO, image.get_size() - Vector2i.ONE * size)
+	return image.get_region(Rect2i(corner, Vector2i.ONE * size))

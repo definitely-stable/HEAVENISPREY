@@ -73,3 +73,75 @@ Motion: one claw strike repeated as a loop, 6 phases read left to right, top row
 Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
 
 Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Yin Corpse (阴尸), an undead cultivator corpse exactly as on the attached reference board: gaunt grey-white skin, long tangled black hair with a loose topknot, a yellow paper talisman strip with red glyphs across the forehead and more yellow talisman strips hanging from the robe, tattered layered slate-blue and grey Taoist robes with frayed edges, a dark red sash, long bony clawed hands, bare feet with dark wraps: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the whole body jolts, the head snapping back and the talisman strip on the forehead flying up; 2 recoil, the upper body thrown backwards, the clawed arms flung out to the sides; 3 staggering back on its heels, still upright; 4 pitching forward again; 5 hunching down, the arms swinging forward; 6 back to the hunched walking stance of the walk sheet. The feet stay on the baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Yin Corpse (阴尸), an undead cultivator corpse exactly as on the attached reference board: gaunt grey-white skin, long tangled black hair with a loose topknot, a yellow paper talisman strip with red glyphs across the forehead and more yellow talisman strips hanging from the robe, tattered layered slate-blue and grey Taoist robes with frayed edges, a dark red sash, long bony clawed hands, bare feet with dark wraps: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the whole body jolts, the head snapping back and the talisman strip on the forehead flying up; 2 recoil, the upper body thrown backwards, the clawed arms flung out to the sides; 3 staggering back on its heels, still upright; 4 pitching forward again; 5 hunching down, the arms swinging forward; 6 back to the hunched walking stance of the walk sheet. The feet stay on the baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Yin Corpse (阴尸), an undead cultivator corpse exactly as on the attached reference board: gaunt grey-white skin, long tangled black hair with a loose topknot, a yellow paper talisman strip with red glyphs across the forehead and more yellow talisman strips hanging from the robe, tattered layered slate-blue and grey Taoist robes with frayed edges, a dark red sash, long bony clawed hands, bare feet with dark wraps: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back, the arms flung up; 2 the knees buckling, the body sagging, the head lolling; 3 dropping to the knees, the arms hanging limp; 4 the torso pitching forward toward the ground; 5 sprawled face down on the ground, the robes and the long hair spread around it; 6 lying still face down on the ground, the talisman strips limp on the robe. It falls forward in the direction it faces and lies inside its cell on the same baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its reference board, the third its walk animation sheet in the same direction made for the same game: match the third image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Yin Corpse (阴尸), an undead cultivator corpse exactly as on the attached reference board: gaunt grey-white skin, long tangled black hair with a loose topknot, a yellow paper talisman strip with red glyphs across the forehead and more yellow talisman strips hanging from the robe, tattered layered slate-blue and grey Taoist robes with frayed edges, a dark red sash, long bony clawed hands, bare feet with dark wraps: the SAME creature as in the attached model sheet (first image) and reference board. Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back, the arms flung up; 2 the knees buckling, the body sagging, the head lolling; 3 dropping to the knees, the arms hanging limp; 4 the torso pitching forward toward the ground; 5 sprawled face down on the ground, the robes and the long hair spread around it; 6 lying still face down on the ground, the talisman strips limp on the robe. It falls forward in the direction it faces and lies inside its cell on the same baseline. No blood, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, feet on the same baseline near the bottom of the cell, the whole body including claws, tail and robes inside its own cell with a clear green gap to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
