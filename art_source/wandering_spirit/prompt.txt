@@ -1,0 +1,157 @@
+## model sheet (attached to every request below)
+
+Generate one image with the image generation tool. The attached images are from the same game: the model sheets of two other enemies (an undead corpse and a demon wolf) and a battle screenshot. Paint the new creature in exactly their style: the same ink line weight, the same painted cel shading, the same muted dark palette with a few saturated accents, the same camera and the same scale (a human-sized figure as tall as the corpse). Do not copy those creatures; only match their style.
+
+Character model sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green. drifting forward, leaning slightly toward the viewer, the long sleeves hanging forward.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Layout: one row of four full-body poses on a 1536 x 1024 canvas, same scale, the lowest point of the body on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south, front view), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view in profile), 4 facing up-right (north-east, three-quarter back).
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk se
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a slow eerie drift loop, 6 evenly spaced phases read left to right, top row then bottom row: the spirit glides forward without legs, the body gently rising and sinking, the torn robe tails and the long sleeves streaming and rippling backward in a wave that travels down the cloth, the hair swaying; frame 6 flows back into frame 1. Drifting in place (no travel across the cell); the lowest robe tails stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk ne
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a slow eerie drift loop, 6 evenly spaced phases read left to right, top row then bottom row: the spirit glides forward without legs, the body gently rising and sinking, the torn robe tails and the long sleeves streaming and rippling backward in a wave that travels down the cloth, the hair swaying; frame 6 flows back into frame 1. Drifting in place (no travel across the cell); the lowest robe tails stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a chilling grasp repeated as a loop, 6 phases read left to right, top row then bottom row: 1 drawing back, the arms pulled in; 2 rearing up, the sleeves spreading wide; 3 lunging forward, both thin hands reaching out fully with the long fingers spread, the mouth open in a silent wail; 4 clutching, the fingers closing; 5 pulling back; 6 back to the drifting stance. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a chilling grasp repeated as a loop, 6 phases read left to right, top row then bottom row: 1 drawing back, the arms pulled in; 2 rearing up, the sleeves spreading wide; 3 lunging forward, both thin hands reaching out fully with the long fingers spread, the mouth open in a silent wail; 4 clutching, the fingers closing; 5 pulling back; 6 back to the drifting stance. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the whole figure jolts back, the head snapping back; 2 recoil, the body bending backward and the robe tails thrown forward, the arms flung up; 3 the form wavering, leaning back; 4 swaying forward again; 5 the sleeves settling; 6 back to the drifting stance of the walk sheet. The robe tails stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the whole figure jolts back, the head snapping back; 2 recoil, the body bending backward and the robe tails thrown forward, the arms flung up; 3 the form wavering, leaning back; 4 swaying forward again; 5 the sleeves settling; 6 back to the drifting stance of the walk sheet. The robe tails stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back, the arms flung up in a wail; 2 the spirit twisting and sagging, the arms falling; 3 collapsing downward, the robe folding in on itself; 4 the empty robe crumpling toward the ground, only the hair and sleeves still visible; 5 the torn robe lying in a flat heap on the ground, the sleeves and the hair spread out; 6 the empty robe lying still in a flat heap on the ground. It collapses forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Wandering Spirit (游魂), the restless ghost of a dead sect disciple: a gaunt spectral figure in a torn, ragged, layered Taoist robe of pale ash-white and cold powder-blue, long frayed sleeves hanging past the hands, thin bony grey-blue hands with long fingers, long loose straight black hair falling over the shoulders and half the face, a pale bluish-white face with hollow dark eye sockets and a thin grieving mouth, a frayed dark indigo sash; it has NO legs and NO feet: below the waist the robe thins into long tattered ribbon-like tails that trail down and just touch the ground, so it seems to hover; the cloth is painted pale and slightly see-through at its frayed edges (painted, not a real transparency), cold blue tones only, no green: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back, the arms flung up in a wail; 2 the spirit twisting and sagging, the arms falling; 3 collapsing downward, the robe folding in on itself; 4 the empty robe crumpling toward the ground, only the hair and sleeves still visible; 5 the torn robe lying in a flat heap on the ground, the sleeves and the hair spread out; 6 the empty robe lying still in a flat heap on the ground. It collapses forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.

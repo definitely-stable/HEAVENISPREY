@@ -68,6 +68,8 @@ const WORN_FLOOR_ASSET: String = "asset.tile.sect_courtyard_floor_worn"
 const ENEMY_ASSETS: Dictionary = {
 	"enemy.yin_corpse": "asset.enemy.yin_corpse",
 	"enemy.blood_wolf": "asset.enemy.blood_wolf",
+	"enemy.wandering_spirit": "asset.enemy.wandering_spirit",
+	"enemy.venom_spirit_snake": "asset.enemy.venom_spirit_snake",
 }
 ## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
 ## hue stays reserved for enemies (ADR-014 section 2).
@@ -539,7 +541,11 @@ func _enemy_pose(slot: int) -> Array:
 	var since: float = _reactions.since(uid)
 	if since < _sprites.clip_length(asset, "hit"):
 		return [asset, "hit", direction, _sprites.clip_frame(asset, "hit", since)]
-	if _sprites.has_clip(asset, "attack") and EnemySystem.touching(driver.config, world, slot):
+	var strike: int = EnemyMotion.attack_frame(driver.config, world, slot, _sprites.clip_frames(asset, "attack"))
+	if strike >= 0:
+		return [asset, "attack", SpriteSet.diagonal(EnemyMotion.attack_signs(world, slot)), strike]
+	var contact: bool = driver.config.attack_value(kind, SimConfig.ATTACK_FORM) == SimConfig.FORM_CONTACT
+	if contact and _sprites.has_clip(asset, "attack") and EnemySystem.touching(driver.config, world, slot):
 		return [asset, "attack", direction, _contact_frame(asset, slot)]
 	# Each enemy starts its stride at its own phase, so a horde does not march in step.
 	var offset: float = posmod(uid * 7, 16) / 16.0 * _sprites.clip_length(asset, "walk")
@@ -620,7 +626,8 @@ func _draw_shadow_pass() -> void:
 	# is free, and grouping keeps one texture per run of draws (a batch, not one per body).
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
-			_cast_shadow(canvas, _frame_pose(slot), _enemy_feet(slot))
+			var pose: Array = _frame_pose(slot)
+			_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
 		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
@@ -654,10 +661,10 @@ func _draw_shadow_pass() -> void:
 
 
 ## The silhouette laid down away from the moon.
-func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2) -> void:
+func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float = 0.0) -> void:
 	if pose[0] != "":
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(feet_world)))
-		_draw_pose(canvas, pose, Vector2.ZERO, Color.BLACK)
+		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
 
 
 ## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
@@ -722,7 +729,9 @@ func _draw_enemy(slot: int) -> void:
 	var pose: Array = _frame_pose(slot)
 	var flash: float = _reactions.flash(uid)
 	_body_poses[uid] = pose
-	if pose[0] != "" and _draw_pose(self, pose, at, light.lerp(TINT_ENEMY_HIT, flash)):
+	var tint: Color = light.lerp(TINT_ENEMY_HIT, flash)
+	tint.a = EnemyMotion.opacity(pose[0])
+	if pose[0] != "" and _draw_pose(self, pose, at - Vector2(0.0, EnemyMotion.lift(pose[0], uid, _anim_time)), tint):
 		return
 	var radius: float = _kind_radius_px(kind)
 	var color: Color = (_enemy_color(kind) * light).lerp(COLOR_ENEMY_HIT, 0.75 * flash)

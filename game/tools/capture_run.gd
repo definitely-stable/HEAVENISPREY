@@ -20,9 +20,12 @@ extends SceneTree
 ## - "perf": `count` enemies on rings around the hero walking left and right; prints the p50
 ##   and p95 frame time and the draw calls over 180 frames and writes them to out (JSON).
 ##   Run it with --disable-vsync (and at 1920x1080 for the ADR-014 A2 budget).
-## - "reactions": a contact sheet of the hit and death reactions (ADR-014 A5b): a corpse and a
-##   wolf on each side of the hero at the arena centre (rows: four diagonals), cropped around each
-##   while it walks, recoils from a blow and falls and decays;
+## - "reactions": a contact sheet of the hit and death reactions (ADR-014 A5b): enemies on each
+##   side of the hero at the arena centre (rows: four diagonals), cropped around each while it
+##   walks, recoils from a blow and falls and decays; `count` names the kinds in turn
+##   ("yin_corpse,blood_wolf" by default, ids without "enemy.");
+## - "strikes": the same four enemies start next to the hero and attack it for STRIKE_SECONDS
+##   (ADR-014 A5c: a telegraphed attack plays its clip by the attack state), blows hidden;
 ## Placing enemies writes the world directly: a presentation check, not a gameplay trace.
 
 const STEP: float = 1.0 / 60.0
@@ -39,6 +42,11 @@ const REACT_CROP: int = 150
 const REACT_AT: Array[Vector2] = [Vector2(-230, 0), Vector2(0, 230), Vector2(0, -230), Vector2(230, 0)]
 const REACT_HIT: Array[float] = [0.03, 0.1, 0.2, 0.32]
 const REACT_FALL: Array[float] = [0.08, 0.25, 0.5, 0.75, 0.95, 1.1]
+const REACT_KINDS: String = "yin_corpse,blood_wolf"
+## Strike sheet: the enemies start this many px from the hero; a column every STRIKE_EVERY s.
+const STRIKE_NEAR: float = 0.45
+const STRIKE_EVERY: float = 0.1
+const STRIKE_SECONDS: float = 1.6
 const CIRCLE: Array[Vector2i] = [
 	Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1),
 	Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1),
@@ -75,8 +83,9 @@ func _capture() -> void:
 	if mode == "fight":
 		await _capture_fight(view, out, count)
 		return
-	if mode == "reactions":
-		await _capture_reactions(view, out)
+	if mode == "reactions" or mode == "strikes":
+		var kinds: String = args[3] if args.size() > 3 else REACT_KINDS
+		await _capture_reactions(view, out, kinds.split(","), mode == "strikes")
 		return
 	if mode == "circles":
 		_walk_circles(view, count)
@@ -293,7 +302,7 @@ func _hero_crop(view: RunView) -> Image:
 	return image.get_region(Rect2i(corner, Vector2i.ONE * HERO_CROP))
 
 
-func _capture_reactions(view: RunView, out: String) -> void:
+func _capture_reactions(view: RunView, out: String, kinds: PackedStringArray, strikes: bool) -> void:
 	var world: WorldState = view.driver.world
 	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
 	for state: WorldState in [world, view.driver.previous]:
@@ -303,14 +312,19 @@ func _capture_reactions(view: RunView, out: String) -> void:
 	for index: int in REACT_AT.size():
 		var slot: int = world.append_enemy_slot()
 		world.enemy_uid[slot] = world.next_enemy_uid
-		world.enemy_kind[slot] = index % 2
-		world.enemy_x[slot] = int((centre.x + REACT_AT[index].x) * Fx.FX_ONE)
-		world.enemy_y[slot] = int((centre.y + REACT_AT[index].y) * Fx.FX_ONE)
+		world.enemy_kind[slot] = maxi(view.tuning.enemy_ids.find("enemy." + kinds[index % kinds.size()]), 0)
+		var offset: Vector2 = REACT_AT[index] * (STRIKE_NEAR if strikes else 1.0)
+		world.enemy_x[slot] = int((centre.x + offset.x) * Fx.FX_ONE)
+		world.enemy_y[slot] = int((centre.y + offset.y) * Fx.FX_ONE)
 		world.enemy_hp[slot] = 1000000
 		world.next_enemy_uid += 1
 		world.enemy_alive += 1
 		slots.append(slot)
 	var rows: Array = [[], [], [], []]
+	if strikes:
+		await _capture_strikes(view, slots, rows)
+		_save_sheet(rows, out)
+		return
 	for _frame: int in 8:
 		await _hero_step(view, Vector2i.ZERO)
 	for index: int in slots.size():
@@ -338,6 +352,26 @@ func _capture_reactions(view: RunView, out: String) -> void:
 			seconds += STEP
 		for index: int in fallen.size():
 			rows[index].append(_crop_at(fallen[index], REACT_CROP))
+	_save_sheet(rows, out)
+
+
+## Crops around each enemy every STRIKE_EVERY s while it attacks the hero; blows on it are
+## hidden (no recoil over the attack) and the hero is kept alive.
+func _capture_strikes(view: RunView, slots: Array[int], rows: Array) -> void:
+	var seconds: float = 0.0
+	var next: float = STRIKE_EVERY
+	while seconds < STRIKE_SECONDS:
+		await _hero_step(view, Vector2i.ZERO)
+		seconds += STEP
+		view._reactions.clear()
+		view.driver.world.hero_hp = view.driver.world.hero_hp_max
+		if seconds >= next:
+			next += STRIKE_EVERY
+			for index: int in slots.size():
+				rows[index].append(_crop_at(view.driver.enemy_position_px(slots[index]), REACT_CROP))
+
+
+func _save_sheet(rows: Array, out: String) -> void:
 	var columns: int = (rows[0] as Array).size()
 	var sheet: Image = Image.create_empty(REACT_CROP * columns, REACT_CROP * rows.size(), false, Image.FORMAT_RGBA8)
 	for y: int in rows.size():
