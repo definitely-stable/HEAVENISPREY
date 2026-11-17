@@ -43,8 +43,26 @@ func test_the_attack_faces_the_locked_direction() -> void:
 	assert_eq(world.enemy_state[0], EnemyAttackSystem.ST_TELL)
 	# The hero is on the enemy's -x side: the attack points to -x, up-left on the screen.
 	var expected: Vector2 = IsoProjection.to_screen(Vector2(-1.0, 0.0))
-	var signs: Vector2i = EnemyMotion.attack_signs(world, 0)
+	var signs: Vector2i = EnemyMotion.attack_signs(config, world, 0)
 	assert_eq(signs, Vector2i(int(signf(expected.x)), int(signf(expected.y))))
+
+
+## A charge aims at the hero until the end of `tell` (ADR-011 E3): the mantis faces the hero
+## while it winds up, then the locked direction while it dashes.
+func test_a_charge_faces_the_hero_while_it_winds_up() -> void:
+	var config: SimConfig = Attacks._mantis()
+	var world: WorldState = Attacks._mantis_world(config)
+	SimKernel.run(config, world, CommandLog.new(), 1)
+	assert_eq(world.enemy_state[0], EnemyAttackSystem.ST_TELL)
+	world.player_y += 300 * Fx.FX_ONE
+	var hero: Vector2 = Vector2(world.player_x - world.enemy_x[0], world.player_y - world.enemy_y[0])
+	var toward: Vector2 = IsoProjection.to_screen(hero)
+	var signs: Vector2i = EnemyMotion.attack_signs(config, world, 0)
+	assert_eq(signs, Vector2i(int(signf(toward.x)), int(signf(toward.y))), "faces the hero, not the old direction")
+	world.enemy_state[0] = EnemyAttackSystem.ST_ACTIVE
+	var locked: Vector2 = IsoProjection.to_screen(Vector2(world.enemy_dir_x[0], world.enemy_dir_y[0]))
+	signs = EnemyMotion.attack_signs(config, world, 0)
+	assert_eq(signs, Vector2i(-1 if locked.x < 0.0 else 1, -1 if locked.y < 0.0 else 1), "dashes the locked way")
 
 
 func test_a_short_clip_or_a_contact_kind_keeps_its_loop() -> void:

@@ -5,8 +5,9 @@ extends GutTest
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
-	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.venom_spirit_snake",
-	"asset.enemy.wandering_spirit", "asset.enemy.yin_corpse",
+	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.fallen_sword_disciple",
+	"asset.enemy.sickle_mantis", "asset.enemy.venom_spirit_snake", "asset.enemy.wandering_spirit",
+	"asset.enemy.yin_corpse",
 	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
 	"asset.prop.courtyard_nature", "asset.prop.courtyard_walls", "asset.prop.distant_peaks",
 	"asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
@@ -17,7 +18,7 @@ const FLOOR: String = "asset.tile.sect_courtyard_floor"
 ## hovered instead of falling forward.
 const HORDE: Array[String] = [
 	"asset.enemy.yin_corpse", "asset.enemy.blood_wolf", "asset.enemy.wandering_spirit",
-	"asset.enemy.venom_spirit_snake",
+	"asset.enemy.venom_spirit_snake", "asset.enemy.sickle_mantis", "asset.enemy.fallen_sword_disciple",
 ]
 const HEAPS: Array[String] = ["asset.enemy.wandering_spirit"]
 
@@ -288,6 +289,11 @@ func test_horde_stands_at_the_height_of_its_boards() -> void:
 	var snake: float = _clip_height(sprites, manifest, "asset.enemy.venom_spirit_snake", "walk") / hero
 	assert_between(spirit, 0.82, corpse, "spirit / hero")
 	assert_between(snake, 0.5, wolf, "snake / hero")
+	# A5d: the disciple stands upright about as tall as the hero, the mantis below the wolf's back.
+	var disciple: float = _clip_height(sprites, manifest, "asset.enemy.fallen_sword_disciple", "walk") / hero
+	var mantis: float = _clip_height(sprites, manifest, "asset.enemy.sickle_mantis", "walk") / hero
+	assert_between(disciple, corpse, 1.05, "disciple / hero")
+	assert_between(mantis, 0.5, wolf, "mantis / hero")
 
 
 ## Median body height (atlas px) of a clip over its frames and generated directions.
