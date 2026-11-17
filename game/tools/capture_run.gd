@@ -145,9 +145,14 @@ func _walk_circles(view: RunView, count: int) -> void:
 
 
 ## `count` enemies on `rings` rings around the hero, `near` times RING_PX away; with `real_hp`
-## they have the HP of their kind (they fall), otherwise they are unkillable.
+## they have the HP of their kind (they fall), otherwise they are unkillable. The hero is moved
+## to the seal first: at the west entry the outer rings would lie past the arena grid.
 func _place_horde(view: RunView, count: int, rings: int = 3, near: float = 1.0, real_hp: bool = false) -> void:
 	var world: WorldState = view.driver.world
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), RunView.CELL_PX)
+	for state: WorldState in [world, view.driver.previous]:
+		state.player_x = int(centre.x) * Fx.FX_ONE
+		state.player_y = int(centre.y) * Fx.FX_ONE
 	var hero: Vector2 = Vector2(world.player_x, world.player_y)
 	for index: int in count:
 		var angle: float = TAU * index / count
