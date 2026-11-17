@@ -1,0 +1,157 @@
+## model sheet (attached to every request below)
+
+Generate one image with the image generation tool. The attached images are from the same game: the model sheets of two other enemies (an undead corpse and a demon wolf) and a battle screenshot. Paint the new creature in exactly their style: the same ink line weight, the same painted cel shading, the same muted dark palette with a few saturated accents, the same camera and the same scale (the lantern from the top of its ring to the end of its tassel is about three quarters as tall as the corpse). Do not copy those creatures; only match their style.
+
+Character model sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature. hovering upright, the spirit arms hanging low and open at its sides, the eye staring forward.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Layout: one row of four full-body poses on a 1536 x 1024 canvas, same scale, the lowest point of the body on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south, front view), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view in profile), 4 facing up-right (north-east, three-quarter back).
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk se
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a slow hovering drift loop, 6 evenly spaced phases read left to right, top row then bottom row: the lantern sways gently from side to side and tilts a little with the sway, the tassel swings behind the motion, the two spirit arms undulate slowly beside the cage like ribbons in water, the eye stays wide open; frame 6 flows back into frame 1. Hovering in place (no travel across the cell); the end of the tassel stays near the same baseline, bobbing only slightly.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk ne
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a slow hovering drift loop, 6 evenly spaced phases read left to right, top row then bottom row: the lantern sways gently from side to side and tilts a little with the sway, the tassel swings behind the motion, the two spirit arms undulate slowly beside the cage like ribbons in water, the eye stays wide open; frame 6 flows back into frame 1. Hovering in place (no travel across the cell); the end of the tassel stays near the same baseline, bobbing only slightly.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: one spell cast, 6 phases read left to right, top row then bottom row: 1 the eye narrowing, the spirit arms drawing back behind the cage; 2 the eye opening wide, the clawed hands cupped together in front of the open panel as if gathering something; 3 the release: the lantern jerking forward and tilting toward its target, both arms thrust straight forward at full reach with the palms open; 4 the follow-through, the arms still extended, the lantern rocking back; 5 the arms drifting back to its sides; 6 back to the hovering pose of the walk sheet. No projectile, no fire burst, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: one spell cast, 6 phases read left to right, top row then bottom row: 1 the eye narrowing, the spirit arms drawing back behind the cage; 2 the eye opening wide, the clawed hands cupped together in front of the open panel as if gathering something; 3 the release: the lantern jerking forward and tilting toward its target, both arms thrust straight forward at full reach with the palms open; 4 the follow-through, the arms still extended, the lantern rocking back; 5 the arms drifting back to its sides; 6 back to the hovering pose of the walk sheet. No projectile, no fire burst, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the cage knocked back and tilted, the eye squeezed half shut, the arms flung out; 2 recoil, the lantern swinging back on its tilt; 3 swinging the other way, the tassel whipping; 4 the eye opening again; 5 the arms gathering in; 6 back to the hovering pose of the walk sheet. The end of the tassel stays near the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the cage knocked back and tilted, the eye squeezed half shut, the arms flung out; 2 recoil, the lantern swinging back on its tilt; 3 swinging the other way, the tassel whipping; 4 the eye opening again; 5 the arms gathering in; 6 back to the hovering pose of the walk sheet. The end of the tassel stays near the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the cage cracking, the eye flaring wide; 2 the spirit arms withering and curling up against the cage; 3 the eye going dim, the lantern sagging and tilting over; 4 the lantern down on the ground, tipping onto its side; 5 lying on its side on the ground, a lattice panel broken open, the arms gone; 6 lying still on its side, the eye dark and empty, the tassel spread on the ground. It falls toward the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Cursed Spirit Lantern (怨灵灯), a haunted temple lantern that floats in the air: a hexagonal lantern cage the size of a man's torso, of dark tarnished bronze with black patina and worn dull-gold edges, pierced lattice side panels, a small curved pagoda roof cap with upturned corners and a broken iron hanging ring on top, a frayed dull crimson tassel hanging from the bottom; inside the cage, seen through the open front panel, a single huge lidless eye made of pale bone-white ghost fire with a black slit pupil, painted flat with no glow around it; two long thin pale grey-violet spirit arms grow out of the sides of the cage and drift beside it like slow ribbons, ending in bony clawed hands; no legs, no body under it; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the cage cracking, the eye flaring wide; 2 the spirit arms withering and curling up against the cage; 3 the eye going dim, the lantern sagging and tilting over; 4 the lantern down on the ground, tipping onto its side; 5 lying on its side on the ground, a lattice panel broken open, the arms gone; 6 lying still on its side, the eye dark and empty, the tassel spread on the ground. It falls toward the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the arms, hands, tassel, paper strips and flames inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.

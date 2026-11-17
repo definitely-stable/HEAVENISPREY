@@ -72,6 +72,8 @@ const ENEMY_ASSETS: Dictionary = {
 	"enemy.venom_spirit_snake": "asset.enemy.venom_spirit_snake",
 	"enemy.sickle_mantis": "asset.enemy.sickle_mantis",
 	"enemy.fallen_sword_disciple": "asset.enemy.fallen_sword_disciple",
+	"enemy.cursed_spirit_lantern": "asset.enemy.cursed_spirit_lantern",
+	"enemy.paper_puppet": "asset.enemy.paper_puppet",
 }
 ## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
 ## hue stays reserved for enemies (ADR-014 section 2).
@@ -104,8 +106,11 @@ const HUD_LAYER: int = 2
 ## Camera zoom and the inset (cells) from the walls inside which it follows the hero.
 const CAMERA_ZOOM: float = 1.3
 const CAMERA_INSET_CELLS: float = 4.0
-## Screen px a projectile or an enemy shot flies above its ground point.
+## Screen px a hero projectile flies above its ground point.
 const FLIGHT_LIFT_PX: float = 26.0
+## Enemy shots leave the lantern's eye: its hover lift (EnemyMotion.HOVER) plus the eye 36 px
+## above its feet (ADR-014 section 27).
+const SHOT_LIFT_PX: float = 52.0
 ## Px of horizontal hero offset before an enemy turns to face the other way.
 const TURN_DEADBAND_PX: float = 6.0
 ## Frame of an enemy attack clip on which its contact damage lands (the claw fully extended).
@@ -881,7 +886,7 @@ func _draw_over_pass() -> void:
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] == 0:
 			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
+		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
 		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, COLOR_WISP)
 	var font: Font = _hud.kit.font if _hud != null and _hud.kit != null else ThemeDB.fallback_font
 	var gem_light: bool = _vfx != null and _vfx.kit.has("qi_wisp")
@@ -932,7 +937,7 @@ func _draw_glow_pass() -> void:
 		_halo(canvas, at, radius * 2.6, COLOR_SWORD_GLOW)
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
-			var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
+			var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
 			_halo(canvas, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, COLOR_WISP_GLOW)
 	var hero: Vector2 = driver.hero_position_px()
 	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
