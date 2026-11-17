@@ -113,6 +113,19 @@ class AssetManifestTests(unittest.TestCase):
         self.entry()["normal"]["method"] = "luminance_sobel"
         self.fails("silhouette_pillow")
 
+    def test_template_faces_need_a_point_inside_each_face(self):
+        guardians = self.entry("asset.prop.courtyard_guardians")
+        self.assertEqual(guardians["normal"]["method"], "template_faces")
+        prop = guardians["layout"]["props"][0]
+        x, y, w, h = prop["region"]
+        prop["faces"]["left"] = [x + w, y]
+        self.fails("left face point is outside its region")
+        del prop["faces"]["left"]
+        self.fails("has no left face point")
+        # Only a prop atlas may use the faces of the template.
+        self.entry()["normal"]["method"] = "template_faces"
+        self.fails("silhouette_pillow")
+
     def test_changed_normal_map_fails(self):
         (self.root / self.entry("asset.tile.sect_courtyard_floor")["normal"]["path"]).write_bytes(tiny_png(768, 768, 2))
         self.fails("normal map: sha256/bytes differ")

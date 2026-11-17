@@ -12,8 +12,10 @@ metrics of ART-BIBLE-001 section 6 measured on the built file.
 
 Every asset drawn in the lit scene also gets a normal map <name>_n.png for 2D lights (ADR-014 section 4): the floor
 from its luminance (Sobel, seamless), sprites from a soft distance-transform "pillow" of the
-silhouette only, because their painted shading must not turn into relief. The HUD kit is drawn
-over the scene, unlit, and has none.
+silhouette only, because their painted shading must not turn into relief; a prop atlas painted
+over the geometry template (source.json "normals": template_faces) gets flat normals on the faces
+of the template's blocks instead, fitted to the painted edges (ADR-015 section 9). The HUD kit is
+drawn over the scene, unlit, and has none.
 
 Needs Pillow, numpy and scipy (local tool, like ref look-dev). CI does not rebuild:
 scripts/validate_assets.py checks the manifest, the LFS pointers and the recorded metrics
@@ -31,8 +33,11 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageChops, ImageFilter
+from PIL import Image, ImageChops, ImageDraw, ImageFilter
 from scipy import ndimage
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import iso_template as iso  # noqa: E402  (the geometry template next to this file)
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "art_source"
@@ -245,10 +250,7 @@ def sprite_normals(atlas: Image.Image, frame: int) -> Image.Image:
     return _encode_normals(normals, alpha)
 
 
-def region_normals(atlas: Image.Image, regions: list[list[int]]) -> Image.Image:
-    """The silhouette pillow of sprite_normals for each prop region of an atlas."""
-    rgba = np.asarray(atlas.convert("RGBA"))
-    alpha = rgba[..., 3]
+def _pillow_field(alpha: np.ndarray, regions: list[list[int]]) -> np.ndarray:
     normals = np.zeros(alpha.shape + (3,), dtype=np.float64)
     normals[..., 2] = 1.0
     k = SPRITE_NORMAL["strength"]
@@ -259,7 +261,182 @@ def region_normals(atlas: Image.Image, regions: list[list[int]]) -> Image.Image:
         gx = ndimage.sobel(height, axis=1)
         gy = ndimage.sobel(height, axis=0)
         normals[y0:y0 + h, x0:x0 + w] = np.dstack([-gx * k, gy * k, np.ones_like(height)])
+    return normals
+
+
+def region_normals(atlas: Image.Image, regions: list[list[int]]) -> Image.Image:
+    """The silhouette pillow of sprite_normals for each prop region of an atlas."""
+    alpha = np.asarray(atlas.convert("RGBA"))[..., 3]
+    return _encode_normals(_pillow_field(alpha, regions), alpha)
+
+
+## ADR-015 section 9: props painted over the geometry template get flat normals on the faces of
+## its blocks. A block's front edges are moved to the painted ones within snap_px when the painted
+## edge is TEMPLATE_SNAP_GAIN times stronger than at the template's place.
+TEMPLATE_NORMAL = {"method": "template_faces", "camera_deg": iso.CAMERA_DEG, "snap_px": 16,
+                   "fallback": SPRITE_NORMAL}
+TEMPLATE_SNAP_GAIN = 1.25
+
+
+def template_normals(atlas: Image.Image, regions: list[list[int]], labels: list[np.ndarray]) -> Image.Image:
+    """The pillow of region_normals, with the flat normal of its face wherever a face label is set
+    (iso_template.FACE_CODES; 0 keeps the pillow)."""
+    alpha = np.asarray(atlas.convert("RGBA"))[..., 3]
+    normals = _pillow_field(alpha, regions)
+    flat = {code: np.array(iso.face_normal(face, TEMPLATE_NORMAL["camera_deg"]))
+            for face, code in iso.FACE_CODES.items()}
+    for (x0, y0, w, h), label in zip(regions, labels):
+        view = normals[y0:y0 + h, x0:x0 + w]
+        for code, n in flat.items():
+            view[label == code] = n
     return _encode_normals(normals, alpha)
+
+
+def _edge_strength(lum: np.ndarray, solid: np.ndarray, hidden: np.ndarray, cx: float, half: float,
+                   y: float) -> float | None:
+    """Luminance step across the front edges of a block whose front corner is at (cx, y): the
+    mean of |above - below| 2 px off the V of slope 1/2, each side counted alike; None when less
+    than 40 % of the V is painted and not hidden by a block above."""
+    xs = np.arange(math.ceil(cx - half * 0.9), math.floor(cx + half * 0.9) + 1)
+    xs = xs[np.abs(xs - cx) >= 3]
+    ys = np.round(y - np.abs(xs - cx) / 2.0).astype(int)
+    ok = (ys >= 3) & (ys < lum.shape[0] - 3) & (xs >= 0) & (xs < lum.shape[1])
+    xs, ys = xs[ok], ys[ok]
+    seen = solid[ys - 2, xs] & solid[ys + 2, xs] & ~hidden[ys, xs]
+    if not len(seen) or seen.sum() < 0.4 * len(seen):
+        return None
+    step = np.abs(lum[ys - 2, xs] - lum[ys + 2, xs])
+    sides = [step[seen & (xs < cx)], step[seen & (xs > cx)]]
+    return float(np.mean([s.mean() for s in sides if len(s)]))
+
+
+def _snap_edge(lum, solid, hidden, cx, half, y0, low: float = -math.inf, high: float = math.inf) -> float | None:
+    """The painted front edge near the template's y0 (see TEMPLATE_NORMAL): the strongest peak of
+    the edge strength kept within (low, high), so the flank of a stronger edge next to it does not
+    count, refined to the centre of the strength within 3 px of it; None when the edge is
+    hidden. A painted edge is a step in tone (a thin outline would read as two peaks either side
+    of it)."""
+    base = _edge_strength(lum, solid, hidden, cx, half, y0)
+    if base is None:
+        return None
+    reach = TEMPLATE_NORMAL["snap_px"]
+    ys = list(range(round(y0) - reach - 1, round(y0) + reach + 2))
+    scores = [_edge_strength(lum, solid, hidden, cx, half, y) or 0.0 for y in ys]
+    best, best_y = (base if low < y0 < high else 0.0), y0
+    for i in range(1, len(ys) - 1):
+        peak = scores[i] >= scores[i - 1] and scores[i] >= scores[i + 1]
+        if peak and low < ys[i] < high and scores[i] > best:
+            best, best_y = scores[i], float(ys[i])
+    if best_y == y0 or best < TEMPLATE_SNAP_GAIN * base:
+        return y0
+    near = [(y, w) for y, w in zip(ys, scores) if abs(y - best_y) <= 3 and low < y < high]
+    return round(sum(y * w for y, w in near) / sum(w for _, w in near), 2)
+
+
+def snap_fronts(lum: np.ndarray, solid: np.ndarray, prop: dict, k: float) -> list[tuple[float, float]]:
+    """The front corners (bottom y, top y) of the blocks of a template prop moved to the painted
+    sheet (`k` sheet px per template px): each visible front edge is snapped bottom to top, the
+    bottom of a narrower block behind the top edges of the block below; a top hidden under the
+    next block follows from where that block stands (coaxial, as iso_template.blocks stacks
+    them)."""
+    widths = [w * k for w, _ in prop.get("blocks", [])]
+    out = [(b * k, t * k) for b, t in iso.fronts(prop)]
+    cx = prop["x"] * k
+    covered = []
+    for i in range(len(out)):
+        mask = Image.new("1", (lum.shape[1], lum.shape[0]), 0)
+        draw = ImageDraw.Draw(mask)
+        for block in iso.blocks(prop)[i + 1:]:
+            for face in block.values():
+                draw.polygon([(x * k, y * k) for x, y in face], fill=1)
+        covered.append(np.asarray(mask, dtype=bool))
+    hidden_tops = []
+    for i, (bottom, top) in enumerate(out):
+        half = widths[i] / 2.0
+        if i:
+            # A narrower block stands behind the front edges of the top below it (a ledge shows);
+            # a wider one hides that top.
+            high = out[i - 1][1] - 5.0 if widths[i] < widths[i - 1] else math.inf
+            snapped = _snap_edge(lum, solid, covered[i], cx, half, bottom, high=high)
+            if snapped is not None:
+                bottom, top = snapped, top + snapped - bottom
+        snapped = _snap_edge(lum, solid, covered[i], cx, half, top, high=bottom - 4.0)
+        if snapped is None:
+            hidden_tops.append(i)
+        else:
+            top = snapped
+        out[i] = (bottom, top)
+    for i in hidden_tops:
+        if i + 1 < len(out):
+            out[i] = (out[i][0], out[i + 1][0] - widths[i + 1] / 4.0 + widths[i] / 4.0)
+    return out
+
+
+def statue_span(solid: np.ndarray, top: list[tuple[float, float]], cx: float) -> tuple[float, float] | None:
+    """x extent (sheet px) of what stands on a top face: the columns of the face, joined to its
+    middle, painted more than 3 px above its back edges."""
+    x0, x1 = round(min(x for x, _ in top)), round(max(x for x, _ in top))
+    back = min(y for _, y in top)
+    half = (x1 - x0) / 2.0
+    above = []
+    for x in range(x0, x1 + 1):
+        edge = round(back + abs(x - cx) * (top[1][1] - back) / half) - 3
+        above.append(bool(solid[max(0, edge - 40):max(0, edge), x].any()))
+    middle = round(cx) - x0
+    if not above[middle]:
+        return None
+    left = right = middle
+    while left > 0 and above[left - 1]:
+        left -= 1
+    while right < len(above) - 1 and above[right + 1]:
+        right += 1
+    return float(x0 + left), float(x0 + right + 1)
+
+
+def face_labels(spec: dict, keyed: Image.Image, solid: np.ndarray, index: int, origin: tuple[int, int],
+                scale: tuple[float, float], size: tuple[int, int]) -> tuple[np.ndarray, list]:
+    """Face codes (iso_template.FACE_CODES) over the atlas region of the prop `index`, and the
+    snapped front corners of its blocks as offsets from the template (sheet px)."""
+    sheet = spec["sheet"]
+    layout = spec["normals"]["layout"]
+    prop_spec = spec["props"][index]
+    prop = iso.prop_in_cell(layout, prop_spec.get("cell", index), tuple(sheet["grid"]))
+    k = keyed.width / iso.SIZE[0]
+    lum = np.asarray(keyed.convert("L"), dtype=np.float64)
+    at = snap_fronts(lum, solid, prop, k)
+    template = iso.fronts(prop)
+    offsets = [[round(b - tb * k, 1), round(t - tt * k, 1)] for (b, t), (tb, tt) in zip(at, template)]
+    scaled = dict(prop, x=prop["x"] * k, blocks=[[w * k, h * k] for w, h in prop["blocks"]])
+    stack = iso.stack(scaled, at)
+    image = Image.new("L", size, 0)
+    draw = ImageDraw.Draw(image)
+    for block in stack:
+        for face, code in iso.FACE_CODES.items():
+            draw.polygon(iso.to_region(block[face], origin, scale), fill=code)
+    if "seat" in prop:
+        top = stack[-1]["top"]
+        span = statue_span(solid, top, scaled["x"])
+        if span is not None:
+            cut = Image.new("1", size, 0)
+            ImageDraw.Draw(cut).polygon(iso.to_region(iso.seat_cut(top, span, prop["seat"]), origin, scale), fill=1)
+            labels = np.asarray(image).copy()
+            labels[np.asarray(cut, dtype=bool) & (labels == iso.FACE_CODES["top"])] = 0
+            return labels, offsets
+    return np.asarray(image).copy(), offsets
+
+
+def face_points(label: np.ndarray, alpha: np.ndarray) -> dict[str, list[float]]:
+    """The point of each face deepest inside it (farthest from any other face and the
+    silhouette), region px: where tests read the normal of a face."""
+    out = {}
+    for face, code in iso.FACE_CODES.items():
+        inside = (label == code) & (alpha > SOLID_ALPHA)
+        if not inside.any():
+            continue
+        depth = ndimage.distance_transform_edt(np.pad(inside, 1))[1:-1, 1:-1]
+        y, x = np.unravel_index(int(np.argmax(depth)), depth.shape)
+        out[face] = [int(x), int(y)]
+    return out
 
 
 def decal_normals(decal: Image.Image) -> Image.Image:
@@ -549,27 +726,42 @@ def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
         if "anchor" in prop:
             anchor = ((prop["anchor"][0] - origin[0]) * size[0] / piece.width,
                       (prop["anchor"][1] - origin[1]) * size[1] / piece.height)
+        faces = None
+        if spec.get("normals", {}).get("method") == "template_faces":
+            faces = face_labels(spec, keyed, solid, index, origin, (size[0] / piece.width, size[1] / piece.height), size)
         piece = resize_premultiplied(piece, size)
-        pieces.append((prop["name"], piece, anchor))
+        pieces.append((prop["name"], piece, anchor, faces))
     # Shelf packing in spec order.
     placed = []
     x = y = shelf = width = 0
-    for name, piece, anchor in pieces:
+    for name, piece, anchor, faces in pieces:
         w, h = piece.width + 2 * PROP_PAD_PX, piece.height + 2 * PROP_PAD_PX
         if x + w > PROP_ATLAS_WIDTH:
             x, y, shelf = 0, y + shelf, 0
-        placed.append((name, piece, anchor, x + PROP_PAD_PX, y + PROP_PAD_PX))
+        placed.append((name, piece, anchor, faces, x + PROP_PAD_PX, y + PROP_PAD_PX))
         x += w
         shelf = max(shelf, h)
         width = max(width, x)
     atlas = Image.new("RGBA", (width, y + shelf), (0, 0, 0, 0))
     props = []
-    for name, piece, anchor, px, py in placed:
+    face_maps = []
+    for name, piece, anchor, faces, px, py in placed:
         atlas.alpha_composite(piece, (px, py))
         fx, fy = anchor or base_anchor(piece)
-        props.append({"name": name, "region": [px, py, piece.width, piece.height],
-                      "feet": [round(px + fx, 1), round(py + fy, 1)]})
-    return atlas, {"density": spec["density"], "props": props}
+        entry = {"name": name, "region": [px, py, piece.width, piece.height],
+                 "feet": [round(px + fx, 1), round(py + fy, 1)]}
+        if faces is not None:
+            label, offsets = faces
+            face_maps.append(label)
+            points = face_points(label, np.asarray(piece.getchannel("A")))
+            entry["faces"] = {face: [px + u, py + v] for face, (u, v) in points.items()}
+            entry["faces"]["snap_px"] = offsets
+        props.append(entry)
+    layout = {"density": spec["density"], "props": props}
+    if face_maps:
+        # Read by build() for the normal map, not written to the manifest.
+        layout["_face_labels"] = face_maps
+    return atlas, layout
 
 
 UI_ATLAS_WIDTH = 1024
@@ -848,6 +1040,10 @@ def build(name: str, passport: dict) -> dict:
     data = out.read_bytes()
     if spec["kind"] in ("sprite_atlas", "anim_atlas"):
         normal_image, normal_spec = sprite_normals(image, layout["frame_size"]), SPRITE_NORMAL
+    elif spec["kind"] == "prop_atlas" and "_face_labels" in layout:
+        regions = [p["region"] for p in layout["props"]]
+        normal_image = template_normals(image, regions, layout.pop("_face_labels"))
+        normal_spec = {**TEMPLATE_NORMAL, "layout": spec["normals"]["layout"]}
     elif spec["kind"] == "prop_atlas":
         normal_image, normal_spec = region_normals(image, [p["region"] for p in layout["props"]]), SPRITE_NORMAL
     elif spec["kind"] == "decal_texture":

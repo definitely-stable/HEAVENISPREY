@@ -17,6 +17,24 @@ def slope(a, b):
     return (b[1] - a[1]) / (b[0] - a[0])
 
 
+def inside(polygon, point):
+    """Even-odd test of a point against a polygon."""
+    x, y = point
+    hit = False
+    for (x0, y0), (x1, y1) in zip(polygon, polygon[1:] + polygon[:1]):
+        if (y0 > y) != (y1 > y) and x < x0 + (y - y0) * (x1 - x0) / (y1 - y0):
+            hit = not hit
+    return hit
+
+
+def load_builder():
+    """tools/art/build_sprites.py (needs Pillow, numpy and scipy)."""
+    spec_ = importlib.util.spec_from_file_location("build_sprites", ROOT / "tools" / "art" / "build_sprites.py")
+    module = importlib.util.module_from_spec(spec_)
+    spec_.loader.exec_module(module)
+    return module
+
+
 class IsoTemplateTests(unittest.TestCase):
     def test_every_base_lies_on_the_two_to_one_floor(self):
         for name, layout in iso.LAYOUTS.items():
@@ -127,6 +145,102 @@ class IsoTemplateTests(unittest.TestCase):
             self.assertEqual(prop["sheet_scale"], layout["scale"])
             self.assertAlmostEqual(prop["anchor"][0], frag["anchor"][0], places=2)
             self.assertAlmostEqual(prop["anchor"][1], frag["anchor"][1] + iso.SIZE[1] * (frag["sheet"] - 1), places=2)
+
+    def test_face_normals_are_the_faces_of_a_cube_seen_by_the_floor_camera(self):
+        left, right, top = (iso.face_normal(f) for f in ("left", "right", "top"))
+        for n in (left, right, top):
+            self.assertAlmostEqual(sum(c * c for c in n), 1.0)
+        # Three faces of one block meet at right angles.
+        for a, b in ((left, right), (left, top), (right, top)):
+            self.assertAlmostEqual(sum(x * y for x, y in zip(a, b)), 0.0)
+        # The left face looks left and down the screen, the right face is its mirror, the top
+        # looks up and towards the viewer (y up the image, as Godot reads normal maps).
+        self.assertLess(left[0], 0.0)
+        self.assertLess(left[1], 0.0)
+        self.assertEqual(right, (-left[0], left[1], left[2]))
+        self.assertEqual(top[0], 0.0)
+        self.assertGreater(top[1], top[2])
+        # The edge a side face shares with the top runs 1 px up per 2 px sideways: the camera of
+        # the normals is the camera of the 2:1 floor.
+        ex, ey = left[1] * top[2] - left[2] * top[1], left[2] * top[0] - left[0] * top[2]
+        self.assertAlmostEqual(abs(ey / ex), 0.5)
+
+    def test_stack_at_the_template_fronts_is_the_template(self):
+        for layout in iso.LAYOUTS.values():
+            for prop in layout:
+                self.assertEqual(iso.stack(prop, iso.fronts(prop)), iso.blocks(prop))
+
+    def test_moved_fronts_keep_axis_and_widths(self):
+        prop = iso.LAYOUTS["courtyard_guardians"][0]
+        at = [(b, t - 11.0) for b, t in iso.fronts(prop)]
+        for block, (bottom, top), (width, _) in zip(iso.stack(prop, at), at, prop["blocks"]):
+            self.assertEqual(block["left"][1], (prop["x"], bottom))
+            self.assertEqual(block["top"][0], (prop["x"], top))
+            self.assertAlmostEqual(block["right"][1][0] - block["left"][0][0], width)
+            self.assertAlmostEqual(slope(block["top"][1], block["top"][0]), 0.5)
+
+    def test_to_region_follows_the_cut_and_the_scale(self):
+        # A prop cut from the sheet at (200, 100) and shrunk to 0.9 x 0.8 of its size.
+        origin, scale = (200.0, 100.0), (0.9, 0.8)
+        self.assertEqual(iso.to_region([(200.0, 100.0)], origin, scale), [(0.0, 0.0)])
+        (x, y), = iso.to_region([(300.0, 350.0)], origin, scale)
+        self.assertAlmostEqual(x, 90.0)
+        self.assertAlmostEqual(y, 200.0)
+        # Slopes of the floor change with an uneven scale exactly as the pixels do.
+        a, b = iso.to_region([(0.0, 0.0), (2.0, 1.0)], origin, scale)
+        self.assertAlmostEqual(slope(a, b), 0.5 * 0.8 / 0.9)
+
+    def test_every_template_prop_is_found_in_its_cell(self):
+        for name, layout in iso.LAYOUTS.items():
+            for cell, prop in enumerate(layout):
+                self.assertIs(iso.prop_in_cell(name, cell, (2, 2)), prop)
+        with self.assertRaises(KeyError):
+            iso.prop_in_cell("courtyard_guardians", 4, (2, 2))
+
+    def test_guardian_source_names_its_template_faces(self):
+        source = json.loads((ROOT / "art_source" / "courtyard_guardians" / "source.json").read_text(encoding="utf-8"))
+        self.assertEqual(source["normals"], {"method": "template_faces", "layout": "courtyard_guardians"})
+        self.assertEqual(len(source["props"]), len(iso.LAYOUTS["courtyard_guardians"]))
+
+    def test_seat_cut_hides_the_statue_and_leaves_the_front_rim(self):
+        prop = iso.LAYOUTS["courtyard_guardians"][0]
+        top = iso.blocks(prop)[-1]["top"]
+        cut = iso.seat_cut(top, (prop["x"] - 120.0, prop["x"] + 110.0), prop["seat"])
+        centre = ((top[0][0] + top[2][0]) / 2.0, (top[0][1] + top[2][1]) / 2.0)
+        self.assertTrue(inside(cut, centre))
+        self.assertTrue(inside(cut, top[2]))  # the back corner, behind the statue
+        self.assertFalse(inside(cut, (top[0][0], top[0][1] - 1.0)))  # the front corner
+        lowest = max(y for _, y in cut)
+        self.assertLess(lowest, top[0][1])
+        # Its lower contour has the proportion of the template seat.
+        x0, x1 = min(x for x, _ in cut), max(x for x, _ in cut)
+        self.assertAlmostEqual((lowest - (centre[1] - 5.0)) / ((x1 - x0) / 2.0), prop["seat"][1] / prop["seat"][0], places=2)
+
+    @unittest.skipUnless(all(importlib.util.find_spec(m) for m in ("PIL", "numpy", "scipy")),
+                         "Pillow, numpy and scipy are not installed")
+    def test_snap_finds_a_block_drawn_off_the_template(self):
+        import numpy as np
+        from PIL import ImageDraw
+
+        builder = load_builder()
+        prop = iso.LAYOUTS["courtyard_guardians"][2]
+        for shift in (0.0, -9.0):
+            at = [(b, t) for b, t in iso.fronts(prop)]
+            # The cap of the pillar painted `shift` px higher than the template.
+            at[-1] = (at[-1][0] + shift, at[-1][1] + shift)
+            image = iso.render("courtyard_guardians")
+            draw = ImageDraw.Draw(image)
+            draw.rectangle((prop["x"] - 120, 0, prop["x"] + 120, iso.SIZE[1] - 1), fill=iso.KEY)
+            # Each block a shade lighter than the one below: a painted edge is a step in tone.
+            for shade, block in enumerate(iso.stack(prop, at)):
+                for face, fill in (("left", iso.LEFT), ("right", iso.RIGHT), ("top", iso.TOP)):
+                    draw.polygon(block[face], fill=tuple(c + 30 * shade for c in fill))
+            lum = np.asarray(image.convert("L"), dtype=np.float64)
+            solid = np.any(np.asarray(image) != iso.KEY, axis=2)
+            found = builder.snap_fronts(lum, solid, prop, 1.0)
+            self.assertAlmostEqual(found[-1][0], at[-1][0], delta=1.0, msg=shift)
+            self.assertAlmostEqual(found[-1][1], at[-1][1], delta=1.0, msg=shift)
+            self.assertAlmostEqual(found[0][1], at[0][1], delta=1.0, msg=shift)
 
     @unittest.skipUnless(importlib.util.find_spec("PIL"), "Pillow is not installed")
     def test_render_draws_the_lowest_corner_of_every_base(self):

@@ -31,6 +31,10 @@
   },
   "palette_group": "props",
   "density": 2,
+  "normals": {
+    "method": "template_faces",
+    "layout": "courtyard_guardians"
+  },
   "sheet": {
     "key_colour": "#00ff00",
     "key_low": 40,
