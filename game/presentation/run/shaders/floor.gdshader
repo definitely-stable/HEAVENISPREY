@@ -5,7 +5,9 @@ shader_type canvas_item;
 // with another period), patches of the worn variant (cracked, mossy, strewn with maple leaves:
 // REF-033 and REF-001 floor tile sets) and a slow drift of tone. The three layers repeat with
 // different periods, so no period of the arena shows one tile twice. Lit by the 2D lights
-// like any ground item.
+// like any ground item, plus the sheen of damp stone (ADR-014 section 26): light() adds a
+// specular lobe seen from the camera's tilt, so a lantern glints on the slabs between it and
+// the viewer, as on the paving of REF-033, and the moon picks out the edges of the slabs.
 
 // The worn flagstones and their normal map, repeating every worn_repeat_px world px.
 uniform sampler2D worn_albedo : repeat_enable, filter_linear_mipmap;
@@ -25,17 +27,33 @@ uniform float clean_mid = 0.38;
 uniform float worn_mid = 0.36;
 uniform float edge_break = 0.55;
 uniform float tone_range = 0.14;
+// Sheen: specular of the clean slab tops, what the damp patches (mask alpha) add, the share
+// left on the worn layer (moss and leaves are matte) and on the seams (darker than seam_luma).
+uniform float gloss_slab = 0.55;
+uniform float gloss_damp = 1.0;
+uniform float gloss_worn = 0.3;
+uniform float seam_luma = 0.3;
+// Damp stone is darker and its cracks fill with water (flatter normals).
+uniform float damp_darken = 0.18;
+uniform float damp_flatten = 0.5;
+// Specular exponent, the screen direction towards the viewer (the camera looks down at the
+// floor from the bottom of the screen) and the share of the moon's specular.
+uniform float shininess = 40.0;
+uniform vec2 view_tilt = vec2(-1.0, 1.0);
+uniform float moon_sheen = 0.45;
 
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 varying vec2 world;
+// Specular of this pixel, from fragment() to light().
+varying float gloss;
 
 void vertex() {
 	world = VERTEX;
 }
 
 void fragment() {
-	vec3 mask = texture(wear_mask, (world - mask_origin) / mask_size).rgb;
+	vec4 mask = texture(wear_mask, (world - mask_origin) / mask_size);
 	// The second clean layer: the same texture turned half a circle (its normals turn with it).
 	vec2 alt_uv = alt_shift - UV * alt_scale;
 	vec3 alt = texture(TEXTURE, alt_uv).rgb;
@@ -49,6 +67,20 @@ void fragment() {
 	vec3 worn = texture(worn_albedo, worn_uv).rgb;
 	float wear = smoothstep(0.46, 0.54, mask.r + (worn_mid - dot(worn, LUMA)) * edge_break);
 	albedo = mix(albedo, worn, wear) * (1.0 + (mask.g - 0.5) * tone_range);
-	COLOR = vec4(albedo, COLOR.a);
-	NORMAL_MAP = mix(normal, texture(worn_normal, worn_uv).rgb, wear);
+	float damp = mask.a;
+	float seam = smoothstep(seam_luma - 0.08, seam_luma + 0.06, dot(albedo, LUMA));
+	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam);
+	COLOR = vec4(albedo * (1.0 - damp_darken * damp), COLOR.a);
+	normal = mix(normal, texture(worn_normal, worn_uv).rgb, wear);
+	NORMAL_MAP = mix(normal, vec3(0.5, 0.5, 1.0), damp_flatten * damp);
+}
+
+void light() {
+	// The default diffuse term of a 2D light, then the sheen.
+	float n_dot_l = max(dot(NORMAL, LIGHT_DIRECTION), 0.0);
+	vec3 light = LIGHT_COLOR.rgb * LIGHT_ENERGY;
+	vec3 half_vector = normalize(LIGHT_DIRECTION + normalize(vec3(view_tilt, 1.0)));
+	float sheen = pow(max(dot(NORMAL, half_vector), 0.0), shininess) * gloss;
+	sheen *= LIGHT_IS_DIRECTIONAL ? moon_sheen : 1.0;
+	LIGHT = vec4(light * (COLOR.rgb * n_dot_l + sheen), LIGHT_COLOR.a);
 }
