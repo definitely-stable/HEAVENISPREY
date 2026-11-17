@@ -1,9 +1,8 @@
 shader_type canvas_item;
 render_mode unshaded;
-// ADR-014 section 5: every cast and contact shadow is drawn opaque into one CanvasGroup buffer;
-// the group is composited once, softened by a mipmap level, at a single alpha. Overlapping
-// shadows therefore do not get darker. A shadow is the absence of moonlight: inside the pool of
-// a lantern or brazier (slice A3) the warm light fills it, so it fades by lantern_fill there.
+// ADR-014 section 5: cast shadows are black and contact shadows are white in the same
+// CanvasGroup buffer. The alpha channel is the union, and red marks contact coverage.
+// Torchlight fills a moon shadow, but feet and prop bases still block light at contact.
 
 const int MAX_LIGHTS = 16;
 
@@ -15,6 +14,7 @@ uniform vec2 lanterns[MAX_LIGHTS];
 uniform int lantern_count = 0;
 uniform float lantern_radius = 240.0;
 uniform float lantern_fill = 0.75;
+uniform float contact_strength = 0.75;
 
 varying vec2 canvas_point;
 
@@ -23,7 +23,7 @@ void vertex() {
 }
 
 void fragment() {
-	float coverage = textureLod(screen_texture, SCREEN_UV, softness_lod).a;
+	vec4 mask = textureLod(screen_texture, SCREEN_UV, softness_lod);
 	float lit = 0.0;
 	for (int index = 0; index < MAX_LIGHTS; index++) {
 		if (index >= lantern_count) {
@@ -34,5 +34,6 @@ void fragment() {
 		lit = max(lit, 1.0 - length(offset) / lantern_radius);
 	}
 	float fill = 1.0 - lantern_fill * clamp(lit, 0.0, 1.0);
-	COLOR = vec4(0.0, 0.0, 0.0, clamp(coverage, 0.0, 1.0) * shadow_alpha * fill);
+	float coverage = max(mask.a * fill, mask.r * contact_strength);
+	COLOR = vec4(0.0, 0.0, 0.0, clamp(coverage, 0.0, 1.0) * shadow_alpha);
 }

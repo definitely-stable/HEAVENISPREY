@@ -29,8 +29,8 @@ uniform float edge_break = 0.55;
 uniform float tone_range = 0.14;
 // Sheen: specular of the clean slab tops, what the damp patches (mask alpha) add, the share
 // left on the worn layer (moss and leaves are matte) and on the seams (darker than seam_luma).
-uniform float gloss_slab = 0.55;
-uniform float gloss_damp = 1.0;
+uniform float gloss_slab = 0.08;
+uniform float gloss_damp = 0.38;
 uniform float gloss_worn = 0.3;
 uniform float seam_luma = 0.3;
 // Damp stone is darker and its cracks fill with water (flatter normals).
@@ -38,7 +38,7 @@ uniform float damp_darken = 0.18;
 uniform float damp_flatten = 0.5;
 // Specular exponent, the screen direction towards the viewer (the camera looks down at the
 // floor from the bottom of the screen) and the share of the moon's specular.
-uniform float shininess = 40.0;
+uniform float shininess = 28.0;
 uniform vec2 view_tilt = vec2(-1.0, 1.0);
 uniform float moon_sheen = 0.45;
 

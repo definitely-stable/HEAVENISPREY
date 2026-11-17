@@ -158,6 +158,7 @@ var _poses: Dictionary = {}
 ## Seconds of walk animation (stops with the run).
 var _anim_time: float = 0.0
 var _hero_moving: bool = false
+var _hero_stride_time: float = 0.0
 ## Hero clips (ADR-014 A4): seconds into the attack after a cast (< 0: none) and its aim (world),
 ## seconds since a defeat started the death clip.
 var _attack_time: float = -1.0
@@ -327,6 +328,7 @@ func start_run(seed_text: String) -> void:
 	_faces.clear()
 	_poses.clear()
 	_anim_time = 0.0
+	_hero_stride_time = 0.0
 	_attack_time = -1.0
 	_death_time = -1.0
 	_hero_moving = false
@@ -393,6 +395,8 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		queue_redraw()
 		return 0
 	var hp_before: int = driver.world.hero_hp
+	var x_before: int = driver.world.player_x
+	var y_before: int = driver.world.player_y
 	var ticks: int = driver.advance(delta, move)
 	var events: Dictionary = driver.take_events()
 	for uid: int in events["hit"]:
@@ -408,9 +412,12 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	_anim_time += delta
 	_flicker()
 	_advance_hero_clips(delta, events["casts"])
-	_hero_moving = move != Vector2i.ZERO
-	if _hero_moving:
-		_facing = Vector2(move).normalized()
+	if ticks > 0:
+		var travel: Vector2 = Vector2(driver.world.player_x - x_before, driver.world.player_y - y_before)
+		_hero_moving = travel != Vector2.ZERO
+		if _hero_moving:
+			_facing = travel.normalized()
+			_hero_stride_time += travel.length() * FixedTickDriver.TICK_SECONDS / P0Tuning.HERO_SPEED_SU_PER_TICK
 	_update_facing()
 	_camera.position = camera_target()
 	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
@@ -592,7 +599,7 @@ func _hero_pose() -> Array:
 		return ["", "", "", 0]
 	var facing: Vector2 = IsoProjection.to_screen(_facing)
 	if not _sprites.has_clip(HERO_ASSET, "idle"):
-		var frame: int = SpriteSet.walk_frame(_anim_time, 0) if _hero_moving else 0
+		var frame: int = SpriteSet.walk_frame(_hero_stride_time, 0) if _hero_moving else 0
 		return [HERO_ASSET, "", SpriteSet.four_way(facing.normalized()), frame]
 	var clip: String = "idle"
 	var seconds: float = _anim_time
@@ -601,6 +608,7 @@ func _hero_pose() -> Array:
 		seconds = _death_time
 	elif _hero_moving:
 		clip = "run"
+		seconds = _hero_stride_time
 	elif _attack_time >= 0.0:
 		clip = "attack"
 		seconds = _attack_time
@@ -627,8 +635,7 @@ func _light_at(feet: Vector2) -> Color:
 func _draw_shadow_pass() -> void:
 	var canvas: Node2D = _shadow_canvas
 	var world: WorldState = driver.world
-	# Silhouettes first, then every contact shadow: the group is one opaque union, so the order
-	# is free, and grouping keeps one texture per run of draws (a batch, not one per body).
+	# Draw silhouettes first. White contacts on top preserve their coverage in lit areas.
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var pose: Array = _frame_pose(slot)
@@ -644,7 +651,9 @@ func _draw_shadow_pass() -> void:
 	# cells darken the ground around its foot instead.
 	for prop: Dictionary in _props:
 		for polygon: PackedVector2Array in prop.get("footprint", []):
-			canvas.draw_colored_polygon(polygon, Color.BLACK)
+			canvas.draw_colored_polygon(polygon, Color.WHITE)
+	for lantern: Vector2 in _lanterns:
+		_contact(canvas, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
@@ -675,7 +684,7 @@ func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float 
 ## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
 func _contact(canvas: Node2D, at: Vector2, radius: float) -> void:
 	var box: Rect2 = Rect2(at - Vector2(radius, radius * 0.5), Vector2(radius * 2.0, radius))
-	canvas.draw_texture_rect(_disc_texture, box, false, Color.BLACK)
+	canvas.draw_texture_rect(_disc_texture, box, false)
 
 
 # --- danger layer: unlit ground marks over the shadows (PLAYABILITY G3) ---
