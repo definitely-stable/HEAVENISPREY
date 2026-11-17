@@ -1,14 +1,16 @@
 extends GutTest
-## ADR-014 sections 15 and 21: the gold HUD kit (pieces, frame windows, stretched bars, the HUD
-## font) and the run HUD laid out after REF-023 and REF-022 on the 1280 x 720 canvas and on a wider
-## window; numbers keep their size while they count and stay inside their troughs.
+## ADR-014 section 21, HUD v1 after REF-067: the gold HUD kit (pieces, frame windows, stretched
+## bars, the HUD font) and the run HUD on the 1280 x 720 canvas and on a wider window; numbers
+## keep their size while they count and stay inside their frames; the trail of lost health and
+## the stage name follow the run.
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const TICK: float = 1.0 / 60.0
 const PIECES: Array[String] = [
-	"portrait_ring", "status_plaque", "bar_slim", "title_plaque", "counter_capsule", "divider_lotus",
-	"fill_red", "fill_gold", "icon_slain", "portrait",
+	"medallion", "bar_hp", "seal_level", "cartouche", "capsule_skull", "bar_qi", "fill_hp", "fill_qi", "fill_trail",
+	"portrait", "divider_lotus",
 ]
+const FRAMES: Array[String] = ["medallion", "bar_hp", "seal_level", "cartouche", "capsule_skull", "bar_qi"]
 
 
 func test_kit_has_every_piece_and_the_font() -> void:
@@ -24,7 +26,7 @@ func test_kit_has_every_piece_and_the_font() -> void:
 
 func test_frame_windows_sit_inside_their_frames() -> void:
 	var kit: HudKit = HudKit.load_default()
-	for piece: String in ["portrait_ring", "status_plaque", "bar_slim", "title_plaque", "counter_capsule"]:
+	for piece: String in FRAMES:
 		var rect: Rect2 = Rect2(Vector2(40, 30), kit.size_of(piece))
 		var inside: Rect2 = kit.window(piece, rect)
 		assert_true(rect.encloses(inside), piece)
@@ -35,12 +37,14 @@ func test_frame_windows_sit_inside_their_frames() -> void:
 
 func test_a_stretched_bar_keeps_its_caps() -> void:
 	var kit: HudKit = HudKit.load_default()
-	var short: Rect2 = kit.window("bar_slim", Rect2(0, 0, 200, 22))
-	var long: Rect2 = kit.window("bar_slim", Rect2(0, 0, 480, 22))
-	assert_almost_eq(long.position.x, short.position.x, 0.01, "left cap")
-	assert_almost_eq(480.0 - long.end.x, 200.0 - short.end.x, 0.01, "right cap")
-	assert_almost_eq(long.size.x - short.size.x, 280.0, 0.01, "only the trough grows")
-	assert_almost_eq(long.size.y, short.size.y, 0.01)
+	for piece: String in ["bar_hp", "bar_qi"]:
+		var height: float = kit.size_of(piece).y
+		var short: Rect2 = kit.window(piece, Rect2(0, 0, 200, height))
+		var long: Rect2 = kit.window(piece, Rect2(0, 0, 480, height))
+		assert_almost_eq(long.position.x, short.position.x, 0.01, piece + " left cap")
+		assert_almost_eq(480.0 - long.end.x, 200.0 - short.end.x, 0.01, piece + " right cap")
+		assert_almost_eq(long.size.x - short.size.x, 280.0, 0.01, piece + " only the trough grows")
+		assert_almost_eq(long.size.y, short.size.y, 0.01)
 
 
 func test_layout_fits_the_canvas_without_overlaps() -> void:
@@ -50,20 +54,24 @@ func test_layout_fits_the_canvas_without_overlaps() -> void:
 		var screen: Rect2 = Rect2(Vector2.ZERO, size)
 		for group: String in at:
 			assert_true(screen.encloses(at[group]), "%s inside %s" % [group, size])
-		for pair: Array in [["ring", "level"], ["ring", "hp"], ["ring", "xp"], ["level", "hp"], ["hp", "xp"],
-				["status", "plaque"], ["plaque", "capsule"], ["plaque", "divider"], ["status", "capsule"]]:
+		for pair: Array in [["hp", "qi"], ["hp", "cartouche"], ["qi", "seal"], ["cartouche", "capsule"],
+				["title", "capsule"], ["hp", "title"], ["seal", "hp"]]:
 			assert_false((at[pair[0]] as Rect2).intersects(at[pair[1]]), "%s / %s at %s" % [pair[0], pair[1], size])
-		assert_almost_eq((at["plaque"] as Rect2).get_center().x, size.x * 0.5, 1.0, "plaque centred")
+		assert_almost_eq((at["cartouche"] as Rect2).get_center().x, size.x * 0.5, 1.0, "cartouche centred")
+		assert_almost_eq((at["title"] as Rect2).get_center().x, size.x * 0.5, 1.0, "stage name centred")
 		assert_almost_eq((at["capsule"] as Rect2).end.x, size.x - RunHud.MARGIN.x, 0.01, "counter on the right")
-		assert_true((at["ring"] as Rect2).intersects(at["status"]), "the ring covers the left end of the plaque")
-		var status: Rect2 = at["status"]
-		var panel: Rect2 = kit.window("status_plaque", status)
-		for row: String in ["level", "hp", "xp"]:
-			var box: Rect2 = at[row]
-			assert_true(status.encloses(box), "%s on the plaque at %s" % [row, size])
-			assert_between(box.position.y, panel.position.y, panel.end.y, "%s top inside the panel" % row)
-			assert_between(box.end.y, panel.position.y, panel.end.y, "%s bottom inside the panel" % row)
-			assert_lte(box.end.x, status.end.x - status.size.x * RunHud.PLAQUE_SCROLL_SHARE + 0.01, row + " before the scroll")
+		var medal: Rect2 = at["medal"]
+		var hole: Rect2 = kit.window("medallion", medal)
+		assert_true(medal.intersects(at["seal"]), "the seal sits on the medallion")
+		assert_gt((at["seal"] as Rect2).get_center().x, hole.get_center().x, "seal on the right")
+		assert_gt((at["seal"] as Rect2).get_center().y, hole.get_center().y, "seal below the centre")
+		var hp: Rect2 = at["hp"]
+		var qi: Rect2 = at["qi"]
+		assert_lt(hp.position.x, medal.end.x, "the dragon's head overlaps the bar's cap")
+		assert_gt(kit.window("bar_hp", hp).position.x, medal.end.x - 2.0, "the trough is clear of the medallion")
+		assert_lt(hp.get_center().y, hole.get_center().y, "health above the portrait's centre")
+		assert_gt(qi.position.y, hp.position.y, "qi under health")
+		assert_lt(qi.end.x, hp.end.x + 0.01, "qi no longer than health")
 
 
 func test_hud_follows_the_run() -> void:
@@ -91,42 +99,66 @@ func test_hud_follows_the_run() -> void:
 	assert_eq(hud.driver, view.driver, "a new run rebinds the HUD")
 
 
+## The pale trail waits after a blow, then runs down to the health; healing lifts it at once.
+func test_trail_of_lost_health() -> void:
+	var step: Vector2 = RunHud.trail_step(1.0, 0.0, 0.6, TICK)
+	assert_eq(step.x, 1.0, "it waits first")
+	var trail: float = 1.0
+	var wait: float = 0.0
+	var frames: int = 0
+	while trail > 0.6 + 0.0001 and frames < 600:
+		step = RunHud.trail_step(trail, wait, 0.6, TICK)
+		trail = step.x
+		wait = step.y
+		frames += 1
+	assert_almost_eq(trail, 0.6, 0.0001, "it reaches the health")
+	var expected: float = RunHud.TRAIL_DELAY + 0.4 / RunHud.TRAIL_SPEED
+	assert_almost_eq(frames * TICK, expected, 2.0 * TICK, "after the delay, at its speed")
+	assert_eq(RunHud.trail_step(0.6, 0.3, 0.8, TICK), Vector2(0.8, 0.0), "healing lifts it")
+
+
+func test_stage_name_shows_then_fades() -> void:
+	assert_eq(RunHud.title_alpha(0.0), 1.0)
+	assert_eq(RunHud.title_alpha(RunHud.TITLE_SECONDS), 1.0)
+	assert_almost_eq(RunHud.title_alpha(RunHud.TITLE_SECONDS + RunHud.TITLE_FADE_SECONDS * 0.5), 0.5, 0.001)
+	assert_eq(RunHud.title_alpha(RunHud.TITLE_SECONDS + RunHud.TITLE_FADE_SECONDS), 0.0)
+	assert_eq(RunHud.title_alpha(300.0), 0.0)
+
+
 ## Long numbers and both locales stay inside their frames: the font shrinks, it never spills.
 func test_text_fits_its_frame_at_any_count() -> void:
 	var kit: HudKit = HudKit.load_default()
 	var at: Dictionary = RunHud.layout(kit, Vector2(1280, 720))
-	var count: Rect2 = RunHud.count_rect(kit, at["capsule"])
-	assert_gt(count.position.x, kit.window("counter_capsule", at["capsule"]).end.x, "count right of the icon")
-	assert_lt(count.end.x, (at["capsule"] as Rect2).end.x, "count left of the end cap")
+	var capsule: Rect2 = at["capsule"]
+	var count: Rect2 = RunHud.count_rect(kit, capsule)
+	assert_true(capsule.encloses(count))
+	assert_gt(count.position.x, capsule.position.x + capsule.size.x * 0.25, "count right of the skull")
 	var locale: String = TranslationServer.get_locale()
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
-		var sample: String = RunHud.count_sample(kit)
+		var sample: String = RunHud.count_sample()
 		var fixed: int = kit.line_size(sample, count, RunHud.COUNT_FONT_SIZE)
-		assert_gte(fixed, 12, "%s stays readable" % sample)
+		assert_gte(fixed, 14, "%s stays readable" % sample)
 		assert_eq(RunHud.short_count(99999), "99999")
 		assert_ne(RunHud.short_count(123456), "123456", "a count past the limit is shortened")
 		for kills: int in [0, 7, 4821, 99999, 123456, RunHud.SAMPLE_SHORT_COUNT]:
-			var text: String = UiText.text("UI_HUD_SLAIN") % RunHud.short_count(kills)
+			var text: String = RunHud.short_count(kills)
 			var size: int = kit.line_size(text, count, RunHud.COUNT_FONT_SIZE, sample)
 			assert_eq(size, fixed, "%s keeps the size of the counter" % text)
 			assert_lte(kit.text_width(text, size), count.size.x, "%s fits" % text)
 		var stage: String = UiText.text(RunHud.STAGE_NAME_KEY)
-		var plaque: Rect2 = kit.window("title_plaque", at["plaque"]).grow_individual(-RunHud.PLAQUE_INSET.x, 0,
-			-RunHud.PLAQUE_INSET.x, 0)
-		assert_eq(kit.fit_size(stage, plaque.size.x, RunHud.TITLE_FONT_SIZE), RunHud.TITLE_FONT_SIZE, stage)
+		assert_eq(kit.fit_size(stage, (at["title"] as Rect2).size.x, RunHud.TITLE_FONT_SIZE), RunHud.TITLE_FONT_SIZE, stage)
 	TranslationServer.set_locale(locale)
-	for row: String in ["hp", "xp"]:
-		var trough: Rect2 = kit.window("bar_slim", at[row]).grow_individual(
-			-RunHud.TEXT_INSET.x, 0, -RunHud.TEXT_INSET.x, 0
-		)
-		var sample: String = RunHud.SAMPLE_HP if row == "hp" else RunHud.SAMPLE_XP
-		var size: int = kit.line_size(sample, trough, RunHud.BAR_FONT_SIZE, sample, RunHud.BAR_OUTLINE)
-		var tall: float = size * HudKit.CAP_HEIGHT + 2.0 * (HudKit.outline_size(size) + RunHud.BAR_OUTLINE)
-		assert_lte(tall, trough.size.y + 0.5, "%s figures stand inside the trough" % row)
-		assert_gte(size, HudKit.MIN_FONT_SIZE, "%s figures stay readable" % row)
-		assert_lte(kit.text_width(sample, size), trough.size.x, "%s fits" % row)
+	var clock: Rect2 = kit.window("cartouche", at["cartouche"])
+	assert_gte(kit.line_size(RunHud.SAMPLE_TIME, clock, RunHud.TIMER_FONT_SIZE, RunHud.SAMPLE_TIME), 24, "a large timer")
+	var seal: Rect2 = kit.window("seal_level", at["seal"])
+	assert_gte(kit.line_size(RunHud.SAMPLE_LEVEL, seal, RunHud.LEVEL_FONT_SIZE, RunHud.SAMPLE_LEVEL), 14, "level")
+	var trough: Rect2 = kit.window("bar_hp", at["hp"]).grow_individual(-RunHud.TEXT_INSET.x, 0, -RunHud.TEXT_INSET.x, 0)
+	var size: int = kit.line_size(RunHud.SAMPLE_HP, trough, RunHud.BAR_FONT_SIZE, RunHud.SAMPLE_HP, RunHud.BAR_OUTLINE)
+	var tall: float = size * HudKit.CAP_HEIGHT + 2.0 * (HudKit.outline_size(size) + RunHud.BAR_OUTLINE)
+	assert_lte(tall, trough.size.y + 0.5, "health figures stand inside the trough")
+	assert_gte(size, HudKit.MIN_FONT_SIZE, "health figures stay readable")
+	assert_lte(kit.text_width(RunHud.SAMPLE_HP, size), trough.size.x, "health fits")
 	assert_almost_eq(kit.text_width("1111", 15), kit.text_width("0000", 15), 0.01, "tabular figures")
 	assert_lt(kit.fit_size("a much longer label than any bar can hold", 60.0, 20), 20, "the font shrinks to fit")
 	assert_eq(kit.fit_size("a much longer label than any bar can hold", 1.0, 20), HudKit.MIN_FONT_SIZE)
-
