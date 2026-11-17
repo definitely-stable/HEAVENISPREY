@@ -1,0 +1,157 @@
+## model sheet (attached to every request below)
+
+Generate one image with the image generation tool. The attached images are from the same game: the model sheets of two other enemies (an undead corpse and a demon wolf) and a battle screenshot. Paint the new creature in exactly their style: the same ink line weight, the same painted cel shading, the same muted dark palette with a few saturated accents, the same camera and the same scale (a human-sized figure as tall as the corpse). Do not copy those creatures; only match their style.
+
+Character model sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature. low and ready, the sickles folded up in front of the chest.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Layout: one row of four full-body poses on a 1536 x 1024 canvas, same scale, the lowest point of the body on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south, front view), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view in profile), 4 facing up-right (north-east, three-quarter back).
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk se
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a fast stalking scuttle loop, 6 evenly spaced phases read left to right, top row then bottom row: the four thin walking legs step in alternating pairs, the long body stays low and level with a slight sway, the head bobs a little, the sickles stay folded in front of the chest; frame 6 flows back into frame 1. Scuttling in place (no travel across the cell); the feet stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk ne
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a fast stalking scuttle loop, 6 evenly spaced phases read left to right, top row then bottom row: the four thin walking legs step in alternating pairs, the long body stays low and level with a slight sway, the head bobs a little, the sickles stay folded in front of the chest; frame 6 flows back into frame 1. Scuttling in place (no travel across the cell); the feet stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: one lunging slash, 6 phases read left to right, top row then bottom row: 1 rearing back, the sickles raised high and wide; 2 coiled low to spring, the sickles cocked back, the wings lifting; 3 the lunge: the whole body stretched forward low and long, both sickles slashing forward at full reach; 4 the follow-through, the sickles crossed low in front; 5 pulling back up; 6 back to the low ready stance. No slash trail, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges. The lunge is long: draw the mantis at about 70% of its size in the walk sheet, so that even at full reach the whole body from the tail tip to the sickle tips fits inside its own cell with at least 40 px of background on every side; never let it cross into the next cell.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: one lunging slash, 6 phases read left to right, top row then bottom row: 1 rearing back, the sickles raised high and wide; 2 coiled low to spring, the sickles cocked back, the wings lifting; 3 the lunge: the whole body stretched forward low and long, both sickles slashing forward at full reach; 4 the follow-through, the sickles crossed low in front; 5 pulling back up; 6 back to the low ready stance. No slash trail, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges. The lunge is long: draw the mantis at about 70% of its size in the walk sheet, so that even at full reach the whole body from the tail tip to the sickle tips fits inside its own cell with at least 40 px of background on every side; never let it cross into the next cell.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking back, the sickles flung up; 2 recoil, the body rocking back on the hind legs; 3 the legs scrabbling; 4 dropping forward again; 5 the sickles folding back in; 6 back to the low ready stance of the walk sheet. The feet stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking back, the sickles flung up; 2 recoil, the body rocking back on the hind legs; 3 the legs scrabbling; 4 dropping forward again; 5 the sickles folding back in; 6 back to the low ready stance of the walk sheet. The feet stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back, the sickles flung up; 2 the legs buckling; 3 the body pitching forward; 4 crashing down onto its side; 5 lying on its side, the sickles splayed on the ground, the legs curling in; 6 lying still on the ground, the legs curled. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Sickle Mantis (镰螳), a demonic praying mantis as large as a crouching man: a long segmented body of glossy dark violet and deep plum chitin with paler lilac edges on the plates, a narrow triangular head with two big dark compound eyes and short dark mandibles, a long thin neck plate, two huge serrated sickle-shaped forelegs of bone-white chitin with dark tips folded up in front of the chest, four thin spiny walking legs, ragged dark violet wings folded flat along the back, a curled abdomen; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil: the body rearing up high on the hind legs, the head thrown back, both sickles flung up high, as tall as the tallest frame of the attack sheet; 2 the legs buckling; 3 the body pitching forward; 4 crashing down onto its side; 5 lying on its side, the sickles splayed on the ground, the legs curling in; 6 lying still on the ground, the legs curled. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the sickles, legs, sword and robes inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.

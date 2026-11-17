@@ -1,7 +1,7 @@
 class_name EnemyMotion
 extends RefCounted
 ## How an enemy sprite moves beyond its looping clips (ADR-014 A5c), presentation only:
-## - an attack with a telegraph (MELEE_ARC and the other forms with an attack state) plays its
+## - an attack with a telegraph (MELEE_ARC, CHARGE and the other forms with an attack state) plays its
 ##   clip by the simulation's state instead of a loop: the first third of the frames over
 ##   `tell` (the wind-up), the second third over `active` (its first frame is the strike, the
 ##   tick the hit lands), the rest over `recover`; the body faces the direction the attack
@@ -33,9 +33,15 @@ static func attack_frame(config: SimConfig, world: WorldState, slot: int, frames
 	return (state - 1) * third + floori(progress * count)
 
 
-## Screen-diagonal signs of the direction the attack in `slot` locked (SpriteSet.diagonal).
-static func attack_signs(world: WorldState, slot: int) -> Vector2i:
-	var screen: Vector2 = IsoProjection.to_screen(Vector2(world.enemy_dir_x[slot], world.enemy_dir_y[slot]))
+## Screen-diagonal signs of the direction the attack in `slot` faces (SpriteSet.diagonal): the
+## locked direction; a charge or a shot aims at the hero until the end of `tell` (ADR-011 E3,
+## E4), so it faces the hero while it winds up.
+static func attack_signs(config: SimConfig, world: WorldState, slot: int) -> Vector2i:
+	var aim: Vector2 = Vector2(world.enemy_dir_x[slot], world.enemy_dir_y[slot])
+	var form: int = config.attack_value(world.enemy_kind[slot], SimConfig.ATTACK_FORM)
+	if form != SimConfig.FORM_ARC and world.enemy_state[slot] == EnemyAttackSystem.ST_TELL:
+		aim = Vector2(world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot])
+	var screen: Vector2 = IsoProjection.to_screen(aim)
 	return Vector2i(-1 if screen.x < 0.0 else 1, -1 if screen.y < 0.0 else 1)
 
 
