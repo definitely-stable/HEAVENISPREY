@@ -61,6 +61,7 @@ func test_every_asset_has_a_normal_map_of_its_size() -> void:
 ## one batch.
 func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
+	assert_same(SpriteSet.load_default(), sprites, "packed once, then shared by every run")
 	var shared: Texture2D = sprites.canvas_texture("asset.char.hero_sword")
 	var placed: Array[Rect2] = []
 	for asset_id: String in [
@@ -272,14 +273,42 @@ func test_horde_recoils_and_falls_forward_onto_the_ground() -> void:
 
 ## Bounding box (cell px) of the solid pixels of a cell.
 static func _extent(image: Image, cell: Rect2i) -> Rect2i:
+	var widths: PackedInt32Array = _row_widths(image, cell)
 	var low: Vector2i = cell.size
 	var high: Vector2i = Vector2i(-1, -1)
 	for y: int in cell.size.y:
-		for x: int in cell.size.x:
-			if image.get_pixel(cell.position.x + x, cell.position.y + y).a8 > 200:
-				low = Vector2i(mini(low.x, x), mini(low.y, y))
-				high = Vector2i(maxi(high.x, x), maxi(high.y, y))
+		if widths[y * 3] == 0:
+			continue
+		low = Vector2i(mini(low.x, widths[y * 3 + 1]), mini(low.y, y))
+		high = Vector2i(maxi(high.x, widths[y * 3 + 2]), maxi(high.y, y))
 	return Rect2i(low, high - low + Vector2i.ONE)
+
+
+## Per row of a cell: [solid pixel count, first solid x, last solid x] (alpha above 200), read from
+## the raw RGBA bytes of the cell: per-pixel get_pixel over ten atlases is too slow for CI.
+static func _row_widths(image: Image, cell: Rect2i) -> PackedInt32Array:
+	var region: Image = image.get_region(cell)
+	if region.get_format() != Image.FORMAT_RGBA8:
+		region.convert(Image.FORMAT_RGBA8)
+	var data: PackedByteArray = region.get_data()
+	var rows: PackedInt32Array = PackedInt32Array()
+	rows.resize(cell.size.y * 3)
+	var stride: int = cell.size.x * 4
+	for y: int in cell.size.y:
+		var count: int = 0
+		var first: int = -1
+		var last: int = -1
+		var base: int = y * stride + 3
+		for x: int in cell.size.x:
+			if data[base + x * 4] > 200:
+				count += 1
+				last = x
+				if first < 0:
+					first = x
+		rows[y * 3] = count
+		rows[y * 3 + 1] = first
+		rows[y * 3 + 2] = last
+	return rows
 
 
 ## ADR-014 section 19: the horde at the height of its boards, measured on the atlases as the
@@ -335,12 +364,14 @@ func test_lantern_shots_leave_its_eye() -> void:
 	var total: float = 0.0
 	var count: int = 0
 	for column: int in 6:
-		for y: int in frame:
-			for x: int in frame:
-				var pixel: Color = image.get_pixel(column * frame + x, row * frame + y)
-				if pixel.a8 > 200 and pixel.r8 > 200 and pixel.g8 > 190 and pixel.b8 > 180:
-					total += y
-					count += 1
+		var region: Image = image.get_region(Rect2i(column * frame, row * frame, frame, frame))
+		region.convert(Image.FORMAT_RGBA8)
+		var data: PackedByteArray = region.get_data()
+		for index: int in range(0, data.size(), 4):
+			if data[index + 3] > 200 and data[index] > 200 and data[index + 1] > 190 and data[index + 2] > 180:
+				@warning_ignore("integer_division")
+				total += index / 4 / frame
+				count += 1
 	assert_gt(count, 60, "the pale eye shows in the walk frames")
 	var eye: float = (float(layout["feet_anchor"][1]) - total / count) / SpriteSet.DENSITY
 	var lift: float = float(EnemyMotion.HOVER["asset.enemy.cursed_spirit_lantern"][0])
@@ -368,20 +399,15 @@ static func _clip_height(sprites: SpriteSet, manifest: Dictionary, asset_id: Str
 
 
 static func _body_height(image: Image, cell: Rect2i) -> float:
-	var widths: Array[int] = []
+	var rows: PackedInt32Array = _row_widths(image, cell)
 	var widest: int = 0
 	for y: int in cell.size.y:
-		var width: int = 0
-		for x: int in cell.size.x:
-			if image.get_pixel(cell.position.x + x, cell.position.y + y).a8 > 200:
-				width += 1
-		widths.append(width)
-		widest = maxi(widest, width)
+		widest = maxi(widest, rows[y * 3])
 	var top: int = -1
 	var bottom: int = -1
-	for y: int in widths.size():
-		if top < 0 and widths[y] >= widest * 0.12:
+	for y: int in cell.size.y:
+		if top < 0 and rows[y * 3] >= widest * 0.12:
 			top = y
-		if widths[y] > 0:
+		if rows[y * 3] > 0:
 			bottom = y
 	return 0.0 if top < 0 else float(bottom + 1 - top)

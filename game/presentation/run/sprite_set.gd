@@ -28,12 +28,18 @@ const EIGHT_WAY: Array[String] = ["e", "se", "s", "sw", "w", "nw", "n", "ne"]
 ## Transparent px between packed atlases, so mipmaps do not bleed one into the next.
 const PACK_GAP_PX: int = 16
 
+## The default set, packed once: packing every atlas with mipmaps takes seconds, and a set is
+## read-only once loaded, so each run (and each test) shares it.
+static var _default: SpriteSet = null
+
 ## asset_id -> {texture, canvas, origin, kind, directions, frames, frame_size, feet_anchor, cells}
 var _assets: Dictionary = {}
 
 
 static func load_default() -> SpriteSet:
-	return SpriteSet._from_manifest(MANIFEST_PATH)
+	if _default == null:
+		_default = SpriteSet._from_manifest(MANIFEST_PATH)
+	return _default
 
 
 static func _from_manifest(path: String) -> SpriteSet:
