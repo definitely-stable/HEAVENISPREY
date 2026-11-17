@@ -52,6 +52,11 @@ const WEAR_BASE: float = 0.4
 ## texture turned half a circle, repeating every ALT_REPEAT_CELLS instead of its own period).
 const ALT_PATCH_CELLS: float = 4.0
 const ALT_REPEAT_CELLS: float = 9.0
+## Damp patches of the paving (ADR-014 section 26): their size (cells), and the level of the
+## noise above which the stone is damp; past it the dampness grows over DAMP_RAMP.
+const DAMP_PATCH_CELLS: float = 5.0
+const DAMP_LEVEL: float = 0.05
+const DAMP_RAMP: float = 0.35
 ## Waterfalls on the near cliff faces: [share across the arena on screen (left to right),
 ## width (screen px)]; each pours from the lowest face near that share.
 const WATERFALLS: Array = [[0.2, 60.0], [0.62, 72.0], [0.86, 48.0]]
@@ -73,6 +78,8 @@ var paving: Polygon2D
 var inlay: Array[PackedVector2Array] = []
 var _iso: Node2D
 var _aura: PointLight2D
+## The lights of the lanterns and braziers, in the order of the light points.
+var _fires: Array[PointLight2D] = []
 var _sky: ColorRect
 var _veil: ColorRect
 var _backdrop: Node2D
@@ -117,7 +124,8 @@ func _init(
 	moon.rotation = RunLighting.moon_rotation()
 	_add_light(moon)
 	for point: Dictionary in light_points:
-		_add_point(point["at"], RunLighting.LANTERN_COLOR, RunLighting.LANTERN_ENERGY, RunLighting.LANTERN_RADIUS_PX)
+		_fires.append(_add_point(point["at"], RunLighting.LANTERN_COLOR, RunLighting.LANTERN_ENERGY,
+			RunLighting.LANTERN_RADIUS_PX))
 	_aura = _add_point(_centre, RunLighting.AURA_COLOR, RunLighting.AURA_ENERGY, RunLighting.AURA_RADIUS_PX)
 
 
@@ -202,8 +210,9 @@ static func wall_distance(data: Dictionary) -> PackedInt32Array:
 
 ## The wear of the paving, one texel per 1 / MASK_TEXELS_PER_CELL of a cell over the arena:
 ## red = how worn (cracked, mossy, leaf-strewn) the flagstones are, green = a slow tone drift
-## around 0.5, blue = which layer of the clean paving shows. Patches of fixed-seed noise, more
-## wear near walls and the void, none inside `clear_radius` of the seal (it stays clean).
+## around 0.5, blue = which layer of the clean paving shows, alpha = how damp the stone is
+## (darker, flatter and glossier: section 26). Patches of fixed-seed noise, more wear near walls
+## and the void, none inside `clear_radius` of the seal (it stays clean).
 static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Image:
 	var cells: Vector2i = cells_of(data)
 	var size: Vector2i = cells * MASK_TEXELS_PER_CELL
@@ -223,8 +232,13 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 	layers.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	layers.fractal_octaves = 2
 	layers.frequency = 1.0 / (ALT_PATCH_CELLS * cell_px)
+	var damp: FastNoiseLite = FastNoiseLite.new()
+	damp.seed = MASK_SEED + 3
+	damp.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	damp.fractal_octaves = 3
+	damp.frequency = 1.0 / (DAMP_PATCH_CELLS * cell_px)
 	var walls: PackedInt32Array = wall_distance(data)
-	var image: Image = Image.create_empty(size.x, size.y, false, Image.FORMAT_RGB8)
+	var image: Image = Image.create_empty(size.x, size.y, false, Image.FORMAT_RGBA8)
 	var centre: Vector2 = centre_of(data, cell_px)
 	var edge_cells: float = WEAR_EDGE_CELLS
 	for y: int in size.y:
@@ -237,7 +251,8 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 			wear *= smoothstep(clear_radius, clear_radius + edge_cells * cell_px, at.distance_to(centre))
 			var drift: float = 0.5 + tone.get_noise_2d(at.x, at.y) * 0.9
 			var layer: float = 0.5 + layers.get_noise_2d(at.x, at.y) * 1.2
-			image.set_pixel(x, y, Color(clampf(wear, 0.0, 1.0), clampf(drift, 0.0, 1.0), clampf(layer, 0.0, 1.0)))
+			var wet: float = clampf((damp.get_noise_2d(at.x, at.y) - DAMP_LEVEL) / DAMP_RAMP, 0.0, 1.0)
+			image.set_pixel(x, y, Color(clampf(wear, 0.0, 1.0), clampf(drift, 0.0, 1.0), clampf(layer, 0.0, 1.0), wet))
 	return image
 
 
@@ -258,6 +273,20 @@ func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0
 func backdrop_origin(view_centre: Vector2, zoom: float, size: Vector2) -> Vector2:
 	var travel: Vector2 = view_centre - IsoProjection.to_screen(_centre)
 	return size * 0.5 - travel * BACKDROP_PARALLAX * zoom
+
+
+## The fire lights at `seconds` of the run (RunLighting.flicker).
+func flicker(seconds: float) -> void:
+	for index: int in _fires.size():
+		_fires[index].energy = RunLighting.LANTERN_ENERGY * RunLighting.flicker(seconds, index)
+
+
+## Energy of each fire light now.
+func fire_energies() -> Array[float]:
+	var out: Array[float] = []
+	for light: PointLight2D in _fires:
+		out.append(light.energy)
+	return out
 
 
 ## Ground point (world px) the hero aura shines on.

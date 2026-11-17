@@ -96,7 +96,6 @@ const RIM_ENEMY: Color = Color(0.66, 0.76, 0.98)
 const RIM_ENEMY_STRENGTH: float = 0.6
 const RIM_HERO: Color = Color(1.0, 0.86, 0.6)
 const RIM_HERO_STRENGTH: float = 0.65
-const RIM_SHADER: Shader = preload("res://presentation/run/shaders/sprite_rim.gdshader")
 const SHADOW_SHADER: Shader = preload("res://presentation/run/shaders/shadow_group.gdshader")
 ## Lantern pools the shadow shader fills (its MAX_LIGHTS).
 const MAX_SHADOW_POOLS: int = 16
@@ -258,10 +257,10 @@ func _build_layers() -> void:
 	_danger = Node2D.new()
 	_danger.draw.connect(_draw_danger_pass)
 	under.add_child(_danger)
-	material = _rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH)
+	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _flames)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
-	_hero_item = _item(_draw_hero_pass, _rim_material(RIM_HERO, RIM_HERO_STRENGTH))
+	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _flames))
 	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -290,15 +289,6 @@ static func _make_disc_texture(size: int) -> GradientTexture2D:
 	texture.width = size
 	texture.height = size
 	return texture
-
-
-static func _rim_material(color: Color, strength: float) -> ShaderMaterial:
-	var rim: ShaderMaterial = ShaderMaterial.new()
-	rim.shader = RIM_SHADER
-	rim.set_shader_parameter("to_moon", -RunLighting.moon_travel())
-	rim.set_shader_parameter("rim_color", color)
-	rim.set_shader_parameter("rim_strength", strength)
-	return rim
 
 
 ## Screen point the camera aims at: the projected hero, held inside the arena inset so the
@@ -362,6 +352,13 @@ func _process(delta: float) -> void:
 	advance_frame(delta, IsoProjection.screen_move_to_world(MoveInput.read()))
 
 
+## The fires flicker on the ground lights, the warm rims and the flame halos.
+func _flicker() -> void:
+	_ground.flicker(_anim_time)
+	for item: CanvasItem in [self, _hero_item]:
+		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _flames.size())
+
+
 ## Starts a new run from the results screen once it is armed; false otherwise.
 func confirm_results() -> bool:
 	if _results == null or not _results.is_armed():
@@ -404,6 +401,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 		_flash = HIT_FLASH
 		_flash_rest = HIT_FLASH + HIT_FLASH_REST
 	_anim_time += delta
+	_flicker()
 	_advance_hero_clips(delta, events["casts"])
 	_hero_moving = move != Vector2i.ZERO
 	if _hero_moving:
@@ -916,8 +914,8 @@ func _pickup_flight(pickup: Array) -> Vector2:
 func _draw_glow_pass() -> void:
 	var canvas: Node2D = _glow
 	var world: WorldState = driver.world
-	for flame: Vector2 in _flames:
-		_halo(canvas, flame, 26.0, COLOR_LANTERN_GLOW)
+	for index: int in _flames.size():
+		_halo(canvas, _flames[index], 26.0 * RunLighting.flicker(_anim_time, index), COLOR_LANTERN_GLOW)
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
 	var light: bool = _vfx != null and _vfx.kit.has("sword")
 	if light:

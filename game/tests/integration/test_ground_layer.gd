@@ -135,6 +135,11 @@ func test_wear_mask_is_fixed_clean_at_the_seal_and_worn_at_the_walls() -> void:
 	assert_gt(inner_count, 0)
 	assert_between(float(worn) / field, 0.1, 0.6, "worn patches are accents, not the whole field")
 	assert_between(float(second) / field, 0.3, 0.7, "both layers of the clean paving show")
+	var damp: int = 0
+	for y: int in mask.get_height():
+		for x: int in mask.get_width():
+			damp += int(mask.get_pixel(x, y).a > 0.5)
+	assert_between(float(damp) / (mask.get_width() * mask.get_height()), 0.05, 0.5, "damp patches, not a wet floor")
 	assert_gt(edge / edge_count, inner / inner_count, "more wear along the walls")
 
 
@@ -236,3 +241,18 @@ func test_aura_follows_the_hero() -> void:
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(300, 200)), 0.0, 0.01)
 	ground.follow(Vector2(500, 100), IsoProjection.to_screen(Vector2(400, 300)), 1.3)
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(500, 100)), 0.0, 0.01, "the aura stays on the hero")
+
+
+## ADR-014 section 26: the fire lights flicker with RunLighting.flicker; the aura stays steady.
+func test_fire_lights_flicker() -> void:
+	var points: Array[Dictionary] = [{"at": Vector2(-48, 200), "flame": 70.0}, {"at": Vector2(800, -48), "flame": 50.0}]
+	var ground: GroundLayer = _ground(SpriteSet.new(), "none", points)
+	for energy: float in ground.fire_energies():
+		assert_almost_eq(energy, RunLighting.LANTERN_ENERGY, 1e-5, "steady before the run")
+	ground.flicker(0.8)
+	var energies: Array[float] = ground.fire_energies()
+	for index: int in points.size():
+		assert_almost_eq(energies[index], RunLighting.LANTERN_ENERGY * RunLighting.flicker(0.8, index), 1e-5)
+	assert_ne(energies[0], energies[1], "out of step")
+	assert_almost_eq((ground.lights[ground.lights.size() - 1] as PointLight2D).energy, RunLighting.AURA_ENERGY, 1e-5,
+		"aura steady")

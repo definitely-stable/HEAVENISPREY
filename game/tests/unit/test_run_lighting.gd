@@ -71,3 +71,39 @@ func test_shadows_fall_along_the_moon() -> void:
 	assert_almost_eq(head.y, 100.0 * RunLighting.SHADOW_SQUASH, 1e-4)
 	var down_light: Vector2 = Vector2(0.0, 1.0).rotated(RunLighting.moon_rotation())
 	assert_almost_eq(down_light.dot(travel), 1.0, 1e-5, "the directional moon shines the same way")
+
+
+## ADR-014 section 26: the fires flicker around their energy, each out of step with the others,
+## the same at the same time.
+func test_fire_flickers_within_its_depth() -> void:
+	var low: float = 2.0
+	var high: float = 0.0
+	var total: float = 0.0
+	var samples: int = 600
+	for step: int in samples:
+		var value: float = RunLighting.flicker(step / 60.0, 3)
+		low = minf(low, value)
+		high = maxf(high, value)
+		total += value
+	assert_gte(low, 1.0 - RunLighting.FLICKER_DEPTH - 1e-5)
+	assert_lte(high, 1.0 + RunLighting.FLICKER_DEPTH + 1e-5)
+	assert_gt(high - low, RunLighting.FLICKER_DEPTH, "it visibly moves")
+	assert_almost_eq(total / samples, 1.0, 0.02, "around the steady energy")
+	assert_eq(RunLighting.flicker(2.5, 1), RunLighting.flicker(2.5, 1), "the same at the same time")
+	assert_ne(RunLighting.flicker(2.5, 1), RunLighting.flicker(2.5, 2), "flames out of step")
+
+
+func test_rim_material_carries_the_flames() -> void:
+	var flames: Array[Vector2] = []
+	for index: int in RunLighting.MAX_FLAMES + 3:
+		flames.append(Vector2(index * 40.0, -60.0))
+	var rim: ShaderMaterial = RunLighting.rim_material(Color.WHITE, 0.5, flames)
+	assert_eq(rim.get_shader_parameter("flame_count"), RunLighting.MAX_FLAMES, "at most the shader's array")
+	assert_eq((rim.get_shader_parameter("flames") as PackedVector2Array).size(), RunLighting.MAX_FLAMES)
+	assert_eq(rim.get_shader_parameter("warm_strength"), RunLighting.WARM_RIM_STRENGTH)
+	RunLighting.set_flicker(rim, 1.25, 4)
+	var energy: PackedFloat32Array = rim.get_shader_parameter("flame_energy")
+	assert_eq(energy.size(), 4)
+	assert_almost_eq(energy[2], RunLighting.flicker(1.25, 2), 1e-6)
+	var none: ShaderMaterial = RunLighting.rim_material(Color.WHITE, 0.5, [] as Array[Vector2])
+	assert_eq(none.get_shader_parameter("flame_count"), 0, "no fires, no warm rim")
