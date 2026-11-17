@@ -54,11 +54,13 @@ static func instant(config: SimConfig, kind: int) -> bool:
 
 ## Screen-diagonal signs of the direction the attack in `slot` faces (SpriteSet.diagonal): the
 ## locked direction; a charge or a shot aims at the hero until the end of `tell` (ADR-011 E3,
-## E4), so it faces the hero while it winds up.
+## E4), so it faces the hero while it winds up. A ground zone is laid where the hero stood when
+## `tell` began (ADR-011 E5): the caster faces it, not the hero who walks away (section 28).
 static func attack_signs(config: SimConfig, world: WorldState, slot: int) -> Vector2i:
 	var aim: Vector2 = Vector2(world.enemy_dir_x[slot], world.enemy_dir_y[slot])
 	var form: int = config.attack_value(world.enemy_kind[slot], SimConfig.ATTACK_FORM)
-	if form != SimConfig.FORM_ARC and world.enemy_state[slot] == EnemyAttackSystem.ST_TELL:
+	var tracks: bool = form == SimConfig.FORM_CHARGE or form == SimConfig.FORM_PROJECTILE
+	if tracks and world.enemy_state[slot] == EnemyAttackSystem.ST_TELL:
 		aim = Vector2(world.player_x - world.enemy_x[slot], world.player_y - world.enemy_y[slot])
 	var screen: Vector2 = IsoProjection.to_screen(aim)
 	return Vector2i(-1 if screen.x < 0.0 else 1, -1 if screen.y < 0.0 else 1)

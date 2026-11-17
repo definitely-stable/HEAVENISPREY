@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.enemy.ruined_jade_guardian",
+  "kind": "anim_atlas",
+  "group": "enemies",
+  "asset_version": 1,
+  "content_ids": [
+    "enemy.ruined_jade_guardian"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-023",
+      "file": "Золотой натиск Древней Секты.png",
+      "sha256": "dd5923b04f7b636d063ecdde4f4188083ecc6a0c28394997859363ff0b5fc94f"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "18f65600c339963e7608604d4135a779e21fbd7b77a56655bebf6f6130262c5e",
+    "created": "2026-11-18T02:18:48+0500",
+    "master_sha256": "89a7604841719e6e6e4711e10285b9b348bfb50644c7d1edf37c4c9e561b64b7",
+    "master_note": "Lossless WebP mosaic of the generated PNGs, 2 per row (master_sha256: its PNG). No reference board exists for this kind: the look follows its visual_brief_ru in enemies.json, painted in the style of the horde (the Yin Corpse and Blood Wolf model sheets and REF-023 attached to the model sheet request). Walk sheets were requested with the model sheet attached, the other clips with the model sheet and the walk sheet of their direction (sheets[].attached)"
+  },
+  "model_sheet": {
+    "file": "model_sheet.webp",
+    "png_sha256": "072b97199abea7a6886dbf683460d93f15f1e8e9659e95ab5d7e1d62f8535055",
+    "prompt_sha256": "0e760d538fd3ef3288d40fbb5a2e5ac861f234f28fe0ca81ea4a95ee8345c7c2"
+  },
+  "palette_group": "enemies",
+  "sheet": {
+    "key_colour": "#0000ff",
+    "key_low": 40,
+    "key_high": 150,
+    "tile": [
+      1536,
+      1024
+    ]
+  },
+  "frame_size": 320,
+  "feet_anchor": [
+    160,
+    314
+  ],
+  "margin_px": 4,
+  "figure_height_px": 190,
+  "grade": {
+    "gamma": 0.8,
+    "tint": [
+      1.0,
+      0.99,
+      1.03
+    ]
+  },
+  "anchor_x": "torso",
+  "directions": [
+    "se",
+    "ne"
+  ],
+  "mirror": {
+    "sw": "se",
+    "nw": "ne"
+  },
+  "clips": [
+    {
+      "name": "walk",
+      "frames": 6,
+      "fps": 7,
+      "loop": true,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "attack",
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "hit",
+      "frames": 6,
+      "fps": 16,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ],
+      "measure": "first",
+      "anchor": "rear",
+      "settle": true
+    }
+  ],
+  "sheets": [
+    {
+      "clip": "walk",
+      "direction": "se",
+      "tile": [
+        0,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d0d04d75c7c98fac9d5d8f000b6a69cf4f7cd8e158043a970d00b4180b14c451",
+      "prompt_sha256": "8651b3f2401ff139c486acd6eb75daac8f8d0f6a4e061a9286dfc8a51f689e4f",
+      "created": "2026-11-18T02:03:35+0500",
+      "attached": [
+        "model_sheet.webp"
+      ]
+    },
+    {
+      "clip": "walk",
+      "direction": "ne",
+      "tile": [
+        1,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "9f1de0e8a8de69b77b69a9972ed6c53792bce2ee4950241ca01e45330c14909c",
+      "prompt_sha256": "ad5aabee7bd564a3bdac20fee547a90fe95f265b5bc0ba60525be5e9fbd41ab6",
+      "created": "2026-11-18T02:03:21+0500",
+      "attached": [
+        "model_sheet.webp"
+      ]
+    },
+    {
+      "clip": "attack",
+      "direction": "se",
+      "tile": [
+        0,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d6c7dddd8e03613c967c2119906e041c795af9e5bc54c0459681c3c6c53aa05b",
+      "prompt_sha256": "a8aa304688579cf51a77f8ea88d91d9277764275d16891580ec109bccdfbd787",
+      "created": "2026-11-18T02:11:22+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk se sheet"
+      ]
+    },
+    {
+      "clip": "attack",
+      "direction": "ne",
+      "tile": [
+        1,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "478c806bdf77063717475d71dca757a4c4c1c7c4883134b050606caff0c30cdb",
+      "prompt_sha256": "3265b5f412628c1134504f6574627e0578f6643aa7a4fa956e3fa6efde22cf12",
+      "created": "2026-11-18T02:11:34+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk ne sheet"
+      ]
+    },
+    {
+      "clip": "hit",
+      "direction": "se",
+      "tile": [
+        0,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "953fbfbc59a387b5f4feb837316a5188df918c7fee66f05d86f975a2e5c5c90d",
+      "prompt_sha256": "3f78065b3463c252805353856560abf343df52b8faab1c778c2d4648f227d752",
+      "created": "2026-11-18T02:11:17+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk se sheet"
+      ]
+    },
+    {
+      "clip": "hit",
+      "direction": "ne",
+      "tile": [
+        1,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "f098b6a3006af00da6140071e9a77cf2cd24ae7d73383bc4e2729016384f7155",
+      "prompt_sha256": "b7b9bfd3e5ca6fff10f8618c3839ef2c2daa420bb833a02a245877fc20e24a3f",
+      "created": "2026-11-18T02:11:14+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk ne sheet"
+      ]
+    },
+    {
+      "clip": "death",
+      "direction": "se",
+      "tile": [
+        0,
+        3
+      ],
+      "candidate": "v2 of 2 (v1 lay as a tall heap, 0.65 of its standing height)",
+      "png_sha256": "eb135dab4c2863bdc1d6c3cec67a96ba07680c9f3ce3d863b65a2cbecbd50da5",
+      "prompt_sha256": "bb2b628ba155b8d83c743e5788b05ee9faf3e5f7a2461498abbab63cb7906a1a",
+      "created": "2026-11-18T02:18:48+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk se sheet"
+      ]
+    },
+    {
+      "clip": "death",
+      "direction": "ne",
+      "tile": [
+        1,
+        3
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d6c48f7efd94f1f09c7bf3fa79bd06bfcbe504cd56cf9143b5b71753548b3d2a",
+      "prompt_sha256": "a767a8e09bef5fe532a591360331d7efeda865a7eaed5b45619449702b9e5129",
+      "created": "2026-11-18T02:11:02+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk ne sheet"
+      ]
+    }
+  ]
+}

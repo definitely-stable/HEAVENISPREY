@@ -6,23 +6,27 @@ extends GutTest
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
 	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.cursed_spirit_lantern",
-	"asset.enemy.fallen_sword_disciple", "asset.enemy.paper_puppet", "asset.enemy.sickle_mantis",
-	"asset.enemy.venom_spirit_snake", "asset.enemy.wandering_spirit", "asset.enemy.yin_corpse",
+	"asset.enemy.fallen_sword_disciple", "asset.enemy.paper_puppet", "asset.enemy.root_abomination",
+	"asset.enemy.ruined_jade_guardian", "asset.enemy.sickle_mantis", "asset.enemy.venom_spirit_snake",
+	"asset.enemy.wandering_spirit", "asset.enemy.yin_corpse",
 	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
 	"asset.prop.courtyard_nature", "asset.prop.courtyard_ring", "asset.prop.courtyard_walls",
 	"asset.prop.distant_peaks", "asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
-## Enemies with sprites (ADR-014 A5, A5c, A5d, section 27); the spirit's robe and the puppet's
+## Enemies with sprites (ADR-014 A5, A5c, A5d, sections 27-28); the spirit's robe and the puppet's
 ## frame collapse into a heap where they stood instead of falling forward.
 const HORDE: Array[String] = [
 	"asset.enemy.yin_corpse", "asset.enemy.blood_wolf", "asset.enemy.wandering_spirit",
 	"asset.enemy.venom_spirit_snake", "asset.enemy.sickle_mantis", "asset.enemy.fallen_sword_disciple",
-	"asset.enemy.cursed_spirit_lantern", "asset.enemy.paper_puppet",
+	"asset.enemy.cursed_spirit_lantern", "asset.enemy.paper_puppet", "asset.enemy.ruined_jade_guardian",
+	"asset.enemy.root_abomination",
 ]
 const HEAPS: Array[String] = ["asset.enemy.wandering_spirit", "asset.enemy.paper_puppet"]
 ## Kinds that never strike while alive (the puppet's seal opens after its death): no attack clip.
+## Kinds twice as broad as a man: lying face down, the back still stands high (section 28).
+const BULKY: Array[String] = ["asset.enemy.ruined_jade_guardian"]
 const UNARMED: Array[String] = ["asset.enemy.paper_puppet"]
 
 
@@ -258,7 +262,8 @@ func test_horde_recoils_and_falls_forward_onto_the_ground() -> void:
 			var lying: Rect2i = _extent(image, Rect2i(5 * frame, (row + offset) * frame, frame, frame))
 			var label: String = "%s death row %d" % [enemy, offset]
 			assert_almost_eq(float(lying.end.y), float(anchor.y), 3.0, label + ": lies on the ground line")
-			assert_lt(lying.size.y, standing.size.y * 0.6, label + ": lies down")
+			var flat: float = 0.7 if enemy in BULKY else 0.6
+			assert_lt(lying.size.y, standing.size.y * flat, label + ": lies down")
 			if enemy in HEAPS:
 				continue
 			assert_gt(lying.end.x - anchor.x, standing.end.x - anchor.x, label + ": falls forward")
@@ -305,6 +310,12 @@ func test_horde_stands_at_the_height_of_its_boards() -> void:
 	var puppet: float = _clip_height(sprites, manifest, "asset.enemy.paper_puppet", "walk") / hero
 	assert_between(lantern, 0.65, 0.78, "lantern / hero")
 	assert_between(puppet, 0.82, corpse, "puppet / hero")
+	# Section 28: the jade guardian towers over the hero, the root abomination crouches below the
+	# corpse.
+	var guardian: float = _clip_height(sprites, manifest, "asset.enemy.ruined_jade_guardian", "walk") / hero
+	var roots: float = _clip_height(sprites, manifest, "asset.enemy.root_abomination", "walk") / hero
+	assert_between(guardian, 1.08, 1.25, "guardian / hero")
+	assert_between(roots, 0.8, corpse, "root abomination / hero")
 
 
 ## ADR-014 section 27: an enemy shot leaves the lantern's eye. The pale eye of the walk SE frames

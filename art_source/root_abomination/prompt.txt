@@ -1,0 +1,157 @@
+## model sheet (attached to every request below)
+
+Generate one image with the image generation tool. The attached images are from the same game: the model sheets of two other enemies (an undead corpse and a demon wolf) and a battle screenshot. Paint the new creature in exactly their style: the same ink line weight, the same painted cel shading, the same muted dark palette with a few saturated accents, the same camera and the same scale (a crouching creature about as tall as the corpse). Do not copy those creatures; only match their style.
+
+Character model sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature. crouched low on its long root arms like an ape, the maw half open.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Layout: one row of four full-body poses on a 1536 x 1024 canvas, same scale, the lowest point of the body on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south, front view), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view in profile), 4 facing up-right (north-east, three-quarter back).
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk se
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a lurching crawl loop, 6 evenly spaced phases read left to right, top row then bottom row: the body pulling itself forward on its long root arms like an ape, the short hind roots shuffling after, the back hunched, the root tendrils on the shoulders and back writhing slowly; frame 6 flows back into frame 1. Crawling in place (no travel across the cell); the root tips stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Draw the creature a little smaller in its cell: the whole body including the outstretched claws and the tendrils spans at most three quarters of the cell width, with a wide gap of background on every side.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk ne
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a lurching crawl loop, 6 evenly spaced phases read left to right, top row then bottom row: the body pulling itself forward on its long root arms like an ape, the short hind roots shuffling after, the back hunched, the root tendrils on the shoulders and back writhing slowly; frame 6 flows back into frame 1. Crawling in place (no travel across the cell); the root tips stay on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: one root-binding spell, 6 phases read left to right, top row then bottom row: 1 rearing up on the hind roots, both root arms lifted, the tendrils spreading wide; 2 the arms raised high, the maw wide open; 3 the release: both root arms plunged deep into the ground in front of it, the body pressed low; 4 the arms still buried in the ground to the elbows, the body tense; 5 tearing the arms back out of the ground; 6 back to the hunched crawling stance. No roots bursting from the ground, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: one root-binding spell, 6 phases read left to right, top row then bottom row: 1 rearing up on the hind roots, both root arms lifted, the tendrils spreading wide; 2 the arms raised high, the maw wide open; 3 the release: both root arms plunged deep into the ground in front of it, the body pressed low; 4 the arms still buried in the ground to the elbows, the body tense; 5 tearing the arms back out of the ground; 6 back to the hunched crawling stance. No roots bursting from the ground, no energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the stump head snapping back, bits of bark flying; 2 recoil, the body rearing back, the arms flung out; 3 the tendrils lashing; 4 dropping forward onto the arms again; 5 settling low; 6 back to the hunched stance of the walk sheet. The root tips stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the stump head snapping back, bits of bark flying; 2 recoil, the body rearing back, the arms flung out; 3 the tendrils lashing; 4 dropping forward onto the arms again; 5 settling low; 6 back to the hunched stance of the walk sheet. The root tips stay on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the front and the face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back; 2 the crimson veins going dark; 3 the body sagging, the knotted roots coming loose; 4 collapsing forward, the body unravelling; 5 a tangled heap of dead black roots on the ground; 6 the dry heap lying still. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Root Abomination (邪木灵), a hunched creature of twisted black roots: gnarled black roots knotted into a crouching ape-like body as big as a man, two long root arms that reach the ground and end in clawed root tips, short thick hind roots, writhing root tendrils trailing from the shoulders and the back, a head like a split black stump with a jagged maw and two small crimson eyes, thin bright crimson veins along the cracks of the bark painted flat with no glow, a few dry dark red leaves caught in the roots; no green anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the front turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown back; 2 the crimson veins going dark; 3 the body sagging, the knotted roots coming loose; 4 collapsing forward, the body unravelling; 5 a tangled heap of dead black roots on the ground; 6 the dry heap lying still. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including the fists, root arms and tendrils inside its own cell with a clear gap of background to the cell edges. Keep the figure the size it has in the walk sheet: even at the widest and the highest pose (raised arms, outstretched claws, a body lying on the ground) nothing comes closer than one eighth of the cell to any cell edge.
+
+Background: perfectly flat solid pure green #00FF00 everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
