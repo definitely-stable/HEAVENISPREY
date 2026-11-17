@@ -69,15 +69,26 @@ func test_scene_shows_victory_and_waits_for_the_player() -> void:
 	assert_true(view.is_results_open())
 	var results: RunResults = view.get("_results")
 	assert_eq(results.title.text, "Victory: the grove is held")
-	assert_string_contains(results.lines.text, "Time 00:02")
+	assert_eq(results._stat_labels[0].text, "Time")
+	assert_eq(results.stat_values[0].text, "00:02")
+	assert_eq(view.get_viewport().gui_get_focus_owner(), results.new_run_button)
+	assert_false(view._hud.visible, "results show one set of run statistics")
+	var runs: int = view.runs_started
+	results.new_run_button.pressed.emit()
+	assert_eq(view.runs_started, runs, "the button also waits for the arm delay")
 	assert_false(view.confirm_results(), "not armed yet")
 	view.advance_frame(RunResults.ARM_DELAY * 0.5, Vector2i.ZERO)
 	assert_false(view.confirm_results())
 	view.advance_frame(RunResults.ARM_DELAY, Vector2i.ZERO)
-	var runs: int = view.runs_started
-	assert_true(view.confirm_results())
+	var confirm: InputEventJoypadButton = InputEventJoypadButton.new()
+	confirm.button_index = JOY_BUTTON_A
+	confirm.pressed = true
+	view.get_viewport().push_input(confirm)
 	assert_eq(view.runs_started, runs + 1)
 	assert_false(view.is_results_open())
+	assert_true(view._hud.visible)
+	results.new_run_button.pressed.emit()
+	assert_eq(view.runs_started, runs + 1, "an old results action cannot start one more run")
 
 
 func test_defeat_results_in_russian() -> void:
@@ -99,9 +110,10 @@ func test_defeat_results_in_russian() -> void:
 	assert_true(view.is_results_open(), "after the death clip")
 	var results: RunResults = view.get("_results")
 	assert_eq(results.title.text, "Поражение")
-	assert_string_contains(results.lines.text, "Убито врагов: %d" % world.kills)
-	assert_string_contains(results.lines.text, "Уровень: %d" % world.level)
-	assert_string_contains(results.lines.text, "Собрано опыта: %d" % world.xp_collected_total)
+	assert_eq(results._stat_labels.map(func(label: Label) -> String: return label.text),
+		["Время", "Побеждено", "Уровень", "Опыт"])
+	assert_eq(results.stat_values.map(func(label: Label) -> String: return label.text),
+		[RunResults.clock(world.tick), str(world.kills), str(world.level), str(world.xp_collected_total)])
 
 
 func test_clock_format() -> void:

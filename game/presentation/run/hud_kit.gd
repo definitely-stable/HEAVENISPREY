@@ -17,9 +17,15 @@ const MIN_FONT_SIZE: int = 10
 const CAP_CENTER: float = 0.33
 ## Cap height of the face (OS/2 sCapHeight 625 of 1000): the lining figures stand this tall.
 const CAP_HEIGHT: float = 0.625
-## A halo is blurred at 1 / HALO_STEP of the atlas resolution: it is soft, it needs no detail.
-const HALO_STEP: int = 3
 const OUTLINE_COLOR: Color = Color(0.06, 0.03, 0.02, 0.9)
+const INK: Color = Color("#1b151c")
+const BRONZE: Color = Color("#8b6a4a")
+const GOLD: Color = Color("#e9c583")
+const FOCUS: Color = Color("#ffe0a8")
+const TEXT: Color = Color("#f8ead7")
+const MUTED: Color = Color("#d6c0ab")
+const JADE: Color = Color("#8bd6bd")
+const CRIMSON: Color = Color("#f0a19a")
 
 var texture: Texture2D
 var font: Font = ThemeDB.fallback_font
@@ -27,8 +33,48 @@ var density: float = 2.0
 ## name -> {region: Rect2, inner: Rect2 (relative to the region, atlas px; empty when none),
 ## slice: Vector2 (left and right caps, atlas px; zero when the piece does not stretch)}
 var _pieces: Dictionary = {}
-## "piece@spread" -> {"texture": ImageTexture, "pad": float (atlas px around the piece)}
-var _halos: Dictionary = {}
+
+
+## The lacquer plate used behind text in the HUD, cards and results.
+static func draw_plate(canvas: CanvasItem, rect: Rect2, fill: Color = INK, edge: Color = BRONZE,
+		line_width: float = 1.0) -> void:
+	var cut: float = minf(rect.size.y * 0.2, 9.0)
+	var a: Vector2 = rect.position
+	var b: Vector2 = rect.end
+	var points: PackedVector2Array = PackedVector2Array([
+		Vector2(a.x + cut, a.y), Vector2(b.x - cut, a.y), Vector2(b.x, a.y + cut),
+		Vector2(b.x, b.y - cut), Vector2(b.x - cut, b.y), Vector2(a.x + cut, b.y),
+		Vector2(a.x, b.y - cut), Vector2(a.x, a.y + cut),
+	])
+	var colors: PackedColorArray = PackedColorArray()
+	var top: Color = Color(fill.lerp(Color("#684536"), 0.20), fill.a)
+	for point: Vector2 in points:
+		colors.append(top.lerp(fill.darkened(0.12), (point.y - a.y) / rect.size.y))
+	canvas.draw_polygon(points, colors)
+	points.append(points[0])
+	canvas.draw_polyline(points, edge, line_width, true)
+
+
+func menu_theme() -> Theme:
+	var theme: Theme = Theme.new()
+	theme.default_font = font
+	theme.default_font_size = 22
+	theme.set_stylebox("normal", "Button", _button_style(Color("#412b25"), BRONZE, 1))
+	theme.set_stylebox("hover", "Button", _button_style(Color("#50372d"), GOLD, 1))
+	theme.set_stylebox("pressed", "Button", _button_style(Color("#2a2021"), GOLD, 1))
+	theme.set_stylebox("focus", "Button", _button_style(Color.TRANSPARENT, FOCUS, 2))
+	for state: StringName in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color"]:
+		theme.set_color(state, "Button", TEXT)
+	return theme
+
+
+static func _button_style(fill: Color, edge: Color, border: int) -> StyleBoxFlat:
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = edge
+	style.set_border_width_all(border)
+	style.set_corner_radius_all(4)
+	return style
 
 
 static func load_default() -> HudKit:
@@ -133,14 +179,26 @@ func draw(canvas: CanvasItem, piece: String, rect: Rect2, modulate: Color = Colo
 		Rect2(region.end.x - caps.y, region.position.y, caps.y, region.size.y), modulate)
 
 
-## Draws the left `share` (0-1) of a fill strip into `rect`: the strip is cut, not squeezed.
-func draw_fill(canvas: CanvasItem, piece: String, rect: Rect2, share: float, modulate: Color = Color.WHITE) -> void:
-	share = clampf(share, 0.0, 1.0)
-	if not has(piece) or share <= 0.0:
+## Feather the edges of the painted card illustrations into the lacquer.
+func draw_card_art(canvas: CanvasItem, piece: String, rect: Rect2) -> void:
+	if not has(piece):
 		return
 	var region: Rect2 = _pieces[piece]["region"]
-	canvas.draw_texture_rect_region(texture, Rect2(rect.position, Vector2(rect.size.x * share, rect.size.y)),
-		Rect2(region.position, Vector2(region.size.x * share, region.size.y)), modulate)
+	var atlas_size: Vector2 = texture.get_size()
+	var knots: PackedFloat32Array = PackedFloat32Array([0.0, 0.12, 0.88, 1.0])
+	for y: int in 3:
+		for x: int in 3:
+			var a: Vector2 = Vector2(knots[x], knots[y])
+			var b: Vector2 = Vector2(knots[x + 1], knots[y + 1])
+			var points: PackedVector2Array = PackedVector2Array()
+			var uvs: PackedVector2Array = PackedVector2Array()
+			var colors: PackedColorArray = PackedColorArray()
+			for uv: Vector2 in [a, Vector2(b.x, a.y), b, Vector2(a.x, b.y)]:
+				points.append(rect.position + uv * rect.size)
+				uvs.append((region.position + region.size * uv) / atlas_size)
+				var edge: float = minf(minf(uv.x, 1.0 - uv.x), minf(uv.y, 1.0 - uv.y))
+				colors.append(Color(1, 1, 1, clampf(edge / knots[1], 0.0, 1.0)))
+			canvas.draw_polygon(points, colors, uvs, texture)
 
 
 ## Text with a dark outline, horizontally centred on `center_x` with its baseline at `baseline`.
@@ -163,10 +221,15 @@ func draw_text(
 ## With a `sample` (the widest text the place can hold, e.g. "99999") the size is fitted to the
 ## sample, so it stays the same while the value changes; a text wider still is fitted on its own.
 func draw_text_in(
-	canvas: CanvasItem, text: String, rect: Rect2, size: int, color: Color, sample: String = "", outline: int = 0
+	canvas: CanvasItem, text: String, rect: Rect2, size: int, color: Color, sample: String = "", outline: int = 0,
+	alignment: HorizontalAlignment = HORIZONTAL_ALIGNMENT_CENTER
 ) -> void:
 	size = line_size(text, rect, size, sample, outline)
-	draw_text(canvas, text, rect.get_center().x, rect.get_center().y + size * CAP_CENTER, size, color, -1.0, outline)
+	var center_x: float = rect.get_center().x
+	if alignment != HORIZONTAL_ALIGNMENT_CENTER:
+		var span: float = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+		center_x = rect.position.x + span * 0.5 if alignment == HORIZONTAL_ALIGNMENT_LEFT else rect.end.x - span * 0.5
+	draw_text(canvas, text, center_x, rect.get_center().y + size * CAP_CENTER, size, color, -1.0, outline)
 
 
 ## The size draw_text_in sets `text` at in `rect` (see there).
@@ -235,77 +298,6 @@ func _paragraph_fits(text: String, width: float, size: int, max_lines: int) -> b
 		if text_width(word, size) > width:
 			return false
 	return paragraph_height(text, width, size) <= font.get_height(size) * max_lines + 0.5
-
-
-## Draws the soft halo of `piece` around `rect` (the rect the piece itself is drawn into): its
-## silhouette blurred `spread` screen px outwards, white, tinted by `modulate`. Meant for a canvas
-## item with additive blending, behind the piece.
-func draw_halo(canvas: CanvasItem, piece: String, rect: Rect2, spread: float, modulate: Color) -> void:
-	var halo: Dictionary = halo_of(piece, spread)
-	if halo.is_empty():
-		return
-	var scale: float = rect.size.y / (_pieces[piece]["region"] as Rect2).size.y
-	canvas.draw_texture_rect(halo["texture"], rect.grow(float(halo["pad"]) * scale), false, modulate)
-
-
-## The halo of `piece`, made once from its alpha in the atlas: the silhouette at 1 / HALO_STEP
-## resolution, padded, box-blurred three times each way (close to a gaussian).
-func halo_of(piece: String, spread: float) -> Dictionary:
-	var key: String = "%s@%d" % [piece, roundi(spread)]
-	if _halos.has(key):
-		return _halos[key]
-	if not has(piece):
-		return {}
-	var atlas: Image = texture.get_image()
-	if atlas == null:
-		return {}
-	if atlas.is_compressed():
-		atlas.decompress()
-	var region: Rect2i = Rect2i(_pieces[piece]["region"] as Rect2)
-	var part: Image = atlas.get_region(region)
-	var w: int = maxi(1, region.size.x / HALO_STEP)
-	var h: int = maxi(1, region.size.y / HALO_STEP)
-	part.resize(w, h, Image.INTERPOLATE_BILINEAR)
-	var radius: int = maxi(1, roundi(spread * density / HALO_STEP / 3.0))
-	var pad: int = radius * 3 + 1
-	var cols: int = w + pad * 2
-	var rows: int = h + pad * 2
-	var field: PackedFloat32Array = PackedFloat32Array()
-	field.resize(cols * rows)
-	for y: int in h:
-		for x: int in w:
-			field[(y + pad) * cols + x + pad] = part.get_pixel(x, y).a
-	for _pass: int in 3:
-		field = _box_blur(field, cols, rows, radius, 1, cols)
-		field = _box_blur(field, rows, cols, radius, cols, 1)
-	var image: Image = Image.create(cols, rows, false, Image.FORMAT_RGBA8)
-	for y: int in rows:
-		for x: int in cols:
-			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(field[y * cols + x], 0.0, 1.0)))
-	_halos[key] = {"texture": ImageTexture.create_from_image(image), "pad": float(pad * HALO_STEP)}
-	return _halos[key]
-
-
-## One box-blur pass of `radius` along lines of `length` samples (`step` apart); `lines` lines,
-## each `stride` apart. Samples past the ends count as zero.
-static func _box_blur(
-	field: PackedFloat32Array, length: int, lines: int, radius: int, step: int, stride: int
-) -> PackedFloat32Array:
-	var out: PackedFloat32Array = PackedFloat32Array()
-	out.resize(field.size())
-	var norm: float = 1.0 / float(radius * 2 + 1)
-	for line: int in lines:
-		var base: int = line * stride
-		var sum: float = 0.0
-		for i: int in mini(radius, length):
-			sum += field[base + i * step]
-		for i: int in length:
-			if i + radius < length:
-				sum += field[base + (i + radius) * step]
-			if i - radius - 1 >= 0:
-				sum -= field[base + (i - radius - 1) * step]
-			out[base + i * step] = sum * norm
-	return out
 
 
 static func _rect(values: Variant) -> Rect2:

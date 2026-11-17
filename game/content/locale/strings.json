@@ -287,6 +287,10 @@
    "en": "Extended Lightning",
    "ru": "Длинная молния"
   },
+  "UI_CHOICE_INPUT": {
+   "en": "Arrows or D-pad · Enter or confirm button",
+   "ru": "Стрелки или крестовина · Enter или кнопка подтверждения"
+  },
   "UI_CHOICE_PICK": {
    "en": "Choose",
    "ru": "Выбрать"
@@ -295,9 +299,17 @@
    "en": "Challenge level",
    "ru": "Уровень испытания"
   },
+  "UI_HUD_HP": {
+   "en": "Health",
+   "ru": "Здоровье"
+  },
   "UI_HUD_LEVEL": {
    "en": "Lv. %d",
    "ru": "Ур. %d"
+  },
+  "UI_HUD_QI": {
+   "en": "Qi",
+   "ru": "Ци"
   },
   "UI_HUD_SLAIN": {
    "en": "Slain: %s",
@@ -315,6 +327,10 @@
    "en": "Choose an upgrade",
    "ru": "Выберите улучшение"
   },
+  "UI_RUN_CONFIRM_INPUT": {
+   "en": "Enter or confirm button",
+   "ru": "Enter или кнопка подтверждения"
+  },
   "UI_RUN_DEFEAT": {
    "en": "Defeat",
    "ru": "Поражение"
@@ -323,9 +339,21 @@
    "en": "Enemies slain: %d",
    "ru": "Убито врагов: %d"
   },
+  "UI_RUN_KILLS_LABEL": {
+   "en": "Slain",
+   "ru": "Побеждено"
+  },
   "UI_RUN_LEVEL": {
    "en": "Level: %d",
    "ru": "Уровень: %d"
+  },
+  "UI_RUN_LEVEL_LABEL": {
+   "en": "Level",
+   "ru": "Уровень"
+  },
+  "UI_RUN_NEW": {
+   "en": "New run",
+   "ru": "Новый забег"
   },
   "UI_RUN_RESTART": {
    "en": "R or Enter: new run",
@@ -335,6 +363,10 @@
    "en": "Time %s",
    "ru": "Время %s"
   },
+  "UI_RUN_TIME_LABEL": {
+   "en": "Time",
+   "ru": "Время"
+  },
   "UI_RUN_VICTORY": {
    "en": "Victory: the grove is held",
    "ru": "Победа: роща выстояла"
@@ -342,6 +374,10 @@
   "UI_RUN_XP": {
    "en": "Experience gathered: %d",
    "ru": "Собрано опыта: %d"
+  },
+  "UI_RUN_XP_LABEL": {
+   "en": "Experience",
+   "ru": "Опыт"
   },
   "UI_START_RUN": {
    "en": "Start run",

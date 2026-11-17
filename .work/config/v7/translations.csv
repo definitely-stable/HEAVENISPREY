@@ -73,6 +73,7 @@ STATUS_ROOT_SLOW_NAME,Entangling Roots,Опутывающие корни
 STATUS_QI_TAINT_NAME,Corrupted Qi,Осквернённая ци
 UI_LEVEL_UP_TITLE,Choose an upgrade,Выберите улучшение
 UI_CHOICE_PICK,Choose,Выбрать
+UI_CHOICE_INPUT,Arrows or D-pad · Enter or confirm button,Стрелки или крестовина · Enter или кнопка подтверждения
 UI_LEVEL_UP_MORE,More choices waiting: %d,Ещё выборов: %d
 UI_UPGRADE_RANK,Rank %d/%d,Ранг %d/%d
 UI_UPGRADE_UNCHANGED,"%s, already full","%s, уже полное"
@@ -99,6 +100,14 @@ UI_RUN_KILLS,Enemies slain: %d,Убито врагов: %d
 UI_RUN_LEVEL,Level: %d,Уровень: %d
 UI_RUN_XP,Experience gathered: %d,Собрано опыта: %d
 UI_RUN_RESTART,R or Enter: new run,R или Enter — новый забег
+UI_RUN_NEW,New run,Новый забег
+UI_RUN_CONFIRM_INPUT,Enter or confirm button,Enter или кнопка подтверждения
+UI_RUN_TIME_LABEL,Time,Время
+UI_RUN_KILLS_LABEL,Slain,Побеждено
+UI_RUN_LEVEL_LABEL,Level,Уровень
+UI_RUN_XP_LABEL,Experience,Опыт
+UI_HUD_HP,Health,Здоровье
+UI_HUD_QI,Qi,Ци
 UI_HUD_LEVEL,Lv. %d,Ур. %d
 UI_HUD_SLAIN,Slain: %s,Убито: %s
 UI_HUD_THOUSANDS,%sk,%s тыс.

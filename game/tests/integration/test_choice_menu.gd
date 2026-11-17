@@ -111,9 +111,6 @@ func test_menu_dims_the_run_and_not_the_hud() -> void:
 	)
 	for child: Node in menu.get_children():
 		assert_false(child is ColorRect, "no dimming rect over the HUD")
-	assert_false(menu.find_children("*", "Label", true, false).any(
-		func(node: Node) -> bool: return (node as Label).visible and not (node as Label).text.is_empty()
-	), "menu text is drawn in the kit, not in plain labels")
 	var waiting: int = view.driver.world.pending_level_choices - 1
 	assert_eq(menu.more_text().is_empty(), waiting <= 0)
 	if waiting > 0:
@@ -125,12 +122,10 @@ func test_menu_dims_the_run_and_not_the_hud() -> void:
 	assert_eq(grade.dim, 0.0, "the fight is bright again after the choice")
 
 
-## ADR-014 section 16: the menu is drawn from the gold kit after REF-011, each card with the
-## illustration of its upgrade, and Choose picks the focused card once armed.
+## The card illustrations still come from the gold kit. Choose picks the selected card once armed.
 func test_cards_come_from_the_gold_kit() -> void:
 	var kit: HudKit = HudKit.load_default()
-	for piece: String in ["card_frame", "title_banner", "rank_ribbon", "choose_button"]:
-		assert_true(kit.has(piece), piece)
+	assert_true(kit.has("divider_lotus"))
 	for code: int in UpgradeSystem.MAX_RANKS.size() + 1:
 		assert_true(kit.has(UpgradeCard.art_piece(code)), "illustration of upgrade %d" % code)
 	assert_eq(UpgradeCard.art_piece(UpgradeSystem.RECOVER), "art_recover")
@@ -144,10 +139,10 @@ func test_cards_come_from_the_gold_kit() -> void:
 	var world: WorldState = view.driver.world
 	assert_eq(menu.kit, view.get("_hud").kit, "the menu shares the HUD kit")
 	for index: int in world.hand.size():
-		assert_eq(menu.cards[index].custom_minimum_size, kit.size_of("card_frame"))
+		assert_eq(menu.cards[index].custom_minimum_size, ChoiceMenu.CARD_SIZE)
 		assert_eq(menu.card_texts[index]["art"], UpgradeCard.art_piece(world.hand[index]))
 		assert_eq(menu.cards[index].text, "", "the card draws its text itself")
-	assert_eq(menu.choose_button.custom_minimum_size, kit.size_of("choose_button"))
+	assert_eq(menu.choose_button.text, UiText.text("UI_CHOICE_PICK"))
 	var top: float = menu.cards[0].get_global_rect().position.y
 	assert_gt(top, ChoiceMenu.TOP, "cards sit under the banner, below the HUD plaque")
 	var hud: Dictionary = RunHud.layout(kit, menu.get_viewport_rect().size)
@@ -169,8 +164,8 @@ func test_every_card_text_stays_in_its_panel() -> void:
 	var kit: HudKit = HudKit.load_default()
 	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
 	var world: WorldState = FixedTickDriver.create(config).world
-	var rect: Rect2 = Rect2(Vector2.ZERO, kit.size_of("card_frame"))
-	var panel: Rect2 = kit.window("card_frame", rect)
+	var rect: Rect2 = Rect2(Vector2.ZERO, ChoiceMenu.CARD_SIZE)
+	var panel: Rect2 = rect
 	var arts: Dictionary = {}
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
@@ -184,12 +179,12 @@ func test_every_card_text_stays_in_its_panel() -> void:
 			var at: Dictionary = ChoiceMenu.card_layout(kit, rect, text)
 			for key: String in ["art", "name", "label", "change"]:
 				assert_true(panel.encloses(at[key]), "%s: %s inside the panel" % [tag, key])
-			assert_lte((at["change"] as Rect2).end.y, panel.end.y - ChoiceMenu.CARD_BOTTOM_PAD, tag + " above the lotus")
+			assert_lte((at["change"] as Rect2).end.y, panel.end.y - ChoiceMenu.CARD_BOTTOM_PAD, tag + " bottom inset")
 			assert_lte((at["art"] as Rect2).end.y, (at["name"] as Rect2).position.y, tag + " art above the name")
-			assert_gte((at["art"] as Rect2).size.x, 150.0, tag + " art stays large")
+			assert_gte((at["art"] as Rect2).size.x, 142.0, tag + " art stays large")
 			var width: float = (at["name"] as Rect2).size.x
-			assert_gte(kit.fit_paragraph_size(text["name"], width, ChoiceMenu.NAME_FONT_SIZE, 2), 18, tag + " name size")
-			for line: Array in [["label", ChoiceMenu.LINE_FONT_SIZE, 13], ["change", ChoiceMenu.CHANGE_FONT_SIZE, 16]]:
+			assert_gte(kit.fit_paragraph_size(text["name"], width, ChoiceMenu.NAME_FONT_SIZE, 2), 20, tag + " name size")
+			for line: Array in [["label", ChoiceMenu.LINE_FONT_SIZE, 18], ["change", ChoiceMenu.CHANGE_FONT_SIZE, 20]]:
 				var box: Rect2 = at[line[0]]
 				var size: int = kit.fit_size(text[line[0]], box.size.x, line[1])
 				assert_lte(kit.text_width(text[line[0]], size), box.size.x, "%s %s fits" % [tag, line[0]])
@@ -198,39 +193,45 @@ func test_every_card_text_stays_in_its_panel() -> void:
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
 		var title: String = UiText.text("UI_LEVEL_UP_TITLE")
-		var banner: Rect2 = kit.window("title_banner", Rect2(Vector2.ZERO, kit.size_of("title_banner")))
-		var room: float = banner.size.x - ChoiceMenu.BANNER_TEXT_INSET * 2.0
-		assert_gte(kit.fit_size(title, room, ChoiceMenu.TITLE_FONT_SIZE), 22, "%s title between the scrolls" % lang)
+		assert_eq(kit.fit_size(title, 536.0, ChoiceMenu.TITLE_FONT_SIZE), ChoiceMenu.TITLE_FONT_SIZE, lang)
 
 
-## The focused card glows with a halo shaped like its frame (not a box), breathing slowly.
-func test_focused_card_glows_with_the_frame_halo() -> void:
-	var kit: HudKit = HudKit.load_default()
-	var halo: Dictionary = kit.halo_of("card_frame", ChoiceMenu.GLOW_SPREAD)
-	assert_false(halo.is_empty(), "the halo is made from the frame")
-	var image: Image = (halo["texture"] as Texture2D).get_image()
-	var w: int = image.get_width()
-	var h: int = image.get_height()
-	assert_gt(image.get_pixel(w / 2, h / 2).a, 0.9, "solid behind the card")
-	assert_lt(image.get_pixel(1, 1).a, 0.02, "faded out at the edge of its pad")
-	assert_lt(image.get_pixel(w / 2, 1).a, image.get_pixel(w / 2, h / 2).a, "falls off outwards")
-	assert_gt(float(halo["pad"]), 0.0)
-	assert_eq(kit.halo_of("card_frame", ChoiceMenu.GLOW_SPREAD), halo, "made once")
+func test_choice_focus_follows_keyboard_and_controller() -> void:
 	var view: RunView = _view()
 	view.start_run(SEED)
 	_to_pause(view, Vector2i.ZERO)
 	await wait_process_frames(2)
 	var menu: ChoiceMenu = _menu(view)
-	var seen: Array[float] = []
-	for step: int in 8:
-		seen.append(menu.glow_strength())
-		menu.age(0.15)
-	assert_between(seen.min(), ChoiceMenu.GLOW_PULSE.x - 0.01, ChoiceMenu.GLOW_PULSE.y + 0.01)
-	assert_between(seen.max(), ChoiceMenu.GLOW_PULSE.x - 0.01, ChoiceMenu.GLOW_PULSE.y + 0.01)
-	assert_gt(seen.max() - seen.min(), 0.1, "the glow breathes")
-	menu.cards[2].grab_focus()
-	menu.cards[1].mouse_entered.emit()
-	assert_true(menu.cards[1].has_focus(), "hover moves the focus, so one card glows at a time")
+	var viewport: Viewport = view.get_viewport()
+	assert_eq(viewport.gui_get_focus_owner(), menu.cards[0], "first visible card owns focus on open")
+	var right: InputEventJoypadButton = InputEventJoypadButton.new()
+	right.button_index = JOY_BUTTON_DPAD_RIGHT
+	right.pressed = true
+	viewport.push_input(right)
+	assert_eq(viewport.gui_get_focus_owner(), menu.cards[1], "D-pad moves to the next card")
+	var down: InputEventKey = InputEventKey.new()
+	down.keycode = KEY_DOWN
+	down.pressed = true
+	viewport.push_input(down)
+	assert_eq(viewport.gui_get_focus_owner(), menu.choose_button, "down moves to the confirmation action")
+	var up: InputEventKey = InputEventKey.new()
+	up.keycode = KEY_UP
+	up.pressed = true
+	viewport.push_input(up)
+	assert_eq(viewport.gui_get_focus_owner(), menu.cards[1], "up returns to the selected card")
+	assert_eq(menu.cards[1].accessibility_name, menu.card_texts[1]["name"])
+	assert_eq(menu.cards[1].accessibility_description, menu.card_texts[1]["stat"])
+	assert_eq(menu.cards[0].focus_previous, menu.choose_button.get_path(), "backwards Tab stays inside")
+	assert_eq(menu.choose_button.focus_next, menu.cards[0].get_path(), "forwards Tab stays inside")
+	menu.cards[2].mouse_entered.emit()
+	assert_eq(viewport.gui_get_focus_owner(), menu.cards[2])
+	var revision: int = menu.revision
+	var confirm: InputEventJoypadButton = InputEventJoypadButton.new()
+	confirm.button_index = JOY_BUTTON_A
+	confirm.pressed = true
+	menu.age(ChoiceMenu.ARM_DELAY)
+	viewport.push_input(confirm)
+	assert_eq(view.driver.world.build_revision, revision + 1, "controller confirmation applies one choice")
 
 
 func test_driver_does_not_record_a_card_that_does_not_exist() -> void:
