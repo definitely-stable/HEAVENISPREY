@@ -43,7 +43,20 @@ LAYOUTS: dict[str, list[dict]] = {
         {"x": 384, "y": 1000, "blocks": [[380, 30], [230, 40]]},
         {"x": 1152, "y": 980, "flat": [600, 375]},
     ],
+    # ADR-015 section 12, REF-068: the seal ring and the parapet, at 3.73 sheet px per screen px
+    # (1.6 times the guardians: small props need the room for detail). A brazier on one cell
+    # (pedestal to the hero's waist, the bowl on the ellipse), a stone pagoda lantern on one cell
+    # (stepped base, shaft, platform, light box; the roof is painted above it) and a broken pillar
+    # on two by two cells (1.3 hero heights).
+    "courtyard_ring": [
+        {"x": 256, "y": 990, "blocks": [[227, 22], [186, 118], [211, 19]], "seat": [99, 32]},
+        {"x": 768, "y": 990, "blocks": [[227, 22], [179, 29], [86, 179], [179, 19], [134, 106]]},
+        {"x": 1280, "y": 990, "blocks": [[374, 45], [285, 314]]},
+    ],
 }
+
+# Columns and rows of the sheet grid (build_sprites `sheet.grid`) when not 2 x 2.
+GRIDS: dict[str, tuple[int, int]] = {"courtyard_ring": (3, 1)}
 
 
 Point = tuple[float, float]
@@ -83,7 +96,10 @@ def flat_rect(prop: dict) -> tuple[float, float, float, float] | None:
 
 # --- ADR-015 section 11: the six fragments of the ruin ring around the seal ---
 
-ARENA = Path(__file__).resolve().parents[2] / "game" / "content" / "arena" / "jade_grove.json"
+# The arena grid the ruin sheets were painted for: the ring of jade_grove.json before ADR-015
+# section 12 opened the court (the fragments now wait in reserve for ruins at the edge). GUT
+# checks the atlas against the same file.
+ARENA = Path(__file__).resolve().parents[2] / "game" / "tests" / "fixtures" / "seal_ring_layout.json"
 RUIN_PROP = "seal_ruin"
 CELL_PX = 48
 ISO_K = math.sqrt(2.0) / 2.0

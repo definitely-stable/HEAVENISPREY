@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.courtyard_ring",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    },
+    {
+      "id": "REF-065",
+      "file": "Кадр арены «Нефритовая роща» у печати.png",
+      "sha256": "8518cb7d57296f406ef1f9c01c822d2bad86ddba7e8853177236e750fa22c185"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "8bdd234fafd140bb2638836bc731c9880a858bfc19f5dcaaf2adf394b679acba",
+    "created": "2026-11-17T19:33:00+0500",
+    "master_sha256": "5ecb4bae2924d0d67ec7d52ed9b428fc5d8a24790529b7a3d8ca4bc9ebf430d2",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical. Painted over the geometry template of tools/art/iso_template.py courtyard_ring (first attached image); the prop kit REF-068, the guardians sheet and the frame REF-065 attached as references"
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      3,
+      1
+    ],
+    "join_px": 4,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "brazier_pedestal",
+      "height_px": 142
+    },
+    {
+      "name": "lantern_stone",
+      "height_px": 156
+    },
+    {
+      "name": "pillar_stump",
+      "height_px": 145
+    }
+  ]
+}

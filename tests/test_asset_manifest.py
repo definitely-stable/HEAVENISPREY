@@ -76,7 +76,7 @@ class AssetManifestTests(unittest.TestCase):
 
     def test_repository_manifest_is_valid(self):
         report = assets.validate()
-        self.assertEqual(report["assets"], 20)
+        self.assertEqual(report["assets"], 21)
         self.assertGreater(report["lfs_bytes"], 0)
 
     def test_lfs_pointer_with_the_same_identity_passes(self):

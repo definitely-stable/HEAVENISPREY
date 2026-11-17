@@ -10,10 +10,12 @@ extends RefCounted
 ## of the wall kit of slice A2. Far behind, rock spires and pagodas stand in the mist (BACKDROP).
 ## Presentation only.
 
-const LIGHTS_ASSET: String = "asset.prop.courtyard_lights"
 const NATURE_ASSET: String = "asset.prop.courtyard_nature"
 const WALLS_ASSET: String = "asset.prop.courtyard_walls"
 const PEAKS_ASSET: String = "asset.prop.distant_peaks"
+## The seal ring and the parapet after REF-068 (ADR-015 section 12): a pedestal brazier on one
+## cell, a stone pagoda lantern on one cell, a broken pillar on two by two cells.
+const RING_ASSET: String = "asset.prop.courtyard_ring"
 ## Guardian lions and the columns of the ruined sect after REF-033 and REF-029: monumental,
 ## the lion on its plinth about 2.25 hero heights, a column about 2.6.
 const GUARDIANS_ASSET: String = "asset.prop.courtyard_guardians"
@@ -47,11 +49,13 @@ const PROP_SPRITES: Dictionary = {
 	"gate": [WALLS_ASSET, "gate", "gate"],
 	"lion": [GUARDIANS_ASSET, "lion_ball", "lion_cub"],
 	"pillar": [GUARDIANS_ASSET, "pillar", "pillar"],
-	"brazier": [LIGHTS_ASSET, "brazier", "brazier"],
+	"pillar_broken": [RING_ASSET, "pillar_stump", "pillar_stump"],
+	"brazier": [RING_ASSET, "brazier_pedestal", "brazier_pedestal"],
+	"lantern": [RING_ASSET, "lantern_stone", "lantern_stone"],
 	"maple_large": [NATURE_ASSET, "maple_large", "maple_large"],
 }
 ## Props that carry a warm point light, and the height of their flame above the base (px).
-const LIGHT_PROPS: Dictionary = {"lantern_pagoda": 0.62, "brazier": 0.85, "gate": 0.55}
+const LIGHT_PROPS: Dictionary = {"lantern_stone": 0.64, "brazier_pedestal": 0.66, "gate": 0.55}
 ## The prop name of a placeholder wall block.
 const BLOCK_PROP: String = "block"
 ## Arena cells of tall walls (solid) and low walls (balustrades, ruins).

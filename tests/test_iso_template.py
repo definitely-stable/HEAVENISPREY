@@ -48,8 +48,9 @@ class IsoTemplateTests(unittest.TestCase):
                     self.assertAlmostEqual(base[0][1], (top[0][1] + top[2][1]) / 2, msg=name)
 
     def test_props_stay_inside_their_grid_cells(self):
-        cell_w, cell_h = iso.SIZE[0] / 2, iso.SIZE[1] / 2
         for name, layout in iso.LAYOUTS.items():
+            cols, rows = iso.GRIDS.get(name, (2, 2))
+            cell_w, cell_h = iso.SIZE[0] / cols, iso.SIZE[1] / rows
             for prop in layout:
                 points = [p for block in iso.blocks(prop) for face in block.values() for p in face]
                 rect = iso.flat_rect(prop)
