@@ -8,14 +8,20 @@ import sys
 import unittest
 from pathlib import Path
 
-import numpy as np
-from PIL import Image
-
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("build_sprites", ROOT / "tools/art/build_sprites.py")
-build_sprites = importlib.util.module_from_spec(SPEC)
-sys.modules["build_sprites"] = build_sprites
-SPEC.loader.exec_module(build_sprites)
+# The art tools need numpy and Pillow; the design CI does not install them (art is built locally).
+try:
+    import numpy as np
+    from PIL import Image
+except ImportError:  # pragma: no cover - depends on the environment
+    np = None
+    Image = None
+build_sprites = None
+if np is not None:
+    SPEC = importlib.util.spec_from_file_location("build_sprites", ROOT / "tools/art/build_sprites.py")
+    build_sprites = importlib.util.module_from_spec(SPEC)
+    sys.modules["build_sprites"] = build_sprites
+    SPEC.loader.exec_module(build_sprites)
 
 
 def creature(legs: int) -> Image.Image:
@@ -31,6 +37,7 @@ def creature(legs: int) -> Image.Image:
     return image
 
 
+@unittest.skipIf(build_sprites is None, "numpy and Pillow are needed by the art tools")
 class ScaledMeasureTests(unittest.TestCase):
     def test_row_scale_hits_the_target_measured_after_scaling(self):
         clip = {"name": "walk", "frames": 1}
