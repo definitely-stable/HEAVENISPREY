@@ -5,13 +5,21 @@ extends GutTest
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
-	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
+	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.venom_spirit_snake",
+	"asset.enemy.wandering_spirit", "asset.enemy.yin_corpse",
 	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
 	"asset.prop.courtyard_nature", "asset.prop.courtyard_walls", "asset.prop.distant_peaks",
 	"asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
+## Enemies with sprites (ADR-014 A5, A5c); the spirit's robe collapses into a heap where it
+## hovered instead of falling forward.
+const HORDE: Array[String] = [
+	"asset.enemy.yin_corpse", "asset.enemy.blood_wolf", "asset.enemy.wandering_spirit",
+	"asset.enemy.venom_spirit_snake",
+]
+const HEAPS: Array[String] = ["asset.enemy.wandering_spirit"]
 
 
 func test_manifest_textures_load_with_their_size() -> void:
@@ -203,7 +211,7 @@ func test_skyline_packing_stays_inside_and_apart() -> void:
 ## ADR-014 A5: the horde walks and strikes in four diagonals, SE and NE drawn, SW and NW mirrored.
 func test_horde_walks_and_strikes_in_four_diagonals() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
-	for enemy: String in ["asset.enemy.yin_corpse", "asset.enemy.blood_wolf"]:
+	for enemy: String in HORDE:
 		for clip: String in ["walk", "attack"]:
 			assert_true(sprites.has_clip(enemy, clip), enemy + " " + clip)
 			assert_eq(sprites.clip_frames(enemy, clip), 6)
@@ -224,7 +232,7 @@ func test_horde_walks_and_strikes_in_four_diagonals() -> void:
 func test_horde_recoils_and_falls_forward_onto_the_ground() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
-	for enemy: String in ["asset.enemy.yin_corpse", "asset.enemy.blood_wolf"]:
+	for enemy: String in HORDE:
 		for clip: String in ["hit", "death"]:
 			assert_eq(sprites.clip_frames(enemy, clip), 6, enemy + " " + clip)
 			assert_eq(sprites.clip_frame(enemy, clip, 10.0), 5, "a one-shot holds its last frame")
@@ -245,6 +253,8 @@ func test_horde_recoils_and_falls_forward_onto_the_ground() -> void:
 			var label: String = "%s death row %d" % [enemy, offset]
 			assert_almost_eq(float(lying.end.y), float(anchor.y), 3.0, label + ": lies on the ground line")
 			assert_lt(lying.size.y, standing.size.y * 0.6, label + ": lies down")
+			if enemy in HEAPS:
+				continue
 			assert_gt(lying.end.x - anchor.x, standing.end.x - anchor.x, label + ": falls forward")
 			assert_lt(absi(lying.position.x - standing.position.x), frame / 6, label + ": its back stays")
 
@@ -273,6 +283,11 @@ func test_horde_stands_at_the_height_of_its_boards() -> void:
 	var wolf: float = _clip_height(sprites, manifest, "asset.enemy.blood_wolf", "walk") / hero
 	assert_between(corpse, 0.9, 1.0, "Yin Corpse / hero")
 	assert_between(wolf, 0.6, 0.75, "wolf / hero")
+	# A5c, no boards: the spirit a little shorter than the corpse, the raised snake below the wolf.
+	var spirit: float = _clip_height(sprites, manifest, "asset.enemy.wandering_spirit", "walk") / hero
+	var snake: float = _clip_height(sprites, manifest, "asset.enemy.venom_spirit_snake", "walk") / hero
+	assert_between(spirit, 0.82, corpse, "spirit / hero")
+	assert_between(snake, 0.5, wolf, "snake / hero")
 
 
 ## Median body height (atlas px) of a clip over its frames and generated directions.

@@ -1,0 +1,157 @@
+## model sheet (attached to every request below)
+
+Generate one image with the image generation tool. The attached images are from the same game: the model sheets of two other enemies (an undead corpse and a demon wolf) and a battle screenshot. Paint the new creature in exactly their style: the same ink line weight, the same painted cel shading, the same muted dark palette with a few saturated accents, the same camera and the same scale (a human-sized figure as tall as the corpse). Do not copy those creatures; only match their style.
+
+Character model sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature. raised and ready, the head held high above the coil.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Layout: one row of four full-body poses on a 1536 x 1024 canvas, same scale, the lowest point of the body on the same baseline, evenly spaced, nothing overlapping, from left to right: 1 facing the viewer (south, front view), 2 facing down-right (south-east, three-quarter front), 3 facing right (east, side view in profile), 4 facing up-right (north-east, three-quarter back).
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk se
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a slithering loop, 6 evenly spaced phases read left to right, top row then bottom row: the raised front body and the head stay high and steady, looking ahead, while S-shaped waves travel down the coil on the ground from the neck to the tail tip; frame 6 flows back into frame 1. Slithering in place (no travel across the cell); the coil stays on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## walk ne
+
+Generate one image with the image generation tool. The attached image is the model sheet of this creature for a game: keep its look, proportions, colours, ink line and scale exactly.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a slithering loop, 6 evenly spaced phases read left to right, top row then bottom row: the raised front body and the head stay high and steady, looking ahead, while S-shaped waves travel down the coil on the ground from the neck to the tail tip; frame 6 flows back into frame 1. Slithering in place (no travel across the cell); the coil stays on the same baseline.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: one strike, 6 phases read left to right, top row then bottom row: 1 the neck drawing back into a tight S, the head low and level, aiming; 2 coiled fully back, the jaws opening wide, the fangs bared; 3 the strike: the head and neck shoot straight forward at full length, the jaws wide open, the fangs out; 4 the bite: the jaws snapping shut at full length; 5 pulling the head back; 6 back to the raised ready stance. No energy, no mist, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## attack ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: one strike, 6 phases read left to right, top row then bottom row: 1 the neck drawing back into a tight S, the head low and level, aiming; 2 coiled fully back, the jaws opening wide, the fangs bared; 3 the strike: the head and neck shoot straight forward at full length, the jaws wide open, the fangs out; 4 the bite: the jaws snapping shut at full length; 5 pulling the head back; 6 back to the raised ready stance. No energy, no mist, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking back and aside, the jaws open in a hiss; 2 recoil, the raised body thrown back and twisting; 3 the coil tightening, the head low; 4 rising again; 5 the head swaying back to centre; 6 back to the raised ready stance of the walk sheet. The coil stays on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## hit ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a hit reaction, 6 phases read left to right, top row then bottom row: 1 the impact, the head jerking back and aside, the jaws open in a hiss; 2 recoil, the raised body thrown back and twisting; 3 the coil tightening, the head low; 4 rising again; 5 the head swaying back to centre; 6 back to the raised ready stance of the walk sheet. The coil stays on the baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death se
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing down-right (south-east): three-quarter front view, the chest and face turned toward the lower right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown up, the jaws open; 2 the raised body writhing and twisting; 3 the head and neck falling forward toward the ground; 4 the whole body slumping onto the ground, still twitching; 5 lying stretched out on the ground, partly on its side, the pale belly showing; 6 lying still on the ground, the head flat, the jaws slack. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
+
+## death ne
+
+Generate one image with the image generation tool. The first attached image is the model sheet of the creature, the second its walk animation sheet in the same direction made for the same game: match the second image exactly in scale, figure size in the cell, ink line, painting, colours, camera and cell layout, so that the new frames cut in seamlessly after the walk frames.
+
+Animation sheet of the Venom Spirit Snake (毒灵蛇), a large demonic serpent: a long thick body of glossy black scales with rows of bright emerald-green scales along the spine and jade-green diamond markings on the flanks, a pale jade-white belly, a broad wedge-shaped head with two short dark horn ridges above the eyes, slit yellow-green eyes (painted, no glow), long curved white fangs, a forked dark red tongue; the front third of the body is raised in an S-curve with the head high and level, the rest lies on the ground in a loose coil behind it; small drops of green venom on the fangs (painted, no mist, no aura); no blue anywhere on the creature: the SAME creature as in the attached model sheet (first image). Keep its face, proportions, colours and costume identical in every frame.
+
+Style: hand-painted dark xianxia game sprite, clean dark ink outline about 3 px, painted cel shading lit softly and neutrally from straight above (no directional key light, no rim light, no glow, no cast shadow, no smoke, no aura), 3-4 large tone masses, readable at small size.
+
+Camera: orthographic isometric game camera looking down at 30 degrees above the horizon (top of the head and the back visible, the body slightly foreshortened), the same camera in every frame.
+
+Direction: in every frame it is facing up-right (north-east): three-quarter back view, we see the back and the right flank, the head turned toward the upper right corner of the image.
+
+Motion: a death sequence, 6 phases read left to right, top row then bottom row: 1 hit recoil, the head thrown up, the jaws open; 2 the raised body writhing and twisting; 3 the head and neck falling forward toward the ground; 4 the whole body slumping onto the ground, still twitching; 5 lying stretched out on the ground, partly on its side, the pale belly showing; 6 lying still on the ground, the head flat, the jaws slack. It falls forward in the direction it faces and lies inside its cell on the same baseline. No energy, no effects.
+
+Layout: a strict grid of 3 columns x 2 rows of equal square cells (6 cells) on a 1536 x 1024 canvas, no borders, no gutters drawn, no labels. Exactly one full-body figure per cell, the same scale in every cell, centred horizontally, the lowest point of the body on the same baseline near the bottom of the cell, the whole body including sleeves, robe tails, hair, coil and tail inside its own cell with a clear gap of background to the cell edges.
+
+Background: perfectly flat solid pure blue #0000FF everywhere, no floor, no shadow, no gradient, no effects. No text, no labels, no numbers, no watermark.
