@@ -2607,7 +2607,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": {
@@ -3768,7 +3768,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": {
@@ -5439,7 +5439,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": {

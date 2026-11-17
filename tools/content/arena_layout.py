@@ -117,7 +117,7 @@ def draw() -> dict:
     k.fill(gate, "#")
     k.region_prop(gate, "gate")
     for u, v, prop in [(-1, -30, "lion"), (15, -30, "lion"), (-6, -40, "pillar"), (20, -40, "pillar"),
-                       (-17, 28, "lion"), (-1, 28, "lion"), (31, 11, "lion"), (31, 22, "lion")]:
+                       (-17, 28, "lion"), (-1, 28, "lion"), (31, 8, "lion"), (31, 22, "lion")]:
         k.block(u, v, "#", prop=prop)
     maple = (lambda u, v: -26 <= v <= -21 and -48 <= u <= -43)
     k.fill(maple, "#")

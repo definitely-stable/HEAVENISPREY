@@ -61211,7 +61211,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": null,
@@ -61357,7 +61357,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "a0e5f5b973db2efece1ff2ff84fa6f872627f03510c26fbea915adfc94df2dfd",
+     "digest": "d03bb5e4958789dc0aed24e96c54907fefdd2d65b3cc8d64ac7b5ae04a0cbaf0",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61365,8 +61365,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2939578",
-     "player_y": "1633880",
+     "player_x": "3000180",
+     "player_y": "1380304",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61380,7 +61380,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "5b51466b75974a843012e4bd9a42616d4ed345901af1d896831b6f6d8c3497b5",
+     "digest": "dd4d0dad7337ccd1c4ad89368797f55b2195fa3946c373f03827bca694726cd8",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61388,8 +61388,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "1998478",
-     "player_y": "1244060",
+     "player_x": "2180904",
+     "player_y": "990484",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61403,7 +61403,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "115c1900628c24586cd21d09c387e7aae11661268b5c4d4afa307b283fa02673",
+     "digest": "29526486ee5fe3fee650b6fb2e8572b2820208e2b1e7f5f6a030c1bc6eae18cb",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61411,8 +61411,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2862000",
-     "player_y": "1086000",
+     "player_x": "2684550",
+     "player_y": "899460",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61426,7 +61426,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "9eba8acdc984c437e16f7f1f7ea234292761d6c2879f53417823be8cc21d77b2",
+     "digest": "6a38c6bc188914ea21365d8b5d49ca1777aa9e71b30b6d7387fa2e2e3ffdc29f",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61434,8 +61434,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2022720",
-     "player_y": "1242124",
+     "player_x": "1845270",
+     "player_y": "1467574",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61449,7 +61449,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "e278201647165b78944869069a86f2a50d1dfe7a28208a77f434e2eb807099b5",
+     "digest": "1718864b835df3eab380644b6308a2cf117a13cdd8262b2bd8436846f5dd60b6",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61457,8 +61457,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2412540",
-     "player_y": "836420",
+     "player_x": "2235090",
+     "player_y": "526474",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61472,7 +61472,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "65e0ab3fc9a4ea655d7b17d3048b6179d598e867b79c5d7225acad1633ba35ed",
+     "digest": "5c280aa41518e03c76068478c9dbba6e1fa39b7de6a87ed78128e121adfd1600",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61480,8 +61480,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2508540",
-     "player_y": "1879340",
+     "player_x": "2311210",
+     "player_y": "1569394",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61495,7 +61495,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "51372d2283f35ecc8811813a5775ae4607f2621a50feb1c781708dbff268b6a4",
+     "digest": "4f07bd4488c65efa7fc9eee0b2aaabfa19e25887d6b646c35dc7bfffbbf73b1e",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61503,8 +61503,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "1872900",
-     "player_y": "1074000",
+     "player_x": "1675570",
+     "player_y": "730114",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61518,7 +61518,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "fc6300e4e534642f32c931d2efd8b9454096579b3766372c997f3e6e22ac0b35",
+     "digest": "b7248f7fc377433f7123187b59f505b2b8e769a3e15e11e17cb631bcb5e19985",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61526,8 +61526,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2814000",
-     "player_y": "1480790",
+     "player_x": "2616670",
+     "player_y": "1119934",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61541,7 +61541,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "b63651a41f49bb0a4ee640779c784d5e3876dc4dd0d0e7846f6ac974ec88c556",
+     "digest": "d801ac7f4ba92d8e7648100a5a2b294ffbe69aeaa62c94391e39f0a5108529ed",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61549,8 +61549,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "1771080",
-     "player_y": "1624790",
+     "player_x": "1573750",
+     "player_y": "1263934",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61564,7 +61564,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "da43db919d57c470accd0a983281764ce278b96316a429eb1066bf89928746e7",
+     "digest": "9e93879aa8be7839b31e781055eda49078fd8b9adbe73e6c1dadab521a5493ba",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61572,8 +61572,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2610360",
-     "player_y": "989150",
+     "player_x": "2413030",
+     "player_y": "628294",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61587,7 +61587,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "845e4dba1f202878c45a9f789ac938c8be4153e1f21b1327c265e3296484db30",
+     "digest": "6f6f717015e1e2a76875ffa7ff8369dfc1887bca29a8e1fdc62a30edaaebf2f4",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61595,8 +61595,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2220540",
-     "player_y": "1930250",
+     "player_x": "2023210",
+     "player_y": "1569394",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61610,7 +61610,7 @@
     {
      "attacks": 0,
      "choices": 0,
-     "digest": "ef7f66166c7872ce703328c2ce7e07a8f29972874e684f8d2fce93d75bf50e34",
+     "digest": "6b7fc2d8081177074b9bac32fc789711416521647a54080f8b532cfb084152d9",
      "enemy_alive": 0,
      "gems": 0,
      "hero_dead": 0,
@@ -61618,8 +61618,8 @@
      "kills": 0,
      "level": 1,
      "paused": 0,
-     "player_x": "2076540",
-     "player_y": "887330",
+     "player_x": "1879210",
+     "player_y": "526474",
      "projectiles": 0,
      "root": 0,
      "shots": 0,
@@ -61942,7 +61942,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": null,
@@ -62403,7 +62403,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": null,
@@ -63334,7 +63334,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": {
@@ -64404,7 +64404,7 @@
   {
    "arena": {
     "body_su": "18000",
-    "digest": "0cfa9c07ec18e0cb8fa51600a0f00192dd11fc73b6d0c248a05bf351862bbeb3",
+    "digest": "6050471e74312e502ab018e086b8ae20340922b5eedb1959ef7d3771ef76cf86",
     "path": "res://content/arena/jade_grove.json"
    },
    "attacks": {
