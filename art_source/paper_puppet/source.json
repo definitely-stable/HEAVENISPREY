@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.enemy.paper_puppet",
+  "kind": "anim_atlas",
+  "group": "enemies",
+  "asset_version": 1,
+  "content_ids": [
+    "enemy.paper_puppet"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-023",
+      "file": "Золотой натиск Древней Секты.png",
+      "sha256": "dd5923b04f7b636d063ecdde4f4188083ecc6a0c28394997859363ff0b5fc94f"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
+    "tool_version": "codex-cli 0.169.0",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "1372780062f1a0438f93fa87b091d4ae381b444675a4d4576e51c2928aedd981",
+    "created": "2026-11-17T23:26:39+0500",
+    "master_sha256": "335c7964fd0da00e7d50f94cf03a64981f2947c16c1b448ee07c17e61eb1c5a3",
+    "master_note": "Lossless WebP mosaic of the generated PNGs, 2 per row (master_sha256: its PNG). No reference board exists for this kind: the look follows its visual_brief_ru in enemies.json, painted in the style of the horde (the Yin Corpse and Blood Wolf model sheets and REF-023 attached to the model sheet request). Walk sheets were requested with the model sheet attached, the other clips with the model sheet and the walk sheet of their direction (sheets[].attached)"
+  },
+  "model_sheet": {
+    "file": "model_sheet.webp",
+    "png_sha256": "6c24d8bc4284778f3533f4cd89800a0dc3850451d797777f9cfb25074a19f283",
+    "prompt_sha256": "b259afa1f5af494237743309cd4127205c1619ae7f3d4d6e308b18efd17d186d"
+  },
+  "palette_group": "enemies",
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "tile": [
+      1536,
+      1024
+    ]
+  },
+  "frame_size": 256,
+  "feet_anchor": [
+    128,
+    250
+  ],
+  "margin_px": 4,
+  "figure_height_px": 150,
+  "grade": {
+    "gamma": 0.8,
+    "tint": [
+      1.0,
+      0.99,
+      1.03
+    ]
+  },
+  "anchor_x": "torso",
+  "directions": [
+    "se",
+    "ne"
+  ],
+  "mirror": {
+    "sw": "se",
+    "nw": "ne"
+  },
+  "clips": [
+    {
+      "name": "walk",
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "hit",
+      "frames": 6,
+      "fps": 16,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ]
+    },
+    {
+      "name": "death",
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "grid": [
+        3,
+        2
+      ],
+      "measure": "first",
+      "settle": true
+    }
+  ],
+  "sheets": [
+    {
+      "clip": "walk",
+      "direction": "se",
+      "tile": [
+        0,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "9c3f698b54d80f30f638d2a459840fa2a6df024effecfa599f6a1be76154fc73",
+      "prompt_sha256": "6558689c8f67c9dab670cb832526fe9180c55900ab8fa37ca8a737b1020b4826",
+      "created": "2026-11-17T23:20:33+0500",
+      "attached": [
+        "model_sheet.webp"
+      ]
+    },
+    {
+      "clip": "walk",
+      "direction": "ne",
+      "tile": [
+        1,
+        0
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "76c26022d085c2e9c0bc9e4be771d91e4e7ff4d406f05336da337bcbb04e8223",
+      "prompt_sha256": "12eef92e7a800186aa6337e37a26e8a47843a7e77d6e3fbdac9c0672902c58f7",
+      "created": "2026-11-17T23:19:13+0500",
+      "attached": [
+        "model_sheet.webp"
+      ]
+    },
+    {
+      "clip": "hit",
+      "direction": "se",
+      "tile": [
+        0,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "055c4c42ce09b5797e8057eebbf003bc7ec736675292a9a5888de9d6acc427f8",
+      "prompt_sha256": "2a3cc27acfb0c91c7526e0e1028951f3abd410644c33369152bed6931df4c147",
+      "created": "2026-11-17T23:24:48+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk se sheet"
+      ]
+    },
+    {
+      "clip": "hit",
+      "direction": "ne",
+      "tile": [
+        1,
+        1
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "8beffdb79e54425f5dcfc5020bfb7e749493e7bacd1f7f4ce13037ab5a1b58e2",
+      "prompt_sha256": "3ef00887270782ac4c00e53a243ec51bc2a087da32906047b4cff132e56a7ffa",
+      "created": "2026-11-17T23:23:56+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk ne sheet"
+      ]
+    },
+    {
+      "clip": "death",
+      "direction": "se",
+      "tile": [
+        0,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "446857384cddc22d04f9e7a707a8eeadd11313004fdf480f0ba269ac3f91ff42",
+      "prompt_sha256": "70c2f3b720012154cf183a1e58b99b537db71d45b27976c71365cf668e7992e7",
+      "created": "2026-11-17T23:26:39+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk se sheet"
+      ]
+    },
+    {
+      "clip": "death",
+      "direction": "ne",
+      "tile": [
+        1,
+        2
+      ],
+      "candidate": "v1 of 1",
+      "png_sha256": "d6361d587d9569861b104b40b479400d0afa26b9f85d8ca6e88e94dc3c831eea",
+      "prompt_sha256": "640ab92a35f879472a94e21ff544f270c568c3f9e08d755c3d41fa32b2d493c3",
+      "created": "2026-11-17T23:25:12+0500",
+      "attached": [
+        "model_sheet.webp",
+        "walk ne sheet"
+      ]
+    }
+  ]
+}

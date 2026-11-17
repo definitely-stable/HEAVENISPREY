@@ -6,10 +6,18 @@ extends RefCounted
 ##   `tell` (the wind-up), the second third over `active` (its first frame is the strike, the
 ##   tick the hit lands), the rest over `recover`; the body faces the direction the attack
 ##   locked, not the hero;
-## - an ethereal kind hovers above its contact shadow, bobbing, and is drawn a little see-through.
+## - a shot or a ground zone (ADR-014 section 27) is released in a single `active` tick, too short
+##   to see: its release frame shows on that tick and opens `recover`, which plays the rest;
+## - an ethereal or flying kind hovers above its contact shadow, bobbing; a ghost is drawn a
+##   little see-through; a fallen one drops to the ground as its death clip starts.
 
 ## Asset -> [lift px, bob px, bob period s] of a body that floats above the ground.
-const HOVER: Dictionary = {"asset.enemy.wandering_spirit": [7.0, 2.5, 1.7]}
+const HOVER: Dictionary = {
+	"asset.enemy.wandering_spirit": [7.0, 2.5, 1.7],
+	"asset.enemy.cursed_spirit_lantern": [16.0, 3.0, 2.3],
+}
+## Seconds a fallen hovering body takes to drop from its lift to the ground.
+const FALL_TIME: float = 0.3
 ## Asset -> opacity of a ghost body; the floor shows through its pale robe a little.
 const OPACITY: Dictionary = {"asset.enemy.wandering_spirit": 0.84}
 
@@ -25,12 +33,23 @@ static func attack_frame(config: SimConfig, world: WorldState, slot: int, frames
 		field = SimConfig.ATTACK_ACTIVE
 	elif state == EnemyAttackSystem.ST_RECOVER:
 		field = SimConfig.ATTACK_RECOVERY
-	var span: int = maxi(config.attack_value(world.enemy_kind[slot], field), 1)
+	var kind: int = world.enemy_kind[slot]
+	var span: int = maxi(config.attack_value(kind, field), 1)
 	var progress: float = clampf(float(span - world.enemy_left[slot]) / float(span), 0.0, 0.999)
 	@warning_ignore("integer_division")
 	var third: int = frames / 3
+	if instant(config, kind) and state != EnemyAttackSystem.ST_TELL:
+		if state == EnemyAttackSystem.ST_ACTIVE:
+			return third
+		return third + floori(progress * (frames - third))
 	var count: int = third if state != EnemyAttackSystem.ST_RECOVER else frames - 2 * third
 	return (state - 1) * third + floori(progress * count)
+
+
+## True when the attack of `kind` is released in one `active` tick (a shot, a ground zone).
+static func instant(config: SimConfig, kind: int) -> bool:
+	var form: int = config.attack_value(kind, SimConfig.ATTACK_FORM)
+	return form == SimConfig.FORM_PROJECTILE or form == SimConfig.FORM_GROUND_ZONE
 
 
 ## Screen-diagonal signs of the direction the attack in `slot` faces (SpriteSet.diagonal): the
@@ -56,3 +75,12 @@ static func lift(asset: String, uid: int, seconds: float) -> float:
 
 static func opacity(asset: String) -> float:
 	return float(OPACITY.get(asset, 1.0))
+
+
+## Screen px a fallen body of `asset` still floats `age` seconds after its death: from its lift
+## down to the ground, falling faster as it goes (0 for a grounded kind).
+static func fall_lift(asset: String, age: float) -> float:
+	if not HOVER.has(asset) or age >= FALL_TIME:
+		return 0.0
+	var share: float = maxf(age, 0.0) / FALL_TIME
+	return float(HOVER[asset][0]) * (1.0 - share * share)

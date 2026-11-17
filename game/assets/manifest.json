@@ -236,6 +236,117 @@
       }
     },
     {
+      "asset_id": "asset.enemy.cursed_spirit_lantern",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/cursed_spirit_lantern/cursed_spirit_lantern.png",
+      "sha256": "bc71d3e79d402c81342e3c79f7f0db826f1918c49c00fcc8b18dc24f3f064399",
+      "bytes": 732999,
+      "size": [
+        1536,
+        2048
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.cursed_spirit_lantern"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 256,
+        "feet_anchor": [
+          128,
+          250
+        ],
+        "scale": [
+          0.2652,
+          0.2945
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 8,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/cursed_spirit_lantern/cursed_spirit_lantern_n.png",
+        "sha256": "fdc86551b533e37efe5b2c3ab3c1cd2871ba18260c12cafec5b84c321530fc5b",
+        "bytes": 577865,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/cursed_spirit_lantern/master.webp",
+        "sha256": "cbccaf3ed6a6f204d731a836324d25be41d14d18cc4e381fbacac8aa13eb6999",
+        "bytes": 9092286,
+        "prompt_sha256": "910cabc95efbea36f778ecc67e0d446eb23e1e3627bcaf2ea47bc6ad8f006c1f"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 780,
+        "palette_mean_delta_e": 9.03,
+        "tones_pct": [
+          57.1,
+          40.5,
+          2.4
+        ],
+        "chroma": 0.173,
+        "threat_colour_pct": 0.0,
+        "median_l": 80.6,
+        "loop_seam_ratio": 1.124,
+        "loop_seam_to_max": 0.898,
+        "height_spread_pct": 1.65,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
       "asset_id": "asset.enemy.fallen_sword_disciple",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/fallen_sword_disciple/fallen_sword_disciple.png",
@@ -343,6 +454,107 @@
         "loop_seam_ratio": 0.922,
         "loop_seam_to_max": 0.797,
         "height_spread_pct": 0.15,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
+      "asset_id": "asset.enemy.paper_puppet",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/paper_puppet/paper_puppet.png",
+      "sha256": "ad593cebc2da071665fb50fadbe7cd034af566c45f79c77d411ae531baf425b7",
+      "bytes": 1068641,
+      "size": [
+        1536,
+        1536
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.paper_puppet"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 256,
+        "feet_anchor": [
+          128,
+          250
+        ],
+        "scale": [
+          0.3272,
+          0.3444
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 10,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 2,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 4,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/paper_puppet/paper_puppet_n.png",
+        "sha256": "a8874f5c0ac189d5ea0e0459702d08bd16bc20f1a19d3d068bc262d51bacf2e1",
+        "bytes": 838430,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/paper_puppet/master.webp",
+        "sha256": "030ff61bca9163c28a909bc80551d207a7f7a83b258c22a9c56c61b75b9172de",
+        "bytes": 8285634,
+        "prompt_sha256": "1372780062f1a0438f93fa87b091d4ae381b444675a4d4576e51c2928aedd981"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 1420,
+        "palette_mean_delta_e": 8.79,
+        "tones_pct": [
+          25.8,
+          72.3,
+          2.0
+        ],
+        "chroma": 0.264,
+        "threat_colour_pct": 0.0,
+        "median_l": 104.9,
+        "loop_seam_ratio": 0.916,
+        "loop_seam_to_max": 0.815,
+        "height_spread_pct": 0.17,
         "torso_drift_px": 1.0
       }
     },

@@ -8,7 +8,8 @@ extends RefCounted
 ##   a body under a stream of blows still reads as recoiling, not frozen on frame 1.
 ## - A fallen enemy plays its "death" clip where it stood, in the direction it faced, then
 ##   decays (CombatVfx.DECAY_TIME): shaders/sprite_dissolve.gdshader eats the body in an ink
-##   noise with a crimson edge while the yin burst rises (CombatVfx.draw_light).
+##   noise with a crimson edge while the yin burst rises (CombatVfx.draw_light). A hovering body
+##   drops to the ground as its clip starts (EnemyMotion.fall_lift).
 
 const FLASH_TIME: float = 0.1
 ## Seconds at full white before the flash fades.
@@ -117,7 +118,7 @@ static func draw_fallen(canvas: CanvasItem, sprites: SpriteSet, deaths: Array[Ar
 			frame = sprites.clip_frame(pose[0], "death", death[1])
 		var tint: Color = light.call(death[0])
 		tint.a = 1.0 - CombatVfx.decay(death)
-		var at: Vector2 = IsoProjection.to_screen(death[0])
+		var at: Vector2 = IsoProjection.to_screen(death[0]) - Vector2(0.0, EnemyMotion.fall_lift(pose[0], death[1]))
 		if pose[1] != "":
 			sprites.draw_clip(canvas, pose[0], pose[1], pose[2], frame, at, tint)
 		else:

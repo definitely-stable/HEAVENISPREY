@@ -5,6 +5,8 @@ extends GutTest
 
 const Attacks: GDScript = preload("res://tests/unit/test_enemy_attacks.gd")
 const RunViewTests: GDScript = preload("res://tests/integration/test_run_view.gd")
+const Shots: GDScript = preload("res://tests/unit/test_enemy_shots.gd")
+const LANTERN: String = "asset.enemy.cursed_spirit_lantern"
 
 
 func test_a_telegraphed_attack_plays_wind_up_strike_and_recovery_by_its_state() -> void:
@@ -127,6 +129,52 @@ func test_a_snake_winds_up_and_strikes_by_its_attack_state() -> void:
 	assert_eq(states.get(EnemyAttackSystem.ST_ACTIVE, -1), 3, "the strike plays frames 2-3")
 	var spirit: String = "asset.enemy.wandering_spirit"
 	assert_gt(EnemyMotion.lift(spirit, 1, 0.0), 0.0, "a spirit floats above its feet")
+
+
+## ADR-014 section 27: a shot leaves in a single active tick. Its release frame shows on that tick
+## and opens recover, which plays the rest of the clip; tell winds up as before.
+func test_a_shot_shows_its_release_on_the_active_tick_and_through_recover() -> void:
+	var config: SimConfig = Shots._lantern()
+	var world: WorldState = Shots._lantern_world(config)
+	var seen: Dictionary = {}
+	var released: bool = false
+	var last: int = -1
+	for tick: int in 120:
+		var before: int = world.enemy_state[0]
+		Shots._run(config, world, 1)
+		var state: int = world.enemy_state[0]
+		var frame: int = EnemyMotion.attack_frame(config, world, 0, 6)
+		if state == EnemyAttackSystem.ST_APPROACH:
+			if before == EnemyAttackSystem.ST_RECOVER:
+				break
+			continue
+		var phase: Array = seen.get(state, [])
+		phase.append(frame)
+		seen[state] = phase
+		assert_true(frame >= last or state == EnemyAttackSystem.ST_TELL, "no step back after tell (tick %d)" % tick)
+		last = frame
+		if state == EnemyAttackSystem.ST_ACTIVE:
+			released = Array(world.shot_damage).any(func(damage: int) -> bool: return damage != 0)
+	assert_true(EnemyMotion.instant(config, 0), "a shot is released in one tick")
+	assert_eq(_range(seen[EnemyAttackSystem.ST_TELL]), [0, 1], "tell winds up on frames 0-1")
+	assert_eq(seen[EnemyAttackSystem.ST_ACTIVE], [2], "the release frame on the active tick")
+	assert_true(released, "the shot is in the air on that tick")
+	assert_eq(_range(seen[EnemyAttackSystem.ST_RECOVER]), [2, 5], "recover holds the release, then plays 3-5")
+	assert_false(EnemyMotion.instant(Attacks._config(), 0), "an arc strikes over its active ticks")
+
+
+## ADR-014 section 27: the lantern flies higher than a spirit; a fallen hovering body drops to the
+## ground as its death clip starts, faster as it falls; a grounded body stays on the ground.
+func test_a_fallen_hovering_body_drops_to_the_ground() -> void:
+	var lift: float = float(EnemyMotion.HOVER[LANTERN][0])
+	assert_gt(lift, float(EnemyMotion.HOVER["asset.enemy.wandering_spirit"][0]), "a lantern flies higher")
+	assert_eq(EnemyMotion.fall_lift(LANTERN, 0.0), lift, "it starts at its lift")
+	var half: float = EnemyMotion.fall_lift(LANTERN, EnemyMotion.FALL_TIME * 0.5)
+	assert_almost_eq(half, lift * 0.75, 0.01, "slow at first")
+	assert_gt(half, EnemyMotion.fall_lift(LANTERN, EnemyMotion.FALL_TIME * 0.9))
+	assert_eq(EnemyMotion.fall_lift(LANTERN, EnemyMotion.FALL_TIME), 0.0, "on the ground at FALL_TIME")
+	assert_eq(EnemyMotion.fall_lift(LANTERN, 2.0), 0.0)
+	assert_eq(EnemyMotion.fall_lift("asset.enemy.yin_corpse", 0.0), 0.0, "a corpse falls where it stands")
 
 
 static func _range(frames: Array) -> Array:

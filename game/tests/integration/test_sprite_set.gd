@@ -5,22 +5,25 @@ extends GutTest
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
 const IDS: Array[String] = [
-	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.fallen_sword_disciple",
-	"asset.enemy.sickle_mantis", "asset.enemy.venom_spirit_snake", "asset.enemy.wandering_spirit",
-	"asset.enemy.yin_corpse",
+	"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.cursed_spirit_lantern",
+	"asset.enemy.fallen_sword_disciple", "asset.enemy.paper_puppet", "asset.enemy.sickle_mantis",
+	"asset.enemy.venom_spirit_snake", "asset.enemy.wandering_spirit", "asset.enemy.yin_corpse",
 	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
 	"asset.prop.courtyard_nature", "asset.prop.courtyard_ring", "asset.prop.courtyard_walls",
 	"asset.prop.distant_peaks", "asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
-## Enemies with sprites (ADR-014 A5, A5c); the spirit's robe collapses into a heap where it
-## hovered instead of falling forward.
+## Enemies with sprites (ADR-014 A5, A5c, A5d, section 27); the spirit's robe and the puppet's
+## frame collapse into a heap where they stood instead of falling forward.
 const HORDE: Array[String] = [
 	"asset.enemy.yin_corpse", "asset.enemy.blood_wolf", "asset.enemy.wandering_spirit",
 	"asset.enemy.venom_spirit_snake", "asset.enemy.sickle_mantis", "asset.enemy.fallen_sword_disciple",
+	"asset.enemy.cursed_spirit_lantern", "asset.enemy.paper_puppet",
 ]
-const HEAPS: Array[String] = ["asset.enemy.wandering_spirit"]
+const HEAPS: Array[String] = ["asset.enemy.wandering_spirit", "asset.enemy.paper_puppet"]
+## Kinds that never strike while alive (the puppet's seal opens after its death): no attack clip.
+const UNARMED: Array[String] = ["asset.enemy.paper_puppet"]
 
 
 func test_manifest_textures_load_with_their_size() -> void:
@@ -213,6 +216,9 @@ func test_horde_walks_and_strikes_in_four_diagonals() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	for enemy: String in HORDE:
 		for clip: String in ["walk", "attack"]:
+			if enemy in UNARMED and clip == "attack":
+				assert_false(sprites.has_clip(enemy, clip), enemy + " strikes only after death")
+				continue
 			assert_true(sprites.has_clip(enemy, clip), enemy + " " + clip)
 			assert_eq(sprites.clip_frames(enemy, clip), 6)
 			var se: Array = sprites.clip_region(enemy, clip, "se", 1)
@@ -293,6 +299,42 @@ func test_horde_stands_at_the_height_of_its_boards() -> void:
 	var mantis: float = _clip_height(sprites, manifest, "asset.enemy.sickle_mantis", "walk") / hero
 	assert_between(disciple, corpse, 1.05, "disciple / hero")
 	assert_between(mantis, 0.5, wolf, "mantis / hero")
+	# Section 27: the lantern from its ring to its tassel at three quarters of the corpse, the
+	# puppet a little shorter than the corpse.
+	var lantern: float = _clip_height(sprites, manifest, "asset.enemy.cursed_spirit_lantern", "walk") / hero
+	var puppet: float = _clip_height(sprites, manifest, "asset.enemy.paper_puppet", "walk") / hero
+	assert_between(lantern, 0.65, 0.78, "lantern / hero")
+	assert_between(puppet, 0.82, corpse, "puppet / hero")
+
+
+## ADR-014 section 27: an enemy shot leaves the lantern's eye. The pale eye of the walk SE frames
+## stands, above the feet and lifted by the hover, at the height the shots fly.
+func test_lantern_shots_leave_its_eye() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var image: Image = sprites.texture("asset.enemy.cursed_spirit_lantern").get_image()
+	if image.is_compressed():
+		image.decompress()
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
+	var layout: Dictionary = {}
+	for entry: Dictionary in manifest["assets"]:
+		if entry["asset_id"] == "asset.enemy.cursed_spirit_lantern":
+			layout = entry["layout"]
+	var frame: int = int(layout["frame_size"])
+	var row: int = int(layout["clips"]["walk"]["row"])
+	var total: float = 0.0
+	var count: int = 0
+	for column: int in 6:
+		for y: int in frame:
+			for x: int in frame:
+				var pixel: Color = image.get_pixel(column * frame + x, row * frame + y)
+				if pixel.a8 > 200 and pixel.r8 > 200 and pixel.g8 > 190 and pixel.b8 > 180:
+					total += y
+					count += 1
+	assert_gt(count, 60, "the pale eye shows in the walk frames")
+	var eye: float = (float(layout["feet_anchor"][1]) - total / count) / SpriteSet.DENSITY
+	var lift: float = float(EnemyMotion.HOVER["asset.enemy.cursed_spirit_lantern"][0])
+	assert_almost_eq(RunView.SHOT_LIFT_PX, lift + eye, 4.0, "the shot flies at the height of the eye")
+	assert_gt(RunView.SHOT_LIFT_PX, RunView.FLIGHT_LIFT_PX, "above the hero's swords")
 
 
 ## Median body height (atlas px) of a clip over its frames and generated directions.
