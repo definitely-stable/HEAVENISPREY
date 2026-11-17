@@ -124,9 +124,12 @@ func test_hero_cannot_leave_arena() -> void:
 		view.advance_frame(TICK, Vector2i(-1, -1))
 	var world: WorldState = view.driver.world
 	var stopped: Vector2i = Vector2i(world.player_x, world.player_y)
+	var stride: float = view._hero_stride_time
 	for _i: int in 60:
 		view.advance_frame(TICK, Vector2i(-1, -1))
 	assert_eq(Vector2i(world.player_x, world.player_y), stopped, "the walls of the landing stop the hero")
+	assert_eq(view._hero_pose()[1], "idle", "holding against a wall does not play the run clip")
+	assert_eq(view._hero_stride_time, stride, "the stride clock stops with the feet")
 	# The wall body covers [x - body, x + body - 1] on each axis.
 	for dx: int in [-arena.body, arena.body - 1]:
 		for dy: int in [-arena.body, arena.body - 1]:
@@ -137,6 +140,19 @@ func test_hero_cannot_leave_arena() -> void:
 	assert_eq(view.camera_target(), IsoProjection.to_screen(view.driver.hero_position_px().clamp(inset, room)),
 		"the camera stops at the inset, so the view does not slide over the void")
 	assert_eq(view.get_node("Camera").position, view.camera_target())
+	view.advance_frame(TICK, Vector2i(1, 1))
+	var moving: Array = view._hero_pose()
+	assert_eq(moving[1], "run", "the clip resumes when the hero can move again")
+	assert_eq(view.advance_frame(TICK * 0.5, Vector2i.ZERO), 0)
+	assert_eq(view._hero_pose(), moving, "a frame before the next tick keeps the last pose")
+	# Left wall of the west entry. The left component is blocked, but the hero slides down it.
+	world.player_x = 5 * arena.cell + arena.body
+	world.player_y = 63 * arena.cell + (arena.cell >> 1)
+	view.advance_frame(TICK, Vector2i(-1, 1))
+	assert_eq(world.player_x, 5 * arena.cell + arena.body)
+	assert_gt(world.player_y, 63 * arena.cell + (arena.cell >> 1))
+	assert_eq(view._hero_pose()[1], "run")
+	assert_eq(view._facing, Vector2.DOWN, "the run clip follows the slide along the wall")
 
 
 func test_tuning_reads_the_roster_windows_from_content() -> void:
