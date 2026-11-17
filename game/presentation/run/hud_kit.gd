@@ -134,13 +134,13 @@ func draw(canvas: CanvasItem, piece: String, rect: Rect2, modulate: Color = Colo
 
 
 ## Draws the left `share` (0-1) of a fill strip into `rect`: the strip is cut, not squeezed.
-func draw_fill(canvas: CanvasItem, piece: String, rect: Rect2, share: float) -> void:
+func draw_fill(canvas: CanvasItem, piece: String, rect: Rect2, share: float, modulate: Color = Color.WHITE) -> void:
 	share = clampf(share, 0.0, 1.0)
 	if not has(piece) or share <= 0.0:
 		return
 	var region: Rect2 = _pieces[piece]["region"]
 	canvas.draw_texture_rect_region(texture, Rect2(rect.position, Vector2(rect.size.x * share, rect.size.y)),
-		Rect2(region.position, Vector2(region.size.x * share, region.size.y)))
+		Rect2(region.position, Vector2(region.size.x * share, region.size.y)), modulate)
 
 
 ## Text with a dark outline, horizontally centred on `center_x` with its baseline at `baseline`.
