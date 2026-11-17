@@ -3,7 +3,7 @@
   "asset_id": "asset.ui.hud_kit",
   "kind": "ui_atlas",
   "group": "ui",
-  "asset_version": 3,
+  "asset_version": 4,
   "content_ids": [],
   "master": "master.webp",
   "references": [
@@ -31,16 +31,21 @@
       "id": "REF-035",
       "file": "Культиватор Меча_ лист игровых анимаций.png",
       "sha256": "ee8cb2409d54f0ccab10798bd848f0fd0cbd6ec736da01d66e954cd01246d901"
+    },
+    {
+      "id": "REF-067",
+      "file": "HUD боя_ медальон, полосы HP и Ци, таймер.png",
+      "sha256": "5ac4dcb05ee14a0b65daa7a902beb5d3642d086be38d8fefbd485806053652d2"
     }
   ],
   "generation": {
     "capability": "GPT imagegen (Codex CLI image_generation, AGENTS.md p.3)",
     "tool_version": "codex-cli 0.169.0",
     "prompt_file": "prompt.txt",
-    "prompt_sha256": "49bd13ed369a53482a9a9e3f7673b5256df75bfc574dc6fdca9c80410310415d",
-    "created": "2026-11-16T12:30:58+0500",
-    "master_sha256": "fa56dbb918b9c7b0a0c69e4dad2add20dc2e7ffc62924b1c2f2aea4913550e9d",
-    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames and fills requests had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035, the cards and card art REF-011, the plate (portrait ring, status plaque, slim bar) crops of the ring plaque and the slim bars of REF-022 and the whole REF-022 board"
+    "prompt_sha256": "9b21d661d1f0427e0fa8b0240837d69ed95db40fa4f3482a8e7d51fabd5bd73c",
+    "created": "2026-11-17T20:17:54+0500",
+    "master_sha256": "2c2242b852c6d43e567b422462f25292867531674ccc107c67b0d589d15b5d83",
+    "master_note": "WebP q92 mosaic of the generated sheets (sheets[].png_sha256) side by side; the frames request had REF-022 and REF-008 attached, the portrait the hero model sheet and REF-035, the cards and card art REF-011, the battle HUD (medal: medallion, bars, level seal, timer cartouche, kill capsule; bars: the fills) the breakdown row of REF-067, the whole REF-067 board and REF-022"
   },
   "palette_group": "ui",
   "density": 1.5,
@@ -72,28 +77,9 @@
       "created": "2026-11-15T19:09:15+0500"
     },
     {
-      "name": "fills",
-      "origin": [
-        1536,
-        0
-      ],
-      "size": [
-        1536,
-        1024
-      ],
-      "grid": [
-        3,
-        2
-      ],
-      "candidate": "v1 of 1",
-      "png_sha256": "18e5f8b695dab07857ca499140baf5e4116d9a04843149dbee0bff8b55e151b4",
-      "prompt_sha256": "473785f7ef58a88fab265cd4cfe3da6829cd06e3d4dcf4601d037ef46bf0272a",
-      "created": "2026-11-15T19:10:27+0500"
-    },
-    {
       "name": "portrait",
       "origin": [
-        3072,
+        1536,
         0
       ],
       "size": [
@@ -112,7 +98,7 @@
     {
       "name": "cards",
       "origin": [
-        4326,
+        2790,
         0
       ],
       "size": [
@@ -131,7 +117,7 @@
     {
       "name": "art",
       "origin": [
-        5862,
+        4326,
         0
       ],
       "size": [
@@ -148,7 +134,26 @@
       "created": "2026-11-15T20:30:23+0500"
     },
     {
-      "name": "plate",
+      "name": "medal",
+      "origin": [
+        5862,
+        0
+      ],
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "candidate": "v1 of 2",
+      "png_sha256": "9e8dd84011e4173b3a7206c700524f6a46bb291d617b4b1857a24df8c954cf1b",
+      "prompt_sha256": "4db74d35806442886fef2c8d214065a0c549f13e42746e18c764dc2149d6d0ab",
+      "created": "2026-11-17T20:17:54+0500"
+    },
+    {
+      "name": "bars",
       "origin": [
         7398,
         0
@@ -158,80 +163,87 @@
         1024
       ],
       "grid": [
-        2,
-        2
+        1,
+        4
       ],
       "candidate": "v1 of 1",
-      "png_sha256": "a8f768b496918c70b7fdbf62dbc91b3340c0eddd94fc3a1740ff592cb19a4e25",
-      "prompt_sha256": "a034242ce196ccd171e16dd9c96f5b1492c474c6e64abf47cfdbbda072cbb77a",
-      "created": "2026-11-16T12:30:58+0500",
-      "drop_edge_lines": true
+      "png_sha256": "00c366f2baa6fed472357663feb8a66d3dc0509fd0e677a9530920af8002b03c",
+      "prompt_sha256": "953d986809e3921823348c02ac489df930a7509c71dea95b443b49209425e671",
+      "created": "2026-11-17T20:17:26+0500"
     }
   ],
   "pieces": [
     {
-      "name": "portrait_ring",
-      "sheet": "plate",
+      "name": "medallion",
+      "sheet": "medal",
       "cell": 0,
-      "height_px": 104,
+      "height_px": 128,
       "inner": "hole"
     },
     {
-      "name": "status_plaque",
-      "sheet": "plate",
+      "name": "bar_hp",
+      "sheet": "medal",
       "cell": 1,
-      "height_px": 80,
-      "inner": "dark",
-      "inner_seed": [
-        0.3,
-        0.5
-      ]
-    },
-    {
-      "name": "bar_slim",
-      "sheet": "plate",
-      "cell": 2,
-      "height_px": 22,
+      "height_px": 30,
       "inner": "dark",
       "stretch": true
     },
     {
-      "name": "title_plaque",
-      "sheet": "frames",
-      "cell": 3,
-      "height_px": 50,
+      "name": "seal_level",
+      "sheet": "medal",
+      "cell": 2,
+      "height_px": 40,
       "inner": "dark"
     },
     {
-      "name": "counter_capsule",
-      "sheet": "frames",
+      "name": "cartouche",
+      "sheet": "medal",
+      "cell": 3,
+      "height_px": 72,
+      "inner": "dark"
+    },
+    {
+      "name": "capsule_skull",
+      "sheet": "medal",
       "cell": 4,
-      "height_px": 38,
-      "inner": "hole"
+      "height_px": 46,
+      "inner": "dark",
+      "inner_seed": [
+        0.65,
+        0.5
+      ]
+    },
+    {
+      "name": "bar_qi",
+      "sheet": "medal",
+      "cell": 5,
+      "height_px": 16,
+      "inner": "dark",
+      "stretch": true
+    },
+    {
+      "name": "fill_hp",
+      "sheet": "bars",
+      "cell": 0,
+      "height_px": 16
+    },
+    {
+      "name": "fill_qi",
+      "sheet": "bars",
+      "cell": 1,
+      "height_px": 16
+    },
+    {
+      "name": "fill_trail",
+      "sheet": "bars",
+      "cell": 2,
+      "height_px": 16
     },
     {
       "name": "divider_lotus",
       "sheet": "frames",
       "cell": 5,
       "height_px": 18
-    },
-    {
-      "name": "fill_red",
-      "sheet": "fills",
-      "cell": 0,
-      "height_px": 10
-    },
-    {
-      "name": "fill_gold",
-      "sheet": "fills",
-      "cell": 1,
-      "height_px": 10
-    },
-    {
-      "name": "icon_slain",
-      "sheet": "fills",
-      "cell": 3,
-      "height_px": 34
     },
     {
       "name": "portrait",

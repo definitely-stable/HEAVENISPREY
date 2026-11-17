@@ -12,20 +12,6 @@ Style: exactly the ornate gold xianxia game UI of the attached asset sheets (fir
 
 Background: perfectly flat solid pure green #00FF00 everywhere around the elements, no gradient, no floor, no shadow. No text, no letters, no digits, no labels, no watermark anywhere.
 
-## fills
-
-Game HUD asset sheet: six separate elements for a dark xianxia action game, laid out as a strict grid of 3 columns x 2 rows of equal cells on a 1536 x 1024 canvas, exactly one element centred in each cell with a wide clear green gap to the cell edges, nothing touching. Read left to right, top row first:
-1: a long straight horizontal liquid bar fill strip, 440 x 36 px, rich crimson red with a lighter glossy band along its top third and a darker lower edge, flat square ends, no frame.
-2: the same strip shape in molten gold with a bright glossy band along its top third and faint flowing texture inside, flat square ends, no frame.
-3: the same strip shape in deep violet purple qi with a lighter glossy band along its top third, flat square ends, no frame.
-4: a round icon medallion about 120 px: a gold rim around a dark red disc with a fierce red-and-black demon mask (horned oni-like skull face) in the middle.
-5: a round icon medallion about 120 px: a gold rim around a dark disc with a small golden hourglass in the middle.
-6: a small round notification badge about 80 px: a glossy crimson red disc with a thin gold rim, empty, nothing written on it.
-
-Style: exactly the ornate gold xianxia game UI of the attached asset sheets (first image is the main reference): hand-painted polished antique gold metal with fine engraved cloud and dragon-scale detail, warm highlights and deep brown-gold shadows, inner panels of very dark warm brown-black lacquer with a faint grain, small red-and-gold accents. Crisp hard edges. Each element is lit softly from above and has NO outer glow, NO bloom, NO sparkles, NO drop shadow and NO light rays around it, so its silhouette ends cleanly against the background.
-
-Background: perfectly flat solid pure green #00FF00 everywhere around the elements, no gradient, no floor, no shadow. No text, no letters, no digits, no labels, no watermark anywhere.
-
 ## portrait
 
 Game HUD hero portrait: a head-and-shoulders bust of the SAME young swordsman as in the attached model sheet (first image) and character board: long black hair in a high topknot with a gold hairpiece and red ribbons, pale face, calm fierce eyes, white hanfu with gold embroidery and dark under-robe, the gold guard of a sword hilt over his shoulder. Three-quarter view, the face turned toward the right of the image, looking up and to the right like the portrait in the top left of the third image. The bust fills a centred circle about 760 px wide on a 1024 x 1024 canvas; the head is inside the circle, the shoulders are cut by the bottom of the circle.
@@ -60,18 +46,24 @@ Game card illustration sheet: eight separate square card illustrations in the lu
 
 Background: everything outside the eight square panels is perfectly flat solid pure green #00FF00. No frames, no borders, no text, no letters, no digits, no watermark.
 
-## plate
+## medal
 
-Game HUD asset sheet for a dark xianxia action game: four separate ornate gold UI elements in the exact style of the attached reference (first image: a gold dragon portrait ring joined to a dark lacquer name plaque with a gold cloud scroll; second image: slim gold bar frames). 1536 x 1024 canvas split into a strict grid of 2 columns x 2 rows of equal cells, exactly one element centred in each cell with a wide clear gap to the cell edges, nothing touching or overlapping. Read left to right, top row first:
+Generate one image with the image generation tool. A game HUD asset sheet for "Heaven Is Prey", a dark xianxia action game: separate ornate UI pieces laid out as a strict grid of 3 columns x 2 rows equal cells on a 1536 x 1024 landscape canvas, exactly one piece centred in each cell with a wide clear gap to the cell edges and between pieces, nothing touching or overlapping. Copy the design, materials and rendering of the attached HUD reference board exactly (the first image is its breakdown row, the second the whole board): sculpted aged gold with warm highlights and fine engraving, lotus buds and cloud scrolls, black-red lacquer, crisp premium hand-painted game UI. The third image is the project's earlier gold UI kit: same gold.
+Background: flat pure #00FF00 green everywhere, including inside every empty window and hole. No glow, halo or shadow spilling onto the background, no text, no numbers, no letters, no labels.
+Read left to right, top row first:
+1 (top left): the round hero portrait medallion of the board: a thick gold ring with a slim golden eastern dragon coiled around it, its head at the upper right; a gold lotus with a small yin-yang at the bottom of the ring; a small jade ring and a red silk tassel hanging below the lower left. The inside of the ring is an empty circle of flat green.
+2 (top middle): the health bar frame of the board, about 460 x 64 px: sculpted gold end caps shaped like lotus buds with cloud curls on both ends, a slim gold rim, an empty recessed dark lacquer track of even height inside; the middle of the frame plain and uniform so it can be stretched.
+3 (top right): the round level seal of the board, about 170 px wide: a gold rim with a fine bead ring and small lotus points, an empty smooth dark lacquer centre.
+4 (bottom left): the timer cartouche of the board, about 470 x 150 px: a curved gold cartouche with a lotus crest on top, cloud scroll ends left and right and a small lotus pendant under the bottom edge, a wide empty dark lacquer panel inside.
+5 (bottom middle): the kill counter capsule of the board, about 460 x 100 px: at the left end a gold-framed horned demon skull medallion with small glowing red eyes, then a dark lacquer capsule with a slim gold rim ending in a gold cloud scroll on the right, the capsule empty inside.
+6 (bottom right): the slim qi bar frame of the board, about 460 x 36 px: a thin gold rim with small pointed ornamental end caps, an empty dark lacquer trough of even height, plain and uniform in the middle so it can be stretched.
 
-1 (top left): a round portrait ring like the ring in the first image: a slim ring of coiled golden eastern dragon scales, the small dragon head at the top right of the ring, one short red silk tassel hanging at the lower left, a small gold clasp at the bottom. Outer diameter about 420 px, the ring band only about 40 px thick so the opening is large. The inside of the ring is an empty circle filled with the same flat green as the background.
+## bars
 
-2 (top right): a long horizontal plaque like the plaque in the first image, about 700 x 190 px: a slim gold rim around a smooth dark brown-black lacquer panel with a very faint misty violet pagoda and pine silhouette in its right third; the left end of the plaque is a plain straight gold edge (a portrait ring will overlap it); the right end is finished by a large curling gold cloud scroll that sticks out past the rim. The panel is empty: no text, no bar.
-
-3 (bottom left): a slim horizontal bar frame like the empty bar in the second image, about 700 x 46 px: a thin gold rim with softly pointed ends carrying a small gold leaf ornament, the inside an empty smooth dark lacquer trough of even height; the middle of the frame is plain and uniform so it can be stretched.
-
-4 (bottom right): nothing, only the flat green background.
-
-Style: hand-painted premium gold, warm amber gold with soft highlights and dark brown shadows, crisp clean edges, front view, no perspective.
-
-Background: every pixel outside the elements, and the inside of the ring, is perfectly flat solid pure green #00FF00. No text, no letters, no numbers, no watermark, no glow onto the background.
+Generate one image with the image generation tool. A game HUD asset sheet for "Heaven Is Prey", a dark xianxia action game: separate ornate UI pieces laid out as a strict grid of 1 column x 4 rows equal cells on a 1536 x 1024 landscape canvas, exactly one piece centred in each cell with a wide clear gap to the cell edges and between pieces, nothing touching or overlapping. Copy the design, materials and rendering of the attached HUD reference board exactly (the first image is its breakdown row, the second the whole board): sculpted aged gold with warm highlights and fine engraving, lotus buds and cloud scrolls, black-red lacquer, crisp premium hand-painted game UI. The third image is the project's earlier gold UI kit: same gold.
+Background: flat pure #00FF00 green everywhere, including inside every empty window and hole. No glow, halo or shadow spilling onto the background, no text, no numbers, no letters, no labels.
+Each row holds one long straight horizontal fill strip, about 1300 x 70 px, perfectly even from end to end (the same height, colour and highlight along the whole length, so any length can be cut from its left end), with square ends and no frame, no rim, no caps:
+1 (top): the health fill of the board: deep crimson liquid with a glossy white-pink highlight along its top edge, a darker red lower edge and a soft inner glow.
+2: the qi fill of the board: a flowing violet to azure liquid with a faint lighter cloud pattern and a glossy highlight along its top edge.
+3: the damage trail of the health bar: a pale rose-white translucent-looking strip with a soft highlight.
+4 (bottom): the experience line: a thin bright gold strip, about 1300 x 24 px, with a highlight along its top edge.

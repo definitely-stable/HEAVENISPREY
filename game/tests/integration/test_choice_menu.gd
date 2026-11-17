@@ -152,7 +152,7 @@ func test_cards_come_from_the_gold_kit() -> void:
 	assert_gt(top, ChoiceMenu.TOP, "cards sit under the banner, below the HUD plaque")
 	var hud: Dictionary = RunHud.layout(kit, menu.get_viewport_rect().size)
 	assert_lt(menu.choose_button.get_global_rect().end.y, menu.get_viewport_rect().size.y, "Choose on screen")
-	assert_false(menu.cards[0].get_global_rect().intersects(hud["ring"]), "cards clear the portrait")
+	assert_false(menu.cards[0].get_global_rect().intersects(hud["medal"]), "cards clear the portrait")
 	var picked: Array[int] = []
 	menu.picked.connect(func(index: int) -> void: picked.append(index))
 	menu.cards[1].grab_focus()
