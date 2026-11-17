@@ -38,7 +38,7 @@ const COLOR_VOID: Color = Color(0.03, 0.03, 0.04)
 const COLOR_HERO: Color = Color(0.93, 0.86, 0.66)
 const COLOR_FACING: Color = Color(0.25, 0.2, 0.15)
 const COLOR_HP_BACK: Color = Color(0.0, 0.0, 0.0, 0.6)
-const COLOR_HP: Color = Color(0.85, 0.2, 0.2)
+const COLOR_HP: Color = RunHud.HP_FILL
 const COLOR_OVER: Color = Color(0.0, 0.0, 0.0, 0.55)
 const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
 ## Spirit sword (metal element) projectile.
@@ -203,16 +203,16 @@ func _ready() -> void:
 	_hud = RunHud.new()
 	_hud.kit = HudKit.load_default()
 	layer.add_child(_hud)
-	# The level-up menu and the results speak in the HUD font.
-	var theme: Theme = Theme.new()
-	theme.default_font = _hud.kit.font
+	var theme: Theme = _hud.kit.menu_theme()
 	_menu = ChoiceMenu.new()
 	_menu.theme = theme
 	_menu.kit = _hud.kit
 	layer.add_child(_menu)
 	_menu.picked.connect(_on_card_picked)
 	_results = RunResults.new()
+	_results.kit = _hud.kit
 	_results.theme = theme
+	_results.restart_requested.connect(confirm_results)
 	layer.add_child(_results)
 	_vfx = CombatVfx.load_default(_hud.kit.font)
 	_build_layers()
@@ -319,6 +319,7 @@ func start_run(seed_text: String) -> void:
 	driver = FixedTickDriver.create(config)
 	if _hud != null:
 		_hud.driver = driver
+		_hud.show()
 	runs_started += 1
 	_kind_assets = PackedStringArray()
 	_hit_keep = 0.0
@@ -435,6 +436,7 @@ func _show_results() -> void:
 	if _death_time >= 0.0 and _death_time < _sprites.clip_length(HERO_ASSET, "death") + DEATH_BEAT:
 		return
 	_results.open(driver.world)
+	_hud.hide()
 
 
 ## Picks card `index` of the shown hand (the menu's `picked`, tests and replays); false when
