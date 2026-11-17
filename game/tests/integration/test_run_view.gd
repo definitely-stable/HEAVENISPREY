@@ -377,6 +377,44 @@ func test_enemy_walks_then_strikes_on_the_damage_tick() -> void:
 	assert_gt(uid, 0)
 
 
+## ADR-014 A5b: a blow plays the recoil and pushes the sprite off its point for a moment; a kill
+## leaves the body falling in its death clip where the enemy stood.
+func test_enemies_recoil_from_blows_and_fall_when_killed() -> void:
+	var view: RunView = (load(RUN_SCENE) as PackedScene).instantiate() as RunView
+	view.read_player_input = false
+	add_child_autofree(view)
+	view.start_run("20261113")
+	_to_centre(view)
+	var world: WorldState = view.driver.world
+	var guard: int = 0
+	while world.enemy_alive == 0 and guard < 600:
+		view.advance_frame(TICK, Vector2i.ZERO)
+		guard += 1
+	var slot: int = 0
+	while world.enemy_uid[slot] == 0:
+		slot += 1
+	var uid: int = world.enemy_uid[slot]
+	assert_gt(view._hit_keep, 0.0, "the run's enemies have a recoil clip")
+	view._reactions.hit(uid, view._hit_keep)
+	view._reactions.age(EnemyReactions.KNOCK_PEAK, view._hit_keep)
+	assert_eq(view._enemy_pose(slot)[1], "hit")
+	var pushed: Vector2 = view._enemy_feet(slot) - view.driver.enemy_position_px(slot)
+	assert_almost_eq(pushed.length(), EnemyReactions.KNOCK_PX, 0.01)
+	var away: Vector2 = view.driver.enemy_position_px(slot) - view.driver.hero_position_px()
+	assert_gt(pushed.dot(away), 0.0, "pushed away from the hero")
+	var vfx: CombatVfx = view.get("_vfx")
+	var fell: bool = false
+	guard = 0
+	while not fell and guard < 3000 and not world.is_over():
+		view.advance_frame(TICK, Vector2i.ZERO)
+		if world.is_paused():
+			view.choose(0)
+		for death: Array in vfx.deaths:
+			fell = fell or (death[2][1] == "death" and death[3] > 0.0)
+		guard += 1
+	assert_true(fell, "a killed enemy falls in its death clip")
+
+
 ## The hero stands at the arena centre, written into the world before the first tick (a
 ## presentation check): in the open court the horde reaches a standing hero quickly.
 static func _to_centre(view: RunView) -> void:

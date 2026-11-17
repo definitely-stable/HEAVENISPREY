@@ -219,6 +219,48 @@ func test_horde_walks_and_strikes_in_four_diagonals() -> void:
 	assert_eq(SpriteSet.diagonal(Vector2i(-1, -1)), "nw")
 
 
+## ADR-014 A5b: an enemy recoils and falls in one-shot clips (REF-010, REF-034); the fall ends
+## lying on the ground line and reaches forward, its back where the standing body stood.
+func test_horde_recoils_and_falls_forward_onto_the_ground() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
+	for enemy: String in ["asset.enemy.yin_corpse", "asset.enemy.blood_wolf"]:
+		for clip: String in ["hit", "death"]:
+			assert_eq(sprites.clip_frames(enemy, clip), 6, enemy + " " + clip)
+			assert_eq(sprites.clip_frame(enemy, clip, 10.0), 5, "a one-shot holds its last frame")
+			assert_eq(sprites.clip_region(enemy, clip, "sw", 1)[1], true, "sw mirrors se")
+		var layout: Dictionary = {}
+		for entry: Dictionary in manifest["assets"]:
+			if entry["asset_id"] == enemy:
+				layout = entry["layout"]
+		var frame: int = int(layout["frame_size"])
+		var anchor: Vector2i = Vector2i(int(layout["feet_anchor"][0]), int(layout["feet_anchor"][1]))
+		var image: Image = sprites.texture(enemy).get_image()
+		if image.is_compressed():
+			image.decompress()
+		var row: int = int(layout["clips"]["death"]["row"])
+		for offset: int in 2:
+			var standing: Rect2i = _extent(image, Rect2i(0, (row + offset) * frame, frame, frame))
+			var lying: Rect2i = _extent(image, Rect2i(5 * frame, (row + offset) * frame, frame, frame))
+			var label: String = "%s death row %d" % [enemy, offset]
+			assert_almost_eq(float(lying.end.y), float(anchor.y), 3.0, label + ": lies on the ground line")
+			assert_lt(lying.size.y, standing.size.y * 0.6, label + ": lies down")
+			assert_gt(lying.end.x - anchor.x, standing.end.x - anchor.x, label + ": falls forward")
+			assert_lt(absi(lying.position.x - standing.position.x), frame / 6, label + ": its back stays")
+
+
+## Bounding box (cell px) of the solid pixels of a cell.
+static func _extent(image: Image, cell: Rect2i) -> Rect2i:
+	var low: Vector2i = cell.size
+	var high: Vector2i = Vector2i(-1, -1)
+	for y: int in cell.size.y:
+		for x: int in cell.size.x:
+			if image.get_pixel(cell.position.x + x, cell.position.y + y).a8 > 200:
+				low = Vector2i(mini(low.x, x), mini(low.y, y))
+				high = Vector2i(maxi(high.x, x), maxi(high.y, y))
+	return Rect2i(low, high - low + Vector2i.ONE)
+
+
 ## ADR-014 section 19: the horde at the height of its boards, measured on the atlases as the
 ## build measures it (lowest solid pixel to the first row 12 % as wide as the widest): the Yin
 ## Corpse nearly as tall as the hero (REF-044), the wolf at the hero's chest (REF-034).

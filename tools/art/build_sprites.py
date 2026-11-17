@@ -361,7 +361,11 @@ def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     a death) becomes figure_height_px x the clip's `height`. One fit factor then keeps every
     frame inside its cell. Each frame is anchored at the torso on feet_anchor.x; vertically the
     lowest foot of the sheet stands on feet_anchor.y and the other frames keep their height above
-    it (the bounce of a run). Atlas rows: the clips in order, one row per generated direction of
+    it (the bounce of a run). A clip with "anchor": "rear" (a fall, ADR-014 A5b) instead keeps the
+    back edge of the body where it stood: every frame keeps frame 0's distance from its rear edge
+    (the left one: the sheets face right) to the anchor, so the body falls forward rather than
+    sliding back under its torso, and with "settle" every frame rests its own lowest pixel on
+    feet_anchor.y. Atlas rows: the clips in order, one row per generated direction of
     the clip; columns: the longest clip."""
     sheet = spec["sheet"]
     key = hex_rgb(sheet["key_colour"])
@@ -403,27 +407,34 @@ def build_anim(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
                     raise ValueError(label + " touches the edge of its cell")
                 cells.append((cell, inner, anchor_of(cell, inner)))
                 heights.append(body_height(np.asarray(cell.getchannel("A"))))
+            if clip.get("anchor") == "rear":
+                lead = cells[0][2] - cells[0][1][0]
+                cells = [(cell, inner, inner[0] + lead) for cell, inner, _ in cells]
             measured = heights[0] if clip.get("measure", "median") == "first" else float(np.median(heights))
             row_scale = spec["figure_height_px"] * clip.get("height", 1.0) / measured
+            # Each frame's ground line: the lowest foot of the sheet, or its own lowest pixel in a
+            # clip that settles on the ground (a fall: the generator does not keep a lying body on
+            # the baseline of the standing ones).
             ground = max(b[3] for _, b, _ in cells)
-            rows.append((clip["name"], direction, row_scale, ground, cells))
+            cells = [(cell, inner, fx, inner[3] if clip.get("settle") else ground) for cell, inner, fx in cells]
+            rows.append((clip["name"], direction, row_scale, cells))
     fit = 1.0
-    for _, _, row_scale, ground, cells in rows:
-        for _, (left, top, right, bottom), fx in cells:
+    for _, _, row_scale, cells in rows:
+        for _, (left, top, right, bottom), fx, ground in cells:
             fit = min(fit, (anchor_x - margin) / max((fx - left) * row_scale, 1),
                       (frame - margin - anchor_x) / max((right - fx) * row_scale, 1),
                       (anchor_y - margin) / max((ground - top) * row_scale, 1))
     columns = max(clip["frames"] for clip in spec["clips"])
     atlas = Image.new("RGBA", (frame * columns, frame * len(rows)), (0, 0, 0, 0))
-    for row_index, (_, _, row_scale, ground, cells) in enumerate(rows):
+    for row_index, (_, _, row_scale, cells) in enumerate(rows):
         scale = row_scale * fit
-        for col, (cell, (left, top, right, bottom), fx) in enumerate(cells):
+        for col, (cell, (left, top, right, bottom), fx, ground) in enumerate(cells):
             figure = cell.crop((left, top, right, bottom))
             size = (max(1, round(figure.width * scale)), max(1, round(figure.height * scale)))
             figure = resize_premultiplied(figure, size)
             atlas.alpha_composite(figure, (col * frame + round(anchor_x - (fx - left) * scale),
                                            row_index * frame + round(anchor_y - (ground - top) * scale)))
-    for row_index, (name, direction, _, _, cells) in enumerate(rows):
+    for row_index, (name, direction, _, cells) in enumerate(rows):
         for col in range(len(cells)):
             inner = bbox(atlas.crop((col * frame, row_index * frame, (col + 1) * frame, (row_index + 1) * frame)), 0)
             if inner is None or min(inner[0], inner[1], frame - inner[2], frame - inner[3]) < margin:
@@ -439,11 +450,13 @@ def anim_metrics(atlas: Image.Image, layout: dict, spec: dict) -> dict:
     """ADR-014 sections 7 and 13, A4 acceptance on the built atlas: the loop seam (difference from
     the last frame to the first over the median and over the largest difference between
     neighbours inside the loop, worst row each), the body height spread of a clip across its directions (worst clip, %, frames measured as the build
-    does) and the torso drift from feet_anchor.x (worst frame, atlas px)."""
+    does) and the torso drift from feet_anchor.x (worst frame, atlas px; a fall anchored at its
+    rear edge leaves the torso on purpose and is not counted)."""
     frame = layout["frame_size"]
     pixels = np.asarray(atlas, dtype=np.float64) / 255.0
     pixels = np.concatenate([pixels[..., :3] * pixels[..., 3:], pixels[..., 3:]], axis=2)
     measure = {c["name"]: c.get("measure", "median") for c in spec["clips"]}
+    rear = {c["name"] for c in spec["clips"] if c.get("anchor") == "rear"}
     seam, seam_to_max, spread, drift = 0.0, 0.0, 0.0, 0.0
     for name, clip in layout["clips"].items():
         heights = []
@@ -452,7 +465,7 @@ def anim_metrics(atlas: Image.Image, layout: dict, spec: dict) -> dict:
             cells = [pixels[y:y + frame, i * frame:(i + 1) * frame] for i in range(clip["frames"])]
             alphas = [np.asarray(atlas.crop((i * frame, y, (i + 1) * frame, y + frame)).getchannel("A"))
                       for i in range(clip["frames"])]
-            for i, alpha in enumerate(alphas):
+            for i in range(len(alphas) if name not in rear else 0):
                 cell = atlas.crop((i * frame, y, (i + 1) * frame, y + frame))
                 inner = bbox(cell)
                 drift = max(drift, abs(torso_x(cell, inner) - layout["feet_anchor"][0]))

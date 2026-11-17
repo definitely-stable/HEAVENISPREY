@@ -57,6 +57,18 @@ func test_effects_expire() -> void:
 	assert_eq(vfx.casts.size(), 0)
 
 
+## ADR-014 A5b: a fallen body decays and the yin burst rises only once its death clip played.
+func test_a_fall_decays_after_its_death_clip() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.add_death(Vector2.ZERO, ["asset.enemy.yin_corpse", "death", "se", 0], 0.6)
+	vfx.age(0.5)
+	assert_eq(CombatVfx.decay(vfx.deaths[0]), 0.0, "whole while it falls")
+	vfx.age(0.1 + CombatVfx.DECAY_TIME * 0.5)
+	assert_almost_eq(CombatVfx.decay(vfx.deaths[0]), 0.5, 0.01, "then it decays")
+	vfx.age(maxf(CombatVfx.DECAY_TIME, CombatVfx.DEATH_TIME))
+	assert_eq(vfx.deaths.size(), 0, "gone after the fall and the decay")
+
+
 func test_a_horde_cannot_pile_up_effects() -> void:
 	var vfx: CombatVfx = CombatVfx.new()
 	for uid: int in 200:
