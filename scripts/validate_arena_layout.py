@@ -4,8 +4,9 @@
 Checks the drawn grid (tools/content/arena_layout.py) with the GAME-ARCH-02 topology rules (no
 isolated pockets, no long 1-wide corridors, a spawn point far enough from any cell, a clear boss
 circle) and with the rules of the board: raised wings are climbed only by stairs, six spawn
-points on the main loop, two entries, a ring of ruins with gaps around the seal, and a field
-at least three times the P0 rectangle. Design-only, stdlib only.
+points on the main loop, two entries, an open ring around the seal with a few markers set
+symmetrically about it (braziers and broken pillars, ADR-015 section 12), and a field at least
+three times the P0 rectangle. Design-only, stdlib only.
 """
 from __future__ import annotations
 
@@ -31,7 +32,7 @@ MIN_FIELD_FACTOR = 3
 LOOP_SPAWNS = 6
 ENTRIES = 2
 SEAL_RING = (9.6, 12.2)
-SEAL_RING_BLOCKED = (0.3, 0.7)
+SEAL_RING_BLOCKED = (0.03, 0.2)
 STEPS = ((1, 0), (-1, 0), (0, 1), (0, -1))
 
 
@@ -84,7 +85,15 @@ def verify(data: dict) -> dict:
     ring = [(x, y) for y in range(h) for x in range(w) if SEAL_RING[0] <= math.hypot(x - cx, y - cy) <= SEAL_RING[1]]
     blocked = sum(1 for x, y in ring if rows[y][x] in BLOCK) / max(1, len(ring))
     must(SEAL_RING_BLOCKED[0] <= blocked <= SEAL_RING_BLOCKED[1], "E_SEAL_RING",
-         f"ruins cover {blocked:.0%} of the ring around the seal")
+         f"markers cover {blocked:.0%} of the ring around the seal")
+    # Mirrors about the seal cell's centre along the screen axes: u -> -u swaps the grid offsets,
+    # v -> -v swaps and negates them.
+    for x, y in ring:
+        if rows[y][x] in BLOCK:
+            dx, dy = x - cx, y - cy
+            for mx, my in ((dy, dx), (-dy, -dx)):
+                must(rows[cy + my][cx + mx] in BLOCK, "E_SEAL_SYMMETRY",
+                     f"the ring marker at {[x, y]} has no mirror at {[cx + mx, cy + my]}")
     return {"cells": [w, h], "walkable_cells": walkable, "field_factor": round(walkable / P0_FIELD_CELLS, 2),
             "max_corridor": topo["max_corridor"], "spawn_points": len(spawns), "loop_spawns": len(loop),
             "entries": len(entries), "seal_ring_blocked": round(blocked, 2)}

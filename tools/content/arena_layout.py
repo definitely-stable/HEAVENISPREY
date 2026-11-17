@@ -25,6 +25,12 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "game/content/arena/jade_grove.json"
 CELL_PX = 48
 BOSS_RADIUS_CELLS = 7
+# The seal ring (step 5): braziers this many cells from the seal cell along the grid axes; the
+# broken pillars' near corners this many cells out along both axes.
+RING_BRAZIER = 12
+RING_PILLAR = 8
+# Stone lanterns on the parapet (step 6): screen (u, v) of the right one of each mirrored pair.
+LANTERNS: list[tuple[int, int]] = [(18, -30), (28, -24), (34, -8), (34, 8), (28, 24)]
 SIDE = 76
 WALK = ".HB^SE"
 STEPS = ((1, 0), (-1, 0), (0, 1), (0, -1))
@@ -116,33 +122,28 @@ def draw() -> dict:
     maple = (lambda u, v: -26 <= v <= -21 and -48 <= u <= -43)
     k.fill(maple, "#")
     k.region_prop(maple, "maple_large")
-    # 5. Seal ring: six ruin fragments at grid radius 9.6-12.2 with wide gaps (the inner loop runs
-    #    through them), pillar ends; brazier columns between them at radius 14.5.
-    #    Each fragment is one painted prop ("seal_ruin") at the centre of its cells.
-    fragments: dict[int, list[tuple[int, int]]] = {}
-    for x, y in k.cells():
-        dx, dy = x - c, y - c
-        r = math.hypot(dx, dy)
-        if 9.6 <= r <= 12.2 and g[y][x] == ".":
-            turn = (math.degrees(math.atan2(dy, dx)) - 15) % 360
-            a = turn % 60
-            if a <= 26:
-                g[y][x] = "#" if a <= 4 or a >= 22 else "w"
-                fragments.setdefault(int(turn // 60), []).append((x, y))
-    for index in sorted(fragments):
-        cells = fragments[index]
-        k.props.append(("seal_ruin", sum(x for x, _ in cells) / len(cells) + 0.5,
-                        sum(y for _, y in cells) / len(cells) + 0.5))
-    for i in range(6):
-        a = math.radians(i * 60 + 50)
-        x, y = round(c + 14.5 * math.cos(a)), round(c + 14.5 * math.sin(a))
-        for b in range(2):
-            for d in range(2):
-                g[y + b][x + d] = "#"
-        k.props.append(("brazier", x + 1.0, y + 1.0))
-    # 6. Pillars and obelisks along the parapet, the main loop stays at least 6 cells wide.
-    for u, v in [(-26, -20), (26, -22), (-30, 12), (28, 16), (-14, -28), (18, -26), (8, 28), (-24, 22)]:
-        k.block(u, v, "#", prop="pillar")
+    # 5. The seal ring of REF-033: around the seal stand four braziers on the gold inlay lines (the
+    #    grid axes, one cell each) and four broken pillars between them (2 x 2, on the screen axes:
+    #    above, below, left and right of the seal). Both sit symmetric about the seal cell; the
+    #    wide gaps between them carry the inner loop.
+    for dx, dy in ((RING_BRAZIER, 0), (0, RING_BRAZIER), (-RING_BRAZIER, 0), (0, -RING_BRAZIER)):
+        g[c + dy][c + dx] = "#"
+        k.props.append(("brazier", c + dx + 0.5, c + dy + 0.5))
+    for sx, sy in ((1, 1), (1, -1), (-1, -1), (-1, 1)):
+        # The block's centre lies RING_PILLAR + 0.5 cells from the seal cell's centre on both axes.
+        x0, y0 = c + (RING_PILLAR if sx > 0 else -RING_PILLAR - 1), c + (RING_PILLAR if sy > 0 else -RING_PILLAR - 1)
+        for a in range(2):
+            for b in range(2):
+                g[y0 + b][x0 + a] = "#"
+        k.props.append(("pillar_broken", x0 + 1.0, y0 + 1.0))
+    # 6. Stone lanterns on the parapet at the corners of the court, in pairs mirrored about the
+    #    screen axis through the seal.
+    for u, v in LANTERNS:
+        for uu in (u, -u):
+            x, y = c + (uu + v) // 2, c + (v - uu) // 2
+            assert g[y][x] == "w", (uu, v, g[y][x])
+            g[y][x] = "#"
+            k.props.append(("lantern", x + 0.5, y + 0.5))
     # 7. Spawn points: six on the main loop (the red rings of REF-033), one on the south landing
     #    and one on the west platform; entries on the west and east landings.
     for degrees in (100, 160, 220, 280, 340, 40):

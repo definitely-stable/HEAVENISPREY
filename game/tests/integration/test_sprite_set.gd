@@ -9,8 +9,8 @@ const IDS: Array[String] = [
 	"asset.enemy.sickle_mantis", "asset.enemy.venom_spirit_snake", "asset.enemy.wandering_spirit",
 	"asset.enemy.yin_corpse",
 	"asset.prop.courtyard_balustrade", "asset.prop.courtyard_guardians", "asset.prop.courtyard_lights",
-	"asset.prop.courtyard_nature", "asset.prop.courtyard_walls", "asset.prop.distant_peaks",
-	"asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
+	"asset.prop.courtyard_nature", "asset.prop.courtyard_ring", "asset.prop.courtyard_walls",
+	"asset.prop.distant_peaks", "asset.prop.seal_ruins", "asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
 const FLOOR: String = "asset.tile.sect_courtyard_floor"
@@ -59,8 +59,7 @@ func test_sprite_atlases_are_packed_into_one_texture() -> void:
 	for asset_id: String in [
 		"asset.char.hero_sword", "asset.enemy.blood_wolf", "asset.enemy.yin_corpse",
 		"asset.prop.courtyard_guardians", "asset.prop.courtyard_lights", "asset.prop.courtyard_nature",
-	"asset.prop.courtyard_walls",
-		"asset.prop.distant_peaks",
+		"asset.prop.courtyard_ring", "asset.prop.courtyard_walls", "asset.prop.distant_peaks",
 	]:
 		assert_eq(sprites.canvas_texture(asset_id), shared, asset_id)
 		var origin: Vector2 = sprites.atlas_origin(asset_id)

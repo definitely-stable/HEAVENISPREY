@@ -1234,6 +1234,94 @@
       }
     },
     {
+      "asset_id": "asset.prop.courtyard_ring",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/courtyard_ring/courtyard_ring.png",
+      "sha256": "6db0854e921e7fb4d09640c1f155aa1d193c902093221408547fb1e87cd54776",
+      "bytes": 244777,
+      "size": [
+        511,
+        324
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "brazier_pedestal",
+            "region": [
+              6,
+              6,
+              120,
+              284
+            ],
+            "feet": [
+              66.5,
+              260.2
+            ]
+          },
+          {
+            "name": "lantern_stone",
+            "region": [
+              138,
+              6,
+              144,
+              312
+            ],
+            "feet": [
+              210.5,
+              288.2
+            ]
+          },
+          {
+            "name": "pillar_stump",
+            "region": [
+              294,
+              6,
+              211,
+              290
+            ],
+            "feet": [
+              397.5,
+              253.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/courtyard_ring/courtyard_ring_n.png",
+        "sha256": "447143df80abcaf6998957f6152d35bc828f9914241e31b4fad53a05d5ba2769",
+        "bytes": 80576,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/courtyard_ring/master.webp",
+        "sha256": "05d37b17e5a78c9c3e21ac6f795b908664a336b89f4cefce19f61cc28a8eb4df",
+        "bytes": 1087686,
+        "prompt_sha256": "8bdd234fafd140bb2638836bc731c9880a858bfc19f5dcaaf2adf394b679acba"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 19411,
+        "palette_mean_delta_e": 13.73,
+        "tones_pct": [
+          53.3,
+          41.0,
+          5.7
+        ],
+        "chroma": 0.253,
+        "threat_colour_pct": 0.242,
+        "median_l": 81.2
+      }
+    },
+    {
       "asset_id": "asset.prop.courtyard_walls",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_walls/courtyard_walls.png",

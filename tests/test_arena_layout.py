@@ -100,14 +100,29 @@ class ArenaLayoutTests(unittest.TestCase):
         with self.assertRaises(arena.ContractError):
             arena.verify(data)
 
-    def test_the_seal_ring_has_ruins_and_gaps(self):
-        data = copy.deepcopy(self.data)
+    def ring_markers(self, data: dict) -> list[tuple[int, int]]:
         cx, cy = data["centre"]
-        for y, row in enumerate(data["rows"]):
+        return [(x, y) for y, row in enumerate(data["rows"]) for x, ch in enumerate(row)
+                if arena.SEAL_RING[0] <= math.hypot(x - cx, y - cy) <= arena.SEAL_RING[1] and ch in "w#"]
+
+    def test_the_seal_ring_has_markers_and_stays_open(self):
+        cleared = copy.deepcopy(self.data)
+        for x, y in self.ring_markers(cleared):
+            set_cell(cleared, x, y, ".")
+        self.rejects("E_SEAL_RING", cleared)
+        walled = copy.deepcopy(self.data)
+        cx, cy = walled["centre"]
+        for y, row in enumerate(walled["rows"]):
             for x, ch in enumerate(row):
-                if arena.SEAL_RING[0] <= math.hypot(x - cx, y - cy) <= arena.SEAL_RING[1] and ch in "w#":
-                    set_cell(data, x, y, ".")
-        self.rejects("E_SEAL_RING", data)
+                if arena.SEAL_RING[0] <= math.hypot(x - cx, y - cy) <= arena.SEAL_RING[1] and x > cx + 4:
+                    set_cell(walled, x, y, "w")
+        self.rejects("E_SEAL_RING", walled)
+
+    def test_the_seal_ring_is_symmetric(self):
+        data = copy.deepcopy(self.data)
+        x, y = self.ring_markers(data)[0]
+        set_cell(data, x, y, ".")
+        self.rejects("E_SEAL_SYMMETRY", data)
 
     def test_unknown_symbol_is_rejected(self):
         data = copy.deepcopy(self.data)

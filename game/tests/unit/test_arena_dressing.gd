@@ -2,6 +2,9 @@ extends GutTest
 ## ADR-014 slice A3, ADR-015 A1: the things that stand in arena 07. Presentation only.
 
 const CELL: int = 48
+## The ring of ruin fragments the seal_ruins sheets were painted for (ADR-015 section 11); since
+## section 12 the court is open and the atlas waits in reserve, checked against this grid.
+const RING_LAYOUT: String = "res://tests/fixtures/seal_ring_layout.json"
 
 
 func _data() -> Dictionary:
@@ -28,7 +31,7 @@ func test_named_props_stand_on_solid_cells() -> void:
 		named += 1
 		assert_true(sprites.has_prop(item["asset"], item["prop"]), "%s/%s" % [item["asset"], item["prop"]])
 		assert_eq(_char_at(item["at"]), ArenaDressing.SOLID_CHAR, "%s at %s" % [item["prop"], item["at"] / CELL])
-	assert_eq(named, (_data()["props"] as Array).size() - _ruins().size(), "every prop has a sprite")
+	assert_eq(named, (_data()["props"] as Array).size(), "every prop has a sprite")
 
 
 func test_every_prop_of_the_file_has_its_sprites() -> void:
@@ -174,9 +177,13 @@ func _median(values: Array[float]) -> float:
 	return values[values.size() / 2] if not values.is_empty() else 0.0
 
 
-## The seal_ruin props of the arena file: [{index, at (cells), cells}].
+func _ring_data() -> Dictionary:
+	return JSON.parse_string(FileAccess.get_file_as_string(RING_LAYOUT))
+
+
+## The seal_ruin props of the ring layout: [{index, at (cells), cells}].
 func _ruins() -> Array[Dictionary]:
-	var data: Dictionary = _data()
+	var data: Dictionary = _ring_data()
 	var centre: Vector2i = Vector2i(int(data["centre"][0]), int(data["centre"][1]))
 	var out: Array[Dictionary] = []
 	for item: Dictionary in data["props"]:
@@ -198,12 +205,12 @@ func _ruin_cells() -> Dictionary:
 	return out
 
 
-## ADR-015 section 10: the low wall cells outside the ruin ring are a balustrade. Every cell of a
-## line is a post or lies on a rail bay between two posts of its run; no low wall is left as a
-## placeholder block.
+## ADR-015 section 10: the low wall cells are a balustrade (since section 12 the seal ring holds
+## no ruins). Every cell of a line is a post or lies on a rail bay between two posts of its run;
+## no low wall is left as a placeholder block.
 func test_balustrade_covers_every_low_wall_cell() -> void:
 	var rows: Array = _data()["rows"]
-	var ruined: Dictionary = _ruin_cells()
+	var ruined: Dictionary = {}
 	var wall: Dictionary = ArenaDressing.balustrade(rows, ruined)
 	var covered: Dictionary = {}
 	for cell: Vector2i in wall["posts"]:
@@ -252,7 +259,7 @@ func test_staircase_is_one_run() -> void:
 ## nothing else (no post, rail or block) stands on those cells.
 func test_ruin_ring_is_six_painted_fragments() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
-	var rows: Array = _data()["rows"]
+	var rows: Array = _ring_data()["rows"]
 	var ruins: Array[Dictionary] = _ruins()
 	assert_eq(ruins.size(), 6)
 	var indices: Dictionary = {}
@@ -266,7 +273,7 @@ func test_ruin_ring_is_six_painted_fragments() -> void:
 		assert_between((ruin["cells"] as Array).size(), 10, 16)
 	assert_eq(indices.keys().size(), 6, "six different fragments")
 	var ruined: Dictionary = _ruin_cells()
-	var centre: Vector2 = Vector2(float(_data()["centre"][0]), float(_data()["centre"][1]))
+	var centre: Vector2 = Vector2(float(_ring_data()["centre"][0]), float(_ring_data()["centre"][1]))
 	for y: int in rows.size():
 		for x: int in (rows[y] as String).length():
 			var code: String = (rows[y] as String)[x]
@@ -274,7 +281,7 @@ func test_ruin_ring_is_six_painted_fragments() -> void:
 			if (code == ArenaDressing.LOW_CHAR or code == ArenaDressing.SOLID_CHAR) and ring > 9.5 and ring < 12.3:
 				assert_true(ruined.has(Vector2i(x, y)), "ring cell %s belongs to a fragment" % Vector2i(x, y))
 	var strips: int = 0
-	for item: Dictionary in _items():
+	for item: Dictionary in ArenaDressing.placements(sprites, _ring_data(), CELL):
 		if item.has("clip"):
 			strips += 1
 			continue
@@ -437,8 +444,7 @@ func test_blocks_cover_the_walls_without_props() -> void:
 		blocks[rect.position] = code
 	var low_blocks: int = blocks.values().count(ArenaDressing.LOW_CHAR)
 	assert_eq(low_blocks, low, "every low wall cell")
-	assert_gt(blocks.values().count(ArenaDressing.SOLID_CHAR), 0, "ruin fragments of the seal ring")
-	# The gate hall and the brazier columns are props, not blocks.
+	# The gate hall, the braziers, broken pillars and lanterns are props, not blocks.
 	for item: Dictionary in _data()["props"]:
 		if item["prop"] == ArenaDressing.RUIN_PROP:
 			continue

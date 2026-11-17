@@ -19,12 +19,16 @@ sim = bots.sim
 # Corridors in ticks (60 per second). Recalibration rule: median x [0.85, 1.20], per-seed
 # bounds [0.75 x min, 1.25 x max] of a fresh 32-seed survey, rounded out to 300 ticks and at
 # most MAX_TICKS; change them by hand only, with a before/after table in the PR. ADR-015 A1
-# (arena 07): idle 28 -> 100 s, circle 53 -> 78 s, kiter 84 -> 249 s (median).
-MEDIAN = {"idle": (4800, 7200), "circle": (3900, 5700), "kiter": (12600, 18000)}
+# (arena 07): idle 28 -> 100 s, circle 53 -> 78 s, kiter 84 -> 249 s (median). ADR-015 section
+# 12 (the open seal ring): idle 100 -> 138 s, circle 78 -> 75 s, kiter 249 -> 245 s; only the
+# idle corridor moved.
+MEDIAN = {"idle": (6900, 10200), "circle": (3900, 5700), "kiter": (12600, 18000)}
 PER_SEED = {"idle": (2400, 18000), "circle": (2100, 8400), "kiter": (4200, 18000)}
 # The kiter outlives the others; in arena 07 the circle leaves the west landing and meets the
-# horde on the bridge, so it no longer outlives the idle bot (ADR-015 A1).
-MEDIAN_RATIO = {("idle", "kiter"): 2.0, ("circle", "kiter"): 2.5}
+# horde on the bridge, so it no longer outlives the idle bot (ADR-015 A1). Since the ring is open
+# (section 12) the horde reaches the seal sooner and the idle bot at the west entry later: the
+# kiter outlives it 1.78 times, no longer 2.49.
+MEDIAN_RATIO = {("idle", "kiter"): 1.7, ("circle", "kiter"): 2.5}
 # Idle and circle never reach the stage end; the kiter may, on a few seeds.
 MAX_KITER_SURVIVORS = 8
 
