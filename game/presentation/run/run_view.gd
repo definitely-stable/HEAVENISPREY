@@ -823,7 +823,7 @@ func _draw_enemy(slot: int) -> void:
 	var at: Vector2 = IsoProjection.to_screen(feet)
 	var light: Color = _light_at(feet)
 	var pose: Array = _frame_pose(slot)
-	var flash: float = _reactions.flash(uid)
+	var flash: float = _enemy_flash(uid)
 	_body_poses[uid] = pose
 	var tint: Color = light.lerp(TINT_ENEMY_HIT, flash)
 	tint.a = EnemyMotion.opacity(pose[0])
@@ -934,14 +934,25 @@ func _draw_hero_pass() -> void:
 
 
 ## 0..1 strength of the hero's white hit flash: full for the first HIT_FLASH_PEAK seconds,
-## then it fades (ADR-014 A2: a short peak, not a steady white).
+## then it fades (ADR-014 A2: a short peak, not a steady white); scaled by the player's
+## hit_flash setting.
 func _hero_flash_share() -> float:
 	if _flash <= 0.0:
 		return 0.0
 	var age: float = HIT_FLASH - _flash
-	if age <= HIT_FLASH_PEAK:
-		return 1.0
-	return clampf(_flash / (HIT_FLASH - HIT_FLASH_PEAK), 0.0, 1.0)
+	var share: float = 1.0 if age <= HIT_FLASH_PEAK else clampf(_flash / (HIT_FLASH - HIT_FLASH_PEAK), 0.0, 1.0)
+	return share * _flash_strength()
+
+
+## 0..1 white of the hit flash on the enemy `uid` (EnemyReactions.flash), scaled by hit_flash.
+func _enemy_flash(uid: int) -> float:
+	return _reactions.flash(uid) * _flash_strength()
+
+
+## The player's hit_flash setting (QUALITY-2026-11 Q3): 0 turns the white flashes off; the
+## recoil, knock-back and HP bar still show the blow.
+func _flash_strength() -> float:
+	return settings.hit_flash if settings != null else 1.0
 
 
 ## Screen px from the hero's feet to the top of its sprite (or of its primitive).

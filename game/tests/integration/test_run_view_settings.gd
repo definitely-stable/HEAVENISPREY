@@ -58,3 +58,20 @@ func test_screen_shake_follows_damage_and_the_settings() -> void:
 		view.choose(0)
 	view.advance_frame(RunViewTests.TICK, Vector2i.ZERO)
 	assert_ne(camera.offset, Vector2.ZERO, "with strength the same blow moves the camera")
+
+
+func test_hit_flash_setting_scales_the_white_flashes() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.settings = PresentationSettings.reference_look()
+	add_child_autofree(view)
+	view._reactions.hit(4, 0.0)
+	view._flash = RunView.HIT_FLASH
+	assert_eq(view._enemy_flash(4), 1.0, "the reference look keeps the full flash")
+	assert_eq(view._hero_flash_share(), 1.0)
+	view.settings.hit_flash = 0.5
+	assert_almost_eq(view._enemy_flash(4), 0.5, 1e-6)
+	assert_almost_eq(view._hero_flash_share(), 0.5, 1e-6)
+	view.settings.hit_flash = 0.0
+	assert_eq(view._enemy_flash(4), 0.0, "0 turns the flashes off")
+	assert_eq(view._hero_flash_share(), 0.0)
