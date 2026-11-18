@@ -172,8 +172,9 @@ class SimBotUpgradeTests(unittest.TestCase):
     def test_header(self):
         self.assertEqual(self.runs["sim_schema_version"], bots.sim_schema_version())
         self.assertEqual(self.runs["bot_policy_version"], bots.BOT_POLICY_VERSION)
-        self.assertEqual([t["id"] for t in self.runs["traces"]], ["botrun.p0.kiter_upgrades.s101"])
-        self.assertEqual(len(self.runs["survey"]), 32 * len(bots.UPGRADE_BOTS))
+        self.assertEqual([t["id"] for t in self.runs["traces"]],
+                         ["botrun.p0.kiter_upgrades.s101", "botrun.p0.thunder.kiter_upgrades.s101"])
+        self.assertEqual(len(self.runs["survey"]), 32 * (len(bots.UPGRADE_BOTS) + len(bots.ANCHORS) + 1))
 
     def test_survivors_win_at_the_stage_end(self):
         """ADR-011 section 1: a bot that is alive after 18000 ticks has won; the dead have not."""
@@ -184,29 +185,35 @@ class SimBotUpgradeTests(unittest.TestCase):
         self.assertLessEqual(bots.UPGRADE_RUNS_PATH.stat().st_size, bots.MAX_UPGRADE_FILE_BYTES)
 
     def test_exact_trace_replays(self):
-        trace = self.runs["traces"][0]
-        config = bots.config_for("kiter_upgrades", trace["enemies"]["seed"])
-        self.assertEqual(trace["choice_mode"], 1)
-        commands = [tuple(int(v) for v in c) for c in trace["commands"]]
-        log, world, checkpoints = sim.run_trace(config, commands, trace["ticks"])
-        self.assertEqual(log.digest(), trace["log_digest"])
-        self.assertEqual(checkpoints, trace["checkpoints"])
-        self.assertEqual((world.tick, world.choices_done), (trace["end_tick"], trace["choices"]))
-        self.assertEqual(world.level - 1, world.choices_done, "every earned choice was made")
+        for trace in self.runs["traces"]:
+            with self.subTest(trace=trace["id"]):
+                config = bots.config_for("kiter_upgrades", trace["enemies"]["seed"], trace["class_id"])
+                self.assertEqual(trace["choice_mode"], 1)
+                commands = [tuple(int(v) for v in c) for c in trace["commands"]]
+                log, world, checkpoints = sim.run_trace(config, commands, trace["ticks"])
+                self.assertEqual(log.digest(), trace["log_digest"])
+                self.assertEqual(checkpoints, trace["checkpoints"])
+                self.assertEqual((world.tick, world.choices_done), (trace["end_tick"], trace["choices"]))
+                self.assertEqual(world.level - 1, world.choices_done, "every earned choice was made")
 
     def test_one_row_per_strategy_recomputes(self):
-        rows = {(r["bot_policy"], r["seed"]): r for r in self.runs["survey"]}
+        rows = {(r["bot_policy"], r["class_id"], r["seed"]): r for r in self.runs["survey"]}
         for name in bots.UPGRADE_BOTS:
             row = bots.survey_row(name, "117", bots.MAX_UPGRADE_COMMANDS)
-            self.assertEqual(row, rows[(name, "117")], name)
+            self.assertEqual(row, rows[(name, bots.SWORD, "117")], name)
+        row = bots.survey_row("kiter_upgrades", "117", bots.MAX_UPGRADE_COMMANDS, bots.THUNDER)
+        self.assertEqual(row, rows[("kiter_upgrades", bots.THUNDER, "117")])
 
     def test_smoke_goal(self):
-        rows = [r for r in self.runs["survey"] if r["bot_policy"] == "kiter_upgrades"]
-        survivors = sum(1 for r in rows if r["death_tick"] == -1)
-        self.assertGreaterEqual(survivors, bots.SMOKE_MIN_SURVIVORS)
-        for row in rows:
-            self.assertLessEqual(row["command_count"], bots.MAX_UPGRADE_COMMANDS)
-            self.assertEqual(row["level"] - 1, row["choices"], row["id"])
+        for class_id in (bots.SWORD, bots.THUNDER):
+            rows = [r for r in self.runs["survey"]
+                    if r["bot_policy"] == "kiter_upgrades" and r["class_id"] == class_id]
+            self.assertEqual([r["seed"] for r in rows], bots.SURVEY_SEEDS, class_id)
+            survivors = sum(1 for r in rows if r["won"] and r["death_tick"] == -1)
+            self.assertGreaterEqual(survivors, bots.SMOKE_MIN_SURVIVORS, class_id)
+            for row in rows:
+                self.assertLessEqual(row["command_count"], bots.MAX_UPGRADE_COMMANDS)
+                self.assertEqual(row["level"] - 1, row["choices"], row["id"])
 
     def test_diagnostics_are_recorded_per_seed(self):
         for name in ("diag_first_id", "diag_utility_first"):
@@ -220,6 +227,9 @@ class SimBotUpgradeTests(unittest.TestCase):
         self.assertEqual(bots.priority_chooser(seen), 1)
         self.assertEqual(bots.utility_chooser(seen), 0)
         self.assertEqual(bots.first_id_chooser(seen), 2)
+        seen.hand = ["upgrade.p0.thunder_damage", "upgrade.p0.thunder_jumps", "upgrade.p0.hero_vitality"]
+        self.assertEqual(bots.thunder_chooser(seen), 1)
+        self.assertEqual(bots.priority_chooser(seen), 2)
         seen.hand = [sim.RECOVER_ID]
         self.assertEqual(bots.priority_chooser(seen), 0)
 

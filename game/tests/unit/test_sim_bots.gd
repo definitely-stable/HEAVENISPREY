@@ -87,33 +87,43 @@ func test_bot_logs_replay_bit_exact() -> void:
 
 func test_kiter_upgrades_log_replays_with_its_choices() -> void:
 	assert_eq(int(_upgrades.get("sim_schema_version", 0)), RunRulesSnapshot.SIM_SCHEMA_VERSION)
-	var row: Dictionary = (_upgrades.get("traces", []) as Array)[0]
-	var name: String = str(row["id"])
-	var config: SimConfig = config_of(row)
-	assert_true(config.is_valid(), name)
-	assert_eq(config.choice_mode, SimConfig.CHOICE_IMMEDIATE)
-	var commands: CommandLog = log_of(row)
-	assert_eq(commands.size(), int(row["command_count"]), name)
-	assert_eq(commands.digest(), str(row["log_digest"]), name + " log digest")
-	var world: WorldState = WorldState.initial(config)
-	var steps: int = 0
-	for checkpoint: Variant in row["checkpoints"]:
-		var mark: Dictionary = checkpoint
-		SimKernel.run(config, world, commands, int(mark["step"]) - steps)
-		steps = int(mark["step"])
-		assert_eq(world.digest(), str(mark["digest"]), name + " @" + str(steps))
-	assert_eq(world.tick, int(row["end_tick"]), name + " end tick")
-	assert_eq(world.choices_done, int(row["choices"]), name + " choices")
-	assert_eq(world.won, int(row["won"]), name + " won at the stage end")
-	assert_eq(world.level - 1, world.choices_done, "every earned choice was made")
-	assert_eq(world.hero_dead, 0, name + " survives")
-	assert_true(world.is_over(), name + " the run is over after the stage duration")
+	var traces: Array = _upgrades.get("traces", [])
+	assert_eq(traces.size(), 2)
+	for row: Dictionary in traces:
+		var name: String = str(row["id"])
+		var config: SimConfig = config_of(row)
+		assert_true(config.is_valid(), name)
+		assert_eq(config.choice_mode, SimConfig.CHOICE_IMMEDIATE)
+		var commands: CommandLog = log_of(row)
+		assert_eq(commands.size(), int(row["command_count"]), name)
+		assert_eq(commands.digest(), str(row["log_digest"]), name + " log digest")
+		var world: WorldState = WorldState.initial(config)
+		var steps: int = 0
+		for checkpoint: Variant in row["checkpoints"]:
+			var mark: Dictionary = checkpoint
+			SimKernel.run(config, world, commands, int(mark["step"]) - steps)
+			steps = int(mark["step"])
+			assert_eq(world.digest(), str(mark["digest"]), name + " @" + str(steps))
+		assert_eq(world.tick, int(row["end_tick"]), name + " end tick")
+		assert_eq(world.choices_done, int(row["choices"]), name + " choices")
+		assert_eq(world.won, int(row["won"]), name + " won at the stage end")
+		assert_eq(world.level - 1, world.choices_done, "every earned choice was made")
+		assert_eq(world.hero_dead, 0, name + " survives")
+		assert_true(world.is_over(), name + " the run is over after the stage duration")
 
 
 func test_the_game_tuning_is_the_bot_config() -> void:
 	var tuned: SimConfig = P0TestSetup.sword_config("101")
 	var row: Dictionary = (_upgrades.get("traces", []) as Array)[0]
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
+	var thunder: Dictionary = (_upgrades.get("traces", []) as Array)[1]
+	var registry: ContentRegistry = ContentRegistry.load_dir()
+	var snapshot: RunRulesSnapshot = RunRulesSnapshot.create_for_new_run(
+		registry, PackedStringArray(["unlock.thunder"]), "class.thunder", P0Tuning.STAGE_ID,
+		"difficulty.standard", PackedStringArray(["mode.normal"]), "101"
+	)
+	var thunder_config: SimConfig = P0Tuning.new().run_config(registry, snapshot)
+	assert_eq(thunder_config.to_ints(), config_of(thunder).to_ints(), "thunder bot matches the game")
 	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
 	var ints: PackedInt64Array = tuned.with_choice_mode(SimConfig.CHOICE_NONE).to_ints()
 	assert_eq(ints, config_of(anchor).to_ints(), "anchors play it without the choice")

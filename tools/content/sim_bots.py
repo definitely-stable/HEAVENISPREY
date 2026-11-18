@@ -22,6 +22,8 @@ a survival count, and the diag_* strategies are recorded without a required outc
 from __future__ import annotations
 
 import importlib.util
+import argparse
+from concurrent.futures import ProcessPoolExecutor
 import json
 import sys
 from pathlib import Path
@@ -29,8 +31,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_runs.json"
 UPGRADE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_upgrade_runs.json"
-RUNS_SCHEMA_VERSION = 5
-BOT_POLICY_VERSION = 3
+RUNS_SCHEMA_VERSION = 6
+BOT_POLICY_VERSION = 4
+SWORD = "class.sword"
+THUNDER = "class.thunder"
 
 
 def _load(name: str, file: str):
@@ -63,8 +67,7 @@ SURVEY_SEEDS = [str(seed) for seed in range(101, 133)]
 MAX_COMMANDS = 2000          # arena 07: the kiter turns along walls (~1200 changes per run)
 MAX_UPGRADE_COMMANDS = 2500
 MAX_FILE_BYTES = 256 * 1024
-MAX_UPGRADE_FILE_BYTES = 256 * 1024   # the exact kiter_upgrades log has ~1400 commands
-MAX_UPGRADE_FILE_BYTES = 256 * 1024   # the kiter_upgrades log has ~1500 commands
+MAX_UPGRADE_FILE_BYTES = 384 * 1024   # two exact traces and the class comparison
 SMOKE_MIN_SURVIVORS = 28     # ADR-010 section 7: kiter_upgrades reaches MAX_TICKS on 28/32
 
 
@@ -193,6 +196,11 @@ UPGRADE_PRIORITY = ["upgrade.p0.sword_count", "upgrade.p0.sword_damage",
                     "upgrade.p0.pickup_radius"]
 UTILITY_FIRST = list(reversed(UPGRADE_PRIORITY))
 priority_chooser = _by_priority(UPGRADE_PRIORITY)
+thunder_chooser = _by_priority([
+    "upgrade.p0.thunder_jumps", "upgrade.p0.thunder_damage", "upgrade.p0.thunder_haste",
+    "upgrade.p0.thunder_reach", "upgrade.p0.hero_vitality", "upgrade.p0.hero_speed",
+    "upgrade.p0.pickup_radius",
+])
 utility_chooser = _by_priority(UTILITY_FIRST)
 
 
@@ -209,19 +217,22 @@ ANCHORS = ["idle", "circle", "kiter"]
 UPGRADE_BOTS = ["kiter_upgrades", "diag_first_id", "diag_utility_first"]
 
 
-def p0_config(seed: str, choice_mode: int = 0):
+def p0_config(seed: str, choice_mode: int = 0, class_id: str = SWORD):
     """The P0 placeholder run, ending in victory after MAX_TICKS (equal to P0Tuning in the
     game, choice_mode aside): roster windows w0..w3 with every attack, threat_caps, venom and
     root (ADR-011 E6), in arena 07 from its west entry (ADR-015 A1)."""
-    return sim.Config(sim.ARENA_BASE, sim.P0_VALUES, sim.P0_KINDS, seed, sim.P0_SKILL,
+    skill, shape = {
+        SWORD: (sim.P0_SKILL, (0, 0, 0)), THUNDER: (sim.THUNDER_SKILL, sim.THUNDER_SHAPE)
+    }[class_id]
+    return sim.Config(sim.ARENA_BASE, sim.P0_VALUES, sim.P0_KINDS, seed, skill,
                       (sim.P0_XP[0], sim.P0_KIND_XP, sim.P0_XP[2]), choice_mode=choice_mode,
                       run_ticks=MAX_TICKS, attacks=sim.P0_ATTACKS, venom=sim.P0_VENOM,
                       root=sim.P0_ROOT, windows=sim.P0_WINDOWS, caps=sim.P0_CAPS,
-                      arena=sim.P0_ARENA)
+                      arena=sim.P0_ARENA, skill_shape=shape)
 
 
-def config_for(name: str, seed: str):
-    return p0_config(seed, 0 if POLICIES[name][2] is None else 1)
+def config_for(name: str, seed: str, class_id: str = SWORD):
+    return p0_config(seed, 0 if POLICIES[name][2] is None else 1, class_id)
 
 
 def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = None):
@@ -229,6 +240,8 @@ def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = Non
     A paused run gets one CHOOSE from the bot's chooser before the step. With `stats` it
     records the peak number of gems on the ground and the lowest hero HP."""
     policy, every, chooser = POLICIES[name]
+    if chooser is priority_chooser and config.skill_form == sim.SKILL_CHAIN:
+        chooser = thunder_chooser
     world, log = sim.World(config), sim.CommandLog()
     held, sequence, steps = (0, 0), 0, 0
     while world.tick < max_ticks and not world.over():
@@ -251,21 +264,23 @@ def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = Non
     return world, log, steps
 
 
-def run_id(name: str, seed: str) -> str:
-    return "botrun.p0.%s.s%s" % (name, seed)
+def run_id(name: str, seed: str, class_id: str = SWORD) -> str:
+    prefix = "botrun.p0.thunder" if class_id == THUNDER else "botrun.p0"
+    return f"{prefix}.{name}.s{seed}"
 
 
 def sim_schema_version() -> int:
     return _load("rules_identity", "rules_identity.py").SIM_SCHEMA_VERSION
 
 
-def _exact(name: str, max_commands: int) -> dict:
-    config = config_for(name, EXACT_SEED)
+def _exact(name: str, max_commands: int, class_id: str = SWORD) -> dict:
+    config = config_for(name, EXACT_SEED, class_id)
     world, log, steps = play(name, config)
     assert len(log.records) <= max_commands, (name, len(log.records))
     _, replayed, checkpoints = sim.run_trace(config, log.records, steps)
     assert replayed.digest() == world.digest(), name
-    return {"id": run_id(name, EXACT_SEED), "name": run_id(name, EXACT_SEED),
+    trace_id = run_id(name, EXACT_SEED, class_id)
+    return {"id": trace_id, "name": trace_id, "class_id": class_id,
             "bot_policy": name, "bot_policy_version": BOT_POLICY_VERSION,
             **sim.config_json(config),
             "commands": [[str(v) for v in c] for c in log.records], "ticks": steps,
@@ -275,11 +290,11 @@ def _exact(name: str, max_commands: int) -> dict:
             "choices": world.choices_done, "checkpoints": checkpoints}
 
 
-def survey_row(name: str, seed: str, max_commands: int) -> dict:
+def survey_row(name: str, seed: str, max_commands: int, class_id: str = SWORD) -> dict:
     stats: dict = {}
-    world, log, _steps = play(name, config_for(name, seed), stats=stats)
+    world, log, _steps = play(name, config_for(name, seed, class_id), stats=stats)
     assert len(log.records) <= max_commands, (name, seed, len(log.records))
-    return {"id": run_id(name, seed), "bot_policy": name, "seed": seed,
+    return {"id": run_id(name, seed, class_id), "bot_policy": name, "seed": seed, "class_id": class_id,
             "death_tick": world.tick if world.hero_dead else -1, "won": world.won,
             "kills": world.kills, "command_count": len(log.records),
             "log_digest": log.digest(), "final_digest": world.digest(),
@@ -299,22 +314,32 @@ def _header(note: str) -> dict:
             "generator": "tools/content/sim_bots.py", "max_ticks": MAX_TICKS, "note": note}
 
 
-def build_runs() -> dict:
+def _survey(cases: list[tuple], jobs: int) -> list[dict]:
+    if jobs == 1:
+        return [survey_row(*case) for case in cases]
+    with ProcessPoolExecutor(jobs) as workers:
+        return list(workers.map(survey_row, *zip(*cases)))
+
+
+def build_runs(jobs: int = 1) -> dict:
     return {**_header("P0 placeholder tuning (ADR-009 section 3, ADR-010), choice_mode 0; "
                       "bots are test instruments"),
             "traces": [_exact(name, MAX_COMMANDS) for name in ANCHORS],
-            "survey": [survey_row(name, seed, MAX_COMMANDS)
-                       for name in ANCHORS for seed in SURVEY_SEEDS]}
+            "survey": _survey([(name, seed, MAX_COMMANDS, SWORD)
+                               for name in ANCHORS for seed in SURVEY_SEEDS], jobs)}
 
 
-def build_upgrade_runs() -> dict:
+def build_upgrade_runs(jobs: int = 1) -> dict:
     return {**_header("P0 placeholder tuning with level-up choices (ADR-010 sections 6-7), "
                       "choice_mode 1; kiter_upgrades is a smoke test, diag_* are baselines"),
             "smoke": {"bot_policy": "kiter_upgrades", "min_survivors": SMOKE_MIN_SURVIVORS,
                       "seeds": len(SURVEY_SEEDS)},
-            "traces": [_exact("kiter_upgrades", MAX_UPGRADE_COMMANDS)],
-            "survey": [survey_row(name, seed, MAX_UPGRADE_COMMANDS)
-                       for name in UPGRADE_BOTS for seed in SURVEY_SEEDS]}
+            "traces": [_exact("kiter_upgrades", MAX_UPGRADE_COMMANDS, class_id)
+                       for class_id in (SWORD, THUNDER)],
+            "survey": _survey([(name, seed, MAX_UPGRADE_COMMANDS, SWORD)
+                               for name in UPGRADE_BOTS for seed in SURVEY_SEEDS]
+                              + [(name, seed, MAX_UPGRADE_COMMANDS, THUNDER)
+                                 for name in (*ANCHORS, "kiter_upgrades") for seed in SURVEY_SEEDS], jobs)}
 
 
 def _bytes(data: dict, limit: int) -> bytes:
@@ -323,20 +348,26 @@ def _bytes(data: dict, limit: int) -> bytes:
     return out
 
 
-def runs_bytes() -> bytes:
-    return _bytes(build_runs(), MAX_FILE_BYTES)
+def runs_bytes(jobs: int = 1) -> bytes:
+    return _bytes(build_runs(jobs), MAX_FILE_BYTES)
 
 
-def upgrade_runs_bytes() -> bytes:
-    return _bytes(build_upgrade_runs(), MAX_UPGRADE_FILE_BYTES)
+def upgrade_runs_bytes(jobs: int = 1) -> bytes:
+    return _bytes(build_upgrade_runs(jobs), MAX_UPGRADE_FILE_BYTES)
 
 
 def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--jobs", type=int, default=1)
+    args = parser.parse_args(argv)
+    if args.jobs < 1:
+        parser.error("--jobs must be at least 1")
     failed = False
     for path, make in ((RUNS_PATH, runs_bytes), (UPGRADE_RUNS_PATH, upgrade_runs_bytes)):
-        expected = make()
+        expected = make(args.jobs)
         rel = path.relative_to(ROOT).as_posix()
-        if "--check" in argv:
+        if args.check:
             if not path.is_file() or path.read_bytes() != expected:
                 print("FAIL: " + rel + " differs from the reference")
                 failed = True

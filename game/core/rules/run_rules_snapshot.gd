@@ -32,7 +32,8 @@ extends RefCounted
 ## 13: the arena topology: walls, flow-field chase, spawn points, shots die in solids
 ##     (ADR-015 A1).
 ## 14: hero skill shape, chain hit order, and Thunder upgrades (ADR-012 C2).
-const SIM_SCHEMA_VERSION: int = 14
+## 15 since C5: the measured Thunder damage tuning changes replay outcomes (ADR-012).
+const SIM_SCHEMA_VERSION: int = 15
 
 var error: String:
 	get:
