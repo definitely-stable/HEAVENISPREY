@@ -137,6 +137,17 @@ func press(index: int) -> bool:
 	return true
 
 
+func _input(event: InputEvent) -> void:
+	var motion: InputEventJoypadMotion = event as InputEventJoypadMotion
+	if not visible or motion == null or motion.axis != JOY_AXIS_LEFT_X or absf(motion.axis_value) < 0.5:
+		return
+	var current: int = cards.find(get_viewport().gui_get_focus_owner())
+	if current < 0:
+		return
+	cards[clampi(current + int(signf(motion.axis_value)), 0, cards.size() - 1)].grab_focus()
+	get_viewport().set_input_as_handled()
+
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key: InputEventKey = event as InputEventKey
 	if not visible or key == null or not key.pressed or key.echo:

@@ -1,5 +1,6 @@
 extends GutTest
 
+const RUN_SCENE: PackedScene = preload("res://presentation/run/run_view.tscn")
 const EXPECTED_CLASSES: PackedStringArray = ["class.sword", "class.thunder"]
 
 
@@ -91,7 +92,7 @@ func test_unlocked_thunder_confirms_with_mouse() -> void:
 
 
 func test_run_view_starts_only_after_selection_and_restart_keeps_lock() -> void:
-	var view: RunView = load("res://presentation/run/run_view.tscn").instantiate()
+	var view: RunView = RUN_SCENE.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
 	assert_true(view.is_class_select_open())
@@ -111,7 +112,7 @@ func test_run_view_starts_only_after_selection_and_restart_keeps_lock() -> void:
 
 
 func test_dev_unlock_opens_only_first_playable_classes() -> void:
-	var view: RunView = load("res://presentation/run/run_view.tscn").instantiate()
+	var view: RunView = RUN_SCENE.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
 	view.session_profile.unlock_all = true
