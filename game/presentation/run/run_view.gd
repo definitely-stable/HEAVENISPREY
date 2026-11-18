@@ -978,111 +978,11 @@ func _hero_height() -> float:
 ## Venom pips and the HP bar above the hero's head, enemy shots over the hero (an incoming
 ## wisp stays visible), gem flights and "+N".
 func _draw_over_pass() -> void:
-	if driver == null:
-		return
-	var canvas: Node2D = _over
-	if _chain_left > 0.0:
-		var alpha: float = _chain_left / 0.12
-		canvas.draw_polyline(_chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
-		canvas.draw_polyline(_chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
-	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
-	var stacks: int = driver.world.venom_stacks
-	var top: float = -_hero_height() - 8.0
-	for pip: int in stacks:
-		canvas.draw_circle(hero + Vector2(-8.0 + 8.0 * pip, top - 6.0), 3.0, COLOR_VENOM)
-	var max_hp: int = driver.world.hero_hp_max
-	if max_hp > 0:
-		var bar: Rect2 = Rect2(hero + Vector2(-HERO_RADIUS_PX, top), Vector2(HERO_RADIUS_PX * 2, 5))
-		canvas.draw_rect(bar, COLOR_HP_BACK)
-		var share: float = clampf(float(driver.world.hero_hp) / float(max_hp), 0.0, 1.0)
-		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * share, bar.size.y)), COLOR_HP)
-	var world: WorldState = driver.world
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] == 0:
-			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
-		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, COLOR_WISP)
-	var font: Font = _hud.kit.font if _hud != null and _hud.kit != null else ThemeDB.fallback_font
-	var gem_light: bool = _vfx != null and _vfx.kit.has("qi_wisp")
-	for pickup: Array in _pickups:
-		var age: float = pickup[2]
-		if age < PICKUP_FLY:
-			if not gem_light:
-				CombatVfx.draw_gem_primitive(canvas, _pickup_flight(pickup), pickup[1], 1.0, GEM_REST_SCALE, COLOR_GEM)
-			continue
-		var fade: float = (age - PICKUP_FLY) / PICKUP_TEXT
-		var color: Color = COLOR_GEM
-		color.a = 1.0 - fade
-		var at: Vector2 = hero + Vector2(HERO_RADIUS_PX * 0.6, -_hero_height() - 6 - 24 * fade)
-		canvas.draw_string_outline(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, 3,
-			Color(0.02, 0.06, 0.08, 0.8 * color.a))
-		canvas.draw_string(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
-	if _vfx != null:
-		_vfx.draw_numbers(canvas)
+	RunEffectsPasses.draw_over_pass(self)
 
-
-## Where a collected gem is on its short flight to the hero (screen px).
-func _pickup_flight(pickup: Array) -> Vector2:
-	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px()) - Vector2(0, GEM_LIFT_PX)
-	var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, GEM_LIFT_PX)
-	return from.lerp(hero, clampf(pickup[2] / PICKUP_FLY, 0.0, 1.0))
-
-
-# --- glow item (additive): flames, blades and trails, wisps, gems near the hero ---
 
 func _draw_glow_pass() -> void:
-	var canvas: Node2D = _glow
-	for index: int in _flames.size():
-		RunLighting.halo(
-			canvas, _halo_texture, _flames[index], 26.0 * RunLighting.flicker(_anim_time, index), COLOR_LANTERN_GLOW
-		)
-	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
-	var light: bool = _vfx != null and _vfx.kit.has("sword")
-	if light:
-		_draw_vfx_light(canvas)
-	for slot: int in world.projectile_slots():
-		if world.proj_damage[slot] == 0:
-			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
-		var heading: Vector2 = _projectile_heading(slot)
-		if light:
-			_vfx.draw_sword(canvas, at, heading)
-			continue
-		canvas.draw_line(at - heading * radius * 6.0, at, COLOR_SWORD_TRAIL, radius * 0.9)
-		RunLighting.halo(canvas, _halo_texture, at, radius * 2.6, COLOR_SWORD_GLOW)
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] != 0:
-			var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
-			RunLighting.halo(
-				canvas, _halo_texture, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, COLOR_WISP_GLOW
-			)
-	var hero: Vector2 = driver.hero_position_px()
-	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
-	for slot: int in world.gem_slots():
-		if world.gem_uid[slot] != 0 and driver.gem_position_px(slot).distance_to(hero) <= near_px:
-			var at: Vector2 = IsoProjection.to_screen(driver.gem_position_px(slot)) - Vector2(0, GEM_LIFT_PX)
-			RunLighting.halo(canvas, _halo_texture, at, 14.0, COLOR_GEM_GLOW)
-
-
-## Effects light of the atlas: bursts and circles, the gems (a qi wisp brighter near the hero, as
-## it is about to be drawn in) and the gems flying in.
-func _draw_vfx_light(canvas: Node2D) -> void:
-	_vfx.draw_light(canvas)
-	var world: WorldState = driver.world
-	var hero: Vector2 = driver.hero_position_px()
-	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
-	for slot: int in world.gem_slots():
-		var uid: int = world.gem_uid[slot]
-		if uid == 0:
-			continue
-		var ground: Vector2 = driver.gem_position_px(slot)
-		var bob: float = sin(_anim_time * GEM_BOB_HZ * TAU + float(uid)) * GEM_BOB_PX
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, GEM_LIFT_PX + bob)
-		var near: bool = ground.distance_to(hero) <= near_px
-		_vfx.draw_gem(canvas, at, world.gem_value[slot], 1.0 if near else GEM_REST_ALPHA, 1.0 if near else GEM_REST_SCALE)
-	for pickup: Array in _pickups:
-		if pickup[2] < PICKUP_FLY:
-			_vfx.draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0)
+	RunEffectsPasses.draw_glow_pass(self)
 
 
 func _enemy_color(kind: int) -> Color:
