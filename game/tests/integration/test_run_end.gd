@@ -31,7 +31,7 @@ static func _short_run(ticks: int) -> SimConfig:
 
 func test_stage_duration_comes_from_content() -> void:
 	var tuning: P0Tuning = P0Tuning.new()
-	var config: SimConfig = tuning.run_config(ContentRegistry.load_dir(), "101")
+	var config: SimConfig = P0TestSetup.sword_config("101", tuning)
 	assert_not_null(config, tuning.error)
 	assert_eq(config.run_ticks, 5 * 60 * 60, "stage.jade_grove: 5 minutes")
 	# run_ticks, then the attack table, four venom and two root values (ADR-011 E2, E5), the

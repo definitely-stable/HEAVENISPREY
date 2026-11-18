@@ -47,7 +47,6 @@ const CAP_KEYS: Array[String] = [
 	"simultaneous_projectile_casts_winding_up", "simultaneous_charge_windups", "active_control_zones",
 	"active_death_hazards", "ordinary_ranged_on_screen",
 ]
-const CLASS_ID: String = "class.sword"
 const STAGE_ID: String = "stage.jade_grove"
 ## Base danger radius H = 2 cells (ADR-011 section 3, placeholder).
 const DANGER_RADIUS_SU: int = 2 * CELL_PX * Fx.FX_ONE
@@ -131,14 +130,26 @@ static func movement_config() -> SimConfig:
 ## level-up choice and the stage duration; null with `error` set when content is missing or
 ## invalid. Kinds are the union of the windows in the order of first appearance (w0 keeps kinds
 ## 0 and 1); a kind record carries the weight of its first window.
-func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
+func run_config(registry: ContentRegistry, snapshot: RunRulesSnapshot) -> SimConfig:
+	error = ""
+	skill_id = ""
 	enemy_ids.clear()
 	if registry == null or not registry.is_valid():
 		return _fail("content registry is not valid")
-	var roster: Dictionary = _roster(registry.catalog("enemy_rosters"))
+	if snapshot == null or not snapshot.is_valid() or snapshot.content_digest != registry.content_digest:
+		return _fail("run rules snapshot is not valid for this content")
+	if (
+		snapshot.stage_id != STAGE_ID
+		or snapshot.difficulty_id != "difficulty.standard"
+		or snapshot.mode_ids != PackedStringArray(["mode.normal"])
+	):
+		return _fail("unsupported P0 stage, difficulty or mode")
+	var stage: Dictionary = registry.definition(snapshot.stage_id)
+	var roster_id: String = str(stage.get("enemy_roster_id", ""))
+	var roster: Dictionary = registry.definition(roster_id)
 	var windows: Array = roster.get("windows", [])
 	if windows.is_empty():
-		return _fail("roster " + ROSTER_ID + " has no windows")
+		return _fail("roster " + roster_id + " has no windows")
 	var kinds: PackedInt64Array = PackedInt64Array()
 	var attacks: PackedInt64Array = PackedInt64Array()
 	var kind_xp: PackedInt64Array = PackedInt64Array()
@@ -166,10 +177,10 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 		HERO_HP_MHP, SPAWN_PERIOD_MT, SPAWN_RAMP_TICKS, SPAWN_RATE_MAX_FX, MAX_ENEMIES,
 		MIN_SPAWN_DISTANCE_CELLS * CELL_PX * Fx.FX_ONE,
 	])
-	var skill: PackedInt64Array = _skill(registry)
+	var skill: PackedInt64Array = _skill(registry, snapshot.class_id)
 	if skill.is_empty():
 		return null
-	var config: SimConfig = movement_config().with_enemies(values, kinds, seed_text).with_skill(skill)
+	var config: SimConfig = movement_config().with_enemies(values, kinds, snapshot.run_seed).with_skill(skill)
 	var venom: PackedInt64Array = venom_values(registry)
 	var root: PackedInt64Array = root_values(registry)
 	if venom.is_empty() or root.is_empty():
@@ -181,9 +192,9 @@ func run_config(registry: ContentRegistry, seed_text: String) -> SimConfig:
 	# Immediate level-up choice: the run pauses on a pending choice (ADR-010 section 6).
 	config.with_choice_mode(SimConfig.CHOICE_IMMEDIATE)
 	# Victory after the stage duration from content (ADR-011 section 1).
-	var minutes: Variant = ContentRegistry.integral(registry.definition(STAGE_ID).get("duration_minutes"))
+	var minutes: Variant = ContentRegistry.integral(stage.get("duration_minutes"))
 	if minutes == null or int(minutes) <= 0:
-		return _fail(STAGE_ID + ": duration_minutes is not a positive integer")
+		return _fail(snapshot.stage_id + ": duration_minutes is not a positive integer")
 	config.with_run_ticks(int(minutes) * 60 * Fx.TICKS_PER_SECOND)
 	if not config.is_valid():
 		return _fail("assembled run config is not valid")
@@ -393,11 +404,15 @@ func venom_values(registry: ContentRegistry) -> PackedInt64Array:
 	return PackedInt64Array([numbers[0], numbers[1], numbers[2], int(numbers[3]) * Fx.FX_ONE])
 
 
-func _skill(registry: ContentRegistry) -> PackedInt64Array:
-	skill_id = str(registry.definition(CLASS_ID).get("start_skill_id", ""))
+func _skill(registry: ContentRegistry, class_id: String) -> PackedInt64Array:
+	var class_def: Dictionary = registry.definition(class_id)
+	if class_def.get("planned_first_playable") != true:
+		_fail(class_id + ": class is not playable in P0")
+		return PackedInt64Array()
+	skill_id = str(class_def.get("start_skill_id", ""))
 	var skill: Dictionary = registry.definition(skill_id)
 	if skill.get("archetype") != "projectile":
-		_fail(CLASS_ID + ": the start skill must be a projectile skill in P0")
+		_fail(class_id + ": the start skill must be a projectile skill in P0")
 		return PackedInt64Array()
 	var cooldown: Variant = ContentRegistry.integral(skill.get("base_cooldown_ticks"))
 	if cooldown == null or int(cooldown) <= 0:
@@ -413,13 +428,6 @@ func _skill(registry: ContentRegistry) -> PackedInt64Array:
 		PROJECTILE_PIERCE,
 		MAX_PROJECTILES,
 	])
-
-
-static func _roster(rosters_catalog: Dictionary) -> Dictionary:
-	for roster: Variant in rosters_catalog.get("rosters", []):
-		if roster is Dictionary and (roster as Dictionary).get("id") == ROSTER_ID:
-			return roster
-	return {}
 
 
 ## ThreatCaps window records in kind order (enemy_ids): [start_second x 60, end_second x 60,

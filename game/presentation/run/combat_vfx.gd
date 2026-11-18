@@ -232,3 +232,18 @@ func _ground_piece(canvas: CanvasItem, piece: String, at: Vector2, radius: float
 
 static func _ease_out(t: float) -> float:
 	return 1.0 - (1.0 - t) * (1.0 - t)
+
+
+## A diamond: 10 px across for value 10 and below, 13 px for more (ADR-010 section 8), times
+## `size` (gems at rest on the ground are smaller and dimmer than the HUD icon).
+static func draw_gem_primitive(
+	canvas: CanvasItem, at: Vector2, value: int, alpha: float, size: float, base: Color
+) -> void:
+	var half: float = (5.0 if value <= 10 else 6.5) * size
+	var color: Color = base
+	color.a = alpha
+	var points: PackedVector2Array = PackedVector2Array([
+		at + Vector2(0, -half * 1.3), at + Vector2(half, 0), at + Vector2(0, half * 1.3), at + Vector2(-half, 0),
+	])
+	canvas.draw_colored_polygon(points, color)
+	canvas.draw_polyline(points + PackedVector2Array([points[0]]), color.darkened(0.4), 1.5)

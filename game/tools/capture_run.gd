@@ -72,7 +72,9 @@ func _capture() -> void:
 	view.read_player_input = false
 	root.add_child(view)
 	await process_frame
-	view.start_run(seed_text)
+	if not view.start_run(seed_text):
+		quit(1)
+		return
 	if mode == "grid":
 		await _capture_grid(view, out)
 		return
