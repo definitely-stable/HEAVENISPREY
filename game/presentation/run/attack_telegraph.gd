@@ -1,18 +1,24 @@
 class_name AttackTelegraph
 extends RefCounted
-## Placeholder telegraphs of enemy attacks drawn with primitives (ADR-011 sections 2-3):
+## Enemy attack telegraphs drawn with primitives (ADR-011 sections 2-3):
 ## a MELEE_ARC sector from the enemy in its fixed direction (E2); a CHARGE lane of the dash
 ## length and the enemy's width (E3), pointing at the hero during `tell` (the aim locks at its
 ## end) and along the locked direction while dashing; a PROJECTILE lane of the launch range
 ## and the shot's width (E4), following the hero the same way until the release. Zones (E5)
 ## are drawn from the zone pool, not from the enemy: a circle of the zone radius. During
-## `tell` the outline shows the whole danger area and a fill grows with the time already spent
-## in it; while active an attack shape or a death zone flashes and a ground zone stays a dark
-## root circle. Presentation only: the simulation decides every hit.
+## `tell` the charge has an outlined lane and a forward chevron, and the shot has a thin axis
+## with a crossbar at its source. The fill grows with elapsed time. While active an attack
+## shape or a death zone flashes and a ground zone stays a dark root circle.
 
 const COLOR_TELL: Color = Color(0.95, 0.3, 0.22, 0.16)
 const COLOR_TELL_EDGE: Color = Color(1.0, 0.42, 0.3, 0.85)
 const COLOR_FILL: Color = Color(0.95, 0.3, 0.22, 0.32)
+const COLOR_CHARGE_BASE: Color = Color(0.08, 0.035, 0.045, 0.64)
+const COLOR_CHARGE_EDGE: Color = Color(1.0, 0.73, 0.54)
+const COLOR_CHARGE_FILL: Color = Color(0.95, 0.33, 0.19, 0.53)
+const COLOR_SHOT_BASE: Color = Color(0.07, 0.12, 0.16, 0.48)
+const COLOR_SHOT_EDGE: Color = Color(0.84, 0.97, 1.0)
+const COLOR_SHOT_FILL: Color = Color(0.36, 0.68, 0.78, 0.25)
 const COLOR_ACTIVE: Color = Color(1.0, 0.85, 0.6, 0.55)
 const COLOR_ROOT: Color = Color(0.5, 0.1, 0.18, 0.34)
 const COLOR_ROOT_EDGE: Color = Color(0.82, 0.2, 0.28, 0.9)
@@ -114,11 +120,33 @@ static func draw(canvas: CanvasItem, telegraph: Dictionary, center: Vector2) -> 
 	if telegraph["active"]:
 		canvas.draw_colored_polygon(outline, COLOR_ACTIVE)
 		return
-	canvas.draw_colored_polygon(outline, COLOR_TELL)
+	var form: int = telegraph["form"]
+	var base: Color = COLOR_TELL
+	var fill: Color = COLOR_FILL
+	if form == SimConfig.FORM_CHARGE:
+		base = COLOR_CHARGE_BASE
+		fill = COLOR_CHARGE_FILL
+	elif form == SimConfig.FORM_PROJECTILE:
+		base = COLOR_SHOT_BASE
+		fill = COLOR_SHOT_FILL
+	canvas.draw_colored_polygon(outline, base)
 	var grown: float = radius * float(telegraph["progress"])
 	if grown > 1.0:
-		canvas.draw_colored_polygon(_shape(telegraph, center, grown, angle, lane_form), COLOR_FILL)
-	canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_TELL_EDGE, 2.0)
+		canvas.draw_colored_polygon(_shape(telegraph, center, grown, angle, lane_form), fill)
+	if form == SimConfig.FORM_CHARGE:
+		canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_CHARGE_EDGE, 4.0, true)
+		var travel: Vector2 = (outline[1] + outline[2]) * 0.5 - center
+		var wing: Vector2 = (outline[0] - center) * 0.56
+		var tail: Vector2 = center + travel * 0.43
+		canvas.draw_polyline(
+			PackedVector2Array([tail + wing, center + travel * 0.57, tail - wing]),
+			COLOR_CHARGE_EDGE, 3.0, true
+		)
+	elif form == SimConfig.FORM_PROJECTILE:
+		var tip: Vector2 = (outline[1] + outline[2]) * 0.5
+		canvas.draw_multiline(PackedVector2Array([center, tip, outline[0], outline[3]]), COLOR_SHOT_EDGE, 2.0, true)
+	else:
+		canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_TELL_EDGE, 2.0)
 
 
 static func _shape(

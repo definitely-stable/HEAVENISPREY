@@ -26,6 +26,9 @@ extends SceneTree
 ##   ("yin_corpse,blood_wolf" by default, ids without "enemy.");
 ## - "strikes": the same four enemies start next to the hero and attack it for STRIKE_SECONDS
 ##   (ADR-014 A5c: a telegraphed attack plays its clip by the attack state), blows hidden;
+## - "telegraphs": overlapping charge and projectile tells at their first, middle, last and
+##   release frames, on shadowed paving and by a brazier; full-size PNGs and matching digests;
+## - "telegraph_perf": the perf horde with both charge and projectile tell caps occupied.
 ## Placing enemies writes the world directly: a presentation check, not a gameplay trace.
 
 const STEP: float = 1.0 / 60.0
@@ -47,6 +50,8 @@ const REACT_KINDS: String = "yin_corpse,blood_wolf"
 const STRIKE_NEAR: float = 0.45
 const STRIKE_EVERY: float = 0.1
 const STRIKE_SECONDS: float = 1.6
+const TELEGRAPH_KINDS: Array[String] = ["enemy.sickle_mantis", "enemy.cursed_spirit_lantern"]
+const TELEGRAPH_OFFSETS: Array[Vector2] = [Vector2(32, 76), Vector2(-220, -176)]
 const CIRCLE: Array[Vector2i] = [
 	Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1), Vector2i(-1, 1),
 	Vector2i(-1, 0), Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1),
@@ -71,8 +76,11 @@ func _capture() -> void:
 	if mode == "grid":
 		await _capture_grid(view, out)
 		return
-	if mode == "perf":
-		await _measure_frames(view, out, count)
+	if mode == "perf" or mode == "telegraph_perf":
+		await _measure_frames(view, out, count, mode == "telegraph_perf")
+		return
+	if mode == "telegraphs":
+		await _capture_telegraphs(view, out, seed_text)
 		return
 	if mode == "hero":
 		await _capture_hero(view, out)
@@ -214,13 +222,97 @@ func _grid_points() -> Array[Vector2]:
 	return out
 
 
-func _measure_frames(view: RunView, out: String, count: int) -> void:
+func _capture_telegraphs(view: RunView, out: String, seed_text: String) -> void:
+	var shots: Array[Dictionary] = []
+	for location: String in ["shadow", "brazier"]:
+		view.start_run(seed_text)
+		var world: WorldState = view.driver.world
+		var at: Vector2 = Vector2(36.5, 29.5) if location == "shadow" else Vector2(49.05, 34.55)
+		world.player_x = roundi(at.x * RunView.CELL_PX * Fx.FX_ONE)
+		world.player_y = roundi(at.y * RunView.CELL_PX * Fx.FX_ONE)
+		_place_horde_slots(world, TELEGRAPH_KINDS.size())
+		for phase: String in ["first", "middle", "last", "release"]:
+			for index: int in TELEGRAPH_KINDS.size():
+				var kind: int = view.tuning.enemy_ids.find(TELEGRAPH_KINDS[index])
+				var ticks: int = view.driver.config.attack_value(kind, SimConfig.ATTACK_TELEGRAPH)
+				var left: int = 1
+				if phase == "first":
+					left = ticks
+				elif phase == "middle":
+					left = ceili(ticks / 2.0)
+				var offset: Vector2 = TELEGRAPH_OFFSETS[index]
+				if location == "brazier" and index == 0:
+					offset = Vector2(80, -4)
+				_set_tell(world, index, kind, offset, left)
+			view.driver.previous = world.copy()
+			view.advance_frame(STEP if phase == "release" else 0.0, Vector2i.ZERO)
+			var camera: Camera2D = root.get_camera_2d()
+			camera.reset_smoothing()
+			await RenderingServer.frame_post_draw
+			var image: Image = root.get_texture().get_image()
+			var path: String = "%s_%s_%s.png" % [out.get_basename(), location, phase]
+			if image.get_size() != Vector2i(1280, 720) or image.save_png(path) != OK:
+				push_error("Could not save 1280×720 telegraph frame: " + path)
+				quit(1)
+				return
+			shots.append({
+				"location": location, "phase": phase, "digest": world.digest(),
+				"camera": camera.get_screen_center_position(), "zoom": camera.zoom.x,
+				"positions_px": [view.driver.enemy_position_px(0), view.driver.enemy_position_px(1)],
+			})
+	var error: Error = _write_json(out.get_basename() + ".json", shots)
+	quit(0 if error == OK else 1)
+
+
+func _place_horde_slots(world: WorldState, count: int) -> void:
+	for index: int in count:
+		var slot: int = world.append_enemy_slot()
+		world.enemy_uid[slot] = world.next_enemy_uid
+		world.enemy_hp[slot] = 1000000
+		world.next_enemy_uid += 1
+		world.enemy_alive += 1
+
+
+func _set_tell(world: WorldState, slot: int, kind: int, offset: Vector2, left: int) -> void:
+	world.enemy_kind[slot] = kind
+	world.enemy_x[slot] = world.player_x + roundi(offset.x * Fx.FX_ONE)
+	world.enemy_y[slot] = world.player_y + roundi(offset.y * Fx.FX_ONE)
+	world.enemy_state[slot] = EnemyAttackSystem.ST_TELL
+	world.enemy_left[slot] = left
+	var aim: PackedInt64Array = EnemyAttackSystem.aim(world, slot)
+	world.enemy_dir_x[slot] = aim[0]
+	world.enemy_dir_y[slot] = aim[1]
+	world.enemy_attack_uid[slot] = world.enemy_uid[slot]
+	world.next_attack_uid = maxi(world.next_attack_uid, world.enemy_attack_uid[slot] + 1)
+
+
+func _measure_frames(view: RunView, out: String, count: int, with_tells: bool) -> void:
 	_place_horde(view, count, 7)
 	var world: WorldState = view.driver.world
+	var kinds: PackedInt32Array = PackedInt32Array()
+	if with_tells:
+		world.hero_hp_max = 1000000000
+		var caps: PackedInt64Array = view.driver.config.caps
+		for index: int in TELEGRAPH_KINDS.size():
+			var cap: int = caps[ThreatCaps.C_CHARGE_TELLS if index == 0 else ThreatCaps.C_SHOT_TELLS]
+			for slot: int in cap:
+				kinds.append(view.tuning.enemy_ids.find(TELEGRAPH_KINDS[index]))
+		if kinds.size() > count:
+			push_error("Enemy count must cover all simultaneous tells")
+			quit(1)
+			return
 	var frames: Array[float] = []
 	var calls: Array[int] = []
 	for frame: int in 240:
 		var start: int = Time.get_ticks_usec()
+		if with_tells:
+			world.hero_hp = world.hero_hp_max
+		for slot: int in kinds.size():
+			var kind: int = kinds[slot]
+			var form: int = view.driver.config.attack_value(kind, SimConfig.ATTACK_FORM)
+			var offset: Vector2 = TELEGRAPH_OFFSETS[0 if form == SimConfig.FORM_CHARGE else 1]
+			var ticks: int = view.driver.config.attack_value(kind, SimConfig.ATTACK_TELEGRAPH)
+			_set_tell(world, slot, kind, offset.rotated(slot * PI * 0.5), 2 + (frame + slot * 7) % (ticks - 1))
 		if world.is_paused():
 			view.choose(0)
 		view.advance_frame(STEP, Vector2i(1, 0) if (frame / 60) % 2 == 0 else Vector2i(-1, 0))
@@ -230,16 +322,31 @@ func _measure_frames(view: RunView, out: String, count: int) -> void:
 			calls.append(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME))
 	frames.sort()
 	calls.sort()
+	if with_tells and (world.tick != 240 or world.enemy_alive != count or root.size != Vector2i(1920, 1080)):
+		push_error("Expected a live 240-tick horde at 1920×1080")
+		quit(1)
+		return
 	var result: Dictionary = {
 		"enemies": world.enemy_alive, "window_px": root.size,
 		"frame_ms_p50": frames[frames.size() / 2], "frame_ms_p95": frames[int(frames.size() * 0.95)],
 		"draw_calls_p50": calls[calls.size() / 2], "draw_calls_max": calls[-1],
 	}
-	var file: FileAccess = FileAccess.open(out, FileAccess.WRITE)
-	file.store_string(JSON.stringify(result, "  "))
-	file.close()
+	if with_tells:
+		result.merge({
+			"frames": frames.size(), "simultaneous_tells": kinds.size(),
+			"world_digest": world.digest(), "command_digest": view.driver.commands.digest(),
+			"ticks": world.tick,
+		})
+	var error: Error = _write_json(out, result)
 	print("perf: ", result)
-	quit(0)
+	quit(0 if error == OK else 1)
+
+
+func _write_json(out: String, data: Variant) -> Error:
+	var file: FileAccess = FileAccess.open(out, FileAccess.WRITE)
+	if file == null:
+		return FileAccess.get_open_error()
+	return OK if file.store_string(JSON.stringify(data, "  ")) else ERR_FILE_CANT_WRITE
 
 
 func _capture_hero(view: RunView, out: String) -> void:
