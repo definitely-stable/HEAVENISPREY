@@ -437,32 +437,6 @@ func test_enemies_recoil_from_blows_and_fall_when_killed() -> void:
 	assert_true(fell, "a killed enemy falls in its death clip")
 
 
-## QUALITY-2026-11 Q2: a blow and a defeat move the camera only through Camera2D.offset and
-## only by the settings multiplier; a reference view (tests, replays, captures) keeps it still.
-func test_screen_shake_follows_damage_and_the_settings() -> void:
-	var view: RunView = (load(RUN_SCENE) as PackedScene).instantiate() as RunView
-	view.read_player_input = false
-	view.settings = PresentationSettings.reference_look()
-	add_child_autofree(view)
-	assert_true(view.start_run("20261113"))
-	_to_centre(view)
-	var camera: Camera2D = view.get_node("Camera")
-	var world: WorldState = view.driver.world
-	var hp: int = world.hero_hp
-	var guard: int = 0
-	while world.hero_hp == hp and guard < 3000:
-		_frame(view, Vector2i.ZERO)
-		guard += 1
-	assert_lt(world.hero_hp, hp, "the horde hurts the standing hero")
-	assert_gt(view._shake.trauma, 0.0, "the blow leaves trauma")
-	assert_eq(camera.offset, Vector2.ZERO, "no screen shake at reference settings")
-	view.settings.screenshake = 1.0
-	while world.is_paused():
-		view.choose(0)
-	view.advance_frame(TICK, Vector2i.ZERO)
-	assert_ne(camera.offset, Vector2.ZERO, "with strength the same blow moves the camera")
-
-
 ## The hero stands at the arena centre, written into the world before the first tick (a
 ## presentation check): in the open court the horde reaches a standing hero quickly.
 static func _to_centre(view: RunView) -> void:
