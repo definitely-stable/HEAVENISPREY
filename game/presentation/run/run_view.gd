@@ -38,7 +38,7 @@ const COLOR_VOID: Color = Color(0.03, 0.03, 0.04)
 const COLOR_HERO: Color = Color(0.93, 0.86, 0.66)
 const COLOR_FACING: Color = Color(0.25, 0.2, 0.15)
 const COLOR_HP_BACK: Color = Color(0.0, 0.0, 0.0, 0.6)
-const COLOR_HP: Color = RunHud.HP_FILL
+const COLOR_HP: Color = Color(0.85, 0.2, 0.2)
 const COLOR_OVER: Color = Color(0.0, 0.0, 0.0, 0.55)
 const COLOR_ENEMY_HIT: Color = Color(1.0, 1.0, 1.0)
 ## Spirit sword (metal element) projectile.
