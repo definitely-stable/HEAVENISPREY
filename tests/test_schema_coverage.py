@@ -43,12 +43,17 @@ class SchemaCoverageTests(unittest.TestCase):
             "[graphics]\nvfx_intensity=1.4\n": "outside 0..1",
             "[accessibility]\nfont_scale=0\n": "must be > 0",
             "[graphics]\nscreenshake=strong\n": "not a number",
+            "[playtest]\nlog_choices=yes\n": "must be true or false",
+            '[graphics]\nfloating_damage_numbers="some"\n': "must be one of",
+            "[graphics]\nown_skill_opacity=1.5\n": "outside 0..1",
         }
         for text, needle in cases.items():
             with self.subTest(text=text):
                 self.assertTrue(any(needle in p for p in vc.check_settings(text)))
         self.assertTrue(any("missing graphics.vfx_intensity" in p
                             for p in vc.check_settings(self.cfg.replace("vfx_intensity=0.65\n", ""))))
+        self.assertTrue(any("missing graphics.hit_flash" in p
+                            for p in vc.check_settings(self.cfg.replace("hit_flash=1.0\n", ""))))
 
 
 if __name__ == "__main__":

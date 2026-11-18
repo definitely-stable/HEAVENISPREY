@@ -190,8 +190,9 @@ def validate_enemies(difficulty, stages, statuses, modes, scenarios, trs):
 
 SETTINGS_SCHEMA={
     "localization":{"preferred_locale":("enum",("auto","en","ru"))},
-    "graphics":{"vfx_intensity":("unit",),"screenshake":("unit",)},
+    "graphics":{"vfx_intensity":("unit",),"screenshake":("unit",),"hit_flash":("unit",),"own_skill_opacity":("unit",),"floating_damage_numbers":("enum",("off","aggregate","all"))},
     "accessibility":{"font_scale":("positive",)},
+    "playtest":{"log_choices":("bool",)},
 }
 def check_localization_context(ctx,trs):
     """localization_context.json: every hint names an existing key or a key prefix (ending with _)."""
@@ -222,6 +223,9 @@ def check_settings(text):
         if rule[0]=="enum":
             if not (value.startswith('"') and value.endswith('"') and value[1:-1] in rule[1]):
                 out.append("settings.example.cfg:%d %s must be one of %s"%(n,key.strip(),rule[1]))
+            continue
+        if rule[0]=="bool":
+            if value not in ("true","false"):out.append("settings.example.cfg:%d %s must be true or false"%(n,key.strip()))
             continue
         try:number=float(value)
         except ValueError:
