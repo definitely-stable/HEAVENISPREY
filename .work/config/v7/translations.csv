@@ -119,3 +119,9 @@ UPGRADE_P0_THUNDER_JUMPS_NAME,Branching Bolt,Ветвистый разряд
 UPGRADE_P0_THUNDER_JUMPS_DESC,Targets per strike %s → %s,Целей за разряд %s → %s
 UPGRADE_P0_THUNDER_REACH_NAME,Long Arc,Длинная дуга
 UPGRADE_P0_THUNDER_REACH_DESC,Jump range %s → %s,Дальность прыжка %s → %s
+UI_CLASS_SELECT_TITLE,Choose your path,Выберите путь
+CLASS_SWORD_DESC,Spirit swords strike the nearest foes; strong against a single target,Духовные мечи бьют ближайших врагов; сильнее против одиночной цели
+CLASS_THUNDER_DESC,Lightning leaps between nearby foes; strong in a dense horde,Молния перескакивает между соседними врагами; сильнее в плотной толпе
+UI_CLASS_START_SKILL,Starting technique: %s,Стартовая техника: %s
+UI_CLASS_LOCKED,Locked: finish a run in %s,Закрыто: завершите забег — %s
+UI_CLASS_CONFIRM,Enter: begin,Enter — начать

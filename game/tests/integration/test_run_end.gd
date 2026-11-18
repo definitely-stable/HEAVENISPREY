@@ -61,6 +61,7 @@ func test_driver_stops_at_the_victory_tick() -> void:
 func test_scene_shows_victory_and_waits_for_the_player() -> void:
 	var view: RunView = _view()
 	TranslationServer.set_locale("en")  # after _ready, which follows the OS language
+	assert_true(view.start_run("101"))
 	view.driver = FixedTickDriver.create(_short_run(120))
 	for _i: int in 121:
 		view.advance_frame(TICK, Vector2i.ZERO)
@@ -83,11 +84,13 @@ func test_scene_shows_victory_and_waits_for_the_player() -> void:
 	confirm.button_index = JOY_BUTTON_A
 	confirm.pressed = true
 	view.get_viewport().push_input(confirm)
-	assert_eq(view.runs_started, runs + 1)
+	assert_eq(view.runs_started, runs)
 	assert_false(view.is_results_open())
-	assert_true(view._hud.visible)
+	assert_true(view.is_class_select_open())
+	assert_eq(view._class_select.locked, [false, false], "victory unlocks Thunder this session")
+	assert_false(view._hud.visible)
 	results.new_run_button.pressed.emit()
-	assert_eq(view.runs_started, runs + 1, "an old results action cannot start one more run")
+	assert_eq(view.runs_started, runs, "an old results action cannot start another run")
 
 
 func test_defeat_results_in_russian() -> void:
@@ -109,6 +112,7 @@ func test_defeat_results_in_russian() -> void:
 	assert_true(view.is_results_open(), "after the death clip")
 	var results: RunResults = view.get("_results")
 	assert_eq(results.title.text, "Поражение")
+	assert_eq(view.session_profile.granted_unlock_ids(), PackedStringArray(["unlock.thunder"]))
 	assert_eq(results._stat_labels.map(func(label: Label) -> String: return label.text),
 		["Время", "Побеждено", "Уровень", "Опыт"])
 	assert_eq(results.stat_values.map(func(label: Label) -> String: return label.text),

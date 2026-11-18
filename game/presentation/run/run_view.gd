@@ -152,6 +152,8 @@ var _grade: FrameGrade
 var _hud: RunHud
 var _menu: ChoiceMenu
 var _results: RunResults
+var _class_select: ClassSelect
+var _last_class_id: String = "class.sword"
 var _sprites: SpriteSet = SpriteSet.new()
 ## Sprite asset_id per enemy kind of the current run ("" = primitive).
 var _kind_assets: PackedStringArray = PackedStringArray()
@@ -196,6 +198,8 @@ static func placeholder_config() -> SimConfig:
 func _ready() -> void:
 	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
+	session_profile.registry = _registry
+	session_profile.unlock_all = OS.get_cmdline_user_args().has("--unlock-all")
 	_sprites = SpriteSet.load_default()
 	texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -219,11 +223,15 @@ func _ready() -> void:
 	_results.theme = theme
 	_results.restart_requested.connect(confirm_results)
 	layer.add_child(_results)
+	_class_select = ClassSelect.new()
+	_class_select.kit = _hud.kit
+	_class_select.theme = theme
+	_class_select.class_confirmed.connect(_on_class_confirmed)
+	layer.add_child(_class_select)
 	_vfx = CombatVfx.load_default(_hud.kit.font)
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
-	driver = FixedTickDriver.create(placeholder_config())
-	start_run()
+	_show_class_select()
 
 
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
@@ -326,6 +334,8 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 		return false
 	tuning = candidate
 	rules_snapshot = snapshot
+	_last_class_id = class_id
+	_class_select.hide()
 	driver = FixedTickDriver.create(config)
 	if _hud != null:
 		_hud.driver = driver
@@ -365,10 +375,7 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 func _process(delta: float) -> void:
 	if not read_player_input:
 		return
-	if Input.is_action_just_pressed("restart"):
-		start_run()
-		return
-	if Input.is_action_just_pressed("ui_accept") and confirm_results():
+	if Input.is_action_just_pressed("restart") and restart_run():
 		return
 	advance_frame(delta, IsoProjection.screen_move_to_world(MoveInput.read()))
 
@@ -380,11 +387,44 @@ func _flicker() -> void:
 		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _flames.size())
 
 
-## Starts a new run from the results screen once it is armed; false otherwise.
+## Returns to the class menu after the summary is armed.
 func confirm_results() -> bool:
-	if _results == null or not _results.is_armed():
+	if not _results.is_armed():
 		return false
-	return start_run()
+	_show_class_select()
+	return true
+
+
+func _show_class_select() -> void:
+	driver = null
+	_hud.hide()
+	_menu.close()
+	_results.close()
+	_vfx.clear()
+	_grade.dim = 0.0
+	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), CELL_PX)
+	_camera.position = IsoProjection.to_screen(centre)
+	_camera.reset_smoothing()
+	_ground.follow(centre, _camera.position, CAMERA_ZOOM, false)
+	_class_select.open(_registry, session_profile.granted_unlock_ids(), _last_class_id)
+	queue_redraw()
+
+
+func _on_class_confirmed(class_id: String) -> void:
+	if _class_select.visible:
+		start_run(null, class_id)
+
+
+func is_class_select_open() -> bool:
+	return _class_select != null and _class_select.visible
+
+
+func restart_run() -> bool:
+	if driver == null:
+		return false
+	if driver.world.is_over():
+		session_profile.record_finished(runs_started, rules_snapshot.stage_id)
+	return start_run(null, _last_class_id)
 
 
 func is_results_open() -> bool:
@@ -393,7 +433,8 @@ func is_results_open() -> bool:
 
 ## One presentation frame; `move` is in world axes (tests and replays feed it directly).
 func advance_frame(delta: float, move: Vector2i) -> int:
-	if rules_snapshot == null:
+	if driver == null:
+		_class_select.age(delta)
 		return 0
 	if driver.world.is_paused():
 		# The run waits for a card; effects freeze with it.
@@ -447,6 +488,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 func _show_results() -> void:
 	if _results == null or _results.visible:
 		return
+	session_profile.record_finished(runs_started, rules_snapshot.stage_id)
 	if _death_time >= 0.0 and _death_time < _sprites.clip_length(HERO_ASSET, "death") + DEATH_BEAT:
 		return
 	_results.open(driver.world)
@@ -456,7 +498,7 @@ func _show_results() -> void:
 ## Picks card `index` of the shown hand (the menu's `picked`, tests and replays); false when
 ## the run is not paused or there is no such card.
 func choose(index: int) -> bool:
-	if not driver.choose(index):
+	if driver == null or not driver.choose(index):
 		return false
 	_sync_menu()
 	queue_redraw()
@@ -487,9 +529,11 @@ func _sync_menu() -> void:
 
 func _draw() -> void:
 	_queue_layers()
-	_draw_gems()
+	if driver != null:
+		_draw_gems()
 	_draw_bodies()
-	_draw_projectiles()
+	if driver != null:
+		_draw_projectiles()
 
 
 func _queue_layers() -> void:
@@ -657,13 +701,14 @@ func _light_at(feet: Vector2) -> Color:
 
 func _draw_shadow_pass() -> void:
 	var canvas: Node2D = _shadow_canvas
-	var world: WorldState = driver.world
+	var world: WorldState = driver.world if driver != null else null
 	# Draw silhouettes first. White contacts on top preserve their coverage in lit areas.
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] != 0:
-			var pose: Array = _frame_pose(slot)
-			_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
-	_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
+	if world != null:
+		for slot: int in world.enemy_slots():
+			if world.enemy_uid[slot] != 0:
+				var pose: Array = _frame_pose(slot)
+				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
+		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	for prop: Dictionary in _props:
 		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
 			continue
@@ -677,6 +722,8 @@ func _draw_shadow_pass() -> void:
 			canvas.draw_colored_polygon(polygon, Color.WHITE)
 	for lantern: Vector2 in _lanterns:
 		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
+	if world == null:
+		return
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
@@ -707,6 +754,8 @@ func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float 
 # --- danger layer: unlit ground marks over the shadows (PLAYABILITY G3) ---
 
 func _draw_danger_pass() -> void:
+	if driver == null:
+		return
 	_danger.draw_set_transform_matrix(IsoProjection.ground())
 	for slot: int in driver.world.zone_slots():
 		var zone: Dictionary = AttackTelegraph.zone_shape(driver.config, driver.world, slot)
@@ -734,12 +783,13 @@ func _draw_ground_rings(canvas: CanvasItem) -> void:
 ## Bodies and courtyard props sorted by depth (then slot), so a thing nearer the viewer covers
 ## the one behind it; the hero is drawn over all of them on its own item (PLAYABILITY G3).
 func _draw_bodies() -> void:
-	var world: WorldState = driver.world
 	_body_poses.clear()
 	var order: Array[Vector2i] = []
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] != 0:
-			order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
+	if driver != null:
+		var world: WorldState = driver.world
+		for slot: int in world.enemy_slots():
+			if world.enemy_uid[slot] != 0:
+				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
 	for prop: Dictionary in _props:
 		order.append(prop["order"])
 	order.sort()
@@ -774,7 +824,9 @@ func _draw_enemy(slot: int) -> void:
 ## A courtyard prop at its base, lit like an upright body standing there.
 func _draw_prop(prop: Dictionary) -> void:
 	var base: Vector2 = prop.get("base", prop["at"])
-	var light: Color = RunLighting.with_aura(prop["fixed_light"], base, driver.hero_position_px())
+	var light: Color = prop["fixed_light"]
+	if driver != null:
+		light = RunLighting.with_aura(light, base, driver.hero_position_px())
 	if prop.has("clip"):
 		_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, false, prop["clip"])
 		return
@@ -843,6 +895,8 @@ func _draw_gems() -> void:
 # --- hero item (warm rim) and the items over it ---
 
 func _draw_hero_pass() -> void:
+	if driver == null:
+		return
 	var canvas: Node2D = _hero_item
 	var feet: Vector2 = driver.hero_position_px()
 	var hero: Vector2 = IsoProjection.to_screen(feet)
@@ -883,110 +937,11 @@ func _hero_height() -> float:
 ## Venom pips and the HP bar above the hero's head, enemy shots over the hero (an incoming
 ## wisp stays visible), gem flights and "+N".
 func _draw_over_pass() -> void:
-	var canvas: Node2D = _over
-	if _chain_left > 0.0:
-		var alpha: float = _chain_left / 0.12
-		canvas.draw_polyline(_chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
-		canvas.draw_polyline(_chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
-	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
-	var stacks: int = driver.world.venom_stacks
-	var top: float = -_hero_height() - 8.0
-	for pip: int in stacks:
-		canvas.draw_circle(hero + Vector2(-8.0 + 8.0 * pip, top - 6.0), 3.0, COLOR_VENOM)
-	var max_hp: int = driver.world.hero_hp_max
-	if max_hp > 0:
-		var bar: Rect2 = Rect2(hero + Vector2(-HERO_RADIUS_PX, top), Vector2(HERO_RADIUS_PX * 2, 5))
-		canvas.draw_rect(bar, COLOR_HP_BACK)
-		var share: float = clampf(float(driver.world.hero_hp) / float(max_hp), 0.0, 1.0)
-		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * share, bar.size.y)), COLOR_HP)
-	var world: WorldState = driver.world
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] == 0:
-			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
-		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, COLOR_WISP)
-	var font: Font = _hud.kit.font if _hud != null and _hud.kit != null else ThemeDB.fallback_font
-	var gem_light: bool = _vfx != null and _vfx.kit.has("qi_wisp")
-	for pickup: Array in _pickups:
-		var age: float = pickup[2]
-		if age < PICKUP_FLY:
-			if not gem_light:
-				CombatVfx.draw_gem_primitive(canvas, _pickup_flight(pickup), pickup[1], 1.0, GEM_REST_SCALE, COLOR_GEM)
-			continue
-		var fade: float = (age - PICKUP_FLY) / PICKUP_TEXT
-		var color: Color = COLOR_GEM
-		color.a = 1.0 - fade
-		var at: Vector2 = hero + Vector2(HERO_RADIUS_PX * 0.6, -_hero_height() - 6 - 24 * fade)
-		canvas.draw_string_outline(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, 3,
-			Color(0.02, 0.06, 0.08, 0.8 * color.a))
-		canvas.draw_string(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
-	if _vfx != null:
-		_vfx.draw_numbers(canvas)
+	RunEffectsPasses.draw_over_pass(self)
 
-
-## Where a collected gem is on its short flight to the hero (screen px).
-func _pickup_flight(pickup: Array) -> Vector2:
-	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px()) - Vector2(0, GEM_LIFT_PX)
-	var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, GEM_LIFT_PX)
-	return from.lerp(hero, clampf(pickup[2] / PICKUP_FLY, 0.0, 1.0))
-
-
-# --- glow item (additive): flames, blades and trails, wisps, gems near the hero ---
 
 func _draw_glow_pass() -> void:
-	var canvas: Node2D = _glow
-	var world: WorldState = driver.world
-	for index: int in _flames.size():
-		RunLighting.halo(
-			canvas, _halo_texture, _flames[index], 26.0 * RunLighting.flicker(_anim_time, index), COLOR_LANTERN_GLOW
-		)
-	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
-	var light: bool = _vfx != null and _vfx.kit.has("sword")
-	if light:
-		_draw_vfx_light(canvas)
-	for slot: int in world.projectile_slots():
-		if world.proj_damage[slot] == 0:
-			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
-		var heading: Vector2 = _projectile_heading(slot)
-		if light:
-			_vfx.draw_sword(canvas, at, heading)
-			continue
-		canvas.draw_line(at - heading * radius * 6.0, at, COLOR_SWORD_TRAIL, radius * 0.9)
-		RunLighting.halo(canvas, _halo_texture, at, radius * 2.6, COLOR_SWORD_GLOW)
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] != 0:
-			var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
-			RunLighting.halo(
-				canvas, _halo_texture, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, COLOR_WISP_GLOW
-			)
-	var hero: Vector2 = driver.hero_position_px()
-	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
-	for slot: int in world.gem_slots():
-		if world.gem_uid[slot] != 0 and driver.gem_position_px(slot).distance_to(hero) <= near_px:
-			var at: Vector2 = IsoProjection.to_screen(driver.gem_position_px(slot)) - Vector2(0, GEM_LIFT_PX)
-			RunLighting.halo(canvas, _halo_texture, at, 14.0, COLOR_GEM_GLOW)
-
-
-## Effects light of the atlas: bursts and circles, the gems (a qi wisp brighter near the hero, as
-## it is about to be drawn in) and the gems flying in.
-func _draw_vfx_light(canvas: Node2D) -> void:
-	_vfx.draw_light(canvas)
-	var world: WorldState = driver.world
-	var hero: Vector2 = driver.hero_position_px()
-	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
-	for slot: int in world.gem_slots():
-		var uid: int = world.gem_uid[slot]
-		if uid == 0:
-			continue
-		var ground: Vector2 = driver.gem_position_px(slot)
-		var bob: float = sin(_anim_time * GEM_BOB_HZ * TAU + float(uid)) * GEM_BOB_PX
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, GEM_LIFT_PX + bob)
-		var near: bool = ground.distance_to(hero) <= near_px
-		_vfx.draw_gem(canvas, at, world.gem_value[slot], 1.0 if near else GEM_REST_ALPHA, 1.0 if near else GEM_REST_SCALE)
-	for pickup: Array in _pickups:
-		if pickup[2] < PICKUP_FLY:
-			_vfx.draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0)
+	RunEffectsPasses.draw_glow_pass(self)
 
 
 func _enemy_color(kind: int) -> Color:
