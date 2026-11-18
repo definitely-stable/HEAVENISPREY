@@ -61,6 +61,10 @@ var sparks: Array[Array] = []
 ## `off`, `aggregate` or `all` (PresentationSettings.floating_damage_numbers); `all`, a number
 ## per blow, is the look before the setting existed; any other value acts as `all`.
 var number_mode: String = "all"
+## Alpha of the hero's own skill effects: cast circles, hit sparks and flying swords
+## (PresentationSettings.own_skill_opacity). Bursts of the fallen, the level pillar and the numbers
+## keep theirs.
+var own_opacity: float = 1.0
 ## [ground px, age, text, kill, x jitter, enemy uid, damage mhp]
 var numbers: Array[Array] = []
 ## [ground px, age, pose] (pose of the body as it fell, drawn fading by the scene)
@@ -163,7 +167,7 @@ func draw_light(canvas: CanvasItem) -> void:
 	for cast: Array in casts:
 		var t: float = share(cast[1], CAST_TIME)
 		_ground_piece(canvas, "sword_circle", cast[0], CAST_RADIUS_PX * (0.55 + 0.45 * _ease_out(t)),
-			Color(1.0, 0.85, 0.55, 0.55 * (1.0 - t)))
+			Color(1.0, 0.85, 0.55, 0.55 * (1.0 - t) * own_opacity))
 	if level_age >= 0.0:
 		var t: float = share(level_age, LEVEL_TIME)
 		_ground_piece(canvas, "sword_circle", level_at, LEVEL_RADIUS_PX * (0.4 + 0.6 * _ease_out(t)),
@@ -187,7 +191,7 @@ func draw_light(canvas: CanvasItem) -> void:
 		var at: Vector2 = IsoProjection.to_screen(spark[0]) - Vector2(0.0, BODY_LIFT_PX)
 		var size: Vector2 = kit.size_of("spark") * spark[3] * (0.6 + 0.6 * _ease_out(t))
 		canvas.draw_set_transform(at, spark[2], Vector2.ONE)
-		kit.draw(canvas, "spark", Rect2(-size * 0.5, size), Color(1.0, 1.0, 1.0, 1.0 - t * t))
+		kit.draw(canvas, "spark", Rect2(-size * 0.5, size), Color(1.0, 1.0, 1.0, (1.0 - t * t) * own_opacity))
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 
 
@@ -199,7 +203,7 @@ func draw_sword(canvas: CanvasItem, at: Vector2, heading: Vector2, alpha: float 
 	var size: Vector2 = native * (SWORD_LENGTH_PX / maxf(native.x, 1.0)) * Vector2(1.0, SWORD_THICKNESS)
 	canvas.draw_set_transform(at, heading.angle(), Vector2.ONE)
 	kit.draw(canvas, "sword", Rect2(Vector2(-size.x * (1.0 - SWORD_LEAD), -size.y * 0.5), size),
-		Color(SWORD_GAIN, SWORD_GAIN, SWORD_GAIN, alpha))
+		Color(SWORD_GAIN, SWORD_GAIN, SWORD_GAIN, alpha * own_opacity))
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 
 

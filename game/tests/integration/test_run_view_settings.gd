@@ -55,3 +55,27 @@ func test_the_damage_number_mode_comes_from_the_settings() -> void:
 	replay.read_player_input = false
 	add_child_autofree(replay)
 	assert_eq(replay._vfx.number_mode, "all", "replays and captures keep a number per blow")
+
+
+func test_own_skill_opacity_fades_only_the_hero_effects() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.settings = PresentationSettings.new()
+	view.settings.own_skill_opacity = 0.5
+	add_child_autofree(view)
+	assert_almost_eq(view._vfx.own_opacity, 0.5, 1e-6, "casts, sparks and swords")
+	assert_almost_eq(view.own_color(Color(1.0, 1.0, 1.0, 0.8)).a, 0.4, 1e-6, "chain line and fallback swords")
+	assert_almost_eq(view.own_color(Color(0.2, 0.4, 0.6, 0.8)).r, 0.2, 1e-6, "only the alpha changes")
+	var replay: RunView = packed.instantiate()
+	replay.read_player_input = false
+	add_child_autofree(replay)
+	assert_eq(replay._vfx.own_opacity, 1.0, "replays and captures keep the full effects")
+	assert_almost_eq(replay.own_color(Color(1.0, 1.0, 1.0, 0.8)).a, 0.8, 1e-6)
+	# PLAYABILITY G3: the threat layer never fades with the hero's own effects.
+	for path: String in ["res://presentation/run/attack_telegraph.gd", "res://presentation/run/enemy_shots.gd"]:
+		if FileAccess.file_exists(path):
+			assert_false(FileAccess.get_file_as_string(path).contains("own_"), path + " ignores own_skill_opacity")
+	var source: String = FileAccess.get_file_as_string("res://presentation/run/run_view.gd")
+	var danger: String = source.get_slice("func _draw_danger_pass", 1).get_slice("\nfunc ", 0)
+	assert_false(danger.is_empty(), "the danger pass is found")
+	assert_false(danger.contains("own_"), "the danger pass ignores own_skill_opacity")
