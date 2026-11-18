@@ -6,6 +6,7 @@
   "contexts": {
     "UI_START_RUN": "main menu",
     "UI_DIFFICULTY": "difficulty selector",
+    "UI_CLASS_": "class selection, starting technique and unlock requirement",
     "CLASS_": "class selection",
     "SKILL_": "skill upgrade description",
     "STATUS_": "combat status tooltip",

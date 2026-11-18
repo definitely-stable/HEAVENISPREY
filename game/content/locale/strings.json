@@ -79,6 +79,10 @@
    "en": "Body Cultivator",
    "ru": "Культиватор тела"
   },
+  "CLASS_SWORD_DESC": {
+   "en": "Spirit swords strike the nearest foes; strong against a single target",
+   "ru": "Духовные мечи бьют ближайших врагов; сильнее против одиночной цели"
+  },
   "CLASS_SWORD_NAME": {
    "en": "Sword Cultivator",
    "ru": "Культиватор меча"
@@ -86,6 +90,10 @@
   "CLASS_TALISMAN_NAME": {
    "en": "Talisman Master",
    "ru": "Мастер талисманов"
+  },
+  "CLASS_THUNDER_DESC": {
+   "en": "Lightning leaps between nearby foes; strong in a dense horde",
+   "ru": "Молния перескакивает между соседними врагами; сильнее в плотной толпе"
   },
   "CLASS_THUNDER_NAME": {
    "en": "Thunder Daoist",
@@ -294,6 +302,22 @@
   "UI_CHOICE_PICK": {
    "en": "Choose",
    "ru": "Выбрать"
+  },
+  "UI_CLASS_CONFIRM": {
+   "en": "Enter: begin",
+   "ru": "Enter — начать"
+  },
+  "UI_CLASS_LOCKED": {
+   "en": "Locked: finish a run in %s",
+   "ru": "Закрыто: завершите забег — %s"
+  },
+  "UI_CLASS_SELECT_TITLE": {
+   "en": "Choose your path",
+   "ru": "Выберите путь"
+  },
+  "UI_CLASS_START_SKILL": {
+   "en": "Starting technique: %s",
+   "ru": "Стартовая техника: %s"
   },
   "UI_DIFFICULTY": {
    "en": "Challenge level",

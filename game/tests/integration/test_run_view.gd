@@ -99,6 +99,7 @@ func test_scene_moves_hero_and_camera() -> void:
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
+	assert_true(view.start_run("101"))
 	var start: Vector2 = view.driver.hero_position_px()
 	var cell: Array = P0Tuning.arena_data()["start"]
 	assert_eq(start, (Vector2(float(cell[0]), float(cell[1])) + Vector2(0.5, 0.5)) * RunView.CELL_PX,
@@ -118,6 +119,7 @@ func test_hero_cannot_leave_arena() -> void:
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
+	assert_true(view.start_run("101"))
 	view.driver = FixedTickDriver.create(RunView.placeholder_config())
 	var arena: ArenaTopology = view.driver.config.arena
 	for _i: int in 600:
@@ -247,10 +249,10 @@ func test_finished_run_waits_for_the_player() -> void:
 		view.advance_frame(TICK, Vector2i.ZERO)
 	assert_eq(view.driver, finished, "no automatic restart")
 	assert_true(view.confirm_results())
-	assert_eq(view.runs_started, runs + 1)
+	assert_eq(view.runs_started, runs)
 	assert_false(view.is_results_open())
-	assert_false(view.driver.world.is_over())
-	assert_eq(view.driver.world.tick, 0)
+	assert_true(view.is_class_select_open())
+	assert_null(view.driver)
 
 
 func test_driver_reports_hits_and_kills_once() -> void:
