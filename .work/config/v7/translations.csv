@@ -99,7 +99,7 @@ UI_RUN_TIME,Time %s,Время %s
 UI_RUN_KILLS,Enemies slain: %d,Убито врагов: %d
 UI_RUN_LEVEL,Level: %d,Уровень: %d
 UI_RUN_XP,Experience gathered: %d,Собрано опыта: %d
-UI_RUN_RESTART,R or Enter: new run,R или Enter — новый забег
+UI_RUN_RESTART,R: run again,R — снова
 UI_RUN_NEW,New run,Новый забег
 UI_RUN_CONFIRM_INPUT,Enter or confirm button,Enter или кнопка подтверждения
 UI_RUN_TIME_LABEL,Time,Время
@@ -111,3 +111,26 @@ UI_HUD_QI,Qi,Ци
 UI_HUD_LEVEL,Lv. %d,Ур. %d
 UI_HUD_SLAIN,Slain: %s,Убито: %s
 UI_HUD_THOUSANDS,%sk,%s тыс.
+UPGRADE_P0_THUNDER_DAMAGE_NAME,Storm Wrath,Гнев бури
+UPGRADE_P0_THUNDER_DAMAGE_DESC,Lightning damage %s → %s,Урон молнии %s → %s
+UPGRADE_P0_THUNDER_HASTE_NAME,Rolling Thunder,Раскаты грома
+UPGRADE_P0_THUNDER_HASTE_DESC,Strikes per second %s → %s,Разрядов в секунду %s → %s
+UPGRADE_P0_THUNDER_JUMPS_NAME,Branching Bolt,Ветвистый разряд
+UPGRADE_P0_THUNDER_JUMPS_DESC,Targets per strike %s → %s,Целей за разряд %s → %s
+UPGRADE_P0_THUNDER_REACH_NAME,Long Arc,Длинная дуга
+UPGRADE_P0_THUNDER_REACH_DESC,Jump range %s → %s,Дальность прыжка %s → %s
+UI_CLASS_SELECT_TITLE,Choose your path,Выберите путь
+CLASS_SWORD_DESC,Spirit swords strike the nearest foes; strong against a single target,Духовные мечи бьют ближайших врагов; сильнее против одиночной цели
+CLASS_THUNDER_DESC,Lightning leaps between nearby foes; strong in a dense horde,Молния перескакивает между соседними врагами; сильнее в плотной толпе
+UI_CLASS_START_SKILL,Starting technique: %s,Стартовая техника: %s
+UI_CLASS_LOCKED,Locked: finish a run in %s,Закрыто: завершите забег — %s
+UI_CLASS_CONFIRM,Enter: begin,Enter — начать
+UI_RUN_CLASS,Class: %s,Класс: %s
+UI_RUN_TO_REWARDS,Enter: rewards,Enter — награды
+UI_REWARDS_TITLE,Run rewards,Награды забега
+UI_REWARDS_MILESTONE,Minute %d (%d+ kills): +%d,%d-я минута (от %d убийств): +%d
+UI_REWARDS_MILESTONE_MISSED,Minute %d (%d+ kills): not reached,%d-я минута (от %d убийств): не достигнуто
+UI_REWARDS_STONES,Spirit Stones earned: %d,Заработано духовных камней: %d
+UI_REWARDS_NOT_SAVED,Progress is not saved yet: stones are not banked,Прогресс пока не сохраняется: камни не зачисляются
+UI_REWARDS_UNLOCK,New class: %s,Открыт класс: %s
+UI_REWARDS_CONTINUE,Enter: choose a class · R: run again,Enter — выбор класса · R — снова

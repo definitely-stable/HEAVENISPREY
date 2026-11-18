@@ -259,9 +259,10 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 ## Moves the hero aura to the hero's ground point (world px), drifts the mist and slides the
 ## distant scenery with the view. `view_centre` is the screen point (projected px) the camera
 ## aims at, `zoom` its zoom; by default the view is centred on the hero at zoom 1.
-func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0) -> void:
+func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0, show_aura: bool = true) -> void:
 	var centre: Vector2 = IsoProjection.to_screen(hero) if view_centre == Vector2.INF else view_centre
 	_aura.position = IsoProjection.to_screen(hero)
+	_aura.visible = show_aura
 	for rect: ColorRect in [_sky, _veil]:
 		(rect.material as ShaderMaterial).set_shader_parameter("camera_offset", centre)
 	var size: Vector2 = get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO

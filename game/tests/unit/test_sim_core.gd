@@ -69,7 +69,7 @@ static func _config(row: Dictionary) -> SimConfig:
 		config.with_enemies(_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"]))
 	var skill: Variant = row.get("skill")
 	if typeof(skill) == TYPE_ARRAY:
-		config.with_skill(_ints(skill))
+		config.with_skill(_ints(skill), _ints(row.get("skill_shape", [0, 0, 0])))
 	var xp: Variant = row.get("xp")
 	if typeof(xp) == TYPE_DICTIONARY:
 		var spec_xp: Dictionary = xp
@@ -134,6 +134,11 @@ func test_traces_match_reference() -> void:
 			assert_eq(world.live_shots(), int(mark["shots"]), label + " shots")
 			assert_eq(world.live_zones(), int(mark["zones"]), label + " zones")
 			assert_eq(world.root_left, int(mark["root"]), label + " root")
+			if config.skill_form == SimConfig.SKILL_CHAIN:
+				assert_eq(world.chain_tick, int(mark["chain_tick"]), label + " chain tick")
+				assert_eq(world.chain_len, int(mark["chain_len"]), label + " chain length")
+				assert_eq(world.chain_uids, _ints(mark["chain_uids"]), label + " chain path")
+				assert_eq(world.ranks, _ints(mark["ranks"]), label + " ranks")
 			assert_eq(world.digest(), str(mark["digest"]), label + " digest")
 
 

@@ -26,8 +26,10 @@ var killed: Array[Array] = []
 var strikes: Array[Array] = []
 var collected: Array[Array] = []
 var levels_gained: int = 0
-## Aim (world direction) of every projectile fired, one per projectile (the hero's cast).
+## Aim (world direction) of every projectile released or chain cast.
 var casts: Array[Vector2] = []
+## Last chain cast this frame: world-pixel points from the hero to the hit targets.
+var chain: PackedVector2Array = PackedVector2Array()
 
 var _accumulator: float = 0.0
 var _sequence: int = 0
@@ -142,9 +144,10 @@ func gem_position_px(slot: int) -> Vector2:
 func take_events() -> Dictionary:
 	var events: Dictionary = {
 		"hit": hit_uids, "killed": killed, "strikes": strikes, "collected": collected, "levels": levels_gained,
-		"casts": casts,
+		"casts": casts, "chain": chain,
 	}
 	casts = []
+	chain = PackedVector2Array()
 	strikes = []
 	hit_uids = PackedInt64Array()
 	killed = []
@@ -173,6 +176,8 @@ func _collect_events() -> void:
 			var at: Vector2 = Vector2(previous.gem_x[slot], previous.gem_y[slot]) / float(Fx.FX_ONE)
 			collected.append([at, previous.gem_value[slot]])
 	levels_gained += world.level - previous.level
+	if world.tick > previous.tick and world.chain_len > 0 and world.chain_tick == previous.tick:
+		_collect_chain()
 	for slot: int in world.projectile_slots():
 		if world.proj_damage[slot] == 0:
 			continue
@@ -183,6 +188,22 @@ func _collect_events() -> void:
 		)
 		if not flying:
 			casts.append(Vector2(world.proj_vx[slot], world.proj_vy[slot]).normalized())
+
+
+func _collect_chain() -> void:
+	var hero: Vector2 = Vector2(world.player_x, world.player_y) / Fx.FX_ONE
+	chain = PackedVector2Array([hero])
+	for index: int in world.chain_len:
+		var uid: int = world.chain_uids[index]
+		var slot: int = world.enemy_uid.find(uid)
+		var state: WorldState = world
+		if slot < 0:
+			state = previous
+			slot = previous.enemy_uid.find(uid)
+		if slot >= 0:
+			chain.append(Vector2(state.enemy_x[slot], state.enemy_y[slot]) / Fx.FX_ONE)
+	if chain.size() > 1:
+		casts.append((chain[1] - hero).normalized())
 
 
 func _record(move: Vector2i) -> void:

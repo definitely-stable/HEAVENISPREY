@@ -17,9 +17,12 @@ extends RefCounted
 
 
 static func cast(config: SimConfig, world: WorldState) -> void:
-	var rate: int = UpgradeSystem.skill_rate(world)
+	var rate: int = UpgradeSystem.skill_rate(config, world)
 	world.skill_acc += rate
 	if world.skill_acc < config.skill_period_mt:
+		return
+	if config.skill_form == SimConfig.SKILL_CHAIN:
+		_cast_chain(config, world, rate)
 		return
 	var targets: PackedInt64Array = _targets_in_range(config, world, UpgradeSystem.projectile_count(world))
 	var room: int = world.proj_damage.count(0) + config.max_projectiles - world.projectile_slots()
@@ -47,6 +50,45 @@ static func cast(config: SimConfig, world: WorldState) -> void:
 		world.proj_damage[slot] = damage
 		world.proj_hits[slot] = 0
 		world.proj_capacity[slot] = capacity
+
+
+## Each jump uses the previous target's position and the original cast damage.
+static func _cast_chain(config: SimConfig, world: WorldState, rate: int) -> void:
+	var slot: int = _nearest_chain_target(
+		world, world.player_x, world.player_y, config.skill_range_su, PackedInt64Array()
+	)
+	if slot < 0:
+		world.skill_acc -= rate
+		return
+	world.skill_acc -= config.skill_period_mt
+	var damage: int = UpgradeSystem.skill_damage(config, world)
+	var hits: int = UpgradeSystem.chain_hits(config, world)
+	var reach: int = UpgradeSystem.chain_reach(config, world)
+	world.chain_tick = world.tick
+	world.chain_len = 0
+	world.chain_uids.fill(0)
+	while slot >= 0:
+		world.enemy_hp[slot] = maxi(0, world.enemy_hp[slot] - damage)
+		world.chain_uids[world.chain_len] = world.enemy_uid[slot]
+		world.chain_len += 1
+		if world.chain_len == hits:
+			break
+		slot = _nearest_chain_target(world, world.enemy_x[slot], world.enemy_y[slot], reach, world.chain_uids)
+
+
+static func _nearest_chain_target(
+	world: WorldState, x: int, y: int, reach: int, excluded: PackedInt64Array
+) -> int:
+	var best: int = -1
+	var best_d2: int = reach * reach + 1
+	for slot: int in world.enemy_slots():
+		if not world.is_enemy_live(slot) or excluded.has(world.enemy_uid[slot]):
+			continue
+		var d2: int = EnemySystem.dist2(x, y, world.enemy_x[slot], world.enemy_y[slot])
+		if d2 < best_d2:
+			best = slot
+			best_d2 = d2
+	return best
 
 
 ## Steps every live projectile and resolves its hits (phases 6 and 7a; enemies do not move

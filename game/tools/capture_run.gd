@@ -12,6 +12,8 @@ extends SceneTree
 ## - "hero": a contact sheet of the animated hero (ADR-014 A4) in game light: four frames of the
 ##   run in each of the 8 directions (one row each, east first, clockwise), then idle, attacks
 ##   on a horde and the death, cropped around the hero;
+## - "results" / "rewards": the end-of-run summaries with a reached milestone; final argument is en or ru.
+## - "class-select": startup class cards over the empty arena; the last argument is locale (en or ru).
 ## - "choice": the P0 run with the hero walking circles until the first level-up, then the open
 ##   choice menu (ADR-014 section 16) after it has armed;
 ## - "fight": combat effects (ADR-014 section 18): `count` enemies with their real HP on rings
@@ -72,8 +74,36 @@ func _capture() -> void:
 	view.read_player_input = false
 	root.add_child(view)
 	await process_frame
+	if mode == "class-select":
+		TranslationServer.set_locale(args[3] if args.size() > 3 else "en")
+		view._show_class_select()
+		view.advance_frame(ClassSelect.ARM_DELAY, Vector2i.ZERO)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var error: Error = root.get_texture().get_image().save_png(out)
+		print("capture class selection: ", out, " error=", error)
+		quit(0 if error == OK else 1)
+		return
 	if not view.start_run(seed_text):
 		quit(1)
+		return
+	if mode == "results" or mode == "rewards":
+		TranslationServer.set_locale(args[3] if args.size() > 3 else "en")
+		# Leave the last tick to the sim so the live view creates the receipt normally.
+		view.driver.world.tick = view.driver.config.run_ticks - 1
+		view.driver.world.kills = 20
+		view.advance_frame(STEP, Vector2i.ZERO)
+		if mode == "rewards":
+			view.advance_frame(RunResults.ARM_DELAY, Vector2i.ZERO)
+			if not view.confirm_results():
+				quit(1)
+				return
+			view.advance_frame(RunRewards.ARM_DELAY, Vector2i.ZERO)
+		await process_frame
+		await RenderingServer.frame_post_draw
+		var error: Error = root.get_texture().get_image().save_png(out)
+		print("capture terminal screen: ", out, " error=", error)
+		quit(0 if error == OK else 1)
 		return
 	if mode == "grid":
 		await _capture_grid(view, out)
