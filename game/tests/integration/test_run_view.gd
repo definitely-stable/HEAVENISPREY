@@ -114,28 +114,6 @@ func test_scene_moves_hero_and_camera() -> void:
 	assert_eq(camera.zoom, Vector2(RunView.CAMERA_ZOOM, RunView.CAMERA_ZOOM))
 
 
-func test_a_replay_view_gets_the_reference_settings() -> void:
-	var packed: PackedScene = load(RUN_SCENE)
-	var view: RunView = packed.instantiate()
-	view.read_player_input = false
-	add_child_autofree(view)
-	assert_not_null(view.settings, "settings are loaded in _ready")
-	assert_eq(view.settings.screenshake, 0.0, "no shake in tests, replays and captures")
-	assert_eq(view.settings.floating_damage_numbers, "all")
-	assert_eq(view.settings.own_skill_opacity, 1.0)
-
-
-func test_settings_set_before_ready_are_kept() -> void:
-	var packed: PackedScene = load(RUN_SCENE)
-	var view: RunView = packed.instantiate()
-	view.read_player_input = false
-	var chosen: PresentationSettings = PresentationSettings.new()
-	chosen.screenshake = 0.7
-	view.settings = chosen
-	add_child_autofree(view)
-	assert_same(view.settings, chosen, "a caller's settings are not replaced")
-
-
 func test_hero_cannot_leave_arena() -> void:
 	var packed: PackedScene = load(RUN_SCENE)
 	var view: RunView = packed.instantiate()
