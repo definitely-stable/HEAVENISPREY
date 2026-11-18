@@ -26,6 +26,10 @@
 | DEV-ENV-005 | Readiness audit, tooling matrix, GO/NO-GO пакет P0-00 | `tooling_matrix.py validate`; P0-00 — **GO** с 2026-11-12 (решение делегировано, [READINESS_AUDIT §5](../development/READINESS_AUDIT.md)) |
 | ART-REF-001 | Каталог референсов `ref/` | Все файлы учтены; статус «референс, не production» |
 
+### Улучшение игры по лучшим практикам осени 2026
+
+[QUALITY-2026-11](QUALITY_PLAN_2026-11.md) — design-proposal: волны срезов по отклику боя и настройкам, инструментам баланса, звуку, UX/доступности и решениям через ADR (честность угроз, драфт, темп, сложность). Слой представления не меняет симуляцию; изменения симуляции — только через ADR и паритет с Python.
+
 ### Foundation gates — 2026 best practices / research, **только архитектура**
 
 [FOUNDATION-2026](../spec/v7/foundation-research-2026.md): 15 приоритизированных требований (детерминированный replay, схемы/версии, источники эффектов, модельные/property tests, UX, будущее profiling, AI-agent workflow) и [машинный реестр](../proposals/foundation-2026/README.md). Этот срез **не начинает** ECS, Godot runtime, RL/PCG или GDExtension. Конкретные технологии производительности и баланс выбираются по будущим измерениям.

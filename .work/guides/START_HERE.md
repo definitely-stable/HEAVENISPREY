@@ -24,6 +24,7 @@
 | **Среда разработки, pinned Godot, doctor, toolchain CI** | [DEV-ENV-001](../spec/v7/dev-env-001-toolchain.md) | [Установка и диагностика](DEV_ENVIRONMENT.md) · [toolchain.lock.json](../tooling/toolchain.lock.json) |
 | **MCP-серверы (Context7, GitHub, Godot MCP), примеры конфигураций** | [MCP_REGISTRY](../development/MCP_REGISTRY.md) | [mcp.lock.json](../tooling/mcp.lock.json) · `python scripts/validate_mcp.py` |
 | **Проверка «это игра»: game-ness gates, juice, ship gates** | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) | [GAME-UX-001](../spec/v7/game-ux-001-oct-2026.md) |
+| **План улучшения по лучшим практикам осени 2026: отклик боя, настройки, баланс, звук, доступность** | [QUALITY-2026-11](../roadmap/QUALITY_PLAN_2026-11.md) | [PLAYABILITY_GATES](PLAYABILITY_GATES.md) · [s15](../spec/core/s15.md) |
 | **Look-dev, паспорт стиля, сравнение с референсами, карточка ассета** | [ART-BIBLE-001](../spec/v7/art-bible-001.md) · [ART_LOOKDEV](ART_LOOKDEV.md) | [ref/catalog.json](../../ref/catalog.json) · [ASSET_CARD](../templates/ASSET_CARD.md) |
 | **Арены, режим «Событие», специализации, экипировка, квесты с референсов (только примеры)** | [REF-EXAMPLES-001](../spec/v7/reference-concept-examples.md) | [ref/catalog.json](../../ref/catalog.json) |
 | **Сохранение посреди выбора, offers cursor, миграция сейвов, backup-слот** | [CHOICE-SAVE-002](../spec/v7/choice-save-002.md) | [SAVE-CONTRACT-001](../spec/v7/save-contract-001.md) · [DRAFT-CONTRACT-002](../spec/v7/draft-contract-002.md) |
