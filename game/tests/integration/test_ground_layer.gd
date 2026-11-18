@@ -207,7 +207,13 @@ func test_waterfalls_start_under_the_near_faces() -> void:
 	var ground: GroundLayer = _ground(SpriteSet.load_default(), FLOOR, [], SEAL, CLIFF, WORN)
 	assert_eq(ground.waterfalls.size(), GroundLayer.WATERFALLS.size())
 	var tops: Array[Vector2] = []
-	for face: PackedVector2Array in GroundLayer.near_faces(_data(), CELL):
+	var faces: Array[PackedVector2Array] = GroundLayer.near_faces(_data(), CELL)
+	var bridge: Dictionary[Vector2, float] = GroundLayer._bridge_openings(_data(), CELL, faces)
+	var bridge_x: PackedFloat32Array = PackedFloat32Array()
+	for point: Vector2 in bridge:
+		bridge_x.append(point.x)
+	bridge_x.sort()
+	for face: PackedVector2Array in faces:
 		tops.append(IsoProjection.to_screen((face[0] + face[1]) * 0.5))
 	var last: float = -INF
 	for index: int in ground.waterfalls.size():
@@ -215,6 +221,7 @@ func test_waterfalls_start_under_the_near_faces() -> void:
 		var fall: Array = GroundLayer.WATERFALLS[index]
 		var top: Vector2 = GroundLayer.waterfall_top(_data(), CELL, fall[0])
 		assert_has(tops, top, "the top of a near face")
+		assert_true(top.x < bridge_x[0] - CELL or top.x > bridge_x[-1] + CELL, "the fall clears the bridge")
 		assert_gt(top.x, last, "left to right")
 		last = top.x
 		assert_almost_eq(rect.position.x + rect.size.x * 0.5, top.x, 0.01)
@@ -233,6 +240,64 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	var moved: Vector2 = ground.backdrop_origin(centre + Vector2(200, -100), 1.3, size)
 	assert_almost_eq(moved, size * 0.5 - Vector2(200, -100) * GroundLayer.BACKDROP_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(GroundLayer.BACKDROP_PARALLAX, 1.0)
+	var far: MeshInstance2D = ground._backdrop.get_child(0) as MeshInstance2D
+	var near: MeshInstance2D = ground._backdrop.get_child(1) as MeshInstance2D
+	assert_eq(far.mesh.get_surface_count(), 1)
+	assert_eq(near.mesh.get_surface_count(), 1)
+	ground.follow(_centre(), centre, 1.3)
+	var origin: Vector2 = far.position
+	var travel: Vector2 = Vector2(200, -100)
+	ground.follow(_centre(), centre + travel, 1.3)
+	assert_almost_eq(far.position - origin, -travel * GroundLayer.FAR_PARALLAX * 1.3, Vector2(0.01, 0.01))
+	assert_lt(far.position.distance_to(origin), near.position.distance_to(origin))
+
+
+func test_cliff_bends_beneath_the_paving_without_seams() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
+	var mesh: ArrayMesh = ground._cliff_mesh(sprites.canvas_texture(CLIFF), sprites.decal_world_px(CLIFF))
+	assert_eq(mesh.get_surface_count(), 1)
+	var arrays: Array = mesh.surface_get_arrays(0)
+	var vertices: PackedVector2Array = arrays[Mesh.ARRAY_VERTEX]
+	var colors: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
+	var seam: Dictionary[Vector2, PackedVector2Array] = {}
+	var face_index: int = 0
+	var rows: int = GroundLayer.CLIFF_DEPTHS.size()
+	var max_bend: float = 0.0
+	var arch_crowns: Dictionary[Vector2, bool] = {}
+	var faces: Array[PackedVector2Array] = GroundLayer.near_faces(_data(), CELL)
+	var openings: Dictionary[Vector2, float] = GroundLayer._bridge_openings(_data(), CELL, faces)
+	for face: PackedVector2Array in GroundLayer._cliff_segments(faces, openings):
+		for side: int in 2:
+			var edge: Vector2 = face[side]
+			var down: PackedVector2Array = PackedVector2Array()
+			for row: int in rows:
+				down.append(vertices[(face_index * rows + row) * 2 + side])
+			assert_eq(down[0], edge, "the top follows the paved edge")
+			var alpha: float = colors[((face_index + 1) * rows - 1) * 2 + side].a
+			var opening: float = openings.get(edge, 0.0)
+			if opening == 0.0:
+				assert_eq(alpha, 0.0, "the foot fades into the gorge")
+			elif opening > 0.99:
+				arch_crowns[edge] = true
+				assert_lt(down[-1].y - edge.y, 92.0, "open space below the bridge deck")
+				assert_eq(alpha, 1.0, "the soffit is solid stone")
+			if seam.has(edge):
+				assert_eq(down, seam[edge], "adjacent strips share the whole corner")
+			else:
+				seam[edge] = down
+			max_bend = maxf(max_bend, absf(down[-1].x - edge.x))
+		face_index += 1
+	assert_gt(max_bend, 24.0, "the silhouette has a sloped foot")
+	for edge: PackedVector2Array in faces:
+		assert_has(seam, IsoProjection.to_screen(edge[0]), "subdivision retains the paving corners")
+		assert_has(seam, IsoProjection.to_screen(edge[1]))
+	var crown_x: Array[float] = []
+	for point: Vector2 in arch_crowns:
+		crown_x.append(point.x)
+	crown_x.sort()
+	var extent: float = crown_x[-1] - crown_x[0] if crown_x.size() > 1 else 0.0
+	assert_gt(extent, 250.0, "the arch crowns are in two separate spans")
 
 
 func test_aura_follows_the_hero() -> void:
