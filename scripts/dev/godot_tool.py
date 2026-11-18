@@ -221,7 +221,8 @@ def gut_run(exe: Path, dirs: list[str]) -> tuple[int, str]:
            "-gexit", "-glog=1", "-gdisable_colors", "-ginclude_subdirs",
            "-gprefix=test_", "-gsuffix=.gd"]
     cmd += ["-gdir=res://tests/" + d for d in dirs]
-    proc = run(cmd, GAME)
+    # Exact replays plus scene tests can exceed five minutes on the Windows runner.
+    proc = run(cmd, GAME, timeout=600)
     return proc.returncode, proc.stdout + proc.stderr
 
 
@@ -298,8 +299,8 @@ func _init() -> void:
 """
 
 
-def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=300,
+def run(cmd: list[str], cwd: Path, *, timeout: int = 300) -> subprocess.CompletedProcess:
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout,
                           encoding="utf-8", errors="replace")
 
 
