@@ -8,6 +8,7 @@ func test_start_seals_rules_and_refuses_invalid_or_locked_starts() -> void:
 	var view: RunView = packed.instantiate()
 	view.read_player_input = false
 	add_child_autofree(view)
+	assert_true(view.start_run())
 	assert_false(HipRng.parse_u64(view.rules_snapshot.run_seed).is_empty())
 	assert_true(view.start_run("18446744073709551615", "class.sword"))
 	var stable: FixedTickDriver = view.driver
