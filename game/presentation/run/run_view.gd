@@ -244,6 +244,8 @@ func _ready() -> void:
 	_class_select.class_confirmed.connect(_on_class_confirmed)
 	layer.add_child(_class_select)
 	_vfx = CombatVfx.load_default(_hud.kit.font)
+	_vfx.number_mode = settings.floating_damage_numbers
+	_vfx.own_opacity = settings.own_skill_opacity
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
 	_show_class_select()
@@ -879,8 +881,16 @@ func _draw_projectiles() -> void:
 			continue
 		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
 		var heading: Vector2 = _projectile_heading(slot)
-		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, COLOR_SWORD, radius * 0.6)
-		draw_circle(at + heading * radius * 1.2, radius * 0.35, COLOR_SWORD)
+		var color: Color = own_color(COLOR_SWORD)
+		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, color, radius * 0.6)
+		draw_circle(at + heading * radius * 1.2, radius * 0.35, color)
+
+
+## `color` as one of the hero's own skill effects: its alpha scaled by own_skill_opacity
+## (QUALITY-2026-11 Q5). Threats (the danger layer, enemy shots and zones) never use it.
+func own_color(color: Color) -> Color:
+	color.a *= settings.own_skill_opacity if settings != null else 1.0
+	return color
 
 
 func _projectile_heading(slot: int) -> Vector2:
