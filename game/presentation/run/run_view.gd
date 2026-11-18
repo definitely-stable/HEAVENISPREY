@@ -139,6 +139,9 @@ var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
 ## Blows on the enemies: flash, push and recoil clip (ADR-014 A5b).
 var _reactions: EnemyReactions = EnemyReactions.new()
+## Camera shake on a blow to the hero and on its death (QUALITY-2026-11 Q2): written into
+## Camera2D.offset, so the followed position stays untouched.
+var _shake: CameraShake = CameraShake.new()
 ## Seconds of the longest enemy hit clip of the run.
 var _hit_keep: float = 0.0
 ## Gem pickups in flight: [from px, value, age seconds].
@@ -374,6 +377,8 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_hero_moving = false
 	_flash = 0.0
 	_flash_rest = 0.0
+	_shake.clear()
+	_camera.offset = Vector2.ZERO
 	if _results != null:
 		_results.close()
 	_rewards.hide()
@@ -451,6 +456,8 @@ func _show_class_select() -> void:
 	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), CELL_PX)
 	_camera.position = IsoProjection.to_screen(centre)
 	_camera.reset_smoothing()
+	_shake.clear()
+	_camera.offset = Vector2.ZERO
 	_ground.follow(centre, _camera.position, CAMERA_ZOOM, false)
 	_class_select.open(_registry, session_profile.granted_unlock_ids(), _last_class_id)
 	queue_redraw()
@@ -510,6 +517,8 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	_add_effects(events)
 	_flash = maxf(_flash - delta, 0.0)
 	_flash_rest = maxf(_flash_rest - delta, 0.0)
+	if driver.world.hero_hp < hp_before:
+		_shake.add(CameraShake.TRAUMA_HIT)
 	if driver.world.hero_hp < hp_before and _flash <= 0.0 and _flash_rest <= 0.0:
 		_flash = HIT_FLASH
 		_flash_rest = HIT_FLASH + HIT_FLASH_REST
@@ -627,6 +636,8 @@ func _age_effects(delta: float) -> void:
 	_pickups = _pickups.filter(func(pickup: Array) -> bool: return pickup[2] < PICKUP_FLY + PICKUP_TEXT)
 	if _vfx != null:
 		_vfx.age(delta)
+	_shake.age(delta)
+	_camera.offset = _shake.offset(settings.screenshake if settings != null else 0.0)
 
 
 ## Enemies face the hero on screen; each axis turns with a deadband so a horde does not flicker.
@@ -707,6 +718,7 @@ func _advance_hero_clips(delta: float, casts: Array) -> void:
 		_death_time += delta
 	elif driver.world.is_over() and driver.world.hero_dead != 0:
 		_death_time = 0.0
+		_shake.add(CameraShake.TRAUMA_DEATH)
 
 
 ## [asset_id, clip, direction, frame] of the hero. An animated atlas (ADR-014 A4) plays death
