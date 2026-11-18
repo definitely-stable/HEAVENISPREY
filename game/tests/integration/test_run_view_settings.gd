@@ -42,3 +42,16 @@ func test_hit_flash_setting_scales_the_white_flashes() -> void:
 	view.settings.hit_flash = 0.0
 	assert_eq(view._enemy_flash(4), 0.0, "0 turns the flashes off")
 	assert_eq(view._hero_flash_share(), 0.0)
+
+
+func test_the_damage_number_mode_comes_from_the_settings() -> void:
+	var packed: PackedScene = load(RUN_SCENE)
+	var view: RunView = packed.instantiate()
+	view.settings = PresentationSettings.new()
+	view.settings.floating_damage_numbers = "aggregate"
+	add_child_autofree(view)
+	assert_eq(view._vfx.number_mode, "aggregate")
+	var replay: RunView = packed.instantiate()
+	replay.read_player_input = false
+	add_child_autofree(replay)
+	assert_eq(replay._vfx.number_mode, "all", "replays and captures keep a number per blow")

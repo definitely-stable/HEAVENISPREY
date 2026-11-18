@@ -241,6 +241,7 @@ func _ready() -> void:
 	_class_select.class_confirmed.connect(_on_class_confirmed)
 	layer.add_child(_class_select)
 	_vfx = CombatVfx.load_default(_hud.kit.font)
+	_vfx.number_mode = settings.floating_damage_numbers
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
 	_show_class_select()
