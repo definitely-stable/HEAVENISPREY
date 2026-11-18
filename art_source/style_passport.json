@@ -114,6 +114,19 @@
         "#ddc3ba"
       ],
       "max_palette_delta_e": 15
+    },
+    "ui_thunder": {
+      "colours": [
+        "#211a35",
+        "#433274",
+        "#7165b5",
+        "#9387ff",
+        "#76a8f4",
+        "#b7ceff",
+        "#f0f0ff",
+        "#b18a58"
+      ],
+      "max_palette_delta_e": 16
     }
   }
 }

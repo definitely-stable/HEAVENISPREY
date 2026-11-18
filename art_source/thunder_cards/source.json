@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.ui.thunder_cards",
+  "kind": "ui_atlas",
+  "group": "ui",
+  "asset_version": 1,
+  "content_ids": [],
+  "master": "master.png",
+  "references": [
+    {
+      "id": "REF-011",
+      "file": "Выберите улучшение_ Небесный клинковый ливень.png",
+      "sha256": "c9b679bbb8a3454abb955815a583315b675e253826368aef3fe5e46096e2a45e"
+    },
+    {
+      "id": "REF-067",
+      "file": "HUD боя_ медальон, полосы HP и Ци, таймер.png",
+      "sha256": "5ac4dcb05ee14a0b65daa7a902beb5d3642d086be38d8fefbd485806053652d2"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in tool, AGENTS.md p.3)",
+    "tool_version": "Codex built-in ImageGen",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "3fa4ece29dee4288c0a4884aa442fb3d18664e0852771246d9db8d71d5a33b4f",
+    "created": "2026-11-19",
+    "master_sha256": "e73b8e11559412f780973c48d09b674efeb5a9a568c546a3153379a1f5f4706b",
+    "master_note": "The original generated 2×2 sheet. Visual anchors are the approved gold frames and the project's xianxia skill illustrations."
+  },
+  "palette_group": "ui_thunder",
+  "density": 2.0,
+  "sheet": {
+    "background": "black",
+    "black_floor": 12,
+    "cut": "cell",
+    "cell_inset_px": 8
+  },
+  "sheets": [
+    {
+      "name": "thunder",
+      "origin": [
+        0,
+        0
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "grid": [
+        2,
+        2
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "art_thunder_damage",
+      "sheet": "thunder",
+      "cell": 0,
+      "height_px": 172
+    },
+    {
+      "name": "art_thunder_haste",
+      "sheet": "thunder",
+      "cell": 1,
+      "height_px": 170
+    },
+    {
+      "name": "art_thunder_jumps",
+      "sheet": "thunder",
+      "cell": 2,
+      "height_px": 166
+    },
+    {
+      "name": "art_thunder_reach",
+      "sheet": "thunder",
+      "cell": 3,
+      "height_px": 96
+    }
+  ]
+}

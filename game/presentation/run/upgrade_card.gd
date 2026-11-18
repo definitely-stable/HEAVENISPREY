@@ -9,12 +9,15 @@ extends RefCounted
 const ART_PIECES: Array[String] = [
 	"art_speed", "art_vitality", "art_pickup", "art_count", "art_damage", "art_haste", "art_pierce", "art_recover",
 ]
+const THUNDER_ART_PIECES: Array[String] = [
+	"art_thunder_damage", "art_thunder_haste", "art_thunder_jumps", "art_thunder_reach",
+]
 
 
 ## Name of the card illustration of `code` in the HUD kit.
 static func art_piece(code: int, form: int = SimConfig.SKILL_PROJECTILE) -> String:
 	if form == SimConfig.SKILL_CHAIN and code >= UpgradeSystem.THUNDER_DAMAGE and code <= UpgradeSystem.THUNDER_REACH:
-		return ""
+		return THUNDER_ART_PIECES[code - UpgradeSystem.THUNDER_DAMAGE]
 	return ART_PIECES[code] if code >= 0 and code < ART_PIECES.size() else ""
 
 
@@ -56,7 +59,7 @@ static func describe(config: SimConfig, world: WorldState, code: int) -> Diction
 	}
 
 
-## The value the card changes, in player units: px/s, HP, px, swords, attacks/s, enemies.
+## The value the card changes, in player units: px/s, HP, arena cells, swords, attacks/s, enemies.
 static func stat(config: SimConfig, world: WorldState, code: int) -> String:
 	if config.skill_form == SimConfig.SKILL_CHAIN:
 		match code:
@@ -67,7 +70,7 @@ static func stat(config: SimConfig, world: WorldState, code: int) -> String:
 			UpgradeSystem.THUNDER_JUMPS:
 				return str(UpgradeSystem.chain_hits(config, world))
 			UpgradeSystem.THUNDER_REACH:
-				return str(roundi(float(UpgradeSystem.chain_reach(config, world)) / Fx.FX_ONE))
+				return _cells(UpgradeSystem.chain_reach(config, world))
 	match code:
 		UpgradeSystem.SPEED:
 			var per_second: float = UpgradeSystem.hero_speed(config, world) * float(Fx.TICKS_PER_SECOND)
@@ -75,7 +78,7 @@ static func stat(config: SimConfig, world: WorldState, code: int) -> String:
 		UpgradeSystem.VITALITY:
 			return _hp(world.hero_hp_max)
 		UpgradeSystem.PICKUP:
-			return str(roundi(float(UpgradeSystem.pickup_radius(config, world)) / Fx.FX_ONE))
+			return _cells(UpgradeSystem.pickup_radius(config, world))
 		UpgradeSystem.COUNT:
 			return str(UpgradeSystem.projectile_count(world))
 		UpgradeSystem.DAMAGE:
@@ -92,6 +95,10 @@ static func stat(config: SimConfig, world: WorldState, code: int) -> String:
 static func _casts_per_second(config: SimConfig, world: WorldState) -> String:
 	var rate: float = float(UpgradeSystem.skill_rate(config, world)) * Fx.TICKS_PER_SECOND
 	return "%.2f" % (rate / maxf(1.0, float(config.skill_period_mt)))
+
+
+static func _cells(su: int) -> String:
+	return String.num(float(su) / float(P0Tuning.CELL_PX * Fx.FX_ONE), 2).trim_suffix(".0")
 
 
 ## Milli-HP shown as whole HP.

@@ -26,10 +26,10 @@ const CAPSULE_SCALE: float = 1.15
 const TIMER_FONT_SIZE: int = 30
 const TITLE_FONT_SIZE: int = 17
 const COUNT_FONT_SIZE: int = 22
-const BAR_FONT_SIZE: int = 14
+const BAR_FONT_SIZE: int = 18
 const LEVEL_FONT_SIZE: int = 19
-## Numbers over the bright fill get a heavier outline.
-const BAR_OUTLINE: int = 1
+const HP_VALUE_WIDTH: float = 108.0
+const HP_SCRIM: Color = Color(0.10, 0.04, 0.06, 0.56)
 ## The stage name shows under the cartouche for this many seconds of the run, then fades out.
 const TITLE_SECONDS: float = 6.0
 const TITLE_FADE_SECONDS: float = 1.0
@@ -66,6 +66,7 @@ var kit: HudKit
 var _trail: float = 1.0
 var _trail_wait: float = 0.0
 var _clock: float = 0.0
+var _hp_scrim: GradientTexture1D = _make_hp_scrim()
 
 
 ## Rects of the HUD groups on a canvas of `size` (screen px), for the kit `kit`.
@@ -169,7 +170,24 @@ func _draw_hp(rect: Rect2, share: float, label: String) -> void:
 		tint = tint.lerp(Color(1.25, 0.95, 0.95), 0.5 + 0.5 * sin(_clock * TAU * LOW_PULSE_HZ))
 	kit.draw_fill(self, "fill_hp", trough, share, tint)
 	_draw_fill_edge(trough, share)
-	kit.draw_text_in(self, label, _inset(trough, TEXT_INSET), BAR_FONT_SIZE, COLOR_TEXT, SAMPLE_HP, BAR_OUTLINE)
+	var value_box: Rect2 = hp_value_box(trough)
+	draw_texture_rect(_hp_scrim, value_box, false)
+	kit.draw_text_in(self, label, value_box, BAR_FONT_SIZE, COLOR_TEXT, SAMPLE_HP)
+
+
+static func hp_value_box(trough: Rect2) -> Rect2:
+	var width: float = minf(HP_VALUE_WIDTH, trough.size.x)
+	return Rect2(trough.get_center().x - width * 0.5, trough.position.y, width, trough.size.y)
+
+
+static func _make_hp_scrim() -> GradientTexture1D:
+	var gradient: Gradient = Gradient.new()
+	var faint: Color = Color(HP_SCRIM, 0.0)
+	gradient.offsets = PackedFloat32Array([0.0, 0.12, 0.88, 1.0])
+	gradient.colors = PackedColorArray([faint, HP_SCRIM, HP_SCRIM, faint])
+	var result: GradientTexture1D = GradientTexture1D.new()
+	result.gradient = gradient
+	return result
 
 
 func _draw_qi(rect: Rect2, share: float) -> void:
