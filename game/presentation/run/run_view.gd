@@ -1,13 +1,11 @@
 class_name RunView
 extends Node2D
-## P0 placeholder run scene: hero movement and auto-attack, jade_grove w0 enemies, contact
-## damage and kills in the courtyard of the ruined sect (ArenaDressing). Reads simulation state only;
-## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
+## The Jade Grove run presents simulation state. Input reaches it through FixedTickDriver,
+## and tuning comes from P0Tuning
 ## (placeholder bases). Hit reactions, falls and decay (EnemyReactions), gem pickup flights and
 ## the level-up ring are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
 ## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
-## A finished run (victory after the stage duration or defeat) stays under RunResults until
-## the player starts a new one (ADR-011 section 1).
+## A finished run presents its Results and Rewards before returning to class selection.
 ## Sprites (ADR-013): the floor texture, the hero and the enemies with an asset in
 ## SpriteSet are drawn as atlas frames sorted by depth over blob shadows; anything without an
 ## asset keeps its primitive, so the scene stays playable with no assets at all.
@@ -198,6 +196,8 @@ static func placeholder_config() -> SimConfig:
 
 
 func _ready() -> void:
+	if ExportReplay.launch_requested(self):
+		return
 	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
 	session_profile.registry = _registry
