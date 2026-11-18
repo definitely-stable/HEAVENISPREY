@@ -229,6 +229,10 @@
    "value": 6
   },
   {
+   "expected": "7000",
+   "value": 7
+  },
+  {
    "expected": "8000",
    "value": 8
   },
@@ -245,8 +249,16 @@
    "value": 12
   },
   {
+   "expected": "13000",
+   "value": 13
+  },
+  {
    "expected": "15000",
    "value": 15
+  },
+  {
+   "expected": "16000",
+   "value": 16
   },
   {
    "expected": "20000",
@@ -415,6 +427,30 @@
   {
    "expected": "400000",
    "value": 400
+  },
+  {
+   "expected": "405000",
+   "value": 405
+  },
+  {
+   "expected": "510000",
+   "value": 510
+  },
+  {
+   "expected": "615000",
+   "value": 615
+  },
+  {
+   "expected": "720000",
+   "value": 720
+  },
+  {
+   "expected": "810000",
+   "value": 810
+  },
+  {
+   "expected": "900000",
+   "value": 900
   }
  ],
  "from_catalog_rejected": [

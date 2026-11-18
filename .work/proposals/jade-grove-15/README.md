@@ -23,7 +23,7 @@
 
 ## Balance evidence
 
-On seeds 101–132 with the existing `kiter_upgrades` policy, Sword cleared 32/32 and Thunder cleared 19/32. Successful runs had median kills of 2471 and 2470 respectively. The highest concurrent population was 32 and 31. On seed 101 both classes took their last ranked upgrade at 11:16 and made 26 level-up picks overall. Sword's bot had filled its damage, haste, count and pierce ranks by 02:37, while Thunder's continued improving chain reach through 11:16. Further balance work is needed for Thunder on the longer profile.
+On seeds 101–132 with the existing `kiter_upgrades` policy, Sword cleared 32/32 and Thunder cleared 19/32. A Thunder policy that prioritized speed and health cleared 24/32 with the same game config. Successful runs under `kiter_upgrades` had median kills of 2471 and 2470 respectively. The highest concurrent population was 32 and 31. On seed 101 both classes took their last ranked upgrade at 11:16 and made 26 level-up picks overall. Sword's bot had filled its damage, haste, count and pierce ranks by 02:37, while Thunder's continued improving chain reach through 11:16. Further balance work is needed for Thunder on the longer profile.
 
 ```text
 python tools/content/sim_bots.py --jade-grove-15 --check

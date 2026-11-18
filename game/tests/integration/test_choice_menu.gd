@@ -4,7 +4,7 @@ extends GutTest
 ## log, RU/EN card texts and a bot log with choices replayed through the scene.
 
 const RUN_SCENE: String = "res://presentation/run/run_view.tscn"
-const UPGRADE_RUNS: String = "res://tests/fixtures/sim_bot_upgrade_runs.json"
+const UPGRADE_RUNS: String = "res://tests/fixtures/jade_grove_15_runs.json"
 const TICK: float = 1.0 / 60.0
 const SEED: String = "20261113"
 
@@ -282,7 +282,7 @@ func test_menu_open_five_seconds_at_60_and_15_fps_gives_the_same_run() -> void:
 func test_kiter_upgrades_log_replays_through_the_scene() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(UPGRADE_RUNS))
 	var row: Dictionary = (data["traces"] as Array)[0]
-	assert_eq(str(row["id"]), "botrun.p0.kiter_upgrades.s101")
+	assert_eq(str(row["id"]), "botrun.jade_grove_15.sword.s101")
 	var mark: Dictionary = {}
 	for checkpoint: Variant in row["checkpoints"]:
 		mark = checkpoint
