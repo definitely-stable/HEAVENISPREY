@@ -121,7 +121,7 @@ func test_a_replay_view_gets_the_reference_settings() -> void:
 	add_child_autofree(view)
 	assert_not_null(view.settings, "settings are loaded in _ready")
 	assert_eq(view.settings.screenshake, 0.0, "no shake in tests, replays and captures")
-	assert_eq(view.settings.floating_damage_numbers, "off")
+	assert_eq(view.settings.floating_damage_numbers, "all")
 	assert_eq(view.settings.own_skill_opacity, 1.0)
 
 
