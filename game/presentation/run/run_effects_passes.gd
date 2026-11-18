@@ -98,8 +98,12 @@ static func _draw_hero_hit(canvas: CanvasItem, feet: Vector2, remaining: float) 
 	var left: Vector2 = feet + Vector2(-spread, 4.0)
 	var right: Vector2 = feet + Vector2(spread, 4.0)
 	var lines: PackedVector2Array = PackedVector2Array([
-		left + Vector2(6, -5), left, left, left + Vector2(6, 5),
-		right + Vector2(-6, -5), right, right, right + Vector2(-6, 5),
+		left + Vector2(5, -5), left + Vector2(0, -5),
+		left + Vector2(0, -5), left + Vector2(0, 5),
+		left + Vector2(0, 5), left + Vector2(5, 5),
+		right + Vector2(-5, -5), right + Vector2(0, -5),
+		right + Vector2(0, -5), right + Vector2(0, 5),
+		right + Vector2(0, 5), right + Vector2(-5, 5),
 	])
 	canvas.draw_multiline(lines, Color(0.13, 0.08, 0.08, 0.95 * remaining), 5.0, true)
 	canvas.draw_multiline(lines, Color(1.0, 0.87, 0.60, remaining), 2.5, true)
