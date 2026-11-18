@@ -126,6 +126,9 @@ const ENEMY_COLORS: Array[Color] = [
 @export var read_player_input: bool = true
 
 var driver: FixedTickDriver
+## View-only settings (QUALITY-2026-11 Q1). Loaded from user://settings.cfg in _ready unless set
+## before; tests, replays and captures (read_player_input = false) get the reference look.
+var settings: PresentationSettings
 var tuning: P0Tuning = P0Tuning.new()
 var runs_started: int = 0
 var session_profile: P0SessionProfile = P0SessionProfile.new()
@@ -198,6 +201,8 @@ static func placeholder_config() -> SimConfig:
 
 
 func _ready() -> void:
+	if settings == null:
+		settings = PresentationSettings.load_from() if read_player_input else PresentationSettings.reference_look()
 	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
 	session_profile.registry = _registry
