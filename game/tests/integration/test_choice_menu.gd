@@ -42,7 +42,7 @@ static func _driver_to_pause(driver: FixedTickDriver, delta: float, move: Vector
 
 
 func test_game_runs_with_the_immediate_choice() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	assert_eq(config.choice_mode, SimConfig.CHOICE_IMMEDIATE)
 
 
@@ -162,7 +162,7 @@ func test_cards_come_from_the_gold_kit() -> void:
 ## lotus crest, at a readable size; long names take two lines and the illustration gives way.
 func test_every_card_text_stays_in_its_panel() -> void:
 	var kit: HudKit = HudKit.load_default()
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var world: WorldState = FixedTickDriver.create(config).world
 	var rect: Rect2 = Rect2(Vector2.ZERO, ChoiceMenu.CARD_SIZE)
 	var panel: Rect2 = rect
@@ -235,7 +235,7 @@ func test_choice_focus_follows_keyboard_and_controller() -> void:
 
 
 func test_driver_does_not_record_a_card_that_does_not_exist() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	assert_false(driver.choose(0), "no pause, no choice")
 	_driver_to_pause(driver, TICK, Vector2i.ZERO)
@@ -248,7 +248,7 @@ func test_driver_does_not_record_a_card_that_does_not_exist() -> void:
 
 
 func test_menu_open_five_seconds_at_60_and_15_fps_gives_the_same_run() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var runs: Array[FixedTickDriver] = []
 	for fps: float in [60.0, 15.0]:
 		var driver: FixedTickDriver = FixedTickDriver.create(config)
@@ -323,7 +323,7 @@ func test_kiter_upgrades_log_replays_through_the_scene() -> void:
 
 func test_card_texts_in_both_locales() -> void:
 	assert_true(UiText.ensure_loaded())
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var world: WorldState = WorldState.initial(config)
 	TranslationServer.set_locale("en")
 	var damage: Dictionary = UpgradeCard.describe(config, world, UpgradeSystem.DAMAGE)
@@ -344,7 +344,7 @@ func test_card_texts_in_both_locales() -> void:
 
 
 func test_card_stat_lines_follow_the_simulation() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), SEED)
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var world: WorldState = WorldState.initial(config)
 	var expected: Dictionary = {
 		UpgradeSystem.SPEED: ["288", "302"], UpgradeSystem.VITALITY: ["100", "120"],

@@ -128,6 +128,8 @@ const ENEMY_COLORS: Array[Color] = [
 var driver: FixedTickDriver
 var tuning: P0Tuning = P0Tuning.new()
 var runs_started: int = 0
+var session_profile: P0SessionProfile = P0SessionProfile.new()
+var rules_snapshot: RunRulesSnapshot
 var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
@@ -217,7 +219,8 @@ func _ready() -> void:
 	_vfx = CombatVfx.load_default(_hud.kit.font)
 	_build_layers()
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
-	start_run(str(randi()))
+	driver = FixedTickDriver.create(placeholder_config())
+	start_run()
 
 
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
@@ -310,12 +313,27 @@ func lantern_positions() -> Array[Vector2]:
 	return _lanterns
 
 
-## Starts a fresh run; falls back to the empty arena when content cannot be assembled.
-func start_run(seed_text: String) -> void:
-	var config: SimConfig = tuning.run_config(_registry, seed_text)
+## Starts a fresh authorized run. An invalid request leaves the current run intact.
+func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> bool:
+	if seed_text == null:
+		seed_text = _random_run_seed()
+	if seed_text is not String:
+		push_error("P0 run refused: seed must be a canonical uint64 decimal string")
+		return false
+	var snapshot: RunRulesSnapshot = RunRulesSnapshot.create_for_new_run(
+		_registry, session_profile.granted_unlock_ids(), class_id, P0Tuning.STAGE_ID,
+		"difficulty.standard", PackedStringArray(["mode.normal"]), seed_text
+	)
+	if not snapshot.is_valid():
+		push_error("P0 run refused: " + snapshot.error)
+		return false
+	var candidate: P0Tuning = P0Tuning.new()
+	var config: SimConfig = candidate.run_config(_registry, snapshot)
 	if config == null:
-		push_error("P0 run without enemies: " + tuning.error)
-		config = placeholder_config()
+		push_error("P0 run refused: " + candidate.error)
+		return false
+	tuning = candidate
+	rules_snapshot = snapshot
 	driver = FixedTickDriver.create(config)
 	if _hud != null:
 		_hud.driver = driver
@@ -347,13 +365,27 @@ func start_run(seed_text: String) -> void:
 	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
 	_sync_menu()
 	queue_redraw()
+	return true
+
+
+static func _random_run_seed() -> String:
+	var bytes: PackedByteArray = Crypto.new().generate_random_bytes(8)
+	if bytes.size() != 8:
+		return ""
+	var signed_word: int = bytes.decode_s64(0)
+	if signed_word >= 0:
+		return str(signed_word)
+	# The signed shift supplies the upper 63 bits. Use 10 = 2 * 5 before doubling.
+	var upper: int = (signed_word >> 1) & 0x7fffffffffffffff
+	var prefix: int = Fx.floor_div(upper, 5)
+	return str(prefix) + str((upper - prefix * 5) * 2 + (signed_word & 1))
 
 
 func _process(delta: float) -> void:
 	if not read_player_input:
 		return
 	if Input.is_action_just_pressed("restart"):
-		start_run(str(randi()))
+		start_run()
 		return
 	if Input.is_action_just_pressed("ui_accept") and confirm_results():
 		return
@@ -371,8 +403,7 @@ func _flicker() -> void:
 func confirm_results() -> bool:
 	if _results == null or not _results.is_armed():
 		return false
-	start_run(str(randi()))
-	return true
+	return start_run()
 
 
 func is_results_open() -> bool:
@@ -381,6 +412,8 @@ func is_results_open() -> bool:
 
 ## One presentation frame; `move` is in world axes (tests and replays feed it directly).
 func advance_frame(delta: float, move: Vector2i) -> int:
+	if rules_snapshot == null:
+		return 0
 	if driver.world.is_paused():
 		# The run waits for a card; effects freeze with it.
 		_sync_menu()

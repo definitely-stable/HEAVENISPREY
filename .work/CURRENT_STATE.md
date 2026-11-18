@@ -34,3 +34,8 @@
 **Governance:** DESIGN PROPOSAL после merge остаётся проектным предложением. Не переносить автоматически в игру SHA256-based RNG, pity-after-2 или sample caps. Перед новой работой перепроверить HEAD/CI/PR live. Не оставлять обычные готовые PR открытыми после зелёного CI/diff-review.
 
 [Readiness](development/READINESS_AUDIT.md) · [System binding](development/SYSTEM_BINDING.md) · [Roadmap](roadmap/NEXT_SLICES.md) · [Draft contract](spec/v7/draft-contract-002.md) · [Choice ViewModel](spec/v7/choice-viewmodel-001.md)
+
+## P0-02-C1 · класс в правилах забега
+
+- **Локальная реализация (2026-11-18):** запуск мечника через RunRulesSnapshot и проверку RunEligibility. RunView передаёт в симуляцию seed снимка, а P0Tuning читает класс и стадию из него. Невалидный или закрытый запуск сохраняет текущий забег.
+- **Проверка:** [TASK_SPEC C1](proposals/p0-02-c1/README.md). Схема симуляции 13.

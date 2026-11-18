@@ -60,7 +60,7 @@ static func _spawned(config: SimConfig, ticks: int) -> WorldState:
 
 
 func test_window_of_a_tick() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "1")
+	var config: SimConfig = P0TestSetup.sword_config("1")
 	assert_not_null(config)
 	var starts: Array = []
 	for tick: int in [0, 5099, 5100, 10499, 10500, 17999, 18000, 90000]:

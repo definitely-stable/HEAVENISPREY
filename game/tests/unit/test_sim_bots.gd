@@ -111,7 +111,7 @@ func test_kiter_upgrades_log_replays_with_its_choices() -> void:
 
 
 func test_the_game_tuning_is_the_bot_config() -> void:
-	var tuned: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "101")
+	var tuned: SimConfig = P0TestSetup.sword_config("101")
 	var row: Dictionary = (_upgrades.get("traces", []) as Array)[0]
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
 	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
