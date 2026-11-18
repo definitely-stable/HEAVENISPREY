@@ -9,8 +9,8 @@ static func draw_over_pass(view: RunView) -> void:
 	var canvas: Node2D = view._over
 	if view._chain_left > 0.0:
 		var alpha: float = view._chain_left / 0.12
-		canvas.draw_polyline(view._chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
-		canvas.draw_polyline(view._chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
+		canvas.draw_polyline(view._chain_line, view.own_color(Color(0.50, 0.49, 1.0, alpha)), 5.0, true)
+		canvas.draw_polyline(view._chain_line, view.own_color(Color(0.85, 0.92, 1.0, alpha)), 2.0, true)
 	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px())
 	var stacks: int = view.driver.world.venom_stacks
 	var top: float = -view._hero_height() - 8.0
@@ -81,8 +81,8 @@ static func draw_glow_pass(view: RunView) -> void:
 		if light:
 			view._vfx.draw_sword(canvas, at, heading)
 			continue
-		canvas.draw_line(at - heading * radius * 6.0, at, RunView.COLOR_SWORD_TRAIL, radius * 0.9)
-		RunLighting.halo(canvas, view._halo_texture, at, radius * 2.6, RunView.COLOR_SWORD_GLOW)
+		canvas.draw_line(at - heading * radius * 6.0, at, view.own_color(RunView.COLOR_SWORD_TRAIL), radius * 0.9)
+		RunLighting.halo(canvas, view._halo_texture, at, radius * 2.6, view.own_color(RunView.COLOR_SWORD_GLOW))
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
 			var at: Vector2 = IsoProjection.to_screen(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
