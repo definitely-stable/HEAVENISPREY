@@ -25,7 +25,7 @@ static func stress_config() -> SimConfig:
 
 
 static func stress_attacks_config() -> SimConfig:
-	var tuned: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var tuned: SimConfig = P0TestSetup.sword_config("20261113")
 	return tuned.with_enemies(
 		PackedInt64Array([500000000, 6000, 0, 1000, 150, 384000]), tuned.kinds, "20261113"
 	).with_windows(

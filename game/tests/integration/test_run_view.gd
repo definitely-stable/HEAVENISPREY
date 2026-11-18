@@ -157,7 +157,7 @@ func test_hero_cannot_leave_arena() -> void:
 
 func test_tuning_reads_the_roster_windows_from_content() -> void:
 	var tuning: P0Tuning = P0Tuning.new()
-	var config: SimConfig = tuning.run_config(ContentRegistry.load_dir(), "20261113")
+	var config: SimConfig = P0TestSetup.sword_config("20261113", tuning)
 	assert_not_null(config, tuning.error)
 	assert_true(config.is_valid())
 	# The union of w0..w3 in the order of first appearance (ADR-011 E6).
@@ -201,9 +201,9 @@ func test_tuning_reads_the_roster_windows_from_content() -> void:
 
 func test_tuning_fails_closed_without_content() -> void:
 	var tuning: P0Tuning = P0Tuning.new()
-	assert_null(tuning.run_config(ContentRegistry.load_dir("res://does_not_exist"), "1"))
+	assert_null(tuning.run_config(ContentRegistry.load_dir("res://does_not_exist"), null))
 	assert_ne(tuning.error, "")
-	assert_null(P0Tuning.new().run_config(ContentRegistry.load_dir(), "not-a-seed"))
+	assert_null(P0TestSetup.sword_config("not-a-seed"))
 
 
 func test_enemies_spawn_and_hurt_a_standing_hero() -> void:
@@ -254,7 +254,7 @@ func test_finished_run_waits_for_the_player() -> void:
 
 
 func test_driver_reports_hits_and_kills_once() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var config: SimConfig = P0TestSetup.sword_config("20261113")
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	var hits: int = 0
 	var kills: Array = []
@@ -271,7 +271,7 @@ func test_driver_reports_hits_and_kills_once() -> void:
 
 
 func test_enemy_in_a_reused_slot_is_not_interpolated() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var config: SimConfig = P0TestSetup.sword_config("20261113")
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	for _i: int in 101:
 		driver.advance(TICK, Vector2i.ZERO)
@@ -307,7 +307,7 @@ func test_scene_reports_gem_pickups_and_levels() -> void:
 
 ## ADR-014 A4: every fired projectile is reported once as a cast with its aim.
 func test_driver_reports_casts_once() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var config: SimConfig = P0TestSetup.sword_config("20261113")
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	var casts: int = 0
 	for _i: int in 900:

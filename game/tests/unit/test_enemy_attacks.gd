@@ -165,7 +165,7 @@ func test_tuning_builds_the_arc_kinds_from_content() -> void:
 
 
 func test_p0_run_has_an_attack_per_kind() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "101")
+	var config: SimConfig = P0TestSetup.sword_config("101")
 	assert_not_null(config)
 	assert_eq(config.attacks.size(), config.kind_count() * SimConfig.ATTACK_STRIDE)
 	for kind: int in 3:

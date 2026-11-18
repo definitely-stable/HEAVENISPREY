@@ -87,7 +87,7 @@ func test_large_gems_are_lotuses() -> void:
 
 
 func test_driver_reports_every_blow_with_its_damage() -> void:
-	var config: SimConfig = P0Tuning.new().run_config(ContentRegistry.load_dir(), "20261113")
+	var config: SimConfig = P0TestSetup.sword_config("20261113")
 	var driver: FixedTickDriver = FixedTickDriver.create(config)
 	var hits: int = 0
 	var kills: Array = []
