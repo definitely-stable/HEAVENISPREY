@@ -1,20 +1,15 @@
 shader_type canvas_item;
 // ADR-014 section 4 and A3 polish: the mist under the floating courtyard (REF-033, REF-056).
 // Two screen-wide rects behind the ground share this shader: the sky (veil = false) is the
-// dusk gradient, opaque; the veil (veil = true) is two layers of drifting value noise over
-// the distant spires drawn between them, thicker towards the bottom of the screen where the
-// abyss is. The camera offset gives the mist a slow parallax. Presentation only.
+// dusk gradient; the veil rolls through the spires and thickens down in the gorge.
 
 uniform bool veil = false;
-uniform vec4 top_color : source_color = vec4(0.17, 0.13, 0.21, 1.0);
-uniform vec4 bottom_color : source_color = vec4(0.08, 0.06, 0.11, 1.0);
-uniform vec4 mist_color : source_color = vec4(0.52, 0.45, 0.62, 1.0);
-uniform float mist_amount = 0.46;
-// Extra mist at the bottom of the screen (0 = even).
-uniform float depth_gain = 0.35;
+uniform vec4 top_color : source_color = vec4(0.22, 0.23, 0.31, 1.0);
+uniform vec4 bottom_color : source_color = vec4(0.13, 0.15, 0.22, 1.0);
+uniform vec4 mist_color : source_color = vec4(0.47, 0.52, 0.66, 1.0);
 uniform vec2 camera_offset = vec2(0.0);
 uniform float parallax = 0.35;
-uniform float scale = 0.0032;
+uniform float scale = 0.0036;
 uniform float drift = 0.012;
 
 float hash(vec2 p) {
@@ -32,7 +27,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
 	float value = 0.0;
 	float weight = 0.5;
-	for (int octave = 0; octave < 5; octave++) {
+	for (int octave = 0; octave < 4; octave++) {
 		value += weight * noise(p);
 		p = p * 2.03 + vec2(17.0, 9.0);
 		weight *= 0.5;
@@ -44,13 +39,13 @@ void fragment() {
 	if (!veil) {
 		COLOR = vec4(mix(top_color.rgb, bottom_color.rgb, SCREEN_UV.y), 1.0);
 	} else {
-		vec2 world = FRAGCOORD.xy + camera_offset * parallax;
-		vec2 p = world * scale * vec2(1.0, 2.0);
+		vec2 world = (SCREEN_UV - vec2(0.5)) / SCREEN_PIXEL_SIZE + camera_offset * parallax;
+		vec2 p = world * scale * vec2(0.73, 2.0);
 		float t = TIME * drift;
-		float low = fbm(p + vec2(t * 3.0, t));
-		float high = fbm(p * 2.2 - vec2(t * 5.0, -t * 2.0));
-		float mist = smoothstep(0.35, 0.85, low * 0.65 + high * 0.45);
-		float depth = 1.0 + depth_gain * (SCREEN_UV.y - 0.5);
-		COLOR = vec4(mist_color.rgb, clamp(mist * mist_amount * depth, 0.0, 1.0));
+		float banks = fbm(p + vec2(-t * 2.5, t * 0.35));
+		float wisps = noise(p * 2.2 - vec2(t * 4.0, -t * 0.6));
+		float mist = smoothstep(0.2, 0.79, banks * 0.86 + wisps * 0.19);
+		float depth = smoothstep(0.19, 1.0, SCREEN_UV.y);
+		COLOR = vec4(mist_color.rgb, 0.07 + depth * 0.12 + mist * 0.47);
 	}
 }

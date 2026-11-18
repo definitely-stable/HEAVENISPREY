@@ -22,7 +22,12 @@ const VOID_CHAR: String = " "
 ## Arena cells of open floor (the inlay runs over them).
 const FLOOR_CHARS: String = ".S"
 ## Screen px the cliff face drops under the near edges before the mist swallows it.
-const CLIFF_PX: float = 240.0
+const CLIFF_PX: float = 288.0
+const CLIFF_DEPTHS: Array[float] = [0.0, 0.14, 0.42, 0.72, 1.0]
+const CLIFF_VISIBILITY: Array[float] = [1.0, 1.0, 0.9, 0.48, 0.0]
+const BRIDGE_SPANS: int = 2
+const BRIDGE_INTRADOS_PX: float = 58.0
+const BRIDGE_EDGE_STEPS: int = 4
 const COLOR_FLOOR_FLAT: Color = Color(0.42, 0.37, 0.44)
 const COLOR_CLIFF_FLAT: Color = Color(0.22, 0.18, 0.25)
 const MIST_SHADER: Shader = preload("res://presentation/run/shaders/mist.gdshader")
@@ -65,11 +70,13 @@ const WATERFALL_TOP_PX: float = 24.0
 const WATERFALL_DROP_PX: float = 330.0
 ## Share of the camera travel the distant scenery follows (1 = glued to the courtyard).
 const BACKDROP_PARALLAX: float = 0.5
+const FAR_PARALLAX: float = 0.24
+const NEAR_PLANE: float = 0.55
 ## Distant spires fade into the mist over this share of their height from the base, and are
 ## tinted by the haze: far ones more than near ones.
-const BACKDROP_FADE: float = 0.45
-const BACKDROP_HAZE_FAR: Color = Color(0.5, 0.47, 0.68, 0.82)
-const BACKDROP_HAZE_NEAR: Color = Color(0.7, 0.64, 0.82, 0.95)
+const BACKDROP_FADE: float = 0.62
+const BACKDROP_HAZE_FAR: Color = Color(0.54, 0.61, 0.76, 0.57)
+const BACKDROP_HAZE_NEAR: Color = Color(0.73, 0.77, 0.91, 0.93)
 
 var lights: Array[Light2D] = []
 var waterfalls: Array[ColorRect] = []
@@ -83,8 +90,6 @@ var _fires: Array[PointLight2D] = []
 var _sky: ColorRect
 var _veil: ColorRect
 var _backdrop: Node2D
-var _backdrop_items: Array[Dictionary] = []
-var _sprites: SpriteSet
 ## The arena file (P0Tuning.arena_data()), its size (world px) and the seal centre (world px).
 var _data: Dictionary
 var _arena: Vector2
@@ -99,13 +104,11 @@ func _init(
 ) -> void:
 	layer = LAYER
 	follow_viewport_enabled = true
-	_sprites = sprites
 	_data = data
 	_arena = Vector2(cells_of(data) * cell_px)
 	_centre = centre_of(data, cell_px)
 	_cell_px = cell_px
-	_backdrop_items = backdrop
-	_build_mist()
+	_build_mist(sprites, backdrop)
 	var ambient: CanvasModulate = CanvasModulate.new()
 	ambient.color = RunLighting.GROUND_AMBIENT
 	add_child(ambient)
@@ -266,14 +269,18 @@ func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0
 	for rect: ColorRect in [_sky, _veil]:
 		(rect.material as ShaderMaterial).set_shader_parameter("camera_offset", centre)
 	var size: Vector2 = get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
-	_backdrop.transform = Transform2D(Vector2(zoom, 0.0), Vector2(0.0, zoom), backdrop_origin(centre, zoom, size))
+	for index: int in _backdrop.get_child_count():
+		var plane: Node2D = _backdrop.get_child(index) as Node2D
+		var parallax: float = FAR_PARALLAX if index == 0 else BACKDROP_PARALLAX
+		plane.scale = Vector2.ONE * zoom
+		plane.position = backdrop_origin(centre, zoom, size, parallax)
 
 
 ## Screen point of the backdrop's origin (the arena centre of the distant scenery) for a view
 ## centred on `view_centre` (projected px) at `zoom` in a window of `size` px.
-func backdrop_origin(view_centre: Vector2, zoom: float, size: Vector2) -> Vector2:
+func backdrop_origin(view_centre: Vector2, zoom: float, size: Vector2, parallax: float = BACKDROP_PARALLAX) -> Vector2:
 	var travel: Vector2 = view_centre - IsoProjection.to_screen(_centre)
-	return size * 0.5 - travel * BACKDROP_PARALLAX * zoom
+	return size * 0.5 - travel * parallax * zoom
 
 
 ## The fire lights at `seconds` of the run (RunLighting.flicker).
@@ -298,7 +305,7 @@ func aura_position() -> Vector2:
 ## Behind the courtyard, on a canvas layer that does not follow the camera: the dusk sky, the
 ## distant spires and pagodas (REF-033, REF-056) and the mist veil drifting in front of them.
 ## The shaders slide with camera_offset; the scenery node is moved by follow().
-func _build_mist() -> void:
+func _build_mist(sprites: SpriteSet, backdrop: Array[Dictionary]) -> void:
 	var back: CanvasLayer = CanvasLayer.new()
 	back.layer = MIST_LAYER
 	add_child(back)
@@ -306,8 +313,9 @@ func _build_mist() -> void:
 	back.add_child(_sky)
 	_backdrop = Node2D.new()
 	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	_backdrop.draw.connect(_draw_backdrop)
 	back.add_child(_backdrop)
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, false))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, true))
 	_veil = _mist_rect(true)
 	back.add_child(_veil)
 
@@ -323,28 +331,42 @@ func _mist_rect(veil: bool) -> ColorRect:
 	return rect
 
 
-## Each distant prop is a quad whose lower part fades out (the mist swallows its base).
-func _draw_backdrop() -> void:
-	for item: Dictionary in _backdrop_items:
-		var quad: Dictionary = _sprites.prop_quad(item["asset"], item["prop"], item["at"], item["scale"], item["flip"])
+## One atlas surface per depth, with the lower part of each peak fading into the mist.
+static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], near_plane: bool) -> MeshInstance2D:
+	var plane: MeshInstance2D = MeshInstance2D.new()
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Dictionary in backdrop:
+		if (float(item["near"]) >= NEAR_PLANE) != near_plane:
+			continue
+		var quad: Dictionary = sprites.prop_quad(item["asset"], item["prop"], item["at"], item["scale"], item["flip"])
 		if quad.is_empty():
 			continue
+		if plane.texture == null:
+			plane.texture = quad["texture"]
 		var rect: Rect2 = quad["rect"]
 		var uv: Rect2 = quad["uv"]
-		var haze: Color = BACKDROP_HAZE_FAR.lerp(BACKDROP_HAZE_NEAR, clampf(item["near"], 0.0, 1.0))
+		var haze: Color = BACKDROP_HAZE_FAR.lerp(BACKDROP_HAZE_NEAR, item["near"])
 		var gone: Color = Color(haze, 0.0)
 		var keep: float = 1.0 - BACKDROP_FADE
 		var mid: float = rect.position.y + rect.size.y * keep
 		var uv_mid: float = uv.position.y + uv.size.y * keep
-		var points: PackedVector2Array = PackedVector2Array([
-			rect.position, Vector2(rect.end.x, rect.position.y), Vector2(rect.end.x, mid), rect.end,
-			Vector2(rect.position.x, rect.end.y), Vector2(rect.position.x, mid),
-		])
-		var uvs: PackedVector2Array = PackedVector2Array([
-			uv.position, Vector2(uv.end.x, uv.position.y), Vector2(uv.end.x, uv_mid), uv.end,
-			Vector2(uv.position.x, uv.end.y), Vector2(uv.position.x, uv_mid),
-		])
-		_backdrop.draw_polygon(points, PackedColorArray([haze, haze, haze, gone, gone, haze]), uvs, quad["texture"])
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([
+			rect.position, Vector2(rect.end.x, rect.position.y), Vector2(rect.position.x, mid),
+			Vector2(rect.end.x, mid), Vector2(rect.position.x, rect.end.y), rect.end,
+		]))
+		uvs.append_array(PackedVector2Array([
+			uv.position, Vector2(uv.end.x, uv.position.y), Vector2(uv.position.x, uv_mid),
+			Vector2(uv.end.x, uv_mid), Vector2(uv.position.x, uv.end.y), uv.end,
+		]))
+		colors.append_array(PackedColorArray([haze, haze, haze, haze, gone, gone]))
+		for offset: int in [0, 2]:
+			indices.append_array(_quad_indices(base + offset))
+	plane.mesh = _surface_mesh(vertices, colors, uvs, indices)
+	return plane
 
 
 ## The paving: one polygon of rectangles over the footprint. With both floor textures the
@@ -474,6 +496,8 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	water.shader = WATERFALL_SHADER
 	for fall: Array in WATERFALLS:
 		var top: Vector2 = waterfall_top(_data, _cell_px, fall[0])
+		if not top.is_finite():
+			continue
 		var width: float = fall[1]
 		var rect: ColorRect = ColorRect.new()
 		rect.material = water
@@ -488,44 +512,136 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 ## middle of the lowest near face within a cell of that screen x.
 static func waterfall_top(data: Dictionary, cell_px: int, share: float) -> Vector2:
 	var faces: Array[PackedVector2Array] = near_faces(data, cell_px)
+	var bridge: Dictionary[Vector2, float] = _bridge_openings(data, cell_px, faces)
 	var left: float = INF
 	var right: float = -INF
+	var bridge_left: float = INF
+	var bridge_right: float = -INF
+	for point: Vector2 in bridge:
+		bridge_left = minf(bridge_left, point.x)
+		bridge_right = maxf(bridge_right, point.x)
 	for face: PackedVector2Array in faces:
 		for point: Vector2 in face:
 			left = minf(left, IsoProjection.to_screen(point).x)
 			right = maxf(right, IsoProjection.to_screen(point).x)
 	var target: float = lerpf(left, right, share)
 	var best: Vector2 = Vector2(target, -INF)
+	var nearest: Vector2 = best
+	var distance: float = INF
 	for face: PackedVector2Array in faces:
 		var middle: Vector2 = IsoProjection.to_screen((face[0] + face[1]) * 0.5)
-		if absf(middle.x - target) <= cell_px and middle.y > best.y:
+		if middle.x >= bridge_left - cell_px and middle.x <= bridge_right + cell_px:
+			continue
+		var across: float = absf(middle.x - target)
+		if across <= cell_px and middle.y > best.y:
 			best = middle
-	return best
+		if across < distance:
+			nearest = middle
+			distance = across
+	return best if is_finite(best.y) else nearest
 
 
-## One surface retains the original face and triangle order under the animated ground lights.
+## Rail cells bordering the bridge carry its fascia, so both bridge and rail corners share the arches.
+static func _bridge_openings(
+	data: Dictionary, cell_px: int, faces: Array[PackedVector2Array]
+) -> Dictionary[Vector2, float]:
+	var corners: Dictionary[Vector2, float] = {}
+	var rows: Array = data.get("rows", [])
+	var left: float = INF
+	var right: float = -INF
+	for edge: PackedVector2Array in faces:
+		var cell: Vector2i = Vector2i((edge[0] + edge[1]) / (2.0 * cell_px))
+		cell -= Vector2i.RIGHT if edge[0].x == edge[1].x else Vector2i.DOWN
+		var tile: String = (rows[cell.y] as String)[cell.x]
+		if tile != "B" and not (tile == "w" and _touches_bridge(rows, cell)):
+			continue
+		var a: Vector2 = IsoProjection.to_screen(edge[0])
+		var b: Vector2 = IsoProjection.to_screen(edge[1])
+		for step: int in BRIDGE_EDGE_STEPS + 1:
+			var at: Vector2 = a.lerp(b, float(step) / BRIDGE_EDGE_STEPS)
+			corners[at] = 0.0
+			left = minf(left, at.x)
+			right = maxf(right, at.x)
+	if right > left:
+		for corner: Vector2 in corners:
+			var along: float = (corner.x - left) / (right - left) * BRIDGE_SPANS
+			var rim: float = (fposmod(along, 1.0) * 2.0 - 1.0) / 0.77
+			corners[corner] = sqrt(maxf(0.0, 1.0 - rim * rim))
+	return corners
+
+
+static func _touches_bridge(rows: Array, cell: Vector2i) -> bool:
+	for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+		var at: Vector2i = cell + step
+		if at.y >= 0 and at.y < rows.size():
+			var row: String = rows[at.y]
+			if at.x >= 0 and at.x < row.length() and row[at.x] == "B":
+				return true
+	return false
+
+
+## Subdivide the bridge fascia so the curve of each arch reads underneath the stepped top.
+static func _cliff_segments(
+	faces: Array[PackedVector2Array], bridge: Dictionary[Vector2, float]
+) -> Array[PackedVector2Array]:
+	var out: Array[PackedVector2Array] = []
+	for edge: PackedVector2Array in faces:
+		var a: Vector2 = IsoProjection.to_screen(edge[0])
+		var b: Vector2 = IsoProjection.to_screen(edge[1])
+		var steps: int = BRIDGE_EDGE_STEPS if bridge.has(a.lerp(b, 0.5)) else 1
+		for index: int in steps:
+			out.append(PackedVector2Array([a.lerp(b, float(index) / steps), a.lerp(b, float(index + 1) / steps)]))
+	return out
+
+
+## Fixed shared vertices pull the rock inward beneath the masonry, with a cool fade at the foot.
 func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var colors: PackedColorArray = PackedColorArray()
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var indices: PackedInt32Array = PackedInt32Array()
-	var drop: Vector2 = Vector2(0.0, CLIFF_PX)
-	var top: Color = Color.WHITE if texture != null else COLOR_CLIFF_FLAT
-	var fade: Color = Color(top, 0.0)
-	var tint: PackedColorArray = PackedColorArray([top, top, fade, fade])
-	for edge: PackedVector2Array in near_faces(_data, _cell_px):
-		var a: Vector2 = IsoProjection.to_screen(edge[0])
-		var b: Vector2 = IsoProjection.to_screen(edge[1])
-		var points: PackedVector2Array = PackedVector2Array([a, b, b + drop, a + drop])
-		for index: int in Geometry2D.triangulate_polygon(points):
-			indices.append(vertices.size() + index)
-		vertices.append_array(points)
-		colors.append_array(tint)
-		# The strip is mapped by screen x, so the masonry runs on from face to face.
-		if texture != null:
-			uvs.append_array(PackedVector2Array([
-				Vector2(a.x / span, 0), Vector2(b.x / span, 0), Vector2(b.x / span, 1), Vector2(a.x / span, 1),
-			]))
+	var top_color: Color = Color.WHITE if texture != null else COLOR_CLIFF_FLAT
+	var cold: Color = top_color * Color(0.63, 0.73, 0.92)
+	var noise: FastNoiseLite = FastNoiseLite.new()
+	noise.seed = MASK_SEED + 4
+	noise.frequency = 0.007
+	var centre_x: float = IsoProjection.to_screen(_centre).x
+	var faces: Array[PackedVector2Array] = near_faces(_data, _cell_px)
+	var bridge: Dictionary[Vector2, float] = _bridge_openings(_data, _cell_px, faces)
+	var bridge_y: float = 0.0
+	for point: Vector2 in bridge:
+		bridge_y += point.y
+	bridge_y /= maxi(bridge.size(), 1)
+	for edge: PackedVector2Array in _cliff_segments(faces, bridge):
+		var base: int = vertices.size()
+		for row: int in CLIFF_DEPTHS.size():
+			var depth: float = CLIFF_DEPTHS[row]
+			var taper: float = smoothstep(0.12, 0.95, depth)
+			for at: Vector2 in edge:
+				var opening: float = bridge.get(at, 0.0)
+				var height: float = lerpf(CLIFF_PX, BRIDGE_INTRADOS_PX + bridge_y - at.y, opening)
+				var inset: float = clampf((centre_x - at.x) / 450.0, -1.0, 1.0) * 36.0
+				var relief: float = noise.get_noise_2d(at.x, at.y) * 45.0
+				var offset: Vector2 = Vector2(inset + relief, relief * 0.55) * taper * (1.0 - opening)
+				vertices.append(at + Vector2(0.0, height * depth) + offset)
+				var tint: Color = top_color.lerp(cold, depth).darkened(opening * smoothstep(0.45, 1.0, depth) * 0.59)
+				tint.a = lerpf(CLIFF_VISIBILITY[row], 1.0, smoothstep(0.0, 0.22, opening))
+				colors.append(tint)
+				if texture != null:
+					uvs.append(Vector2((at.x + offset.x * 0.55) / span, depth * height / CLIFF_PX))
+			if row + 1 < CLIFF_DEPTHS.size():
+				indices.append_array(_quad_indices(base + row * 2))
+	return _surface_mesh(vertices, colors, uvs, indices)
+
+
+## Each band is laid out as two consecutive rows of left and right vertices.
+static func _quad_indices(base: int) -> PackedInt32Array:
+	return PackedInt32Array([base, base + 1, base + 3, base, base + 3, base + 2])
+
+
+static func _surface_mesh(
+	vertices: PackedVector2Array, colors: PackedColorArray, uvs: PackedVector2Array, indices: PackedInt32Array
+) -> ArrayMesh:
 	var mesh: ArrayMesh = ArrayMesh.new()
 	if not vertices.is_empty():
 		var arrays: Array = []

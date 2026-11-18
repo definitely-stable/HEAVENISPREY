@@ -71,18 +71,32 @@ const BLOCK_TOP: Color = Color(0.34, 0.3, 0.37)
 const BLOCK_SIDE_X: Color = Color(0.23, 0.2, 0.26)
 const BLOCK_SIDE_Y: Color = Color(0.17, 0.15, 0.2)
 ## Distant scenery in the mist (REF-033, REF-056: rock spires and pagodas behind the arena):
-## [prop, base (px from the arena centre in the backdrop's own plane, which follows the view
-## with GroundLayer.BACKDROP_PARALLAX), scale, flip, nearness 0..1 (less haze)].
+## [prop, base (px from the arena centre in the backdrop plane), scale, flip, nearness 0..1].
 const BACKDROP: Array = [
-	["pagoda_rock", Vector2(-452.0, -119.0), 0.62, false, 0.3],
-	["waterfall_rock", Vector2(228.0, -133.0), 0.6, false, 0.3],
-	["spire", Vector2(455.0, -9.0), 0.5, false, 0.1],
-	["spire", Vector2(90.0, -250.0), 0.38, true, 0.0],
-	["gate_rock", Vector2(-230.0, -290.0), 0.36, false, 0.0],
-	["gate_rock", Vector2(800.0, 215.0), 0.72, false, 0.7],
-	["waterfall_rock", Vector2(-735.0, 109.0), 0.72, true, 0.7],
-	["spire", Vector2(-318.0, 581.0), 0.7, true, 1.0],
-	["pagoda_rock", Vector2(532.0, 561.0), 0.72, true, 1.0],
+	["spire", Vector2(-860.0, -72.0), 0.49, true, 0.16],
+	["waterfall_rock", Vector2(-706.0, -138.0), 0.44, false, 0.12],
+	["pagoda_rock", Vector2(-570.0, 47.0), 0.58, true, 0.40],
+	["spire", Vector2(-432.0, -103.0), 0.55, false, 0.22],
+	["gate_rock", Vector2(-285.0, -206.0), 0.46, false, 0.12],
+	["waterfall_rock", Vector2(-252.0, 370.0), 0.50, true, 0.36],
+	["spire", Vector2(69.0, 403.0), 0.5, false, 0.25],
+	["spire", Vector2(108.0, -218.0), 0.39, true, 0.11],
+	["waterfall_rock", Vector2(266.0, -61.0), 0.54, false, 0.29],
+	["pagoda_rock", Vector2(441.0, 393.0), 0.51, false, 0.32],
+	["spire", Vector2(543.0, -52.0), 0.55, true, 0.22],
+	["gate_rock", Vector2(653.0, -133.0), 0.45, true, 0.13],
+	["waterfall_rock", Vector2(835.0, 119.0), 0.49, false, 0.25],
+	["spire", Vector2(-1418.0, 235.0), 0.68, false, 0.58],
+	["waterfall_rock", Vector2(-1215.0, 354.0), 0.77, true, 0.75],
+	["gate_rock", Vector2(-984.0, 247.0), 0.65, true, 0.65],
+	["spire", Vector2(-822.0, 418.0), 0.66, true, 0.76],
+	["pagoda_rock", Vector2(-529.0, 521.0), 0.72, false, 0.61],
+	["waterfall_rock", Vector2(-160.0, 596.0), 0.66, false, 0.68],
+	["spire", Vector2(143.0, 534.0), 0.69, true, 0.60],
+	["waterfall_rock", Vector2(509.0, 558.0), 0.71, true, 0.72],
+	["spire", Vector2(735.0, 395.0), 0.64, false, 0.60],
+	["pagoda_rock", Vector2(971.0, 391.0), 0.71, false, 0.71],
+	["gate_rock", Vector2(1213.0, 281.0), 0.66, false, 0.58],
 ]
 
 
