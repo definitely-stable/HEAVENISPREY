@@ -12,7 +12,7 @@ extends RefCounted
 ## locked at the end of tell), ON_DEATH_ZONE (telegraph, persistent ticks, the zone of radius
 ## H) or GROUND_ZONE (the same timings, radius multiplier of H, status.root_slow, one zone per
 ## caster, no barrier) with the venom and root values from the status catalog (ADR-011); the
-## sword class start skill and its cooldown. NOT canonical (ADR-009 section 3): the bases
+## selected class start skill and its cooldown. NOT canonical (ADR-009 section 3): the bases
 ## those multipliers scale (hero speed, radius and HP, base enemy HP and contact damage),
 ## spawn cadence, ramp and cap, arena size, the skill's range, damage and projectile, the
 ## enemy shot radius, launch range and keep distance, the ground-zone launch range
@@ -61,6 +61,10 @@ const ZONE_TRIGGER_CELLS: int = 8
 const ENEMY_SHOT_RADIUS_PX: int = 8
 const SKILL_RANGE_CELLS: int = 8
 const SKILL_DAMAGE_MHP: int = 10000
+const THUNDER_DAMAGE_MHP: int = 8000
+const THUNDER_CHAIN_HITS: int = 4
+const THUNDER_REACH_CELLS: int = 3
+const IGNORED_START_STATUSES: PackedStringArray = ["status.mark", "status.shock"]
 const PROJECTILE_SPEED_SU: int = 12000
 const PROJECTILE_RADIUS_PX: int = 10
 const PROJECTILE_TTL_TICKS: int = 40
@@ -180,7 +184,8 @@ func run_config(registry: ContentRegistry, snapshot: RunRulesSnapshot) -> SimCon
 	var skill: PackedInt64Array = _skill(registry, snapshot.class_id)
 	if skill.is_empty():
 		return null
-	var config: SimConfig = movement_config().with_enemies(values, kinds, snapshot.run_seed).with_skill(skill)
+	var config: SimConfig = movement_config().with_enemies(values, kinds, snapshot.run_seed)
+	config.with_skill(skill.slice(0, 8), skill.slice(8))
 	var venom: PackedInt64Array = venom_values(registry)
 	var root: PackedInt64Array = root_values(registry)
 	if venom.is_empty() or root.is_empty():
@@ -411,23 +416,53 @@ func _skill(registry: ContentRegistry, class_id: String) -> PackedInt64Array:
 		return PackedInt64Array()
 	skill_id = str(class_def.get("start_skill_id", ""))
 	var skill: Dictionary = registry.definition(skill_id)
-	if skill.get("archetype") != "projectile":
-		_fail(class_id + ": the start skill must be a projectile skill in P0")
+	var archetype: String = str(skill.get("archetype", ""))
+	if archetype != "projectile" and archetype != "chain":
+		_fail(class_id + ": unsupported P0 start skill archetype " + archetype)
+		return PackedInt64Array()
+	if not _start_effects_supported(skill.get("effect_ops")):
+		_fail(skill_id + ": unsupported P0 start skill effect")
 		return PackedInt64Array()
 	var cooldown: Variant = ContentRegistry.integral(skill.get("base_cooldown_ticks"))
 	if cooldown == null or int(cooldown) <= 0:
 		_fail(skill_id + ": base_cooldown_ticks is not a positive integer")
 		return PackedInt64Array()
+	var period: int = int(cooldown) * SimConfig.RATE_ONE
+	var reach: int = SKILL_RANGE_CELLS * CELL_PX * Fx.FX_ONE
+	if archetype == "chain":
+		return PackedInt64Array([
+			period, reach, THUNDER_DAMAGE_MHP, 0, 0, 0, 0, 0,
+			SimConfig.SKILL_CHAIN, THUNDER_CHAIN_HITS, THUNDER_REACH_CELLS * CELL_PX * Fx.FX_ONE,
+		])
 	return PackedInt64Array([
-		int(cooldown) * SimConfig.RATE_ONE,
-		SKILL_RANGE_CELLS * CELL_PX * Fx.FX_ONE,
+		period,
+		reach,
 		SKILL_DAMAGE_MHP,
 		PROJECTILE_SPEED_SU,
 		PROJECTILE_RADIUS_PX * Fx.FX_ONE,
 		PROJECTILE_TTL_TICKS,
 		PROJECTILE_PIERCE,
 		MAX_PROJECTILES,
+		SimConfig.SKILL_PROJECTILE, 0, 0,
 	])
+
+
+static func _start_effects_supported(ops: Variant) -> bool:
+	if ops is not Array:
+		return false
+	var damage_ops: int = 0
+	for entry: Variant in ops:
+		if entry is not Dictionary:
+			return false
+		match entry.get("op"):
+			"damage":
+				damage_ops += 1
+			"apply_status":
+				if not IGNORED_START_STATUSES.has(str(entry.get("status_id", ""))):
+					return false
+			_:
+				return false
+	return damage_ops == 1
 
 
 ## ThreatCaps window records in kind order (enemy_ids): [start_second x 60, end_second x 60,

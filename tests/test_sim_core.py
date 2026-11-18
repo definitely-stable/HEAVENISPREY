@@ -741,9 +741,9 @@ def run_to_pause(config, world, log, limit=20000):
 
 class SimChoiceReferenceTests(unittest.TestCase):
     def test_upgrades_are_in_ascii_id_order_with_p0_ranks(self):
-        ids = [uid for uid, _ in sim.UPGRADES]
+        ids = [uid for uid, _ in sim.UPGRADE_TABLES[sim.SKILL_PROJECTILE]]
         self.assertEqual(ids, sorted(ids, key=lambda text: text.encode("ascii")))
-        self.assertEqual(dict(sim.UPGRADES), {
+        self.assertEqual(dict(sim.UPGRADE_TABLES[sim.SKILL_PROJECTILE]), {
             "upgrade.p0.hero_speed": 3, "upgrade.p0.hero_vitality": 5,
             "upgrade.p0.pickup_radius": 3, "upgrade.p0.sword_count": 2,
             "upgrade.p0.sword_damage": 2, "upgrade.p0.sword_haste": 5,
@@ -833,7 +833,7 @@ class SimChoiceReferenceTests(unittest.TestCase):
 
     def test_hand_is_short_or_recover_when_ranks_run_out(self):
         config, world = choice_arena()
-        top = [rank for _, rank in sim.UPGRADES]
+        top = [rank for _, rank in sim.UPGRADE_TABLES[sim.SKILL_PROJECTILE]]
         for free, size in ((7, 3), (3, 3), (2, 2), (1, 1)):
             world.ranks = top[:7 - free] + [0] * free
             cursor = world.offers_rng_cursor
@@ -866,7 +866,7 @@ class SimChoiceReferenceTests(unittest.TestCase):
         self.assertEqual(sim.hero_speed(config, world), 4800 + 240)
         self.assertEqual(sim.pickup_radius(config, world), 48000 + 24000)
         self.assertEqual(sim.skill_damage(config, world), 10000 + 3000)
-        self.assertEqual(sim.skill_rate(world), 1150)
+        self.assertEqual(sim.skill_rate(config, world), 1150)
         self.assertEqual(sim.projectile_count(world), 2)
         self.assertEqual(sim.projectile_pierce(config, world), 2)
         self.assertEqual(world.ledger_size, 4, "room for pierce 1 + 2 ranks")
@@ -1014,7 +1014,7 @@ class SimRunEndReferenceTests(unittest.TestCase):
         config = p0(run_ticks=18000)
         # choice_mode, run_ticks, then the attack table (empty), the venom and root values and
         # the windows and caps (both empty).
-        self.assertEqual(config.ints()[-11:], [0, 18000, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        self.assertEqual(config.ints()[-14:], [0, 18000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
         self.assertTrue(config.valid())
         self.assertFalse(p0(run_ticks=-1).valid())
 

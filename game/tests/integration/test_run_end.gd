@@ -34,12 +34,11 @@ func test_stage_duration_comes_from_content() -> void:
 	var config: SimConfig = P0TestSetup.sword_config("101", tuning)
 	assert_not_null(config, tuning.error)
 	assert_eq(config.run_ticks, 5 * 60 * 60, "stage.jade_grove: 5 minutes")
-	# run_ticks, then the attack table, four venom and two root values (ADR-011 E2, E5), the
-	# windows and the caps (E6), each table after its size.
+	# run_ticks, then the attack table, venom, root, skill shape, windows and caps.
 	# The arena topology closes the list (ADR-015 A1).
 	assert_not_null(config.arena)
 	var tail: int = (
-		1 + config.attacks.size() + 4 + 2 + 1 + config.windows.size() + 1 + config.caps.size()
+		1 + config.attacks.size() + 4 + 2 + 3 + 1 + config.windows.size() + 1 + config.caps.size()
 		+ config.arena.to_ints().size()
 	)
 	assert_eq(config.to_ints()[config.to_ints().size() - tail - 1], config.run_ticks)

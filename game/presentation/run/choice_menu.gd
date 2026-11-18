@@ -106,7 +106,7 @@ func open(config: SimConfig, world: WorldState) -> void:
 			continue
 		var code: int = world.hand[index]
 		var text: Dictionary = UpgradeCard.describe(config, world, code)
-		text["art"] = UpgradeCard.art_piece(code)
+		text["art"] = UpgradeCard.art_piece(code, config.skill_form)
 		card_texts[index] = text
 		card.accessibility_name = str(text["name"])
 		card.accessibility_description = str(text["stat"])

@@ -454,6 +454,38 @@
   "UPGRADE_P0_SWORD_PIERCE_NAME": {
    "en": "Piercing Intent",
    "ru": "Пронзающее намерение"
+  },
+  "UPGRADE_P0_THUNDER_DAMAGE_DESC": {
+   "en": "Lightning damage %s → %s",
+   "ru": "Урон молнии %s → %s"
+  },
+  "UPGRADE_P0_THUNDER_DAMAGE_NAME": {
+   "en": "Storm Wrath",
+   "ru": "Гнев бури"
+  },
+  "UPGRADE_P0_THUNDER_HASTE_DESC": {
+   "en": "Strikes per second %s → %s",
+   "ru": "Разрядов в секунду %s → %s"
+  },
+  "UPGRADE_P0_THUNDER_HASTE_NAME": {
+   "en": "Rolling Thunder",
+   "ru": "Раскаты грома"
+  },
+  "UPGRADE_P0_THUNDER_JUMPS_DESC": {
+   "en": "Targets per strike %s → %s",
+   "ru": "Целей за разряд %s → %s"
+  },
+  "UPGRADE_P0_THUNDER_JUMPS_NAME": {
+   "en": "Branching Bolt",
+   "ru": "Ветвистый разряд"
+  },
+  "UPGRADE_P0_THUNDER_REACH_DESC": {
+   "en": "Jump range %s → %s",
+   "ru": "Дальность прыжка %s → %s"
+  },
+  "UPGRADE_P0_THUNDER_REACH_NAME": {
+   "en": "Long Arc",
+   "ru": "Длинная дуга"
   }
  }
 }

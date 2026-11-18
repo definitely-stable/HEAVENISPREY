@@ -12,13 +12,15 @@ const ART_PIECES: Array[String] = [
 
 
 ## Name of the card illustration of `code` in the HUD kit.
-static func art_piece(code: int) -> String:
+static func art_piece(code: int, form: int = SimConfig.SKILL_PROJECTILE) -> String:
+	if form == SimConfig.SKILL_CHAIN and code >= UpgradeSystem.THUNDER_DAMAGE and code <= UpgradeSystem.THUNDER_REACH:
+		return ""
 	return ART_PIECES[code] if code >= 0 and code < ART_PIECES.size() else ""
 
 
 ## Translation key stem of a card: upgrade.p0.sword_damage -> UPGRADE_P0_SWORD_DAMAGE.
-static func key_stem(code: int) -> String:
-	return UpgradeSystem.card_id(code).replace(".", "_").to_upper()
+static func key_stem(code: int, form: int = SimConfig.SKILL_PROJECTILE) -> String:
+	return UpgradeSystem.card_id(code, form).replace(".", "_").to_upper()
 
 
 ## {"name", "stat", "label", "change", "rank"} in the current locale. "stat" is the whole line
@@ -28,10 +30,11 @@ static func key_stem(code: int) -> String:
 static func describe(config: SimConfig, world: WorldState, code: int) -> Dictionary:
 	var after: WorldState = world.copy()
 	UpgradeSystem.apply_upgrade(after, code)
-	var stem: String = key_stem(code)
+	var stem: String = key_stem(code, config.skill_form)
 	var rank: String = ""
-	if code < UpgradeSystem.MAX_RANKS.size():
-		rank = UiText.text("UI_UPGRADE_RANK") % [after.ranks[code], UpgradeSystem.MAX_RANKS[code]]
+	var ranks: PackedInt64Array = UpgradeSystem.RANK_TABLES[config.skill_form]
+	if code < ranks.size():
+		rank = UiText.text("UI_UPGRADE_RANK") % [after.ranks[code], ranks[code]]
 	var values: Array = [stat(config, world, code), stat(config, after, code)]
 	var template: String = UiText.text(stem + "_DESC")
 	var first: int = template.find("%s")
@@ -55,6 +58,16 @@ static func describe(config: SimConfig, world: WorldState, code: int) -> Diction
 
 ## The value the card changes, in player units: px/s, HP, px, swords, attacks/s, enemies.
 static func stat(config: SimConfig, world: WorldState, code: int) -> String:
+	if config.skill_form == SimConfig.SKILL_CHAIN:
+		match code:
+			UpgradeSystem.THUNDER_DAMAGE:
+				return _hp(UpgradeSystem.skill_damage(config, world))
+			UpgradeSystem.THUNDER_HASTE:
+				return _casts_per_second(config, world)
+			UpgradeSystem.THUNDER_JUMPS:
+				return str(UpgradeSystem.chain_hits(config, world))
+			UpgradeSystem.THUNDER_REACH:
+				return str(roundi(float(UpgradeSystem.chain_reach(config, world)) / Fx.FX_ONE))
 	match code:
 		UpgradeSystem.SPEED:
 			var per_second: float = UpgradeSystem.hero_speed(config, world) * float(Fx.TICKS_PER_SECOND)
@@ -68,13 +81,17 @@ static func stat(config: SimConfig, world: WorldState, code: int) -> String:
 		UpgradeSystem.DAMAGE:
 			return _hp(UpgradeSystem.skill_damage(config, world))
 		UpgradeSystem.HASTE:
-			var rate: float = float(UpgradeSystem.skill_rate(world)) * Fx.TICKS_PER_SECOND
-			return "%.2f" % (rate / maxf(1.0, float(config.skill_period_mt)))
+			return _casts_per_second(config, world)
 		UpgradeSystem.PIERCE:
 			return str(UpgradeSystem.projectile_pierce(config, world) + 1)
 		UpgradeSystem.RECOVER:
 			return _hp(world.hero_hp)
 	return "?"
+
+
+static func _casts_per_second(config: SimConfig, world: WorldState) -> String:
+	var rate: float = float(UpgradeSystem.skill_rate(config, world)) * Fx.TICKS_PER_SECOND
+	return "%.2f" % (rate / maxf(1.0, float(config.skill_period_mt)))
 
 
 ## Milli-HP shown as whole HP.

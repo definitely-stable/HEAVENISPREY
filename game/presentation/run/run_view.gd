@@ -142,6 +142,8 @@ var _hit_keep: float = 0.0
 var _pickups: Array[Array] = []
 ## Combat effects (ADR-014 section 18, A6).
 var _vfx: CombatVfx
+var _chain_line: PackedVector2Array = PackedVector2Array()
+var _chain_left: float = 0.0
 ## Pose of each enemy drawn in the last frame by uid: an enemy killed next frame decays in it.
 var _body_poses: Dictionary = {}
 ## Tone of the world frame, over the scene and under the HUD (ADR-014 section 20).
@@ -350,6 +352,8 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_body_poses.clear()
 	if _vfx != null:
 		_vfx.clear()
+	_chain_left = 0.0
+	_chain_line.clear()
 	_camera.position = camera_target()
 	_camera.reset_smoothing()
 	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
@@ -497,6 +501,12 @@ func _queue_layers() -> void:
 ## Effects of this frame's events: a spark and a number for every blow, decay where an enemy
 ## fell, the sword circle of a cast and the pillar of a level.
 func _add_effects(events: Dictionary) -> void:
+	var chain_points: PackedVector2Array = events["chain"]
+	if chain_points.size() > 1:
+		_chain_left = 0.12
+		_chain_line.clear()
+		for point: Vector2 in chain_points:
+			_chain_line.append(IsoProjection.to_screen(point) - Vector2(0, 18))
 	if _vfx == null:
 		return
 	for strike: Array in events["strikes"]:
@@ -508,13 +518,14 @@ func _add_effects(events: Dictionary) -> void:
 		var fell: Array = EnemyReactions.death_pose(_sprites, _body_poses.get(kill[2], standing))
 		_vfx.add_death(kill[0], fell[0], fell[1])
 		_reactions.fallen(kill[2])
-	if not (events["casts"] as Array).is_empty():
+	if driver.config.skill_form == SimConfig.SKILL_PROJECTILE and not (events["casts"] as Array).is_empty():
 		_vfx.add_cast(driver.hero_position_px())
 	if int(events["levels"]) > 0:
 		_vfx.level_up(driver.hero_position_px())
 
 
 func _age_effects(delta: float) -> void:
+	_chain_left = maxf(0.0, _chain_left - delta)
 	_reactions.age(delta, _hit_keep)
 	for pickup: Array in _pickups:
 		pickup[2] += delta
@@ -873,6 +884,10 @@ func _hero_height() -> float:
 ## wisp stays visible), gem flights and "+N".
 func _draw_over_pass() -> void:
 	var canvas: Node2D = _over
+	if _chain_left > 0.0:
+		var alpha: float = _chain_left / 0.12
+		canvas.draw_polyline(_chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
+		canvas.draw_polyline(_chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
 	var hero: Vector2 = IsoProjection.to_screen(driver.hero_position_px())
 	var stacks: int = driver.world.venom_stacks
 	var top: float = -_hero_height() - 8.0

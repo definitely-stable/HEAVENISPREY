@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 VECTORS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_core_vectors.json"
-VECTORS_SCHEMA_VERSION = 12
+VECTORS_SCHEMA_VERSION = 13
 ARENA_PATH = ROOT / "game" / "content" / "arena" / "jade_grove.json"
 
 
@@ -154,11 +154,21 @@ CHOOSE = 1   # a = card index in the hand, b = build_revision the hand was built
 # ADR-010 section 6, P0 policy (not engine limits): the seven upgrades in ASCII ID order with
 # their maximum rank; the code of an upgrade is its position. RECOVER is offered alone when
 # every upgrade is at its maximum rank; it has no rank.
-UPGRADES = (("upgrade.p0.hero_speed", 3), ("upgrade.p0.hero_vitality", 5),
-            ("upgrade.p0.pickup_radius", 3), ("upgrade.p0.sword_count", 2),
-            ("upgrade.p0.sword_damage", 2), ("upgrade.p0.sword_haste", 5),
-            ("upgrade.p0.sword_pierce", 2))
+_COMMON_UPGRADES = (("upgrade.p0.hero_speed", 3), ("upgrade.p0.hero_vitality", 5),
+                    ("upgrade.p0.pickup_radius", 3))
+SKILL_PROJECTILE, SKILL_CHAIN = range(2)
+UPGRADE_TABLES = (
+    _COMMON_UPGRADES + (("upgrade.p0.sword_count", 2), ("upgrade.p0.sword_damage", 2),
+                        ("upgrade.p0.sword_haste", 5), ("upgrade.p0.sword_pierce", 2)),
+    _COMMON_UPGRADES + (("upgrade.p0.thunder_damage", 2), ("upgrade.p0.thunder_haste", 5),
+                        ("upgrade.p0.thunder_jumps", 2), ("upgrade.p0.thunder_reach", 2)),
+)
 U_SPEED, U_VITALITY, U_PICKUP, U_COUNT, U_DAMAGE, U_HASTE, U_PIERCE = range(7)
+U_THUNDER_DAMAGE, U_THUNDER_HASTE, U_THUNDER_JUMPS, U_THUNDER_REACH = range(3, 7)
+MAX_CHAIN_HITS = 8
+MAX_SKILL_RANGE = 1 << 22
+THUNDER_DAMAGE_PER_RANK = 2000
+THUNDER_REACH_PER_RANK = 48000
 U_RECOVER = 7
 RECOVER_ID = "upgrade.p0.recover"
 HAND_SIZE = 3
@@ -172,8 +182,8 @@ HASTE_PER_RANK = 150          # rate_fx of the skill cooldown accumulator
 OFFERS_STREAM = "offers"
 
 
-def upgrade_id(code: int) -> str:
-    return RECOVER_ID if code == U_RECOVER else UPGRADES[code][0]
+def upgrade_id(code: int, form: int = SKILL_PROJECTILE) -> str:
+    return RECOVER_ID if code == U_RECOVER else UPGRADE_TABLES[form][code][0]
 
 
 def ints_digest(values: list[int]) -> str:
@@ -244,7 +254,7 @@ class Config:
     def __init__(self, movement, enemy_values=(0, 0, 0, RATE_ONE, 0, 0), kinds=(), seed="0",
                  skill=(0,) * 8, xp=((0, 0), (), ()), choice_mode=0, run_ticks=0, attacks=(),
                  venom=(0,) * VENOM_STRIDE, root=(0,) * ROOT_STRIDE, windows=(),
-                 caps=(), arena=None):
+                 caps=(), arena=None, skill_shape=(0, 0, 0)):
         self.arena = arena
         self.choice_mode = choice_mode
         self.root = list(root)
@@ -262,6 +272,7 @@ class Config:
          self.max_enemies, self.spawn_min_distance) = enemy_values
         (self.skill_period, self.skill_range, self.skill_damage, self.proj_speed,
          self.proj_radius, self.proj_ttl, self.pierce, self.max_projectiles) = skill
+        self.skill_form, self.chain_hits, self.chain_reach = skill_shape
         self.raw_kinds = list(kinds)
         self.kinds = [tuple(kinds[i:i + KIND_STRIDE])
                       for i in range(0, len(kinds) - KIND_STRIDE + 1, KIND_STRIDE)]
@@ -277,6 +288,9 @@ class Config:
         return [self.skill_period, self.skill_range, self.skill_damage, self.proj_speed,
                 self.proj_radius, self.proj_ttl, self.pierce, self.max_projectiles]
 
+    def skill_shape(self) -> list[int]:
+        return [self.skill_form, self.chain_hits, self.chain_reach]
+
     def xp_values(self) -> list[int]:
         return [self.pickup_radius, self.max_gems]
 
@@ -285,7 +299,7 @@ class Config:
                 self.start_x, self.start_y] + self.enemy_values() + self.skill_values() \
             + self.raw_kinds + self.xp_values() + self.kind_xp + self.xp_costs \
             + [self.choice_mode, self.run_ticks, len(self.raw_attacks)] + self.raw_attacks \
-            + self.venom + self.root + [len(self.raw_windows)] + self.raw_windows \
+            + self.venom + self.root + self.skill_shape() + [len(self.raw_windows)] + self.raw_windows \
             + [len(self.caps)] + self.caps + (self.arena.ints() if self.arena else [])
 
     def attack(self, kind: int) -> tuple:
@@ -300,7 +314,7 @@ class Config:
     def ledger_size(self) -> int:
         """Ledger cells of every projectile slot: enough for the largest pierce an upgrade can
         reach; a projectile uses `pierce at cast + 1` of them (its capacity)."""
-        return min(MAX_PIERCE, self.pierce + UPGRADES[U_PIERCE][1]) + 1
+        return min(MAX_PIERCE, self.pierce + UPGRADE_TABLES[SKILL_PROJECTILE][U_PIERCE][1]) + 1
 
     def has_enemies(self) -> bool:
         return bool(self.raw_kinds)
@@ -355,7 +369,7 @@ class Config:
             return False
         if self.has_enemies() and not self._enemies_valid():
             return False
-        if self.has_skill() and not self._skill_valid():
+        if (self.has_skill() or any(self.skill_shape())) and not self._skill_valid():
             return False
         if (self.has_xp() or self.kind_xp) and not self._xp_valid():
             return False
@@ -488,10 +502,20 @@ class Config:
 
     def _skill_valid(self) -> bool:
         """A projectile must not step over the smallest enemy in one tick (no tunnelling)."""
-        if not self.has_enemies():
+        if not self.has_enemies() or self.skill_period <= 0:
+            return False
+        if self.skill_form == SKILL_CHAIN:
+            ranks = UPGRADE_TABLES[SKILL_CHAIN] if self.choice_mode else ()
+            extra_hits = ranks[U_THUNDER_JUMPS][1] if ranks else 0
+            extra_reach = ranks[U_THUNDER_REACH][1] * THUNDER_REACH_PER_RANK if ranks else 0
+            return (self.has_skill() and not any(self.skill_values()[3:])
+                    and 0 <= self.skill_range <= MAX_SKILL_RANGE
+                    and 0 < self.chain_hits <= MAX_CHAIN_HITS - extra_hits
+                    and 0 < self.chain_reach <= MAX_SKILL_RANGE - extra_reach)
+        if any(self.skill_shape()):
             return False
         min_radius = min([fx.COORD_MAX] + [kind[1] for kind in self.kinds])
-        return (self.skill_period > 0 and self.skill_range >= 0 and self.proj_speed > 0
+        return (self.skill_range >= 0 and self.proj_speed > 0
                 and self.proj_radius > 0 and self.proj_speed <= self.proj_radius + min_radius
                 and self.proj_ttl > 0 and 0 <= self.pierce <= MAX_PIERCE
                 and 0 < self.max_projectiles <= MAX_PROJECTILES_LIMIT)
@@ -745,13 +769,16 @@ class World:
         self.build_revision = 0
         self.offers_rng_cursor = 0
         self.hand: list[int] = []
-        self.ranks = [0] * len(UPGRADES)
+        self.ranks = [0] * len(UPGRADE_TABLES[config.skill_form])
         self.hero_hp_max = config.hero_hp
         self.next_attack_uid = 1
         self.venom_stacks = 0
         self.venom_left = 0
         self.venom_phase = 0
         self.root_left = 0
+        self.chain_tick = 0
+        self.chain_len = 0
+        self.chain_uids = [0] * MAX_CHAIN_HITS
         self.ledger_size = config.ledger_size()
         self.enemies: list[list[int]] = []
         self.projectiles: list[list[int]] = []
@@ -778,7 +805,8 @@ class World:
                 self.choices_done, self.build_revision, self.offers_rng_cursor] + hand \
             + self.ranks + [self.hero_hp_max, self.next_attack_uid, self.venom_stacks,
                             self.venom_left, self.venom_phase, self.root_left,
-                            len(self.enemies), len(self.projectiles), len(self.gems),
+                            self.chain_tick, self.chain_len] + self.chain_uids \
+            + [len(self.enemies), len(self.projectiles), len(self.gems),
                             len(self.shots), len(self.zones)]
         return head + [v for enemy in self.enemies for v in enemy] \
             + [v for projectile in self.projectiles for v in projectile] \
@@ -1099,12 +1127,23 @@ def pickup_radius(config: Config, world: World) -> int:
     return config.pickup_radius + PICKUP_PER_RANK * world.ranks[U_PICKUP]
 
 
-def skill_rate(world: World) -> int:
-    return RATE_ONE + HASTE_PER_RANK * world.ranks[U_HASTE]
+def skill_rate(config: Config, world: World) -> int:
+    code = U_THUNDER_HASTE if config.skill_form == SKILL_CHAIN else U_HASTE
+    return RATE_ONE + HASTE_PER_RANK * world.ranks[code]
 
 
 def skill_damage(config: Config, world: World) -> int:
+    if config.skill_form == SKILL_CHAIN:
+        return config.skill_damage + THUNDER_DAMAGE_PER_RANK * world.ranks[U_THUNDER_DAMAGE]
     return max(1, config.skill_damage + DAMAGE_PER_RANK * world.ranks[U_DAMAGE])
+
+
+def chain_hits(config: Config, world: World) -> int:
+    return config.chain_hits + world.ranks[U_THUNDER_JUMPS]
+
+
+def chain_reach(config: Config, world: World) -> int:
+    return config.chain_reach + THUNDER_REACH_PER_RANK * world.ranks[U_THUNDER_REACH]
 
 
 def projectile_count(world: World) -> int:
@@ -1138,9 +1177,12 @@ def cast(config: Config, world: World) -> None:
     """One cast fires a projectile at each of up to `count` targets. With no target, or fewer
     free projectile slots than projectiles to fire, the whole cast is held and the tick does not
     advance the accumulator."""
-    rate = skill_rate(world)
+    rate = skill_rate(config, world)
     world.skill_acc += rate
     if world.skill_acc < config.skill_period:
+        return
+    if config.skill_form == SKILL_CHAIN:
+        _cast_chain(config, world, rate)
         return
     targets = targets_in_range(config, world, projectile_count(world))
     free = sum(1 for p in world.projectiles if p[P_DAMAGE] == 0)
@@ -1163,6 +1205,39 @@ def cast(config: Config, world: World) -> None:
             world.projectiles.append(record)
         else:
             world.projectiles[slot] = record
+
+
+def _nearest_chain_target(world: World, x: int, y: int, reach: int, exclude) -> int:
+    best, best_d2 = -1, reach * reach + 1
+    for slot, enemy in enumerate(world.enemies):
+        if not _live(enemy) or enemy[E_UID] in exclude:
+            continue
+        d2 = _dist2(x, y, enemy[E_X], enemy[E_Y])
+        if d2 < best_d2:
+            best, best_d2 = slot, d2
+    return best
+
+
+def _cast_chain(config: Config, world: World, rate: int) -> None:
+    target = _nearest_chain_target(world, world.player_x, world.player_y, config.skill_range, ())
+    if target < 0:
+        world.skill_acc -= rate
+        return
+    world.skill_acc -= config.skill_period
+    damage = skill_damage(config, world)
+    hits = chain_hits(config, world)
+    reach = chain_reach(config, world)
+    world.chain_tick = world.tick
+    world.chain_len = 0
+    world.chain_uids = [0] * MAX_CHAIN_HITS
+    while target >= 0:
+        enemy = world.enemies[target]
+        enemy[E_HP] = max(0, enemy[E_HP] - damage)
+        world.chain_uids[world.chain_len] = enemy[E_UID]
+        world.chain_len += 1
+        if world.chain_len == hits:
+            break
+        target = _nearest_chain_target(world, enemy[E_X], enemy[E_Y], reach, world.chain_uids)
 
 
 def _free_projectile(world: World, slot: int) -> None:
@@ -1528,7 +1603,7 @@ def build_hand(config: Config, world: World) -> None:
     for i in 0..k-1 with k = min(HAND_SIZE, n) the card j = below(n - i) of the `offers`
     stream is removed from the candidates into the hand (remove-at, the rest keep their
     order). With no candidate the hand is RECOVER alone and no word is drawn."""
-    candidates = [code for code, (_, top) in enumerate(UPGRADES) if world.ranks[code] < top]
+    candidates = [code for code, (_, top) in enumerate(UPGRADE_TABLES[config.skill_form]) if world.ranks[code] < top]
     if not candidates:
         world.hand = [U_RECOVER]
         return
@@ -1657,6 +1732,9 @@ P0_VALUES = [100000, 90000, 10800, 2000, 48, 384000]
 # ADR-009 section 3 placeholder skill (`skill.spirit_sword`): 50 tick cooldown, 8 cells
 # range, 10 HP damage, 12 px/tick, 10 px radius, 40 ticks, pierce 1, 64 projectile slots.
 P0_SKILL = [50000, 384000, 10000, 12000, 10000, 40, 1, 64]
+# ADR-012 section 2, the same placeholder tuning used by P0Tuning.
+THUNDER_SKILL = [65000, 384000, 8000, 0, 0, 0, 0, 0]
+THUNDER_SHAPE = (SKILL_CHAIN, 4, 144000)
 SEED = "20261113"
 # ADR-010 placeholder XP: pickup radius 2 hero radii, 512 gems, yin_corpse 10 / blood_wolf 15,
 # incremental level costs (5L^2 + 15L + 20) / 2 for levels 2..21, the last one repeats.
@@ -1790,6 +1868,28 @@ def _choice_scenarios():
 
 
 CHOICE_SCENARIOS = _choice_scenarios()
+
+
+def _chain_scenarios():
+    still = Config(BASE, P0_VALUES, W0_KINDS, SEED, THUNDER_SKILL, P0_XP, skill_shape=THUNDER_SHAPE)
+    crowd = Config(
+        BASE, [TOUGH, 6000, 0, 1000, 64, 200000], W0_KINDS, "123",
+        THUNDER_SKILL, P0_XP, skill_shape=THUNDER_SHAPE,
+    )
+    upgrades = Config(
+        BASE, CROWD_CHOICE.enemy_values(), CROWD_CHOICE.raw_kinds, SEED,
+        [5000, THUNDER_SKILL[1], 16000, 0, 0, 0, 0, 0], ((1000000, 512), (10, 15), [20]),
+        choice_mode=1, skill_shape=THUNDER_SHAPE,
+    )
+    records, steps = scripted_choices(upgrades, _circle(25, 600), 600, _cycle)
+    return [
+        ("chain_hero_stands_still", still, [], 3600),
+        ("chain_crowd_hero_circles", crowd, migrate_v1(_circle(25, 3600)), 3600),
+        ("chain_upgrades_cycle", upgrades, records, steps),
+    ]
+
+
+CHAIN_SCENARIOS = _chain_scenarios()
 
 
 def _death_tick(config: Config, moves) -> int:
@@ -1991,7 +2091,7 @@ LAUNCH_CASES = [(96000, 72000, 0), (96000, 72001, 0), (96000, 50912, 50912),
                 (96000, 50913, 50913), (4194304, 3145728, 0), (4194304, -1 << 30, 1 << 30)]
 
 # Golden hands (ADR-010 section 6): (name, seed, ranks, offers cursor) -> hand, cursor after.
-_MAX_RANKS = [top for _, top in UPGRADES]
+_MAX_RANKS = [top for _, top in UPGRADE_TABLES[SKILL_PROJECTILE]]
 HAND_CASES = [
     ("n7_fresh", SEED, [0] * 7, 0),
     ("n7_cursor_5", SEED, [0] * 7, 5),
@@ -2073,6 +2173,10 @@ def run_trace(config: Config, commands, steps: int):
                 "shots": world.live_shots(), "zones": world.live_zones(),
                 "root": world.root_left,
                 "digest": world.digest()})
+            if config.skill_form == SKILL_CHAIN:
+                checkpoints[-1].update(chain_tick=world.chain_tick, chain_len=world.chain_len,
+                                       chain_uids=[str(uid) for uid in world.chain_uids],
+                                       ranks=list(world.ranks))
     return log, world, checkpoints
 
 
@@ -2099,7 +2203,8 @@ def config_json(config: Config) -> dict:
     if config.arena is not None:
         arena = {"path": "res://" + ARENA_PATH.relative_to(ROOT / "game").as_posix(),
                  "body_su": str(config.arena.body), "digest": ints_digest(config.arena.ints())}
-    return {"config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
+    shape = {"skill_shape": config.skill_shape()} if config.skill_form else {}
+    return {**shape, "config": [str(v) for v in config.ints()[:8]], "enemies": enemies, "skill": skill,
             "xp": xp, "choice_mode": config.choice_mode, "run_ticks": config.run_ticks,
             "attacks": attacks, "arena": arena}
 
@@ -2107,7 +2212,7 @@ def config_json(config: Config) -> dict:
 def build_vectors() -> dict:
     traces = []
     for name, config, commands, steps in SCENARIOS + CHOICE_SCENARIOS + RUN_END_SCENARIOS \
-            + ATTACK_SCENARIOS + ARENA_SCENARIOS:
+            + ATTACK_SCENARIOS + ARENA_SCENARIOS + CHAIN_SCENARIOS:
         assert config.valid(), name
         log, _, checkpoints = run_trace(config, commands, steps)
         traces.append({"name": name, **config_json(config),
@@ -2125,7 +2230,8 @@ def build_vectors() -> dict:
     return {"schema_version": VECTORS_SCHEMA_VERSION, "kind": "hip-sim-core-vectors",
             "policy_id": fx.POLICY_ID, "rng_policy_id": hip_rng.POLICY_ID,
             "log_schema_version": LOG_SCHEMA_VERSION,
-            "upgrades": [{"id": uid, "max_rank": top} for uid, top in UPGRADES],
+            "upgrades": [{"id": uid, "max_rank": top} for uid, top in UPGRADE_TABLES[SKILL_PROJECTILE]],
+            "thunder_upgrades": [{"id": uid, "max_rank": top} for uid, top in UPGRADE_TABLES[SKILL_CHAIN]],
             "recover_id": RECOVER_ID,
             "generator": "tools/content/sim_core.py",
             "note": "movement, enemy and skill constants here are trace inputs, not canonical tuning",

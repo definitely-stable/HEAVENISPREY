@@ -72,6 +72,10 @@ var venom_stacks: int = 0
 var venom_left: int = 0
 var venom_phase: int = 0
 var root_left: int = 0
+## Last chain cast tick and hit order, with zeros in the unused cells (ADR-012 C2).
+var chain_tick: int = 0
+var chain_len: int = 0
+var chain_uids: PackedInt64Array = PackedInt64Array([0, 0, 0, 0, 0, 0, 0, 0])
 
 var enemy_uid: PackedInt64Array = PackedInt64Array()
 var enemy_kind: PackedInt64Array = PackedInt64Array()
@@ -247,7 +251,10 @@ func to_ints() -> PackedInt64Array:
 		out.append(hand[card] if card < hand.size() else UpgradeSystem.NO_CARD)
 	out.append_array(ranks)
 	out.append_array(PackedInt64Array([
-		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase, root_left,
+		hero_hp_max, next_attack_uid, venom_stacks, venom_left, venom_phase, root_left, chain_tick, chain_len,
+	]))
+	out.append_array(chain_uids)
+	out.append_array(PackedInt64Array([
 		enemy_slots(), projectile_slots(), gem_slots(), shot_slots(), zone_slots(),
 	]))
 	for slot: int in enemy_slots():
@@ -319,6 +326,9 @@ func copy() -> WorldState:
 	other.venom_left = venom_left
 	other.venom_phase = venom_phase
 	other.root_left = root_left
+	other.chain_tick = chain_tick
+	other.chain_len = chain_len
+	other.chain_uids = chain_uids.duplicate()
 	other.enemy_uid = enemy_uid.duplicate()
 	other.enemy_kind = enemy_kind.duplicate()
 	other.enemy_x = enemy_x.duplicate()
