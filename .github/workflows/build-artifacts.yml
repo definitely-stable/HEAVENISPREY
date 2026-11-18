@@ -52,8 +52,10 @@ jobs:
           "${{ runner.temp }}/hip-release"
           --fixture game/tests/fixtures/sim_bot_upgrade_runs.json
       - name: Preserve executable permissions in the distribution
-        shell: bash
-        run: tar -czf "${{ runner.temp }}/heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}.tar.gz" -C "${{ runner.temp }}/hip-release" .
+        run: >-
+          python -m tarfile -c
+          "${{ runner.temp }}/heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}.tar.gz"
+          "${{ runner.temp }}/hip-release"
       - uses: actions/upload-artifact@v7
         with:
           name: heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}
