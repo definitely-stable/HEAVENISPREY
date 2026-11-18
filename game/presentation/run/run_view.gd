@@ -126,6 +126,9 @@ const ENEMY_COLORS: Array[Color] = [
 @export var read_player_input: bool = true
 
 var driver: FixedTickDriver
+## View-only settings (QUALITY-2026-11 Q1). Loaded from user://settings.cfg in _ready unless set
+## before; tests, replays and captures (read_player_input = false) get the reference look.
+var settings: PresentationSettings
 var tuning: P0Tuning = P0Tuning.new()
 var runs_started: int = 0
 var session_profile: P0SessionProfile = P0SessionProfile.new()
@@ -198,6 +201,8 @@ static func placeholder_config() -> SimConfig:
 
 
 func _ready() -> void:
+	if settings == null:
+		settings = PresentationSettings.load_from() if read_player_input else PresentationSettings.reference_look()
 	UiText.apply_locale()
 	_registry = ContentRegistry.load_dir()
 	session_profile.registry = _registry
@@ -746,55 +751,7 @@ func _light_at(feet: Vector2) -> Color:
 # --- shadow layer: one buffer, composited once (ADR-014 section 5) ---
 
 func _draw_shadow_pass() -> void:
-	var canvas: Node2D = _shadow_canvas
-	var world: WorldState = driver.world if driver != null else null
-	# Draw silhouettes first. White contacts on top preserve their coverage in lit areas.
-	if world != null:
-		for slot: int in world.enemy_slots():
-			if world.enemy_uid[slot] != 0:
-				var pose: Array = _frame_pose(slot)
-				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
-		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
-			continue
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
-		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
-	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
-	# A ruin as wide as several cells has no single base point to lay its silhouette from: its
-	# cells darken the ground around its foot instead.
-	for prop: Dictionary in _props:
-		for polygon: PackedVector2Array in prop.get("footprint", []):
-			canvas.draw_colored_polygon(polygon, Color.WHITE)
-	for lantern: Vector2 in _lanterns:
-		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
-	if world == null:
-		return
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] != 0:
-			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(_enemy_feet(slot)), radius)
-	if _vfx != null:
-		for death: Array in _vfx.deaths:
-			var left: float = 1.0 - CombatVfx.decay(death)
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(death[0]), HERO_RADIUS_PX * 0.9 * left)
-	RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
-	for slot: int in world.gem_slots():
-		if world.gem_uid[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.gem_position_px(slot)), 3.5)
-	for slot: int in world.projectile_slots():
-		if world.proj_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.projectile_position_px(slot)), 3.0)
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.shot_position_px(slot)), 4.0)
-
-
-## The silhouette laid down away from the moon.
-func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float = 0.0) -> void:
-	if pose[0] != "":
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(feet_world)))
-		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
+	RunShadowPass.draw(self)
 
 
 # --- danger layer: unlit ground marks over the shadows (PLAYABILITY G3) ---

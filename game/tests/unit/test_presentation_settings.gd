@@ -119,6 +119,16 @@ func test_unknown_sections_and_keys_are_ignored() -> void:
 	assert_almost_eq(settings.vfx_intensity, 0.65, 0.0001, "bloom is not vfx_intensity")
 
 
+func test_reference_keeps_the_current_look() -> void:
+	var settings: PresentationSettings = PresentationSettings.reference_look()
+	assert_eq(settings.screenshake, 0.0)
+	assert_eq(settings.floating_damage_numbers, "all", "a number on every blow, as before")
+	assert_eq(settings.own_skill_opacity, 1.0)
+	assert_almost_eq(settings.hit_flash, 1.0, 0.0001, "the current hit flash look is kept")
+	assert_eq(settings.preferred_locale, "auto")
+	assert_false(settings.log_choices)
+
+
 func test_duplicate_settings_is_a_separate_copy() -> void:
 	var settings: PresentationSettings = PresentationSettings.new()
 	settings.preferred_locale = "en"

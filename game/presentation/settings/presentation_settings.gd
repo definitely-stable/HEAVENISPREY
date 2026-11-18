@@ -62,6 +62,17 @@ func save_to(path: String = DEFAULT_PATH) -> Error:
 	return config.save(path)
 
 
+## The look of tests, replays and reference captures: the current look whatever a player saved.
+## No screen shake, a number on every blow (as before the setting existed) and fully opaque own
+## effects; the rest are the defaults.
+static func reference_look() -> PresentationSettings:
+	var settings: PresentationSettings = PresentationSettings.new()
+	settings.screenshake = 0.0
+	settings.floating_damage_numbers = "all"
+	settings.own_skill_opacity = 1.0
+	return settings
+
+
 ## A separate copy with the same eight values.
 func duplicate_settings() -> PresentationSettings:
 	var copy: PresentationSettings = PresentationSettings.new()
