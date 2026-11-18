@@ -130,3 +130,29 @@ static func set_flicker(rim: ShaderMaterial, seconds: float, count: int) -> void
 	for index: int in mini(count, MAX_FLAMES):
 		energy.append(flicker(seconds, index))
 	rim.set_shader_parameter("flame_energy", energy)
+
+
+## A white disc with a thin soft edge (the shadow group blurs it further).
+static func disc_texture(size: int) -> GradientTexture2D:
+	var gradient: Gradient = Gradient.new()
+	gradient.offsets = PackedFloat32Array([0.0, 0.85, 1.0])
+	gradient.colors = PackedColorArray([Color.WHITE, Color.WHITE, Color(1.0, 1.0, 1.0, 0.0)])
+	var texture: GradientTexture2D = GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.width = size
+	texture.height = size
+	return texture
+
+
+## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
+static func contact(canvas: Node2D, texture: Texture2D, at: Vector2, radius: float) -> void:
+	var box: Rect2 = Rect2(at - Vector2(radius, radius * 0.5), Vector2(radius * 2.0, radius))
+	canvas.draw_texture_rect(texture, box, false)
+
+
+static func halo(canvas: Node2D, texture: Texture2D, at: Vector2, radius: float, color: Color) -> void:
+	var box: Rect2 = Rect2(at - Vector2(radius, radius), Vector2(radius, radius) * 2.0)
+	canvas.draw_texture_rect(texture, box, false, color)

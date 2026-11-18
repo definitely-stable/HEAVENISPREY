@@ -168,7 +168,7 @@ var _attack_aim: Vector2 = Vector2.RIGHT
 var _death_time: float = -1.0
 var _flash_rest: float = 0.0
 var _halo_texture: Texture2D = GroundLayer._radial_texture(64)
-var _disc_texture: Texture2D = _make_disc_texture(32)
+var _disc_texture: Texture2D = RunLighting.disc_texture(32)
 var _ground: GroundLayer
 ## Courtyard props (ArenaDressing.placements, plus their cached screen point, depth key and
 ## fixed light: they never move) and the ground points of the lit ones.
@@ -285,21 +285,6 @@ func _item(drawer: Callable, item_material: Material) -> Node2D:
 	return item
 
 
-## A white disc with a thin soft edge (the shadow group blurs it further).
-static func _make_disc_texture(size: int) -> GradientTexture2D:
-	var gradient: Gradient = Gradient.new()
-	gradient.offsets = PackedFloat32Array([0.0, 0.85, 1.0])
-	gradient.colors = PackedColorArray([Color.WHITE, Color.WHITE, Color(1.0, 1.0, 1.0, 0.0)])
-	var texture: GradientTexture2D = GradientTexture2D.new()
-	texture.gradient = gradient
-	texture.fill = GradientTexture2D.FILL_RADIAL
-	texture.fill_from = Vector2(0.5, 0.5)
-	texture.fill_to = Vector2(1.0, 0.5)
-	texture.width = size
-	texture.height = size
-	return texture
-
-
 ## Screen point the camera aims at: the projected hero, held inside the arena inset so the
 ## view does not slide over the void.
 func camera_target() -> Vector2:
@@ -316,7 +301,7 @@ func lantern_positions() -> Array[Vector2]:
 ## Starts a fresh authorized run. An invalid request leaves the current run intact.
 func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> bool:
 	if seed_text == null:
-		seed_text = _random_run_seed()
+		seed_text = P0SessionProfile.random_run_seed()
 	if seed_text is not String:
 		push_error("P0 run refused: seed must be a canonical uint64 decimal string")
 		return false
@@ -366,19 +351,6 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_sync_menu()
 	queue_redraw()
 	return true
-
-
-static func _random_run_seed() -> String:
-	var bytes: PackedByteArray = Crypto.new().generate_random_bytes(8)
-	if bytes.size() != 8:
-		return ""
-	var signed_word: int = bytes.decode_s64(0)
-	if signed_word >= 0:
-		return str(signed_word)
-	# The signed shift supplies the upper 63 bits. Use 10 = 2 * 5 before doubling.
-	var upper: int = (signed_word >> 1) & 0x7fffffffffffffff
-	var prefix: int = Fx.floor_div(upper, 5)
-	return str(prefix) + str((upper - prefix * 5) * 2 + (signed_word & 1))
 
 
 func _process(delta: float) -> void:
@@ -688,25 +660,25 @@ func _draw_shadow_pass() -> void:
 		for polygon: PackedVector2Array in prop.get("footprint", []):
 			canvas.draw_colored_polygon(polygon, Color.WHITE)
 	for lantern: Vector2 in _lanterns:
-		_contact(canvas, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
+		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
-			_contact(canvas, IsoProjection.to_screen(_enemy_feet(slot)), radius)
+			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(_enemy_feet(slot)), radius)
 	if _vfx != null:
 		for death: Array in _vfx.deaths:
 			var left: float = 1.0 - CombatVfx.decay(death)
-			_contact(canvas, IsoProjection.to_screen(death[0]), HERO_RADIUS_PX * 0.9 * left)
-	_contact(canvas, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
+			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(death[0]), HERO_RADIUS_PX * 0.9 * left)
+	RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0:
-			_contact(canvas, IsoProjection.to_screen(driver.gem_position_px(slot)), 3.5)
+			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.gem_position_px(slot)), 3.5)
 	for slot: int in world.projectile_slots():
 		if world.proj_damage[slot] != 0:
-			_contact(canvas, IsoProjection.to_screen(driver.projectile_position_px(slot)), 3.0)
+			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.projectile_position_px(slot)), 3.0)
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
-			_contact(canvas, IsoProjection.to_screen(driver.shot_position_px(slot)), 4.0)
+			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.shot_position_px(slot)), 4.0)
 
 
 ## The silhouette laid down away from the moon.
@@ -714,12 +686,6 @@ func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float 
 	if pose[0] != "":
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(feet_world)))
 		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
-
-
-## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
-func _contact(canvas: Node2D, at: Vector2, radius: float) -> void:
-	var box: Rect2 = Rect2(at - Vector2(radius, radius * 0.5), Vector2(radius * 2.0, radius))
-	canvas.draw_texture_rect(_disc_texture, box, false)
 
 
 # --- danger layer: unlit ground marks over the shadows (PLAYABILITY G3) ---
@@ -853,22 +819,9 @@ func _draw_gems() -> void:
 		var bob: float = sin(_anim_time * GEM_BOB_HZ * TAU + float(uid)) * GEM_BOB_PX
 		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, GEM_LIFT_PX + bob)
 		var near: bool = ground.distance_to(hero) <= near_px
-		_draw_gem(self, at, world.gem_value[slot], 1.0, GEM_REST_SCALE, COLOR_GEM if near else COLOR_GEM_REST)
-
-
-## A diamond: 10 px across for value 10 and below, 13 px for more (ADR-010 section 8), times
-## `size` (gems at rest on the ground are smaller and dimmer than the HUD icon).
-static func _draw_gem(
-	canvas: CanvasItem, at: Vector2, value: int, alpha: float, size: float = 1.0, base: Color = COLOR_GEM
-) -> void:
-	var half: float = (5.0 if value <= 10 else 6.5) * size
-	var color: Color = base
-	color.a = alpha
-	var points: PackedVector2Array = PackedVector2Array([
-		at + Vector2(0, -half * 1.3), at + Vector2(half, 0), at + Vector2(0, half * 1.3), at + Vector2(-half, 0),
-	])
-	canvas.draw_colored_polygon(points, color)
-	canvas.draw_polyline(points + PackedVector2Array([points[0]]), color.darkened(0.4), 1.5)
+		CombatVfx.draw_gem_primitive(
+			self, at, world.gem_value[slot], 1.0, GEM_REST_SCALE, COLOR_GEM if near else COLOR_GEM_REST
+		)
 
 
 # --- hero item (warm rim) and the items over it ---
@@ -938,7 +891,7 @@ func _draw_over_pass() -> void:
 		var age: float = pickup[2]
 		if age < PICKUP_FLY:
 			if not gem_light:
-				_draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0, GEM_REST_SCALE)
+				CombatVfx.draw_gem_primitive(canvas, _pickup_flight(pickup), pickup[1], 1.0, GEM_REST_SCALE, COLOR_GEM)
 			continue
 		var fade: float = (age - PICKUP_FLY) / PICKUP_TEXT
 		var color: Color = COLOR_GEM
@@ -964,7 +917,9 @@ func _draw_glow_pass() -> void:
 	var canvas: Node2D = _glow
 	var world: WorldState = driver.world
 	for index: int in _flames.size():
-		_halo(canvas, _flames[index], 26.0 * RunLighting.flicker(_anim_time, index), COLOR_LANTERN_GLOW)
+		RunLighting.halo(
+			canvas, _halo_texture, _flames[index], 26.0 * RunLighting.flicker(_anim_time, index), COLOR_LANTERN_GLOW
+		)
 	var radius: float = float(driver.config.projectile_radius_su) / Fx.FX_ONE
 	var light: bool = _vfx != null and _vfx.kit.has("sword")
 	if light:
@@ -978,17 +933,19 @@ func _draw_glow_pass() -> void:
 			_vfx.draw_sword(canvas, at, heading)
 			continue
 		canvas.draw_line(at - heading * radius * 6.0, at, COLOR_SWORD_TRAIL, radius * 0.9)
-		_halo(canvas, at, radius * 2.6, COLOR_SWORD_GLOW)
+		RunLighting.halo(canvas, _halo_texture, at, radius * 2.6, COLOR_SWORD_GLOW)
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
 			var at: Vector2 = IsoProjection.to_screen(driver.shot_position_px(slot)) - Vector2(0, SHOT_LIFT_PX)
-			_halo(canvas, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, COLOR_WISP_GLOW)
+			RunLighting.halo(
+				canvas, _halo_texture, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, COLOR_WISP_GLOW
+			)
 	var hero: Vector2 = driver.hero_position_px()
 	var near_px: float = float(UpgradeSystem.pickup_radius(driver.config, world)) / Fx.FX_ONE * GEM_NEAR_RADII
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0 and driver.gem_position_px(slot).distance_to(hero) <= near_px:
 			var at: Vector2 = IsoProjection.to_screen(driver.gem_position_px(slot)) - Vector2(0, GEM_LIFT_PX)
-			_halo(canvas, at, 14.0, COLOR_GEM_GLOW)
+			RunLighting.halo(canvas, _halo_texture, at, 14.0, COLOR_GEM_GLOW)
 
 
 ## Effects light of the atlas: bursts and circles, the gems (a qi wisp brighter near the hero, as
@@ -1010,11 +967,6 @@ func _draw_vfx_light(canvas: Node2D) -> void:
 	for pickup: Array in _pickups:
 		if pickup[2] < PICKUP_FLY:
 			_vfx.draw_gem(canvas, _pickup_flight(pickup), pickup[1], 1.0)
-
-
-func _halo(canvas: Node2D, at: Vector2, radius: float, color: Color) -> void:
-	var box: Rect2 = Rect2(at - Vector2(radius, radius), Vector2(radius, radius) * 2.0)
-	canvas.draw_texture_rect(_halo_texture, box, false, color)
 
 
 func _enemy_color(kind: int) -> Color:

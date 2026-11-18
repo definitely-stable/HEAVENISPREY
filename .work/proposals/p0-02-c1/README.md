@@ -9,6 +9,6 @@
 - **Contracts:** RunView creates a RunRulesSnapshot with eligibility and takes the seed from Crypto unless explicitly supplied. P0Tuning uses the validated class, stage and seed from the snapshot. No simulation format changes.
 - **Acceptance:** Sword accepts the largest canonical uint64 seed. A locked class or malformed seed preserves the previous run. The same sword journal has the existing world and log digests.
 - **Test commands:** python scripts/validate_work.py, python -m unittest discover -s tests -v, Python reference vector checks and the pinned Godot import and GUT suite.
-- **Evidence:** Added with verification.
+- **Evidence:** Start integration coverage verifies accepted and rejected seeds and closed-class eligibility. Tests use the pinned Godot 4.7.2 engine and unchanged sword fixtures.
 - **Risk / rollback:** Revert this isolated runtime setup and caller migration.
 - **Next action:** C2.
