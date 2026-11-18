@@ -113,6 +113,178 @@
               "weight": 1
             }
           ]
+        },
+        {
+          "id": "jade_grove.w4",
+          "start_second": 300,
+          "end_second": 405,
+          "max_control_enemies_near_player": 1,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 6
+            },
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 6
+            },
+            {
+              "enemy_id": "enemy.venom_spirit_snake",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w5",
+          "start_second": 405,
+          "end_second": 510,
+          "max_control_enemies_near_player": 1,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 9
+            },
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 4
+            },
+            {
+              "enemy_id": "enemy.cursed_spirit_lantern",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.fallen_sword_disciple",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w6",
+          "start_second": 510,
+          "end_second": 615,
+          "max_control_enemies_near_player": 2,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 16
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.paper_puppet",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.root_abomination",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 4
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w7",
+          "start_second": 615,
+          "end_second": 720,
+          "max_control_enemies_near_player": 1,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 8
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 3
+            },
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 5
+            },
+            {
+              "enemy_id": "enemy.venom_spirit_snake",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.fallen_sword_disciple",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w8",
+          "start_second": 720,
+          "end_second": 810,
+          "max_control_enemies_near_player": 2,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 13
+            },
+            {
+              "enemy_id": "enemy.wandering_spirit",
+              "weight": 6
+            },
+            {
+              "enemy_id": "enemy.root_abomination",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.cursed_spirit_lantern",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            }
+          ]
+        },
+        {
+          "id": "jade_grove.w9",
+          "start_second": 810,
+          "end_second": 900,
+          "max_control_enemies_near_player": 2,
+          "weighted_enemies": [
+            {
+              "enemy_id": "enemy.yin_corpse",
+              "weight": 12
+            },
+            {
+              "enemy_id": "enemy.blood_wolf",
+              "weight": 7
+            },
+            {
+              "enemy_id": "enemy.sickle_mantis",
+              "weight": 2
+            },
+            {
+              "enemy_id": "enemy.cursed_spirit_lantern",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.paper_puppet",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.ruined_jade_guardian",
+              "weight": 1
+            },
+            {
+              "enemy_id": "enemy.root_abomination",
+              "weight": 1
+            }
+          ]
         }
       ]
     },

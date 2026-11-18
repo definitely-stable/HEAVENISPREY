@@ -85,13 +85,13 @@ def export(args) -> None:
         if native != args.platform:
             raise godot_tool.ToolError("Replay verification requires a native export runner")
         smoke = [str(path / console), "--headless", "--", "--verify-export-replay"]
-        subprocess.run([*smoke, str(args.fixture.resolve())], cwd=path, check=True, timeout=120)
+        subprocess.run([*smoke, str(args.fixture.resolve())], cwd=path, check=True, timeout=360)
         with tempfile.TemporaryDirectory() as tmp:
             bad = Path(tmp) / "invalid.json"
             corrupted = json.loads(args.fixture.read_text(encoding="utf-8"))
             corrupted["traces"][0]["checkpoints"][-1]["digest"] = "0" * 64
             bad.write_text(json.dumps(corrupted), encoding="utf-8")
-            result = subprocess.run([*smoke, str(bad)], cwd=path, check=False, timeout=120,
+            result = subprocess.run([*smoke, str(bad)], cwd=path, check=False, timeout=360,
                                     capture_output=True, text=True, encoding="utf-8", errors="replace")
             if result.returncode != 1 or "World digest mismatch" not in result.stderr:
                 raise godot_tool.ToolError("Corrupt digest was not rejected by the exported game")

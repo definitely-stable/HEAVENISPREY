@@ -7,7 +7,7 @@
     {
       "id": "stage.jade_grove",
       "name_key": "STAGE_JADE_NAME",
-      "duration_minutes": 5,
+      "duration_minutes": 15,
       "allowed_class_ids": [
         "class.sword",
         "class.thunder",

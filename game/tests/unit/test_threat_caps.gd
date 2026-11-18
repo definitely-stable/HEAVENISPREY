@@ -63,9 +63,15 @@ func test_window_of_a_tick() -> void:
 	var config: SimConfig = P0TestSetup.sword_config("1")
 	assert_not_null(config)
 	var starts: Array = []
-	for tick: int in [0, 5099, 5100, 10499, 10500, 17999, 18000, 90000]:
+	for tick: int in [
+		0, 5099, 5100, 10499, 10500, 15000, 17999, 18000, 24299, 24300, 30600, 36900,
+		43200, 48600, 53999, 54000, 90000,
+	]:
 		starts.append(config.windows[ThreatCaps.window_at(config, tick)])
-	assert_eq(starts, [0, 0, 5100, 5100, 10500, 15000, 15000, 15000])
+	assert_eq(starts, [
+		0, 0, 5100, 5100, 10500, 15000, 15000, 18000, 18000, 24300, 30600, 36900,
+		43200, 48600, 48600, 48600, 48600,
+	])
 	assert_eq(ThreatCaps.spawn_weights(config, 5100), PackedInt64Array([5, 3, 2, 2, 0, 0, 0, 0, 0, 0]))
 	var plain: SimConfig = _config(EVERY_TICK, YIN_LANTERN, YIN_LANTERN_ATTACKS, [], [])
 	assert_eq(ThreatCaps.spawn_weights(plain, 0), PackedInt64Array([8, 3]), "the kind weights")

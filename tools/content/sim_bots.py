@@ -32,6 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_runs.json"
 UPGRADE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "sim_bot_upgrade_runs.json"
+JADE_GROVE_RUNS_PATH = ROOT / "game" / "tests" / "fixtures" / "jade_grove_15_runs.json"
 RUNS_SCHEMA_VERSION = 6
 BOT_POLICY_VERSION = 4
 SWORD = "class.sword"
@@ -219,9 +220,7 @@ UPGRADE_BOTS = ["kiter_upgrades", "diag_first_id", "diag_utility_first"]
 
 
 def p0_config(seed: str, choice_mode: int = 0, class_id: str = SWORD):
-    """The P0 placeholder run, ending in victory after MAX_TICKS (equal to P0Tuning in the
-    game, choice_mode aside): roster windows w0..w3 with every attack, threat_caps, venom and
-    root (ADR-011 E6), in arena 07 from its west entry (ADR-015 A1)."""
+    """The historical five-minute P0 config used by the original journals and opening probe."""
     skill, shape = {
         SWORD: (sim.P0_SKILL, (0, 0, 0)), THUNDER: (sim.THUNDER_SKILL, sim.THUNDER_SHAPE)
     }[class_id]
@@ -234,6 +233,31 @@ def p0_config(seed: str, choice_mode: int = 0, class_id: str = SWORD):
 
 def config_for(name: str, seed: str, class_id: str = SWORD):
     return p0_config(seed, 0 if POLICIES[name][2] is None else 1, class_id)
+
+
+def jade_grove_config(seed: str, class_id: str):
+    """The live 15-minute stage, with canonical roster windows and P0Tuning pacing."""
+    source = ROOT / ".work" / "config" / "v7"
+    stages = json.loads((source / "stages.json").read_text(encoding="utf-8"))["stages"]
+    stage = next(row for row in stages if row["id"] == "stage.jade_grove")
+    rosters = json.loads((source / "enemy_rosters.json").read_text(encoding="utf-8"))["rosters"]
+    roster = next(row for row in rosters if row["id"] == stage["enemy_roster_id"])
+    kinds = list(dict.fromkeys(entry["enemy_id"] for window in roster["windows"]
+                               for entry in window["weighted_enemies"]))
+    windows = []
+    for window in roster["windows"]:
+        weights = {entry["enemy_id"]: entry["weight"] for entry in window["weighted_enemies"]}
+        windows.extend((60 * window["start_second"], 60 * window["end_second"],
+                        window["max_control_enemies_near_player"],
+                        *(weights.get(kind, 0) for kind in kinds)))
+    config = p0_config(seed, choice_mode=1, class_id=class_id)
+    config.raw_windows = windows
+    config.run_ticks = stage["duration_minutes"] * 3600
+    config.spawn_ramp = 8400
+    config.spawn_rate_max = 6500
+    config.max_enemies = 80
+    config.xp_costs = [*sim.P0_XP_COSTS[:13], 605, 810, 1050, 1340, 1690, 2100, 2550, 3000]
+    return config
 
 
 def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = None,
@@ -278,13 +302,14 @@ def sim_schema_version() -> int:
     return _load("rules_identity", "rules_identity.py").SIM_SCHEMA_VERSION
 
 
-def _exact(name: str, max_commands: int, class_id: str = SWORD) -> dict:
-    config = config_for(name, EXACT_SEED, class_id)
-    world, log, steps = play(name, config)
+def _exact(name: str, max_commands: int, class_id: str = SWORD, *, config=None,
+           trace_id: str | None = None) -> dict:
+    config = config if config is not None else config_for(name, EXACT_SEED, class_id)
+    world, log, steps = play(name, config, config.run_ticks)
     assert len(log.records) <= max_commands, (name, len(log.records))
     _, replayed, checkpoints = sim.run_trace(config, log.records, steps)
     assert replayed.digest() == world.digest(), name
-    trace_id = run_id(name, EXACT_SEED, class_id)
+    trace_id = trace_id or run_id(name, EXACT_SEED, class_id)
     return {"id": trace_id, "name": trace_id, "class_id": class_id,
             "bot_policy": name, "bot_policy_version": BOT_POLICY_VERSION,
             **sim.config_json(config),
@@ -361,16 +386,32 @@ def upgrade_runs_bytes(jobs: int = 1) -> bytes:
     return _bytes(build_upgrade_runs(jobs), MAX_UPGRADE_FILE_BYTES)
 
 
+def jade_grove_runs_bytes() -> bytes:
+    traces = []
+    for class_id in (SWORD, THUNDER):
+        config = jade_grove_config(EXACT_SEED, class_id)
+        trace = _exact("kiter_upgrades", 8000, class_id, config=config,
+                       trace_id=f"botrun.jade_grove_15.{class_id.removeprefix('class.')}.s{EXACT_SEED}")
+        assert trace["won"] == 1 and trace["end_tick"] == config.run_ticks, trace["id"]
+        traces.append(trace)
+    data = _header("15-minute Jade Grove with the current roster and class upgrades.")
+    data.update(max_ticks=traces[0]["run_ticks"], traces=traces)
+    return _bytes(data, 768 * 1024)
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--jobs", type=int, default=1)
+    parser.add_argument("--jade-grove-15", action="store_true", help="generate the live stage replays")
     args = parser.parse_args(argv)
     if args.jobs < 1:
         parser.error("--jobs must be at least 1")
     failed = False
-    for path, make in ((RUNS_PATH, runs_bytes), (UPGRADE_RUNS_PATH, upgrade_runs_bytes)):
-        expected = make(args.jobs)
+    files = ((JADE_GROVE_RUNS_PATH, jade_grove_runs_bytes),) if args.jade_grove_15 else (
+        (RUNS_PATH, lambda: runs_bytes(args.jobs)), (UPGRADE_RUNS_PATH, lambda: upgrade_runs_bytes(args.jobs)))
+    for path, make in files:
+        expected = make()
         rel = path.relative_to(ROOT).as_posix()
         if args.check:
             if not path.is_file() or path.read_bytes() != expected:

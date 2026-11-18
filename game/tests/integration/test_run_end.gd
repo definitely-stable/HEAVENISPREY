@@ -33,7 +33,7 @@ func test_stage_duration_comes_from_content() -> void:
 	var tuning: P0Tuning = P0Tuning.new()
 	var config: SimConfig = P0TestSetup.sword_config("101", tuning)
 	assert_not_null(config, tuning.error)
-	assert_eq(config.run_ticks, 5 * 60 * 60, "stage.jade_grove: 5 minutes")
+	assert_eq(config.run_ticks, 15 * 60 * 60, "stage.jade_grove: 15 minutes")
 	# run_ticks, then the attack table, venom, root, skill shape, windows and caps.
 	# The arena topology closes the list (ADR-015 A1).
 	assert_not_null(config.arena)
@@ -42,6 +42,21 @@ func test_stage_duration_comes_from_content() -> void:
 		+ config.arena.to_ints().size()
 	)
 	assert_eq(config.to_ints()[config.to_ints().size() - tail - 1], config.run_ticks)
+
+
+func test_jade_grove_continues_after_five_minutes() -> void:
+	var config: SimConfig = P0TestSetup.sword_config("101")
+	var world: WorldState = WorldState.initial(config)
+	var commands: CommandLog = CommandLog.new()
+	world.tick = 17999
+	SimKernel.step(config, world, commands)
+	assert_false(world.is_over(), "the former finish is now a roster transition")
+	world.tick = config.run_ticks - 2
+	SimKernel.step(config, world, commands)
+	assert_false(world.is_over(), "the penultimate tick remains playable")
+	SimKernel.step(config, world, commands)
+	assert_eq(world.won, 1)
+	assert_eq(world.tick, config.run_ticks)
 
 
 func test_config_rejects_a_negative_duration() -> void:

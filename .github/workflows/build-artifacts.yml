@@ -50,7 +50,7 @@ jobs:
         run: >-
           python scripts/dev/godot_export.py ${{ matrix.platform }}
           "${{ runner.temp }}/hip-release"
-          --fixture game/tests/fixtures/sim_bot_upgrade_runs.json
+          --fixture game/tests/fixtures/jade_grove_15_runs.json
       - name: Preserve executable permissions in the distribution
         working-directory: ${{ runner.temp }}
         run: >-
