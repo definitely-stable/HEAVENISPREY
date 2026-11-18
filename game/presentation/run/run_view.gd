@@ -130,6 +130,7 @@ var tuning: P0Tuning = P0Tuning.new()
 var runs_started: int = 0
 var session_profile: P0SessionProfile = P0SessionProfile.new()
 var rules_snapshot: RunRulesSnapshot
+var start_error: String = ""
 var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
@@ -300,22 +301,26 @@ func lantern_positions() -> Array[Vector2]:
 
 ## Starts a fresh authorized run. An invalid request leaves the current run intact.
 func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> bool:
+	start_error = ""
 	if seed_text == null:
 		seed_text = P0SessionProfile.random_run_seed()
 	if seed_text is not String:
-		push_error("P0 run refused: seed must be a canonical uint64 decimal string")
+		start_error = "seed must be a canonical uint64 decimal string"
+		push_warning("P0 run refused: " + start_error)
 		return false
 	var snapshot: RunRulesSnapshot = RunRulesSnapshot.create_for_new_run(
 		_registry, session_profile.granted_unlock_ids(), class_id, P0Tuning.STAGE_ID,
 		"difficulty.standard", PackedStringArray(["mode.normal"]), seed_text
 	)
 	if not snapshot.is_valid():
-		push_error("P0 run refused: " + snapshot.error)
+		start_error = snapshot.error
+		push_warning("P0 run refused: " + start_error)
 		return false
 	var candidate: P0Tuning = P0Tuning.new()
 	var config: SimConfig = candidate.run_config(_registry, snapshot)
 	if config == null:
-		push_error("P0 run refused: " + candidate.error)
+		start_error = candidate.error
+		push_error("P0 run refused: " + start_error)
 		return false
 	tuning = candidate
 	rules_snapshot = snapshot
