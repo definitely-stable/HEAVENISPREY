@@ -2396,6 +2396,81 @@
       }
     },
     {
+      "asset_id": "asset.ui.thunder_cards",
+      "kind": "ui_atlas",
+      "path": "game/assets/ui/thunder_cards/thunder_cards.png",
+      "sha256": "63a649d1c76c93fa86cbbdc7e39004a3c610574aade5b27022b159a143c85336",
+      "bytes": 601213,
+      "size": [
+        809,
+        684
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [],
+      "layout": {
+        "density": 2.0,
+        "pieces": [
+          {
+            "name": "art_thunder_damage",
+            "region": [
+              2,
+              2,
+              316,
+              344
+            ]
+          },
+          {
+            "name": "art_thunder_haste",
+            "region": [
+              322,
+              2,
+              401,
+              340
+            ]
+          },
+          {
+            "name": "art_thunder_jumps",
+            "region": [
+              2,
+              350,
+              387,
+              332
+            ]
+          },
+          {
+            "name": "art_thunder_reach",
+            "region": [
+              393,
+              350,
+              414,
+              192
+            ]
+          }
+        ]
+      },
+      "normal": null,
+      "source": {
+        "path": "art_source/thunder_cards/master.png",
+        "sha256": "e73b8e11559412f780973c48d09b674efeb5a9a568c546a3153379a1f5f4706b",
+        "bytes": 1279703,
+        "prompt_sha256": "3fa4ece29dee4288c0a4884aa442fb3d18664e0852771246d9db8d71d5a33b4f"
+      },
+      "qa": {
+        "palette_group": "ui_thunder",
+        "opaque_px": 4314,
+        "palette_mean_delta_e": 11.96,
+        "tones_pct": [
+          0.0,
+          29.6,
+          70.4
+        ],
+        "chroma": 0.341,
+        "threat_colour_pct": 0.0,
+        "median_l": 194.7
+      }
+    },
+    {
       "asset_id": "asset.vfx.combat",
       "kind": "vfx_atlas",
       "path": "game/assets/vfx/combat/combat.png",

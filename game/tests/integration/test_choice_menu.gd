@@ -125,7 +125,8 @@ func test_menu_dims_the_run_and_not_the_hud() -> void:
 ## The card illustrations still come from the gold kit. Choose picks the selected card once armed.
 func test_cards_come_from_the_gold_kit() -> void:
 	var kit: HudKit = HudKit.load_default()
-	assert_true(kit.has("divider_lotus"))
+	for piece: String in ["divider_lotus", "card_frame", "rank_ribbon", "title_banner", "choose_button"]:
+		assert_true(kit.has(piece), piece)
 	for code: int in UpgradeSystem.MAX_RANKS.size() + 1:
 		assert_true(kit.has(UpgradeCard.art_piece(code)), "illustration of upgrade %d" % code)
 	assert_eq(UpgradeCard.art_piece(UpgradeSystem.RECOVER), "art_recover")
@@ -142,7 +143,7 @@ func test_cards_come_from_the_gold_kit() -> void:
 		assert_eq(menu.cards[index].custom_minimum_size, ChoiceMenu.CARD_SIZE)
 		assert_eq(menu.card_texts[index]["art"], UpgradeCard.art_piece(world.hand[index]))
 		assert_eq(menu.cards[index].text, "", "the card draws its text itself")
-	assert_eq(menu.choose_button.text, UiText.text("UI_CHOICE_PICK"))
+	assert_eq(menu.choose_button.accessibility_name, UiText.text("UI_CHOICE_PICK"))
 	var top: float = menu.cards[0].get_global_rect().position.y
 	assert_gt(top, ChoiceMenu.TOP, "cards sit under the banner, below the HUD plaque")
 	var hud: Dictionary = RunHud.layout(kit, menu.get_viewport_rect().size)
@@ -165,7 +166,7 @@ func test_every_card_text_stays_in_its_panel() -> void:
 	var config: SimConfig = P0TestSetup.sword_config(SEED)
 	var world: WorldState = FixedTickDriver.create(config).world
 	var rect: Rect2 = Rect2(Vector2.ZERO, ChoiceMenu.CARD_SIZE)
-	var panel: Rect2 = rect
+	var panel: Rect2 = kit.window("card_frame", rect)
 	var arts: Dictionary = {}
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
@@ -193,7 +194,53 @@ func test_every_card_text_stays_in_its_panel() -> void:
 	for lang: String in ["ru", "en"]:
 		TranslationServer.set_locale(lang)
 		var title: String = UiText.text("UI_LEVEL_UP_TITLE")
-		assert_eq(kit.fit_size(title, 536.0, ChoiceMenu.TITLE_FONT_SIZE), ChoiceMenu.TITLE_FONT_SIZE, lang)
+		var banner: Rect2 = kit.window("title_banner", Rect2(Vector2.ZERO, ChoiceMenu.BANNER_SIZE))
+		assert_gte(kit.fit_size(title, banner.size.x - 44.0, ChoiceMenu.TITLE_FONT_SIZE), 25, lang)
+
+
+func test_thunder_has_distinct_art_and_readable_card_stats() -> void:
+	var atlas: HudKit = HudKit.load_kit(ChoiceMenu.THUNDER_ART)
+	var kit: HudKit = HudKit.load_default()
+	var view: RunView = _view()
+	view.session_profile.unlock_all = true
+	assert_true(view.start_run(SEED, "class.thunder"))
+	var config: SimConfig = view.driver.config
+	var world: WorldState = view.driver.world
+	var names: Dictionary = {}
+	for lang: String in ["ru", "en"]:
+		TranslationServer.set_locale(lang)
+		for code: int in range(UpgradeSystem.THUNDER_DAMAGE, UpgradeSystem.THUNDER_REACH + 1):
+			var piece: String = UpgradeCard.art_piece(code, config.skill_form)
+			assert_true(atlas.has(piece), piece)
+			names[piece] = true
+			var text: Dictionary = UpgradeCard.describe(config, world, code)
+			var at: Dictionary = ChoiceMenu.card_layout(kit, Rect2(Vector2.ZERO, ChoiceMenu.CARD_SIZE), text)
+			assert_false(str(text["change"]).is_empty())
+			assert_gte(kit.line_size(text["label"], at["label"], ChoiceMenu.LINE_FONT_SIZE), 18)
+	assert_eq(names.size(), 4)
+
+
+func test_gold_picker_fits_supported_canvas_sizes_and_short_hands() -> void:
+	var config: SimConfig = P0TestSetup.sword_config(SEED)
+	for size: Vector2i in [Vector2i(1280, 720), Vector2i(1280, 800), Vector2i(1720, 720)]:
+		var viewport: SubViewport = SubViewport.new()
+		viewport.size = size
+		add_child_autofree(viewport)
+		var menu: ChoiceMenu = ChoiceMenu.new()
+		viewport.add_child(menu)
+		var world: WorldState = WorldState.initial(config)
+		for count: int in [1, 2, 3]:
+			world.hand = PackedInt64Array([UpgradeSystem.RECOVER, UpgradeSystem.HASTE, UpgradeSystem.DAMAGE]).slice(0, count)
+			world.pending_level_choices = count
+			menu.open(config, world)
+			await wait_process_frames(2)
+			var safe: Rect2 = Rect2(Vector2.ZERO, Vector2(size)).grow(-12)
+			assert_true(safe.encloses(menu.choose_button.get_global_rect()), str(size))
+			assert_eq(viewport.gui_get_focus_owner(), menu.cards[0])
+			for index: int in menu.cards.size():
+				assert_eq(menu.cards[index].visible, index < count)
+				if index < count:
+					assert_true(safe.encloses(menu.cards[index].get_global_rect()), str(size))
 
 
 func test_choice_focus_follows_keyboard_and_controller() -> void:
@@ -348,7 +395,7 @@ func test_card_stat_lines_follow_the_simulation() -> void:
 	var world: WorldState = WorldState.initial(config)
 	var expected: Dictionary = {
 		UpgradeSystem.SPEED: ["288", "302"], UpgradeSystem.VITALITY: ["100", "120"],
-		UpgradeSystem.PICKUP: ["48", "72"], UpgradeSystem.COUNT: ["1", "2"],
+		UpgradeSystem.PICKUP: ["1", "1.5"], UpgradeSystem.COUNT: ["1", "2"],
 		UpgradeSystem.DAMAGE: ["10", "13"], UpgradeSystem.HASTE: ["1.20", "1.38"],
 		UpgradeSystem.PIERCE: ["2", "3"], UpgradeSystem.RECOVER: ["100", "100"],
 	}

@@ -73,16 +73,16 @@ STATUS_ROOT_SLOW_NAME,Entangling Roots,Опутывающие корни
 STATUS_QI_TAINT_NAME,Corrupted Qi,Осквернённая ци
 UI_LEVEL_UP_TITLE,Choose an upgrade,Выберите улучшение
 UI_CHOICE_PICK,Choose,Выбрать
-UI_CHOICE_INPUT,Arrows or D-pad · Enter or confirm button,Стрелки или крестовина · Enter или кнопка подтверждения
+UI_CHOICE_INPUT,1–3 · Arrows + Enter · D-pad + Confirm,1–3 · Стрелки + Enter · Крестовина + подтверждение
 UI_LEVEL_UP_MORE,More choices waiting: %d,Ещё выборов: %d
 UI_UPGRADE_RANK,Rank %d/%d,Ранг %d/%d
 UI_UPGRADE_UNCHANGED,"%s, already full","%s, уже полное"
 UPGRADE_P0_HERO_SPEED_NAME,Swift Steps,Быстрый шаг
-UPGRADE_P0_HERO_SPEED_DESC,Move speed %s → %s,Скорость движения %s → %s
+UPGRADE_P0_HERO_SPEED_DESC,Move speed (px/s) %s → %s,Скорость (пкс/с) %s → %s
 UPGRADE_P0_HERO_VITALITY_NAME,Vital Qi,Жизненная ци
 UPGRADE_P0_HERO_VITALITY_DESC,Max health %s → %s and heal,Макс. здоровье %s → %s и лечение
 UPGRADE_P0_PICKUP_RADIUS_NAME,Qi Attraction,Притяжение ци
-UPGRADE_P0_PICKUP_RADIUS_DESC,Pickup radius %s → %s,Радиус подбора %s → %s
+UPGRADE_P0_PICKUP_RADIUS_DESC,Pickup radius (cells) %s → %s,Радиус подбора (кл.) %s → %s
 UPGRADE_P0_SWORD_COUNT_NAME,Sword Formation,Строй мечей
 UPGRADE_P0_SWORD_COUNT_DESC,Swords per volley %s → %s,Мечей за залп %s → %s
 UPGRADE_P0_SWORD_DAMAGE_NAME,Honed Edge,Отточенный клинок
@@ -118,7 +118,7 @@ UPGRADE_P0_THUNDER_HASTE_DESC,Strikes per second %s → %s,Разрядов в �
 UPGRADE_P0_THUNDER_JUMPS_NAME,Branching Bolt,Ветвистый разряд
 UPGRADE_P0_THUNDER_JUMPS_DESC,Targets per strike %s → %s,Целей за разряд %s → %s
 UPGRADE_P0_THUNDER_REACH_NAME,Long Arc,Длинная дуга
-UPGRADE_P0_THUNDER_REACH_DESC,Jump range %s → %s,Дальность прыжка %s → %s
+UPGRADE_P0_THUNDER_REACH_DESC,Jump range (cells) %s → %s,Дальность прыжка (кл.) %s → %s
 UI_CLASS_SELECT_TITLE,Choose your path,Выберите путь
 CLASS_SWORD_DESC,Spirit swords strike the nearest foes; strong against a single target,Духовные мечи бьют ближайших врагов; сильнее против одиночной цели
 CLASS_THUNDER_DESC,Lightning leaps between nearby foes; strong in a dense horde,Молния перескакивает между соседними врагами; сильнее в плотной толпе

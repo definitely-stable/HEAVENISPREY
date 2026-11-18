@@ -978,7 +978,7 @@ def render_card(name: str, entry: dict) -> str:
         "> Сгенерировано `python tools/art/build_sprites.py` из `source.json` и `game/assets/manifest.json`. Не редактировать вручную.",
         "",
         f"- **asset_id (stable):** `{entry['asset_id']}` · версия ассета {entry['asset_version']}",
-        f"- **Content IDs:** {', '.join('`' + c + '`' for c in entry['content_ids'])}",
+        f"- **Content IDs:** {', '.join('`' + c + '`' for c in entry['content_ids']) or '—'}",
         f"- **Type / layer:** {kind}",
         f"- **Reference anchors:** {refs}",
         f"- **Style passport version:** ART-BIBLE-001 v{entry['art_bible_version']}, группа `{qa['palette_group']}`",

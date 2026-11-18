@@ -17,6 +17,7 @@ const MIN_FONT_SIZE: int = 10
 const CAP_CENTER: float = 0.33
 ## Cap height of the face (OS/2 sCapHeight 625 of 1000): the lining figures stand this tall.
 const CAP_HEIGHT: float = 0.625
+const HALO_STEP: int = 3
 const OUTLINE_COLOR: Color = Color(0.06, 0.03, 0.02, 0.9)
 const INK: Color = Color("#1b151c")
 const BRONZE: Color = Color("#8b6a4a")
@@ -33,6 +34,7 @@ var density: float = 2.0
 ## name -> {region: Rect2, inner: Rect2 (relative to the region, atlas px; empty when none),
 ## slice: Vector2 (left and right caps, atlas px; zero when the piece does not stretch)}
 var _pieces: Dictionary = {}
+var _halos: Dictionary = {}
 
 
 ## The lacquer plate used behind text in the HUD, cards and results.
@@ -308,6 +310,77 @@ func _paragraph_fits(text: String, width: float, size: int, max_lines: int) -> b
 		if text_width(word, size) > width:
 			return false
 	return paragraph_height(text, width, size) <= font.get_height(size) * max_lines + 0.5
+
+
+## Draws the soft halo of `piece` around `rect` (the rect the piece itself is drawn into): its
+## silhouette blurred `spread` screen px outwards, white, tinted by `modulate`. Meant for a canvas
+## item drawn behind the piece.
+func draw_halo(canvas: CanvasItem, piece: String, rect: Rect2, spread: float, modulate: Color) -> void:
+	var halo: Dictionary = halo_of(piece, spread)
+	if halo.is_empty():
+		return
+	var scale: float = rect.size.y / (_pieces[piece]["region"] as Rect2).size.y
+	canvas.draw_texture_rect(halo["texture"], rect.grow(float(halo["pad"]) * scale), false, modulate)
+
+
+## The halo of `piece`, made once from its alpha in the atlas: the silhouette at 1 / HALO_STEP
+## resolution, padded, box-blurred three times each way (close to a gaussian).
+func halo_of(piece: String, spread: float) -> Dictionary:
+	var key: String = "%s@%d" % [piece, roundi(spread)]
+	if _halos.has(key):
+		return _halos[key]
+	if not has(piece):
+		return {}
+	var atlas: Image = texture.get_image()
+	if atlas == null:
+		return {}
+	if atlas.is_compressed():
+		atlas.decompress()
+	var region: Rect2i = Rect2i(_pieces[piece]["region"] as Rect2)
+	var part: Image = atlas.get_region(region)
+	var w: int = maxi(1, region.size.x / HALO_STEP)
+	var h: int = maxi(1, region.size.y / HALO_STEP)
+	part.resize(w, h, Image.INTERPOLATE_BILINEAR)
+	var radius: int = maxi(1, roundi(spread * density / HALO_STEP / 3.0))
+	var pad: int = radius * 3 + 1
+	var cols: int = w + pad * 2
+	var rows: int = h + pad * 2
+	var field: PackedFloat32Array = PackedFloat32Array()
+	field.resize(cols * rows)
+	for y: int in h:
+		for x: int in w:
+			field[(y + pad) * cols + x + pad] = part.get_pixel(x, y).a
+	for _pass: int in 3:
+		field = _box_blur(field, cols, rows, radius, 1, cols)
+		field = _box_blur(field, rows, cols, radius, cols, 1)
+	var image: Image = Image.create(cols, rows, false, Image.FORMAT_RGBA8)
+	for y: int in rows:
+		for x: int in cols:
+			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, clampf(field[y * cols + x], 0.0, 1.0)))
+	_halos[key] = {"texture": ImageTexture.create_from_image(image), "pad": float(pad * HALO_STEP)}
+	return _halos[key]
+
+
+## One box-blur pass of `radius` along lines of `length` samples (`step` apart); `lines` lines,
+## each `stride` apart. Samples past the ends count as zero.
+static func _box_blur(
+	field: PackedFloat32Array, length: int, lines: int, radius: int, step: int, stride: int
+) -> PackedFloat32Array:
+	var out: PackedFloat32Array = PackedFloat32Array()
+	out.resize(field.size())
+	var norm: float = 1.0 / float(radius * 2 + 1)
+	for line: int in lines:
+		var base: int = line * stride
+		var sum: float = 0.0
+		for i: int in mini(radius, length):
+			sum += field[base + i * step]
+		for i: int in length:
+			if i + radius < length:
+				sum += field[base + (i + radius) * step]
+			if i - radius - 1 >= 0:
+				sum -= field[base + (i - radius - 1) * step]
+			out[base + i * step] = sum * norm
+	return out
 
 
 static func _rect(values: Variant) -> Rect2:
