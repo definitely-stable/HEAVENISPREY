@@ -1733,7 +1733,7 @@ P0_VALUES = [100000, 90000, 10800, 2000, 48, 384000]
 # range, 10 HP damage, 12 px/tick, 10 px radius, 40 ticks, pierce 1, 64 projectile slots.
 P0_SKILL = [50000, 384000, 10000, 12000, 10000, 40, 1, 64]
 # ADR-012 section 2, the same placeholder tuning used by P0Tuning.
-THUNDER_SKILL = [65000, 384000, 8000, 0, 0, 0, 0, 0]
+THUNDER_SKILL = [65000, 384000, 12800, 0, 0, 0, 0, 0]
 THUNDER_SHAPE = (SKILL_CHAIN, 4, 144000)
 SEED = "20261113"
 # ADR-010 placeholder XP: pickup radius 2 hero radii, 512 gems, yin_corpse 10 / blood_wolf 15,

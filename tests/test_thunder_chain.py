@@ -38,7 +38,7 @@ class ThunderTests(unittest.TestCase):
         self._enemy(40, 488001)
         sim.cast(self.config, self.world)
         self.assertEqual(self.world.chain_uids, [20, 99, 0, 0, 0, 0, 0, 0])
-        self.assertEqual(first_tie[sim.E_HP], 92000)
+        self.assertEqual(first_tie[sim.E_HP], 100000 - self.config.skill_damage)
         self.assertEqual(other_tie[sim.E_HP], 100000)
         self.assertEqual(self.world.ints()[44:54], [100, 2, 20, 99, 0, 0, 0, 0, 0, 0])
 
@@ -55,10 +55,11 @@ class ThunderTests(unittest.TestCase):
         with patch.object(sim, "_nearest_chain_target", side_effect=rank_changes_during_jump):
             sim.cast(self.config, self.world)
         self.assertEqual(self.world.chain_uids, [20, 21, 22, 0, 0, 0, 0, 0])
-        self.assertEqual([e[sim.E_HP] for e in self.world.enemies], [92000] * 3)
+        self.assertEqual([e[sim.E_HP] for e in self.world.enemies], [100000 - self.config.skill_damage] * 3)
         self.world.skill_acc = self.config.skill_period - sim.RATE_ONE
         sim.cast(self.config, self.world)
-        self.assertEqual([e[sim.E_HP] for e in self.world.enemies], [80000] * 3)
+        remaining = 100000 - 2 * self.config.skill_damage - 2 * sim.THUNDER_DAMAGE_PER_RANK
+        self.assertEqual([e[sim.E_HP] for e in self.world.enemies], [remaining] * 3)
 
     def test_config_reserves_upgrade_headroom(self):
         self.assertTrue(self.config.valid())

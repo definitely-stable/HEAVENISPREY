@@ -75,7 +75,7 @@ func test_chain_config_bounds_and_catalog_effects() -> void:
 	var config: SimConfig = tuning.run_config(registry, snapshot)
 	assert_not_null(config, tuning.error)
 	assert_eq(tuning.skill_id, "skill.thunder_chain")
-	assert_eq(config.to_ints().slice(14, 22), SKILL)
+	assert_eq(config.to_ints().slice(14, 22), PackedInt64Array([65000, 384000, 12800, 0, 0, 0, 0, 0]))
 	assert_eq(config.skill_form, SimConfig.SKILL_CHAIN)
 	assert_true(config.is_valid())
 	config.chain_hits = 7

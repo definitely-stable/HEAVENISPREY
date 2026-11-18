@@ -24,8 +24,9 @@ static func stress_config() -> SimConfig:
 	).with_skill(PackedInt64Array([50000, 384000, 10000, 12000, 10000, 40, 1, 64]))
 
 
-static func stress_attacks_config() -> SimConfig:
-	var tuned: SimConfig = P0TestSetup.sword_config("20261113")
+static func stress_attacks_config(tuned: SimConfig = null) -> SimConfig:
+	if tuned == null:
+		tuned = P0TestSetup.sword_config("20261113")
 	return tuned.with_enemies(
 		PackedInt64Array([500000000, 6000, 0, 1000, 150, 384000]), tuned.kinds, "20261113"
 	).with_windows(
@@ -38,19 +39,38 @@ static func percentile(sorted: Array[int], share: int) -> int:
 
 
 func _initialize() -> void:
+	if "--thunder" in OS.get_cmdline_user_args():
+		var registry: ContentRegistry = ContentRegistry.load_dir()
+		var snapshot: RunRulesSnapshot = RunRulesSnapshot.create_for_new_run(
+			registry, PackedStringArray(["unlock.thunder"]), "class.thunder", P0Tuning.STAGE_ID,
+			"difficulty.standard", PackedStringArray(["mode.normal"]), "20261113"
+		)
+		var thunder: SimConfig = stress_attacks_config(P0Tuning.new().run_config(registry, snapshot))
+		# Keep every slot occupied while measuring chains at the 150-enemy limit.
+		for kind: int in thunder.kind_count():
+			thunder.kinds[kind * SimConfig.KIND_STRIDE + SimConfig.KIND_HP] = 100000000
+		measure("thunder_6_max_ranks", thunder, UpgradeSystem.RANK_TABLES[SimConfig.SKILL_CHAIN])
+		thunder.chain_hits = SimConfig.MAX_CHAIN_HITS
+		measure("thunder_8_targets", thunder)
+		quit()
+		return
 	measure("stress_150_separation", stress_config())
 	measure("stress_150_attacks", stress_attacks_config())
 	quit()
 
 
-func measure(scenario: String, config: SimConfig) -> void:
+func measure(scenario: String, config: SimConfig, ranks: PackedInt64Array = []) -> void:
 	var commands: CommandLog = CommandLog.new()
 	for index: int in range(0, ceili((WARMUP_TICKS + MEASURED_TICKS) / 30.0)):
 		var move: Vector2i = DIRS[index % DIRS.size()]
 		commands.append(PlayerCommand.create(index * 30, index, move.x, move.y), 0)
 	var world: WorldState = WorldState.initial(config)
+	if not ranks.is_empty():
+		world.ranks = ranks.duplicate()
 	var ticks: Array[int] = []
 	var separation: Array[int] = []
+	var min_alive: int = config.max_enemies
+	var longest_chain: int = 0
 	for tick: int in WARMUP_TICKS + MEASURED_TICKS:
 		var started: int = Time.get_ticks_usec()
 		SimKernel.step(config, world, commands)
@@ -58,6 +78,8 @@ func measure(scenario: String, config: SimConfig) -> void:
 		if tick < WARMUP_TICKS:
 			continue
 		ticks.append(spent)
+		min_alive = mini(min_alive, world.enemy_alive)
+		longest_chain = maxi(longest_chain, world.chain_len)
 		var probe: WorldState = world.copy()
 		started = Time.get_ticks_usec()
 		SeparationSystem.chase_and_separate(config, probe)
@@ -66,6 +88,8 @@ func measure(scenario: String, config: SimConfig) -> void:
 	separation.sort()
 	print(JSON.stringify({
 		"scenario": scenario, "enemy_alive": world.enemy_alive, "ticks": MEASURED_TICKS,
+		"minimum_alive": min_alive, "longest_chain": longest_chain,
+		"chain_targets": UpgradeSystem.chain_hits(config, world) if config.skill_form == SimConfig.SKILL_CHAIN else 0,
 		"tick_us_p50": percentile(ticks, 50), "tick_us_p95": percentile(ticks, 95),
 		"tick_us_p99": percentile(ticks, 99), "separation_us_p50": percentile(separation, 50),
 		"separation_us_p95": percentile(separation, 95), "digest": world.digest(),
