@@ -1,12 +1,11 @@
 class_name RunResults
 extends Control
-## The stopped run and its summary (ADR-011 §1). A new run needs a deliberate
-## press after the first second.
+## The immutable run summary. Acknowledgement needs a deliberate press.
 
-signal restart_requested
+signal rewards_requested
 
 const ARM_DELAY: float = 1.0
-const PANEL_SIZE: Vector2 = Vector2(566, 416)
+const PANEL_SIZE: Vector2 = Vector2(566, 508)
 const COLOR_DIM: Color = Color(0.045, 0.027, 0.07, 0.69)
 const STAT_KEYS: Array[String] = [
 	"UI_RUN_TIME_LABEL", "UI_RUN_KILLS_LABEL", "UI_RUN_LEVEL_LABEL", "UI_RUN_XP_LABEL",
@@ -15,7 +14,9 @@ const STAT_KEYS: Array[String] = [
 var kit: HudKit
 var title: Label
 var hint: Label
-var new_run_button: Button
+var class_line: Label
+var unlock_line: Label
+var rewards_button: Button
 var stat_values: Array[Label] = []
 var _stat_labels: Array[Label] = []
 var _arm_left: float = 0.0
@@ -56,6 +57,8 @@ func _init() -> void:
 	title.custom_minimum_size.y = 60.0
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	column.add_child(title)
+	class_line = _label(23, HudKit.TEXT)
+	column.add_child(class_line)
 	var stats: GridContainer = GridContainer.new()
 	stats.columns = 2
 	stats.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -70,12 +73,14 @@ func _init() -> void:
 		tile_style.set_content_margin(side, 10.0)
 	for _key: String in STAT_KEYS:
 		_add_stat(stats, tile_style)
-	new_run_button = Button.new()
-	new_run_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	new_run_button.custom_minimum_size = Vector2(224, 48)
-	new_run_button.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
-	new_run_button.pressed.connect(_on_restart_pressed)
-	column.add_child(new_run_button)
+	unlock_line = _label(22, HudKit.JADE)
+	column.add_child(unlock_line)
+	rewards_button = Button.new()
+	rewards_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	rewards_button.custom_minimum_size = Vector2(224, 48)
+	rewards_button.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+	rewards_button.pressed.connect(_on_rewards_pressed)
+	column.add_child(rewards_button)
 	hint = _label(19, HudKit.MUTED)
 	column.add_child(hint)
 
@@ -106,28 +111,33 @@ func _draw_plate(plate: Control) -> void:
 		kit.draw(plate, "divider_lotus", Rect2(rect.get_center().x - 102.0, 21, 204, 18))
 
 
-func open(world: WorldState) -> void:
+func open(receipt: RunResultReceipt, class_title: String, unlocked_class: String) -> void:
 	if kit == null:
 		kit = HudKit.load_default()
 		theme = kit.menu_theme()
-	var won: bool = world.won != 0
+	var fields: Dictionary = receipt.fields()
+	var won: bool = fields["result"] == "victory"
 	title.text = UiText.text("UI_RUN_VICTORY" if won else "UI_RUN_DEFEAT")
 	title.add_theme_color_override("font_color", HudKit.JADE if won else HudKit.CRIMSON)
-	var values: Array[String] = [clock(world.tick), str(world.kills), str(world.level), str(world.xp_collected_total)]
+	class_line.text = UiText.text("UI_RUN_CLASS") % class_title
+	unlock_line.visible = not unlocked_class.is_empty()
+	unlock_line.text = UiText.text("UI_REWARDS_UNLOCK") % unlocked_class
+	var values: Array[String] = [
+		clock(fields["survived_ticks"]), str(fields["kills"]), str(fields["level"]), str(fields["xp_collected"]),
+	]
 	for index: int in STAT_KEYS.size():
 		_stat_labels[index].text = UiText.text(STAT_KEYS[index])
 		stat_values[index].text = values[index]
-	new_run_button.text = UiText.text("UI_RUN_NEW")
-	new_run_button.self_modulate = Color(0.7, 0.7, 0.7)
-	hint.text = UiText.text("UI_RUN_CONFIRM_INPUT")
-	hint.modulate.a = 0.0
+	rewards_button.text = UiText.text("UI_RUN_TO_REWARDS")
+	rewards_button.self_modulate = Color(0.7, 0.7, 0.7)
+	hint.text = UiText.text("UI_RUN_RESTART")
 	_arm_left = ARM_DELAY
 	visible = true
 	if is_inside_tree():
-		var action: NodePath = new_run_button.get_path()
-		new_run_button.focus_next = action
-		new_run_button.focus_previous = action
-		new_run_button.grab_focus()
+		var action: NodePath = rewards_button.get_path()
+		rewards_button.focus_next = action
+		rewards_button.focus_previous = action
+		rewards_button.grab_focus()
 
 
 func close() -> void:
@@ -140,13 +150,12 @@ func age(delta: float) -> void:
 		return
 	_arm_left = maxf(_arm_left - maxf(delta, 0.0), 0.0)
 	if is_armed():
-		hint.modulate.a = 1.0
-		new_run_button.self_modulate = Color.WHITE
+		rewards_button.self_modulate = Color.WHITE
 
 
-func _on_restart_pressed() -> void:
+func _on_rewards_pressed() -> void:
 	if is_armed():
-		restart_requested.emit()
+		rewards_requested.emit()
 
 
 func is_armed() -> bool:

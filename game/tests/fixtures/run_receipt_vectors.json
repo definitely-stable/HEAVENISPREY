@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "policy_id": "hip-reward-preview-v1",
+  "scenario_id": "receipt-preview",
+  "seed": "101",
+  "run_uid": "110344626205fbdbd666e89804f74252",
+  "reward_event_id": "reward.minute3:110344626205fbdbd666e89804f74252:0",
+  "cases": [
+    {"name": "victory", "result": "victory", "survived_ticks": 18000, "kills": 20, "event": true, "stones_preview": 8},
+    {"name": "death_one_tick_short", "result": "defeat", "survived_ticks": 10799, "kills": 20, "event": false, "stones_preview": 0},
+    {"name": "death_on_threshold", "result": "defeat", "survived_ticks": 10800, "kills": 20, "event": true, "stones_preview": 8},
+    {"name": "kill_short", "result": "defeat", "survived_ticks": 10800, "kills": 19, "event": false, "stones_preview": 0},
+    {"name": "kill_after_minute_three", "result": "defeat", "survived_ticks": 11200, "kills": 20, "event": true, "stones_preview": 8},
+    {"name": "abandoned_counts_for_preview", "result": "abandoned", "survived_ticks": 14400, "kills": 50, "event": true, "stones_preview": 8},
+    {"name": "unsupported_mode_multiplier", "result": "victory", "survived_ticks": 18000, "kills": 20, "mode_ids": ["mode.ascetic"], "error": "unsupported_mode_multiplier"},
+    {"name": "apprentice_floors", "result": "victory", "survived_ticks": 18000, "kills": 20, "difficulty_id": "difficulty.apprentice", "event": true, "stones_preview": 6},
+    {"name": "ineligible_mode", "result": "victory", "survived_ticks": 18000, "kills": 20, "mode_ids": ["mode.training"], "event": false, "stones_preview": 0}
+  ]
+}
