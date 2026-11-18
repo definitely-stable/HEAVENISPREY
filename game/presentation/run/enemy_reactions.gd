@@ -36,9 +36,10 @@ func clear() -> void:
 	_ages.clear()
 
 
-## A blow on `uid`; `clip_length` is its hit clip (0 without one).
+## A blow on `uid`; `clip_length` is its hit clip (0 without one). A flash starts at most once
+## per FLASH_TIME on one enemy, however short its clip (QUALITY-2026-11 Q3).
 func hit(uid: int, clip_length: float) -> void:
-	var restart: float = clip_length * RESTART_SHARE if clip_length > 0.0 else FLASH_TIME
+	var restart: float = maxf(clip_length * RESTART_SHARE, FLASH_TIME)
 	if not _ages.has(uid) or float(_ages[uid]) >= restart:
 		_ages[uid] = 0.0
 
