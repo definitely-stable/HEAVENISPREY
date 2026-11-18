@@ -74,6 +74,8 @@ const ENEMY_ASSETS: Dictionary = {
 	"enemy.fallen_sword_disciple": "asset.enemy.fallen_sword_disciple",
 	"enemy.cursed_spirit_lantern": "asset.enemy.cursed_spirit_lantern",
 	"enemy.paper_puppet": "asset.enemy.paper_puppet",
+	"enemy.ruined_jade_guardian": "asset.enemy.ruined_jade_guardian",
+	"enemy.root_abomination": "asset.enemy.root_abomination",
 }
 ## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
 ## hue stays reserved for enemies (ADR-014 section 2).

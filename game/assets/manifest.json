@@ -559,6 +559,228 @@
       }
     },
     {
+      "asset_id": "asset.enemy.root_abomination",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/root_abomination/root_abomination.png",
+      "sha256": "74922e9df84d04c4f9ddb151d66a7f99249efb18bf9156a0221936a8da4c21ce",
+      "bytes": 2121019,
+      "size": [
+        1920,
+        2560
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.root_abomination"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 320,
+        "feet_anchor": [
+          160,
+          314
+        ],
+        "scale": [
+          0.344,
+          0.4491
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 9,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/root_abomination/root_abomination_n.png",
+        "sha256": "154eff9699aaa212b69f79f6864c86b6240bc183dd57680861824805221c3aa6",
+        "bytes": 1492354,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/root_abomination/master.webp",
+        "sha256": "423fa8e46fc3bc5380d984ce92da3db6a02bf0d54c49333bc155cf3ae1689adf",
+        "bytes": 12141118,
+        "prompt_sha256": "f45e1421660588b031d300646bc73d15795b0bb0d2b2bd0a1249d5ad55e827ab"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 1962,
+        "palette_mean_delta_e": 6.87,
+        "tones_pct": [
+          97.2,
+          2.8,
+          0.0
+        ],
+        "chroma": 0.109,
+        "threat_colour_pct": 0.0,
+        "median_l": 46.9,
+        "loop_seam_ratio": 1.113,
+        "loop_seam_to_max": 1.008,
+        "height_spread_pct": 0.5,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
+      "asset_id": "asset.enemy.ruined_jade_guardian",
+      "kind": "anim_atlas",
+      "path": "game/assets/enemies/ruined_jade_guardian/ruined_jade_guardian.png",
+      "sha256": "140bff6bb6481f37d93ff1a04cda521f80b87e77ab44f632641bbbd68f39eda0",
+      "bytes": 2597902,
+      "size": [
+        1920,
+        2560
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "enemy.ruined_jade_guardian"
+      ],
+      "layout": {
+        "anchor_x": "torso",
+        "frame_size": 320,
+        "feet_anchor": [
+          160,
+          314
+        ],
+        "scale": [
+          0.4274,
+          0.4993
+        ],
+        "frames": 6,
+        "directions": [
+          "se",
+          "ne"
+        ],
+        "mirror": {
+          "sw": "se",
+          "nw": "ne"
+        },
+        "clips": {
+          "walk": {
+            "row": 0,
+            "frames": 6,
+            "fps": 7,
+            "loop": true,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "attack": {
+            "row": 2,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "hit": {
+            "row": 4,
+            "frames": 6,
+            "fps": 16,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          },
+          "death": {
+            "row": 6,
+            "frames": 6,
+            "fps": 10,
+            "loop": false,
+            "directions": [
+              "se",
+              "ne"
+            ]
+          }
+        }
+      },
+      "normal": {
+        "path": "game/assets/enemies/ruined_jade_guardian/ruined_jade_guardian_n.png",
+        "sha256": "0cbdbd72c57eea5faaf579645f842dd6078d9b917eebfd8a5ea5b996470e5351",
+        "bytes": 1425134,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/ruined_jade_guardian/master.webp",
+        "sha256": "58c9857872269758fcba6cc82ffd296148a024578271c0c488166111a69f02c6",
+        "bytes": 10209844,
+        "prompt_sha256": "18f65600c339963e7608604d4135a779e21fbd7b77a56655bebf6f6130262c5e"
+      },
+      "qa": {
+        "palette_group": "enemies",
+        "opaque_px": 3474,
+        "palette_mean_delta_e": 11.03,
+        "tones_pct": [
+          32.7,
+          61.3,
+          6.0
+        ],
+        "chroma": 0.057,
+        "threat_colour_pct": 0.0,
+        "median_l": 102.3,
+        "loop_seam_ratio": 1.319,
+        "loop_seam_to_max": 1.06,
+        "height_spread_pct": 0.26,
+        "torso_drift_px": 1.0
+      }
+    },
+    {
       "asset_id": "asset.enemy.sickle_mantis",
       "kind": "anim_atlas",
       "path": "game/assets/enemies/sickle_mantis/sickle_mantis.png",

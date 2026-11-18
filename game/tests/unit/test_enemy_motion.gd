@@ -6,6 +6,7 @@ extends GutTest
 const Attacks: GDScript = preload("res://tests/unit/test_enemy_attacks.gd")
 const RunViewTests: GDScript = preload("res://tests/integration/test_run_view.gd")
 const Shots: GDScript = preload("res://tests/unit/test_enemy_shots.gd")
+const Zones: GDScript = preload("res://tests/unit/test_enemy_zones.gd")
 const LANTERN: String = "asset.enemy.cursed_spirit_lantern"
 
 
@@ -175,6 +176,47 @@ func test_a_fallen_hovering_body_drops_to_the_ground() -> void:
 	assert_eq(EnemyMotion.fall_lift(LANTERN, EnemyMotion.FALL_TIME), 0.0, "on the ground at FALL_TIME")
 	assert_eq(EnemyMotion.fall_lift(LANTERN, 2.0), 0.0)
 	assert_eq(EnemyMotion.fall_lift("asset.enemy.yin_corpse", 0.0), 0.0, "a corpse falls where it stands")
+
+
+## ADR-014 section 28: the root caster lays its zone where the hero stood when tell began. It plays
+## the cast like a shot (release frame on the active tick, recover 2-5) and faces the zone, not
+## the hero who walked away; a shot still tracks the hero while it winds up.
+func test_a_root_caster_faces_its_zone_and_releases_in_one_tick() -> void:
+	var config: SimConfig = Zones._config(Zones.ROOT_KIND, Zones.ROOT_GROWTH)
+	var world: WorldState = Zones._root_world(config)
+	var seen: Dictionary = {}
+	var moved: bool = false
+	for tick: int in 140:
+		var before: int = world.enemy_state[0]
+		Zones._run(config, world, 1)
+		var state: int = world.enemy_state[0]
+		if state == EnemyAttackSystem.ST_APPROACH:
+			if before == EnemyAttackSystem.ST_RECOVER:
+				break
+			continue
+		if state == EnemyAttackSystem.ST_TELL and not moved:
+			# The hero walks round to the caster's far side; the zone stays where it was laid.
+			world.player_x = world.enemy_x[0] + 200000
+			moved = true
+		var phase: Array = seen.get(state, [])
+		phase.append(EnemyMotion.attack_frame(config, world, 0, 6))
+		seen[state] = phase
+		var locked: Vector2 = IsoProjection.to_screen(Vector2(world.enemy_dir_x[0], world.enemy_dir_y[0]))
+		var expected: Vector2i = Vector2i(-1 if locked.x < 0.0 else 1, -1 if locked.y < 0.0 else 1)
+		assert_eq(EnemyMotion.attack_signs(config, world, 0), expected, "faces its zone (tick %d)" % tick)
+	assert_true(moved, "the caster wound up")
+	assert_eq(_range(seen[EnemyAttackSystem.ST_TELL]), [0, 1], "tell winds up on frames 0-1")
+	assert_eq(seen[EnemyAttackSystem.ST_ACTIVE], [2], "the release frame on the active tick")
+	assert_eq(_range(seen[EnemyAttackSystem.ST_RECOVER]), [2, 5], "recover holds the release, then plays 3-5")
+	var shots: SimConfig = Shots._lantern()
+	var lantern: WorldState = Shots._lantern_world(shots)
+	lantern.enemy_state[0] = EnemyAttackSystem.ST_TELL
+	lantern.enemy_dir_x[0] = -Fx.FX_ONE
+	lantern.enemy_dir_y[0] = 0
+	lantern.player_x = lantern.enemy_x[0] + 200000
+	var toward: Vector2 = IsoProjection.to_screen(Vector2(1, 0))
+	assert_eq(EnemyMotion.attack_signs(shots, lantern, 0), Vector2i(int(signf(toward.x)), int(signf(toward.y))),
+		"a shot still tracks the hero in tell")
 
 
 static func _range(frames: Array) -> Array:
