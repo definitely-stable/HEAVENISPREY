@@ -79,6 +79,10 @@
    "en": "Body Cultivator",
    "ru": "Культиватор тела"
   },
+  "CLASS_SWORD_DESC": {
+   "en": "Spirit swords strike the nearest foes; strong against a single target",
+   "ru": "Духовные мечи бьют ближайших врагов; сильнее против одиночной цели"
+  },
   "CLASS_SWORD_NAME": {
    "en": "Sword Cultivator",
    "ru": "Культиватор меча"
@@ -86,6 +90,10 @@
   "CLASS_TALISMAN_NAME": {
    "en": "Talisman Master",
    "ru": "Мастер талисманов"
+  },
+  "CLASS_THUNDER_DESC": {
+   "en": "Lightning leaps between nearby foes; strong in a dense horde",
+   "ru": "Молния перескакивает между соседними врагами; сильнее в плотной толпе"
   },
   "CLASS_THUNDER_NAME": {
    "en": "Thunder Daoist",
@@ -295,6 +303,22 @@
    "en": "Choose",
    "ru": "Выбрать"
   },
+  "UI_CLASS_CONFIRM": {
+   "en": "Enter: begin",
+   "ru": "Enter — начать"
+  },
+  "UI_CLASS_LOCKED": {
+   "en": "Locked: finish a run in %s",
+   "ru": "Закрыто: завершите забег — %s"
+  },
+  "UI_CLASS_SELECT_TITLE": {
+   "en": "Choose your path",
+   "ru": "Выберите путь"
+  },
+  "UI_CLASS_START_SKILL": {
+   "en": "Starting technique: %s",
+   "ru": "Стартовая техника: %s"
+  },
   "UI_DIFFICULTY": {
    "en": "Challenge level",
    "ru": "Уровень испытания"
@@ -327,6 +351,38 @@
    "en": "Choose an upgrade",
    "ru": "Выберите улучшение"
   },
+  "UI_REWARDS_CONTINUE": {
+   "en": "Enter: choose a class · R: run again",
+   "ru": "Enter — выбор класса · R — снова"
+  },
+  "UI_REWARDS_MILESTONE": {
+   "en": "Minute %d (%d+ kills): +%d",
+   "ru": "%d-я минута (от %d убийств): +%d"
+  },
+  "UI_REWARDS_MILESTONE_MISSED": {
+   "en": "Minute %d (%d+ kills): not reached",
+   "ru": "%d-я минута (от %d убийств): не достигнуто"
+  },
+  "UI_REWARDS_NOT_SAVED": {
+   "en": "Progress is not saved yet: stones are not banked",
+   "ru": "Прогресс пока не сохраняется: камни не зачисляются"
+  },
+  "UI_REWARDS_STONES": {
+   "en": "Spirit Stones earned: %d",
+   "ru": "Заработано духовных камней: %d"
+  },
+  "UI_REWARDS_TITLE": {
+   "en": "Run rewards",
+   "ru": "Награды забега"
+  },
+  "UI_REWARDS_UNLOCK": {
+   "en": "New class: %s",
+   "ru": "Открыт класс: %s"
+  },
+  "UI_RUN_CLASS": {
+   "en": "Class: %s",
+   "ru": "Класс: %s"
+  },
   "UI_RUN_CONFIRM_INPUT": {
    "en": "Enter or confirm button",
    "ru": "Enter или кнопка подтверждения"
@@ -356,8 +412,8 @@
    "ru": "Новый забег"
   },
   "UI_RUN_RESTART": {
-   "en": "R or Enter: new run",
-   "ru": "R или Enter — новый забег"
+   "en": "R: run again",
+   "ru": "R — снова"
   },
   "UI_RUN_TIME": {
    "en": "Time %s",
@@ -366,6 +422,10 @@
   "UI_RUN_TIME_LABEL": {
    "en": "Time",
    "ru": "Время"
+  },
+  "UI_RUN_TO_REWARDS": {
+   "en": "Enter: rewards",
+   "ru": "Enter — награды"
   },
   "UI_RUN_VICTORY": {
    "en": "Victory: the grove is held",

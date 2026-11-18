@@ -26,6 +26,7 @@ import argparse
 from concurrent.futures import ProcessPoolExecutor
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -235,10 +236,12 @@ def config_for(name: str, seed: str, class_id: str = SWORD):
     return p0_config(seed, 0 if POLICIES[name][2] is None else 1, class_id)
 
 
-def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = None):
+def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = None,
+         *, on_step: Callable | None = None):
     """Runs bot `name` until the hero dies or `max_ticks` ticks; returns (world, log, steps).
     A paused run gets one CHOOSE from the bot's chooser before the step. With `stats` it
-    records the peak number of gems on the ground and the lowest hero HP."""
+    records the peak number of gems on the ground and the lowest hero HP.
+    The optional observer reads the completed step and never supplies bot decisions."""
     policy, every, chooser = POLICIES[name]
     if chooser is priority_chooser and config.skill_form == sim.SKILL_CHAIN:
         chooser = thunder_chooser
@@ -261,6 +264,8 @@ def play(name: str, config, max_ticks: int = MAX_TICKS, stats: dict | None = Non
         if stats is not None:
             stats["gems_ground_peak"] = max(stats.get("gems_ground_peak", 0), world.gems_alive)
             stats["hp_min"] = min(stats.get("hp_min", world.hero_hp), world.hero_hp)
+        if on_step is not None:
+            on_step(world)
     return world, log, steps
 
 
