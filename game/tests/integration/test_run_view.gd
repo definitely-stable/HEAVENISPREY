@@ -183,20 +183,22 @@ func test_tuning_reads_the_roster_windows_from_content() -> void:
 		3072, 25200, 11000, 0, 360, 1,
 	]))
 	# start/end seconds x 60, max_control_enemies_near_player, a weight per kind.
-	assert_eq(config.windows, PackedInt64Array([
+	assert_eq(config.windows.slice(0, 52), PackedInt64Array([
 		0, 5100, 0, 8, 2, 0, 0, 0, 0, 0, 0, 0, 0,
 		5100, 10500, 0, 5, 3, 2, 2, 0, 0, 0, 0, 0, 0,
 		10500, 15000, 1, 3, 3, 0, 0, 2, 1, 1, 1, 0, 0,
 		15000, 18000, 2, 3, 2, 0, 0, 1, 0, 0, 0, 1, 1,
 	]))
+	assert_eq(config.windows.size(), 10 * 13, "the roster has ten formations")
+	assert_eq(config.windows[-12], config.run_ticks, "the final wave ends at victory")
 	assert_eq(config.caps, PackedInt64Array([2, 2, 2, 3, 3, 384000]), "threat_caps, 8 cells near")
 	assert_eq(config.hero_hp_mhp, 100000)
 	assert_eq(config.spawn_min_distance_su, 384000)
 	assert_eq(tuning.skill_id, "skill.spirit_sword", "class.sword start skill")
 	assert_eq(config.skill_period_mt, 50000, "base_cooldown_ticks 50 from content")
-	# Equal to the P0_VALUES / P0_SKILL trace inputs of sim_core.py.
+	# The spawn distance and sword settings match the historical P0 tuning.
 	assert_eq(config.to_ints().slice(8, 22), PackedInt64Array([
-		100000, 90000, 10800, 2000, 48, 384000,
+		100000, 90000, 8400, 6500, 80, 384000,
 		50000, 384000, 10000, 12000, 10000, 40, 1, 64,
 	]))
 

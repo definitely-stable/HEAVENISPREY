@@ -70,6 +70,7 @@ jobs:
           python tools/content/fx.py --check
           python tools/content/sim_core.py --check
           python tools/content/sim_bots.py --check
+          python tools/content/sim_bots.py --jade-grove-15 --check
       - name: Verify DEV-ENV-001 pinned toolchain lock (no network)
         run: python scripts/validate_toolchain.py
       - name: Verify ART-REF-001 reference catalog (structure, canonical IDs, README parity)

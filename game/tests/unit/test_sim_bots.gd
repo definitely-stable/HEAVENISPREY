@@ -5,6 +5,7 @@ extends GutTest
 
 const RUNS: String = "res://tests/fixtures/sim_bot_runs.json"
 const UPGRADE_RUNS: String = "res://tests/fixtures/sim_bot_upgrade_runs.json"
+const LIVE_RUNS: String = "res://tests/fixtures/jade_grove_15_runs.json"
 
 var _data: Dictionary = {}
 var _upgrades: Dictionary = {}
@@ -112,11 +113,15 @@ func test_kiter_upgrades_log_replays_with_its_choices() -> void:
 		assert_true(world.is_over(), name + " the run is over after the stage duration")
 
 
-func test_the_game_tuning_is_the_bot_config() -> void:
+func test_the_game_tuning_matches_the_live_bot_journals() -> void:
+	var live: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LIVE_RUNS))
+	var traces: Array = live["traces"]
+	assert_eq(traces.size(), 2)
 	var tuned: SimConfig = P0TestSetup.sword_config("101")
-	var row: Dictionary = (_upgrades.get("traces", []) as Array)[0]
+	var row: Dictionary = traces[0]
 	assert_eq(tuned.to_ints(), config_of(row).to_ints(), "the upgrade bot plays the P0 run of the game")
-	var thunder: Dictionary = (_upgrades.get("traces", []) as Array)[1]
+	assert_eq(int(row["end_tick"]), 54000)
+	var thunder: Dictionary = traces[1]
 	var registry: ContentRegistry = ContentRegistry.load_dir()
 	var snapshot: RunRulesSnapshot = RunRulesSnapshot.create_for_new_run(
 		registry, PackedStringArray(["unlock.thunder"]), "class.thunder", P0Tuning.STAGE_ID,
@@ -124,6 +129,4 @@ func test_the_game_tuning_is_the_bot_config() -> void:
 	)
 	var thunder_config: SimConfig = P0Tuning.new().run_config(registry, snapshot)
 	assert_eq(thunder_config.to_ints(), config_of(thunder).to_ints(), "thunder bot matches the game")
-	var anchor: Dictionary = (_data.get("traces", []) as Array)[0]
-	var ints: PackedInt64Array = tuned.with_choice_mode(SimConfig.CHOICE_NONE).to_ints()
-	assert_eq(ints, config_of(anchor).to_ints(), "anchors play it without the choice")
+	assert_eq(int(thunder["end_tick"]), 54000)

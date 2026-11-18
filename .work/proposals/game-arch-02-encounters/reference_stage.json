@@ -430,7 +430,18 @@
   "mixed_slow_slack": {
    "jade_grove.w3:enemy_attack.jade_stomp": 0.256,
    "jade_grove.w3:enemy_attack.root_growth": 0.904,
-   "jade_grove.w3:enemy_attack.mantis_lunge": 1.376
+   "jade_grove.w3:enemy_attack.mantis_lunge": 1.376,
+   "jade_grove.w6:enemy_attack.jade_stomp": 0.256,
+   "jade_grove.w6:enemy_attack.puppet_burst": 0.592,
+   "jade_grove.w6:enemy_attack.root_growth": 0.904,
+   "jade_grove.w8:enemy_attack.root_growth": 0.904,
+   "jade_grove.w8:enemy_attack.lantern_wisp": 1.592,
+   "jade_grove.w8:enemy_attack.jade_stomp": 0.256,
+   "jade_grove.w9:enemy_attack.mantis_lunge": 1.376,
+   "jade_grove.w9:enemy_attack.lantern_wisp": 1.592,
+   "jade_grove.w9:enemy_attack.puppet_burst": 0.592,
+   "jade_grove.w9:enemy_attack.jade_stomp": 0.256,
+   "jade_grove.w9:enemy_attack.root_growth": 0.904
   },
   "boss": {
    "escape_slack": {

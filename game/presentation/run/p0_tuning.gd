@@ -2,7 +2,7 @@ class_name P0Tuning
 extends RefCounted
 ## P0 placeholder run setup: builds a SimConfig from canonical content plus placeholder bases.
 ##
-## From content (read-only): the jade_grove roster windows w0..w3 (time bounds, enemy IDs and
+## From content (read-only): the jade_grove roster windows (time bounds, enemy IDs and
 ## spawn weights, max_control_enemies_near_player) and the roster threat_caps (ADR-011 E6),
 ## each enemy's speed/radius/health multipliers and its attack: CONTACT (damage multiplier,
 ## hit interval), MELEE_ARC (damage multiplier, telegraph/active/recovery/cooldown ticks,
@@ -33,11 +33,11 @@ const HERO_SPEED_SU_PER_TICK: int = 4800
 const HERO_HP_MHP: int = 100000
 const BASE_ENEMY_HP_MHP: int = 10000
 const BASE_CONTACT_DAMAGE_MHP: int = 10000
-## One spawn per 1.5 s at x1 rate; the rate grows by x1 every 3 min up to x2.
+## One spawn per 1.5 s at x1 rate. The rate rises through the run within the live-enemy cap.
 const SPAWN_PERIOD_MT: int = 90000
-const SPAWN_RAMP_TICKS: int = 10800
-const SPAWN_RATE_MAX_FX: int = 2000
-const MAX_ENEMIES: int = 48
+const SPAWN_RAMP_TICKS: int = 8400
+const SPAWN_RATE_MAX_FX: int = 6500
+const MAX_ENEMIES: int = 80
 const MIN_SPAWN_DISTANCE_CELLS: int = 8
 const ROSTER_ID: String = "roster.jade_grove"
 ## The radius around the hero for max_control_enemies_near_player (8 cells, placeholder).
@@ -74,9 +74,9 @@ const PICKUP_RADIUS_PX: int = 48
 const MAX_GEMS: int = 512
 const XP_BASE: int = 5
 const XP_PER_SPAWN_COST: int = 5
-## Incremental level costs (5L^2 + 15L + 20) / 2 for levels 2..21; the last one repeats.
+## Incremental costs keep the early level cadence and spread the last ranks across the late waves.
 const XP_COSTS: Array[int] = [
-	20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460, 530, 605, 685, 770, 860, 955, 1055, 1160,
+	20, 35, 55, 80, 110, 145, 185, 230, 280, 335, 395, 460, 530, 605, 810, 1050, 1340, 1690, 2100, 2550, 3000,
 ]
 
 static var _arena_data: Dictionary = {}

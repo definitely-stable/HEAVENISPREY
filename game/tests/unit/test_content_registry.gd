@@ -49,7 +49,7 @@ func test_localization_is_not_content() -> void:
 func test_integral_numbers_recovered_from_json_floats() -> void:
 	var registry: ContentRegistry = ContentRegistry.load_dir()
 	var stage: Dictionary = registry.definition("stage.jade_grove")
-	assert_eq(ContentRegistry.integral(stage.get("duration_minutes")), 5)
+	assert_eq(ContentRegistry.integral(stage.get("duration_minutes")), 15)
 	assert_eq(ContentRegistry.integral(0.85), null)
 	assert_eq(ContentRegistry.integral("5"), null)
 	assert_eq(ContentRegistry.integral(INF), null)
