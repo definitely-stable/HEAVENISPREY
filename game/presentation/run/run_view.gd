@@ -461,7 +461,7 @@ func is_class_select_open() -> bool:
 
 
 func restart_run() -> bool:
-	if driver == null:
+	if driver == null or (driver.world.is_over() and not (is_results_open() or is_rewards_open())):
 		return false
 	return start_run(null, _last_class_id)
 

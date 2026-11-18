@@ -128,6 +128,7 @@ func test_defeat_results_in_russian() -> void:
 		guard += 1
 	var world: WorldState = view.driver.world
 	assert_eq([world.hero_dead, world.won], [1, 0])
+	assert_false(view.restart_run(), "wait for the defeat result and first unlock message")
 	for _i: int in 90:
 		view.advance_frame(TICK, Vector2i.ZERO)
 	assert_true(view.is_results_open(), "after the death clip")
