@@ -139,3 +139,86 @@ func test_scene_shows_the_effects_of_a_fight() -> void:
 	assert_true(saw_cast, "cast circle")
 	view.start_run("20261113")
 	assert_true(vfx.sparks.is_empty() and vfx.deaths.is_empty(), "a new run starts clean")
+
+
+## The player setting's number modes: `off` hides the numbers, `aggregate` adds blows on the
+## same enemy within AGGREGATE_TIME and `all` shows a number per blow.
+func test_off_mode_shows_sparks_but_no_numbers() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "off"
+	vfx.add_strike(Vector2(10, 20), 4000, 5, false)
+	vfx.add_strike(Vector2(10, 20), 4000, 5, false)
+	vfx.add_strike(Vector2(10, 20), 4000, 5, true)
+	assert_eq(vfx.sparks.size(), 3, "a spark on every blow")
+	assert_eq(vfx.numbers.size(), 0, "no numbers")
+
+
+func test_all_mode_shows_a_number_per_blow() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "all"
+	for _i: int in 3:
+		vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	assert_eq(vfx.numbers.size(), 3)
+
+
+func test_aggregate_adds_up_blows_in_the_window() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	vfx.age(0.05)
+	vfx.add_strike(Vector2(10, 20), 3000, 5, false)
+	vfx.age(0.05)
+	vfx.add_strike(Vector2(10, 20), 1400, 5, false)
+	assert_eq(vfx.numbers.size(), 1, "one number")
+	assert_eq(vfx.numbers[0][2], "6")
+	assert_eq(vfx.numbers[0][6], 6400)
+
+
+func test_aggregate_starts_a_new_number_after_the_window() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	vfx.age(0.13)
+	vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	assert_eq(vfx.numbers.size(), 2, "the window has passed")
+
+
+func test_aggregate_keeps_enemies_apart() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	vfx.add_strike(Vector2(30, 20), 2000, 6, false)
+	assert_eq(vfx.numbers.size(), 2, "one number per enemy")
+	assert_eq(vfx.numbers[0][5], 5)
+	assert_eq(vfx.numbers[1][5], 6)
+
+
+func test_aggregate_keeps_the_kill() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	vfx.add_strike(Vector2(10, 20), 2000, 5, false)
+	vfx.add_strike(Vector2(10, 20), 2000, 5, true)
+	assert_eq(vfx.numbers.size(), 1)
+	assert_true(vfx.numbers[0][3], "a killing blow marks the number")
+
+
+func test_aggregate_shows_its_first_whole_point() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	vfx.add_strike(Vector2(10, 20), 300, 5, false)
+	vfx.add_strike(Vector2(10, 20), 300, 5, false)
+	assert_eq(vfx.numbers.size(), 1)
+	assert_eq(vfx.numbers[0][2], "1", "600 milli-HP rounds to one")
+	var single: CombatVfx = CombatVfx.new()
+	single.number_mode = "aggregate"
+	single.add_strike(Vector2(10, 20), 300, 5, false)
+	assert_eq(single.numbers.size(), 1)
+	assert_eq(single.numbers[0][2], "0", "under half a point until a blow adds to it")
+
+
+func test_aggregate_keeps_the_cap() -> void:
+	var vfx: CombatVfx = CombatVfx.new()
+	vfx.number_mode = "aggregate"
+	for uid: int in 100:
+		vfx.add_strike(Vector2(uid, 0), 2000, uid, false)
+	assert_eq(vfx.numbers.size(), CombatVfx.MAX_NUMBERS)

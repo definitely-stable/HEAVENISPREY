@@ -12,6 +12,9 @@ const ASSET_ID: String = "asset.vfx.combat"
 const SPARK_TIME: float = 0.2
 const NUMBER_TIME: float = 0.8
 const NUMBER_POP_TIME: float = 0.09
+## Seconds after a number appears during which further blows on the same enemy add to it
+## (mode `aggregate`).
+const AGGREGATE_TIME: float = 0.12
 const NUMBER_RISE_PX: float = 26.0
 const DEATH_TIME: float = 0.55
 ## Seconds a fallen body takes to decay once its death clip has played (EnemyReactions).
@@ -55,7 +58,10 @@ var kit: HudKit
 var font: Font = ThemeDB.fallback_font
 ## [ground px, age, angle, scale]
 var sparks: Array[Array] = []
-## [ground px, age, text, kill, x jitter]
+## `off`, `aggregate` or `all` (PresentationSettings.floating_damage_numbers); `all`, a number
+## per blow, is the look before the setting existed; any other value acts as `all`.
+var number_mode: String = "all"
+## [ground px, age, text, kill, x jitter, enemy uid, damage mhp]
 var numbers: Array[Array] = []
 ## [ground px, age, pose] (pose of the body as it fell, drawn fading by the scene)
 var deaths: Array[Array] = []
@@ -88,9 +94,21 @@ func add_strike(at: Vector2, damage_mhp: int, uid: int, kill: bool) -> void:
 	sparks.append([at, 0.0, turn, 0.85 + float(posmod(uid * 13, 7)) * 0.05])
 	if sparks.size() > MAX_SPARKS:
 		sparks.pop_front()
+	if number_mode == "off":
+		return
+	if number_mode == "aggregate":
+		for i: int in range(numbers.size() - 1, -1, -1):
+			var number: Array = numbers[i]
+			if number[5] == uid and number[1] < AGGREGATE_TIME:
+				number[6] += damage_mhp
+				number[2] = str(roundi(number[6] / 1000.0))
+				number[3] = number[3] or kill
+				number[0] = at
+				return
 	var whole: int = roundi(damage_mhp / 1000.0)
-	if whole > 0:
-		numbers.append([at, 0.0, str(whole), kill, float(posmod(uid * 37, 21) - 10)])
+	if whole > 0 or number_mode == "aggregate":
+		numbers.append([at, 0.0, str(whole), kill, float(posmod(uid * 37, 21) - 10), uid,
+			damage_mhp])
 		if numbers.size() > MAX_NUMBERS:
 			numbers.pop_front()
 
@@ -204,6 +222,8 @@ static func gem_piece(value: int) -> String:
 ## numbers of REF-023; a killing blow is gold and a little larger.
 func draw_numbers(canvas: CanvasItem) -> void:
 	for number: Array in numbers:
+		if number[2] == "0":
+			continue
 		var t: float = share(number[1], NUMBER_TIME)
 		var size: int = NUMBER_KILL_FONT_SIZE if number[3] else NUMBER_FONT_SIZE
 		var pop: float = 1.0 + 0.35 * (1.0 - share(number[1], NUMBER_POP_TIME))
