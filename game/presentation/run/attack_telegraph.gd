@@ -85,22 +85,9 @@ static func zone_shape(config: SimConfig, world: WorldState, slot: int) -> Dicti
 	}
 
 
-## Draws `zone` (from zone_shape).
-static func draw_zone(canvas: CanvasItem, zone: Dictionary) -> void:
-	var center: Vector2 = zone["center"]
-	var radius: float = zone["radius"]
-	if zone["active"]:
-		if zone["form"] == SimConfig.FORM_GROUND_ZONE:
-			canvas.draw_circle(center, radius, COLOR_ROOT)
-			canvas.draw_arc(center, radius, 0.0, TAU, ZONE_POINTS, COLOR_ROOT_EDGE, 2.0)
-		else:
-			canvas.draw_circle(center, radius, COLOR_ACTIVE)
-		return
-	canvas.draw_circle(center, radius, COLOR_TELL)
-	var grown: float = radius * float(zone["progress"])
-	if grown > 1.0:
-		canvas.draw_circle(center, grown, COLOR_FILL)
-	canvas.draw_arc(center, radius, 0.0, TAU, ZONE_POINTS, COLOR_TELL_EDGE, 2.0)
+## Zone and attack marks share the same draw passes and keep their original footprints.
+static func _is_zone(form: int) -> bool:
+	return form == SimConfig.FORM_GROUND_ZONE or form == SimConfig.FORM_DEATH_ZONE
 
 
 ## The telegraph ticks of the first kind whose attack has `form` (one kind per zone form in P0).
@@ -111,16 +98,24 @@ static func _form_telegraph(config: SimConfig, form: int) -> int:
 	return 0
 
 
-## Draws `telegraph` (from shape) at `center` (the interpolated enemy position in px).
-static func draw(canvas: CanvasItem, telegraph: Dictionary, center: Vector2) -> void:
+## Draws the area and its timing fill on the arena floor.
+static func draw_fill(canvas: CanvasItem, telegraph: Dictionary) -> void:
+	var center: Vector2 = telegraph["center"]
 	var radius: float = telegraph["radius"]
-	var angle: float = telegraph["angle"]
-	var lane_form: bool = telegraph["form"] != SimConfig.FORM_ARC
-	var outline: PackedVector2Array = _shape(telegraph, center, radius, angle, lane_form)
+	var form: int = telegraph["form"]
+	var grown: float = radius * float(telegraph["progress"])
+	if _is_zone(form):
+		if telegraph["active"]:
+			canvas.draw_circle(center, radius, COLOR_ROOT if form == SimConfig.FORM_GROUND_ZONE else COLOR_ACTIVE)
+		else:
+			canvas.draw_circle(center, radius, COLOR_TELL)
+			if grown > 1.0:
+				canvas.draw_circle(center, grown, COLOR_FILL)
+		return
+	var outline: PackedVector2Array = _shape(telegraph, radius)
 	if telegraph["active"]:
 		canvas.draw_colored_polygon(outline, COLOR_ACTIVE)
 		return
-	var form: int = telegraph["form"]
 	var base: Color = COLOR_TELL
 	var fill: Color = COLOR_FILL
 	if form == SimConfig.FORM_CHARGE:
@@ -130,9 +125,24 @@ static func draw(canvas: CanvasItem, telegraph: Dictionary, center: Vector2) -> 
 		base = COLOR_SHOT_BASE
 		fill = COLOR_SHOT_FILL
 	canvas.draw_colored_polygon(outline, base)
-	var grown: float = radius * float(telegraph["progress"])
 	if grown > 1.0:
-		canvas.draw_colored_polygon(_shape(telegraph, center, grown, angle, lane_form), fill)
+		canvas.draw_colored_polygon(_shape(telegraph, grown), fill)
+
+
+## Keeps the same outline, axis and direction cues legible over bodies and light.
+static func draw_edge(canvas: CanvasItem, telegraph: Dictionary) -> void:
+	var form: int = telegraph["form"]
+	var center: Vector2 = telegraph["center"]
+	var radius: float = telegraph["radius"]
+	var active: bool = telegraph["active"]
+	if _is_zone(form):
+		if not active or form == SimConfig.FORM_GROUND_ZONE:
+			var edge: Color = COLOR_ROOT_EDGE if active else COLOR_TELL_EDGE
+			canvas.draw_arc(center, radius, 0.0, TAU, ZONE_POINTS, edge, 2.0)
+		return
+	if active:
+		return
+	var outline: PackedVector2Array = _shape(telegraph, radius)
 	if form == SimConfig.FORM_CHARGE:
 		canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_CHARGE_EDGE, 4.0, true)
 		var travel: Vector2 = (outline[1] + outline[2]) * 0.5 - center
@@ -149,10 +159,10 @@ static func draw(canvas: CanvasItem, telegraph: Dictionary, center: Vector2) -> 
 		canvas.draw_polyline(outline + PackedVector2Array([outline[0]]), COLOR_TELL_EDGE, 2.0)
 
 
-static func _shape(
-	telegraph: Dictionary, center: Vector2, radius: float, angle: float, lane_form: bool
-) -> PackedVector2Array:
-	if lane_form:
+static func _shape(telegraph: Dictionary, radius: float) -> PackedVector2Array:
+	var center: Vector2 = telegraph["center"]
+	var angle: float = telegraph["angle"]
+	if telegraph["form"] != SimConfig.FORM_ARC:
 		return lane(center, radius, angle, telegraph["width"])
 	return sector(center, radius, angle, telegraph["half_arc"])
 

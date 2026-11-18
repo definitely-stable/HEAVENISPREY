@@ -3,15 +3,58 @@ extends RefCounted
 ## Render the combat overlays and additive light in the same order as the arena view.
 
 
-static func draw_over_pass(view: RunView) -> void:
+static func prepare_danger(view: RunView) -> void:
+	view._danger_marks.clear()
 	if view.driver == null:
 		return
-	var canvas: Node2D = view._over
+	var world: WorldState = view.driver.world
+	var config: SimConfig = view.driver.config
+	for slot: int in world.zone_slots():
+		var zone: Dictionary = AttackTelegraph.zone_shape(config, world, slot)
+		if not zone.is_empty():
+			view._danger_marks.append(zone)
+	for slot: int in world.enemy_slots():
+		var telegraph: Dictionary = AttackTelegraph.shape(config, world, slot)
+		if not telegraph.is_empty():
+			telegraph["center"] = view.driver.enemy_position_px(slot)
+			view._danger_marks.append(telegraph)
+
+
+static func draw_danger_fill(view: RunView) -> void:
+	if view.driver == null:
+		return
+	var canvas: Node2D = view._danger
+	canvas.draw_set_transform_matrix(IsoProjection.ground())
+	for mark: Dictionary in view._danger_marks:
+		AttackTelegraph.draw_fill(canvas, mark)
+	var world: WorldState = view.driver.world
+	if world.root_left > 0:
+		canvas.draw_arc(view.driver.hero_position_px(), RunView.HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, RunView.COLOR_ROOTED, 3.0)
+	if world.is_over():
+		for rect: Rect2 in GroundLayer.footprint(P0Tuning.arena_data(), RunView.CELL_PX):
+			canvas.draw_rect(rect, RunView.COLOR_OVER)
+
+
+static func draw_warning_edges(view: RunView) -> void:
+	if view.driver == null:
+		return
+	var canvas: Node2D = view._warning_edges
 	if view._chain_left > 0.0:
 		var alpha: float = view._chain_left / 0.12
 		canvas.draw_polyline(view._chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
 		canvas.draw_polyline(view._chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
+	canvas.draw_set_transform_matrix(IsoProjection.ground())
+	for mark: Dictionary in view._danger_marks:
+		AttackTelegraph.draw_edge(canvas, mark)
+
+
+static func draw_over_pass(view: RunView) -> void:
+	if view.driver == null:
+		return
+	var canvas: Node2D = view._over
 	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px())
+	if view._flash > 0.0:
+		_draw_hero_hit(canvas, hero, view._flash / RunView.HIT_FLASH)
 	var stacks: int = view.driver.world.venom_stacks
 	var top: float = -view._hero_height() - 8.0
 	for pip: int in stacks:
@@ -47,6 +90,19 @@ static func draw_over_pass(view: RunView) -> void:
 		canvas.draw_string(font, at, "+" + str(pickup[1]), HORIZONTAL_ALIGNMENT_LEFT, -1, 16, color)
 	if view._vfx != null:
 		view._vfx.draw_numbers(canvas)
+
+
+## A short cue at the feet keeps the character's face and clothing readable on impact.
+static func _draw_hero_hit(canvas: CanvasItem, feet: Vector2, remaining: float) -> void:
+	var spread: float = 23.0 + (1.0 - remaining) * 8.0
+	var left: Vector2 = feet + Vector2(-spread, 4.0)
+	var right: Vector2 = feet + Vector2(spread, 4.0)
+	var lines: PackedVector2Array = PackedVector2Array([
+		left + Vector2(6, -5), left, left, left + Vector2(6, 5),
+		right + Vector2(-6, -5), right, right, right + Vector2(-6, 5),
+	])
+	canvas.draw_multiline(lines, Color(0.13, 0.08, 0.08, 0.95 * remaining), 5.0, true)
+	canvas.draw_multiline(lines, Color(1.0, 0.87, 0.60, remaining), 2.5, true)
 
 
 ## Where the collected gem is on its short flight to the hero.

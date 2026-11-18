@@ -70,13 +70,9 @@ const ENEMY_ASSETS: Dictionary = {
 	"enemy.cursed_spirit_lantern": "asset.enemy.cursed_spirit_lantern",
 	"enemy.paper_puppet": "asset.enemy.paper_puppet",
 }
-## Hit flash of a sprite (modulate above 1 brightens it). The hero flashes white: the threat
-## hue stays reserved for enemies (ADR-014 section 2).
+## Hit flash of an enemy sprite (modulate above 1 brightens it).
 const TINT_ENEMY_HIT: Color = Color(2.2, 2.2, 2.2)
-const TINT_HERO_HIT: Color = Color(1.9, 1.9, 1.9)
-## Seconds the hero flash stays at full white before it fades; a new flash waits this long
-## after the last one ended.
-const HIT_FLASH_PEAK: float = 0.07
+## Minimum rest after the hero's hit cue, so repeated damage does not flicker.
 const HIT_FLASH_REST: float = 0.3
 ## Gems float above their ground point and bob; in reach (pickup radius x GEM_NEAR_RADII) they
 ## brighten and glow.
@@ -182,6 +178,8 @@ var _danger: Node2D
 var _hero_item: Node2D
 var _over: Node2D
 var _glow: Node2D
+var _warning_edges: Node2D
+var _danger_marks: Array[Dictionary] = []
 var _decay: Node2D
 
 @onready var _camera: Camera2D = $Camera
@@ -278,16 +276,17 @@ func _build_layers() -> void:
 	_shadow_canvas.draw.connect(_draw_shadow_pass)
 	group.add_child(_shadow_canvas)
 	_danger = Node2D.new()
-	_danger.draw.connect(_draw_danger_pass)
+	_danger.draw.connect(RunEffectsPasses.draw_danger_fill.bind(self))
 	under.add_child(_danger)
 	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _flames)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
-	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _flames))
-	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_glow = _item(_draw_glow_pass, additive)
+	_warning_edges = _item(RunEffectsPasses.draw_warning_edges.bind(self), null)
+	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _flames))
+	_over = _item(_draw_over_pass, null)
 
 
 func _item(drawer: Callable, item_material: Material) -> Node2D:
@@ -499,8 +498,6 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	for gem: Array in events["collected"]:
 		_pickups.append([gem[0], gem[1], 0.0])
 	_add_effects(events)
-	_flash = maxf(_flash - delta, 0.0)
-	_flash_rest = maxf(_flash_rest - delta, 0.0)
 	if driver.world.hero_hp < hp_before and _flash <= 0.0 and _flash_rest <= 0.0:
 		_flash = HIT_FLASH
 		_flash_rest = HIT_FLASH + HIT_FLASH_REST
@@ -570,6 +567,7 @@ func _sync_menu() -> void:
 
 
 func _draw() -> void:
+	RunEffectsPasses.prepare_danger(self)
 	_queue_layers()
 	if driver != null:
 		_draw_gems()
@@ -579,7 +577,7 @@ func _draw() -> void:
 
 
 func _queue_layers() -> void:
-	for item: CanvasItem in [_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
+	for item: CanvasItem in [_shadow_canvas, _danger, _decay, _glow, _warning_edges, _hero_item, _over, _hud]:
 		if item != null:
 			item.queue_redraw()
 
@@ -611,6 +609,8 @@ func _add_effects(events: Dictionary) -> void:
 
 
 func _age_effects(delta: float) -> void:
+	_flash = maxf(_flash - delta, 0.0)
+	_flash_rest = maxf(_flash_rest - delta, 0.0)
 	_chain_left = maxf(0.0, _chain_left - delta)
 	_reactions.age(delta, _hit_keep)
 	for pickup: Array in _pickups:
@@ -793,33 +793,6 @@ func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float 
 		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
 
 
-# --- danger layer: unlit ground marks over the shadows (PLAYABILITY G3) ---
-
-func _draw_danger_pass() -> void:
-	if driver == null:
-		return
-	_danger.draw_set_transform_matrix(IsoProjection.ground())
-	for slot: int in driver.world.zone_slots():
-		var zone: Dictionary = AttackTelegraph.zone_shape(driver.config, driver.world, slot)
-		if not zone.is_empty():
-			AttackTelegraph.draw_zone(_danger, zone)
-	for slot: int in driver.world.enemy_slots():
-		var telegraph: Dictionary = AttackTelegraph.shape(driver.config, driver.world, slot)
-		if not telegraph.is_empty():
-			AttackTelegraph.draw(_danger, telegraph, driver.enemy_position_px(slot))
-	_draw_ground_rings(_danger)
-	if driver.world.is_over():
-		for rect: Rect2 in GroundLayer.footprint(P0Tuning.arena_data(), CELL_PX):
-			_danger.draw_rect(rect, COLOR_OVER)
-
-
-## The root ring lies on the ground around the hero.
-func _draw_ground_rings(canvas: CanvasItem) -> void:
-	var hero: Vector2 = driver.hero_position_px()
-	if driver.world.root_left > 0:
-		canvas.draw_arc(hero, HERO_RADIUS_PX + 4.0, 0.0, TAU, 32, COLOR_ROOTED, 3.0)
-
-
 # --- upright layer (this node, rim shader) ---
 
 ## Bodies and courtyard props sorted by depth (then slot), so a thing nearer the viewer covers
@@ -948,30 +921,14 @@ func _draw_hero_pass() -> void:
 	var light: Color = _light_at(feet)
 	var stacks: int = driver.world.venom_stacks
 	var pose: Array = _hero_pose()
+	var venom_mix: float = 0.25 + 0.15 * stacks if stacks > 0 else 0.0
 	if pose[0] != "":
-		var tint: Color = light.lerp(TINT_HERO_HIT, _hero_flash_share())
-		if stacks > 0 and _flash <= 0.0:
-			tint = tint.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
-		if _draw_pose(canvas, pose, hero, tint):
+		if _draw_pose(canvas, pose, hero, light.lerp(COLOR_VENOM, venom_mix)):
 			return
 	var facing: Vector2 = IsoProjection.to_screen(_facing).normalized()
-	var color: Color = COLOR_HERO.lerp(Color.WHITE, _hero_flash_share())
-	if stacks > 0 and _flash <= 0.0:
-		color = color.lerp(COLOR_VENOM, 0.25 + 0.15 * stacks)
 	var body: Vector2 = hero - Vector2(0, HERO_RADIUS_PX)
-	canvas.draw_circle(body, HERO_RADIUS_PX, color)
+	canvas.draw_circle(body, HERO_RADIUS_PX, COLOR_HERO.lerp(COLOR_VENOM, venom_mix))
 	canvas.draw_circle(body + facing * (HERO_RADIUS_PX * 0.55), HERO_RADIUS_PX * 0.25, COLOR_FACING)
-
-
-## 0..1 strength of the hero's white hit flash: full for the first HIT_FLASH_PEAK seconds,
-## then it fades (ADR-014 A2: a short peak, not a steady white).
-func _hero_flash_share() -> float:
-	if _flash <= 0.0:
-		return 0.0
-	var age: float = HIT_FLASH - _flash
-	if age <= HIT_FLASH_PEAK:
-		return 1.0
-	return clampf(_flash / (HIT_FLASH - HIT_FLASH_PEAK), 0.0, 1.0)
 
 
 ## Screen px from the hero's feet to the top of its sprite (or of its primitive).
