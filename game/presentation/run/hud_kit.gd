@@ -179,6 +179,16 @@ func draw(canvas: CanvasItem, piece: String, rect: Rect2, modulate: Color = Colo
 		Rect2(region.end.x - caps.y, region.position.y, caps.y, region.size.y), modulate)
 
 
+## Draws the left `share` (0-1) of a fill strip into `rect`: the strip is cut, not squeezed.
+func draw_fill(canvas: CanvasItem, piece: String, rect: Rect2, share: float, modulate: Color = Color.WHITE) -> void:
+	share = clampf(share, 0.0, 1.0)
+	if not has(piece) or share <= 0.0:
+		return
+	var region: Rect2 = _pieces[piece]["region"]
+	canvas.draw_texture_rect_region(texture, Rect2(rect.position, Vector2(rect.size.x * share, rect.size.y)),
+		Rect2(region.position, Vector2(region.size.x * share, region.size.y)), modulate)
+
+
 ## Feather the edges of the painted card illustrations into the lacquer.
 func draw_card_art(canvas: CanvasItem, piece: String, rect: Rect2) -> void:
 	if not has(piece):
