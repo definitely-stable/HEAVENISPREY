@@ -69,3 +69,14 @@ func test_dissolve_material_has_its_noise() -> void:
 			low = minf(low, image.get_pixel(x, y).r)
 			high = maxf(high, image.get_pixel(x, y).r)
 	assert_gt(high - low, 0.5, "the noise spans the decay from start to end")
+
+
+func test_a_flash_starts_at_most_once_per_flash_time() -> void:
+	var reactions: EnemyReactions = EnemyReactions.new()
+	reactions.hit(9, 0.1)
+	reactions.age(EnemyReactions.FLASH_TIME * 0.6, 0.1)
+	reactions.hit(9, 0.1)
+	assert_gt(reactions.since(9), 0.0, "a short clip does not restart the flash inside FLASH_TIME")
+	reactions.age(EnemyReactions.FLASH_TIME * 0.5, 0.1)
+	reactions.hit(9, 0.1)
+	assert_eq(reactions.since(9), 0.0, "after FLASH_TIME it does")
