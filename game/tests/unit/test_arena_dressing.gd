@@ -78,6 +78,57 @@ func test_guardian_bases_lie_on_the_floor() -> void:
 		assert_between(base[2] / float(entry["layout"]["density"]) / footprint, cover[name][0], cover[name][1], name)
 
 
+## ADR-015 section 9: the pedestals and pillars painted over the projection template have flat
+## faces in their normal map, not the rounded silhouette pillow: the left face looks left and down
+## the screen, the right face is its mirror, the top looks up; the front corner between the two
+## side faces is sharp.
+func test_guardian_pedestals_have_flat_faces_and_sharp_corners() -> void:
+	var entry: Dictionary = _manifest_entry(ArenaDressing.GUARDIANS_ASSET)
+	assert_eq(entry["normal"]["method"], "template_faces")
+	var normals: Image = _image_at(entry["normal"]["path"])
+	for prop: Dictionary in entry["layout"]["props"]:
+		var name: String = prop["name"]
+		var faces: Dictionary = prop["faces"]
+		var left: Vector3 = _normal_near(normals, faces["left"])
+		var right: Vector3 = _normal_near(normals, faces["right"])
+		var top: Vector3 = _normal_near(normals, faces["top"])
+		assert_lt(left.x, -0.6, "%s left face looks left" % name)
+		assert_lt(left.y, -0.2, "%s left face looks down" % name)
+		assert_gt(right.x, 0.6, "%s right face looks right" % name)
+		assert_lt(right.y, -0.2, "%s right face looks down" % name)
+		assert_almost_eq(left.x, -right.x, 0.02, "%s side faces mirror" % name)
+		assert_gt(top.y, 0.8, "%s top looks up" % name)
+		# Across the row of the side faces the normal turns from the left face to the right one in
+		# at most 2 px: no rounded bevel at the front corner.
+		var row: int = int(faces["left"][1])
+		var turning: int = 0
+		for x: int in range(int(faces["left"][0]), int(faces["right"][0]) + 1):
+			var n: Vector3 = _decode(normals.get_pixel(x, row))
+			if absf(n.x) < 0.6:
+				turning += 1
+		assert_lte(turning, 2, "%s front corner is sharp" % name)
+
+
+func _image_at(path: String) -> Image:
+	var image: Image = (load("res://" + path.trim_prefix("game/")) as Texture2D).get_image()
+	if image.is_compressed():
+		image.decompress()
+	return image
+
+
+func _decode(colour: Color) -> Vector3:
+	return Vector3(colour.r * 2.0 - 1.0, colour.g * 2.0 - 1.0, colour.b * 2.0 - 1.0)
+
+
+## The mean normal of the 5 x 5 px around an atlas point.
+func _normal_near(image: Image, at: Array) -> Vector3:
+	var sum: Vector3 = Vector3.ZERO
+	for dy: int in range(-2, 3):
+		for dx: int in range(-2, 3):
+			sum += _decode(image.get_pixel(int(at[0]) + dx, int(at[1]) + dy))
+	return sum.normalized()
+
+
 func _manifest_entry(asset_id: String) -> Dictionary:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SpriteSet.MANIFEST_PATH))
 	for asset: Dictionary in manifest["assets"]:

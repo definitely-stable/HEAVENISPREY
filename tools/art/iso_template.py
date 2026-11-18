@@ -13,6 +13,10 @@ The fragments of the ruin ring around the seal (ADR-015 section 11) are drawn fr
 itself, two per sheet (seal_ruins_1 .. seal_ruins_3): the footprint of each fragment's cells flat
 on the ground, the broken wall along the middle of the ring and the pillar stumps on its solid
 cells, all at one scale, so the painted fragment fits its cells exactly.
+
+The template also gives a faceted normal map to the props painted over it (ADR-015 section 9):
+the faces of its blocks, moved into the atlas region of each prop, get the flat normal of their
+side of the block (face_normal); what is not a face (the statue) keeps the silhouette pillow.
 """
 from __future__ import annotations
 
@@ -83,6 +87,76 @@ def blocks(prop: dict) -> list[dict[str, list[Point]]]:
             by = (top[0][1] + top[2][1]) / 2 + width / 4
         out.append(faces(cx, by, width, height))
     return out
+
+
+def fronts(prop: dict) -> list[tuple[float, float]]:
+    """(bottom y, top y) of the front corner of each block of a prop, bottom to top (sheet px)."""
+    return [(block["left"][1][1], block["left"][2][1]) for block in blocks(prop)]
+
+
+def stack(prop: dict, at: list[tuple[float, float]] | None = None) -> list[dict[str, list[Point]]]:
+    """The faces of the blocks of a prop with the front corners moved to `at` ((bottom y, top y)
+    per block, sheet px): a painted sheet keeps the axis and the widths of the template but its
+    blocks may sit a few px higher or lower (ADR-015 section 9)."""
+    if at is None:
+        return blocks(prop)
+    return [faces(prop["x"], bottom, width, bottom - top)
+            for (width, _height), (bottom, top) in zip(prop.get("blocks", []), at)]
+
+
+def prop_in_cell(name: str, cell: int, grid: tuple[int, int]) -> dict:
+    """The template prop of sheet `name` that stands in grid cell `cell` (row-major)."""
+    cols, rows = grid
+    cw, ch = SIZE[0] / cols, SIZE[1] / rows
+    for prop in LAYOUTS[name]:
+        if int(prop["x"] // cw) + cols * int((prop["y"] - 1) // ch) == cell:
+            return prop
+    raise KeyError(f"{name}: no template prop in grid cell {cell}")
+
+
+# --- Faceted normal maps of props painted over the template (ADR-015 section 9) ---
+
+## ADR-014 sections 1 and 2: an orthographic camera 30 degrees above the horizon.
+CAMERA_DEG = 30.0
+FACE_CODES = {"left": 1, "right": 2, "top": 3}
+
+
+def face_normal(face: str, camera_deg: float = CAMERA_DEG) -> tuple[float, float, float]:
+    """Unit normal of a face of a block in the tangent space of the screen (x right, y up the
+    image, z towards the viewer; OpenGL, as Godot reads normal maps). A side face of a block
+    standing corner-on looks 45 degrees off the camera azimuth and is horizontal: on screen it
+    turns sideways by cos 45 and down by sin(camera) * cos 45. The top looks up: up the image by
+    cos(camera), towards the viewer by sin(camera)."""
+    s, c = math.sin(math.radians(camera_deg)), math.cos(math.radians(camera_deg))
+    if face == "top":
+        return (0.0, c, s)
+    side = {"left": -1.0, "right": 1.0}[face]
+    k = math.sqrt(0.5)
+    return (side * k, -s * k, c * k)
+
+
+def to_region(points: list[Point], origin: Point, scale: Point) -> list[Point]:
+    """Sheet px -> px of a prop's atlas region: the prop was cut from the sheet at `origin`
+    (its bounding box) and resized by `scale` (x, y)."""
+    return [((x - origin[0]) * scale[0], (y - origin[1]) * scale[1]) for x, y in points]
+
+
+def seat_cut(top: list[Point], span: tuple[float, float], seat: tuple[float, float],
+             steps: int = 32) -> list[Point]:
+    """What a statue hides of the top face it sits on: the seat ellipse of the template widened to
+    the measured width of the statue (`span`, its x extent in sheet px) with the seat's own
+    proportion, swept up the image from its lower half (the statue rises behind its front
+    contour). A polygon in sheet px."""
+    x0, x1 = span
+    cx = (x0 + x1) / 2.0
+    rx = (x1 - x0) / 2.0
+    ry = rx * seat[1] / seat[0]
+    # The seat is centred on the top face, 5 px up as the template draws it.
+    cy = (top[0][1] + top[2][1]) / 2.0 - 5.0
+    far = min(y for _, y in top) - 2.0 * ry - 1.0
+    lower = [(cx + rx * math.cos(math.pi * i / steps), cy + ry * math.sin(math.pi * i / steps))
+             for i in range(steps + 1)]
+    return lower + [(cx - rx, far), (cx + rx, far)]
 
 
 def flat_rect(prop: dict) -> tuple[float, float, float, float] | None:

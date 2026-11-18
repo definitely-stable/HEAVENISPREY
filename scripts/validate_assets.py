@@ -13,8 +13,9 @@ game/assets/manifest.json lists every game sprite and texture. For each entry:
   (art_source/style_passport.json, ART-BIBLE-001 version 3); the rim of characters is not
   baked but drawn by the scene shader (ADR-014 section 4), so no asset may carry one;
 - every asset drawn in the lit scene has a normal map <name>_n.png next to it (ADR-014
-  section 4) with the method of its kind, the same size, and the same identity rules as the
-  built file; the HUD kit (ui_atlas) and the effects atlas (vfx_atlas) are drawn unlit over
+  section 4) with the method of its kind (a prop atlas painted over the geometry template may
+  use template_faces, and then every prop names a point inside its left, right and top face),
+  the same size, and the same identity rules as the built file; the HUD kit (ui_atlas) and the effects atlas (vfx_atlas) are drawn unlit over
   the scene and have none;
 - a HUD kit or an effects atlas has uniquely named pieces inside the atlas, frame windows
   inside their piece and stretch caps narrower than the piece (ADR-014 sections 15 and 18);
@@ -51,6 +52,10 @@ NORMAL_METHODS = {"sprite_atlas": "silhouette_pillow", "anim_atlas": "silhouette
                   "prop_atlas": "silhouette_pillow", "decal_texture": "luminance_sobel",
                   "strip_texture": "luminance_sobel", "ui_atlas": None,
                   "vfx_atlas": None}
+## A prop atlas painted over the geometry template may take flat normals on the faces of the
+## template's blocks instead (ADR-015 section 9); each prop then names a point inside each face.
+TEMPLATE_FACES = "template_faces"
+FACE_NAMES = ("left", "right", "top")
 ## ADR-014 sections 7 and 13, A4: the loop seam against the median and the largest step between
 ## frames inside the loop, the body height of a clip across its directions, the torso against
 ## feet_anchor.x (atlas px).
@@ -187,6 +192,14 @@ def check_layout(entry: dict) -> None:
                 raise AssetError(f"{label}: {prop['name']} region leaves the atlas")
             if not (x <= fx <= x + w and y <= fy <= y + h):
                 raise AssetError(f"{label}: {prop['name']} anchor is outside its region")
+            if (entry.get("normal") or {}).get("method") == TEMPLATE_FACES:
+                faces = prop.get("faces", {})
+                for face in FACE_NAMES:
+                    if face not in faces:
+                        raise AssetError(f"{label}: {prop['name']} has no {face} face point")
+                    px, py = faces[face]
+                    if not (x <= px < x + w and y <= py < y + h):
+                        raise AssetError(f"{label}: {prop['name']} {face} face point is outside its region")
     elif entry["kind"] in ("ui_atlas", "vfx_atlas"):
         names = [p["name"] for p in layout["pieces"]]
         if not names or len(set(names)) != len(names):
@@ -245,7 +258,9 @@ def check_entry(entry: dict, passport: dict, ids: set[str], refs: dict[str, str]
     if method is None:
         if normal is not None:
             raise AssetError(f"{asset_id}: a {entry['kind']} is drawn unlit and has no normal map")
-    elif normal is None or normal["path"] != expected[:-len(".png")] + "_n.png" or normal.get("method") != method:
+    elif normal is None or normal["path"] != expected[:-len(".png")] + "_n.png" or (
+            normal.get("method") != method
+            and not (entry["kind"] == "prop_atlas" and normal.get("method") == TEMPLATE_FACES)):
         raise AssetError(f"{asset_id}: normal map must be {name}_n.png made by {method}")
     elif check_binary(ROOT / normal["path"], normal["sha256"], normal["bytes"], asset_id + " normal map"):
         width, height, _colour = png_header(ROOT / normal["path"])

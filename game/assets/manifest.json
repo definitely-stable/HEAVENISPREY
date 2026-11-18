@@ -1119,7 +1119,35 @@
             "feet": [
               144.0,
               366.5
-            ]
+            ],
+            "faces": {
+              "left": [
+                74,
+                315
+              ],
+              "right": [
+                213,
+                315
+              ],
+              "top": [
+                144,
+                284
+              ],
+              "snap_px": [
+                [
+                  0.0,
+                  -2.4
+                ],
+                [
+                  -1.5,
+                  0.0
+                ],
+                [
+                  0.0,
+                  -11.2
+                ]
+              ]
+            }
           },
           {
             "name": "lion_cub",
@@ -1132,7 +1160,35 @@
             "feet": [
               432.5,
               365.8
-            ]
+            ],
+            "faces": {
+              "left": [
+                362,
+                315
+              ],
+              "right": [
+                503,
+                315
+              ],
+              "top": [
+                432,
+                284
+              ],
+              "snap_px": [
+                [
+                  0.0,
+                  -2.4
+                ],
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  -11.1
+                ]
+              ]
+            }
           },
           {
             "name": "pillar",
@@ -1145,7 +1201,35 @@
             "feet": [
               682.5,
               456.2
-            ]
+            ],
+            "faces": {
+              "left": [
+                644,
+                124
+              ],
+              "right": [
+                719,
+                124
+              ],
+              "top": [
+                682,
+                53
+              ],
+              "snap_px": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  -15.0,
+                  2.9
+                ],
+                [
+                  2.9,
+                  -1.6
+                ]
+              ]
+            }
           },
           {
             "name": "pillar_broken",
@@ -1158,18 +1242,48 @@
             "feet": [
               920.5,
               236.8
-            ]
+            ],
+            "faces": {
+              "left": [
+                884,
+                107
+              ],
+              "right": [
+                959,
+                108
+              ],
+              "top": [
+                924,
+                48
+              ],
+              "snap_px": [
+                [
+                  0.0,
+                  0.0
+                ],
+                [
+                  -14.6,
+                  -1.0
+                ]
+              ]
+            }
           }
         ]
       },
       "normal": {
         "path": "game/assets/props/courtyard_guardians/courtyard_guardians_n.png",
-        "sha256": "92d10c4d50730c9da3835614a239b3d4b74913dce8a4ab314193218de866f9e1",
-        "bytes": 152072,
-        "method": "silhouette_pillow",
-        "bevel_px": 14.0,
-        "blur_px": 3.0,
-        "strength": 2.0
+        "sha256": "a27ede161dbd508d00fe35c6835ad58874216a4464063ab8ba2cd332c9e6b3db",
+        "bytes": 113907,
+        "method": "template_faces",
+        "camera_deg": 30.0,
+        "snap_px": 16,
+        "fallback": {
+          "method": "silhouette_pillow",
+          "bevel_px": 14.0,
+          "blur_px": 3.0,
+          "strength": 2.0
+        },
+        "layout": "courtyard_guardians"
       },
       "source": {
         "path": "art_source/courtyard_guardians/master.webp",
