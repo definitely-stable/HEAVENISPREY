@@ -152,6 +152,8 @@ var _grade: FrameGrade
 var _hud: RunHud
 var _menu: ChoiceMenu
 var _results: RunResults
+var _rewards: RunRewards
+var _run_uid: String = ""
 var _class_select: ClassSelect
 var _last_class_id: String = "class.sword"
 var _sprites: SpriteSet = SpriteSet.new()
@@ -221,8 +223,13 @@ func _ready() -> void:
 	_results = RunResults.new()
 	_results.kit = _hud.kit
 	_results.theme = theme
-	_results.restart_requested.connect(confirm_results)
+	_results.rewards_requested.connect(confirm_results)
 	layer.add_child(_results)
+	_rewards = RunRewards.new()
+	_rewards.kit = _hud.kit
+	_rewards.theme = theme
+	_rewards.continue_requested.connect(confirm_rewards)
+	layer.add_child(_rewards)
 	_class_select = ClassSelect.new()
 	_class_select.kit = _hud.kit
 	_class_select.theme = theme
@@ -332,8 +339,15 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 		start_error = candidate.error
 		push_error("P0 run refused: " + start_error)
 		return false
+	var uid: String = Crypto.new().generate_random_bytes(16).hex_encode()
+	if not RunResultReceipt.valid_run_uid(uid):
+		push_error("P0 run refused: could not generate a run_uid")
+		return false
+	if driver != null and _finish_run() == null:
+		return false
 	tuning = candidate
 	rules_snapshot = snapshot
+	_run_uid = uid
 	_last_class_id = class_id
 	_class_select.hide()
 	driver = FixedTickDriver.create(config)
@@ -357,6 +371,7 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_flash_rest = 0.0
 	if _results != null:
 		_results.close()
+	_rewards.hide()
 	_reactions.clear()
 	_pickups.clear()
 	_body_poses.clear()
@@ -387,16 +402,42 @@ func _flicker() -> void:
 		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _flames.size())
 
 
-## Returns to the class menu after the summary is armed.
 func confirm_results() -> bool:
 	if not _results.is_armed():
+		return false
+	var receipt: RunResultReceipt = _finish_run()
+	if receipt == null:
+		return false
+	_results.close()
+	_rewards.open(receipt, _registry.definition(RewardPreview.MILESTONE_ID), _unlock_name(receipt))
+	return true
+
+
+func confirm_rewards() -> bool:
+	if not _rewards.is_armed():
 		return false
 	_show_class_select()
 	return true
 
 
+func is_rewards_open() -> bool:
+	return _rewards != null and _rewards.visible
+
+
+func _finish_run() -> RunResultReceipt:
+	return session_profile.finish(_run_uid, rules_snapshot, driver)
+
+
+func _unlock_name(receipt: RunResultReceipt) -> String:
+	var definition: Dictionary = _registry.definition(session_profile.unlocked_class_for(receipt))
+	return UiText.text(str(definition["name_key"])) if not definition.is_empty() else ""
+
+
 func _show_class_select() -> void:
 	driver = null
+	rules_snapshot = null
+	_run_uid = ""
+	_rewards.hide()
 	_hud.hide()
 	_menu.close()
 	_results.close()
@@ -420,10 +461,8 @@ func is_class_select_open() -> bool:
 
 
 func restart_run() -> bool:
-	if driver == null:
+	if driver == null or (driver.world.is_over() and not (is_results_open() or is_rewards_open())):
 		return false
-	if driver.world.is_over():
-		session_profile.record_finished(runs_started, rules_snapshot.stage_id)
 	return start_run(null, _last_class_id)
 
 
@@ -436,6 +475,9 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	if driver == null:
 		_class_select.age(delta)
 		return 0
+	if _rewards.visible:
+		_rewards.age(delta)
+		return 0
 	if driver.world.is_paused():
 		# The run waits for a card; effects freeze with it.
 		_sync_menu()
@@ -445,9 +487,10 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 	_poses.clear()
 	if driver.world.is_over():
 		_advance_hero_clips(delta, [])
-		_show_results()
 		if _results.visible:
 			_results.age(delta)
+		else:
+			_show_results()
 		queue_redraw()
 		return 0
 	var hp_before: int = driver.world.hero_hp
@@ -488,10 +531,13 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 func _show_results() -> void:
 	if _results == null or _results.visible:
 		return
-	session_profile.record_finished(runs_started, rules_snapshot.stage_id)
+	var receipt: RunResultReceipt = _finish_run()
+	if receipt == null:
+		return
 	if _death_time >= 0.0 and _death_time < _sprites.clip_length(HERO_ASSET, "death") + DEATH_BEAT:
 		return
-	_results.open(driver.world)
+	var class_def: Dictionary = _registry.definition(rules_snapshot.class_id)
+	_results.open(receipt, UiText.text(str(class_def["name_key"])), _unlock_name(receipt))
 	_hud.hide()
 
 

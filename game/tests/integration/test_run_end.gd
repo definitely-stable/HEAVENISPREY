@@ -69,12 +69,14 @@ func test_scene_shows_victory_and_waits_for_the_player() -> void:
 	assert_true(view.is_results_open())
 	var results: RunResults = view.get("_results")
 	assert_eq(results.title.text, "Victory: the grove is held")
+	assert_eq(results.class_line.text, "Class: Sword Cultivator")
+	assert_eq(results.unlock_line.text, "New class: Thunder Daoist")
 	assert_eq(results._stat_labels[0].text, "Time")
 	assert_eq(results.stat_values[0].text, "00:02")
-	assert_eq(view.get_viewport().gui_get_focus_owner(), results.new_run_button)
+	assert_eq(view.get_viewport().gui_get_focus_owner(), results.rewards_button)
 	assert_false(view._hud.visible, "results show one set of run statistics")
 	var runs: int = view.runs_started
-	results.new_run_button.pressed.emit()
+	results.rewards_button.pressed.emit()
 	assert_eq(view.runs_started, runs, "the button also waits for the arm delay")
 	assert_false(view.confirm_results(), "not armed yet")
 	view.advance_frame(RunResults.ARM_DELAY * 0.5, Vector2i.ZERO)
@@ -86,10 +88,29 @@ func test_scene_shows_victory_and_waits_for_the_player() -> void:
 	view.get_viewport().push_input(confirm)
 	assert_eq(view.runs_started, runs)
 	assert_false(view.is_results_open())
+	assert_true(view.is_rewards_open())
+	assert_eq(view._rewards.unlock_line.text, results.unlock_line.text)
+	assert_eq(view._rewards.stones_line.text, "Spirit Stones earned: 0")
+	assert_eq(view.session_profile.receipts().size(), 1)
+	var receipt: RunResultReceipt = view.session_profile.receipts()[0]
+	assert_same(view._finish_run(), receipt, "finalizing the same run keeps the receipt")
+	assert_eq(receipt.fields()["world_digest"], view.driver.world.digest())
+	assert_eq(receipt.fields()["log_digest"], view.driver.commands.digest())
+	assert_true(receipt.fields().is_read_only())
+	assert_true((receipt.fields()["reward_events"] as Array).is_read_only())
+	var enter: InputEventKey = InputEventKey.new()
+	enter.keycode = KEY_ENTER
+	enter.pressed = true
+	view.get_viewport().push_input(enter)
+	assert_true(view.is_rewards_open(), "Enter while arming cannot leave Rewards")
+	view.advance_frame(RunRewards.ARM_DELAY, Vector2i.ZERO)
+	view.get_viewport().push_input(enter)
 	assert_true(view.is_class_select_open())
+	assert_eq(view.get_viewport().gui_get_focus_owner(), view._class_select.cards[0])
+	assert_eq(view.session_profile.receipts().size(), 1)
 	assert_eq(view._class_select.locked, [false, false], "victory unlocks Thunder this session")
 	assert_false(view._hud.visible)
-	results.new_run_button.pressed.emit()
+	results.rewards_button.pressed.emit()
 	assert_eq(view.runs_started, runs, "an old results action cannot start another run")
 
 
@@ -107,6 +128,7 @@ func test_defeat_results_in_russian() -> void:
 		guard += 1
 	var world: WorldState = view.driver.world
 	assert_eq([world.hero_dead, world.won], [1, 0])
+	assert_false(view.restart_run(), "wait for the defeat result and first unlock message")
 	for _i: int in 90:
 		view.advance_frame(TICK, Vector2i.ZERO)
 	assert_true(view.is_results_open(), "after the death clip")
@@ -116,7 +138,66 @@ func test_defeat_results_in_russian() -> void:
 	assert_eq(results._stat_labels.map(func(label: Label) -> String: return label.text),
 		["Время", "Побеждено", "Уровень", "Опыт"])
 	assert_eq(results.stat_values.map(func(label: Label) -> String: return label.text),
-		[RunResults.clock(world.tick), str(world.kills), str(world.level), str(world.xp_collected_total)])
+		[RunResults.clock(world.tick - 1), str(world.kills), str(world.level), str(world.xp_collected_total)])
+	assert_eq(results.class_line.text, "Класс: Культиватор меча")
+	assert_eq(results.unlock_line.text, "Открыт класс: Даос грома")
+	view.advance_frame(RunResults.ARM_DELAY, Vector2i.ZERO)
+	assert_true(view.confirm_results())
+	assert_eq(view._rewards.title.text, "Награды забега")
+	assert_eq(view._rewards.unlock_line.text, results.unlock_line.text)
+
+
+func test_restart_from_choice_stores_one_abandon_and_keeps_class_locked() -> void:
+	var view: RunView = _view()
+	assert_true(view.start_run("101"))
+	var original_uid: String = view._run_uid
+	var world: WorldState = view.driver.world
+	world.tick = 14400
+	world.kills = 50
+	world.pending_level_choices = 1
+	world.hand = PackedInt64Array([0, 1, 2])
+	view.advance_frame(TICK, Vector2i.ZERO)
+	assert_true(view.is_menu_open())
+	assert_true(view.restart_run())
+	assert_false(view.is_menu_open())
+	assert_ne(view._run_uid, original_uid)
+	assert_eq(view.rules_snapshot.class_id, "class.sword")
+	assert_eq(view.driver.world.tick, 0)
+	assert_eq(view.session_profile.granted_unlock_ids(), PackedStringArray())
+	var receipts: Array[RunResultReceipt] = view.session_profile.receipts()
+	assert_eq(receipts.size(), 1)
+	var fields: Dictionary = receipts[0].fields()
+	assert_eq(fields["run_uid"], original_uid)
+	assert_eq(fields["result"], "abandoned")
+	assert_eq(fields["survived_ticks"], 14400)
+	assert_eq(fields["stones_preview"], 8)
+	var events: Array = fields["reward_events"]
+	assert_eq(events[0]["reward_event_id"], "reward.minute3:%s:0" % original_uid)
+	assert_true((events[0] as Dictionary).is_read_only())
+	assert_true((fields["mode_ids"] as Array).is_read_only())
+
+
+func test_restart_from_results_and_rewards_starts_the_same_class() -> void:
+	var view: RunView = _view()
+	view.session_profile.unlock_all = true
+	assert_true(view.start_run("101", "class.thunder"))
+	for screen: String in ["results", "rewards"]:
+		view.driver = FixedTickDriver.create(_short_run(1))
+		view.advance_frame(TICK, Vector2i.ZERO)
+		assert_true(view.is_results_open())
+		if screen == "rewards":
+			view.advance_frame(RunResults.ARM_DELAY, Vector2i.ZERO)
+			assert_true(view.confirm_results())
+			assert_true(view.is_rewards_open())
+		assert_true(view.restart_run())
+		assert_false(view.is_results_open())
+		assert_false(view.is_rewards_open())
+		assert_eq(view.rules_snapshot.class_id, "class.thunder")
+		assert_eq(view.driver.world.tick, 0)
+	var receipts: Array[RunResultReceipt] = view.session_profile.receipts()
+	assert_eq(receipts.size(), 2)
+	assert_eq(receipts[0].fields()["result"], "victory")
+	assert_eq(receipts[1].fields()["result"], "victory")
 
 
 func test_clock_format() -> void:
