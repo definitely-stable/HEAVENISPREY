@@ -1,0 +1,65 @@
+name: Desktop release export and bot replay (P0-02)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-artifacts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Export and replay (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-2022
+            platform: windows
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    env:
+      HIP_TOOLS_ROOT: ${{ github.workspace }}/.tools
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Fetch and verify game assets
+        run: |
+          git lfs pull --include="game/assets/**" --exclude=""
+          python scripts/validate_assets.py
+      - name: Cache the locked editor
+        uses: actions/cache@v6
+        with:
+          path: .tools/godot
+          key: godot-export-${{ runner.os }}-${{ hashFiles('.work/tooling/toolchain.lock.json') }}
+      - name: Install the locked editor
+        run: python scripts/dev/godot_tool.py install
+      - name: Build and verify both seed-101 traces in the release
+        run: >-
+          python scripts/dev/godot_export.py ${{ matrix.platform }}
+          "${{ runner.temp }}/hip-release"
+          --fixture game/tests/fixtures/sim_bot_upgrade_runs.json
+      - name: Preserve executable permissions in the distribution
+        working-directory: ${{ runner.temp }}
+        run: >-
+          python -m tarfile -c
+          "heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}.tar.gz"
+          hip-release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}
+          path: ${{ runner.temp }}/heaven-is-prey-${{ matrix.platform }}-${{ github.sha }}.tar.gz
+          if-no-files-found: error
+          retention-days: 14
