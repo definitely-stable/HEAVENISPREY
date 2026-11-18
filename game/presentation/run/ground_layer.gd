@@ -463,10 +463,11 @@ func _floor_reach(axis: Vector2) -> float:
 ## screen and fading into the mist, and the waterfalls that pour down three of them
 ## (REF-033, REF-029).
 func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
-	var faces: Node2D = Node2D.new()
+	var faces: MeshInstance2D = MeshInstance2D.new()
 	faces.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	faces.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	faces.draw.connect(_draw_cliffs.bind(faces, sprites, cliff_asset))
+	faces.texture = sprites.canvas_texture(cliff_asset)
+	faces.mesh = _cliff_mesh(faces.texture, sprites.decal_world_px(cliff_asset))
 	add_child(faces)
 	var water: ShaderMaterial = ShaderMaterial.new()
 	water.shader = WATERFALL_SHADER
@@ -501,26 +502,40 @@ static func waterfall_top(data: Dictionary, cell_px: int, share: float) -> Vecto
 	return best
 
 
-func _draw_cliffs(canvas: Node2D, sprites: SpriteSet, cliff_asset: String) -> void:
-	var texture: Texture2D = sprites.canvas_texture(cliff_asset)
-	var span: float = sprites.decal_world_px(cliff_asset) if texture != null else 1.0
+## One surface retains the original face and triangle order under the animated ground lights.
+func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
 	var drop: Vector2 = Vector2(0.0, CLIFF_PX)
-	var fade: Color = Color(1.0, 1.0, 1.0, 0.0)
+	var top: Color = Color.WHITE if texture != null else COLOR_CLIFF_FLAT
+	var fade: Color = Color(top, 0.0)
+	var tint: PackedColorArray = PackedColorArray([top, top, fade, fade])
 	for edge: PackedVector2Array in near_faces(_data, _cell_px):
 		var a: Vector2 = IsoProjection.to_screen(edge[0])
 		var b: Vector2 = IsoProjection.to_screen(edge[1])
 		var points: PackedVector2Array = PackedVector2Array([a, b, b + drop, a + drop])
-		var colors: PackedColorArray = PackedColorArray([Color.WHITE, Color.WHITE, fade, fade])
-		if texture == null:
-			for index: int in 4:
-				colors[index] = Color(COLOR_CLIFF_FLAT, colors[index].a)
-			canvas.draw_polygon(points, colors)
-			continue
+		for index: int in Geometry2D.triangulate_polygon(points):
+			indices.append(vertices.size() + index)
+		vertices.append_array(points)
+		colors.append_array(tint)
 		# The strip is mapped by screen x, so the masonry runs on from face to face.
-		var uvs: PackedVector2Array = PackedVector2Array([
-			Vector2(a.x / span, 0), Vector2(b.x / span, 0), Vector2(b.x / span, 1), Vector2(a.x / span, 1),
-		])
-		canvas.draw_polygon(points, colors, uvs, texture)
+		if texture != null:
+			uvs.append_array(PackedVector2Array([
+				Vector2(a.x / span, 0), Vector2(b.x / span, 0), Vector2(b.x / span, 1), Vector2(a.x / span, 1),
+			]))
+	var mesh: ArrayMesh = ArrayMesh.new()
+	if not vertices.is_empty():
+		var arrays: Array = []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		arrays[Mesh.ARRAY_COLOR] = colors
+		arrays[Mesh.ARRAY_INDEX] = indices
+		if not uvs.is_empty():
+			arrays[Mesh.ARRAY_TEX_UV] = uvs
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
 
 
 func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> PointLight2D:

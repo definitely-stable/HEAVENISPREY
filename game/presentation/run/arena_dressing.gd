@@ -347,20 +347,32 @@ static func _add_ruin(out: Array[Dictionary], prop: String, cells: Array, base: 
 ## Posts, broken posts and rail bays of `wall` (balustrade()) as placements.
 static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int) -> void:
 	var half: Vector2 = Vector2(0.5, 0.5)
+	var rail_height: float = sprites.prop_size(BALUSTRADE_ASSET, "rail").y
 	for pair: Array in wall["rails"]:
 		var a: Vector2 = (Vector2(pair[0]) + half) * cell_px
 		var b: Vector2 = (Vector2(pair[1]) + half) * cell_px
 		var along: Vector2 = (b - a).normalized()
 		var diagonal: bool = absf(along.x) > 0.01 and absf(along.y) > 0.01
 		var reach: float = POST_HALF_PX * (sqrt(2.0) if diagonal else 1.0)
+		var from: Vector2 = a + along * reach
+		var to: Vector2 = b - along * reach
+		var bounds: Rect2 = Rect2(IsoProjection.to_screen(from), Vector2.ZERO)
+		bounds = bounds.expand(IsoProjection.to_screen(to)).grow_side(SIDE_TOP, rail_height)
 		out.append({
 			"asset": BALUSTRADE_ASSET, "prop": RAIL_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
-			"flame": 0.0, "from": a + along * reach, "to": b - along * reach, "wall": true,
+			"flame": 0.0, "from": from, "to": to, "rail_bounds": bounds, "wall": true,
 		})
 	for cell: Vector2i in wall["posts"]:
 		var prop: String = "post_broken" if (wall["broken"] as Array).has(cell) else "post"
 		_add(out, sprites, BALUSTRADE_ASSET, prop, (Vector2(cell) + half) * cell_px, false)
 		out[-1]["wall"] = true
+
+
+## Keep rails that the camera can reveal while smoothing finishes after a redraw.
+static func rail_draw_window(canvas: CanvasItem, target: Vector2) -> Rect2:
+	var current: Rect2 = canvas.get_canvas_transform().affine_inverse() * canvas.get_viewport_rect()
+	var settled: Rect2 = Rect2(target - current.size * 0.5, current.size)
+	return current.merge(settled).grow(2.0)
 
 
 ## The solid cells (keys Vector2i) of every group of solid cells that a named prop stands on.

@@ -216,6 +216,7 @@ func _ready() -> void:
 	layer.add_child(_results)
 	_vfx = CombatVfx.load_default(_hud.kit.font)
 	_build_layers()
+	get_viewport().size_changed.connect(queue_redraw)
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
 	start_run(str(randi()))
 
@@ -725,7 +726,10 @@ func _draw_bodies() -> void:
 	for slot: int in world.enemy_slots():
 		if world.enemy_uid[slot] != 0:
 			order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
+	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
 	for prop: Dictionary in _props:
+		if prop.has("rail_bounds") and not rail_window.intersects(prop["rail_bounds"]):
+			continue
 		order.append(prop["order"])
 	order.sort()
 	for key: Vector2i in order:
