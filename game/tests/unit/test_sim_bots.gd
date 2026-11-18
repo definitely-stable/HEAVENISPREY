@@ -33,7 +33,7 @@ static func config_of(row: Dictionary) -> SimConfig:
 	var attacks: Dictionary = row["attacks"]
 	var config: SimConfig = SimConfig.create(_ints(row["config"])).with_enemies(
 		_ints(spec["values"]), _ints(spec["kinds"]), str(spec["seed"])
-	).with_skill(_ints(row["skill"])).with_xp(
+	).with_skill(_ints(row["skill"]), _ints(row.get("skill_shape", [0, 0, 0]))).with_xp(
 		_ints(xp["values"]), _ints(xp["kind_xp"]), _ints(xp["costs"])
 	).with_choice_mode(int(row["choice_mode"])).with_run_ticks(int(row["run_ticks"])).with_attacks(
 		_ints(attacks["records"]), _ints(attacks["venom"]), _ints(attacks["root"])

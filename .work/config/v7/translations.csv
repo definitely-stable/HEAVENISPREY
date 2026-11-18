@@ -111,3 +111,11 @@ UI_HUD_QI,Qi,Ци
 UI_HUD_LEVEL,Lv. %d,Ур. %d
 UI_HUD_SLAIN,Slain: %s,Убито: %s
 UI_HUD_THOUSANDS,%sk,%s тыс.
+UPGRADE_P0_THUNDER_DAMAGE_NAME,Storm Wrath,Гнев бури
+UPGRADE_P0_THUNDER_DAMAGE_DESC,Lightning damage %s → %s,Урон молнии %s → %s
+UPGRADE_P0_THUNDER_HASTE_NAME,Rolling Thunder,Раскаты грома
+UPGRADE_P0_THUNDER_HASTE_DESC,Strikes per second %s → %s,Разрядов в секунду %s → %s
+UPGRADE_P0_THUNDER_JUMPS_NAME,Branching Bolt,Ветвистый разряд
+UPGRADE_P0_THUNDER_JUMPS_DESC,Targets per strike %s → %s,Целей за разряд %s → %s
+UPGRADE_P0_THUNDER_REACH_NAME,Long Arc,Длинная дуга
+UPGRADE_P0_THUNDER_REACH_DESC,Jump range %s → %s,Дальность прыжка %s → %s

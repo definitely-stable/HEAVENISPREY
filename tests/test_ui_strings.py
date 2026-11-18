@@ -43,7 +43,7 @@ class UiStringsTests(unittest.TestCase):
         self.assertEqual(strings.main(["--check"]), 0)
 
     def test_every_upgrade_card_has_name_and_stat_line(self):
-        ids = [upgrade_id for upgrade_id, _ in sim.UPGRADES] + [sim.RECOVER_ID]
+        ids = {upgrade_id for table in sim.UPGRADE_TABLES for upgrade_id, _ in table} | {sim.RECOVER_ID}
         for upgrade_id in ids:
             name, desc = stem(upgrade_id) + "_NAME", stem(upgrade_id) + "_DESC"
             self.assertIn(name, self.table, upgrade_id)

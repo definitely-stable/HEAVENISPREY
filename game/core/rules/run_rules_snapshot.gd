@@ -31,7 +31,8 @@ extends RefCounted
 ## 12: roster windows by spawn tick and threat_caps on spawns and launches (ADR-011 E6).
 ## 13: the arena topology: walls, flow-field chase, spawn points, shots die in solids
 ##     (ADR-015 A1).
-const SIM_SCHEMA_VERSION: int = 13
+## 14: hero skill shape, chain hit order, and Thunder upgrades (ADR-012 C2).
+const SIM_SCHEMA_VERSION: int = 14
 
 var error: String:
 	get:

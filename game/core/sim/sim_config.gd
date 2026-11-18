@@ -70,6 +70,10 @@ const VENOM_STRIDE: int = 4
 const ROOT_STRIDE: int = 2
 const MAX_ENEMIES_LIMIT: int = 4096
 const MAX_PROJECTILES_LIMIT: int = 256
+const SKILL_PROJECTILE: int = 0
+const SKILL_CHAIN: int = 1
+const MAX_CHAIN_HITS: int = 8
+const MAX_SKILL_RANGE: int = 4194304
 const MAX_PIERCE: int = 7
 const MAX_GEMS_LIMIT: int = 4096
 const MAX_XP_COSTS: int = 64
@@ -108,6 +112,9 @@ var projectile_radius_su: int = 0
 var projectile_ttl_ticks: int = 0
 var projectile_pierce: int = 0
 var max_projectiles: int = 0
+var skill_form: int = SKILL_PROJECTILE
+var chain_hits: int = 0
+var chain_reach_su: int = 0
 
 var pickup_radius_su: int = 0
 var max_gems: int = 0
@@ -161,7 +168,16 @@ func with_enemies(p_values: PackedInt64Array, p_kinds: PackedInt64Array, p_seed:
 
 ## Enables the hero skill: [period_mt, range_su, damage_mhp, projectile_speed_su,
 ## projectile_radius_su, projectile_ttl_ticks, projectile_pierce, max_projectiles].
-func with_skill(p_values: PackedInt64Array) -> SimConfig:
+## Optional shape record is [skill_form, chain_hits, chain_reach_su].
+func with_skill(
+	p_values: PackedInt64Array, shape: PackedInt64Array = PackedInt64Array([0, 0, 0])
+) -> SimConfig:
+	if shape.size() != 3:
+		skill_form = -1
+		return self
+	skill_form = shape[0]
+	chain_hits = shape[1]
+	chain_reach_su = shape[2]
 	if p_values.size() == 8:
 		skill_period_mt = p_values[0]
 		skill_range_su = p_values[1]
@@ -292,6 +308,7 @@ func to_ints() -> PackedInt64Array:
 	out.append_array(attacks)
 	out.append_array(venom)
 	out.append_array(root)
+	out.append_array(PackedInt64Array([skill_form, chain_hits, chain_reach_su]))
 	out.append(windows.size())
 	out.append_array(windows)
 	out.append(caps.size())
@@ -322,7 +339,7 @@ func is_valid() -> bool:
 		return false
 	if has_enemies() and not _enemies_valid():
 		return false
-	if has_skill() and not _skill_valid():
+	if (has_skill() or skill_form != SKILL_PROJECTILE or chain_hits != 0 or chain_reach_su != 0) and not _skill_valid():
 		return false
 	if (has_xp() or not kind_xp.is_empty()) and not _xp_valid():
 		return false
@@ -527,14 +544,17 @@ func _enemies_valid() -> bool:
 
 ## A projectile must not step over the smallest enemy in one tick (no tunnelling).
 func _skill_valid() -> bool:
-	if not has_enemies():
+	if not has_enemies() or skill_period_mt <= 0:
+		return false
+	if skill_form == SKILL_CHAIN:
+		return _chain_valid()
+	if skill_form != SKILL_PROJECTILE or chain_hits != 0 or chain_reach_su != 0:
 		return false
 	var min_radius: int = Fx.COORD_MAX
 	for kind: int in kind_count():
 		min_radius = mini(min_radius, kind_value(kind, KIND_RADIUS))
 	return (
-		skill_period_mt > 0
-		and skill_range_su >= 0
+		skill_range_su >= 0
 		and projectile_speed_su > 0
 		and projectile_radius_su > 0
 		and projectile_speed_su <= projectile_radius_su + min_radius
@@ -543,6 +563,22 @@ func _skill_valid() -> bool:
 		and projectile_pierce <= MAX_PIERCE
 		and max_projectiles > 0
 		and max_projectiles <= MAX_PROJECTILES_LIMIT
+	)
+
+
+func _chain_valid() -> bool:
+	var ranks: PackedInt64Array = UpgradeSystem.RANK_TABLES[SKILL_CHAIN]
+	var extra_hits: int = ranks[UpgradeSystem.THUNDER_JUMPS] if choice_mode == CHOICE_IMMEDIATE else 0
+	var extra_reach: int = 0
+	if choice_mode == CHOICE_IMMEDIATE:
+		extra_reach = ranks[UpgradeSystem.THUNDER_REACH] * UpgradeSystem.THUNDER_REACH_PER_RANK
+	return (
+		has_skill()
+		and projectile_speed_su == 0 and projectile_radius_su == 0 and projectile_ttl_ticks == 0
+		and projectile_pierce == 0 and max_projectiles == 0
+		and skill_range_su >= 0 and skill_range_su <= MAX_SKILL_RANGE
+		and chain_hits > 0 and chain_hits <= MAX_CHAIN_HITS - extra_hits
+		and chain_reach_su > 0 and chain_reach_su <= MAX_SKILL_RANGE - extra_reach
 	)
 
 
