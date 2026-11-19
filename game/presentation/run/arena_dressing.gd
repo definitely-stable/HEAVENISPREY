@@ -267,10 +267,6 @@ static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, 
 	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
 	if quad.is_empty():
 		return
-	_draw_coping(canvas, quad, item, light)
-	if item["prop"] == COPING_PROP:
-		_draw_edge_on_hand_rail(canvas, quad, item, light)
-		return
 	var uv: Rect2 = quad["uv"]
 	uv.size.y *= 1.0 - RAIL_STONE_SHARE
 	var uvs: PackedVector2Array = PackedVector2Array([
@@ -284,46 +280,82 @@ static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, 
 
 
 ## A thick stone sill, projected from the same plane as the post feet and the adjacent paving.
-static func _draw_coping(canvas: CanvasItem, quad: Dictionary, item: Dictionary, light: Color) -> void:
+static func sill_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInstance2D:
+	var sill: MeshInstance2D = MeshInstance2D.new()
+	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
+	if quad.is_empty():
+		return sill
+	sill.texture = quad["texture"]
+	sill.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var source: Rect2 = quad["uv"]
 	var lift: Vector2 = Vector2(0.0, -COPING_HEIGHT)
-	var from: Vector2 = item["from"]
-	var to: Vector2 = item["to"]
-	var offset: Vector2 = (to - from).normalized().orthogonal() * COPING_HALF_WIDTH
-	if IsoProjection.to_screen(offset).y < 0.0:
-		offset = -offset
-	var a: Vector2 = IsoProjection.to_screen(from - offset)
-	var b: Vector2 = IsoProjection.to_screen(to - offset)
-	var c: Vector2 = IsoProjection.to_screen(to + offset)
-	var d: Vector2 = IsoProjection.to_screen(from + offset)
-	var uvs: PackedVector2Array = PackedVector2Array([
+	var band: PackedVector2Array = PackedVector2Array([
 		Vector2(source.position.x, source.position.y + source.size.y * 0.86),
 		Vector2(source.end.x, source.position.y + source.size.y * 0.86),
 		source.end, Vector2(source.position.x, source.end.y),
 	])
-	var near_side: PackedVector2Array = PackedVector2Array([d + lift, c + lift, c, d])
-	if not is_equal_approx(c.x, d.x):
-		canvas.draw_polygon(near_side, PackedColorArray([light.darkened(0.32)]), uvs, quad["texture"])
-	var cap: PackedVector2Array = PackedVector2Array([a + lift, b + lift, c + lift, d + lift])
-	canvas.draw_polygon(cap, PackedColorArray([light.darkened(0.09)]), uvs, quad["texture"])
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Dictionary in props:
+		if not item.has("rail_bounds"):
+			continue
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var offset: Vector2 = (to - from).normalized().orthogonal() * COPING_HALF_WIDTH
+		if IsoProjection.to_screen(offset).y < 0.0:
+			offset = -offset
+		var a: Vector2 = IsoProjection.to_screen(from - offset)
+		var b: Vector2 = IsoProjection.to_screen(to - offset)
+		var c: Vector2 = IsoProjection.to_screen(to + offset)
+		var d: Vector2 = IsoProjection.to_screen(from + offset)
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([d + lift, c + lift, c, d, a + lift, b + lift, c + lift, d + lift]))
+		uvs.append_array(band)
+		uvs.append_array(band)
+		var side: Color = Color(0.68, 0.64, 0.73)
+		colors.append_array(PackedColorArray([side, side, side, side, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE]))
+		indices.append_array(PackedInt32Array([base, base + 1, base + 2, base, base + 2, base + 3,
+			base + 4, base + 5, base + 6, base + 4, base + 6, base + 7]))
+	sill.mesh = GroundLayer._surface_mesh(vertices, colors, uvs, indices)
+	return sill
 
 
-## The side elevation collapses edge-on, but the lacquered handrail has a visible top.
-static func _draw_edge_on_hand_rail(canvas: CanvasItem, quad: Dictionary, item: Dictionary, light: Color) -> void:
+## The face disappears end-on, but the upper edge of the handrail still catches the light.
+static func edge_handrail_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInstance2D:
+	var mesh: MeshInstance2D = MeshInstance2D.new()
+	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
+	if quad.is_empty():
+		return mesh
+	mesh.texture = quad["texture"]
 	var height: float = COPING_HEIGHT + (quad["rect"] as Rect2).size.y * (1.0 - RAIL_STONE_SHARE)
 	var lift: Vector2 = Vector2(0.0, -height)
-	var from: Vector2 = IsoProjection.to_screen(item["from"]) + lift
-	var to: Vector2 = IsoProjection.to_screen(item["to"]) + lift
 	var half: Vector2 = Vector2(2.4, 0.0)
-	var cap: PackedVector2Array = PackedVector2Array([from - half, to - half, to + half, from + half])
 	var uv: Rect2 = quad["uv"]
 	var top: float = uv.position.y + uv.size.y * 0.02
 	var bottom: float = uv.position.y + uv.size.y * 0.13
-	var uvs: PackedVector2Array = PackedVector2Array([
+	var band: PackedVector2Array = PackedVector2Array([
 		Vector2(uv.position.x, top), Vector2(uv.end.x, top),
-		Vector2(uv.end.x, bottom), Vector2(uv.position.x, bottom),
+		Vector2(uv.position.x, bottom), Vector2(uv.end.x, bottom),
 	])
-	canvas.draw_polygon(cap, PackedColorArray([light.darkened(0.22)]), uvs, quad["texture"])
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Dictionary in props:
+		if item["prop"] != COPING_PROP:
+			continue
+		var from: Vector2 = IsoProjection.to_screen(item["from"]) + lift
+		var to: Vector2 = IsoProjection.to_screen(item["to"]) + lift
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([from - half, to - half, to + half, from + half]))
+		uvs.append_array(band)
+		var light: Color = wall_light(item["fixed_light"]).darkened(0.22)
+		colors.append_array(PackedColorArray([light, light, light, light]))
+		indices.append_array(PackedInt32Array([base, base + 1, base + 2, base, base + 2, base + 3]))
+	mesh.mesh = GroundLayer._surface_mesh(vertices, colors, uvs, indices)
+	return mesh
 
 
 static func wall_light(light: Color) -> Color:
