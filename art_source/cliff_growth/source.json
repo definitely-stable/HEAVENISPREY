@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.cliff_growth",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-033",
+      "file": "Концепт‑борд арены «Руины секты».png",
+      "sha256": "5bd8ed2620617b8d8adbee986518adb0c798b52408e51f4975ef0cb62c9ed6e1"
+    },
+    {
+      "id": "REF-056",
+      "file": "Панель арены заброшенного монастыря Иньян.png",
+      "sha256": "e685edac4188246e7c35c815a941336dd6c6a2ef8181ffaa23054f3feddb0933"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "c6b37b67f12928ca87650c90cb85d0c04d5fb8f86f3f6831b904fdfb231abdca",
+    "created": "2026-11-19T15:35:58+05:00",
+    "master_sha256": "c6a97972ff26b243cfec592053b7dfa1af2eb139d8057b94b60723050c10e764",
+    "master_note": "lossless WebP of the generated PNG (master_sha256); pixels identical"
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "background": "alpha",
+    "grid": [
+      3,
+      1
+    ],
+    "join_px": 2,
+    "min_area_px": 100
+  },
+  "props": [
+    {
+      "name": "moss",
+      "height_px": 40
+    },
+    {
+      "name": "vines",
+      "height_px": 118
+    },
+    {
+      "name": "roots",
+      "height_px": 130
+    }
+  ],
+  "grade": {
+    "tint": [
+      0.96,
+      0.94,
+      1.0
+    ]
+  }
+}

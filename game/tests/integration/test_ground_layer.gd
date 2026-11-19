@@ -66,8 +66,8 @@ func test_paving_is_one_polygon_over_the_footprint() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
 	var rects: Array[Rect2] = GroundLayer.footprint(_data(), CELL)
-	assert_eq(ground.paving.polygons.size(), rects.size())
-	assert_eq(ground.paving.polygon.size(), rects.size() * 4)
+	assert_gt(ground.paving.polygons.size(), rects.size(), "the visible rim fills the tiled recesses")
+	assert_gt(ground.paving.polygon.size(), rects.size() * 4)
 	assert_eq(ground.paving.polygon[0], rects[0].position)
 	assert_true(ground.paving.texture is CanvasTexture, "the paving carries the normal map")
 	var texels_per_px: float = float(ground.paving.texture.get_width()) / sprites.floor_repeat_px(FLOOR, CELL)
@@ -298,6 +298,45 @@ func test_cliff_bends_beneath_the_paving_without_seams() -> void:
 	crown_x.sort()
 	var extent: float = crown_x[-1] - crown_x[0] if crown_x.size() > 1 else 0.0
 	assert_gt(extent, 250.0, "the arch crowns are in two separate spans")
+	var rock_vertices: int = face_index * rows * 2
+	var arch_vertices: int = 8 + GroundLayer.BRIDGE_SPANS * GroundLayer.ARCH_STONES * 6
+	assert_eq(vertices.size() - rock_vertices, arch_vertices, "the arch masonry stays in the cliff batch")
+
+
+func test_cliff_courses_soften_teeth_without_crossing_corners() -> void:
+	var faces: Array[PackedVector2Array] = [
+		PackedVector2Array([Vector2(0, CELL), Vector2(CELL, CELL)]),
+		PackedVector2Array([Vector2(CELL, 0), Vector2(CELL, CELL)]),
+	]
+	var courses: Dictionary[Vector2, float] = GroundLayer.cliff_courses(faces)
+	var apex: Vector2 = IsoProjection.to_screen(Vector2(CELL, CELL))
+	assert_eq(courses.size(), 1)
+	assert_lt(courses.get(apex, apex.y), apex.y, "the tooth recedes under the paving")
+	faces[1] = PackedVector2Array([Vector2(CELL, CELL), Vector2(2 * CELL, CELL)])
+	assert_true(GroundLayer.cliff_courses(faces).is_empty(), "an isometric diagonal holds its profile")
+
+
+func test_cliff_growth_hangs_from_the_real_rock_in_one_batch() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
+	var growth: MeshInstance2D = ground.get_node("CliffGrowth")
+	assert_eq(growth.mesh.get_surface_count(), 1)
+	var verts: PackedVector2Array = growth.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var faces: Array[PackedVector2Array] = GroundLayer.near_faces(_data(), CELL)
+	var bridge: Dictionary[Vector2, float] = GroundLayer._bridge_openings(_data(), CELL, faces)
+	assert_eq(verts.size(), GroundLayer.CLIFF_GROWTH.size() * 4)
+	for index: int in GroundLayer.CLIFF_GROWTH.size():
+		var item: Array = GroundLayer.CLIFF_GROWTH[index]
+		var at: Vector2 = item[0] * CELL
+		var on_cliff: bool = false
+		for face: PackedVector2Array in faces:
+			if Geometry2D.get_closest_point_to_segment(at, face[0], face[1]).is_equal_approx(at):
+				on_cliff = true
+				assert_false(bridge.has(IsoProjection.to_screen(face[0].lerp(face[1], 0.5))),
+					"growth leaves the bridge arch free")
+				break
+		assert_true(on_cliff, "growth %s has a rock anchor" % index)
+		assert_gt(verts[index * 4].y, IsoProjection.to_screen(at).y, "growth starts below the rim")
 
 
 func test_aura_follows_the_hero() -> void:
