@@ -13,6 +13,7 @@ const IDS: Array[String] = [
 	"asset.prop.courtyard_nature", "asset.prop.courtyard_ring", "asset.prop.courtyard_walls",
 	"asset.prop.distant_peaks", "asset.prop.jade_grove_cliff_relief", "asset.prop.jade_grove_fence_modules",
 	"asset.prop.jade_grove_front_stairs",
+	"asset.prop.jade_grove_horizon",
 	"asset.prop.jade_grove_masonry",
 	"asset.prop.jade_grove_rail_details",
 	"asset.prop.jade_grove_rail_finishes", "asset.prop.jade_grove_side_stairs", "asset.prop.jade_grove_waterfalls",

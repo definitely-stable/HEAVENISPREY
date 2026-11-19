@@ -13,6 +13,7 @@ extends RefCounted
 const NATURE_ASSET: String = "asset.prop.courtyard_nature"
 const WALLS_ASSET: String = "asset.prop.courtyard_walls"
 const PEAKS_ASSET: String = "asset.prop.distant_peaks"
+const HORIZON_ASSET: String = "asset.prop.jade_grove_horizon"
 ## The seal ring and the parapet after REF-068 (ADR-015 section 12): a pedestal brazier on one
 ## cell, a stone pagoda lantern on one cell, a broken pillar on two by two cells.
 const RING_ASSET: String = "asset.prop.courtyard_ring"
@@ -93,32 +94,31 @@ const BLOCK_SIDE_X: Color = Color(0.23, 0.2, 0.26)
 const BLOCK_SIDE_Y: Color = Color(0.17, 0.15, 0.2)
 ## Distant scenery in the mist (REF-033, REF-056: rock spires and pagodas behind the arena):
 ## [prop, base (px from the arena centre in the backdrop plane), scale, flip, nearness 0..1].
-const BACKDROP: Array = [
-	["spire", Vector2(-860.0, -72.0), 0.49, true, 0.16],
-	["waterfall_rock", Vector2(-706.0, -138.0), 0.44, false, 0.12],
-	["pagoda_rock", Vector2(-570.0, 47.0), 0.58, true, 0.40],
-	["spire", Vector2(-432.0, -103.0), 0.55, false, 0.22],
-	["gate_rock", Vector2(-285.0, -206.0), 0.46, false, 0.12],
-	["waterfall_rock", Vector2(-252.0, 370.0), 0.50, true, 0.36],
-	["spire", Vector2(69.0, 403.0), 0.5, false, 0.25],
-	["spire", Vector2(108.0, -218.0), 0.39, true, 0.11],
-	["waterfall_rock", Vector2(266.0, -61.0), 0.54, false, 0.29],
-	["pagoda_rock", Vector2(441.0, 393.0), 0.51, false, 0.32],
-	["spire", Vector2(543.0, -52.0), 0.55, true, 0.22],
-	["gate_rock", Vector2(653.0, -133.0), 0.45, true, 0.13],
-	["waterfall_rock", Vector2(835.0, 119.0), 0.49, false, 0.25],
-	["spire", Vector2(-1418.0, 235.0), 0.68, false, 0.58],
-	["waterfall_rock", Vector2(-1215.0, 354.0), 0.77, true, 0.75],
-	["gate_rock", Vector2(-984.0, 247.0), 0.65, true, 0.65],
-	["spire", Vector2(-822.0, 418.0), 0.66, true, 0.76],
-	["pagoda_rock", Vector2(-529.0, 521.0), 0.72, false, 0.61],
-	["waterfall_rock", Vector2(-160.0, 596.0), 0.66, false, 0.68],
-	["spire", Vector2(143.0, 534.0), 0.69, true, 0.60],
-	["waterfall_rock", Vector2(509.0, 558.0), 0.71, true, 0.72],
-	["spire", Vector2(735.0, 395.0), 0.64, false, 0.60],
-	["pagoda_rock", Vector2(971.0, 391.0), 0.71, false, 0.71],
-	["gate_rock", Vector2(1213.0, 281.0), 0.66, false, 0.58],
-]
+const BACKDROP: Dictionary = {
+	HORIZON_ASSET: [
+		["western_needles", Vector2(-748, -91), 0.79, false, 0.18],
+		["split_ridge", Vector2(-40, -83), 0.86, false, 0.22],
+		["eastern_rampart", Vector2(739, -111), 0.85, false, 0.17],
+		["split_ridge", Vector2(-701, 263), 0.84, true, 0.35],
+		["eastern_rampart", Vector2(70, 311), 0.89, false, 0.37],
+		["western_needles", Vector2(806, 260), 0.88, true, 0.34],
+	],
+	PEAKS_ASSET: [
+		["spire", Vector2(-652, -94), 0.40, true, 0.21],
+		["pagoda_rock", Vector2(-398, 26), 0.50, false, 0.42],
+		["gate_rock", Vector2(199, -105), 0.42, false, 0.24],
+		["spire", Vector2(541, 38), 0.54, false, 0.29],
+		["waterfall_rock", Vector2(823, 163), 0.56, true, 0.36],
+		["spire", Vector2(-1354, 226), 0.71, false, 0.57],
+		["waterfall_rock", Vector2(-1195, 354), 0.86, true, 0.77],
+		["pagoda_rock", Vector2(-809, 393), 0.70, true, 0.70],
+		["gate_rock", Vector2(-489, 515), 0.74, false, 0.62],
+		["spire", Vector2(-90, 584), 0.61, true, 0.64],
+		["waterfall_rock", Vector2(474, 542), 0.72, false, 0.72],
+		["spire", Vector2(760, 415), 0.70, false, 0.61],
+		["pagoda_rock", Vector2(1010, 406), 0.78, false, 0.73],
+	],
+}
 
 
 ## Every placement: {asset, prop, at (world px), flip, light (bool), flame (screen px above the
@@ -575,11 +575,12 @@ static func draw_block(canvas: CanvasItem, item: Dictionary, light: Color) -> vo
 ## near}.
 static func backdrop(sprites: SpriteSet) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
-	for item: Array in BACKDROP:
-		if sprites.has_prop(PEAKS_ASSET, item[0]):
-			out.append({
-				"asset": PEAKS_ASSET, "prop": item[0], "at": item[1], "scale": item[2], "flip": item[3], "near": item[4],
-			})
+	for asset: String in BACKDROP:
+		for item: Array in BACKDROP[asset]:
+			if sprites.has_prop(asset, item[0]):
+				out.append({
+					"asset": asset, "prop": item[0], "at": item[1], "scale": item[2], "flip": item[3], "near": item[4],
+				})
 	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["at"].y < b["at"].y)
 	return out
 

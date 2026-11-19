@@ -36,16 +36,21 @@ float fbm(vec2 p) {
 }
 
 void fragment() {
+	vec2 world = (SCREEN_UV - vec2(0.5)) / SCREEN_PIXEL_SIZE + camera_offset * parallax;
 	if (!veil) {
-		COLOR = vec4(mix(top_color.rgb, bottom_color.rgb, SCREEN_UV.y), 1.0);
+		float sky_depth = smoothstep(0.0, 1.0, SCREEN_UV.y);
+		vec2 opening = (world - vec2(455.0, -88.0)) / vec2(850.0, 440.0);
+		float twilight = exp(-dot(opening, opening) * 1.7) * (1.0 - sky_depth);
+		vec3 sky = mix(top_color.rgb, bottom_color.rgb, sky_depth);
+		COLOR = vec4(sky + vec3(0.090, 0.042, 0.032) * twilight, 1.0);
 	} else {
-		vec2 world = (SCREEN_UV - vec2(0.5)) / SCREEN_PIXEL_SIZE + camera_offset * parallax;
-		vec2 p = world * scale * vec2(0.73, 2.0);
+		vec2 p = world * scale * vec2(0.48, 2.25);
 		float t = TIME * drift;
 		float banks = fbm(p + vec2(-t * 2.5, t * 0.35));
-		float wisps = noise(p * 2.2 - vec2(t * 4.0, -t * 0.6));
-		float mist = smoothstep(0.2, 0.79, banks * 0.86 + wisps * 0.19);
+		float wisps = noise(p * vec2(1.8, 2.7) - vec2(t * 4.0, -t * 0.6));
+		float mist = smoothstep(0.25, 0.78, banks * 0.81 + wisps * 0.22);
 		float depth = smoothstep(0.19, 1.0, SCREEN_UV.y);
-		COLOR = vec4(mist_color.rgb, 0.07 + depth * 0.12 + mist * 0.47);
+		vec3 haze = mix(mist_color.rgb, mist_color.rgb * vec3(0.86, 0.94, 1.0), depth);
+		COLOR = vec4(haze, 0.045 + depth * 0.13 + mist * (0.31 + depth * 0.16));
 	}
 }

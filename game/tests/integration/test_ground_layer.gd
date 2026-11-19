@@ -255,8 +255,12 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	var moved: Vector2 = ground.backdrop_origin(centre + Vector2(200, -100), 1.3, size)
 	assert_almost_eq(moved, size * 0.5 - Vector2(200, -100) * GroundLayer.BACKDROP_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(GroundLayer.BACKDROP_PARALLAX, 1.0)
-	var far: MeshInstance2D = ground._backdrop.get_child(0) as MeshInstance2D
-	var near: MeshInstance2D = ground._backdrop.get_child(1) as MeshInstance2D
+	assert_eq(ground._backdrop.get_child_count(), 3)
+	var horizon: MeshInstance2D = ground._backdrop.get_child(0) as MeshInstance2D
+	var far: MeshInstance2D = ground._backdrop.get_child(1) as MeshInstance2D
+	var near: MeshInstance2D = ground._backdrop.get_child(2) as MeshInstance2D
+	assert_eq(horizon.mesh.get_surface_count(), 1)
+	assert_eq(horizon.texture, sprites.canvas_texture(ArenaDressing.HORIZON_ASSET))
 	assert_eq(far.mesh.get_surface_count(), 1)
 	assert_eq(near.mesh.get_surface_count(), 1)
 	ground.follow(_centre(), centre, 1.3)
@@ -264,6 +268,7 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	var travel: Vector2 = Vector2(200, -100)
 	ground.follow(_centre(), centre + travel, 1.3)
 	assert_almost_eq(far.position - origin, -travel * GroundLayer.FAR_PARALLAX * 1.3, Vector2(0.01, 0.01))
+	assert_almost_eq(horizon.position - origin, -travel * GroundLayer.HORIZON_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(far.position.distance_to(origin), near.position.distance_to(origin))
 
 

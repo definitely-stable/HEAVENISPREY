@@ -2127,6 +2127,94 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_horizon",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_horizon/jade_grove_horizon.png",
+      "sha256": "8fe4e359868da27c44857c87fc6bec90fe2d4dab76a53eb770409b025a09765f",
+      "bytes": 923858,
+      "size": [
+        1177,
+        649
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 1,
+        "props": [
+          {
+            "name": "western_needles",
+            "region": [
+              6,
+              6,
+              1082,
+              202
+            ],
+            "feet": [
+              548.6,
+              197.1
+            ]
+          },
+          {
+            "name": "split_ridge",
+            "region": [
+              6,
+              220,
+              1165,
+              217
+            ],
+            "feet": [
+              585.2,
+              425.4
+            ]
+          },
+          {
+            "name": "eastern_rampart",
+            "region": [
+              6,
+              449,
+              1032,
+              194
+            ],
+            "feet": [
+              528.3,
+              630.4
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_horizon/jade_grove_horizon_n.png",
+        "sha256": "bf9695ed895a4f9bf8785f4e98e31e4a3ba458eb17a231c3b78f8b5a1d642866",
+        "bytes": 209450,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_horizon/master.webp",
+        "sha256": "4bb0937caed60ac075754eadf8f0fada8f7f99b9d39f43f54e1e54137248e356",
+        "bytes": 1450922,
+        "prompt_sha256": "692b85affca7abe1c5a12662f18ebd8424a8e0489e828b0bfe15f22f18b74d5c"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 17598,
+        "palette_mean_delta_e": 15.88,
+        "tones_pct": [
+          79.0,
+          21.0,
+          0.0
+        ],
+        "chroma": 0.121,
+        "threat_colour_pct": 0.0,
+        "median_l": 70.6
+      }
+    },
+    {
       "asset_id": "asset.prop.jade_grove_masonry",
       "kind": "prop_atlas",
       "path": "game/assets/props/jade_grove_masonry/jade_grove_masonry.png",

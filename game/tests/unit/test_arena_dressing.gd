@@ -586,15 +586,18 @@ func test_lights_come_from_lantern_props_with_their_flame_height() -> void:
 		assert_gt(light["flame"], 20.0)
 
 
-## A3 polish: the distant scenery is listed far to near and comes from its own atlas.
+## Scenery is sorted by its foot within each plane. Cutouts come from their authored atlas.
 func test_backdrop_is_sorted_far_to_near() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var items: Array[Dictionary] = ArenaDressing.backdrop(sprites)
-	assert_eq(items.size(), ArenaDressing.BACKDROP.size())
+	var expected: int = 0
+	for placements: Array in ArenaDressing.BACKDROP.values():
+		expected += placements.size()
+	assert_eq(items.size(), expected)
 	var last: float = -INF
 	for item: Dictionary in items:
 		assert_true(sprites.has_prop(item["asset"], item["prop"]), item["prop"])
-		assert_eq(item["asset"], ArenaDressing.PEAKS_ASSET)
+		assert_has(ArenaDressing.BACKDROP, item["asset"])
 		assert_gte(item["at"].y, last, "drawn back to front")
 		last = item["at"].y
 		assert_between(item["scale"], 0.2, 1.0, "smaller than the courtyard props: it is far away")

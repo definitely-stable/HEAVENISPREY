@@ -89,6 +89,8 @@ const WATERFALL_TOP_PX: float = 23.0
 ## Share of the camera travel the distant scenery follows (1 = glued to the courtyard).
 const BACKDROP_PARALLAX: float = 0.5
 const FAR_PARALLAX: float = 0.24
+const HORIZON_PARALLAX: float = 0.115
+const SCENERY_PARALLAX: Array[float] = [HORIZON_PARALLAX, FAR_PARALLAX, BACKDROP_PARALLAX]
 const NEAR_PLANE: float = 0.55
 ## Distant spires fade into the mist over this share of their height from the base, and are
 ## tinted by the haze: far ones more than near ones.
@@ -335,9 +337,8 @@ func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0
 	var size: Vector2 = get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
 	for index: int in _backdrop.get_child_count():
 		var plane: Node2D = _backdrop.get_child(index) as Node2D
-		var parallax: float = FAR_PARALLAX if index == 0 else BACKDROP_PARALLAX
 		plane.scale = Vector2.ONE * zoom
-		plane.position = backdrop_origin(centre, zoom, size, parallax)
+		plane.position = backdrop_origin(centre, zoom, size, SCENERY_PARALLAX[index])
 
 
 ## Screen point of the backdrop's origin (the arena centre of the distant scenery) for a view
@@ -366,9 +367,7 @@ func aura_position() -> Vector2:
 	return IsoProjection.to_world(_aura.position)
 
 
-## Behind the courtyard, on a canvas layer that does not follow the camera: the dusk sky, the
-## distant spires and pagodas (REF-033, REF-056) and the mist veil drifting in front of them.
-## The shaders slide with camera_offset; the scenery node is moved by follow().
+## Dusk, horizon, spires and drifting mist behind the courtyard (REF-033, REF-056).
 func _build_mist(sprites: SpriteSet, backdrop: Array[Dictionary]) -> void:
 	var back: CanvasLayer = CanvasLayer.new()
 	back.layer = MIST_LAYER
@@ -378,8 +377,9 @@ func _build_mist(sprites: SpriteSet, backdrop: Array[Dictionary]) -> void:
 	_backdrop = Node2D.new()
 	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	back.add_child(_backdrop)
-	_backdrop.add_child(_backdrop_plane(sprites, backdrop, false))
-	_backdrop.add_child(_backdrop_plane(sprites, backdrop, true))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.HORIZON_ASSET, false))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.PEAKS_ASSET, false))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.PEAKS_ASSET, true))
 	_veil = _mist_rect(true)
 	back.add_child(_veil)
 
@@ -396,14 +396,16 @@ func _mist_rect(veil: bool) -> ColorRect:
 
 
 ## One atlas surface per depth, with the lower part of each peak fading into the mist.
-static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], near_plane: bool) -> MeshInstance2D:
+static func _backdrop_plane(
+	sprites: SpriteSet, backdrop: Array[Dictionary], asset: String, near_plane: bool
+) -> MeshInstance2D:
 	var plane: MeshInstance2D = MeshInstance2D.new()
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var colors: PackedColorArray = PackedColorArray()
 	var indices: PackedInt32Array = PackedInt32Array()
 	for item: Dictionary in backdrop:
-		if (float(item["near"]) >= NEAR_PLANE) != near_plane:
+		if item["asset"] != asset or (float(item["near"]) >= NEAR_PLANE) != near_plane:
 			continue
 		var quad: Dictionary = sprites.prop_quad(item["asset"], item["prop"], item["at"], item["scale"], item["flip"])
 		if quad.is_empty():
@@ -413,6 +415,8 @@ static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], nea
 		var rect: Rect2 = quad["rect"]
 		var uv: Rect2 = quad["uv"]
 		var haze: Color = BACKDROP_HAZE_FAR.lerp(BACKDROP_HAZE_NEAR, item["near"])
+		if asset == ArenaDressing.HORIZON_ASSET:
+			haze = Color(0.77, 0.80, 0.94, 0.64 + float(item["near"]) * 0.26)
 		var gone: Color = Color(haze, 0.0)
 		var keep: float = 1.0 - BACKDROP_FADE
 		var mid: float = rect.position.y + rect.size.y * keep
