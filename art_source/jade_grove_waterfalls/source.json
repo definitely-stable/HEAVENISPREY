@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_waterfalls",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    }
+  ],
+  "palette_group": "props",
+  "density": 2,
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "36867e372ac60cc788c822035c5a0736869ee8fc14477ff39040f43400c87c15",
+    "created": "2026-11-19T22:33:14+05:00",
+    "master_sha256": "c159290dc6d2e5ee8bd5fbb17e039bbb5db1832c374f9e681ae402eb4a20aca7",
+    "master_note": "Lossless WebP of the master painted over the waterfall origins alignment template. The atlas pivots locate the overflow lip at the bottom of each notch."
+  },
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      3,
+      1
+    ],
+    "join_px": 2,
+    "min_area_px": 220
+  },
+  "props": [
+    {
+      "name": "shale_spring",
+      "anchor": [
+        264,
+        510
+      ],
+      "sheet_scale": 3.45
+    },
+    {
+      "name": "broken_spillway",
+      "anchor": [
+        770,
+        519
+      ],
+      "sheet_scale": 3.45
+    },
+    {
+      "name": "moss_cleft",
+      "anchor": [
+        1289,
+        510
+      ],
+      "sheet_scale": 3.45
+    }
+  ]
+}

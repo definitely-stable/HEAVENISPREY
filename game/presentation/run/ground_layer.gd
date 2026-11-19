@@ -77,12 +77,15 @@ const ALT_REPEAT_CELLS: float = 9.0
 const DAMP_PATCH_CELLS: float = 5.0
 const DAMP_LEVEL: float = 0.05
 const DAMP_RAMP: float = 0.35
-## Waterfalls on the near cliff faces: [share across the arena on screen (left to right),
-## width (screen px)]; each pours from the lowest face near that share.
-const WATERFALLS: Array = [[0.2, 60.0], [0.62, 72.0], [0.86, 48.0]]
-## Screen px a waterfall starts under the edge (below the capping course) and how far it falls.
-const WATERFALL_TOP_PX: float = 24.0
-const WATERFALL_DROP_PX: float = 330.0
+const WATERFALL_ASSET: String = "asset.prop.jade_grove_waterfalls"
+## [Rim midpoint in cells, rock, stream box in screen px, spread, split, drift, speed].
+const WATERFALLS: Array = [
+	[Vector2(13.5, 68), "shale_spring", Vector2(91, 323), 0.82, 0.58, -0.11, 0.85],
+	[Vector2(52.5, 62), "broken_spillway", Vector2(133, 347), 1.0, 0.82, 0.16, 1.13],
+	[Vector2(67.5, 29), "moss_cleft", Vector2(82, 323), 0.72, 0.17, -0.18, 0.97],
+]
+## Vertical drop from the upper edge of the paving to the overflow lip, in projected px.
+const WATERFALL_TOP_PX: float = 23.0
 ## Share of the camera travel the distant scenery follows (1 = glued to the courtyard).
 const BACKDROP_PARALLAX: float = 0.5
 const FAR_PARALLAX: float = 0.24
@@ -616,53 +619,52 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	if _data.get("stage_id") == "stage.jade_grove":
 		add_child(_cliff_growth_mesh(sprites))
 		add_child(JadeGroveCliffRelief.new(sprites, _cell_px))
-	var water: ShaderMaterial = ShaderMaterial.new()
-	water.shader = WATERFALL_SHADER
+		_build_waterfalls(sprites)
+
+
+func _build_waterfalls(sprites: SpriteSet) -> void:
 	for fall: Array in WATERFALLS:
-		var top: Vector2 = waterfall_top(_data, _cell_px, fall[0])
-		if not top.is_finite():
-			continue
-		var width: float = fall[1]
+		var top: Vector2 = IsoProjection.to_screen((fall[0] as Vector2) * _cell_px)
+		var size: Vector2 = fall[2]
+		var water: ShaderMaterial = ShaderMaterial.new()
+		water.shader = WATERFALL_SHADER
+		water.set_shader_parameter("spread", fall[3])
+		water.set_shader_parameter("split", fall[4])
+		water.set_shader_parameter("drift", fall[5])
+		water.set_shader_parameter("speed", fall[6])
+		water.set_shader_parameter("phase", waterfalls.size() * 3.71)
 		var rect: ColorRect = ColorRect.new()
+		rect.name = fall[1]
 		rect.material = water
 		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		rect.position = top + Vector2(-width * 0.5, WATERFALL_TOP_PX)
-		rect.size = Vector2(width, WATERFALL_DROP_PX)
+		rect.position = top + Vector2(-size.x * 0.5, WATERFALL_TOP_PX)
+		rect.size = size
+		_add_waterfall_rock(sprites, rect, fall[1])
 		add_child(rect)
 		waterfalls.append(rect)
 
 
-## Screen point of the top of a waterfall at `share` across the arena (left to right): the
-## middle of the lowest near face within a cell of that screen x.
-static func waterfall_top(data: Dictionary, cell_px: int, share: float) -> Vector2:
-	var faces: Array[PackedVector2Array] = near_faces(data, cell_px)
-	var bridge: Dictionary[Vector2, float] = _bridge_openings(data, cell_px, faces)
-	var left: float = INF
-	var right: float = -INF
-	var bridge_left: float = INF
-	var bridge_right: float = -INF
-	for point: Vector2 in bridge:
-		bridge_left = minf(bridge_left, point.x)
-		bridge_right = maxf(bridge_right, point.x)
-	for face: PackedVector2Array in faces:
-		for point: Vector2 in face:
-			left = minf(left, IsoProjection.to_screen(point).x)
-			right = maxf(right, IsoProjection.to_screen(point).x)
-	var target: float = lerpf(left, right, share)
-	var best: Vector2 = Vector2(target, -INF)
-	var nearest: Vector2 = best
-	var distance: float = INF
-	for face: PackedVector2Array in faces:
-		var middle: Vector2 = IsoProjection.to_screen((face[0] + face[1]) * 0.5)
-		if middle.x >= bridge_left - cell_px and middle.x <= bridge_right + cell_px:
-			continue
-		var across: float = absf(middle.x - target)
-		if across <= cell_px and middle.y > best.y:
-			best = middle
-		if across < distance:
-			nearest = middle
-			distance = across
-	return best if is_finite(best.y) else nearest
+## The atlas pivot marks the notch where the water spills. Paving drawn later hides the rear of the rock.
+static func _add_waterfall_rock(sprites: SpriteSet, water: ColorRect, piece: String) -> void:
+	var quad: Dictionary = sprites.prop_quad(WATERFALL_ASSET, piece, Vector2(water.size.x * 0.5, 0.0))
+	if quad.is_empty():
+		return
+	var rock: Sprite2D = Sprite2D.new()
+	rock.name = "OverflowRock"
+	rock.texture = quad["texture"]
+	rock.centered = false
+	rock.show_behind_parent = true
+	rock.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	rock.modulate = Color(0.84, 0.83, 0.92)
+	rock.region_enabled = true
+	rock.region_filter_clip_enabled = true
+	var uv: Rect2 = quad["uv"]
+	var rect: Rect2 = quad["rect"]
+	var atlas_size: Vector2 = rock.texture.get_size()
+	rock.region_rect = Rect2(uv.position * atlas_size, uv.size * atlas_size)
+	rock.position = rect.position
+	rock.scale = rect.size / rock.region_rect.size
+	water.add_child(rock)
 
 
 ## Rail cells bordering the bridge carry its fascia, so both bridge and rail corners share the arches.

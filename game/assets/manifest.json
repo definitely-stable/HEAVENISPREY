@@ -2505,6 +2505,94 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_waterfalls",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_waterfalls/jade_grove_waterfalls.png",
+      "sha256": "58c532b44ebbed3d2a67672443c37a762a49044f81c0c0685c376b82a1aa021d",
+      "bytes": 92159,
+      "size": [
+        638,
+        94
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "shale_spring",
+            "region": [
+              6,
+              6,
+              203,
+              82
+            ],
+            "feet": [
+              108.7,
+              51.6
+            ]
+          },
+          {
+            "name": "broken_spillway",
+            "region": [
+              221,
+              6,
+              225,
+              82
+            ],
+            "feet": [
+              331.2,
+              58.9
+            ]
+          },
+          {
+            "name": "moss_cleft",
+            "region": [
+              458,
+              6,
+              174,
+              80
+            ],
+            "feet": [
+              547.6,
+              54.7
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_waterfalls/jade_grove_waterfalls_n.png",
+        "sha256": "9f872fffc73089a3e1b37536d7147319a955117f39c8730fd8d3621d80e3bba1",
+        "bytes": 42152,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_waterfalls/master.webp",
+        "sha256": "0ab5e900b8c3344f3e46cf17f230ee5c8c7288a3181c94eb88f180acd2fc5e29",
+        "bytes": 818834,
+        "prompt_sha256": "36867e372ac60cc788c822035c5a0736869ee8fc14477ff39040f43400c87c15"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 5100,
+        "palette_mean_delta_e": 11.76,
+        "tones_pct": [
+          58.1,
+          41.3,
+          0.6
+        ],
+        "chroma": 0.116,
+        "threat_colour_pct": 0.0,
+        "median_l": 74.4
+      }
+    },
+    {
       "asset_id": "asset.prop.seal_ruins",
       "kind": "prop_atlas",
       "path": "game/assets/props/seal_ruins/seal_ruins.png",

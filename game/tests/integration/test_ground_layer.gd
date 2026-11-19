@@ -232,15 +232,17 @@ func test_waterfalls_start_under_the_near_faces() -> void:
 	for index: int in ground.waterfalls.size():
 		var rect: ColorRect = ground.waterfalls[index]
 		var fall: Array = GroundLayer.WATERFALLS[index]
-		var top: Vector2 = GroundLayer.waterfall_top(_data(), CELL, fall[0])
+		var top: Vector2 = IsoProjection.to_screen((fall[0] as Vector2) * CELL)
 		assert_has(tops, top, "the top of a near face")
 		assert_true(top.x < bridge_x[0] - CELL or top.x > bridge_x[-1] + CELL, "the fall clears the bridge")
 		assert_gt(top.x, last, "left to right")
 		last = top.x
 		assert_almost_eq(rect.position.x + rect.size.x * 0.5, top.x, 0.01)
 		assert_almost_eq(rect.position.y, top.y + GroundLayer.WATERFALL_TOP_PX, 0.01)
+		assert_eq(rect.size, fall[2])
 		assert_eq((rect.material as ShaderMaterial).shader, GroundLayer.WATERFALL_SHADER)
 		assert_eq(rect.mouse_filter, Control.MOUSE_FILTER_IGNORE)
+		assert_not_null(rect.get_node_or_null("OverflowRock"), "the stone source atlas is present")
 
 
 ## A3 polish: the distant scenery follows the view at BACKDROP_PARALLAX of its travel.

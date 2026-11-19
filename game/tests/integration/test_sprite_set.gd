@@ -15,7 +15,8 @@ const IDS: Array[String] = [
 	"asset.prop.jade_grove_front_stairs",
 	"asset.prop.jade_grove_masonry",
 	"asset.prop.jade_grove_rail_details",
-	"asset.prop.jade_grove_rail_finishes", "asset.prop.jade_grove_side_stairs", "asset.prop.seal_ruins",
+	"asset.prop.jade_grove_rail_finishes", "asset.prop.jade_grove_side_stairs", "asset.prop.jade_grove_waterfalls",
+	"asset.prop.seal_ruins",
 	"asset.tile.sect_cliff", "asset.tile.sect_courtyard_floor",
 	"asset.tile.sect_courtyard_floor_worn", "asset.tile.sect_seal",
 ]
