@@ -266,6 +266,8 @@ func _build_layers() -> void:
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
+	shadow_material.set_shader_parameter("paving_mask", _ground.shadow_receiver)
+	shadow_material.set_shader_parameter("paving_size", Vector2(P0Tuning.arena_cells() * CELL_PX))
 	var pools: PackedVector2Array = PackedVector2Array()
 	for lantern: Vector2 in _lanterns.slice(0, MAX_SHADOW_POOLS):
 		pools.append(IsoProjection.to_screen(lantern))

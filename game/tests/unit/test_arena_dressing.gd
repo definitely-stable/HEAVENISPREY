@@ -405,10 +405,12 @@ func test_rails_run_between_post_faces() -> void:
 		for end: Vector2 in [a, b]:
 			var centre: Vector2 = (end / CELL).floor() * CELL + Vector2.ONE * CELL * 0.5
 			assert_almost_eq(end.distance_to(centre), 0.0, 0.01, "a rail runs from a post centre")
-		for quad: PackedVector2Array in ArenaDressing.rail_quads(item, bay):
-			assert_almost_eq(quad[3].y - quad[0].y, -bay.y, 0.01)
+		var infill: Vector2 = Vector2(bay.x, bay.y * (1.0 - ArenaDressing.RAIL_STONE_SHARE))
+		for quad: PackedVector2Array in ArenaDressing.rail_quads(item, infill, ArenaDressing.COPING_HEIGHT):
+			assert_almost_eq(quad[3].y - quad[0].y, -infill.y, 0.01)
 			assert_almost_eq(quad[0].x, quad[3].x, 0.01, "vertical plane")
-			assert_almost_eq(_cross(IsoProjection.to_screen(a), IsoProjection.to_screen(b), quad[0]), 0.0, 0.5)
+			var on_floor: Vector2 = quad[0] + Vector2(0.0, ArenaDressing.COPING_HEIGHT)
+			assert_almost_eq(_cross(IsoProjection.to_screen(a), IsoProjection.to_screen(b), on_floor), 0.0, 0.5)
 	assert_gt(rails, 50)
 
 
