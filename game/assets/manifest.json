@@ -1850,6 +1850,107 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_cliff_relief",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_cliff_relief/jade_grove_cliff_relief.png",
+      "sha256": "7c2d33b786986b3b164532b77fe044b74d46cc9cf9c3f39e39e44cdd229ead13",
+      "bytes": 631013,
+      "size": [
+        1607,
+        316
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "terrace_shelves",
+            "region": [
+              6,
+              6,
+              409,
+              290
+            ],
+            "feet": [
+              210.9,
+              38.8
+            ]
+          },
+          {
+            "name": "gorge_split",
+            "region": [
+              427,
+              6,
+              398,
+              279
+            ],
+            "feet": [
+              626.4,
+              40.4
+            ]
+          },
+          {
+            "name": "maple_roots",
+            "region": [
+              837,
+              6,
+              393,
+              304
+            ],
+            "feet": [
+              1029.1,
+              51.6
+            ]
+          },
+          {
+            "name": "south_spur",
+            "region": [
+              1242,
+              6,
+              359,
+              299
+            ],
+            "feet": [
+              1413.1,
+              46.0
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_cliff_relief/jade_grove_cliff_relief_n.png",
+        "sha256": "7d42c8242f9d8acffceef1ce9f6749fe1c4dccbfa81fbc63872d7dabe9810fb4",
+        "bytes": 149756,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_cliff_relief/master.webp",
+        "sha256": "abadfe5549db2b852839eb56e1ee7541d77807b031f662dca40cc4611e3268b1",
+        "bytes": 1171762,
+        "prompt_sha256": "586900c3d7fd75a91480b99f33fcf015a6fd9e774629ca6cda742c0e23c8cc15"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 6355,
+        "palette_mean_delta_e": 10.96,
+        "tones_pct": [
+          76.5,
+          23.5,
+          0.0
+        ],
+        "chroma": 0.075,
+        "threat_colour_pct": 0.0,
+        "median_l": 61.7
+      }
+    },
+    {
       "asset_id": "asset.prop.jade_grove_fence_modules",
       "kind": "prop_atlas",
       "path": "game/assets/props/jade_grove_fence_modules/jade_grove_fence_modules.png",

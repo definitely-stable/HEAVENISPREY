@@ -615,6 +615,7 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	add_child(faces)
 	if _data.get("stage_id") == "stage.jade_grove":
 		add_child(_cliff_growth_mesh(sprites))
+		add_child(JadeGroveCliffRelief.new(sprites, _cell_px))
 	var water: ShaderMaterial = ShaderMaterial.new()
 	water.shader = WATERFALL_SHADER
 	for fall: Array in WATERFALLS:
@@ -784,8 +785,7 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				var seam: Vector2 = at + lip
 				if opening == 0.0 and sides.has(at):
 					# A projected side contour must not split into independent sheets below the cap.
-					var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0)
-					offset = Vector2(lean * 49.0 * taper, 0.0)
+					offset = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
 				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band) + offset
 				vertices.append(down)
 				var shade: float = [0.30, 0.06, 0.19, 0.0, 0.0, 0.0][row]
@@ -818,11 +818,10 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 		var base: int = vertices.size()
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
-			var taper: float = smoothstep(0.08, 0.45, depth)
 			for at: Vector2 in edge:
 				var seam: Vector2 = at + rim.get(at, Vector2.ZERO)
-				var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0) * 49.0 * taper
-				vertices.append(seam + Vector2(lean, depth * CLIFF_PX))
+				var offset: Vector2 = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
+				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX) + offset)
 				colors.append(Color(0.57, 0.55, 0.66, CLIFF_VISIBILITY[row]))
 				if texture != null:
 					uvs.append(Vector2((seam.x + seam.y * 0.4) / span, depth))
