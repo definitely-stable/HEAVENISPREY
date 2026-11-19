@@ -69,16 +69,17 @@ static func falloff(distance: float, radius: float) -> float:
 
 ## Light on an upright sprite whose feet stand at `feet` (world px); `hero` (world px) carries
 ## the aura. Ambient plus the flat moon share plus UPRIGHT_SHARE of every point light there.
-static func light_at(feet: Vector2, hero: Vector2, lanterns: Array[Vector2]) -> Color:
+static func light_at(feet: Vector2, hero: Vector2, lanterns: Array[Dictionary]) -> Color:
 	return with_aura(fixed_light(feet, lanterns), feet, hero)
 
 
 ## The part of light_at() that does not move: ambient, the flat moon and the lanterns. Things
 ## that stand still (the courtyard props) keep it and add only the aura each frame.
-static func fixed_light(feet: Vector2, lanterns: Array[Vector2]) -> Color:
+static func fixed_light(feet: Vector2, lanterns: Array[Dictionary]) -> Color:
 	var light: Color = AMBIENT + MOON_COLOR * MOON_FLAT
-	for lantern: Vector2 in lanterns:
-		light += LANTERN_COLOR * (LANTERN_ENERGY * UPRIGHT_SHARE * falloff(feet.distance_to(lantern), LANTERN_RADIUS_PX))
+	for lantern: Dictionary in lanterns:
+		var reach: float = falloff(feet.distance_to(lantern["at"]), lantern["radius"])
+		light += LANTERN_COLOR * (lantern["energy"] * UPRIGHT_SHARE * reach)
 	light.a = 1.0
 	return light
 
@@ -106,18 +107,19 @@ static func flicker(seconds: float, index: int) -> float:
 	return 1.0 + FLICKER_DEPTH * (0.62 * slow + 0.38 * quick)
 
 
-## The rim material of upright sprites: `color` on the moon side at `strength`, and the warm
-## rim of every flame in `flames` (screen px, at most MAX_FLAMES).
-static func rim_material(color: Color, strength: float, flames: Array[Vector2]) -> ShaderMaterial:
+## The rim material of upright sprites: cool moonlight and warm rims from nearby flames.
+static func rim_material(color: Color, strength: float, lanterns: Array[Dictionary]) -> ShaderMaterial:
 	var rim: ShaderMaterial = ShaderMaterial.new()
 	rim.shader = RIM_SHADER
 	rim.set_shader_parameter("to_moon", -moon_travel())
 	rim.set_shader_parameter("rim_color", color)
 	rim.set_shader_parameter("rim_strength", strength)
-	var points: PackedVector2Array = PackedVector2Array(flames.slice(0, MAX_FLAMES))
+	var points: PackedVector4Array = PackedVector4Array()
+	for lantern: Dictionary in lanterns.slice(0, MAX_FLAMES):
+		var at: Vector2 = lantern["flame_at"]
+		points.append(Vector4(at.x, at.y, lantern["radius"], lantern["energy"] / LANTERN_ENERGY))
 	rim.set_shader_parameter("flames", points)
 	rim.set_shader_parameter("flame_count", points.size())
-	rim.set_shader_parameter("flame_radius", LANTERN_RADIUS_PX)
 	rim.set_shader_parameter("warm_color", LANTERN_COLOR)
 	rim.set_shader_parameter("warm_strength", WARM_RIM_STRENGTH)
 	set_flicker(rim, 0.0, points.size())

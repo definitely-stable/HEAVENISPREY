@@ -11,10 +11,9 @@ uniform sampler2D paving_mask : repeat_disable, filter_nearest;
 uniform vec2 paving_size = vec2(1.0);
 uniform float shadow_alpha = 0.4;
 uniform float softness_lod = 1.5;
-// Lantern ground points in canvas (projected) px, their radius (world px = screen half width).
-uniform vec2 lanterns[MAX_LIGHTS];
+// Lanterns: projected ground position, radius, and energy relative to a brazier.
+uniform vec4 lanterns[MAX_LIGHTS];
 uniform int lantern_count = 0;
-uniform float lantern_radius = 240.0;
 uniform float lantern_fill = 0.75;
 uniform float contact_strength = 0.75;
 
@@ -32,8 +31,9 @@ void fragment() {
 			break;
 		}
 		// A world circle is a 2:1 ellipse on screen.
-		vec2 offset = (canvas_point - lanterns[index]) * vec2(1.0, 2.0);
-		lit = max(lit, 1.0 - length(offset) / lantern_radius);
+		vec4 lantern = lanterns[index];
+		vec2 offset = (canvas_point - lantern.xy) * vec2(1.0, 2.0);
+		lit = max(lit, (1.0 - length(offset) / lantern.z) * lantern.w);
 	}
 	float fill = 1.0 - lantern_fill * clamp(lit, 0.0, 1.0);
 	float coverage = max(mask.a * fill, mask.r * contact_strength);

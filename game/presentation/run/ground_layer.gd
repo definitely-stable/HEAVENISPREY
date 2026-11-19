@@ -108,6 +108,7 @@ var _iso: Node2D
 var _aura: PointLight2D
 ## The lights of the lanterns and braziers, in the order of the light points.
 var _fires: Array[PointLight2D] = []
+var _fire_levels: Array[float] = []
 var _sky: ColorRect
 var _veil: ColorRect
 var _backdrop: Node2D
@@ -149,8 +150,10 @@ func _init(
 	moon.rotation = RunLighting.moon_rotation()
 	_add_light(moon)
 	for point: Dictionary in light_points:
-		_fires.append(_add_point(point["at"], RunLighting.LANTERN_COLOR, RunLighting.LANTERN_ENERGY,
-			RunLighting.LANTERN_RADIUS_PX))
+		var energy: float = point.get("energy", RunLighting.LANTERN_ENERGY)
+		_fire_levels.append(energy)
+		_fires.append(_add_point(point["at"], RunLighting.LANTERN_COLOR, energy, point.get("radius",
+			RunLighting.LANTERN_RADIUS_PX)))
 	_aura = _add_point(_centre, RunLighting.AURA_COLOR, RunLighting.AURA_ENERGY, RunLighting.AURA_RADIUS_PX)
 
 
@@ -341,17 +344,15 @@ func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0
 		plane.position = backdrop_origin(centre, zoom, size, SCENERY_PARALLAX[index])
 
 
-## Screen point of the backdrop's origin (the arena centre of the distant scenery) for a view
-## centred on `view_centre` (projected px) at `zoom` in a window of `size` px.
+## Place a distant plane relative to camera travel from the projected arena centre.
 func backdrop_origin(view_centre: Vector2, zoom: float, size: Vector2, parallax: float = BACKDROP_PARALLAX) -> Vector2:
 	var travel: Vector2 = view_centre - IsoProjection.to_screen(_centre)
 	return size * 0.5 - travel * parallax * zoom
 
 
-## The fire lights at `seconds` of the run (RunLighting.flicker).
 func flicker(seconds: float) -> void:
 	for index: int in _fires.size():
-		_fires[index].energy = RunLighting.LANTERN_ENERGY * RunLighting.flicker(seconds, index)
+		_fires[index].energy = _fire_levels[index] * RunLighting.flicker(seconds, index)
 
 
 ## Energy of each fire light now.
@@ -362,7 +363,6 @@ func fire_energies() -> Array[float]:
 	return out
 
 
-## Ground point (world px) the hero aura shines on.
 func aura_position() -> Vector2:
 	return IsoProjection.to_world(_aura.position)
 

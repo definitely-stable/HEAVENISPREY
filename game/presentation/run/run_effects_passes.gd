@@ -60,10 +60,11 @@ static func _pickup_flight(view: RunView, pickup: Array) -> Vector2:
 
 static func draw_glow_pass(view: RunView) -> void:
 	var canvas: Node2D = view._glow
-	for index: int in view._flames.size():
-		var radius: float = 26.0 * RunLighting.flicker(view._anim_time, index)
+	for index: int in view._light_points.size():
+		var source: Dictionary = view._light_points[index]
+		var radius: float = source["halo"] * RunLighting.flicker(view._anim_time, index)
 		RunLighting.halo(
-			canvas, view._halo_texture, view._flames[index], radius, RunView.COLOR_LANTERN_GLOW
+			canvas, view._halo_texture, source["flame_at"], radius, RunView.COLOR_LANTERN_GLOW
 		)
 	if view.driver == null:
 		return

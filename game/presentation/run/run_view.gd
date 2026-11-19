@@ -175,8 +175,7 @@ var _ground: GroundLayer
 ## Courtyard props (ArenaDressing.placements, plus their cached screen point, depth key and
 ## fixed light: they never move) and the ground points of the lit ones.
 var _props: Array[Dictionary] = []
-var _lanterns: Array[Vector2] = []
-var _flames: Array[Vector2] = []
+var _light_points: Array[Dictionary] = []
 var _shadow_canvas: Node2D
 var _danger: Node2D
 var _hero_item: Node2D
@@ -241,13 +240,10 @@ func _ready() -> void:
 func _build_layers() -> void:
 	var data: Dictionary = P0Tuning.arena_data()
 	_props = ArenaDressing.placements(_sprites, data, CELL_PX)
-	var light_points: Array[Dictionary] = ArenaDressing.lights(_props)
-	for point: Dictionary in light_points:
-		_lanterns.append(point["at"])
-		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
-	ArenaDressing.prepare_props(_sprites, _props, _lanterns)
+	_light_points = ArenaDressing.lights(_props)
+	ArenaDressing.prepare_props(_sprites, _props, _light_points)
 	_ground = GroundLayer.new(
-		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
+		_sprites, FLOOR_ASSET, data, CELL_PX, _light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
 		ArenaDressing.backdrop(_sprites))
 	_ground.add_child(ArenaDressing.sill_mesh(_sprites, _props))
 	add_child(_ground)
@@ -266,12 +262,12 @@ func _build_layers() -> void:
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
 	shadow_material.set_shader_parameter("paving_mask", _ground.shadow_receiver)
 	shadow_material.set_shader_parameter("paving_size", Vector2(P0Tuning.arena_cells() * CELL_PX))
-	var pools: PackedVector2Array = PackedVector2Array()
-	for lantern: Vector2 in _lanterns.slice(0, MAX_SHADOW_POOLS):
-		pools.append(IsoProjection.to_screen(lantern))
+	var pools: PackedVector4Array = PackedVector4Array()
+	for source: Dictionary in _light_points.slice(0, MAX_SHADOW_POOLS):
+		var at: Vector2 = IsoProjection.to_screen(source["at"])
+		pools.append(Vector4(at.x, at.y, source["radius"], source["energy"] / RunLighting.LANTERN_ENERGY))
 	shadow_material.set_shader_parameter("lanterns", pools)
 	shadow_material.set_shader_parameter("lantern_count", pools.size())
-	shadow_material.set_shader_parameter("lantern_radius", RunLighting.LANTERN_RADIUS_PX)
 	group.material = shadow_material
 	under.add_child(group)
 	_shadow_canvas = Node2D.new()
@@ -280,10 +276,10 @@ func _build_layers() -> void:
 	_danger = Node2D.new()
 	_danger.draw.connect(_draw_danger_pass)
 	under.add_child(_danger)
-	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _flames)
+	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _light_points)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
-	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _flames))
+	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _light_points))
 	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -309,7 +305,10 @@ func camera_target() -> Vector2:
 
 ## Ground points (world px) of the lit courtyard props.
 func lantern_positions() -> Array[Vector2]:
-	return _lanterns
+	var points: Array[Vector2] = []
+	for source: Dictionary in _light_points:
+		points.append(source["at"])
+	return points
 
 
 ## Starts a fresh authorized run. An invalid request leaves the current run intact.
@@ -395,7 +394,7 @@ func _process(delta: float) -> void:
 func _flicker() -> void:
 	_ground.flicker(_anim_time)
 	for item: CanvasItem in [self, _hero_item]:
-		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _flames.size())
+		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _light_points.size())
 
 
 func confirm_results() -> bool:
@@ -736,7 +735,7 @@ func _draw_pose(canvas: CanvasItem, pose: Array, at: Vector2, tint: Color) -> bo
 
 ## Light on an upright thing standing at `feet` (world px), RunLighting model.
 func _light_at(feet: Vector2) -> Color:
-	return RunLighting.light_at(feet, driver.hero_position_px(), _lanterns)
+	return RunLighting.light_at(feet, driver.hero_position_px(), _light_points)
 
 
 # --- shadow layer: one buffer, composited once (ADR-014 section 5) ---
@@ -753,8 +752,8 @@ func _draw_shadow_pass() -> void:
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
 	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture, window)
-	for lantern: Vector2 in _lanterns:
-		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
+	for source: Dictionary in _light_points:
+		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(source["at"]), CELL_PX * 0.65)
 	if world == null:
 		return
 	for slot: int in world.enemy_slots():

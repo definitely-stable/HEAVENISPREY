@@ -32,7 +32,9 @@ const TEMPLE_PANEL: String = "temple_panel"
 const CLIFF_PANEL: String = "cliff_parapet"
 const BRIDGE_ARCH: String = "bridge_arch"
 const TERRACE_RELIEF: String = "terrace_relief"
-const LOW_LANTERNS: Array[Vector2] = [Vector2(32.5, 9.5), Vector2(59.5, 20.5), Vector2(64.5, 31.5)]
+const LOW_LANTERNS: Array[Vector2] = [
+	Vector2(32.5, 9.5), Vector2(12.5, 35.5), Vector2(59.5, 20.5), Vector2(64.5, 31.5),
+]
 const TEMPLE_RAIL_REACH: float = 17.0
 # This inside return is the apron of the east gate lantern. Tall rails on its two sides
 # project on top of the outer rail. The walk-blocking stone apron shows the same footprint.
@@ -76,8 +78,13 @@ const PROP_SPRITES: Dictionary = {
 	"lantern": [RING_ASSET, "lantern_stone", "lantern_stone"],
 	"maple_large": [NATURE_ASSET, "maple_large", "maple_large"],
 }
-## Props that carry a warm point light, and the height of their flame above the base (px).
-const LIGHT_PROPS: Dictionary = {"lantern_stone": 0.64, "lantern_low": 0.52, "brazier_pedestal": 0.66, "gate": 0.55}
+## [flame height as a fraction of the sprite, pool radius in world px, energy, halo in screen px].
+const LIGHT_PROPS: Dictionary[String, Vector4] = {
+	"lantern_stone": Vector4(0.64, 215.0, 2.92, 22.0),
+	"lantern_low": Vector4(0.52, 132.0, 1.86, 14.0),
+	"brazier_pedestal": Vector4(0.66, RunLighting.LANTERN_RADIUS_PX, RunLighting.LANTERN_ENERGY, 27.0),
+	"gate": Vector4(0.55, 225.0, 3.18, 25.0),
+}
 ## The prop name of a placeholder wall block.
 const BLOCK_PROP: String = "block"
 ## Arena cells of tall walls (solid) and low walls (balustrades, ruins).
@@ -502,7 +509,7 @@ static func wall_light(light: Color) -> Color:
 
 
 ## A strip of a large prop sorts at its own cell but is drawn and lit at the sprite anchor.
-static func prepare_props(sprites: SpriteSet, props: Array[Dictionary], lanterns: Array[Vector2]) -> void:
+static func prepare_props(sprites: SpriteSet, props: Array[Dictionary], lanterns: Array[Dictionary]) -> void:
 	for index: int in props.size():
 		var prop: Dictionary = props[index]
 		var base: Vector2 = prop.get("base", prop["at"])
@@ -585,12 +592,17 @@ static func backdrop(sprites: SpriteSet) -> Array[Dictionary]:
 	return out
 
 
-## World points (px) of every light-carrying prop, with its flame height (screen px).
+## Shared light sources for the floor, upright sprites, shadows, and halos.
 static func lights(items: Array[Dictionary]) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for item: Dictionary in items:
 		if item["light"]:
-			out.append({"at": item["at"], "flame": item["flame"]})
+			var profile: Vector4 = LIGHT_PROPS[item["prop"]]
+			var at: Vector2 = item["at"]
+			out.append({
+				"at": at, "flame": item["flame"], "radius": profile.y, "energy": profile.z, "halo": profile.w,
+				"flame_at": IsoProjection.to_screen(at) - Vector2(0.0, item["flame"]),
+			})
 	return out
 
 
@@ -900,5 +912,6 @@ static func _add(
 ) -> void:
 	if not sprites.has_prop(asset, prop):
 		return
-	var flame: float = sprites.prop_size(asset, prop).y * float(LIGHT_PROPS.get(prop, 0.0))
+	var profile: Vector4 = LIGHT_PROPS.get(prop, Vector4.ZERO)
+	var flame: float = sprites.prop_size(asset, prop).y * profile.x
 	out.append({"asset": asset, "prop": prop, "at": at, "flip": flip, "light": LIGHT_PROPS.has(prop), "flame": flame})
