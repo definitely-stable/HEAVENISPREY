@@ -389,6 +389,86 @@ func test_long_fence_keeps_posts_at_turns_and_runs_continuously() -> void:
 	assert_has(corner["posts"], Vector2i(2, 4), "the turn into the other run keeps its post")
 
 
+func test_each_masonry_run_stops_at_shared_piers() -> void:
+	var tee: Dictionary = ArenaDressing.balustrade([" w ", "www"])
+	assert_does_not_have(tee["rails"], [Vector2i(0, 1), Vector2i(2, 1)], "no bay crosses the shared pier")
+	var items: Array[Dictionary] = _items()
+	var piers: Dictionary = {}
+	var profiles: Dictionary = {}
+	for item: Dictionary in items:
+		if item["prop"] == "temple_turn":
+			for cell: Vector2i in ArenaDressing.TEMPLE_TURN:
+				piers[cell] = "corner_pier"
+		elif item["prop"] == "bridge_bay":
+			var start: Vector2 = item["base"]
+			piers[Vector2i((start / CELL).floor())] = "bridge_pier"
+			profiles[ArenaDressing.BRIDGE_ARCH] = true
+		elif item.get("wall", false) and not item.has("panel") and item["asset"] != ArenaDressing.FENCE_MODULES_ASSET:
+			var at: Vector2 = item["at"]
+			piers[Vector2i((at / CELL).floor())] = item["prop"]
+	for item: Dictionary in items:
+		if not item.has("panel"):
+			continue
+		profiles[item["panel"]] = true
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var start: Vector2i = Vector2i((from / CELL).floor())
+		var end: Vector2i = Vector2i((to / CELL).floor())
+		var step: Vector2i = (end - start).sign()
+		assert_has(piers, start, "each run starts on a pillar")
+		assert_has(piers, end, "each run ends on a pillar")
+		if item["panel"] == ArenaDressing.TEMPLE_PANEL:
+			assert_eq(piers.get(start), "corner_pier", "the red rail enters a full-height pillar")
+			assert_eq(piers.get(end), "corner_pier", "the red rail enters a full-height pillar")
+		if item["prop"] == ArenaDressing.COPING_PROP:
+			var volume: ArrayMesh = item["volume"]
+			var vertices: PackedVector2Array = volume.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+			var width: float = absf(vertices[4].x - vertices[7].x) + absf(vertices[12].x - vertices[15].x)
+			assert_gt(width, 10.0, "an end-on stone run keeps visible sides below its coping")
+		for distance: int in range(1, maxi(absi(end.x - start.x), absi(end.y - start.y))):
+			var at: Vector2i = start + step * distance
+			assert_does_not_have(piers, at, "no span passes through a pier at %s" % at)
+	assert_eq(profiles.size(), 5, "open bridge arches, temple lacquer, reliefs and two masonry elevations")
+
+
+func test_painted_fence_joins_fit_their_wall_cells() -> void:
+	var clips: Array[Vector2] = []
+	var contact_runs: int = 0
+	var bays: int = 0
+	var coping: int = 0
+	var plinths: int = 0
+	for item: Dictionary in _items():
+		if item["asset"] != ArenaDressing.FENCE_MODULES_ASSET:
+			continue
+		match item["prop"]:
+			"temple_turn":
+				clips.append(item["clip"])
+				contact_runs += (item["footprint"] as Array).size()
+			"bridge_bay", "cliff_coping":
+				var start: Vector2 = item["base"]
+				var end: Vector2 = item["at"]
+				var step: Vector2 = Vector2(1, -1) if item["prop"] == "bridge_bay" else Vector2.ONE
+				assert_eq(_char_at(start), ArenaDressing.LOW_CHAR)
+				assert_eq(_char_at(start + step * CELL), ArenaDressing.LOW_CHAR)
+				assert_eq(_char_at(end), ArenaDressing.LOW_CHAR)
+				assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
+				bays += int(item["prop"] == "bridge_bay")
+				coping += int(item["prop"] == "cliff_coping")
+			"lantern_base":
+				assert_eq((item["footprint"] as Array).size(), 1, "one low plinth covers both cells at the lantern")
+				plinths += 1
+	assert_gt(clips.size(), 1, "the turn has depth-sorted sections")
+	if not clips.is_empty():
+		assert_eq(clips[0].x, -INF)
+		assert_eq(clips[-1].y, INF)
+	for index: int in range(1, clips.size()):
+		assert_eq(clips[index - 1].y, clips[index].x, "one sprite without gaps or duplicate strips")
+	assert_eq(contact_runs, 3)
+	assert_gt(bays, 6)
+	assert_gt(coping, 6)
+	assert_eq(plinths, 1)
+
+
 func test_rails_run_between_post_faces() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var bay: Vector2 = sprites.prop_size(ArenaDressing.BALUSTRADE_ASSET, "rail")

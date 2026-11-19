@@ -1850,6 +1850,410 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_fence_modules",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_fence_modules/jade_grove_fence_modules.png",
+      "sha256": "7f081082cfc20018a6591646a4f283c2ce2f4ca4b17a46d0d3b9594702b13731",
+      "bytes": 318833,
+      "size": [
+        983,
+        359
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "temple_turn",
+            "region": [
+              6,
+              6,
+              447,
+              347
+            ],
+            "feet": [
+              60.4,
+              211.5
+            ]
+          },
+          {
+            "name": "bridge_bay",
+            "region": [
+              465,
+              6,
+              330,
+              139
+            ],
+            "feet": [
+              520.3,
+              108.3
+            ]
+          },
+          {
+            "name": "cliff_coping",
+            "region": [
+              807,
+              6,
+              85,
+              185
+            ],
+            "feet": [
+              847.1,
+              50.8
+            ]
+          },
+          {
+            "name": "lantern_base",
+            "region": [
+              904,
+              6,
+              73,
+              79
+            ],
+            "feet": [
+              940.9,
+              48.3
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_fence_modules/jade_grove_fence_modules_n.png",
+        "sha256": "285600bf6bbcf40eac53b0f19d148156e30fb2f3c40254d4df0d0afc1757d459",
+        "bytes": 116273,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_fence_modules/master.webp",
+        "sha256": "4c5a6fcf4ebff36f4476a150430cb4f54f6b1a3b1322ad615de0303707c65e15",
+        "bytes": 970084,
+        "prompt_sha256": "67ec8150f09aee583ba94d90628d7b878a30ff91843b85cfdddba47e88490b9e"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 6983,
+        "palette_mean_delta_e": 9.67,
+        "tones_pct": [
+          55.4,
+          44.1,
+          0.5
+        ],
+        "chroma": 0.18,
+        "threat_colour_pct": 0.014,
+        "median_l": 79.1
+      }
+    },
+    {
+      "asset_id": "asset.prop.jade_grove_masonry",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_masonry/jade_grove_masonry.png",
+      "sha256": "e6f904c10c62ddb286930e25694cef20399ae663bfea800d711d4fa6d22b6f0a",
+      "bytes": 71248,
+      "size": [
+        547,
+        108
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "corner_pier",
+            "region": [
+              6,
+              6,
+              75,
+              96
+            ],
+            "feet": [
+              43.5,
+              88.8
+            ]
+          },
+          {
+            "name": "terminal_pier",
+            "region": [
+              93,
+              6,
+              56,
+              72
+            ],
+            "feet": [
+              121.0,
+              66.0
+            ]
+          },
+          {
+            "name": "stone_parapet",
+            "region": [
+              161,
+              6,
+              164,
+              48
+            ],
+            "feet": [
+              243.0,
+              13.0
+            ]
+          },
+          {
+            "name": "temple_panel",
+            "region": [
+              337,
+              6,
+              204,
+              66
+            ],
+            "feet": [
+              439.0,
+              21.0
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_masonry/jade_grove_masonry_n.png",
+        "sha256": "c0a2301ed8cd9fdf84c4217ec5392653c45603fd0c78007e5c0f6307cc216f73",
+        "bytes": 26202,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_masonry/master.webp",
+        "sha256": "3598f0f775cae9e13a182a75524562b8fdfdf942fbaa4dcf519c824fe6d2f938",
+        "bytes": 1023992,
+        "prompt_sha256": "000a9ca934eecb248a1474a46759bbfc2aa05a3095e453572ae9704979878f23"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 5446,
+        "palette_mean_delta_e": 10.93,
+        "tones_pct": [
+          50.0,
+          48.8,
+          1.2
+        ],
+        "chroma": 0.248,
+        "threat_colour_pct": 0.0,
+        "median_l": 85.1
+      }
+    },
+    {
+      "asset_id": "asset.prop.jade_grove_rail_details",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_rail_details/jade_grove_rail_details.png",
+      "sha256": "53ee3bf0e3188c401be689e59a3853e96f78e7a624e54ceb00343ff7257d4eda",
+      "bytes": 76689,
+      "size": [
+        586,
+        104
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "lantern_apron",
+            "region": [
+              6,
+              6,
+              108,
+              78
+            ],
+            "feet": [
+              60.0,
+              73.0
+            ]
+          },
+          {
+            "name": "bridge_end",
+            "region": [
+              126,
+              6,
+              78,
+              92
+            ],
+            "feet": [
+              165.0,
+              84.5
+            ]
+          },
+          {
+            "name": "cliff_parapet",
+            "region": [
+              216,
+              6,
+              184,
+              54
+            ],
+            "feet": [
+              308.0,
+              14.5
+            ]
+          },
+          {
+            "name": "coping_top",
+            "region": [
+              412,
+              6,
+              168,
+              44
+            ],
+            "feet": [
+              496.0,
+              8.0
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_rail_details/jade_grove_rail_details_n.png",
+        "sha256": "811676d257a029696a3684a05300bb3952a1ad39e2a9d6bb3b5d152d291adb6c",
+        "bytes": 19795,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_rail_details/master.webp",
+        "sha256": "b0c8b96bede1f6249b48471c172aba2fa8a463a244b2f5ef6025c79994430297",
+        "bytes": 1065924,
+        "prompt_sha256": "3eeceeabee3e2aaff7c182cb5d97ba87d9ab52ab57ee65d0132315891496d478"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 5052,
+        "palette_mean_delta_e": 10.78,
+        "tones_pct": [
+          17.9,
+          79.3,
+          2.8
+        ],
+        "chroma": 0.177,
+        "threat_colour_pct": 0.0,
+        "median_l": 106.9
+      }
+    },
+    {
+      "asset_id": "asset.prop.jade_grove_rail_finishes",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_rail_finishes/jade_grove_rail_finishes.png",
+      "sha256": "3804198335ef237e62e149f1b7f05f3383c62b9094eb9aa4aabe9a5ef0df7656",
+      "bytes": 114110,
+      "size": [
+        645,
+        188
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "bridge_pier",
+            "region": [
+              6,
+              6,
+              65,
+              94
+            ],
+            "feet": [
+              38.5,
+              85.8
+            ]
+          },
+          {
+            "name": "lantern_low",
+            "region": [
+              83,
+              6,
+              131,
+              176
+            ],
+            "feet": [
+              149.0,
+              154.5
+            ]
+          },
+          {
+            "name": "bridge_arch",
+            "region": [
+              226,
+              6,
+              201,
+              60
+            ],
+            "feet": [
+              326.5,
+              15.8
+            ]
+          },
+          {
+            "name": "terrace_relief",
+            "region": [
+              439,
+              6,
+              200,
+              58
+            ],
+            "feet": [
+              539.5,
+              14.2
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_rail_finishes/jade_grove_rail_finishes_n.png",
+        "sha256": "9ef18b56745926737785373858ee36be94ba0a24e2d8855fd86f6ba6a276ca34",
+        "bytes": 43722,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_rail_finishes/master.webp",
+        "sha256": "9b372f1d07b61f5728f3c1a3458ba60c2a45ee49a75776050b99e539dd236821",
+        "bytes": 1077344,
+        "prompt_sha256": "c2dd3a4233a44b70eb345a970a70e4ea5f45b77d74c91b6630c6281ab45de703"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 5683,
+        "palette_mean_delta_e": 8.61,
+        "tones_pct": [
+          41.5,
+          55.7,
+          2.8
+        ],
+        "chroma": 0.157,
+        "threat_colour_pct": 0.0,
+        "median_l": 92.0
+      }
+    },
+    {
       "asset_id": "asset.prop.seal_ruins",
       "kind": "prop_atlas",
       "path": "game/assets/props/seal_ruins/seal_ruins.png",

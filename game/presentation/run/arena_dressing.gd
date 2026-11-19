@@ -22,6 +22,22 @@ const GUARDIANS_ASSET: String = "asset.prop.courtyard_guardians"
 ## The balustrade after REF-029: a stone post with a gold cap (0.8 hero heights), the post broken
 ## and the front elevation of one rail bay (0.5 hero heights).
 const BALUSTRADE_ASSET: String = "asset.prop.courtyard_balustrade"
+const MASONRY_ASSET: String = "asset.prop.jade_grove_masonry"
+const RAIL_DETAILS_ASSET: String = "asset.prop.jade_grove_rail_details"
+const RAIL_FINISHES_ASSET: String = "asset.prop.jade_grove_rail_finishes"
+const FENCE_MODULES_ASSET: String = "asset.prop.jade_grove_fence_modules"
+const STONE_PANEL: String = "stone_parapet"
+const TEMPLE_PANEL: String = "temple_panel"
+const CLIFF_PANEL: String = "cliff_parapet"
+const BRIDGE_ARCH: String = "bridge_arch"
+const TERRACE_RELIEF: String = "terrace_relief"
+const LOW_LANTERNS: Array[Vector2] = [Vector2(32.5, 9.5), Vector2(59.5, 20.5), Vector2(64.5, 31.5)]
+const TEMPLE_RAIL_REACH: float = 17.0
+# This inside return is the apron of the east gate lantern. Tall rails on its two sides
+# project on top of the outer rail. The walk-blocking stone apron shows the same footprint.
+const GATE_LANTERN_APRON: Array[Vector2i] = [Vector2i(33, 8), Vector2i(34, 9)]
+const TEMPLE_TURN: Array[Vector2i] = [Vector2i(33, 6), Vector2i(35, 8), Vector2i(38, 8), Vector2i(39, 7)]
+const WALL_LIP_SHIFT: float = 0.29
 ## The prop name of a rail bay: a vertical plane between two posts, textured with "rail".
 const RAIL_PROP: String = "rail_span"
 const COPING_PROP: String = "wall_coping"
@@ -35,6 +51,7 @@ const RAIL_STONE_SHARE: float = 0.19
 ## same stone base, with visible red infill where the rail presents a face.
 const RUN_DIRS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 1)]
 const RUN_STEPS: Array[int] = [2, 2, 1, 2]
+const MASONRY_RUN_STEPS: Array[int] = [3, 3, 2, 4]
 ## Half the side of a post's square base (world px, 0.4 of a cell): rails stop at the post faces.
 const POST_HALF_PX: float = 9.6
 ## The ruin ring around the seal (ADR-015 section 11): each "seal_ruin" of the arena file is the
@@ -59,7 +76,7 @@ const PROP_SPRITES: Dictionary = {
 	"maple_large": [NATURE_ASSET, "maple_large", "maple_large"],
 }
 ## Props that carry a warm point light, and the height of their flame above the base (px).
-const LIGHT_PROPS: Dictionary = {"lantern_stone": 0.64, "brazier_pedestal": 0.66, "gate": 0.55}
+const LIGHT_PROPS: Dictionary = {"lantern_stone": 0.64, "lantern_low": 0.52, "brazier_pedestal": 0.66, "gate": 0.55}
 ## The prop name of a placeholder wall block.
 const BLOCK_PROP: String = "block"
 ## Arena cells of tall walls (solid) and low walls (balustrades, ruins).
@@ -115,11 +132,17 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 	var anchors: Array[Vector2] = []
 	var ruin_at: Array[Vector2] = []
 	var lions: int = 0
+	var gate: Vector2 = Vector2.INF
 	for item: Dictionary in data.get("props", []):
 		var prop: String = str(item.get("prop", ""))
 		var at: Array = item.get("at", [0, 0])
 		var cell: Vector2 = Vector2(float(at[0]), float(at[1]))
 		anchors.append(cell)
+		if prop == "gate":
+			gate = cell
+		if prop == "lantern" and LOW_LANTERNS.has(cell) and sprites.has_prop(RAIL_FINISHES_ASSET, "lantern_low"):
+			_add(out, sprites, RAIL_FINISHES_ASSET, "lantern_low", cell * cell_px, false)
+			continue
 		if prop == RUIN_PROP:
 			ruin_at.append(cell)
 		var second: bool = false
@@ -140,8 +163,32 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 				propped[cell] = true
 			_add_ruin(out, "ruin_%d" % index, cells, at * cell_px, cell_px)
 	var walls: bool = sprites.has_prop(BALUSTRADE_ASSET, "post") and sprites.has_prop(BALUSTRADE_ASSET, "rail")
+	var masonry: bool = walls and sprites.has_prop(MASONRY_ASSET, STONE_PANEL) \
+		and sprites.has_prop(MASONRY_ASSET, TEMPLE_PANEL) and sprites.has_prop(MASONRY_ASSET, "corner_pier") \
+		and sprites.has_prop(MASONRY_ASSET, "terminal_pier") and sprites.has_prop(RAIL_DETAILS_ASSET, CLIFF_PANEL) \
+		and sprites.has_prop(RAIL_DETAILS_ASSET, "coping_top") and sprites.has_prop(RAIL_DETAILS_ASSET, "bridge_end") \
+		and sprites.has_prop(RAIL_DETAILS_ASSET, "lantern_apron")
 	if walls:
-		_add_balustrade(out, sprites, balustrade(rows, propped), cell_px)
+		var skip: Dictionary = propped.duplicate()
+		if masonry and data.get("stage_id") == "stage.jade_grove":
+			var plinth: bool = sprites.has_prop(FENCE_MODULES_ASSET, "lantern_base") \
+				and GATE_LANTERN_APRON.all(func(cell: Vector2i) -> bool: return _tile(rows, cell) == LOW_CHAR)
+			for index: int in GATE_LANTERN_APRON.size():
+				var cell: Vector2i = GATE_LANTERN_APRON[index]
+				if _tile(rows, cell) != LOW_CHAR:
+					continue
+				skip[cell] = true
+				if plinth:
+					continue
+				var overlap: float = 0.18 if index == 0 else -0.18
+				var anchor: Vector2 = (Vector2(cell) + Vector2.ONE * (0.5 + overlap)) * cell_px
+				_add(out, sprites, RAIL_DETAILS_ASSET, "lantern_apron", anchor, false)
+				out[-1]["wall"] = true
+			if plinth:
+				var a: Vector2 = (Vector2(GATE_LANTERN_APRON[0]) + Vector2(0.5, 0.5)) * cell_px
+				var b: Vector2 = (Vector2(GATE_LANTERN_APRON[1]) + Vector2(0.5, 0.5)) * cell_px
+				out.append(_fence_module("lantern_base", (a + b) * 0.5, b, [_footprint_between(a, b, 13.0)]))
+		_add_balustrade(out, sprites, balustrade(rows, skip, masonry), cell_px, gate, masonry, rows)
 	for y: int in rows.size():
 		var row: String = rows[y]
 		for x: int in row.length():
@@ -162,7 +209,7 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 ## stone course linking the bases}. Cells link to their neighbours
 ## along RUN_DIRS; a diagonal link is dropped where an axis link already joins the two cells
 ## through a corner cell, so a staircase on the grid is one run, not a zigzag.
-static func balustrade(rows: Array, skip: Dictionary = {}) -> Dictionary:
+static func balustrade(rows: Array, skip: Dictionary = {}, masonry: bool = false) -> Dictionary:
 	var lines: Dictionary = {}
 	for y: int in rows.size():
 		var row: String = rows[y]
@@ -174,33 +221,45 @@ static func balustrade(rows: Array, skip: Dictionary = {}) -> Dictionary:
 	var rails: Array = []
 	var edge_on: Array = []
 	var links: Dictionary = {}
+	var turns: Dictionary = {}
+	var runs: Array[Dictionary] = []
 	for index: int in RUN_DIRS.size():
 		var dir: Vector2i = RUN_DIRS[index]
+		var stride: int = (MASONRY_RUN_STEPS if masonry else RUN_STEPS)[index]
 		for cell: Vector2i in cells:
 			if not _linked(lines, cell, dir) or _linked(lines, cell - dir, dir):
 				continue
 			var run: Array[Vector2i] = [cell]
 			while _linked(lines, run[-1], dir):
 				run.append(run[-1] + dir)
-			var last_post: int = 0
+			runs.append({"cells": run, "edge_on": dir == Vector2i.ONE})
 			for i: int in run.size():
+				if links.has(run[i]):
+					turns[run[i]] = true
 				links[run[i]] = int(links.get(run[i], 0)) + (1 if i == 0 or i == run.size() - 1 else 2)
-				if i % RUN_STEPS[index] != 0 and i != run.size() - 1:
+				if i % stride != 0 and i != run.size() - 1:
 					continue
-				if dir == Vector2i(1, -1) and run.size() >= 7 and i % 3 == 2 and i != run.size() - 1 \
+				if not masonry and dir == Vector2i(1, -1) and run.size() >= 7 and i % 3 == 2 and i != run.size() - 1 \
 					and not _wall_junction(lines, run[i]):
 					continue  # Combine two bays on long facades without a break in the rail.
 				posts[run[i]] = true
-				if i > 0:
-					(edge_on if dir == Vector2i(1, 1) else rails).append([run[last_post], run[i]])
-				last_post = i
+	posts.merge(turns)
+	# Resolve spans after all directions have nominated their supports. A bay stops at a pier
+	# shared with another direction even when that direction was encountered later.
+	for run: Dictionary in runs:
+		var last: Vector2i = run["cells"][0]
+		var spans: Array = edge_on if run["edge_on"] else rails
+		for cell: Vector2i in run["cells"]:
+			if cell != last and posts.has(cell):
+				spans.append([last, cell])
+				last = cell
 	var broken: Array = []
 	for cell: Vector2i in cells:
 		if not links.has(cell):
 			posts[cell] = true  # a lone post
 		elif int(links[cell]) == 1:
 			broken.append(cell)
-	return {"posts": _sorted(posts.keys()), "broken": broken, "rails": rails, "edge_on": edge_on}
+	return {"posts": _sorted(posts.keys()), "broken": broken, "rails": rails, "edge_on": edge_on, "turns": turns}
 
 
 ## Which fragment of the ruin ring a "seal_ruin" at `at` (cells) is: its turn around the seal.
@@ -264,6 +323,9 @@ static func ruin_strips(cells: Array, cell_px: int) -> Array[Dictionary]:
 ## Draws a rail bay on `canvas` (screen space): the "rail" elevation stretched on the vertical
 ## plane from `from` to `to` (world px, already stopped at the post faces), in whole bays.
 static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, light: Color) -> void:
+	if item.has("volume"):
+		canvas.draw_mesh(item["volume"], item["surface"], Transform2D.IDENTITY, light)
+		return
 	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
 	if quad.is_empty():
 		return
@@ -299,7 +361,7 @@ static func sill_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInsta
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var indices: PackedInt32Array = PackedInt32Array()
 	for item: Dictionary in props:
-		if not item.has("rail_bounds"):
+		if not item.has("rail_bounds") or item.has("panel"):
 			continue
 		var from: Vector2 = item["from"]
 		var to: Vector2 = item["to"]
@@ -325,6 +387,8 @@ static func sill_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInsta
 ## The face disappears end-on, but the upper edge of the handrail still catches the light.
 static func edge_handrail_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInstance2D:
 	var mesh: MeshInstance2D = MeshInstance2D.new()
+	if props.any(func(item: Dictionary) -> bool: return item.has("panel")):
+		return mesh
 	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
 	if quad.is_empty():
 		return mesh
@@ -358,23 +422,124 @@ static func edge_handrail_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> 
 	return mesh
 
 
+## A tapered stone course retains a visible body even when viewed straight along its length.
+## The lacquered version uses a slimmer section and the keyed openings in the painted elevations.
+static func _build_masonry_volume(sprites: SpriteSet, item: Dictionary, from: Vector2, to: Vector2) -> void:
+	var piece: Dictionary = sprites.prop_quad(item["asset"], item["panel"], Vector2.ZERO)
+	var uv: Rect2 = piece["uv"]
+	var wooden: bool = item["panel"] == TEMPLE_PANEL
+	var open: bool = wooden or item["panel"] == BRIDGE_ARCH
+	var across: Vector2 = (to - from).normalized().orthogonal()
+	if IsoProjection.to_screen(across).y < 0.0:
+		across = -across
+	var bottom: Vector2 = across * (4.0 if wooden else 14.0)
+	var crown: Vector2 = across * (4.0 if wooden else 7.0)
+	var lift: Vector2 = Vector2(0.0, -float(item["panel_height"]))
+	var bevel: float = 0.0 if open else 3.0
+	var floor: PackedVector2Array = PackedVector2Array()
+	var top: PackedVector2Array = PackedVector2Array()
+	var crown_lip: PackedVector2Array = PackedVector2Array()
+	for at: Vector2 in [from, to]:
+		floor.append(IsoProjection.to_screen(at - bottom))
+		floor.append(IsoProjection.to_screen(at + bottom))
+		top.append(IsoProjection.to_screen(at - crown) + lift + Vector2(0.0, bevel))
+		top.append(IsoProjection.to_screen(at + crown) + lift + Vector2(0.0, bevel))
+		crown_lip.append(IsoProjection.to_screen(at - crown - across * bevel) + lift)
+		crown_lip.append(IsoProjection.to_screen(at + crown + across * bevel) + lift)
+	var cap: Rect2 = uv
+	cap.position.y += uv.size.y * 0.015
+	cap.size.y *= 0.13
+	if item["asset"] == RAIL_DETAILS_ASSET:
+		cap = sprites.prop_quad(RAIL_DETAILS_ASSET, "coping_top", Vector2.ZERO)["uv"]
+	# Each quad has independent material coordinates. Ends sample the frame, away from cutouts.
+	var end: Rect2 = Rect2(uv.position + Vector2(uv.size.x * 0.02, 0.0), uv.size * Vector2(0.045, 1.0))
+	var vertices: PackedVector2Array = PackedVector2Array([
+		floor[0], floor[2], top[2], top[0],
+		floor[0], floor[1], top[1], top[0],
+		floor[2], floor[3], top[3], top[2],
+		floor[1], floor[3], top[3], top[1],
+		crown_lip[0], crown_lip[2], crown_lip[3], crown_lip[1],
+	])
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	var rects: Array[Rect2] = [uv, end, end, uv, cap]
+	var tones: Array[float] = [0.66, 0.63, 0.73, 0.85, 0.94]
+	if wooden:
+		# Use solid crosspieces behind the keyed elevation. A second full elevation in the back
+		# would appear through the apertures and visually fill them at the game camera angle.
+		for level: float in [0.20, 0.57]:
+			var drop: Vector2 = -lift * level
+			vertices.append_array([top[0] + drop, top[2] + drop, top[3] + drop, top[1] + drop])
+			rects.append(Rect2(uv.position + Vector2(0.0, uv.size.y * level), uv.size * Vector2(1.0, 0.045)))
+			tones.append(0.70)
+	elif not open:
+		vertices.append_array([top[0], top[2], crown_lip[2], crown_lip[0]])
+		vertices.append_array([top[1], top[3], crown_lip[3], crown_lip[1]])
+		var moulding: Rect2 = Rect2(uv.position, Vector2(uv.size.x, uv.size.y * 0.16))
+		rects.append_array([moulding, moulding])
+		tones.append_array([0.68, 0.94])
+	for face: int in rects.size():
+		var rect: Rect2 = rects[face]
+		var base: int = face * 4
+		if face == 4 or (wooden and face > 4):
+			uvs.append_array([rect.position, Vector2(rect.end.x, rect.position.y), rect.end,
+				Vector2(rect.position.x, rect.end.y)])
+		else:
+			uvs.append_array([Vector2(rect.position.x, rect.end.y), rect.end,
+				Vector2(rect.end.x, rect.position.y), rect.position])
+		var shade: Color = Color.WHITE * tones[face]
+		shade.a = 1.0
+		colors.append_array([shade, shade, shade, shade])
+		if not open or face != 0:
+			indices.append_array([base, base + 1, base + 2, base, base + 2, base + 3])
+	item["surface"] = piece["texture"]
+	item["volume"] = GroundLayer._surface_mesh(vertices, colors, uvs, indices)
+
+
 static func wall_light(light: Color) -> Color:
 	return light.darkened(0.17 * (1.0 - smoothstep(0.91, 1.26, light.r)))
 
 
+## A strip of a large prop sorts at its own cell but is drawn and lit at the sprite anchor.
+static func prepare_props(sprites: SpriteSet, props: Array[Dictionary], lanterns: Array[Vector2]) -> void:
+	for index: int in props.size():
+		var prop: Dictionary = props[index]
+		var base: Vector2 = prop.get("base", prop["at"])
+		var screen: Vector2 = IsoProjection.to_screen(base)
+		prop["screen"] = screen
+		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
+		prop["fixed_light"] = RunLighting.fixed_light(base, lanterns)
+		if prop.has("rail_bounds"):
+			continue
+		var quad: Dictionary = sprites.prop_quad(prop["asset"], prop["prop"], Vector2.ZERO, 1.0, prop["flip"])
+		if quad.is_empty():
+			continue
+		var local: Rect2 = quad["rect"]
+		var bounds: Rect2 = Rect2(local.position + screen, local.size)
+		prop["draw_bounds"] = bounds
+		prop["shadow_bounds"] = (RunLighting.shadow_transform(screen) * local).merge(bounds).grow(18.0)
+
+
 ## Lay the silhouettes first; the white contacts keep their coverage near a lantern.
-static func draw_shadows(canvas: Node2D, sprites: SpriteSet, props: Array[Dictionary], disc: Texture2D) -> void:
+static func draw_shadows(
+	canvas: Node2D, sprites: SpriteSet, props: Array[Dictionary], disc: Texture2D, window: Rect2
+) -> void:
 	for prop: Dictionary in props:
-		if prop["prop"] == BLOCK_PROP or prop.has("rail_bounds") or prop.has("clip"):
+		if prop["prop"] == BLOCK_PROP or prop.has("rail_bounds") or prop.has("clip") or prop.has("footprint"):
+			continue
+		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
 			continue
 		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
 		var shadow: Color = Color(0.0, 0.0, 0.0, 0.72) if prop.get("wall", false) else Color.BLACK
 		sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, shadow, prop["flip"])
 	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
 	for prop: Dictionary in props:
+		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
+			continue
 		for polygon: PackedVector2Array in prop.get("footprint", []):
 			canvas.draw_colored_polygon(polygon, Color.WHITE)
-		if prop.get("wall", false) and not prop.has("rail_bounds"):
+		if prop.get("wall", false) and not prop.has("rail_bounds") and not prop.has("footprint"):
 			RunLighting.contact(canvas, disc, prop["screen"], POST_HALF_PX * 1.55)
 
 
@@ -475,10 +640,21 @@ static func _add_ruin(out: Array[Dictionary], prop: String, cells: Array, base: 
 
 
 ## Posts, broken posts and rail bays of `wall` (balustrade()) as placements.
-static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int) -> void:
+static func _add_balustrade(
+	out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int, gate: Vector2, masonry: bool, rows: Array
+) -> void:
 	var half: Vector2 = Vector2(0.5, 0.5)
 	var rail_height: float = sprites.prop_size(BALUSTRADE_ASSET, "rail").y
+	var painted_posts: Dictionary = {}
+	var temple_spans: Array = []
+	if masonry and sprites.has_prop(FENCE_MODULES_ASSET, "temple_turn"):
+		temple_spans = _temple_spans(wall)
+		if not temple_spans.is_empty():
+			_add_temple_turn(out, temple_spans, painted_posts, rows, cell_px)
+	var first_span: int = out.size()
 	for pair: Array in wall["rails"]:
+		if temple_spans.has(pair):
+			continue
 		var a: Vector2 = (Vector2(pair[0]) + half) * cell_px
 		var b: Vector2 = (Vector2(pair[1]) + half) * cell_px
 		var along: Vector2 = (b - a).normalized()
@@ -493,6 +669,8 @@ static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Di
 			"flame": 0.0, "from": from, "to": to, "rail_bounds": bounds, "wall": true,
 		})
 	for pair: Array in wall["edge_on"]:
+		if temple_spans.has(pair):
+			continue
 		var a: Vector2 = (Vector2(pair[0]) + half) * cell_px
 		var b: Vector2 = (Vector2(pair[1]) + half) * cell_px
 		var bounds: Rect2 = Rect2(IsoProjection.to_screen(a), Vector2.ZERO).expand(IsoProjection.to_screen(b))
@@ -502,10 +680,180 @@ static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Di
 			"flame": 0.0, "from": a + inset, "to": b - inset, "wall": true,
 			"rail_bounds": bounds.grow(COPING_HALF_WIDTH).grow_side(SIDE_TOP, rail_height + COPING_HEIGHT),
 		})
+	var temple_piers: Dictionary = {}
+	var bridge_piers: Dictionary = {}
+	var copy_end_on: Array[Dictionary] = []
+	var bridge_arches: bool = sprites.has_prop(RAIL_FINISHES_ASSET, BRIDGE_ARCH) \
+		and sprites.has_prop(RAIL_FINISHES_ASSET, "bridge_pier")
+	if masonry:
+		for index: int in range(first_span, out.size()):
+			var item: Dictionary = out[index]
+			var centre: Vector2 = item["at"] / float(cell_px)
+			var from: Vector2 = item["from"]
+			var to: Vector2 = item["to"]
+			# Narrow returns take masonry. The central brass disc needs a genuinely wide bay.
+			var width: float = absf(IsoProjection.to_screen(to - from).x)
+			var temple: bool = width >= cell_px and centre.distance_to(gate) <= TEMPLE_RAIL_REACH
+			var bridge: bool = _bridge_wall(rows, Vector2i(centre.floor()))
+			var panel: String = TEMPLE_PANEL if temple else (STONE_PANEL if bridge else CLIFF_PANEL)
+			var asset: String = RAIL_DETAILS_ASSET if panel == CLIFF_PANEL else MASONRY_ASSET
+			if bridge and not temple and bridge_arches and width >= cell_px * 1.35:
+				panel = BRIDGE_ARCH
+				asset = RAIL_FINISHES_ASSET
+			elif panel == CLIFF_PANEL and centre.x >= 42.0 and width >= cell_px * 1.5 \
+					and _near_tile(rows, Vector2i(centre.floor()), "H") and sprites.has_prop(RAIL_FINISHES_ASSET, TERRACE_RELIEF):
+				panel = TERRACE_RELIEF
+				asset = RAIL_FINISHES_ASSET
+			item["asset"] = asset
+			item["panel"] = panel
+			item["panel_height"] = 29.0 if temple or panel == BRIDGE_ARCH else 22.0
+			if item["prop"] == COPING_PROP:
+				item["panel_height"] = 18.0
+			var start: Vector2i = Vector2i((from / cell_px).floor())
+			var finish: Vector2i = Vector2i((to / cell_px).floor())
+			if temple:
+				temple_piers[start] = true
+				temple_piers[finish] = true
+			if panel == BRIDGE_ARCH:
+				bridge_piers[start] = true
+				bridge_piers[finish] = true
+			var start_shift: Vector2 = _lip_offset(rows, start, cell_px)
+			var end_shift: Vector2 = _lip_offset(rows, finish, cell_px)
+			var start_at: Vector2 = (Vector2(start) + half) * cell_px + start_shift
+			var end_at: Vector2 = (Vector2(finish) + half) * cell_px + end_shift
+			var delta: Vector2i = finish - start
+			# The midpoint of the two lip offsets retains the module's full shape and keeps both
+			# sockets inside their wall cells. The end fittings are wider than the offset change.
+			var adjustment: Vector2 = (end_shift - start_shift) * 0.5
+			var module_start: Vector2 = start_at + adjustment
+			var module_end: Vector2 = end_at - adjustment
+			if panel == BRIDGE_ARCH and delta == Vector2i(2, -2) and sprites.has_prop(FENCE_MODULES_ASSET, "bridge_bay"):
+				out[index] = _fence_segment("bridge_bay", module_start, module_end, 12.0)
+				painted_posts[start] = true
+				continue
+			var adjoining_turn: bool = not temple_spans.is_empty() and finish == TEMPLE_TURN[0]
+			if item["prop"] == COPING_PROP and delta.x == delta.y and delta.x in [2, 4] \
+					and (centre.x >= 42.0 or adjoining_turn) \
+					and sprites.has_prop(FENCE_MODULES_ASSET, "cliff_coping"):
+				var flip: bool = IsoProjection.to_screen(start_shift + end_shift).x < 0.0
+				var midpoint: Vector2 = module_start.lerp(module_end, 0.5) if delta.x == 4 else module_end
+				out[index] = _fence_segment("cliff_coping", module_start, midpoint, 13.0, flip)
+				if delta.x == 4:
+					copy_end_on.append(_fence_segment("cliff_coping", midpoint, module_end, 13.0, flip))
+				continue
+			var along: Vector2 = (to - from).normalized() * 4.5
+			_build_masonry_volume(sprites, item, start_at + along, end_at - along)
+			item["rail_bounds"] = (item["rail_bounds"] as Rect2).grow(22.0)
+	out.append_array(copy_end_on)
 	for cell: Vector2i in wall["posts"]:
+		if painted_posts.has(cell):
+			continue
 		var prop: String = "post_broken" if (wall["broken"] as Array).has(cell) else "post"
-		_add(out, sprites, BALUSTRADE_ASSET, prop, (Vector2(cell) + half) * cell_px, false)
+		var asset: String = BALUSTRADE_ASSET
+		var anchor: Vector2 = (Vector2(cell) + half) * cell_px
+		if masonry:
+			asset = MASONRY_ASSET
+			var turn: bool = (wall["turns"] as Dictionary).has(cell)
+			if temple_piers.has(cell):
+				prop = "corner_pier"
+			elif turn:
+				asset = RAIL_DETAILS_ASSET
+				prop = "bridge_end"
+			elif bridge_piers.has(cell):
+				asset = RAIL_FINISHES_ASSET
+				prop = "bridge_pier"
+			else:
+				prop = "terminal_pier"
+			anchor += _lip_offset(rows, cell, cell_px)
+		_add(out, sprites, asset, prop, anchor, false)
 		out[-1]["wall"] = true
+
+
+## The painted L fits these shared sockets only. Keep the assembled wall on other layouts.
+static func _temple_spans(wall: Dictionary) -> Array:
+	var spans: Array = (wall["rails"] as Array) + (wall["edge_on"] as Array)
+	var matched: Array = []
+	for index: int in range(1, TEMPLE_TURN.size()):
+		var pair: Array = [TEMPLE_TURN[index - 1], TEMPLE_TURN[index]]
+		if not spans.has(pair):
+			return []
+		matched.append(pair)
+	return matched
+
+
+static func _add_temple_turn(
+	out: Array[Dictionary], spans: Array, painted_posts: Dictionary, rows: Array, cell_px: int
+) -> void:
+	var cells: Array[Vector2i] = []
+	var footprint: Array[PackedVector2Array] = []
+	var pivot: Vector2i = TEMPLE_TURN[1]
+	var anchor: Vector2 = (Vector2(pivot) + Vector2(0.5, 0.5)) * cell_px + _lip_offset(rows, pivot, cell_px)
+	for cell: Vector2i in TEMPLE_TURN:
+		painted_posts[cell] = true
+	for pair: Array in spans:
+		var start: Vector2i = pair[0]
+		var finish: Vector2i = pair[1]
+		var a: Vector2 = (Vector2(start) + Vector2(0.5, 0.5)) * cell_px + _lip_offset(rows, start, cell_px)
+		var b: Vector2 = (Vector2(finish) + Vector2(0.5, 0.5)) * cell_px + _lip_offset(rows, finish, cell_px)
+		footprint.append(_footprint_between(a, b, 13.0))
+		var delta: Vector2i = finish - start
+		var count: int = maxi(absi(delta.x), absi(delta.y))
+		for index: int in count:
+			cells.append(start + delta.sign() * index)
+	cells.append(TEMPLE_TURN[-1])
+	for strip: Dictionary in ruin_strips(cells, cell_px):
+		var sort_feet: Vector2 = (Vector2(strip["front"]) + Vector2(0.5, 0.5)) * cell_px
+		var module: Dictionary = _fence_module("temple_turn", anchor, sort_feet, footprint)
+		module["clip"] = strip["clip"]
+		out.append(module)
+		footprint = []
+
+
+static func _fence_module(
+	prop: String, anchor: Vector2, sort_feet: Vector2, footprint: Array[PackedVector2Array]
+) -> Dictionary:
+	return {"asset": FENCE_MODULES_ASSET, "prop": prop, "at": sort_feet, "base": anchor, "flip": false,
+		"light": false, "flame": 0.0, "wall": true, "footprint": footprint}
+
+
+static func _fence_segment(prop: String, a: Vector2, b: Vector2, half_width: float, flip: bool = false) -> Dictionary:
+	var segment: Dictionary = _fence_module(prop, a, b, [_footprint_between(a, b, half_width)])
+	segment["flip"] = flip
+	return segment
+
+
+static func _footprint_between(from: Vector2, to: Vector2, half_width: float) -> PackedVector2Array:
+	var offset: Vector2 = (to - from).normalized().orthogonal() * half_width
+	return PackedVector2Array([IsoProjection.to_screen(from - offset), IsoProjection.to_screen(to - offset),
+		IsoProjection.to_screen(to + offset), IsoProjection.to_screen(from + offset)])
+
+
+static func _tile(rows: Array, cell: Vector2i) -> String:
+	if cell.y < 0 or cell.y >= rows.size():
+		return " "
+	var row: String = rows[cell.y]
+	return row[cell.x] if cell.x >= 0 and cell.x < row.length() else " "
+
+
+static func _bridge_wall(rows: Array, cell: Vector2i) -> bool:
+	return _near_tile(rows, cell, "B")
+
+
+static func _near_tile(rows: Array, cell: Vector2i, tile: String) -> bool:
+	for dy: int in range(-1, 2):
+		for dx: int in range(-1, 2):
+			if _tile(rows, cell + Vector2i(dx, dy)) == tile:
+				return true
+	return false
+
+
+## Align exterior stonework nearer the lip while retaining its position inside the same wall tile.
+static func _lip_offset(rows: Array, cell: Vector2i, cell_px: int) -> Vector2:
+	var outward: Vector2 = Vector2.ZERO
+	for offset: Vector2i in [Vector2i.LEFT, Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN]:
+		if _tile(rows, cell + offset) == " ":
+			outward += Vector2(offset)
+	return outward.normalized() * cell_px * WALL_LIP_SHIFT
 
 
 ## Keep rails that the camera can reveal while smoothing finishes after a redraw.

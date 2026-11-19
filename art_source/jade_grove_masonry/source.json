@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_masonry",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "000a9ca934eecb248a1474a46759bbfc2aa05a3095e453572ae9704979878f23",
+    "created": "2026-11-19T21:01:03+05:00",
+    "master_sha256": "0b44bd5a88484f72e517494500218e60dee906d41d46094d4be602fc67b5ab5f",
+    "master_note": "Lossless WebP of the generated PNG. Candidate 2. Painted over jade_grove_masonry geometry template with REF-068. Base slopes are +0.505/-0.511 and +0.500/-0.507. Candidate 1 was rejected in-game for the monolithic dark silhouettes and lack of material separation."
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 2,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "corner_pier",
+      "height_px": 48
+    },
+    {
+      "name": "terminal_pier",
+      "height_px": 36
+    },
+    {
+      "name": "stone_parapet",
+      "height_px": 24
+    },
+    {
+      "name": "temple_panel",
+      "height_px": 33
+    }
+  ]
+}

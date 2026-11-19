@@ -245,13 +245,7 @@ func _build_layers() -> void:
 	for point: Dictionary in light_points:
 		_lanterns.append(point["at"])
 		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
-	for index: int in _props.size():
-		var prop: Dictionary = _props[index]
-		# A strip of a large prop sorts at its own cell but stands and is lit where the prop does.
-		var base: Vector2 = prop.get("base", prop["at"])
-		prop["screen"] = IsoProjection.to_screen(base)
-		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
-		prop["fixed_light"] = RunLighting.fixed_light(base, _lanterns)
+	ArenaDressing.prepare_props(_sprites, _props, _lanterns)
 	_ground = GroundLayer.new(
 		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
 		ArenaDressing.backdrop(_sprites))
@@ -757,7 +751,8 @@ func _draw_shadow_pass() -> void:
 				var pose: Array = _frame_pose(slot)
 				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture)
+	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
+	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture, window)
 	for lantern: Vector2 in _lanterns:
 		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
 	if world == null:
@@ -830,9 +825,11 @@ func _draw_bodies() -> void:
 				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
 	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
 	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.COPING_PROP:
+		if prop["prop"] == ArenaDressing.COPING_PROP and not prop.has("panel"):
 			continue
 		if prop.has("rail_bounds") and not rail_window.intersects(prop["rail_bounds"]):
+			continue
+		if prop.has("draw_bounds") and not rail_window.intersects(prop["draw_bounds"]):
 			continue
 		order.append(prop["order"])
 	order.sort()
@@ -871,6 +868,8 @@ func _draw_prop(prop: Dictionary) -> void:
 	if driver != null:
 		light = RunLighting.with_aura(light, base, driver.hero_position_px())
 	light = ArenaDressing.wall_light(light) if prop.get("wall", false) else light
+	if prop["prop"] in ["lantern_apron", "lantern_base"]:
+		light = light.darkened(0.22)
 	if prop.has("clip"):
 		_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, false, prop["clip"])
 		return
