@@ -1951,6 +1951,81 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_front_stairs",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_front_stairs/jade_grove_front_stairs.png",
+      "sha256": "0208f8452b25cfb0ddca70636f139f6cc9e85478f932dc3885d67bb0d963638c",
+      "bytes": 695240,
+      "size": [
+        1506,
+        278
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "temple_flight",
+            "region": [
+              6,
+              6,
+              746,
+              243
+            ],
+            "feet": [
+              378.6,
+              128.2
+            ]
+          },
+          {
+            "name": "south_flight",
+            "region": [
+              764,
+              6,
+              736,
+              266
+            ],
+            "feet": [
+              1131.6,
+              140.4
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_front_stairs/jade_grove_front_stairs_n.png",
+        "sha256": "93c023f3e29663fa0f11ae794060665e18815f501356130385380f928df78fda",
+        "bytes": 24205,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_front_stairs/master.webp",
+        "sha256": "f1c29a06512e33623e24498f728d83db22dd181963b56d9cd8c0ce7421f8f533",
+        "bytes": 1331538,
+        "prompt_sha256": "0278ac057e98b57758696d74d88c1da985e24af0e5c81d9f9cc238bddde3e206"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 10714,
+        "palette_mean_delta_e": 8.57,
+        "tones_pct": [
+          81.6,
+          18.4,
+          0.0
+        ],
+        "chroma": 0.13,
+        "threat_colour_pct": 0.0,
+        "median_l": 65.0
+      }
+    },
+    {
       "asset_id": "asset.prop.jade_grove_masonry",
       "kind": "prop_atlas",
       "path": "game/assets/props/jade_grove_masonry/jade_grove_masonry.png",
@@ -2251,6 +2326,81 @@
         "chroma": 0.157,
         "threat_colour_pct": 0.0,
         "median_l": 92.0
+      }
+    },
+    {
+      "asset_id": "asset.prop.jade_grove_side_stairs",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_side_stairs/jade_grove_side_stairs.png",
+      "sha256": "560226c976f71cd413c8eee6c2b50faf0a2adf9a08579a63432003447c641f43",
+      "bytes": 554592,
+      "size": [
+        1198,
+        258
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "maple_flight",
+            "region": [
+              6,
+              6,
+              588,
+              246
+            ],
+            "feet": [
+              300.4,
+              135.1
+            ]
+          },
+          {
+            "name": "east_flight",
+            "region": [
+              606,
+              6,
+              586,
+              233
+            ],
+            "feet": [
+              898.6,
+              128.2
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_side_stairs/jade_grove_side_stairs_n.png",
+        "sha256": "6819d452f69b21b6dacdc9033c972713a5c8197dafa7e95eaf5e2715bad53920",
+        "bytes": 37042,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_side_stairs/master.webp",
+        "sha256": "b72ef73a3c92289da711cdad23198ba8260ba3f70ef03bae608b9969b2df6bdf",
+        "bytes": 1207696,
+        "prompt_sha256": "3b1d8d634a8b9d81602776d68d70083416e8fb8843e88591df79f17d3d5f2839"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 11280,
+        "palette_mean_delta_e": 7.72,
+        "tones_pct": [
+          65.1,
+          34.9,
+          0.0
+        ],
+        "chroma": 0.146,
+        "threat_colour_pct": 0.0,
+        "median_l": 79.0
       }
     },
     {

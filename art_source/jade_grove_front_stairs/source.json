@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_front_stairs",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "palette_group": "props",
+  "density": 2,
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "0278ac057e98b57758696d74d88c1da985e24af0e5c81d9f9cc238bddde3e206",
+    "created": "2026-11-19T22:14:05+05:00",
+    "master_sha256": "2d194235d1ef9102bd2139df5e626cea758856b7aa23ad14aa0ce7ec275f35f0",
+    "master_note": "Lossless WebP of generated PNG with the paved landings. The first candidate was rejected in the actual camera for the blue tone and block-shaped ends."
+  },
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      1,
+      2
+    ],
+    "join_px": 2,
+    "min_area_px": 260
+  },
+  "props": [
+    {
+      "name": "temple_flight",
+      "anchor": [
+        768,
+        245
+      ],
+      "sheet_scale": 2.8
+    },
+    {
+      "name": "south_flight",
+      "anchor": [
+        768,
+        751
+      ],
+      "sheet_scale": 2.8
+    }
+  ]
+}

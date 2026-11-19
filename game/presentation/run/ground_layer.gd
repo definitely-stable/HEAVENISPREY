@@ -135,6 +135,7 @@ func _init(
 	_iso.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	add_child(_iso)
 	_build_floor(sprites, floor_asset, worn_asset, sprites.decal_world_px(seal_asset) * 0.5)
+	_build_jade_grove_stairs(sprites)
 	_build_seal(sprites, seal_asset)
 	var moon: DirectionalLight2D = DirectionalLight2D.new()
 	moon.color = RunLighting.MOON_COLOR
@@ -475,7 +476,59 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 	wear.set_shader_parameter("mask_size", _arena)
 	wear.set_shader_parameter("worn_repeat_px", sprites.floor_repeat_px(worn_asset, _cell_px))
 	wear.set_shader_parameter("alt_scale", sprites.floor_repeat_px(floor_asset, _cell_px) / (ALT_REPEAT_CELLS * _cell_px))
+	if _data.get("stage_id") == "stage.jade_grove":
+		var terraces: Image = Image.create_empty(mask_size.x, mask_size.y, false, Image.FORMAT_L8)
+		var rows: Array = _data["rows"]
+		for y: int in mask_size.y:
+			for x: int in mask_size.x:
+				if (rows[y] as String)[x] == "H":
+					terraces.set_pixel(x, y, Color.WHITE)
+		wear.set_shader_parameter("terrace_mask", ImageTexture.create_from_image(terraces))
+		wear.set_shader_parameter("has_terraces", true)
 	paving.material = wear
+
+
+## The stair artwork is already in game projection. Draw it above the paving in screen space,
+## where it receives the same lights as the landing and stays beneath the characters.
+func _build_jade_grove_stairs(sprites: SpriteSet) -> void:
+	if _data.get("stage_id") != "stage.jade_grove":
+		return
+	var stairs: Node2D = Node2D.new()
+	stairs.name = "JadeGroveStairs"
+	stairs.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	add_child(stairs)
+	var entries: Array = [
+		["front", "temple_flight", Vector2(27.25, 15.25)],
+		["front", "south_flight", Vector2(49.0, 53.0)],
+		["side", "maple_flight", Vector2(11.5, 40.0)],
+		["side", "east_flight", Vector2(63.5, 25.0)],
+	]
+	for entry: Array in entries:
+		var asset: String = "asset.prop.jade_grove_%s_stairs" % entry[0]
+		var anchor: Vector2 = IsoProjection.to_screen((entry[2] as Vector2) * _cell_px)
+		var quad: Dictionary = sprites.prop_quad(asset, entry[1], anchor)
+		if quad.is_empty():
+			continue
+		var rect: Rect2 = quad["rect"]
+		var texture: Texture2D = quad["texture"]
+		var uv: Rect2 = quad["uv"]
+		var size: Vector2 = texture.get_size()
+		var flight: Polygon2D = Polygon2D.new()
+		flight.name = entry[1]
+		flight.texture = texture
+		var landing: ShaderMaterial = ShaderMaterial.new()
+		landing.shader = preload("res://presentation/run/shaders/stair_landing.gdshader")
+		landing.set_shader_parameter("atlas_region", Vector4(uv.position.x, uv.position.y, uv.size.x, uv.size.y))
+		landing.set_shader_parameter("sideways", entry[0] == "side")
+		flight.material = landing
+		flight.polygon = PackedVector2Array([
+			rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
+		])
+		flight.uv = PackedVector2Array([
+			uv.position * size, Vector2(uv.end.x, uv.position.y) * size,
+			uv.end * size, Vector2(uv.position.x, uv.end.y) * size,
+		])
+		stairs.add_child(flight)
 
 
 ## The ritual seal inlaid at the centre of the arena (lit with the floor), its gold lines to

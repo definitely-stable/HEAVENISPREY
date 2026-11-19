@@ -16,6 +16,8 @@ uniform float worn_repeat_px = 480.0;
 // Red: wear 0..1; green: tone drift around 0.5; blue: the second clean layer 0..1. Covers
 // mask_size world px from mask_origin.
 uniform sampler2D wear_mask : repeat_disable, filter_linear;
+uniform sampler2D terrace_mask : repeat_disable, filter_linear;
+uniform bool has_terraces = false;
 uniform vec2 mask_origin = vec2(0.0);
 uniform vec2 mask_size = vec2(1.0);
 // UV scale of the second clean layer (its period is 1 / alt_scale of the first) and its shift.
@@ -53,7 +55,9 @@ void vertex() {
 }
 
 void fragment() {
-	vec4 mask = texture(wear_mask, (world - mask_origin) / mask_size);
+	vec2 arena_uv = (world - mask_origin) / mask_size;
+	vec4 mask = texture(wear_mask, arena_uv);
+	float terrace = has_terraces ? texture(terrace_mask, arena_uv).r : 0.0;
 	// The second clean layer: the same texture turned half a circle (its normals turn with it).
 	vec2 alt_uv = alt_shift - UV * alt_scale;
 	vec3 alt = texture(TEXTURE, alt_uv).rgb;
@@ -67,7 +71,9 @@ void fragment() {
 	vec3 worn = texture(worn_albedo, worn_uv).rgb;
 	float wear = smoothstep(0.46, 0.54, mask.r + (worn_mid - dot(worn, LUMA)) * edge_break);
 	albedo = mix(albedo, worn, wear) * (1.0 + (mask.g - 0.5) * tone_range);
-	float damp = mask.a;
+	// The landing stone continues the warmer, drier colour of the stair treads.
+	albedo *= mix(vec3(1.0), vec3(1.20, 1.10, 1.01), terrace);
+	float damp = mask.a * mix(1.0, 0.64, terrace);
 	float seam = smoothstep(seam_luma - 0.08, seam_luma + 0.06, dot(albedo, LUMA));
 	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam);
 	COLOR = vec4(albedo * (1.0 - damp_darken * damp), COLOR.a);

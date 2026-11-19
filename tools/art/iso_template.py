@@ -279,6 +279,65 @@ def fence_sheet():
     return image
 
 
+STAIR_SCALE = 2.8
+STAIR_ANCHORS = ((768, 245), (768, 751))
+
+
+def stair_sheet(sideways: bool):
+    """Flights and cheek walls at the dimensions of the four Jade Grove stair footprints."""
+    from PIL import Image, ImageDraw
+
+    image = Image.new("RGB", SIZE, KEY)
+    draw = ImageDraw.Draw(image)
+
+    def world(u, v):
+        diff = u / (CELL_PX * ISO_K)
+        total = 2 * v / (CELL_PX * ISO_K)
+        return (total + diff) * 0.5, (total - diff) * 0.5
+
+    def block(slot, x0, y0, x1, y1, height, chamfer=0):
+        corner_y = min(chamfer * 0.5, (y1 - y0) * 0.42)
+        points = ((x0 + chamfer, y0), (x1 - chamfer, y0), (x1, y0 + corner_y), (x1, y1 - corner_y),
+                  (x1 - chamfer, y1), (x0 + chamfer, y1), (x0, y1 - corner_y), (x0, y0 + corner_y))
+        base = [world(u, v) for u, v in points]
+        ax, ay = STAIR_ANCHORS[slot]
+        for _, face, fill in _prism(base, height):
+            points = [(ax + u * STAIR_SCALE, ay + (v - z) * STAIR_SCALE)
+                      for point, z in face for u, v in [iso_screen(*point)]]
+            draw.polygon(points, fill=fill, outline=EDGE)
+
+    if sideways:
+        # The western stair rises left; the eastern stair rises right. The floor-facing footprint
+        # still meets the actual openings, and the near masonry shows the rise between landings.
+        for slot, width, depth, rise in ((0, 293, 109, 20), (1, 292, 103, 19)):
+            near, far = depth * 0.5, -depth * 0.5 + 12
+            left, right = -width * 0.5, width * 0.5
+            landing = 29
+            block(slot, left, far, left + landing + 1, near, rise if slot == 0 else 1, 11)
+            block(slot, right - landing - 1, far, right, near, rise if slot == 1 else 1, 11)
+            for index in range(5):
+                x0 = left + landing + (width - landing * 2) * index / 5
+                x1 = left + landing + (width - landing * 2) * (index + 1) / 5
+                height = 2 + rise * (4 - index if slot == 0 else index) / 4
+                block(slot, x0, far, x1, near, height)
+                block(slot, x0, near - 9, x1, near + 4, height + 4)
+    else:
+        for slot, width, depth, count, rise in ((0, 366, 119, 6, 26), (1, 360, 132, 5, 24)):
+            left, right = -width * 0.5, width * 0.5
+            far, near = -depth * 0.5 + rise, depth * 0.5
+            head, foot = far + 16, near - 18
+            block(slot, left, far, right, head + 1, rise + 1, 13)
+            for index in range(count):
+                y0 = head + (foot - head) * index / count
+                y1 = head + (foot - head) * (index + 1) / count
+                height = 2 + rise * (count - index - 1) / (count - 1)
+                block(slot, left, y0, right, y1, height)
+                block(slot, left - 3, y0, left + 13, y1, height + 6)
+                block(slot, right - 13, y0, right + 3, y1, height + 6)
+            block(slot, left, foot, right, near, 1, 15)
+    return image
+
+
 def cell_groups(cells: list[tuple[int, int]]) -> list[list[tuple[int, int]]]:
     """Groups of cells joined by a side, each in row order, groups in order of their first cell."""
     left, out = set(cells), []
@@ -409,6 +468,8 @@ def render(name: str):
 
     if name == "jade_grove_fence_modules":
         return fence_sheet()
+    if name in ("jade_grove_front_stairs", "jade_grove_side_stairs"):
+        return stair_sheet(name == "jade_grove_side_stairs")
 
     image = Image.new("RGB", SIZE, KEY)
     draw = ImageDraw.Draw(image)
@@ -437,7 +498,8 @@ def render(name: str):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    sheets = sorted(LAYOUTS) + ["jade_grove_fence_modules"] + [f"seal_ruins_{n}" for n in range(1, RUIN_SHEETS + 1)]
+    sheets = sorted(LAYOUTS) + ["jade_grove_fence_modules", "jade_grove_front_stairs", "jade_grove_side_stairs"]
+    sheets += [f"seal_ruins_{n}" for n in range(1, RUIN_SHEETS + 1)]
     parser.add_argument("sheet", choices=sheets)
     parser.add_argument("out", type=Path)
     args = parser.parse_args()
