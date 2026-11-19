@@ -1,13 +1,8 @@
 class_name RunView
 extends Node2D
-## P0 placeholder run scene: hero movement and auto-attack, jade_grove w0 enemies, contact
-## damage and kills in the courtyard of the ruined sect (ArenaDressing). Reads simulation state only;
-## input reaches the simulation through FixedTickDriver. Tuning comes from P0Tuning
-## (placeholder bases). Hit reactions, falls and decay (EnemyReactions), gem pickup flights and
-## the level-up ring are presentation-only effects (ADR-010 section 8). A pending level-up pauses the run under
-## ChoiceMenu; a picked card reaches the simulation as a CHOOSE through FixedTickDriver.
-## A finished run (victory after the stage duration or defeat) stays under RunResults until
-## the player starts a new one (ADR-011 section 1).
+## The Jade Grove run presents simulation state. FixedTickDriver handles commands,
+## and P0Tuning configures the run. Hit reactions and pickup effects are presentation-only
+## (ADR-010 section 8).
 ## Sprites (ADR-013): the floor texture, the hero and the enemies with an asset in
 ## SpriteSet are drawn as atlas frames sorted by depth over blob shadows; anything without an
 ## asset keeps its primitive, so the scene stays playable with no assets at all.
@@ -247,6 +242,7 @@ func _ready() -> void:
 	_vfx.number_mode = settings.floating_damage_numbers
 	_vfx.own_opacity = settings.own_skill_opacity
 	_build_layers()
+	get_viewport().size_changed.connect(queue_redraw)
 	_camera.zoom = Vector2(CAMERA_ZOOM, CAMERA_ZOOM)
 	_show_class_select()
 
@@ -807,7 +803,10 @@ func _draw_bodies() -> void:
 		for slot: int in world.enemy_slots():
 			if world.enemy_uid[slot] != 0:
 				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
+	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
 	for prop: Dictionary in _props:
+		if prop.has("rail_bounds") and not rail_window.intersects(prop["rail_bounds"]):
+			continue
 		order.append(prop["order"])
 	order.sort()
 	for key: Vector2i in order:
