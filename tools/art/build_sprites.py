@@ -547,7 +547,8 @@ def base_anchor(prop: Image.Image) -> tuple[float, float]:
 def build_props(spec: dict, master: Image.Image) -> tuple[Image.Image, dict]:
     """One prop per connected shape of the keyed sheet, matched to spec props by grid cell."""
     sheet = spec["sheet"]
-    keyed = key_out(master, hex_rgb(sheet["key_colour"]), sheet["key_low"], sheet["key_high"])
+    keyed = (master.convert("RGBA") if sheet.get("background") == "alpha"
+             else key_out(master, hex_rgb(sheet["key_colour"]), sheet["key_low"], sheet["key_high"]))
     solid = np.asarray(keyed.getchannel("A")) > EDGE_ALPHA
     # Smoke, tassels and leaves float a few px off the body: join them before labelling.
     labels, count = ndimage.label(ndimage.binary_dilation(solid, iterations=sheet.get("join_px", 6)))
@@ -972,6 +973,9 @@ def render_card(name: str, entry: dict) -> str:
     else:
         geometry = f"бесшовная текстура {layout['texture_px']}×{layout['texture_px']} px на {layout['cells']}×{layout['cells']} клеток"
         kind = "tile"
+    background_rule = ("сохранена исходная прозрачность; без запечённых свечения, теней и текста"
+                       if spec.get("sheet", {}).get("background") == "alpha" else
+                       "без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены")
     lines = [
         f"# ASSET_CARD: {entry['asset_id']}",
         "",
@@ -989,7 +993,7 @@ def render_card(name: str, entry: dict) -> str:
             "ui_atlas": "без запечённых свечения, теней и текста; фон снят хромакеем; рисуется поверх сцены без света и нормалей",
             "vfx_atlas": "только свет: нарисован на чёрном, альфа — яркость над чёрным, цвет отделён от чёрного; "
                          "рисуется аддитивно, без нормалей и света сцены; без текста",
-        }.get(entry["kind"], "без запечённых свечения, теней и текста; фон снят хромакеем, тень — слой сцены; кант рисует шейдер сцены"),
+        }.get(entry["kind"], background_rule),
         f"- **Metrics:** palette ΔE {qa['palette_mean_delta_e']} · tones {qa['tones_pct']} · хрома {qa['chroma']} · "
         f"цвет угрозы {qa['threat_colour_pct']} %" + (
             f" · шов цикла {qa['loop_seam_ratio']} медианы / {qa['loop_seam_to_max']} наибольшего шага · "

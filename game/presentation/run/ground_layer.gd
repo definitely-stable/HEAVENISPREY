@@ -30,6 +30,19 @@ const BRIDGE_INTRADOS_PX: float = 58.0
 const BRIDGE_EDGE_STEPS: int = 4
 const BRIDGE_ARCH_WIDTH: float = 0.72
 const ARCH_STONES: int = 15
+const GROWTH_ASSET: String = "asset.prop.cliff_growth"
+## Authored anchors on the visible rock, in cells: [point, piece, scale, flip, drop in px].
+const CLIFF_GROWTH: Array = [
+	[Vector2(3.5, 47.0), "roots", 0.83, false, 11.0],
+	[Vector2(8.5, 50.0), "vines", 0.86, true, 12.0],
+	[Vector2(12.0, 46.5), "moss", 0.83, false, 12.0],
+	[Vector2(10.5, 70.0), "vines", 0.92, true, 11.0],
+	[Vector2(14.5, 67.0), "moss", 0.67, false, 14.0],
+	[Vector2(50.5, 64.0), "vines", 1.03, true, 11.0],
+	[Vector2(53.5, 61.0), "moss", 0.86, false, 13.0],
+	[Vector2(57.5, 57.0), "roots", 1.0, true, 12.0],
+	[Vector2(59.5, 55.0), "moss", 0.62, true, 16.0],
+]
 const COLOR_FLOOR_FLAT: Color = Color(0.42, 0.37, 0.44)
 const COLOR_CLIFF_FLAT: Color = Color(0.22, 0.18, 0.25)
 const MIST_SHADER: Shader = preload("res://presentation/run/shaders/mist.gdshader")
@@ -384,6 +397,8 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 			rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
 		]))
 		parts.append(PackedInt32Array([first, first + 1, first + 2, first + 3]))
+	if texture != null and _data.get("stage_id") == "stage.jade_grove":
+		_add_paving_caps(points, parts)
 	paving.polygon = points
 	paving.polygons = parts
 	_iso.add_child(paving)
@@ -494,6 +509,8 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	faces.texture = sprites.canvas_texture(cliff_asset)
 	faces.mesh = _cliff_mesh(faces.texture, sprites.decal_world_px(cliff_asset))
 	add_child(faces)
+	if _data.get("stage_id") == "stage.jade_grove":
+		add_child(_cliff_growth_mesh(sprites))
 	var water: ShaderMaterial = ShaderMaterial.new()
 	water.shader = WATERFALL_SHADER
 	for fall: Array in WATERFALLS:
@@ -612,7 +629,7 @@ static func cliff_courses(faces: Array[PackedVector2Array]) -> Dictionary[Vector
 	var courses: Dictionary[Vector2, float] = {}
 	for at: Vector2 in right:
 		if left.has(at) and is_equal_approx(left[at].y, right[at].y):
-			courses[at] = lerpf(at.y, left[at].y, 0.43)
+			courses[at] = (at.y + left[at].y) * 0.5
 	return courses
 
 
@@ -657,7 +674,7 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 						lerpf(footing, height, 0.32), lerpf(footing, height, 0.65), height]
 					drop = lerpf(drop, courses_px[row], abutment)
 				# Depth in screen pixels keeps the bridge's masonry courses level above each opening.
-				var band: float = smoothstep(0.0, 18.0, drop) * (1.0 - smoothstep(28.0, 90.0, drop))
+				var band: float = smoothstep(0.0, 14.0, drop) * (1.0 - smoothstep(30.0, 102.0, drop))
 				var taper: float = smoothstep(0.08, 0.45, depth)
 				var inset: float = clampf((centre_x - at.x) / 800.0, -1.0, 1.0)
 				var relief: float = noise.get_noise_2d(at.x, at.y * 0.7) + 0.21 * sin(at.y * 0.020 + at.x * 0.006)
@@ -667,7 +684,8 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 					offset *= 1.0 - abutment
 				var down: Vector2 = at + Vector2(0.0, drop + (course - at.y) * band) + offset
 				vertices.append(down)
-				var shade: float = 0.20 if row == 2 else 0.0
+				var has_course: bool = courses.has(at) or masonry
+				var shade: float = [0.51 if has_course else 0.23, 0.06, 0.19, 0.0, 0.0, 0.0][row]
 				var tint: Color = top_color.lerp(cold, depth * 0.82).darkened(shade)
 				var v: float = depth
 				if masonry:
@@ -691,6 +709,59 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 			var spring: Vector2 = Vector2(bridge_left + bay * (index + 0.5), bridge_y + CLIFF_PX)
 			_arch_stonework(spring, bay * BRIDGE_ARCH_WIDTH * 0.5, vertices, colors, uvs, indices)
 	return _surface_mesh(vertices, colors, uvs, indices)
+
+
+## Extend the paving into the recessed teeth so the outer lip and the stone floor meet.
+func _add_paving_caps(points: PackedVector2Array, parts: Array) -> void:
+	var faces: Array[PackedVector2Array] = near_faces(_data, _cell_px)
+	var courses: Dictionary[Vector2, float] = cliff_courses(faces)
+	for face: PackedVector2Array in faces:
+		var a: Vector2 = IsoProjection.to_screen(face[0])
+		var b: Vector2 = IsoProjection.to_screen(face[1])
+		var apron_a: float = maxf(0.0, courses.get(a, a.y - 9.0) + 9.0 - a.y)
+		var apron_b: float = maxf(0.0, courses.get(b, b.y - 9.0) + 9.0 - b.y)
+		if apron_a + apron_b <= 0.0:
+			continue
+		var first: int = points.size()
+		points.append_array(face)
+		if apron_b > 0.0:
+			points.append(IsoProjection.to_world(b + Vector2(0.0, apron_b)))
+		if apron_a > 0.0:
+			points.append(IsoProjection.to_world(a + Vector2(0.0, apron_a)))
+		parts.append(PackedInt32Array(range(first, points.size())))
+
+
+## Keep the trailing growth attached to the lit face, in one transparent atlas draw.
+func _cliff_growth_mesh(sprites: SpriteSet) -> MeshInstance2D:
+	var growth: MeshInstance2D = MeshInstance2D.new()
+	growth.name = "CliffGrowth"
+	growth.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Array in CLIFF_GROWTH:
+		var quad: Dictionary = sprites.prop_quad(GROWTH_ASSET, item[1], Vector2.ZERO, item[2], item[3])
+		if quad.is_empty():
+			continue
+		growth.texture = quad["texture"]
+		var at: Vector2 = IsoProjection.to_screen(item[0] * _cell_px) + Vector2(0.0, item[4])
+		var size: Vector2 = (quad["rect"] as Rect2).size
+		var rect: Rect2 = Rect2(at - Vector2(size.x * 0.5, 0.0), size)
+		var uv: Rect2 = quad["uv"]
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([
+			rect.position, Vector2(rect.end.x, rect.position.y), Vector2(rect.position.x, rect.end.y), rect.end,
+		]))
+		uvs.append_array(PackedVector2Array([
+			uv.position, Vector2(uv.end.x, uv.position.y), Vector2(uv.position.x, uv.end.y), uv.end,
+		]))
+		var upper: Color = Color(0.78, 0.80, 0.90)
+		var lower: Color = Color(0.68, 0.71, 0.86, 0.87)
+		colors.append_array(PackedColorArray([upper, upper, lower, lower]))
+		indices.append_array(_quad_indices(base))
+	growth.mesh = _surface_mesh(vertices, colors, uvs, indices)
+	return growth
 
 
 ## The middle pier projects slightly in front of the spandrel and widens toward the footings.

@@ -1003,6 +1003,94 @@
       }
     },
     {
+      "asset_id": "asset.prop.cliff_growth",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/cliff_growth/cliff_growth.png",
+      "sha256": "34a1ebd74528c74ddf72275671c45aff71e908ad303e5c456359d3f96d82f9f8",
+      "bytes": 119507,
+      "size": [
+        675,
+        272
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "moss",
+            "region": [
+              6,
+              6,
+              261,
+              80
+            ],
+            "feet": [
+              181.0,
+              69.0
+            ]
+          },
+          {
+            "name": "vines",
+            "region": [
+              279,
+              6,
+              221,
+              236
+            ],
+            "feet": [
+              342.0,
+              221.0
+            ]
+          },
+          {
+            "name": "roots",
+            "region": [
+              512,
+              6,
+              157,
+              260
+            ],
+            "feet": [
+              573.5,
+              235.8
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/cliff_growth/cliff_growth_n.png",
+        "sha256": "b2f93db94e05d0ab496ba2f00b509060e1a32810decac80be811ebabe5d01a6d",
+        "bytes": 101095,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/cliff_growth/master.webp",
+        "sha256": "81276d8037b48b47606cab4b73b1734313df28bcea7402a67074a2ea735200de",
+        "bytes": 479394,
+        "prompt_sha256": "c6b37b67f12928ca87650c90cb85d0c04d5fb8f86f3f6831b904fdfb231abdca"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 2713,
+        "palette_mean_delta_e": 16.47,
+        "tones_pct": [
+          95.6,
+          4.4,
+          0.0
+        ],
+        "chroma": 0.063,
+        "threat_colour_pct": 0.0,
+        "median_l": 55.1
+      }
+    },
+    {
       "asset_id": "asset.prop.courtyard_balustrade",
       "kind": "prop_atlas",
       "path": "game/assets/props/courtyard_balustrade/courtyard_balustrade.png",
