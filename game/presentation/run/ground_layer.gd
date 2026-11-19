@@ -23,11 +23,13 @@ const VOID_CHAR: String = " "
 const FLOOR_CHARS: String = ".S"
 ## Screen px the cliff face drops under the near edges before the mist swallows it.
 const CLIFF_PX: float = 288.0
-const CLIFF_DEPTHS: Array[float] = [0.0, 0.14, 0.42, 0.72, 1.0]
-const CLIFF_VISIBILITY: Array[float] = [1.0, 1.0, 0.9, 0.48, 0.0]
+const CLIFF_DEPTHS: Array[float] = [0.0, 0.08, 0.15, 0.38, 0.67, 1.0]
+const CLIFF_VISIBILITY: Array[float] = [1.0, 1.0, 1.0, 0.97, 0.71, 0.0]
 const BRIDGE_SPANS: int = 2
 const BRIDGE_INTRADOS_PX: float = 58.0
 const BRIDGE_EDGE_STEPS: int = 4
+const BRIDGE_ARCH_WIDTH: float = 0.72
+const ARCH_STONES: int = 15
 const COLOR_FLOOR_FLAT: Color = Color(0.42, 0.37, 0.44)
 const COLOR_CLIFF_FLAT: Color = Color(0.22, 0.18, 0.25)
 const MIST_SHADER: Shader = preload("res://presentation/run/shaders/mist.gdshader")
@@ -565,7 +567,7 @@ static func _bridge_openings(
 	if right > left:
 		for corner: Vector2 in corners:
 			var along: float = (corner.x - left) / (right - left) * BRIDGE_SPANS
-			var rim: float = (fposmod(along, 1.0) * 2.0 - 1.0) / 0.77
+			var rim: float = (fposmod(along, 1.0) * 2.0 - 1.0) / BRIDGE_ARCH_WIDTH
 			corners[corner] = sqrt(maxf(0.0, 1.0 - rim * rim))
 	return corners
 
@@ -594,7 +596,27 @@ static func _cliff_segments(
 	return out
 
 
-## Fixed shared vertices pull the rock inward beneath the masonry, with a cool fade at the foot.
+## Average only the teeth of across-screen runs. Corners and the contact with the floor stay put.
+static func cliff_courses(faces: Array[PackedVector2Array]) -> Dictionary[Vector2, float]:
+	var left: Dictionary[Vector2, Vector2] = {}
+	var right: Dictionary[Vector2, Vector2] = {}
+	for face: PackedVector2Array in faces:
+		var a: Vector2 = IsoProjection.to_screen(face[0])
+		var b: Vector2 = IsoProjection.to_screen(face[1])
+		if a.x > b.x:
+			var swap: Vector2 = a
+			a = b
+			b = swap
+		right[a] = b
+		left[b] = a
+	var courses: Dictionary[Vector2, float] = {}
+	for at: Vector2 in right:
+		if left.has(at) and is_equal_approx(left[at].y, right[at].y):
+			courses[at] = lerpf(at.y, left[at].y, 0.43)
+	return courses
+
+
+## One surface for coping, rock and bridge trim. The first row always lands on the floor.
 func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var colors: PackedColorArray = PackedColorArray()
@@ -604,34 +626,117 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var cold: Color = top_color * Color(0.63, 0.73, 0.92)
 	var noise: FastNoiseLite = FastNoiseLite.new()
 	noise.seed = MASK_SEED + 4
-	noise.frequency = 0.007
+	noise.frequency = 0.005
 	var centre_x: float = IsoProjection.to_screen(_centre).x
 	var faces: Array[PackedVector2Array] = near_faces(_data, _cell_px)
+	var courses: Dictionary[Vector2, float] = cliff_courses(faces)
 	var bridge: Dictionary[Vector2, float] = _bridge_openings(_data, _cell_px, faces)
 	var bridge_y: float = 0.0
+	var bridge_left: float = INF
+	var bridge_right: float = -INF
 	for point: Vector2 in bridge:
 		bridge_y += point.y
+		bridge_left = minf(bridge_left, point.x)
+		bridge_right = maxf(bridge_right, point.x)
 	bridge_y /= maxi(bridge.size(), 1)
+	var bay: float = (bridge_right - bridge_left) / BRIDGE_SPANS
 	for edge: PackedVector2Array in _cliff_segments(faces, bridge):
 		var base: int = vertices.size()
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
-			var taper: float = smoothstep(0.12, 0.95, depth)
 			for at: Vector2 in edge:
+				var masonry: bool = bridge.has(at)
 				var opening: float = bridge.get(at, 0.0)
+				var abutment: float = smoothstep(0.0, 68.0, minf(at.x - bridge_left, bridge_right - at.x))
 				var height: float = lerpf(CLIFF_PX, BRIDGE_INTRADOS_PX + bridge_y - at.y, opening)
-				var inset: float = clampf((centre_x - at.x) / 450.0, -1.0, 1.0) * 36.0
-				var relief: float = noise.get_noise_2d(at.x, at.y) * 45.0
-				var offset: Vector2 = Vector2(inset + relief, relief * 0.55) * taper * (1.0 - opening)
-				vertices.append(at + Vector2(0.0, height * depth) + offset)
-				var tint: Color = top_color.lerp(cold, depth).darkened(opening * smoothstep(0.45, 1.0, depth) * 0.59)
-				tint.a = lerpf(CLIFF_VISIBILITY[row], 1.0, smoothstep(0.0, 0.22, opening))
+				var course: float = lerpf(courses.get(at, at.y), bridge_y, abutment if masonry else 0.0)
+				var drop: float = height * depth
+				if masonry and row > 0:
+					var footing: float = minf(39.0, height - 4.0)
+					var courses_px: Array[float] = [0.0, footing * 0.53, footing,
+						lerpf(footing, height, 0.32), lerpf(footing, height, 0.65), height]
+					drop = lerpf(drop, courses_px[row], abutment)
+				# Depth in screen pixels keeps the bridge's masonry courses level above each opening.
+				var band: float = smoothstep(0.0, 18.0, drop) * (1.0 - smoothstep(28.0, 90.0, drop))
+				var taper: float = smoothstep(0.08, 0.45, depth)
+				var inset: float = clampf((centre_x - at.x) / 800.0, -1.0, 1.0)
+				var relief: float = noise.get_noise_2d(at.x, at.y * 0.7) + 0.21 * sin(at.y * 0.020 + at.x * 0.006)
+				var shelf: float = (1.0 - smoothstep(0.38, 0.98, depth)) * taper
+				var offset: Vector2 = Vector2(inset * 42.0 * taper + relief * 104.0 * shelf, relief * 38.0 * shelf)
+				if masonry:
+					offset *= 1.0 - abutment
+				var down: Vector2 = at + Vector2(0.0, drop + (course - at.y) * band) + offset
+				vertices.append(down)
+				var shade: float = 0.20 if row == 2 else 0.0
+				var tint: Color = top_color.lerp(cold, depth * 0.82).darkened(shade)
+				var v: float = depth
+				if masonry:
+					var pier: float = absf((at.x - bridge_left) - bay)
+					var reveal: float = smoothstep(27.0, 59.0, pier)
+					tint *= Color.WHITE.lerp(Color(0.92, 0.94, 1.0).darkened(reveal * depth * 0.14), abutment)
+					var below_deck: float = maxf(0.0, down.y - bridge_y)
+					var masonry_v: float = maxf(drop * 0.50, below_deck) / 420.0
+					v = lerpf(depth, masonry_v, abutment)
+				tint.a = lerpf(CLIFF_VISIBILITY[row], 1.0, smoothstep(0.0, 0.20, opening))
 				colors.append(tint)
 				if texture != null:
-					uvs.append(Vector2((at.x + offset.x * 0.55) / span, depth * height / CLIFF_PX))
+					var warp: float = relief * 0.07 * smoothstep(0.12, 0.6, depth)
+					warp *= 1.0 - abutment if masonry else 1.0
+					uvs.append(Vector2((at.x + offset.x * 0.42) / span + warp, v))
 			if row + 1 < CLIFF_DEPTHS.size():
 				indices.append_array(_quad_indices(base + row * 2))
+	if bay > 0.0 and texture != null:
+		_bridge_pier(Vector2(bridge_left + bay, bridge_y), vertices, colors, uvs, indices)
+		for index: int in BRIDGE_SPANS:
+			var spring: Vector2 = Vector2(bridge_left + bay * (index + 0.5), bridge_y + CLIFF_PX)
+			_arch_stonework(spring, bay * BRIDGE_ARCH_WIDTH * 0.5, vertices, colors, uvs, indices)
 	return _surface_mesh(vertices, colors, uvs, indices)
+
+
+## The middle pier projects slightly in front of the spandrel and widens toward the footings.
+static func _bridge_pier(
+	at: Vector2, vertices: PackedVector2Array, colors: PackedColorArray,
+	uvs: PackedVector2Array, indices: PackedInt32Array
+) -> void:
+	var base: int = vertices.size()
+	for row: int in 4:
+		var height: float = [33.0, 110.0, 192.0, CLIFF_PX][row]
+		var half_width: float = [19.0, 23.0, 29.0, 36.0][row]
+		var alpha: float = [0.90, 0.96, 0.84, 0.0][row]
+		for side: int in 2:
+			var x: float = half_width * (-1.0 if side == 0 else 1.0)
+			vertices.append(at + Vector2(x, height + side * 5.0))
+			var tone: Color = Color(0.84, 0.86, 0.93, alpha) if side == 0 else Color(0.64, 0.66, 0.74, alpha)
+			colors.append(tone)
+			uvs.append(Vector2(0.245 + side * 0.087, 0.097 + height * 0.001))
+	for row: int in 3:
+		indices.append_array(_quad_indices(base + row * 2))
+
+
+## The cut stone has a lit face and a recessed return. Both darken into the gorge at the spring.
+static func _arch_stonework(
+	spring: Vector2, radius: float, vertices: PackedVector2Array, colors: PackedColorArray,
+	uvs: PackedVector2Array, indices: PackedInt32Array
+) -> void:
+	var rise: float = CLIFF_PX - BRIDGE_INTRADOS_PX
+	for stone: int in ARCH_STONES:
+		var base: int = vertices.size()
+		var u: float = 0.235 + float(stone % 3) * 0.046
+		for row: int in 3:
+			for side: int in 2:
+				var angle: float = (stone + side) * PI / ARCH_STONES
+				var radial: Vector2 = Vector2(-cos(angle), -sin(angle))
+				var rim: Vector2 = spring + radial * Vector2(radius, rise)
+				var offsets: Array[float] = [-11.0, 2.5, 22.0]
+				var tint: Color = [Color(0.45, 0.48, 0.55), Color(1.05, 1.02, 1.0),
+					Color(0.86, 0.85, 0.9)][row]
+				tint *= [0.81, 0.92, 1.0, 0.85, 0.96][stone % 5]
+				tint.a = smoothstep(0.04, 0.42, sin(angle))
+				vertices.append(rim + radial * offsets[row])
+				colors.append(tint)
+				uvs.append(Vector2(u + side * 0.037, 0.128 + row * 0.03))
+		indices.append_array(_quad_indices(base))
+		indices.append_array(_quad_indices(base + 2))
 
 
 ## Each band is laid out as two consecutive rows of left and right vertices.

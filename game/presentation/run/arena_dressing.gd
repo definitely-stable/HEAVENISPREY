@@ -24,11 +24,13 @@ const GUARDIANS_ASSET: String = "asset.prop.courtyard_guardians"
 const BALUSTRADE_ASSET: String = "asset.prop.courtyard_balustrade"
 ## The prop name of a rail bay: a vertical plane between two posts, textured with "rail".
 const RAIL_PROP: String = "rail_span"
+const COPING_PROP: String = "wall_coping"
+const COPING_HEIGHT: float = 23.0
+const COPING_HALF_WIDTH: float = 9.0
 ## Directions of a straight balustrade run on the grid and the cells between its posts: along a
 ## grid axis the run climbs the screen at 2:1 and posts every second cell keep the rail readable;
-## along a cell diagonal it runs flat across the screen (a post on every cell, 68 px apart) or
-## straight up it, where the rail is edge-on and posts on every second cell (68 px apart, as tall
-## as their spacing) carry the line without stacking into a ladder.
+## along a cell diagonal it runs flat across the screen or straight up it, where the thin stone
+## cap replaces the edge-on rail. Long flat runs alternate one and two bays between posts.
 const RUN_DIRS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 1)]
 const RUN_STEPS: Array[int] = [2, 2, 1, 2]
 ## Half the side of a post's square base (world px, 0.4 of a cell): rails stop at the post faces.
@@ -154,8 +156,8 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 
 ## The balustrade of the low wall cells of `rows` but those in `skip` (cells of the ruins):
 ## {"posts": cells, "broken": cells (dead ends of a line), "rails": [[cell, cell], ...] between
-## neighbouring posts of a straight run, "edge_on": the same for runs straight up the screen (no
-## rail is drawn: it is edge-on and the posts carry the line)}. Cells link to their neighbours
+## neighbouring posts of a straight run, "edge_on": spans straight up the screen with a low
+## stone course linking the bases}. Cells link to their neighbours
 ## along RUN_DIRS; a diagonal link is dropped where an axis link already joins the two cells
 ## through a corner cell, so a staircase on the grid is one run, not a zigzag.
 static func balustrade(rows: Array, skip: Dictionary = {}) -> Dictionary:
@@ -183,6 +185,9 @@ static func balustrade(rows: Array, skip: Dictionary = {}) -> Dictionary:
 				links[run[i]] = int(links.get(run[i], 0)) + (1 if i == 0 or i == run.size() - 1 else 2)
 				if i % RUN_STEPS[index] != 0 and i != run.size() - 1:
 					continue
+				if dir == Vector2i(1, -1) and run.size() >= 7 and i % 3 == 2 and i != run.size() - 1 \
+					and not _wall_junction(lines, run[i]):
+					continue  # Combine two bays on long facades without a break in the rail.
 				posts[run[i]] = true
 				if i > 0:
 					(edge_on if dir == Vector2i(1, 1) else rails).append([run[last_post], run[i]])
@@ -260,6 +265,9 @@ static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, 
 	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
 	if quad.is_empty():
 		return
+	if item["prop"] == COPING_PROP:
+		_draw_coping(canvas, quad, item, light)
+		return
 	var uv: Rect2 = quad["uv"]
 	var uvs: PackedVector2Array = PackedVector2Array([
 		Vector2(uv.position.x, uv.end.y), uv.end, Vector2(uv.end.x, uv.position.y), uv.position,
@@ -267,6 +275,45 @@ static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, 
 	var colors: PackedColorArray = PackedColorArray([light, light, light, light])
 	for bay: PackedVector2Array in rail_quads(item, (quad["rect"] as Rect2).size):
 		canvas.draw_polygon(bay, colors, uvs, quad["texture"])
+
+
+## From this angle the rail face has zero width. Only the stone cap and its near end are visible.
+static func _draw_coping(canvas: CanvasItem, quad: Dictionary, item: Dictionary, light: Color) -> void:
+	var source: Rect2 = quad["uv"]
+	var from: Vector2 = IsoProjection.to_screen(item["from"])
+	var to: Vector2 = IsoProjection.to_screen(item["to"])
+	var lift: Vector2 = Vector2(0.0, -COPING_HEIGHT)
+	var left: Vector2 = Vector2(-COPING_HALF_WIDTH, 0.0)
+	var right: Vector2 = -left
+	var cap: PackedVector2Array = PackedVector2Array([from + left + lift, from + right + lift,
+		to + right + lift, to + left + lift])
+	var band: Rect2 = Rect2(source.position + Vector2(0.0, source.size.y * 0.83),
+		Vector2(source.size.x, source.size.y * 0.13))
+	var cap_uv: PackedVector2Array = PackedVector2Array([band.position,
+		Vector2(band.position.x, band.end.y), band.end, Vector2(band.end.x, band.position.y)])
+	canvas.draw_polygon(cap, PackedColorArray([light.lightened(0.11)]), cap_uv, quad["texture"])
+	var end: PackedVector2Array = PackedVector2Array([cap[3], cap[2], to + right, to + left])
+	canvas.draw_colored_polygon(end, Color(0.28, 0.25, 0.32) * light)
+
+
+static func wall_light(light: Color) -> Color:
+	return light.darkened(0.17 * (1.0 - smoothstep(0.91, 1.26, light.r)))
+
+
+## Lay the silhouettes first; the white contacts keep their coverage near a lantern.
+static func draw_shadows(canvas: Node2D, sprites: SpriteSet, props: Array[Dictionary], disc: Texture2D) -> void:
+	for prop: Dictionary in props:
+		if prop["prop"] == BLOCK_PROP or prop.has("rail_bounds") or prop.has("clip"):
+			continue
+		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
+		var shadow: Color = Color(0.0, 0.0, 0.0, 0.72) if prop.get("wall", false) else Color.BLACK
+		sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, shadow, prop["flip"])
+	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
+	for prop: Dictionary in props:
+		for polygon: PackedVector2Array in prop.get("footprint", []):
+			canvas.draw_colored_polygon(polygon, Color.WHITE)
+		if prop.get("wall", false) and not prop.has("rail_bounds"):
+			RunLighting.contact(canvas, disc, prop["screen"], POST_HALF_PX * 1.55)
 
 
 ## The screen quads [base from, base to, top to, top from] of the bays of a rail: as many whole
@@ -317,6 +364,13 @@ static func lights(items: Array[Dictionary]) -> Array[Dictionary]:
 		if item["light"]:
 			out.append({"at": item["at"], "flame": item["flame"]})
 	return out
+
+
+static func _wall_junction(lines: Dictionary, cell: Vector2i) -> bool:
+	for dir: Vector2i in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+		if _linked(lines, cell, dir) or _linked(lines, cell - dir, dir):
+			return true
+	return false
 
 
 static func _linked(lines: Dictionary, cell: Vector2i, dir: Vector2i) -> bool:
@@ -375,6 +429,15 @@ static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Di
 		out.append({
 			"asset": BALUSTRADE_ASSET, "prop": RAIL_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
 			"flame": 0.0, "from": from, "to": to, "rail_bounds": bounds, "wall": true,
+		})
+	for pair: Array in wall["edge_on"]:
+		var a: Vector2 = (Vector2(pair[0]) + half) * cell_px
+		var b: Vector2 = (Vector2(pair[1]) + half) * cell_px
+		var bounds: Rect2 = Rect2(IsoProjection.to_screen(a), Vector2.ZERO).expand(IsoProjection.to_screen(b))
+		var inset: Vector2 = Vector2.ONE * (POST_HALF_PX * 0.52)
+		out.append({
+			"asset": BALUSTRADE_ASSET, "prop": COPING_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
+			"flame": 0.0, "from": a + inset, "to": b - inset, "rail_bounds": bounds.grow(COPING_HEIGHT), "wall": true,
 		})
 	for cell: Vector2i in wall["posts"]:
 		var prop: String = "post_broken" if (wall["broken"] as Array).has(cell) else "post"

@@ -751,17 +751,7 @@ func _draw_shadow_pass() -> void:
 				var pose: Array = _frame_pose(slot)
 				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.BLOCK_PROP or prop["prop"] == ArenaDressing.RAIL_PROP or prop.has("clip"):
-			continue
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
-		_sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, Color.BLACK, prop["flip"])
-	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
-	# A ruin as wide as several cells has no single base point to lay its silhouette from: its
-	# cells darken the ground around its foot instead.
-	for prop: Dictionary in _props:
-		for polygon: PackedVector2Array in prop.get("footprint", []):
-			canvas.draw_colored_polygon(polygon, Color.WHITE)
+	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture)
 	for lantern: Vector2 in _lanterns:
 		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
 	if world == null:
@@ -872,13 +862,14 @@ func _draw_prop(prop: Dictionary) -> void:
 	var light: Color = prop["fixed_light"]
 	if driver != null:
 		light = RunLighting.with_aura(light, base, driver.hero_position_px())
+	light = ArenaDressing.wall_light(light) if prop.get("wall", false) else light
 	if prop.has("clip"):
 		_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, false, prop["clip"])
 		return
 	if prop["prop"] == ArenaDressing.BLOCK_PROP:
 		ArenaDressing.draw_block(self, prop, light)
 		return
-	if prop["prop"] == ArenaDressing.RAIL_PROP:
+	if prop.has("rail_bounds"):
 		ArenaDressing.draw_rail(self, _sprites, prop, light)
 		return
 	_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, prop["flip"])

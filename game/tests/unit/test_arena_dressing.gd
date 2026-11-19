@@ -243,7 +243,7 @@ func test_staircase_is_one_run() -> void:
 	var stairs: Array = ["w   ", " w  ", "  w ", "   w"]
 	var wall: Dictionary = ArenaDressing.balustrade(stairs)
 	assert_eq(wall["posts"], [Vector2i(0, 0), Vector2i(2, 2), Vector2i(3, 3)], "every second cell, and the end")
-	assert_eq(wall["rails"], [], "straight up the screen: posts only")
+	assert_eq(wall["rails"], [], "straight up the screen: a stone cap instead of a rail face")
 	assert_eq(wall["edge_on"], [[Vector2i(0, 0), Vector2i(2, 2)], [Vector2i(2, 2), Vector2i(3, 3)]])
 	var flat: Dictionary = ArenaDressing.balustrade(["   w", "  w ", " w  ", "w   "])
 	assert_eq((flat["rails"] as Array).size(), 3, "flat across the screen: a bay between every post")
@@ -360,6 +360,35 @@ func test_ruins_stand_on_their_cells() -> void:
 
 ## Rail bays stand on the line between the post centres and stop at the post faces; the quads of
 ## a bay are vertical planes on that line, as tall as the rail elevation.
+func test_edge_on_coping_joins_only_the_existing_low_wall() -> void:
+	var caps: int = 0
+	for item: Dictionary in _items():
+		if item["prop"] != ArenaDressing.COPING_PROP:
+			continue
+		caps += 1
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		assert_almost_eq(IsoProjection.to_screen(from).x, IsoProjection.to_screen(to).x, 0.01)
+		var at: Vector2 = from
+		while at.x < to.x:
+			assert_eq(_char_at(at), ArenaDressing.LOW_CHAR, "cap never covers the walkable floor")
+			at += Vector2.ONE * CELL
+		assert_eq(_char_at(to), ArenaDressing.LOW_CHAR, "the cap meets the final post")
+	assert_gt(caps, 0, "the real arena has visible stone caps")
+	var split: Dictionary = ArenaDressing.balustrade(["w  ", " . ", "  w"])
+	assert_eq(split["edge_on"], [], "do not bridge a gap")
+
+
+func test_long_fence_keeps_posts_at_turns_and_runs_continuously() -> void:
+	var rows: Array = ["      w", "     w ", "    w  ", "   w   ", "  w    ", " w     ", "w      "]
+	var flat: Dictionary = ArenaDressing.balustrade(rows)
+	assert_false(flat["posts"].has(Vector2i(2, 4)), "two consecutive bays share the end posts")
+	assert_has(flat["rails"], [Vector2i(1, 5), Vector2i(3, 3)])
+	rows[5] = " w w   "
+	var corner: Dictionary = ArenaDressing.balustrade(rows)
+	assert_has(corner["posts"], Vector2i(2, 4), "the turn into the other run keeps its post")
+
+
 func test_rails_run_between_post_faces() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var bay: Vector2 = sprites.prop_size(ArenaDressing.BALUSTRADE_ASSET, "rail")

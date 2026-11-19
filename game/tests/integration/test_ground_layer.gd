@@ -298,6 +298,22 @@ func test_cliff_bends_beneath_the_paving_without_seams() -> void:
 	crown_x.sort()
 	var extent: float = crown_x[-1] - crown_x[0] if crown_x.size() > 1 else 0.0
 	assert_gt(extent, 250.0, "the arch crowns are in two separate spans")
+	var rock_vertices: int = face_index * rows * 2
+	assert_eq(vertices.size() - rock_vertices, 8 + GroundLayer.BRIDGE_SPANS * GroundLayer.ARCH_STONES * 6,
+		"both cut-stone rims and their middle pier are in the cliff batch")
+
+
+func test_cliff_courses_soften_teeth_without_crossing_corners() -> void:
+	var faces: Array[PackedVector2Array] = [
+		PackedVector2Array([Vector2(0, CELL), Vector2(CELL, CELL)]),
+		PackedVector2Array([Vector2(CELL, 0), Vector2(CELL, CELL)]),
+	]
+	var courses: Dictionary[Vector2, float] = GroundLayer.cliff_courses(faces)
+	var apex: Vector2 = IsoProjection.to_screen(Vector2(CELL, CELL))
+	assert_eq(courses.size(), 1)
+	assert_lt(courses.get(apex, apex.y), apex.y, "the tooth recedes under the paving")
+	faces[1] = PackedVector2Array([Vector2(CELL, CELL), Vector2(2 * CELL, CELL)])
+	assert_true(GroundLayer.cliff_courses(faces).is_empty(), "an isometric diagonal holds its profile")
 
 
 func test_aura_follows_the_hero() -> void:
