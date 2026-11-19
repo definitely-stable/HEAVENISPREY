@@ -97,6 +97,7 @@ var lights: Array[Light2D] = []
 var waterfalls: Array[ColorRect] = []
 ## The paving polygon, and the gold inlay as closed or open polylines (world px).
 var paving: Polygon2D
+var shadow_receiver: ImageTexture
 var inlay: Array[PackedVector2Array] = []
 var _iso: Node2D
 var _aura: PointLight2D
@@ -194,6 +195,50 @@ static func near_faces(data: Dictionary, cell_px: int) -> Array[PackedVector2Arr
 			if x >= below.length() or below[x] == VOID_CHAR:
 				out.append(PackedVector2Array([Vector2(x, y + 1) * cell_px, Vector2(x + 1, y + 1) * cell_px]))
 	return out
+
+
+## Include the back-facing edges when computing the shared paving outline.
+static func perimeter(data: Dictionary, cell_px: int) -> Array[PackedVector2Array]:
+	var faces: Array[PackedVector2Array] = near_faces(data, cell_px)
+	var rows: Array = data.get("rows", [])
+	for y: int in rows.size():
+		var row: String = rows[y]
+		var above: String = rows[y - 1] if y > 0 else ""
+		for x: int in row.length():
+			if row[x] == VOID_CHAR:
+				continue
+			if x == 0 or row[x - 1] == VOID_CHAR:
+				faces.append(PackedVector2Array([Vector2(x, y) * cell_px, Vector2(x, y + 1) * cell_px]))
+			if x >= above.length() or above[x] == VOID_CHAR:
+				faces.append(PackedVector2Array([Vector2(x, y) * cell_px, Vector2(x + 1, y) * cell_px]))
+	return faces
+
+
+## At a concave step, fill the part of the void between the corner and its adjoining tips.
+## The three occupied quarters leave only one direction to move, away from playable paving.
+static func rim_offsets(data: Dictionary, cell_px: int, boundary: Array[PackedVector2Array]) -> Dictionary:
+	var rows: Array = data.get("rows", [])
+	var neighbours: Dictionary[Vector2, PackedVector2Array] = {}
+	for face: PackedVector2Array in boundary:
+		for side: int in 2:
+			var at: Vector2 = face[side]
+			var adjacent: PackedVector2Array = neighbours.get(at, PackedVector2Array())
+			adjacent.append(face[1 - side])
+			neighbours[at] = adjacent
+	var offsets: Dictionary = {}
+	for at: Vector2 in neighbours:
+		var ends: PackedVector2Array = neighbours[at]
+		if ends.size() != 2:
+			continue
+		var cell: Vector2i = Vector2i(at / cell_px)
+		var paved: int = 0
+		for offset: Vector2i in [Vector2i.ZERO, Vector2i.LEFT, Vector2i.UP, -Vector2i.ONE]:
+			var q: Vector2i = cell + offset
+			if q.y >= 0 and q.y < rows.size() and q.x >= 0 and q.x < (rows[q.y] as String).length():
+				paved += int(rows[q.y][q.x] != VOID_CHAR)
+		if paved == 3:
+			offsets[at] = (ends[0] + ends[1]) * 0.5 - at
+	return offsets
 
 
 ## Distance (cells, four neighbours) of every cell from the nearest cell that is not open
@@ -391,7 +436,8 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 	paving = Polygon2D.new()
 	var points: PackedVector2Array = PackedVector2Array()
 	var parts: Array = []
-	for rect: Rect2 in footprint(_data, _cell_px):
+	var floor_rects: Array[Rect2] = footprint(_data, _cell_px)
+	for rect: Rect2 in floor_rects:
 		var first: int = points.size()
 		points.append_array(PackedVector2Array([
 			rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
@@ -402,6 +448,11 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 	paving.polygon = points
 	paving.polygons = parts
 	_iso.add_child(paving)
+	var mask_size: Vector2i = cells_of(_data)
+	var receiver: Image = Image.create_empty(maxi(1, mask_size.x), maxi(1, mask_size.y), false, Image.FORMAT_L8)
+	for rect: Rect2 in floor_rects:
+		receiver.fill_rect(Rect2i(rect.position / _cell_px, rect.size / _cell_px), Color.WHITE)
+	shadow_receiver = ImageTexture.create_from_image(receiver)
 	if texture == null:
 		paving.color = COLOR_FLOOR_FLAT
 		return
@@ -613,26 +664,6 @@ static func _cliff_segments(
 	return out
 
 
-## Average only the teeth of across-screen runs. Corners and the contact with the floor stay put.
-static func cliff_courses(faces: Array[PackedVector2Array]) -> Dictionary[Vector2, float]:
-	var left: Dictionary[Vector2, Vector2] = {}
-	var right: Dictionary[Vector2, Vector2] = {}
-	for face: PackedVector2Array in faces:
-		var a: Vector2 = IsoProjection.to_screen(face[0])
-		var b: Vector2 = IsoProjection.to_screen(face[1])
-		if a.x > b.x:
-			var swap: Vector2 = a
-			a = b
-			b = swap
-		right[a] = b
-		left[b] = a
-	var courses: Dictionary[Vector2, float] = {}
-	for at: Vector2 in right:
-		if left.has(at) and is_equal_approx(left[at].y, right[at].y):
-			courses[at] = (at.y + left[at].y) * 0.5
-	return courses
-
-
 ## One surface for coping, rock and bridge trim. The first row always lands on the floor.
 func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var vertices: PackedVector2Array = PackedVector2Array()
@@ -646,7 +677,21 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	noise.frequency = 0.005
 	var centre_x: float = IsoProjection.to_screen(_centre).x
 	var faces: Array[PackedVector2Array] = near_faces(_data, _cell_px)
-	var courses: Dictionary[Vector2, float] = cliff_courses(faces)
+	var boundary: Array[PackedVector2Array] = perimeter(_data, _cell_px)
+	var rim: Dictionary = _rim_shifts(boundary)
+	var sides: Dictionary = {}
+	var back: Array[PackedVector2Array] = []
+	for index: int in boundary.size():
+		var face: PackedVector2Array = boundary[index]
+		var a: Vector2 = IsoProjection.to_screen(face[0])
+		var b: Vector2 = IsoProjection.to_screen(face[1])
+		var heel_a: Vector2 = a + rim[a]
+		var heel_b: Vector2 = b + rim[b]
+		if absf(heel_a.x - heel_b.x) < 0.01:
+			sides[a] = true
+			sides[b] = true
+			if index >= faces.size():
+				back.append(face)
 	var bridge: Dictionary[Vector2, float] = _bridge_openings(_data, _cell_px, faces)
 	var bridge_y: float = 0.0
 	var bridge_left: float = INF
@@ -666,7 +711,8 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				var opening: float = bridge.get(at, 0.0)
 				var abutment: float = smoothstep(0.0, 68.0, minf(at.x - bridge_left, bridge_right - at.x))
 				var height: float = lerpf(CLIFF_PX, BRIDGE_INTRADOS_PX + bridge_y - at.y, opening)
-				var course: float = lerpf(courses.get(at, at.y), bridge_y, abutment if masonry else 0.0)
+				var lip: Vector2 = rim.get(at, Vector2.ZERO)
+				var seam_y: float = (bridge_y - at.y - lip.y) * abutment if masonry else 0.0
 				var drop: float = height * depth
 				if masonry and row > 0:
 					var footing: float = minf(39.0, height - 4.0)
@@ -682,10 +728,14 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				var offset: Vector2 = Vector2(inset * 42.0 * taper + relief * 104.0 * shelf, relief * 38.0 * shelf)
 				if masonry:
 					offset *= 1.0 - abutment
-				var down: Vector2 = at + Vector2(0.0, drop + (course - at.y) * band) + offset
+				var seam: Vector2 = at + lip
+				if opening == 0.0 and sides.has(at):
+					# A projected side contour must not split into independent sheets below the cap.
+					var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0)
+					offset = Vector2(lean * 49.0 * taper, 0.0)
+				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band) + offset
 				vertices.append(down)
-				var has_course: bool = courses.has(at) or masonry
-				var shade: float = [0.51 if has_course else 0.23, 0.06, 0.19, 0.0, 0.0, 0.0][row]
+				var shade: float = [0.30, 0.06, 0.19, 0.0, 0.0, 0.0][row]
 				var tint: Color = top_color.lerp(cold, depth * 0.82).darkened(shade)
 				var v: float = depth
 				if masonry:
@@ -708,27 +758,52 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 		for index: int in BRIDGE_SPANS:
 			var spring: Vector2 = Vector2(bridge_left + bay * (index + 0.5), bridge_y + CLIFF_PX)
 			_arch_stonework(spring, bay * BRIDGE_ARCH_WIDTH * 0.5, vertices, colors, uvs, indices)
-	return _surface_mesh(vertices, colors, uvs, indices)
+	var back_indices: PackedInt32Array = PackedInt32Array()
+	# These faces are viewed squarely end-on. Only their silhouette needs the back-side fill.
+	# Keep the textured front in front of this narrow, shadowed rock return.
+	for edge: PackedVector2Array in _cliff_segments(back, bridge):
+		var base: int = vertices.size()
+		for row: int in CLIFF_DEPTHS.size():
+			var depth: float = CLIFF_DEPTHS[row]
+			var taper: float = smoothstep(0.08, 0.45, depth)
+			for at: Vector2 in edge:
+				var seam: Vector2 = at + rim.get(at, Vector2.ZERO)
+				var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0) * 49.0 * taper
+				vertices.append(seam + Vector2(lean, depth * CLIFF_PX))
+				colors.append(Color(0.57, 0.55, 0.66, CLIFF_VISIBILITY[row]))
+				if texture != null:
+					uvs.append(Vector2((seam.x + seam.y * 0.4) / span, depth))
+			if row + 1 < CLIFF_DEPTHS.size():
+				back_indices.append_array(_quad_indices(base + row * 2))
+	back_indices.append_array(indices)
+	return _surface_mesh(vertices, colors, uvs, back_indices)
 
 
-## Extend the paving into the recessed teeth so the outer lip and the stone floor meet.
+## The floor and the cliff use the same outer edge. Paving fills only the concave step.
 func _add_paving_caps(points: PackedVector2Array, parts: Array) -> void:
-	var faces: Array[PackedVector2Array] = near_faces(_data, _cell_px)
-	var courses: Dictionary[Vector2, float] = cliff_courses(faces)
+	var faces: Array[PackedVector2Array] = perimeter(_data, _cell_px)
+	var rim: Dictionary = rim_offsets(_data, _cell_px, faces)
+	for at: Vector2 in rim:
+		var delta: Vector2 = rim[at]
+		var first: int = points.size()
+		points.append_array(PackedVector2Array([at, at + Vector2(delta.x * 2.0, 0.0),
+			at + Vector2(0.0, delta.y * 2.0)]))
+		parts.append(PackedInt32Array([first, first + 1, first + 2]))
+
+
+## Interpolate at the original bridge subdivisions too, so their tops share the rim.
+func _rim_shifts(faces: Array[PackedVector2Array]) -> Dictionary:
+	var offsets: Dictionary = rim_offsets(_data, _cell_px, faces)
+	var shifts: Dictionary = {}
 	for face: PackedVector2Array in faces:
 		var a: Vector2 = IsoProjection.to_screen(face[0])
 		var b: Vector2 = IsoProjection.to_screen(face[1])
-		var apron_a: float = maxf(0.0, courses.get(a, a.y - 9.0) + 9.0 - a.y)
-		var apron_b: float = maxf(0.0, courses.get(b, b.y - 9.0) + 9.0 - b.y)
-		if apron_a + apron_b <= 0.0:
-			continue
-		var first: int = points.size()
-		points.append_array(face)
-		if apron_b > 0.0:
-			points.append(IsoProjection.to_world(b + Vector2(0.0, apron_b)))
-		if apron_a > 0.0:
-			points.append(IsoProjection.to_world(a + Vector2(0.0, apron_a)))
-		parts.append(PackedInt32Array(range(first, points.size())))
+		var shift_a: Vector2 = IsoProjection.to_screen(offsets.get(face[0], Vector2.ZERO))
+		var shift_b: Vector2 = IsoProjection.to_screen(offsets.get(face[1], Vector2.ZERO))
+		for index: int in BRIDGE_EDGE_STEPS + 1:
+			var t: float = float(index) / BRIDGE_EDGE_STEPS
+			shifts[a.lerp(b, t)] = shift_a.lerp(shift_b, t)
+	return shifts
 
 
 ## Keep the trailing growth attached to the lit face, in one transparent atlas draw.

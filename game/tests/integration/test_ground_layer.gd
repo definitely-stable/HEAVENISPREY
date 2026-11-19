@@ -96,6 +96,19 @@ func test_without_a_floor_texture_one_flat_polygon() -> void:
 	assert_eq(ground.inlay.size(), 0, "no seal, no inlay")
 
 
+func test_shadow_receiver_covers_paving_and_excludes_void() -> void:
+	var ground: GroundLayer = _ground(SpriteSet.new(), "none")
+	var mask: Image = ground.shadow_receiver.get_image()
+	var rows: Array = _data()["rows"]
+	assert_eq(mask.get_size(), GroundLayer.cells_of(_data()))
+	var mismatches: int = 0
+	for y: int in rows.size():
+		for x: int in (rows[y] as String).length():
+			if (mask.get_pixel(x, y).r > 0.5) != (rows[y][x] != GroundLayer.VOID_CHAR):
+				mismatches += 1
+	assert_eq(mismatches, 0, "every shadow receiver texel matches the paved topology")
+
+
 ## A3 polish: the wear mask is the same on every run, clean at the seal, more worn at the walls.
 func test_wear_mask_is_fixed_clean_at_the_seal_and_worn_at_the_walls() -> void:
 	var clear: float = 336.0
@@ -267,13 +280,15 @@ func test_cliff_bends_beneath_the_paving_without_seams() -> void:
 	var arch_crowns: Dictionary[Vector2, bool] = {}
 	var faces: Array[PackedVector2Array] = GroundLayer.near_faces(_data(), CELL)
 	var openings: Dictionary[Vector2, float] = GroundLayer._bridge_openings(_data(), CELL, faces)
+	var rim: Dictionary = ground._rim_shifts(GroundLayer.perimeter(_data(), CELL))
 	for face: PackedVector2Array in GroundLayer._cliff_segments(faces, openings):
 		for side: int in 2:
 			var edge: Vector2 = face[side]
 			var down: PackedVector2Array = PackedVector2Array()
 			for row: int in rows:
 				down.append(vertices[(face_index * rows + row) * 2 + side])
-			assert_eq(down[0], edge, "the top follows the paved edge")
+			var expected: Vector2 = edge + rim.get(edge, Vector2.ZERO)
+			assert_eq(down[0], expected, "the top follows the shared paving contour")
 			var alpha: float = colors[((face_index + 1) * rows - 1) * 2 + side].a
 			var opening: float = openings.get(edge, 0.0)
 			if opening == 0.0:
@@ -300,20 +315,19 @@ func test_cliff_bends_beneath_the_paving_without_seams() -> void:
 	assert_gt(extent, 250.0, "the arch crowns are in two separate spans")
 	var rock_vertices: int = face_index * rows * 2
 	var arch_vertices: int = 8 + GroundLayer.BRIDGE_SPANS * GroundLayer.ARCH_STONES * 6
-	assert_eq(vertices.size() - rock_vertices, arch_vertices, "the arch masonry stays in the cliff batch")
+	assert_gt(vertices.size() - rock_vertices, arch_vertices, "arch masonry and side returns stay in one batch")
 
 
-func test_cliff_courses_soften_teeth_without_crossing_corners() -> void:
-	var faces: Array[PackedVector2Array] = [
-		PackedVector2Array([Vector2(0, CELL), Vector2(CELL, CELL)]),
-		PackedVector2Array([Vector2(CELL, 0), Vector2(CELL, CELL)]),
-	]
-	var courses: Dictionary[Vector2, float] = GroundLayer.cliff_courses(faces)
-	var apex: Vector2 = IsoProjection.to_screen(Vector2(CELL, CELL))
-	assert_eq(courses.size(), 1)
-	assert_lt(courses.get(apex, apex.y), apex.y, "the tooth recedes under the paving")
-	faces[1] = PackedVector2Array([Vector2(CELL, CELL), Vector2(2 * CELL, CELL)])
-	assert_true(GroundLayer.cliff_courses(faces).is_empty(), "an isometric diagonal holds its profile")
+func test_shared_rim_fills_inside_steps_on_all_four_sides() -> void:
+	var court: Dictionary = {"rows": [" ... ", ".....", ".....", ".....", " ... "]}
+	var faces: Array[PackedVector2Array] = GroundLayer.perimeter(court, CELL)
+	var rim: Dictionary = GroundLayer.rim_offsets(court, CELL, faces)
+	assert_eq(rim.size(), 4)
+	assert_eq(rim.get(Vector2(1, 1) * CELL), -Vector2.ONE * CELL * 0.5)
+	assert_eq(rim.get(Vector2(4, 1) * CELL), Vector2(1, -1) * CELL * 0.5)
+	assert_eq(rim.get(Vector2(1, 4) * CELL), Vector2(-1, 1) * CELL * 0.5)
+	assert_eq(rim.get(Vector2(4, 4) * CELL), Vector2.ONE * CELL * 0.5)
+	assert_false(rim.has(Vector2(1, 0) * CELL), "the outside corner stays intact")
 
 
 func test_cliff_growth_hangs_from_the_real_rock_in_one_batch() -> void:

@@ -25,12 +25,14 @@ const BALUSTRADE_ASSET: String = "asset.prop.courtyard_balustrade"
 ## The prop name of a rail bay: a vertical plane between two posts, textured with "rail".
 const RAIL_PROP: String = "rail_span"
 const COPING_PROP: String = "wall_coping"
-const COPING_HEIGHT: float = 23.0
-const COPING_HALF_WIDTH: float = 9.0
+const COPING_HEIGHT: float = 6.0
+const COPING_HALF_WIDTH: float = 8.0
+## The atlas already paints the original stone foot below the railing.
+const RAIL_STONE_SHARE: float = 0.19
 ## Directions of a straight balustrade run on the grid and the cells between its posts: along a
 ## grid axis the run climbs the screen at 2:1 and posts every second cell keep the rail readable;
-## along a cell diagonal it runs flat across the screen or straight up it, where the thin stone
-## cap replaces the edge-on rail. Long flat runs alternate one and two bays between posts.
+## along a cell diagonal it runs flat across the screen or straight up it. All spans share the
+## same stone base, with visible red infill where the rail presents a face.
 const RUN_DIRS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 1)]
 const RUN_STEPS: Array[int] = [2, 2, 1, 2]
 ## Half the side of a post's square base (world px, 0.4 of a cell): rails stop at the post faces.
@@ -265,35 +267,95 @@ static func draw_rail(canvas: CanvasItem, sprites: SpriteSet, item: Dictionary, 
 	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
 	if quad.is_empty():
 		return
-	if item["prop"] == COPING_PROP:
-		_draw_coping(canvas, quad, item, light)
-		return
 	var uv: Rect2 = quad["uv"]
+	uv.size.y *= 1.0 - RAIL_STONE_SHARE
 	var uvs: PackedVector2Array = PackedVector2Array([
 		Vector2(uv.position.x, uv.end.y), uv.end, Vector2(uv.end.x, uv.position.y), uv.position,
 	])
 	var colors: PackedColorArray = PackedColorArray([light, light, light, light])
-	for bay: PackedVector2Array in rail_quads(item, (quad["rect"] as Rect2).size):
+	var bay_size: Vector2 = (quad["rect"] as Rect2).size
+	bay_size.y *= 1.0 - RAIL_STONE_SHARE
+	for bay: PackedVector2Array in rail_quads(item, bay_size, COPING_HEIGHT):
 		canvas.draw_polygon(bay, colors, uvs, quad["texture"])
 
 
-## From this angle the rail face has zero width. Only the stone cap and its near end are visible.
-static func _draw_coping(canvas: CanvasItem, quad: Dictionary, item: Dictionary, light: Color) -> void:
+## A thick stone sill, projected from the same plane as the post feet and the adjacent paving.
+static func sill_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInstance2D:
+	var sill: MeshInstance2D = MeshInstance2D.new()
+	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
+	if quad.is_empty():
+		return sill
+	sill.texture = quad["texture"]
+	sill.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var source: Rect2 = quad["uv"]
-	var from: Vector2 = IsoProjection.to_screen(item["from"])
-	var to: Vector2 = IsoProjection.to_screen(item["to"])
 	var lift: Vector2 = Vector2(0.0, -COPING_HEIGHT)
-	var left: Vector2 = Vector2(-COPING_HALF_WIDTH, 0.0)
-	var right: Vector2 = -left
-	var cap: PackedVector2Array = PackedVector2Array([from + left + lift, from + right + lift,
-		to + right + lift, to + left + lift])
-	var band: Rect2 = Rect2(source.position + Vector2(0.0, source.size.y * 0.83),
-		Vector2(source.size.x, source.size.y * 0.13))
-	var cap_uv: PackedVector2Array = PackedVector2Array([band.position,
-		Vector2(band.position.x, band.end.y), band.end, Vector2(band.end.x, band.position.y)])
-	canvas.draw_polygon(cap, PackedColorArray([light.lightened(0.11)]), cap_uv, quad["texture"])
-	var end: PackedVector2Array = PackedVector2Array([cap[3], cap[2], to + right, to + left])
-	canvas.draw_colored_polygon(end, Color(0.28, 0.25, 0.32) * light)
+	var band: PackedVector2Array = PackedVector2Array([
+		Vector2(source.position.x, source.position.y + source.size.y * 0.86),
+		Vector2(source.end.x, source.position.y + source.size.y * 0.86),
+		source.end, Vector2(source.position.x, source.end.y),
+	])
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Dictionary in props:
+		if not item.has("rail_bounds"):
+			continue
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var offset: Vector2 = (to - from).normalized().orthogonal() * COPING_HALF_WIDTH
+		if IsoProjection.to_screen(offset).y < 0.0:
+			offset = -offset
+		var a: Vector2 = IsoProjection.to_screen(from - offset)
+		var b: Vector2 = IsoProjection.to_screen(to - offset)
+		var c: Vector2 = IsoProjection.to_screen(to + offset)
+		var d: Vector2 = IsoProjection.to_screen(from + offset)
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([d + lift, c + lift, c, d, a + lift, b + lift, c + lift, d + lift]))
+		uvs.append_array(band)
+		uvs.append_array(band)
+		var side: Color = Color(0.68, 0.64, 0.73)
+		colors.append_array(PackedColorArray([side, side, side, side, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE]))
+		indices.append_array(PackedInt32Array([base, base + 1, base + 2, base, base + 2, base + 3,
+			base + 4, base + 5, base + 6, base + 4, base + 6, base + 7]))
+	sill.mesh = GroundLayer._surface_mesh(vertices, colors, uvs, indices)
+	return sill
+
+
+## The face disappears end-on, but the upper edge of the handrail still catches the light.
+static func edge_handrail_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> MeshInstance2D:
+	var mesh: MeshInstance2D = MeshInstance2D.new()
+	var quad: Dictionary = sprites.prop_quad(BALUSTRADE_ASSET, "rail", Vector2.ZERO)
+	if quad.is_empty():
+		return mesh
+	mesh.texture = quad["texture"]
+	var height: float = COPING_HEIGHT + (quad["rect"] as Rect2).size.y * (1.0 - RAIL_STONE_SHARE)
+	var lift: Vector2 = Vector2(0.0, -height)
+	var half: Vector2 = Vector2(2.4, 0.0)
+	var uv: Rect2 = quad["uv"]
+	var top: float = uv.position.y + uv.size.y * 0.02
+	var bottom: float = uv.position.y + uv.size.y * 0.13
+	var band: PackedVector2Array = PackedVector2Array([
+		Vector2(uv.position.x, top), Vector2(uv.end.x, top),
+		Vector2(uv.position.x, bottom), Vector2(uv.end.x, bottom),
+	])
+	var vertices: PackedVector2Array = PackedVector2Array()
+	var colors: PackedColorArray = PackedColorArray()
+	var uvs: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	for item: Dictionary in props:
+		if item["prop"] != COPING_PROP:
+			continue
+		var from: Vector2 = IsoProjection.to_screen(item["from"]) + lift
+		var to: Vector2 = IsoProjection.to_screen(item["to"]) + lift
+		var base: int = vertices.size()
+		vertices.append_array(PackedVector2Array([from - half, to - half, to + half, from + half]))
+		uvs.append_array(band)
+		var light: Color = wall_light(item["fixed_light"]).darkened(0.22)
+		colors.append_array(PackedColorArray([light, light, light, light]))
+		indices.append_array(PackedInt32Array([base, base + 1, base + 2, base, base + 2, base + 3]))
+	mesh.mesh = GroundLayer._surface_mesh(vertices, colors, uvs, indices)
+	return mesh
 
 
 static func wall_light(light: Color) -> Color:
@@ -318,15 +380,15 @@ static func draw_shadows(canvas: Node2D, sprites: SpriteSet, props: Array[Dictio
 
 ## The screen quads [base from, base to, top to, top from] of the bays of a rail: as many whole
 ## bays as fit the run at the elevation's own width (`bay`, screen px of a front view).
-static func rail_quads(item: Dictionary, bay: Vector2) -> Array[PackedVector2Array]:
+static func rail_quads(item: Dictionary, bay: Vector2, elevation: float) -> Array[PackedVector2Array]:
 	var from: Vector2 = item["from"]
 	var to: Vector2 = item["to"]
 	var count: int = maxi(1, roundi(from.distance_to(to) / bay.x))
 	var lift: Vector2 = Vector2(0.0, -bay.y)
 	var out: Array[PackedVector2Array] = []
 	for i: int in count:
-		var a: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i) / count))
-		var b: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i + 1) / count))
+		var a: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i) / count)) - Vector2(0.0, elevation)
+		var b: Vector2 = IsoProjection.to_screen(from.lerp(to, float(i + 1) / count)) - Vector2(0.0, elevation)
 		out.append(PackedVector2Array([a, b, b + lift, a + lift]))
 	return out
 
@@ -424,8 +486,8 @@ static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Di
 		var reach: float = POST_HALF_PX * (sqrt(2.0) if diagonal else 1.0)
 		var from: Vector2 = a + along * reach
 		var to: Vector2 = b - along * reach
-		var bounds: Rect2 = Rect2(IsoProjection.to_screen(from), Vector2.ZERO)
-		bounds = bounds.expand(IsoProjection.to_screen(to)).grow_side(SIDE_TOP, rail_height)
+		var bounds: Rect2 = Rect2(IsoProjection.to_screen(from), Vector2.ZERO).expand(IsoProjection.to_screen(to))
+		bounds = bounds.grow(COPING_HALF_WIDTH + COPING_HEIGHT).grow_side(SIDE_TOP, rail_height)
 		out.append({
 			"asset": BALUSTRADE_ASSET, "prop": RAIL_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
 			"flame": 0.0, "from": from, "to": to, "rail_bounds": bounds, "wall": true,
@@ -437,7 +499,8 @@ static func _add_balustrade(out: Array[Dictionary], sprites: SpriteSet, wall: Di
 		var inset: Vector2 = Vector2.ONE * (POST_HALF_PX * 0.52)
 		out.append({
 			"asset": BALUSTRADE_ASSET, "prop": COPING_PROP, "at": (a + b) * 0.5, "flip": false, "light": false,
-			"flame": 0.0, "from": a + inset, "to": b - inset, "rail_bounds": bounds.grow(COPING_HEIGHT), "wall": true,
+			"flame": 0.0, "from": a + inset, "to": b - inset, "wall": true,
+			"rail_bounds": bounds.grow(COPING_HALF_WIDTH).grow_side(SIDE_TOP, rail_height + COPING_HEIGHT),
 		})
 	for cell: Vector2i in wall["posts"]:
 		var prop: String = "post_broken" if (wall["broken"] as Array).has(cell) else "post"

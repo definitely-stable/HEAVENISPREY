@@ -255,7 +255,11 @@ func _build_layers() -> void:
 	_ground = GroundLayer.new(
 		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
 		ArenaDressing.backdrop(_sprites))
+	_ground.add_child(ArenaDressing.sill_mesh(_sprites, _props))
 	add_child(_ground)
+	var handrails: MeshInstance2D = ArenaDressing.edge_handrail_mesh(_sprites, _props)
+	handrails.show_behind_parent = true
+	add_child(handrails)
 	var under: CanvasLayer = CanvasLayer.new()
 	under.layer = -1
 	under.follow_viewport_enabled = true
@@ -266,6 +270,8 @@ func _build_layers() -> void:
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
+	shadow_material.set_shader_parameter("paving_mask", _ground.shadow_receiver)
+	shadow_material.set_shader_parameter("paving_size", Vector2(P0Tuning.arena_cells() * CELL_PX))
 	var pools: PackedVector2Array = PackedVector2Array()
 	for lantern: Vector2 in _lanterns.slice(0, MAX_SHADOW_POOLS):
 		pools.append(IsoProjection.to_screen(lantern))
@@ -824,6 +830,8 @@ func _draw_bodies() -> void:
 				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
 	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
 	for prop: Dictionary in _props:
+		if prop["prop"] == ArenaDressing.COPING_PROP:
+			continue
 		if prop.has("rail_bounds") and not rail_window.intersects(prop["rail_bounds"]):
 			continue
 		order.append(prop["order"])
