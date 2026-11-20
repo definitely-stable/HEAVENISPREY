@@ -12,12 +12,10 @@ const int MAX_FLAMES = 16;
 uniform vec2 to_moon = vec2(-0.877, -0.48);
 uniform vec3 rim_color : source_color = vec3(0.6, 0.68, 0.72);
 uniform float rim_strength = 0.5;
-// Flames of the lanterns and braziers (screen px of the canvas, raised to the fire) and their
-// flicker (1 = steady).
-uniform vec2 flames[MAX_FLAMES];
+// Flames: screen position of the fire, reach in px, and energy relative to a brazier.
+uniform vec4 flames[MAX_FLAMES];
 uniform float flame_energy[MAX_FLAMES];
 uniform int flame_count = 0;
-uniform float flame_radius = 240.0;
 uniform vec3 warm_color : source_color = vec3(1.0, 0.68, 0.3);
 uniform float warm_strength = 0.0;
 
@@ -41,10 +39,10 @@ void fragment() {
 	float warm = 0.0;
 	if (shaped && warm_strength > 0.0) {
 		for (int i = 0; i < min(flame_count, MAX_FLAMES); i++) {
-			vec2 to_flame = flames[i] - canvas_point;
-			float reach = 1.0 - length(to_flame) / flame_radius;
+			vec2 to_flame = flames[i].xy - canvas_point;
+			float reach = 1.0 - length(to_flame) / flames[i].z;
 			if (reach > 0.0) {
-				warm += max(dot(dir, normalize(to_flame)), 0.0) * reach * reach * flame_energy[i];
+				warm += max(dot(dir, normalize(to_flame)), 0.0) * reach * reach * flame_energy[i] * flames[i].w;
 			}
 		}
 	}

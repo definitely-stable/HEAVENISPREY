@@ -389,6 +389,98 @@ func test_long_fence_keeps_posts_at_turns_and_runs_continuously() -> void:
 	assert_has(corner["posts"], Vector2i(2, 4), "the turn into the other run keeps its post")
 
 
+func test_each_masonry_run_stops_at_shared_piers() -> void:
+	var tee: Dictionary = ArenaDressing.balustrade([" w ", "www"])
+	assert_does_not_have(tee["rails"], [Vector2i(0, 1), Vector2i(2, 1)], "no bay crosses the shared pier")
+	var items: Array[Dictionary] = _items()
+	var piers: Dictionary = {}
+	var profiles: Dictionary = {}
+	var copings: Array[Vector4i] = []
+	for item: Dictionary in items:
+		if item["prop"] == "bridge_bay":
+			var start: Vector2 = item["base"]
+			piers[Vector2i((start / CELL).floor())] = "bridge_pier"
+			profiles[ArenaDressing.BRIDGE_ARCH] = true
+		elif item.get("wall", false) and not item.has("panel") and item["asset"] != ArenaDressing.FENCE_MODULES_ASSET:
+			var at: Vector2 = item["at"]
+			piers[Vector2i((at / CELL).floor())] = item["prop"]
+	for item: Dictionary in items:
+		if not item.has("panel") or item["prop"] in [ArenaDressing.SANCTUARY_JOIN, ArenaDressing.MAPLE_PARAPET]:
+			continue
+		profiles[item["panel"]] = true
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var start: Vector2i = Vector2i((from / CELL).floor())
+		var end: Vector2i = Vector2i((to / CELL).floor())
+		var step: Vector2i = (end - start).sign()
+		var endpoints: PackedVector2Array = item["masonry_ends"]
+		assert_almost_eq((endpoints[1] - endpoints[0]).cross(Vector2(step).normalized()), 0.0, 0.01)
+		assert_has(piers, start, "each run starts on a pillar")
+		assert_has(piers, end, "each run ends on a pillar")
+		if item["panel"] == ArenaDressing.TEMPLE_PANEL:
+			assert_eq(piers.get(start), "corner_pier", "the red rail enters a full-height pillar")
+			assert_eq(piers.get(end), "corner_pier", "the red rail enters a full-height pillar")
+		if item["prop"] == ArenaDressing.COPING_PROP:
+			copings.append(Vector4i(start.x, start.y, end.x, end.y))
+			var volume: ArrayMesh = item["volume"]
+			var vertices: PackedVector2Array = volume.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+			var width: float = absf(vertices[4].x - vertices[7].x) + absf(vertices[12].x - vertices[15].x)
+			assert_gt(width, 10.0, "an end-on stone run keeps visible sides below its coping")
+			var feet: PackedVector2Array = item["footprint"][0]
+			for side: int in 2:
+				var cell: Vector2i = start if side == 0 else end
+				var socket: Vector2 = (feet[side] + feet[3 - side]) * 0.5
+				assert_eq(Vector2i((IsoProjection.to_world(socket) / CELL).floor()), cell)
+				var section_end: Vector2 = IsoProjection.to_screen(item["masonry_ends"][side])
+				assert_lt(section_end.distance_to(socket), 5.0, "the wall enters the post's footprint")
+		for distance: int in range(1, maxi(absi(end.x - start.x), absi(end.y - start.y))):
+			var at: Vector2i = start + step * distance
+			assert_does_not_have(piers, at, "no span passes through a pier at %s" % at)
+	assert_eq(profiles.size(), 5, "open bridge arches, temple lacquer, reliefs and two masonry elevations")
+	for span: Vector4i in [Vector4i(33, 6, 34, 7), Vector4i(34, 7, 35, 8), Vector4i(33, 8, 34, 9)]:
+		assert_eq(copings.count(span), 1, "one course on each inner and outer side of the temple corner")
+
+
+func test_bridge_bays_fit_their_wall_cells() -> void:
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var items: Array[Dictionary] = ArenaDressing.placements(sprites, _data(), CELL)
+	ArenaDressing.prepare_props(sprites, items, [])
+	var starts: Dictionary[Vector2i, bool] = {}
+	var ends: Dictionary[Vector2i, Dictionary] = {}
+	var piers: Dictionary[Vector2i, Dictionary] = {}
+	for item: Dictionary in items:
+		if item["prop"] == "bridge_pier":
+			piers[Vector2i((item["at"] / CELL).floor())] = item
+		if item["prop"] != "bridge_bay":
+			continue
+		var start: Vector2 = item["base"]
+		var end: Vector2 = item["at"]
+		var step: Vector2 = Vector2(1, -1)
+		assert_eq(_char_at(start), ArenaDressing.LOW_CHAR)
+		assert_eq(_char_at(start + step * CELL), ArenaDressing.LOW_CHAR)
+		assert_eq(_char_at(end), ArenaDressing.LOW_CHAR)
+		assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
+		starts[Vector2i((start / CELL).floor())] = true
+		ends[Vector2i((end / CELL).floor())] = item
+	assert_eq(starts.size(), 9)
+	var terminals: int = 0
+	for end: Vector2i in ends:
+		if starts.has(end):
+			assert_does_not_have(piers, end, "the next module already paints the shared pier")
+			continue
+		terminals += 1
+		assert_has(piers, end, "the exposed end uses a matching bridge pier")
+		if not piers.has(end):
+			continue
+		var bay: Dictionary = ends[end]
+		var pier: Dictionary = piers[end]
+		assert_gt(pier["order"].x, bay["order"].x, "the pier draws over the cut end")
+		var bounds: Rect2 = bay["draw_bounds"]
+		var cut: Vector2 = Vector2(bounds.end.x - 0.5, bounds.get_center().y)
+		assert_true((pier["draw_bounds"] as Rect2).has_point(cut), "the pier spans the module's cut edge")
+	assert_eq(terminals, 2, "both bridge rails end in a pier")
+
+
 func test_rails_run_between_post_faces() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var bay: Vector2 = sprites.prop_size(ArenaDressing.BALUSTRADE_ASSET, "rail")
@@ -484,12 +576,31 @@ func test_blocks_cover_the_walls_without_props() -> void:
 		assert_false(blocks.has(cell), "%s stands on its own cells" % item["prop"])
 
 
-func test_lions_face_each_other_in_pairs() -> void:
+func test_guardians_and_sanctuary_follow_the_architecture() -> void:
+	var rows: Array = _data()["rows"]
+	var items: Array[Dictionary] = _items()
+	var joins: int = 0
 	var lions: Array = []
-	for item: Dictionary in _items():
+	for item: Dictionary in items:
 		if item["asset"] == ArenaDressing.GUARDIANS_ASSET and (item["prop"] as String).begins_with("lion"):
 			lions.append([item["prop"], item["flip"]])
-	var pair: Array = [["lion_ball", false], ["lion_cub", true]]
+		if item["prop"] != ArenaDressing.SANCTUARY_JOIN:
+			continue
+		joins += 1
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var ends: Array[String] = []
+		for point: Vector2 in [from, to]:
+			var tile: Vector2i = Vector2i((point / CELL).floor())
+			ends.append(rows[tile.y][tile.x])
+		ends.sort()
+		assert_eq(ends, ["#", "w"])
+		assert_almost_eq(IsoProjection.to_screen(from).y, IsoProjection.to_screen(to).y, 0.01)
+		var outer: Vector2 = from if _char_at(from) == "w" else to
+		assert_true(items.any(func(prop: Dictionary) -> bool:
+			return prop.get("wall", false) and not prop.has("panel") and prop["at"] == outer))
+	assert_eq(joins, 2)
+	var pair: Array = [["lion_ball", false], ["lion_cub", false]]
 	assert_eq(lions, pair + pair + pair)
 
 
@@ -506,15 +617,18 @@ func test_lights_come_from_lantern_props_with_their_flame_height() -> void:
 		assert_gt(light["flame"], 20.0)
 
 
-## A3 polish: the distant scenery is listed far to near and comes from its own atlas.
+## Scenery is sorted by its foot within each plane. Cutouts come from their authored atlas.
 func test_backdrop_is_sorted_far_to_near() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var items: Array[Dictionary] = ArenaDressing.backdrop(sprites)
-	assert_eq(items.size(), ArenaDressing.BACKDROP.size())
+	var expected: int = 0
+	for placements: Array in ArenaDressing.BACKDROP.values():
+		expected += placements.size()
+	assert_eq(items.size(), expected)
 	var last: float = -INF
 	for item: Dictionary in items:
 		assert_true(sprites.has_prop(item["asset"], item["prop"]), item["prop"])
-		assert_eq(item["asset"], ArenaDressing.PEAKS_ASSET)
+		assert_has(ArenaDressing.BACKDROP, item["asset"])
 		assert_gte(item["at"].y, last, "drawn back to front")
 		last = item["at"].y
 		assert_between(item["scale"], 0.2, 1.0, "smaller than the courtyard props: it is far away")

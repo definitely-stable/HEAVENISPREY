@@ -2,6 +2,94 @@ class_name RunEffectsPasses
 extends RefCounted
 ## Render the combat overlays and additive light in the same order as the arena view.
 
+const TERRACE_MARKS_SHADER: Shader = preload("res://presentation/run/shaders/terrace_marks.gdshader")
+const SHADOW_SILHOUETTES_SHADER: Shader = preload("res://presentation/run/shaders/shadow_silhouettes.gdshader")
+
+
+static func configure_shadow_receiver(material: ShaderMaterial, ground: GroundLayer) -> void:
+	var terrain: JadeGroveTerrain = ground._terrain
+	if terrain == null or terrain.surface_mask == null:
+		material.set_shader_parameter("paving_mask", ground.shadow_receiver)
+		material.set_shader_parameter("paving_size", ground._arena)
+	else:
+		material.set_shader_parameter("paving_mask", terrain.surface_mask)
+		material.set_shader_parameter("surface_shift", RunLighting.SHADOW_SURFACE_SHIFT)
+		_set_surface_bounds(material, terrain.surface_bounds)
+
+
+static func add_shadow_layers(view: RunView, group: CanvasGroup) -> void:
+	view._shadow_canvas = Node2D.new()
+	var silhouettes: ShaderMaterial = ShaderMaterial.new()
+	silhouettes.shader = SHADOW_SILHOUETTES_SHADER
+	view._shadow_canvas.material = silhouettes
+	view._shadow_canvas.draw.connect(view._draw_shadow_pass)
+	group.add_child(view._shadow_canvas)
+	view._contact_shadow_canvas = Node2D.new()
+	var contacts: CanvasItemMaterial = CanvasItemMaterial.new()
+	contacts.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	view._contact_shadow_canvas.material = contacts
+	view._contact_shadow_canvas.draw.connect(draw_contact_shadows.bind(view))
+	group.add_child(view._contact_shadow_canvas)
+
+
+static func draw_contact_shadows(view: RunView) -> void:
+	var canvas: Node2D = view._contact_shadow_canvas
+	var disc: Texture2D = view._disc_texture
+	var window: Rect2 = ArenaDressing.rail_draw_window(view, view._camera.get_screen_center_position())
+	for prop: Dictionary in view._props:
+		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
+			continue
+		for polygon: PackedVector2Array in prop.get("footprint", []):
+			canvas.draw_colored_polygon(polygon, Color.RED)
+		if prop.get("wall", false) and not prop.has("rail_bounds") and not prop.has("footprint"):
+			RunLighting.contact(canvas, disc, prop["screen"], ArenaDressing.POST_HALF_PX * 1.55)
+	for source: Dictionary in view._light_points:
+		RunLighting.contact(canvas, disc, view.surface_at(source["at"]), RunView.CELL_PX * 0.65)
+	if view.driver == null:
+		return
+	var world: WorldState = view.driver.world
+	for slot: int in world.enemy_slots():
+		if world.enemy_uid[slot] != 0:
+			var radius: float = view._kind_radius_px(world.enemy_kind[slot]) * 0.95
+			RunLighting.contact(canvas, disc, view.surface_at(view._enemy_feet(slot)), radius)
+	if view._vfx != null:
+		for death: Array in view._vfx.deaths:
+			var left: float = 1.0 - CombatVfx.decay(death)
+			RunLighting.contact(canvas, disc, view.surface_at(death[0]), RunView.HERO_RADIUS_PX * 0.9 * left)
+	RunLighting.contact(canvas, disc, view.surface_at(view.driver.hero_position_px()), RunView.HERO_RADIUS_PX * 0.95)
+	for slot: int in world.gem_slots():
+		if world.gem_uid[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.gem_position_px(slot)), 3.5)
+	for slot: int in world.projectile_slots():
+		if world.proj_damage[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.projectile_position_px(slot)), 3.0)
+	for slot: int in world.shot_slots():
+		if world.shot_damage[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.shot_position_px(slot)), 4.0)
+
+
+static func add_danger_layer(parent: Node, terrain: JadeGroveTerrain) -> Node2D:
+	var canvas: Node2D = Node2D.new()
+	if terrain == null or terrain.surface_mask == null:
+		parent.add_child(canvas)
+		return canvas
+	var group: CanvasGroup = CanvasGroup.new()
+	# Preserve the original pixels above and below each shifted point for the surface lookup.
+	group.fit_margin = 40.0
+	var material: ShaderMaterial = ShaderMaterial.new()
+	material.shader = TERRACE_MARKS_SHADER
+	material.set_shader_parameter("surface_mask", terrain.surface_mask)
+	_set_surface_bounds(material, terrain.surface_bounds)
+	group.material = material
+	parent.add_child(group)
+	group.add_child(canvas)
+	return canvas
+
+
+static func _set_surface_bounds(material: ShaderMaterial, bounds: Rect2) -> void:
+	material.set_shader_parameter("surface_bounds",
+		Vector4(bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y))
+
 
 static func draw_over_pass(view: RunView) -> void:
 	if view.driver == null:
@@ -11,7 +99,7 @@ static func draw_over_pass(view: RunView) -> void:
 		var alpha: float = view._chain_left / 0.12
 		canvas.draw_polyline(view._chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
 		canvas.draw_polyline(view._chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
-	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px())
+	var hero: Vector2 = view.surface_at(view.driver.hero_position_px())
 	var stacks: int = view.driver.world.venom_stacks
 	var top: float = -view._hero_height() - 8.0
 	for pip: int in stacks:
@@ -26,7 +114,7 @@ static func draw_over_pass(view: RunView) -> void:
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] == 0:
 			continue
-		var at: Vector2 = IsoProjection.to_screen(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
+		var at: Vector2 = view.surface_at(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
 		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, RunView.COLOR_WISP)
 	var font: Font = view._hud.kit.font if view._hud != null and view._hud.kit != null else ThemeDB.fallback_font
 	var gem_light: bool = view._vfx != null and view._vfx.kit.has("qi_wisp")
@@ -51,8 +139,8 @@ static func draw_over_pass(view: RunView) -> void:
 
 ## Where the collected gem is on its short flight to the hero.
 static func _pickup_flight(view: RunView, pickup: Array) -> Vector2:
-	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px()) - Vector2(0, RunView.GEM_LIFT_PX)
-	var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, RunView.GEM_LIFT_PX)
+	var hero: Vector2 = view.surface_at(view.driver.hero_position_px()) - Vector2(0, RunView.GEM_LIFT_PX)
+	var from: Vector2 = view.surface_at(pickup[0]) - Vector2(0, RunView.GEM_LIFT_PX)
 	return from.lerp(hero, clampf(pickup[2] / RunView.PICKUP_FLY, 0.0, 1.0))
 
 
@@ -60,10 +148,11 @@ static func _pickup_flight(view: RunView, pickup: Array) -> Vector2:
 
 static func draw_glow_pass(view: RunView) -> void:
 	var canvas: Node2D = view._glow
-	for index: int in view._flames.size():
-		var radius: float = 26.0 * RunLighting.flicker(view._anim_time, index)
+	for index: int in view._light_points.size():
+		var source: Dictionary = view._light_points[index]
+		var radius: float = source["halo"] * RunLighting.flicker(view._anim_time, index)
 		RunLighting.halo(
-			canvas, view._halo_texture, view._flames[index], radius, RunView.COLOR_LANTERN_GLOW
+			canvas, view._halo_texture, source["flame_at"], radius, RunView.COLOR_LANTERN_GLOW
 		)
 	if view.driver == null:
 		return
@@ -76,7 +165,7 @@ static func draw_glow_pass(view: RunView) -> void:
 		if world.proj_damage[slot] == 0:
 			continue
 		var ground: Vector2 = view.driver.projectile_position_px(slot)
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, RunView.FLIGHT_LIFT_PX)
+		var at: Vector2 = view.surface_at(ground) - Vector2(0, RunView.FLIGHT_LIFT_PX)
 		var heading: Vector2 = view._projectile_heading(slot)
 		if light:
 			view._vfx.draw_sword(canvas, at, heading)
@@ -85,7 +174,7 @@ static func draw_glow_pass(view: RunView) -> void:
 		RunLighting.halo(canvas, view._halo_texture, at, radius * 2.6, RunView.COLOR_SWORD_GLOW)
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
-			var at: Vector2 = IsoProjection.to_screen(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
+			var at: Vector2 = view.surface_at(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
 			RunLighting.halo(
 				canvas, view._halo_texture, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, RunView.COLOR_WISP_GLOW
 			)
@@ -93,7 +182,7 @@ static func draw_glow_pass(view: RunView) -> void:
 	var near_px: float = float(UpgradeSystem.pickup_radius(view.driver.config, world)) / Fx.FX_ONE * RunView.GEM_NEAR_RADII
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0 and view.driver.gem_position_px(slot).distance_to(hero) <= near_px:
-			var at: Vector2 = IsoProjection.to_screen(view.driver.gem_position_px(slot)) - Vector2(0, RunView.GEM_LIFT_PX)
+			var at: Vector2 = view.surface_at(view.driver.gem_position_px(slot)) - Vector2(0, RunView.GEM_LIFT_PX)
 			RunLighting.halo(canvas, view._halo_texture, at, 14.0, RunView.COLOR_GEM_GLOW)
 
 
@@ -110,7 +199,7 @@ static func _draw_vfx_light(view: RunView, canvas: Node2D) -> void:
 			continue
 		var ground: Vector2 = view.driver.gem_position_px(slot)
 		var bob: float = sin(view._anim_time * RunView.GEM_BOB_HZ * TAU + float(uid)) * RunView.GEM_BOB_PX
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, RunView.GEM_LIFT_PX + bob)
+		var at: Vector2 = view.surface_at(ground) - Vector2(0, RunView.GEM_LIFT_PX + bob)
 		var near: bool = ground.distance_to(hero) <= near_px
 		view._vfx.draw_gem(
 			canvas, at, world.gem_value[slot], 1.0 if near else RunView.GEM_REST_ALPHA, 1.0 if near else RunView.GEM_REST_SCALE

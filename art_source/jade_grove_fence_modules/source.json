@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_fence_modules",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "67ec8150f09aee583ba94d90628d7b878a30ff91843b85cfdddba47e88490b9e",
+    "created": "2026-11-19T21:33:47+05:00",
+    "master_sha256": "4ebe3940f49e370d3d18110e9f74dc6399ada8a48849bfa6241f3df67e6459dc",
+    "master_note": "Lossless WebP from the generated PNG. Four complete sections painted over tools/art/iso_template.py jade_grove_fence_modules in the fixed arena projection."
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 2,
+    "min_area_px": 250
+  },
+  "props": [
+    {
+      "name": "temple_turn",
+      "anchor": [
+        151,
+        285
+      ],
+      "sheet_scale": 2.5
+    },
+    {
+      "name": "bridge_bay",
+      "anchor": [
+        862,
+        328
+      ],
+      "sheet_scale": 2.5
+    },
+    {
+      "name": "cliff_coping",
+      "anchor": [
+        374,
+        697
+      ],
+      "sheet_scale": 2.5
+    },
+    {
+      "name": "lantern_base",
+      "anchor": [
+        1152,
+        790
+      ],
+      "sheet_scale": 2.5
+    }
+  ]
+}

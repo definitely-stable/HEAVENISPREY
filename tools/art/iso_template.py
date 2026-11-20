@@ -43,6 +43,25 @@ LAYOUTS: dict[str, list[dict]] = {
         {"x": 384, "y": 1000, "blocks": [[380, 30], [230, 40]]},
         {"x": 1152, "y": 980, "flat": [600, 375]},
     ],
+    # Stone posts sit on the run corners and terminals. The two elevations are sampled on planes.
+    "jade_grove_masonry": [
+        {"x": 384, "y": 435, "blocks": [[228, 43], [180, 112], [214, 32]]},
+        {"x": 1152, "y": 435, "blocks": [[183, 36], [146, 88], [178, 26]]},
+        {"x": 384, "y": 886, "flat": [582, 170]},
+        {"x": 1152, "y": 886, "flat": [582, 188]},
+    ],
+    "jade_grove_rail_details": [
+        {"x": 384, "y": 435, "blocks": [[335, 59], [306, 24]]},
+        {"x": 1152, "y": 435, "blocks": [[236, 42], [189, 102], [218, 27]]},
+        {"x": 384, "y": 886, "flat": [582, 170]},
+        {"x": 1152, "y": 886, "flat": [582, 152]},
+    ],
+    "jade_grove_rail_finishes": [
+        {"x": 384, "y": 435, "blocks": [[214, 34], [152, 124], [196, 33]]},
+        {"x": 1152, "y": 465, "blocks": [[202, 32], [132, 87], [166, 103], [205, 42]]},
+        {"x": 384, "y": 886, "flat": [582, 176]},
+        {"x": 1152, "y": 886, "flat": [582, 164]},
+    ],
     # ADR-015 section 12, REF-068: the seal ring and the parapet, at 3.73 sheet px per screen px
     # (1.6 times the guardians: small props need the room for detail). A brazier on one cell
     # (pedestal to the hero's waist, the bowl on the ellipse), a stone pagoda lantern on one cell
@@ -198,6 +217,162 @@ def _prism(base: list[Point], height: float) -> list[tuple[float, list[tuple[Poi
     return faces + [top]
 
 
+FENCE_SCALE = 2.5
+FENCE_ANCHORS = ((151, 285), (862, 328), (374, 697), (1152, 790))
+
+
+def fence_sheet():
+    """Whole modules at one screen scale, including the actual turn beside the gate lion."""
+    from PIL import Image, ImageDraw
+
+    image = Image.new("RGB", SIZE, KEY)
+    draw = ImageDraw.Draw(image)
+
+    def prism(slot, a, b, half_width, lift, height, wood=False):
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        length = math.hypot(dx, dy)
+        nx, ny = -dy * half_width / length, dx * half_width / length
+        base = [(a[0] - nx, a[1] - ny), (b[0] - nx, b[1] - ny),
+                (b[0] + nx, b[1] + ny), (a[0] + nx, a[1] + ny)]
+        x, y = FENCE_ANCHORS[slot]
+        for _, face, tone in _prism(base, height):
+            points = [(x + u * FENCE_SCALE, y + (v - z - lift) * FENCE_SCALE)
+                      for world, z in face for u, v in [iso_screen(*world)]]
+            fill = tuple(round(c * s) for c, s in zip(tone, (1.24, 0.72, 0.63))) if wood else tone
+            draw.polygon(points, fill=fill, outline=EDGE)
+
+    def pier(slot, at, height):
+        x, y = at
+        for radius, lift, rise in ((0.34, 0, 5), (0.25, 5, height - 11), (0.33, height - 6, 6)):
+            prism(slot, (x - radius, y), (x + radius, y), radius, lift, rise)
+
+    left, turn, near, end = (-1.59, -2.0), (0.0, 0.0), (3.205, -0.085), (4.0, -1.0)
+    pier(0, left, 30)
+    prism(0, left, turn, 0.29, 0, 14)
+    prism(0, left, turn, 0.34, 14, 5)
+    for a, b in ((turn, near), (near, end)):
+        prism(0, a, b, 0.30, 0, 6)
+        for lift, height, width in ((8, 4, 0.08), (19, 4, 0.08), (31, 5, 0.13)):
+            prism(0, a, b, width, lift, height, wood=True)
+    for at, height in ((turn, 44), (near, 44), (end, 40)):
+        pier(0, at, height)
+
+    start, finish = (0.0, 0.0), (2.0, -2.0)
+    prism(1, start, finish, 0.28, 0, 6)
+    prism(1, start, finish, 0.19, 30, 5)
+    for t in (0.5, 0.94):
+        x, y = 2 * t, -2 * t
+        prism(1, (x - 0.105, y + 0.105), (x + 0.105, y - 0.105), 0.16, 6, 24)
+    pier(1, start, 39)
+
+    for i in range(2):
+        a, b = (float(i), float(i)), (i + 1.0, i + 1.0)
+        prism(2, a, b, 0.34, 0, 5)
+        prism(2, a, b, 0.25, 5, 12)
+        prism(2, (i + 0.025, i + 0.025), (i + 0.975, i + 0.975), 0.32, 17, 5)
+        if i == 0:
+            prism(2, (0.86, 0.62), (1.10, 0.86), 0.24, 0, 16)
+            prism(2, (0.82, 0.58), (1.14, 0.90), 0.28, 16, 4)
+
+    prism(3, (-0.50, -0.50), (0.50, 0.50), 0.32, 0, 4)
+    prism(3, (-0.41, -0.41), (0.41, 0.41), 0.24, 4, 3)
+    return image
+
+
+STAIR_SCALE = 2.8
+STAIR_ANCHORS = ((768, 245), (768, 751))
+
+GATE_ANCHOR = (768, 910)
+GATE_SCALE = 2.7
+
+
+def gate_sheet():
+    """Temple wall and closed gateway with both piers on the landing axis."""
+    from PIL import Image, ImageDraw
+
+    image = Image.new("RGB", SIZE, KEY)
+    draw = ImageDraw.Draw(image)
+    ax, ay = GATE_ANCHOR
+
+    def poly(points, fill):
+        draw.polygon([(ax + x * GATE_SCALE, ay + y * GATE_SCALE) for x, y in points],
+                     fill=fill, outline=EDGE)
+
+    poly([(-220, -40), (220, -40), (236, -22), (221, -5), (-221, -5), (-236, -22)], LEFT)
+    poly([(-228, -90), (-207, -103), (207, -103), (228, -90), (228, -27), (-228, -27)], LEFT)
+    poly([(-233, -93), (-210, -110), (210, -110), (233, -93), (224, -84), (-224, -84)], TOP)
+    poly([(-226, -54), (226, -54), (228, -41), (-228, -41)], RIGHT)
+    poly([(-142, -151), (142, -151), (142, -34), (-142, -34)], RIGHT)
+    poly([(-108, -141), (108, -141), (108, -26), (-108, -26)], (76, 61, 71))
+    poly([(-99, -137), (-1, -137), (-1, -27), (-99, -27)], (83, 47, 53))
+    poly([(1, -137), (99, -137), (99, -27), (1, -27)], (72, 41, 49))
+    for x in (-125, 125):
+        for width, height, bottom in ((60, 18, 15), (44, 13, -7), (34, 129, -21), (49, 13, -146)):
+            for side, points in faces(x, bottom, width, height).items():
+                poly(points, {"left": LEFT, "right": RIGHT, "top": TOP}[side])
+    poly([(-156, -174), (156, -174), (146, -149), (-146, -149)], LEFT)
+    poly([(-178, -178), (-153, -179), (-117, -207), (-106, -223), (106, -223),
+          (117, -207), (153, -179), (178, -178), (167, -167), (-167, -167)], TOP)
+    poly([(-180, -184), (-151, -173), (151, -173), (180, -184), (170, -168),
+          (125, -165), (-125, -165), (-170, -168)], LEFT)
+    return image
+
+
+def stair_sheet(sideways: bool):
+    """Flights and cheek walls at the dimensions of the four Jade Grove stair footprints."""
+    from PIL import Image, ImageDraw
+
+    image = Image.new("RGB", SIZE, KEY)
+    draw = ImageDraw.Draw(image)
+
+    def world(u, v):
+        diff = u / (CELL_PX * ISO_K)
+        total = 2 * v / (CELL_PX * ISO_K)
+        return (total + diff) * 0.5, (total - diff) * 0.5
+
+    def block(slot, x0, y0, x1, y1, height, chamfer=0):
+        corner_y = min(chamfer * 0.5, (y1 - y0) * 0.42)
+        points = ((x0 + chamfer, y0), (x1 - chamfer, y0), (x1, y0 + corner_y), (x1, y1 - corner_y),
+                  (x1 - chamfer, y1), (x0 + chamfer, y1), (x0, y1 - corner_y), (x0, y0 + corner_y))
+        base = [world(u, v) for u, v in points]
+        ax, ay = STAIR_ANCHORS[slot]
+        for _, face, fill in _prism(base, height):
+            points = [(ax + u * STAIR_SCALE, ay + (v - z) * STAIR_SCALE)
+                      for point, z in face for u, v in [iso_screen(*point)]]
+            draw.polygon(points, fill=fill, outline=EDGE)
+
+    if sideways:
+        # The western stair rises left; the eastern stair rises right. The floor-facing footprint
+        # still meets the actual openings, and the near masonry shows the rise between landings.
+        for slot, width, depth, rise in ((0, 293, 109, 20), (1, 292, 103, 19)):
+            near, far = depth * 0.5, -depth * 0.5 + 12
+            left, right = -width * 0.5, width * 0.5
+            landing = 29
+            block(slot, left, far, left + landing + 1, near, rise if slot == 0 else 1, 11)
+            block(slot, right - landing - 1, far, right, near, rise if slot == 1 else 1, 11)
+            for index in range(5):
+                x0 = left + landing + (width - landing * 2) * index / 5
+                x1 = left + landing + (width - landing * 2) * (index + 1) / 5
+                height = 2 + rise * (4 - index if slot == 0 else index) / 4
+                block(slot, x0, far, x1, near, height)
+                block(slot, x0, near - 9, x1, near + 4, height + 4)
+    else:
+        for slot, width, depth, count, rise in ((0, 366, 119, 6, 26), (1, 360, 132, 5, 24)):
+            left, right = -width * 0.5, width * 0.5
+            far, near = -depth * 0.5 + rise, depth * 0.5
+            head, foot = far + 16, near - 18
+            block(slot, left, far, right, head + 1, rise + 1, 13)
+            for index in range(count):
+                y0 = head + (foot - head) * index / count
+                y1 = head + (foot - head) * (index + 1) / count
+                height = 2 + rise * (count - index - 1) / (count - 1)
+                block(slot, left, y0, right, y1, height)
+                block(slot, left - 3, y0, left + 13, y1, height + 6)
+                block(slot, right - 13, y0, right + 3, y1, height + 6)
+            block(slot, left, foot, right, near, 1, 15)
+    return image
+
+
 def cell_groups(cells: list[tuple[int, int]]) -> list[list[tuple[int, int]]]:
     """Groups of cells joined by a side, each in row order, groups in order of their first cell."""
     left, out = set(cells), []
@@ -326,6 +501,13 @@ def render(name: str):
     """The template as a PIL image (Pillow is needed only here)."""
     from PIL import Image, ImageDraw
 
+    if name == "jade_grove_fence_modules":
+        return fence_sheet()
+    if name == "jade_grove_gate":
+        return gate_sheet()
+    if name in ("jade_grove_front_stairs", "jade_grove_side_stairs"):
+        return stair_sheet(name == "jade_grove_side_stairs")
+
     image = Image.new("RGB", SIZE, KEY)
     draw = ImageDraw.Draw(image)
     if name.startswith("seal_ruins_"):
@@ -353,7 +535,11 @@ def render(name: str):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("sheet", choices=sorted(LAYOUTS) + [f"seal_ruins_{n}" for n in range(1, RUIN_SHEETS + 1)])
+    sheets = sorted(LAYOUTS) + [
+        "jade_grove_fence_modules", "jade_grove_front_stairs", "jade_grove_gate", "jade_grove_side_stairs",
+    ]
+    sheets += [f"seal_ruins_{n}" for n in range(1, RUIN_SHEETS + 1)]
+    parser.add_argument("sheet", choices=sheets)
     parser.add_argument("out", type=Path)
     args = parser.parse_args()
     render(args.sheet).save(args.out)

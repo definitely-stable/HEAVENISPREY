@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_rail_details",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "3eeceeabee3e2aaff7c182cb5d97ba87d9ab52ab57ee65d0132315891496d478",
+    "created": "2026-11-19T21:06:34+05:00",
+    "master_sha256": "3baef50f0c02bdea2547feb3d468b4379352feaa31c28127c0fcd42eb1d3afd7",
+    "master_note": "Lossless WebP of the generated PNG. Painted over the jade_grove_rail_details geometry template with the matching masonry master as the material input."
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 2,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "lantern_apron",
+      "height_px": 39
+    },
+    {
+      "name": "bridge_end",
+      "height_px": 46
+    },
+    {
+      "name": "cliff_parapet",
+      "height_px": 27
+    },
+    {
+      "name": "coping_top",
+      "height_px": 22
+    }
+  ]
+}

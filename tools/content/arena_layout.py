@@ -122,6 +122,11 @@ def draw() -> dict:
     maple = (lambda u, v: -26 <= v <= -21 and -48 <= u <= -43)
     k.fill(maple, "#")
     k.region_prop(maple, "maple_large")
+    # The flanks reach the piers and give the landing one full tread at each turn.
+    for u, v in ((1, -29), (13, -29), (34, 12), (-15, 29), (-3, 29)):
+        x, y = c + (u + v) // 2, c + (v - u) // 2
+        assert g[y][x] in ".H", (u, v, g[y][x])
+        g[y][x] = "^"
     # 5. The seal ring of REF-033: around the seal stand four braziers on the gold inlay lines (the
     #    grid axes, one cell each) and four broken pillars between them (2 x 2, on the screen axes:
     #    above, below, left and right of the seal). Both sit symmetric about the seal cell; the

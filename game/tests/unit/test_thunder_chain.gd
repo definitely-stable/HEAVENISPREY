@@ -125,16 +125,21 @@ func test_scene_shows_chain_to_live_and_fallen_targets_for_120_ms() -> void:
 	assert_true(view.start_run("101"))
 	view.driver = FixedTickDriver.create(_config(SKILL, CHAIN))
 	var world: WorldState = view.driver.world
+	var origin: Vector2 = Vector2(22.5, 15.5) * RunView.CELL_PX
+	world.player_x = roundi(origin.x * Fx.FX_ONE)
+	world.player_y = roundi(origin.y * Fx.FX_ONE)
 	world.skill_acc = 64000
 	_enemy(world, 2, 120000, 0, 1000)
 	_enemy(world, 1, 180000, 0, 100000)
-	var origin: Vector2 = Vector2(world.player_x, world.player_y) / Fx.FX_ONE
 	view.advance_frame(TICK, Vector2i.ZERO)
 	assert_eq(world.kills, 1)
 	assert_eq(view._chain_left, 0.12)
-	var expected: PackedVector2Array = PackedVector2Array()
-	for dx: int in [0, 120, 180]:
-		expected.append(IsoProjection.to_screen(origin + Vector2(dx, 0)) - Vector2(0, 18))
+	# The cast starts on the temple landing and reaches two different treads.
+	var expected: PackedVector2Array = PackedVector2Array([
+		IsoProjection.to_screen(origin) - Vector2(0, 30 + 18),
+		IsoProjection.to_screen(origin + Vector2(120, 0)) - Vector2(0, 25 + 18),
+		IsoProjection.to_screen(origin + Vector2(180, 0)) - Vector2(0, 20 + 18),
+	])
 	assert_eq(view._chain_line, expected)
 	view.advance_frame(0.121, Vector2i.ZERO)
 	assert_eq(view._chain_left, 0.0)

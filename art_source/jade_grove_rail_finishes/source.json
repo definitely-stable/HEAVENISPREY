@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_rail_finishes",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "c2dd3a4233a44b70eb345a970a70e4ea5f45b77d74c91b6630c6281ab45de703",
+    "created": "2026-11-19T21:22:11+05:00",
+    "master_sha256": "4b6e40b27b0e5e2dcdbbd9f553ebd1307e1e9191b679766078a5314abbf59ca8",
+    "master_note": "Lossless WebP of the generated PNG. Painted over the jade_grove_rail_finishes geometry template with REF-068 as the material reference."
+  },
+  "palette_group": "props",
+  "density": 2,
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      2,
+      2
+    ],
+    "join_px": 2,
+    "min_area_px": 400
+  },
+  "props": [
+    {
+      "name": "bridge_pier",
+      "height_px": 47
+    },
+    {
+      "name": "lantern_low",
+      "height_px": 88
+    },
+    {
+      "name": "bridge_arch",
+      "height_px": 30
+    },
+    {
+      "name": "terrace_relief",
+      "height_px": 29
+    }
+  ]
+}

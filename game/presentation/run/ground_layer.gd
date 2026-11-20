@@ -77,15 +77,20 @@ const ALT_REPEAT_CELLS: float = 9.0
 const DAMP_PATCH_CELLS: float = 5.0
 const DAMP_LEVEL: float = 0.05
 const DAMP_RAMP: float = 0.35
-## Waterfalls on the near cliff faces: [share across the arena on screen (left to right),
-## width (screen px)]; each pours from the lowest face near that share.
-const WATERFALLS: Array = [[0.2, 60.0], [0.62, 72.0], [0.86, 48.0]]
-## Screen px a waterfall starts under the edge (below the capping course) and how far it falls.
-const WATERFALL_TOP_PX: float = 24.0
-const WATERFALL_DROP_PX: float = 330.0
+const WATERFALL_ASSET: String = "asset.prop.jade_grove_waterfalls"
+## [Rim midpoint in cells, rock, stream box in screen px, spread, split, drift, speed].
+const WATERFALLS: Array = [
+	[Vector2(13.5, 68), "shale_spring", Vector2(91, 323), 0.82, 0.58, -0.11, 0.85],
+	[Vector2(52.5, 62), "broken_spillway", Vector2(133, 347), 1.0, 0.82, 0.16, 1.13],
+	[Vector2(67.5, 29), "moss_cleft", Vector2(82, 323), 0.72, 0.17, -0.18, 0.97],
+]
+## Vertical drop from the upper edge of the paving to the overflow lip, in projected px.
+const WATERFALL_TOP_PX: float = 23.0
 ## Share of the camera travel the distant scenery follows (1 = glued to the courtyard).
 const BACKDROP_PARALLAX: float = 0.5
 const FAR_PARALLAX: float = 0.24
+const HORIZON_PARALLAX: float = 0.115
+const SCENERY_PARALLAX: Array[float] = [HORIZON_PARALLAX, FAR_PARALLAX, BACKDROP_PARALLAX]
 const NEAR_PLANE: float = 0.55
 ## Distant spires fade into the mist over this share of their height from the base, and are
 ## tinted by the haze: far ones more than near ones.
@@ -103,6 +108,7 @@ var _iso: Node2D
 var _aura: PointLight2D
 ## The lights of the lanterns and braziers, in the order of the light points.
 var _fires: Array[PointLight2D] = []
+var _fire_levels: Array[float] = []
 var _sky: ColorRect
 var _veil: ColorRect
 var _backdrop: Node2D
@@ -111,19 +117,23 @@ var _data: Dictionary
 var _arena: Vector2
 var _centre: Vector2
 var _cell_px: int
+var _terrain: JadeGroveTerrain
 
 
 func _init(
 	sprites: SpriteSet, floor_asset: String, data: Dictionary, cell_px: int,
 	light_points: Array[Dictionary] = [], seal_asset: String = "", cliff_asset: String = "",
-	worn_asset: String = "", backdrop: Array[Dictionary] = []
+	worn_asset: String = "", backdrop: Array[Dictionary] = [], terrain: JadeGroveTerrain = null
 ) -> void:
 	layer = LAYER
 	follow_viewport_enabled = true
-	_data = data
+	# Position the separate scenery canvas after Camera2D updates its smoothed scroll.
+	process_priority = 1
+	_data = terrain.paving_data if terrain != null else data
 	_arena = Vector2(cells_of(data) * cell_px)
 	_centre = centre_of(data, cell_px)
 	_cell_px = cell_px
+	_terrain = terrain
 	_build_mist(sprites, backdrop)
 	var ambient: CanvasModulate = CanvasModulate.new()
 	ambient.color = RunLighting.GROUND_AMBIENT
@@ -143,8 +153,10 @@ func _init(
 	moon.rotation = RunLighting.moon_rotation()
 	_add_light(moon)
 	for point: Dictionary in light_points:
-		_fires.append(_add_point(point["at"], RunLighting.LANTERN_COLOR, RunLighting.LANTERN_ENERGY,
-			RunLighting.LANTERN_RADIUS_PX))
+		var energy: float = point.get("energy", RunLighting.LANTERN_ENERGY)
+		_fire_levels.append(energy)
+		_fires.append(_add_point(point["at"], RunLighting.LANTERN_COLOR, energy, point.get("radius",
+			RunLighting.LANTERN_RADIUS_PX)))
 	_aura = _add_point(_centre, RunLighting.AURA_COLOR, RunLighting.AURA_ENERGY, RunLighting.AURA_RADIUS_PX)
 
 
@@ -319,34 +331,36 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 	return image
 
 
-## Moves the hero aura to the hero's ground point (world px), drifts the mist and slides the
-## distant scenery with the view. `view_centre` is the screen point (projected px) the camera
-## aims at, `zoom` its zoom; by default the view is centred on the hero at zoom 1.
-func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0, show_aura: bool = true) -> void:
-	var centre: Vector2 = IsoProjection.to_screen(hero) if view_centre == Vector2.INF else view_centre
-	_aura.position = IsoProjection.to_screen(hero)
+func follow_hero(hero: Vector2, show_aura: bool = true) -> void:
+	_aura.position = surface_at(hero)
 	_aura.visible = show_aura
+
+
+func _process(_delta: float) -> void:
+	var camera: Camera2D = get_viewport().get_camera_2d()
+	if camera != null:
+		_position_scenery(camera.get_screen_center_position(), camera.zoom.x)
+
+
+func _position_scenery(centre: Vector2, zoom: float) -> void:
 	for rect: ColorRect in [_sky, _veil]:
 		(rect.material as ShaderMaterial).set_shader_parameter("camera_offset", centre)
-	var size: Vector2 = get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
+	var size: Vector2 = get_viewport().get_visible_rect().size
 	for index: int in _backdrop.get_child_count():
 		var plane: Node2D = _backdrop.get_child(index) as Node2D
-		var parallax: float = FAR_PARALLAX if index == 0 else BACKDROP_PARALLAX
 		plane.scale = Vector2.ONE * zoom
-		plane.position = backdrop_origin(centre, zoom, size, parallax)
+		plane.position = backdrop_origin(centre, zoom, size, SCENERY_PARALLAX[index])
 
 
-## Screen point of the backdrop's origin (the arena centre of the distant scenery) for a view
-## centred on `view_centre` (projected px) at `zoom` in a window of `size` px.
+## Place a distant plane relative to camera travel from the projected arena centre.
 func backdrop_origin(view_centre: Vector2, zoom: float, size: Vector2, parallax: float = BACKDROP_PARALLAX) -> Vector2:
 	var travel: Vector2 = view_centre - IsoProjection.to_screen(_centre)
 	return size * 0.5 - travel * parallax * zoom
 
 
-## The fire lights at `seconds` of the run (RunLighting.flicker).
 func flicker(seconds: float) -> void:
 	for index: int in _fires.size():
-		_fires[index].energy = RunLighting.LANTERN_ENERGY * RunLighting.flicker(seconds, index)
+		_fires[index].energy = _fire_levels[index] * RunLighting.flicker(seconds, index)
 
 
 ## Energy of each fire light now.
@@ -357,14 +371,15 @@ func fire_energies() -> Array[float]:
 	return out
 
 
-## Ground point (world px) the hero aura shines on.
 func aura_position() -> Vector2:
 	return IsoProjection.to_world(_aura.position)
 
 
-## Behind the courtyard, on a canvas layer that does not follow the camera: the dusk sky, the
-## distant spires and pagodas (REF-033, REF-056) and the mist veil drifting in front of them.
-## The shaders slide with camera_offset; the scenery node is moved by follow().
+func surface_at(point: Vector2) -> Vector2:
+	return _terrain.project(point) if _terrain != null else IsoProjection.to_screen(point)
+
+
+## Dusk, horizon, spires and drifting mist behind the courtyard (REF-033, REF-056).
 func _build_mist(sprites: SpriteSet, backdrop: Array[Dictionary]) -> void:
 	var back: CanvasLayer = CanvasLayer.new()
 	back.layer = MIST_LAYER
@@ -374,8 +389,9 @@ func _build_mist(sprites: SpriteSet, backdrop: Array[Dictionary]) -> void:
 	_backdrop = Node2D.new()
 	_backdrop.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	back.add_child(_backdrop)
-	_backdrop.add_child(_backdrop_plane(sprites, backdrop, false))
-	_backdrop.add_child(_backdrop_plane(sprites, backdrop, true))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.HORIZON_ASSET, false))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.PEAKS_ASSET, false))
+	_backdrop.add_child(_backdrop_plane(sprites, backdrop, ArenaDressing.PEAKS_ASSET, true))
 	_veil = _mist_rect(true)
 	back.add_child(_veil)
 
@@ -392,14 +408,16 @@ func _mist_rect(veil: bool) -> ColorRect:
 
 
 ## One atlas surface per depth, with the lower part of each peak fading into the mist.
-static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], near_plane: bool) -> MeshInstance2D:
+static func _backdrop_plane(
+	sprites: SpriteSet, backdrop: Array[Dictionary], asset: String, near_plane: bool
+) -> MeshInstance2D:
 	var plane: MeshInstance2D = MeshInstance2D.new()
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var colors: PackedColorArray = PackedColorArray()
 	var indices: PackedInt32Array = PackedInt32Array()
 	for item: Dictionary in backdrop:
-		if (float(item["near"]) >= NEAR_PLANE) != near_plane:
+		if item["asset"] != asset or (float(item["near"]) >= NEAR_PLANE) != near_plane:
 			continue
 		var quad: Dictionary = sprites.prop_quad(item["asset"], item["prop"], item["at"], item["scale"], item["flip"])
 		if quad.is_empty():
@@ -409,6 +427,8 @@ static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], nea
 		var rect: Rect2 = quad["rect"]
 		var uv: Rect2 = quad["uv"]
 		var haze: Color = BACKDROP_HAZE_FAR.lerp(BACKDROP_HAZE_NEAR, item["near"])
+		if asset == ArenaDressing.HORIZON_ASSET:
+			haze = Color(0.77, 0.80, 0.94, 0.64 + float(item["near"]) * 0.26)
 		var gone: Color = Color(haze, 0.0)
 		var keep: float = 1.0 - BACKDROP_FADE
 		var mid: float = rect.position.y + rect.size.y * keep
@@ -433,20 +453,29 @@ static func _backdrop_plane(sprites: SpriteSet, backdrop: Array[Dictionary], nea
 ## floor shader blends the clean flagstones with the worn ones by the wear mask.
 func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, clear_radius: float) -> void:
 	var texture: Texture2D = sprites.canvas_texture(floor_asset)
-	paving = Polygon2D.new()
+	var repeat_px: float = sprites.floor_repeat_px(floor_asset, _cell_px)
+	var raised: bool = _terrain != null and texture != null
 	var points: PackedVector2Array = PackedVector2Array()
 	var parts: Array = []
 	var floor_rects: Array[Rect2] = footprint(_data, _cell_px)
-	for rect: Rect2 in floor_rects:
-		var first: int = points.size()
-		points.append_array(PackedVector2Array([
-			rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
-		]))
-		parts.append(PackedInt32Array([first, first + 1, first + 2, first + 3]))
+	if not raised:
+		for rect: Rect2 in floor_rects:
+			var first: int = points.size()
+			points.append_array(PackedVector2Array([
+				rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
+			]))
+			parts.append(PackedInt32Array([first, first + 1, first + 2, first + 3]))
 	if texture != null and _data.get("stage_id") == "stage.jade_grove":
 		_add_paving_caps(points, parts)
-	paving.polygon = points
-	paving.polygons = parts
+	if raised:
+		var bevels: Array[PackedVector2Array] = []
+		for part: PackedInt32Array in parts:
+			bevels.append(PackedVector2Array([points[part[0]], points[part[1]], points[part[2]]]))
+		paving = _terrain.build_paving(float(texture.get_width()) / repeat_px, bevels)
+	else:
+		paving = Polygon2D.new()
+		paving.polygon = points
+		paving.polygons = parts
 	_iso.add_child(paving)
 	var mask_size: Vector2i = cells_of(_data)
 	var receiver: Image = Image.create_empty(maxi(1, mask_size.x), maxi(1, mask_size.y), false, Image.FORMAT_L8)
@@ -458,16 +487,18 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 		return
 	paving.texture = texture
 	# Polygon UVs are in texels; the tile repeats every floor_repeat_px world px.
-	var scale: float = sprites.floor_repeat_px(floor_asset, _cell_px) / float(texture.get_width())
-	var uvs: PackedVector2Array = PackedVector2Array()
-	for point: Vector2 in paving.polygon:
-		uvs.append(point / scale)
-	paving.uv = uvs
+	if not raised:
+		var scale: float = repeat_px / float(texture.get_width())
+		var uvs: PackedVector2Array = PackedVector2Array()
+		for point: Vector2 in paving.polygon:
+			uvs.append(point / scale)
+		paving.uv = uvs
 	var worn: CanvasTexture = sprites.canvas_texture(worn_asset) as CanvasTexture
 	if worn == null:
 		return
 	var wear: ShaderMaterial = ShaderMaterial.new()
 	wear.shader = FLOOR_SHADER
+	JadeGroveTerrain.configure_floor_material(wear, sprites, repeat_px if raised else 0.0)
 	wear.set_shader_parameter("worn_albedo", worn.diffuse_texture)
 	wear.set_shader_parameter("worn_normal", worn.normal_texture)
 	wear.set_shader_parameter("wear_mask", ImageTexture.create_from_image(wear_mask(_data, _cell_px, clear_radius)))
@@ -475,6 +506,18 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 	wear.set_shader_parameter("mask_size", _arena)
 	wear.set_shader_parameter("worn_repeat_px", sprites.floor_repeat_px(worn_asset, _cell_px))
 	wear.set_shader_parameter("alt_scale", sprites.floor_repeat_px(floor_asset, _cell_px) / (ALT_REPEAT_CELLS * _cell_px))
+	if _data.get("stage_id") == "stage.jade_grove":
+		var terraces: Image = Image.create_empty(mask_size.x, mask_size.y, false, Image.FORMAT_RG8)
+		var rows: Array = _data["rows"]
+		for y: int in mask_size.y:
+			for x: int in mask_size.x:
+				var tile: String = (rows[y] as String)[x]
+				if tile == "H":
+					terraces.set_pixel(x, y, Color.RED)
+				elif tile == "^":
+					terraces.set_pixel(x, y, Color.GREEN)
+		wear.set_shader_parameter("terrace_mask", ImageTexture.create_from_image(terraces))
+		wear.set_shader_parameter("has_terraces", true)
 	paving.material = wear
 
 
@@ -562,53 +605,53 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	add_child(faces)
 	if _data.get("stage_id") == "stage.jade_grove":
 		add_child(_cliff_growth_mesh(sprites))
-	var water: ShaderMaterial = ShaderMaterial.new()
-	water.shader = WATERFALL_SHADER
+		add_child(JadeGroveCliffRelief.new(sprites, _cell_px, _terrain))
+		_build_waterfalls(sprites)
+
+
+func _build_waterfalls(sprites: SpriteSet) -> void:
 	for fall: Array in WATERFALLS:
-		var top: Vector2 = waterfall_top(_data, _cell_px, fall[0])
-		if not top.is_finite():
-			continue
-		var width: float = fall[1]
+		var top: Vector2 = _rim_at((fall[0] as Vector2) * _cell_px)
+		var size: Vector2 = fall[2]
+		var water: ShaderMaterial = ShaderMaterial.new()
+		water.shader = WATERFALL_SHADER
+		water.set_shader_parameter("spread", fall[3])
+		water.set_shader_parameter("split", fall[4])
+		water.set_shader_parameter("drift", fall[5])
+		water.set_shader_parameter("speed", fall[6])
+		water.set_shader_parameter("phase", waterfalls.size() * 3.71)
 		var rect: ColorRect = ColorRect.new()
+		rect.name = fall[1]
 		rect.material = water
 		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		rect.position = top + Vector2(-width * 0.5, WATERFALL_TOP_PX)
-		rect.size = Vector2(width, WATERFALL_DROP_PX)
+		rect.position = top + Vector2(-size.x * 0.5, WATERFALL_TOP_PX)
+		rect.size = size
+		_add_waterfall_rock(sprites, rect, fall[1])
 		add_child(rect)
 		waterfalls.append(rect)
 
 
-## Screen point of the top of a waterfall at `share` across the arena (left to right): the
-## middle of the lowest near face within a cell of that screen x.
-static func waterfall_top(data: Dictionary, cell_px: int, share: float) -> Vector2:
-	var faces: Array[PackedVector2Array] = near_faces(data, cell_px)
-	var bridge: Dictionary[Vector2, float] = _bridge_openings(data, cell_px, faces)
-	var left: float = INF
-	var right: float = -INF
-	var bridge_left: float = INF
-	var bridge_right: float = -INF
-	for point: Vector2 in bridge:
-		bridge_left = minf(bridge_left, point.x)
-		bridge_right = maxf(bridge_right, point.x)
-	for face: PackedVector2Array in faces:
-		for point: Vector2 in face:
-			left = minf(left, IsoProjection.to_screen(point).x)
-			right = maxf(right, IsoProjection.to_screen(point).x)
-	var target: float = lerpf(left, right, share)
-	var best: Vector2 = Vector2(target, -INF)
-	var nearest: Vector2 = best
-	var distance: float = INF
-	for face: PackedVector2Array in faces:
-		var middle: Vector2 = IsoProjection.to_screen((face[0] + face[1]) * 0.5)
-		if middle.x >= bridge_left - cell_px and middle.x <= bridge_right + cell_px:
-			continue
-		var across: float = absf(middle.x - target)
-		if across <= cell_px and middle.y > best.y:
-			best = middle
-		if across < distance:
-			nearest = middle
-			distance = across
-	return best if is_finite(best.y) else nearest
+## The atlas pivot marks the notch where the water spills. Paving drawn later hides the rear of the rock.
+static func _add_waterfall_rock(sprites: SpriteSet, water: ColorRect, piece: String) -> void:
+	var quad: Dictionary = sprites.prop_quad(WATERFALL_ASSET, piece, Vector2(water.size.x * 0.5, 0.0))
+	if quad.is_empty():
+		return
+	var rock: Sprite2D = Sprite2D.new()
+	rock.name = "OverflowRock"
+	rock.texture = quad["texture"]
+	rock.centered = false
+	rock.show_behind_parent = true
+	rock.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	rock.modulate = Color(0.84, 0.83, 0.92)
+	rock.region_enabled = true
+	rock.region_filter_clip_enabled = true
+	var uv: Rect2 = quad["uv"]
+	var rect: Rect2 = quad["rect"]
+	var atlas_size: Vector2 = rock.texture.get_size()
+	rock.region_rect = Rect2(uv.position * atlas_size, uv.size * atlas_size)
+	rock.position = rect.position
+	rock.scale = rect.size / rock.region_rect.size
+	water.add_child(rock)
 
 
 ## Rail cells bordering the bridge carry its fascia, so both bridge and rail corners share the arches.
@@ -704,6 +747,7 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var bay: float = (bridge_right - bridge_left) / BRIDGE_SPANS
 	for edge: PackedVector2Array in _cliff_segments(faces, bridge):
 		var base: int = vertices.size()
+		var lift: float = _cliff_edge_lift(edge)
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
 			for at: Vector2 in edge:
@@ -731,9 +775,8 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				var seam: Vector2 = at + lip
 				if opening == 0.0 and sides.has(at):
 					# A projected side contour must not split into independent sheets below the cap.
-					var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0)
-					offset = Vector2(lean * 49.0 * taper, 0.0)
-				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band) + offset
+					offset = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
+				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band - lift) + offset
 				vertices.append(down)
 				var shade: float = [0.30, 0.06, 0.19, 0.0, 0.0, 0.0][row]
 				var tint: Color = top_color.lerp(cold, depth * 0.82).darkened(shade)
@@ -763,13 +806,13 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	# Keep the textured front in front of this narrow, shadowed rock return.
 	for edge: PackedVector2Array in _cliff_segments(back, bridge):
 		var base: int = vertices.size()
+		var lift: float = _cliff_edge_lift(edge)
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
-			var taper: float = smoothstep(0.08, 0.45, depth)
 			for at: Vector2 in edge:
 				var seam: Vector2 = at + rim.get(at, Vector2.ZERO)
-				var lean: float = clampf((centre_x - seam.x) / 800.0, -1.0, 1.0) * 49.0 * taper
-				vertices.append(seam + Vector2(lean, depth * CLIFF_PX))
+				var offset: Vector2 = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
+				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX - lift) + offset)
 				colors.append(Color(0.57, 0.55, 0.66, CLIFF_VISIBILITY[row]))
 				if texture != null:
 					uvs.append(Vector2((seam.x + seam.y * 0.4) / span, depth))
@@ -820,7 +863,7 @@ func _cliff_growth_mesh(sprites: SpriteSet) -> MeshInstance2D:
 		if quad.is_empty():
 			continue
 		growth.texture = quad["texture"]
-		var at: Vector2 = IsoProjection.to_screen(item[0] * _cell_px) + Vector2(0.0, item[4])
+		var at: Vector2 = _rim_at(item[0] * _cell_px) + Vector2(0.0, item[4])
 		var size: Vector2 = (quad["rect"] as Rect2).size
 		var rect: Rect2 = Rect2(at - Vector2(size.x * 0.5, 0.0), size)
 		var uv: Rect2 = quad["uv"]
@@ -906,6 +949,21 @@ static func _surface_mesh(
 	return mesh
 
 
+func _rim_at(at: Vector2) -> Vector2:
+	var screen: Vector2 = IsoProjection.to_screen(at)
+	return screen - Vector2(0.0, _rim_lift(screen))
+
+
+func _rim_lift(screen: Vector2) -> float:
+	return _terrain.rim_height(IsoProjection.to_world(screen)) if _terrain != null else 0.0
+
+
+func _cliff_edge_lift(edge: PackedVector2Array) -> float:
+	if _terrain == null:
+		return 0.0
+	return _terrain.rim_edge_height(IsoProjection.to_world(edge[0]), IsoProjection.to_world(edge[1]))
+
+
 func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> PointLight2D:
 	var light: PointLight2D = PointLight2D.new()
 	light.texture = _radial_texture(256)
@@ -914,7 +972,7 @@ func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> Poin
 	light.energy = energy
 	light.height = RunLighting.LIGHT_HEIGHT_PX
 	# Lights live in screen space: a world circle of `radius` is a 2:1 ellipse on screen.
-	light.position = IsoProjection.to_screen(at)
+	light.position = surface_at(at)
 	light.scale = Vector2(1.0, 0.5)
 	_add_light(light)
 	return light

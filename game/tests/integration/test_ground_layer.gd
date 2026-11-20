@@ -187,7 +187,7 @@ func test_lights_reach_the_ground_layer_only() -> void:
 func test_seal_inlay_and_mist() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
-	var seals: Array = ground.find_children("*", "Sprite2D", true, false)
+	var seals: Array = ground._iso.find_children("*", "Sprite2D", false, false)
 	assert_eq(seals.size(), 2, "the seal and its glow")
 	for seal: Sprite2D in seals:
 		assert_eq(seal.position, _centre())
@@ -232,15 +232,17 @@ func test_waterfalls_start_under_the_near_faces() -> void:
 	for index: int in ground.waterfalls.size():
 		var rect: ColorRect = ground.waterfalls[index]
 		var fall: Array = GroundLayer.WATERFALLS[index]
-		var top: Vector2 = GroundLayer.waterfall_top(_data(), CELL, fall[0])
+		var top: Vector2 = IsoProjection.to_screen((fall[0] as Vector2) * CELL)
 		assert_has(tops, top, "the top of a near face")
 		assert_true(top.x < bridge_x[0] - CELL or top.x > bridge_x[-1] + CELL, "the fall clears the bridge")
 		assert_gt(top.x, last, "left to right")
 		last = top.x
 		assert_almost_eq(rect.position.x + rect.size.x * 0.5, top.x, 0.01)
 		assert_almost_eq(rect.position.y, top.y + GroundLayer.WATERFALL_TOP_PX, 0.01)
+		assert_eq(rect.size, fall[2])
 		assert_eq((rect.material as ShaderMaterial).shader, GroundLayer.WATERFALL_SHADER)
 		assert_eq(rect.mouse_filter, Control.MOUSE_FILTER_IGNORE)
+		assert_not_null(rect.get_node_or_null("OverflowRock"), "the stone source atlas is present")
 
 
 ## A3 polish: the distant scenery follows the view at BACKDROP_PARALLAX of its travel.
@@ -253,16 +255,43 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	var moved: Vector2 = ground.backdrop_origin(centre + Vector2(200, -100), 1.3, size)
 	assert_almost_eq(moved, size * 0.5 - Vector2(200, -100) * GroundLayer.BACKDROP_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(GroundLayer.BACKDROP_PARALLAX, 1.0)
-	var far: MeshInstance2D = ground._backdrop.get_child(0) as MeshInstance2D
-	var near: MeshInstance2D = ground._backdrop.get_child(1) as MeshInstance2D
+	assert_eq(ground._backdrop.get_child_count(), 3)
+	var horizon: MeshInstance2D = ground._backdrop.get_child(0) as MeshInstance2D
+	var far: MeshInstance2D = ground._backdrop.get_child(1) as MeshInstance2D
+	var near: MeshInstance2D = ground._backdrop.get_child(2) as MeshInstance2D
+	assert_eq(horizon.mesh.get_surface_count(), 1)
+	assert_eq(horizon.texture, sprites.canvas_texture(ArenaDressing.HORIZON_ASSET))
 	assert_eq(far.mesh.get_surface_count(), 1)
 	assert_eq(near.mesh.get_surface_count(), 1)
-	ground.follow(_centre(), centre, 1.3)
+	ground._position_scenery(centre, 1.3)
 	var origin: Vector2 = far.position
 	var travel: Vector2 = Vector2(200, -100)
-	ground.follow(_centre(), centre + travel, 1.3)
+	ground._position_scenery(centre + travel, 1.3)
 	assert_almost_eq(far.position - origin, -travel * GroundLayer.FAR_PARALLAX * 1.3, Vector2(0.01, 0.01))
+	assert_almost_eq(horizon.position - origin, -travel * GroundLayer.HORIZON_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(far.position.distance_to(origin), near.position.distance_to(origin))
+
+
+func test_scenery_and_mist_follow_the_visible_camera_while_it_settles() -> void:
+	var ground: GroundLayer = _ground(SpriteSet.new(), "none")
+	var camera: Camera2D = Camera2D.new()
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 1.0
+	camera.zoom = Vector2.ONE * 1.3
+	add_child_autofree(camera)
+	camera.make_current()
+	camera.reset_smoothing()
+	camera.position = Vector2(300, 200)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var centre: Vector2 = camera.get_screen_center_position()
+	assert_gt(centre.distance_to(camera.get_target_position()), 1.0, "the camera is still settling")
+	var size: Vector2 = ground.get_viewport().get_visible_rect().size
+	for index: int in GroundLayer.SCENERY_PARALLAX.size():
+		var plane: Node2D = ground._backdrop.get_child(index)
+		var expected: Vector2 = ground.backdrop_origin(centre, camera.zoom.x, size, GroundLayer.SCENERY_PARALLAX[index])
+		assert_almost_eq(plane.position, expected, Vector2.ONE * 0.01)
+	assert_eq(ground._veil.material.get_shader_parameter("camera_offset"), centre)
 
 
 func test_cliff_bends_beneath_the_paving_without_seams() -> void:
@@ -355,22 +384,27 @@ func test_cliff_growth_hangs_from_the_real_rock_in_one_batch() -> void:
 
 func test_aura_follows_the_hero() -> void:
 	var ground: GroundLayer = _ground(SpriteSet.new(), "none")
-	ground.follow(Vector2(300, 200))
+	ground.follow_hero(Vector2(300, 200))
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(300, 200)), 0.0, 0.01)
-	ground.follow(Vector2(500, 100), IsoProjection.to_screen(Vector2(400, 300)), 1.3)
+	ground.follow_hero(Vector2(500, 100))
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(500, 100)), 0.0, 0.01, "the aura stays on the hero")
 
 
 ## ADR-014 section 26: the fire lights flicker with RunLighting.flicker; the aura stays steady.
 func test_fire_lights_flicker() -> void:
-	var points: Array[Dictionary] = [{"at": Vector2(-48, 200), "flame": 70.0}, {"at": Vector2(800, -48), "flame": 50.0}]
+	var points: Array[Dictionary] = [
+		{"at": Vector2(-48, 200), "flame": 70.0, "energy": 1.86, "radius": 132.0},
+		{"at": Vector2(800, -48), "flame": 50.0, "energy": RunLighting.LANTERN_ENERGY},
+	]
 	var ground: GroundLayer = _ground(SpriteSet.new(), "none", points)
-	for energy: float in ground.fire_energies():
-		assert_almost_eq(energy, RunLighting.LANTERN_ENERGY, 1e-5, "steady before the run")
+	var steady: Array[float] = ground.fire_energies()
+	assert_almost_eq(ground._fires[0].texture_scale, 132.0 * 2.0 / 256.0, 1e-5)
+	for index: int in points.size():
+		assert_almost_eq(steady[index], float(points[index]["energy"]), 1e-5, "steady before the run")
 	ground.flicker(0.8)
 	var energies: Array[float] = ground.fire_energies()
 	for index: int in points.size():
-		assert_almost_eq(energies[index], RunLighting.LANTERN_ENERGY * RunLighting.flicker(0.8, index), 1e-5)
+		assert_almost_eq(energies[index], float(points[index]["energy"]) * RunLighting.flicker(0.8, index), 1e-5)
 	assert_ne(energies[0], energies[1], "out of step")
 	assert_almost_eq((ground.lights[ground.lights.size() - 1] as PointLight2D).energy, RunLighting.AURA_ENERGY, 1e-5,
 		"aura steady")

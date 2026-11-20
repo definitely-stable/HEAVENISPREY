@@ -172,12 +172,11 @@ var _flash_rest: float = 0.0
 var _halo_texture: Texture2D = GroundLayer._radial_texture(64)
 var _disc_texture: Texture2D = RunLighting.disc_texture(32)
 var _ground: GroundLayer
-## Courtyard props (ArenaDressing.placements, plus their cached screen point, depth key and
-## fixed light: they never move) and the ground points of the lit ones.
+## Courtyard props with cached projection, draw order and fixed light.
 var _props: Array[Dictionary] = []
-var _lanterns: Array[Vector2] = []
-var _flames: Array[Vector2] = []
+var _light_points: Array[Dictionary] = []
 var _shadow_canvas: Node2D
+var _contact_shadow_canvas: Node2D
 var _danger: Node2D
 var _hero_item: Node2D
 var _over: Node2D
@@ -240,21 +239,15 @@ func _ready() -> void:
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
 func _build_layers() -> void:
 	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain
+	if data.get("stage_id") == "stage.jade_grove" and _sprites.has(FLOOR_ASSET) and _sprites.has(WORN_FLOOR_ASSET):
+		terrain = JadeGroveTerrain.new(data, CELL_PX)
 	_props = ArenaDressing.placements(_sprites, data, CELL_PX)
-	var light_points: Array[Dictionary] = ArenaDressing.lights(_props)
-	for point: Dictionary in light_points:
-		_lanterns.append(point["at"])
-		_flames.append(IsoProjection.to_screen(point["at"]) - Vector2(0.0, point["flame"]))
-	for index: int in _props.size():
-		var prop: Dictionary = _props[index]
-		# A strip of a large prop sorts at its own cell but stands and is lit where the prop does.
-		var base: Vector2 = prop.get("base", prop["at"])
-		prop["screen"] = IsoProjection.to_screen(base)
-		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
-		prop["fixed_light"] = RunLighting.fixed_light(base, _lanterns)
+	_light_points = ArenaDressing.lights(_props, terrain)
+	ArenaDressing.prepare_props(_sprites, _props, _light_points, terrain)
 	_ground = GroundLayer.new(
-		_sprites, FLOOR_ASSET, data, CELL_PX, light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
-		ArenaDressing.backdrop(_sprites))
+		_sprites, FLOOR_ASSET, data, CELL_PX, _light_points, SEAL_ASSET, CLIFF_ASSET, WORN_FLOOR_ASSET,
+		ArenaDressing.backdrop(_sprites), terrain)
 	_ground.add_child(ArenaDressing.sill_mesh(_sprites, _props))
 	add_child(_ground)
 	var handrails: MeshInstance2D = ArenaDressing.edge_handrail_mesh(_sprites, _props)
@@ -265,31 +258,27 @@ func _build_layers() -> void:
 	under.follow_viewport_enabled = true
 	add_child(under)
 	var group: CanvasGroup = CanvasGroup.new()
-	group.use_mipmaps = true
-	group.fit_margin = 16.0
+	group.fit_margin = RunLighting.SHADOW_SURFACE_MARGIN if terrain != null else 16.0
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
-	shadow_material.set_shader_parameter("paving_mask", _ground.shadow_receiver)
-	shadow_material.set_shader_parameter("paving_size", Vector2(P0Tuning.arena_cells() * CELL_PX))
-	var pools: PackedVector2Array = PackedVector2Array()
-	for lantern: Vector2 in _lanterns.slice(0, MAX_SHADOW_POOLS):
-		pools.append(IsoProjection.to_screen(lantern))
+	RunEffectsPasses.configure_shadow_receiver(shadow_material, _ground)
+	var pools: PackedVector4Array = PackedVector4Array()
+	for source: Dictionary in _light_points.slice(0, MAX_SHADOW_POOLS):
+		var at: Vector2 = surface_at(source["at"])
+		pools.append(Vector4(at.x, at.y, source["radius"], source["energy"] / RunLighting.LANTERN_ENERGY))
 	shadow_material.set_shader_parameter("lanterns", pools)
 	shadow_material.set_shader_parameter("lantern_count", pools.size())
-	shadow_material.set_shader_parameter("lantern_radius", RunLighting.LANTERN_RADIUS_PX)
 	group.material = shadow_material
 	under.add_child(group)
-	_shadow_canvas = Node2D.new()
-	_shadow_canvas.draw.connect(_draw_shadow_pass)
-	group.add_child(_shadow_canvas)
-	_danger = Node2D.new()
+	RunEffectsPasses.add_shadow_layers(self, group)
+	_danger = RunEffectsPasses.add_danger_layer(under, terrain)
 	_danger.draw.connect(_draw_danger_pass)
-	under.add_child(_danger)
-	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _flames)
+	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _light_points)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
-	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _flames))
+	add_child(RunThreatSilhouettes.new(self))
+	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _light_points))
 	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()
 	additive.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -310,12 +299,19 @@ func _item(drawer: Callable, item_material: Material) -> Node2D:
 func camera_target() -> Vector2:
 	var inset: Vector2 = Vector2.ONE * CAMERA_INSET_CELLS * CELL_PX
 	var arena: Vector2 = Vector2(P0Tuning.arena_cells() * CELL_PX)
-	return IsoProjection.to_screen(driver.hero_position_px().clamp(inset, arena - inset))
+	return surface_at(driver.hero_position_px().clamp(inset, arena - inset))
+
+
+func surface_at(point: Vector2) -> Vector2:
+	return _ground.surface_at(point)
 
 
 ## Ground points (world px) of the lit courtyard props.
 func lantern_positions() -> Array[Vector2]:
-	return _lanterns
+	var points: Array[Vector2] = []
+	for source: Dictionary in _light_points:
+		points.append(source["at"])
+	return points
 
 
 ## Starts a fresh authorized run. An invalid request leaves the current run intact.
@@ -383,7 +379,7 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_chain_line.clear()
 	_camera.position = camera_target()
 	_camera.reset_smoothing()
-	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
+	_ground.follow_hero(driver.hero_position_px())
 	_sync_menu()
 	queue_redraw()
 	return true
@@ -401,7 +397,7 @@ func _process(delta: float) -> void:
 func _flicker() -> void:
 	_ground.flicker(_anim_time)
 	for item: CanvasItem in [self, _hero_item]:
-		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _flames.size())
+		RunLighting.set_flicker(item.material as ShaderMaterial, _anim_time, _light_points.size())
 
 
 func confirm_results() -> bool:
@@ -448,7 +444,7 @@ func _show_class_select() -> void:
 	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), CELL_PX)
 	_camera.position = IsoProjection.to_screen(centre)
 	_camera.reset_smoothing()
-	_ground.follow(centre, _camera.position, CAMERA_ZOOM, false)
+	_ground.follow_hero(centre, false)
 	_class_select.open(_registry, session_profile.granted_unlock_ids(), _last_class_id)
 	queue_redraw()
 
@@ -521,7 +517,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 			_hero_stride_time += travel.length() * FixedTickDriver.TICK_SECONDS / P0Tuning.HERO_SPEED_SU_PER_TICK
 	_update_facing()
 	_camera.position = camera_target()
-	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
+	_ground.follow_hero(driver.hero_position_px())
 	_sync_menu()
 	if driver.world.is_over():
 		_show_results()
@@ -585,7 +581,7 @@ func _draw() -> void:
 
 
 func _queue_layers() -> void:
-	for item: CanvasItem in [_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
+	for item: CanvasItem in [_shadow_canvas, _contact_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
 		if item != null:
 			item.queue_redraw()
 
@@ -598,7 +594,7 @@ func _add_effects(events: Dictionary) -> void:
 		_chain_left = 0.12
 		_chain_line.clear()
 		for point: Vector2 in chain_points:
-			_chain_line.append(IsoProjection.to_screen(point) - Vector2(0, 18))
+			_chain_line.append(surface_at(point) - Vector2(0, 18))
 	if _vfx == null:
 		return
 	for strike: Array in events["strikes"]:
@@ -742,7 +738,7 @@ func _draw_pose(canvas: CanvasItem, pose: Array, at: Vector2, tint: Color) -> bo
 
 ## Light on an upright thing standing at `feet` (world px), RunLighting model.
 func _light_at(feet: Vector2) -> Color:
-	return RunLighting.light_at(feet, driver.hero_position_px(), _lanterns)
+	return RunLighting.light_at(feet, driver.hero_position_px(), _light_points)
 
 
 # --- shadow layer: one buffer, composited once (ADR-014 section 5) ---
@@ -750,42 +746,21 @@ func _light_at(feet: Vector2) -> Color:
 func _draw_shadow_pass() -> void:
 	var canvas: Node2D = _shadow_canvas
 	var world: WorldState = driver.world if driver != null else null
-	# Draw silhouettes first. White contacts on top preserve their coverage in lit areas.
 	if world != null:
 		for slot: int in world.enemy_slots():
 			if world.enemy_uid[slot] != 0:
 				var pose: Array = _frame_pose(slot)
 				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture)
-	for lantern: Vector2 in _lanterns:
-		RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(lantern), CELL_PX * 0.65)
-	if world == null:
-		return
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] != 0:
-			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(_enemy_feet(slot)), radius)
-	if _vfx != null:
-		for death: Array in _vfx.deaths:
-			var left: float = 1.0 - CombatVfx.decay(death)
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(death[0]), HERO_RADIUS_PX * 0.9 * left)
-	RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
-	for slot: int in world.gem_slots():
-		if world.gem_uid[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.gem_position_px(slot)), 3.5)
-	for slot: int in world.projectile_slots():
-		if world.proj_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.projectile_position_px(slot)), 3.0)
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, IsoProjection.to_screen(driver.shot_position_px(slot)), 4.0)
+	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_screen_center_position())
+	ArenaDressing.draw_shadows(canvas, _sprites, _props, window)
 
 
 ## The silhouette laid down away from the moon.
 func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float = 0.0) -> void:
 	if pose[0] != "":
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(IsoProjection.to_screen(feet_world)))
+		var at: Vector2 = surface_at(feet_world)
+		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(at, IsoProjection.to_screen(feet_world).y - at.y))
 		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
 
 
@@ -828,11 +803,13 @@ func _draw_bodies() -> void:
 		for slot: int in world.enemy_slots():
 			if world.enemy_uid[slot] != 0:
 				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
-	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
+	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_screen_center_position())
 	for prop: Dictionary in _props:
-		if prop["prop"] == ArenaDressing.COPING_PROP:
+		if prop["prop"] == ArenaDressing.COPING_PROP and not prop.has("panel"):
 			continue
 		if prop.has("rail_bounds") and not rail_window.intersects(prop["rail_bounds"]):
+			continue
+		if prop.has("draw_bounds") and not rail_window.intersects(prop["draw_bounds"]):
 			continue
 		order.append(prop["order"])
 	order.sort()
@@ -848,7 +825,7 @@ func _draw_enemy(slot: int) -> void:
 	var kind: int = world.enemy_kind[slot]
 	var uid: int = world.enemy_uid[slot]
 	var feet: Vector2 = _enemy_feet(slot)
-	var at: Vector2 = IsoProjection.to_screen(feet)
+	var at: Vector2 = surface_at(feet)
 	var light: Color = _light_at(feet)
 	var pose: Array = _frame_pose(slot)
 	var flash: float = _reactions.flash(uid)
@@ -893,7 +870,7 @@ func _enemy_feet(slot: int) -> Vector2:
 ## the living; the yin burst over it is light (glow item).
 func _draw_decay_pass() -> void:
 	if _vfx != null:
-		EnemyReactions.draw_fallen(_decay, _sprites, _vfx.deaths, _light_at)
+		EnemyReactions.draw_fallen(_decay, _sprites, _vfx.deaths, _light_at, surface_at)
 
 
 ## Hero projectiles fly above their ground point (their shadow dot marks it), blade along the
@@ -906,7 +883,7 @@ func _draw_projectiles() -> void:
 	for slot: int in world.projectile_slots():
 		if world.proj_damage[slot] == 0:
 			continue
-		var at: Vector2 = IsoProjection.to_screen(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
+		var at: Vector2 = surface_at(driver.projectile_position_px(slot)) - Vector2(0, FLIGHT_LIFT_PX)
 		var heading: Vector2 = _projectile_heading(slot)
 		draw_line(at - heading * radius * 2.2, at + heading * radius * 1.2, COLOR_SWORD, radius * 0.6)
 		draw_circle(at + heading * radius * 1.2, radius * 0.35, COLOR_SWORD)
@@ -929,7 +906,7 @@ func _draw_gems() -> void:
 			continue
 		var ground: Vector2 = driver.gem_position_px(slot)
 		var bob: float = sin(_anim_time * GEM_BOB_HZ * TAU + float(uid)) * GEM_BOB_PX
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, GEM_LIFT_PX + bob)
+		var at: Vector2 = surface_at(ground) - Vector2(0, GEM_LIFT_PX + bob)
 		var near: bool = ground.distance_to(hero) <= near_px
 		CombatVfx.draw_gem_primitive(
 			self, at, world.gem_value[slot], 1.0, GEM_REST_SCALE, COLOR_GEM if near else COLOR_GEM_REST
@@ -943,7 +920,7 @@ func _draw_hero_pass() -> void:
 		return
 	var canvas: Node2D = _hero_item
 	var feet: Vector2 = driver.hero_position_px()
-	var hero: Vector2 = IsoProjection.to_screen(feet)
+	var hero: Vector2 = surface_at(feet)
 	var light: Color = _light_at(feet)
 	var stacks: int = driver.world.venom_stacks
 	var pose: Array = _hero_pose()
