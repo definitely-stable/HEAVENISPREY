@@ -266,6 +266,10 @@ func test_default_run_view_projects_raised_paving_shadows_and_warnings() -> void
 	var warnings: ShaderMaterial = view._danger.get_parent().material as ShaderMaterial
 	var shadows: ShaderMaterial = view._shadow_canvas.get_parent().material as ShaderMaterial
 	assert_not_null(warnings, "the normal scene projects attack outlines onto the raised paving")
+	assert_eq(shadows.get_shader_parameter("surface_shift"), RunLighting.SHADOW_SURFACE_SHIFT)
+	assert_eq(view._contact_shadow_canvas.get_parent(), view._shadow_canvas.get_parent())
+	var contacts: CanvasItemMaterial = view._contact_shadow_canvas.material
+	assert_eq(contacts.blend_mode, CanvasItemMaterial.BLEND_MODE_ADD)
 	if warnings != null:
 		assert_eq(warnings.get_shader_parameter("surface_mask"), shadows.get_shader_parameter("paving_mask"))
 

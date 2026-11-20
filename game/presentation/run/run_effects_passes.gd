@@ -3,6 +3,7 @@ extends RefCounted
 ## Render the combat overlays and additive light in the same order as the arena view.
 
 const TERRACE_MARKS_SHADER: Shader = preload("res://presentation/run/shaders/terrace_marks.gdshader")
+const SHADOW_SILHOUETTES_SHADER: Shader = preload("res://presentation/run/shaders/shadow_silhouettes.gdshader")
 
 
 static func configure_shadow_receiver(material: ShaderMaterial, ground: GroundLayer) -> void:
@@ -12,7 +13,59 @@ static func configure_shadow_receiver(material: ShaderMaterial, ground: GroundLa
 		material.set_shader_parameter("paving_size", ground._arena)
 	else:
 		material.set_shader_parameter("paving_mask", terrain.surface_mask)
+		material.set_shader_parameter("surface_shift", RunLighting.SHADOW_SURFACE_SHIFT)
 		_set_surface_bounds(material, terrain.surface_bounds)
+
+
+static func add_shadow_layers(view: RunView, group: CanvasGroup) -> void:
+	view._shadow_canvas = Node2D.new()
+	var silhouettes: ShaderMaterial = ShaderMaterial.new()
+	silhouettes.shader = SHADOW_SILHOUETTES_SHADER
+	view._shadow_canvas.material = silhouettes
+	view._shadow_canvas.draw.connect(view._draw_shadow_pass)
+	group.add_child(view._shadow_canvas)
+	view._contact_shadow_canvas = Node2D.new()
+	var contacts: CanvasItemMaterial = CanvasItemMaterial.new()
+	contacts.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	view._contact_shadow_canvas.material = contacts
+	view._contact_shadow_canvas.draw.connect(draw_contact_shadows.bind(view))
+	group.add_child(view._contact_shadow_canvas)
+
+
+static func draw_contact_shadows(view: RunView) -> void:
+	var canvas: Node2D = view._contact_shadow_canvas
+	var disc: Texture2D = view._disc_texture
+	var window: Rect2 = ArenaDressing.rail_draw_window(view, view._camera.get_screen_center_position())
+	for prop: Dictionary in view._props:
+		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
+			continue
+		for polygon: PackedVector2Array in prop.get("footprint", []):
+			canvas.draw_colored_polygon(polygon, Color.RED)
+		if prop.get("wall", false) and not prop.has("rail_bounds") and not prop.has("footprint"):
+			RunLighting.contact(canvas, disc, prop["screen"], ArenaDressing.POST_HALF_PX * 1.55)
+	for source: Dictionary in view._light_points:
+		RunLighting.contact(canvas, disc, view.surface_at(source["at"]), RunView.CELL_PX * 0.65)
+	if view.driver == null:
+		return
+	var world: WorldState = view.driver.world
+	for slot: int in world.enemy_slots():
+		if world.enemy_uid[slot] != 0:
+			var radius: float = view._kind_radius_px(world.enemy_kind[slot]) * 0.95
+			RunLighting.contact(canvas, disc, view.surface_at(view._enemy_feet(slot)), radius)
+	if view._vfx != null:
+		for death: Array in view._vfx.deaths:
+			var left: float = 1.0 - CombatVfx.decay(death)
+			RunLighting.contact(canvas, disc, view.surface_at(death[0]), RunView.HERO_RADIUS_PX * 0.9 * left)
+	RunLighting.contact(canvas, disc, view.surface_at(view.driver.hero_position_px()), RunView.HERO_RADIUS_PX * 0.95)
+	for slot: int in world.gem_slots():
+		if world.gem_uid[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.gem_position_px(slot)), 3.5)
+	for slot: int in world.projectile_slots():
+		if world.proj_damage[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.projectile_position_px(slot)), 3.0)
+	for slot: int in world.shot_slots():
+		if world.shot_damage[slot] != 0:
+			RunLighting.contact(canvas, disc, view.surface_at(view.driver.shot_position_px(slot)), 4.0)
 
 
 static func add_danger_layer(parent: Node, terrain: JadeGroveTerrain) -> Node2D:

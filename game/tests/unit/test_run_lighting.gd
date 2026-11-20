@@ -78,6 +78,11 @@ func test_shadows_fall_along_the_moon() -> void:
 	assert_almost_eq(head.y, 100.0 * RunLighting.SHADOW_SQUASH, 1e-4)
 	var down_light: Vector2 = Vector2(0.0, 1.0).rotated(RunLighting.moon_rotation())
 	assert_almost_eq(down_light.dot(travel), 1.0, 1e-5, "the directional moon shines the same way")
+	for elevation: float in [30.0, -28.0]:
+		var on_terrace: Vector2 = feet - Vector2(0.0, elevation)
+		var datum: Transform2D = RunLighting.shadow_transform(on_terrace, elevation)
+		var expected: Vector2 = feet + head * (1.0 + elevation / 100.0)
+		assert_almost_eq(datum * Vector2(0.0, -100.0), expected, Vector2.ONE * 0.001)
 
 
 ## ADR-014 section 26: the fires flicker around their energy, each out of step with the others,

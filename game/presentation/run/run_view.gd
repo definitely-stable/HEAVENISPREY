@@ -176,6 +176,7 @@ var _ground: GroundLayer
 var _props: Array[Dictionary] = []
 var _light_points: Array[Dictionary] = []
 var _shadow_canvas: Node2D
+var _contact_shadow_canvas: Node2D
 var _danger: Node2D
 var _hero_item: Node2D
 var _over: Node2D
@@ -257,8 +258,7 @@ func _build_layers() -> void:
 	under.follow_viewport_enabled = true
 	add_child(under)
 	var group: CanvasGroup = CanvasGroup.new()
-	group.use_mipmaps = true
-	group.fit_margin = 16.0
+	group.fit_margin = RunLighting.SHADOW_SURFACE_MARGIN if terrain != null else 16.0
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
@@ -271,9 +271,7 @@ func _build_layers() -> void:
 	shadow_material.set_shader_parameter("lantern_count", pools.size())
 	group.material = shadow_material
 	under.add_child(group)
-	_shadow_canvas = Node2D.new()
-	_shadow_canvas.draw.connect(_draw_shadow_pass)
-	group.add_child(_shadow_canvas)
+	RunEffectsPasses.add_shadow_layers(self, group)
 	_danger = RunEffectsPasses.add_danger_layer(under, terrain)
 	_danger.draw.connect(_draw_danger_pass)
 	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _light_points)
@@ -583,7 +581,7 @@ func _draw() -> void:
 
 
 func _queue_layers() -> void:
-	for item: CanvasItem in [_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
+	for item: CanvasItem in [_shadow_canvas, _contact_shadow_canvas, _danger, _decay, _hero_item, _over, _glow, _hud]:
 		if item != null:
 			item.queue_redraw()
 
@@ -748,7 +746,6 @@ func _light_at(feet: Vector2) -> Color:
 func _draw_shadow_pass() -> void:
 	var canvas: Node2D = _shadow_canvas
 	var world: WorldState = driver.world if driver != null else null
-	# Draw silhouettes first. White contacts on top preserve their coverage in lit areas.
 	if world != null:
 		for slot: int in world.enemy_slots():
 			if world.enemy_uid[slot] != 0:
@@ -756,35 +753,14 @@ func _draw_shadow_pass() -> void:
 				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
 	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_screen_center_position())
-	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture, window)
-	for source: Dictionary in _light_points:
-		RunLighting.contact(canvas, _disc_texture, surface_at(source["at"]), CELL_PX * 0.65)
-	if world == null:
-		return
-	for slot: int in world.enemy_slots():
-		if world.enemy_uid[slot] != 0:
-			var radius: float = _kind_radius_px(world.enemy_kind[slot]) * 0.95
-			RunLighting.contact(canvas, _disc_texture, surface_at(_enemy_feet(slot)), radius)
-	if _vfx != null:
-		for death: Array in _vfx.deaths:
-			var left: float = 1.0 - CombatVfx.decay(death)
-			RunLighting.contact(canvas, _disc_texture, surface_at(death[0]), HERO_RADIUS_PX * 0.9 * left)
-	RunLighting.contact(canvas, _disc_texture, surface_at(driver.hero_position_px()), HERO_RADIUS_PX * 0.95)
-	for slot: int in world.gem_slots():
-		if world.gem_uid[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, surface_at(driver.gem_position_px(slot)), 3.5)
-	for slot: int in world.projectile_slots():
-		if world.proj_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, surface_at(driver.projectile_position_px(slot)), 3.0)
-	for slot: int in world.shot_slots():
-		if world.shot_damage[slot] != 0:
-			RunLighting.contact(canvas, _disc_texture, surface_at(driver.shot_position_px(slot)), 4.0)
+	ArenaDressing.draw_shadows(canvas, _sprites, _props, window)
 
 
 ## The silhouette laid down away from the moon.
 func _cast_shadow(canvas: Node2D, pose: Array, feet_world: Vector2, lift: float = 0.0) -> void:
 	if pose[0] != "":
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(surface_at(feet_world)))
+		var at: Vector2 = surface_at(feet_world)
+		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(at, IsoProjection.to_screen(feet_world).y - at.y))
 		_draw_pose(canvas, pose, Vector2(0.0, -lift), Color.BLACK)
 
 

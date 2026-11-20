@@ -596,7 +596,8 @@ static func prepare_props(
 	for index: int in props.size():
 		var prop: Dictionary = props[index]
 		var base: Vector2 = prop.get("base", prop["at"])
-		var screen: Vector2 = terrain.project(base) if terrain != null else IsoProjection.to_screen(base)
+		var flat: Vector2 = IsoProjection.to_screen(base)
+		var screen: Vector2 = terrain.project(base) if terrain != null else flat
 		prop["screen"] = screen
 		var depth: float = IsoProjection.depth(prop["at"])
 		# The terminal covers the cut edge of its co-planar painted bay.
@@ -605,7 +606,7 @@ static func prepare_props(
 		prop["order"] = Vector2i(roundi(depth * 16.0), -1 - index)
 		prop["fixed_light"] = RunLighting.fixed_light(base, lanterns)
 		if terrain != null:
-			_lift_prop(sprites, prop, terrain, screen - IsoProjection.to_screen(base))
+			_lift_prop(sprites, prop, terrain, screen - flat)
 		if prop.has("rail_bounds"):
 			continue
 		var quad: Dictionary = sprites.prop_quad(prop["asset"], prop["prop"], Vector2.ZERO, 1.0, prop["flip"])
@@ -614,7 +615,8 @@ static func prepare_props(
 		var local: Rect2 = quad["rect"]
 		var bounds: Rect2 = Rect2(local.position + screen, local.size)
 		prop["draw_bounds"] = bounds
-		prop["shadow_bounds"] = (RunLighting.shadow_transform(screen) * local).merge(bounds).grow(18.0)
+		prop["shadow_transform"] = RunLighting.shadow_transform(screen, flat.y - screen.y)
+		prop["shadow_bounds"] = (prop["shadow_transform"] * local).merge(bounds).grow(RunLighting.SHADOW_SURFACE_MARGIN)
 
 
 static func _lift_prop(sprites: SpriteSet, prop: Dictionary, terrain: JadeGroveTerrain, delta: Vector2) -> void:
@@ -636,26 +638,16 @@ static func _lift_prop(sprites: SpriteSet, prop: Dictionary, terrain: JadeGroveT
 		footprint[index] = polygon
 
 
-## Lay the silhouettes first; the white contacts keep their coverage near a lantern.
 static func draw_shadows(
-	canvas: Node2D, sprites: SpriteSet, props: Array[Dictionary], disc: Texture2D, window: Rect2
+	canvas: Node2D, sprites: SpriteSet, props: Array[Dictionary], window: Rect2
 ) -> void:
 	for prop: Dictionary in props:
-		if prop["prop"] == BLOCK_PROP or prop.has("rail_bounds") or prop.has("clip") or prop.has("footprint"):
+		if not prop.has("shadow_bounds") or prop.has("clip") or prop.has("footprint") \
+				or not window.intersects(prop["shadow_bounds"]):
 			continue
-		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
-			continue
-		canvas.draw_set_transform_matrix(RunLighting.shadow_transform(prop["screen"]))
+		canvas.draw_set_transform_matrix(prop["shadow_transform"])
 		var shadow: Color = Color(0.0, 0.0, 0.0, 0.72) if prop.get("wall", false) else Color.BLACK
 		sprites.draw_prop(canvas, prop["asset"], prop["prop"], Vector2.ZERO, shadow, prop["flip"])
-	canvas.draw_set_transform_matrix(Transform2D.IDENTITY)
-	for prop: Dictionary in props:
-		if prop.has("shadow_bounds") and not window.intersects(prop["shadow_bounds"]):
-			continue
-		for polygon: PackedVector2Array in prop.get("footprint", []):
-			canvas.draw_colored_polygon(polygon, Color.WHITE)
-		if prop.get("wall", false) and not prop.has("rail_bounds") and not prop.has("footprint"):
-			RunLighting.contact(canvas, disc, prop["screen"], POST_HALF_PX * 1.55)
 
 
 ## The screen quads [base from, base to, top to, top from] of the bays of a rail: as many whole

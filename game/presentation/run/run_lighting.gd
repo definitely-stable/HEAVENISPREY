@@ -46,6 +46,8 @@ const LIGHT_HEIGHT_PX: float = 40.0
 ## height, both along the moon's travel (the shadow falls to the lower right).
 const SHADOW_SQUASH: float = 0.34
 const SHADOW_SHEAR: float = -0.62
+const SHADOW_SURFACE_SHIFT: Vector2 = Vector2(-SHADOW_SHEAR, 1.0 + SHADOW_SQUASH)
+const SHADOW_SURFACE_MARGIN: float = 64.0
 ## Darkening of the shadow layer, composited once (overlaps do not stack).
 const SHADOW_ALPHA: float = 0.4
 
@@ -91,11 +93,10 @@ static func with_aura(fixed: Color, feet: Vector2, hero: Vector2) -> Color:
 	return light
 
 
-## Screen transform that lays an upright sprite drawn at the origin (feet) down as its cast
-## shadow at `feet_screen`: heights shrink by SHADOW_SQUASH and flip to fall down the screen,
-## and lean to the right along the moon.
-static func shadow_transform(feet_screen: Vector2) -> Transform2D:
-	return Transform2D(Vector2(1.0, 0.0), Vector2(SHADOW_SHEAR, -SHADOW_SQUASH), feet_screen)
+## Lay the silhouette onto the zero-height plane. The composite samples it at the receiving surface.
+static func shadow_transform(feet_screen: Vector2, elevation: float = 0.0) -> Transform2D:
+	return Transform2D(Vector2.RIGHT, Vector2(SHADOW_SHEAR, -SHADOW_SQUASH),
+		feet_screen + SHADOW_SURFACE_SHIFT * elevation)
 
 
 ## Energy factor of flame `index` at `seconds` of the run: within 1 +- FLICKER_DEPTH, the same
@@ -152,7 +153,7 @@ static func disc_texture(size: int) -> GradientTexture2D:
 ## The contact shadow under the feet: a 2:1 disc, drawn as a textured rect so contacts batch.
 static func contact(canvas: Node2D, texture: Texture2D, at: Vector2, radius: float) -> void:
 	var box: Rect2 = Rect2(at - Vector2(radius, radius * 0.5), Vector2(radius * 2.0, radius))
-	canvas.draw_texture_rect(texture, box, false)
+	canvas.draw_texture_rect(texture, box, false, Color.RED)
 
 
 static func halo(canvas: Node2D, texture: Texture2D, at: Vector2, radius: float, color: Color) -> void:
