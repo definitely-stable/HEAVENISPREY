@@ -194,6 +194,31 @@ func test_surface_mask_follows_the_visible_floor_in_screen_space() -> void:
 	assert_eq(image.get_pixelv(sky_texel).g, 0.0, "the gorge does not receive floor marks")
 
 
+func test_raised_rim_bevel_covers_the_gap_between_its_two_heights() -> void:
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(P0Tuning.arena_data(), RunView.CELL_PX)
+	var cell: int = RunView.CELL_PX
+	var boundary: Array[PackedVector2Array] = GroundLayer.perimeter(terrain.paving_data, cell)
+	var offsets: Dictionary = GroundLayer.rim_offsets(terrain.paving_data, cell, boundary)
+	var bevels: Array[PackedVector2Array] = []
+	var centres: Array[Vector2] = []
+	for at: Vector2 in [Vector2(10, 37), Vector2(35, 8)]:
+		var corner: Vector2 = at * cell
+		var offset: Vector2 = offsets[corner]
+		bevels.append(PackedVector2Array([corner, corner + Vector2(2.0 * offset.x, 0.0),
+			corner + Vector2(0.0, 2.0 * offset.y)]))
+		centres.append(IsoProjection.to_screen(corner + offset * 0.5))
+	var paving: Polygon2D = terrain.build_paving(1.0, bevels)
+	add_child_autofree(paving)
+	var mask: Image = terrain.surface_mask.get_image()
+	var lifts: Array[float] = [18.0, 15.0]
+	for index: int in centres.size():
+		var seam: Vector2 = centres[index] - Vector2(0.0, lifts[index])
+		var texel: Vector2i = Vector2i((seam - terrain.surface_bounds.position) * JadeGroveTerrain.SURFACE_MASK_SCALE)
+		var mark: Color = mask.get_pixelv(texel)
+		assert_almost_eq(mark.g, 0.5, 0.01, "the maple and temple bevels have visible retaining faces")
+		assert_almost_eq(mark.r * 127.5 - 64.0, lifts[index], 1.0)
+
+
 func test_default_run_view_projects_raised_paving_shadows_and_warnings() -> void:
 	var scene: PackedScene = load("res://presentation/run/run_view.tscn")
 	var view: RunView = scene.instantiate()

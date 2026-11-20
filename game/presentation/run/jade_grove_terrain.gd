@@ -320,11 +320,14 @@ func build_paving(texels_per_px: float, bevels: Array[PackedVector2Array] = []) 
 				_join_edge(faces, edges, middle, a, tread)
 	for bevel: PackedVector2Array in bevels:
 		var tip: Vector2 = (bevel[1] + bevel[2]) * 0.5
+		var corner_key: Vector2i = Vector2i(bevel[0] * 2.0 / _cell_px)
+		var tip_key: Vector2i = Vector2i(tip * 2.0 / _cell_px)
 		for side: int in [1, 2]:
 			var level: float = rim_edge_height(bevel[0], bevel[side])
 			var depth: float = IsoProjection.depth((bevel[0] + bevel[side] + tip) / 3.0) * 2.0 / _cell_px
 			var half: PackedVector2Array = PackedVector2Array([bevel[0], bevel[side], tip])
 			_append_face(faces, half, PackedFloat32Array([level, level, level]), depth, 1.0)
+			_join_edge(faces, edges, corner_key, tip_key, faces.size() - 1)
 	faces.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a["depth"] < b["depth"])
 	var vertices: PackedVector2Array = PackedVector2Array()
 	var uvs: PackedVector2Array = PackedVector2Array()
