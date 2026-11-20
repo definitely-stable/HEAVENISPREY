@@ -15,6 +15,7 @@ const LEVELS: Array[float] = [30.0, 24.0, 24.0, -28.0]
 const SIDE_RISES: int = 4
 const MAX_STEP: float = 6.0
 const RETAINING_SHADE: float = 0.59
+const MAPLE_PARAPET_FOOTINGS: Array[Vector2i] = [Vector2i(11, 35), Vector2i(10, 36)]
 const VOID: int = 255
 const SURFACE_MASK_SCALE: float = 0.5
 const FACE_OFFSETS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
@@ -191,38 +192,40 @@ func _align_retaining_faces(rows: Array, stairs: PackedByteArray, walkable: Pack
 
 ## A pocket enclosed by masonry, or a missing return between high and low walls, needs a stone core.
 func _fill_retaining_pockets(original: Array, rows: Array) -> void:
+	var jade_grove: bool = paving_data.get("stage_id") == "stage.jade_grove"
 	for y: int in range(1, _size.y - 1):
 		for x: int in range(1, _size.x - 1):
 			if original[y][x] != " ":
 				continue
+			var footing: bool = jade_grove and MAPLE_PARAPET_FOOTINGS.has(Vector2i(x, y))
 			var edges: PackedFloat32Array = PackedFloat32Array([INF, INF, INF, INF])
-			var wall_count: int = 0
-			var open_side: int = -1
+			var supports: int = 0
+			var opens_to_void: bool = false
 			var lower: float = INF
 			var upper: float = -INF
 			for side: int in 4:
 				var neighbour: Vector2i = Vector2i(x, y) + FACE_OFFSETS[side]
 				var tile: String = original[neighbour.y][neighbour.x]
 				if tile == " ":
-					open_side = side
-				if not "w#".contains(tile):
+					opens_to_void = true
+					continue
+				if not footing and not "w#".contains(tile):
 					continue
 				var face: int = (neighbour.y * _size.x + neighbour.x) * 4 + (side + 2) % 4
 				var level: float = _levels[face]
 				edges[side] = level
 				lower = minf(lower, level)
 				upper = maxf(upper, level)
-				wall_count += 1
-			if wall_count != 4 and (wall_count != 3 or open_side < 0 or upper - lower <= MAX_STEP):
+				supports += 1
+			var corner: bool = supports == 4 or (supports == 3 and opens_to_void and upper - lower > MAX_STEP)
+			if not corner and (not footing or supports == 0):
 				continue
 			var row: String = rows[y]
 			rows[y] = row.substr(0, x) + "#" + row.substr(x + 1)
 			var cell: int = y * _size.x + x
 			_tiles[cell] = 0
-			if open_side >= 0:
-				edges[open_side] = lower
 			for side: int in 4:
-				_levels[cell * 4 + side] = edges[side]
+				_levels[cell * 4 + side] = edges[side] if edges[side] != INF else lower
 
 
 static func configure_floor_material(material: ShaderMaterial, sprites: SpriteSet, repeat_px: float) -> void:

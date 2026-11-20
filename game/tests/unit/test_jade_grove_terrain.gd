@@ -116,7 +116,8 @@ func test_retaining_corner_has_a_split_foundation_and_preserves_open_rims() -> v
 				filled.append(Vector2i(x, y))
 	var returns: Array[Vector2i] = [Vector2i(34, 8), Vector2i(60, 20), Vector2i(18, 22),
 		Vector2i(14, 44), Vector2i(55, 47), Vector2i(42, 58)]
-	assert_eq(filled, returns, "paving only changes at closed pockets and stepped wall returns")
+	var footings: Array[Vector2i] = [Vector2i(11, 35), Vector2i(10, 36)]
+	assert_eq(filled, returns.slice(0, 3) + footings + returns.slice(3), "only masonry extends the silhouette")
 	for cell: Vector2i in returns:
 		assert_eq(original[cell.y][cell.x], " ", "the blocking topology retains the void cell")
 		assert_eq(paving[cell.y][cell.x], "#")
@@ -140,6 +141,36 @@ func test_retaining_corner_has_a_split_foundation_and_preserves_open_rims() -> v
 		assert_eq(terrain.height_at(rear), 30.0)
 		assert_eq(terrain.height_at(front), 0.0)
 	assert_eq(terrain.height_at(Vector2(19.5, 22.5) * RunView.CELL_PX), 30.0, "sockets sit on the upper cut")
+
+
+func test_maple_parapets_follow_the_blocked_rim_and_reach_the_lower_foundation() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var props: Array[Dictionary] = ArenaDressing.placements(sprites, data, RunView.CELL_PX)
+	ArenaDressing.prepare_props(sprites, props, ArenaDressing.lights(props, terrain), terrain)
+	var connections: Array[Vector4i] = []
+	for prop: Dictionary in props:
+		if prop["prop"] != ArenaDressing.MAPLE_PARAPET:
+			continue
+		var from: Vector2 = prop["from"]
+		var to: Vector2 = prop["to"]
+		var start: Vector2i = Vector2i((from / RunView.CELL_PX).floor())
+		var end: Vector2i = Vector2i((to / RunView.CELL_PX).floor())
+		connections.append(Vector4i(start.x, start.y, end.x, end.y))
+		var lamp: Vector2 = ArenaDressing.MAPLE_LANTERN * RunView.CELL_PX
+		assert_lt(minf(from.distance_to(lamp), to.distance_to(lamp)), ArenaDressing.POST_HALF_PX)
+		for step: int in 33:
+			var tile: Vector2i = Vector2i((from.lerp(to, step / 32.0) / RunView.CELL_PX).floor())
+			assert_false(ArenaTopology.WALK_CHARS.contains(data["rows"][tile.y][tile.x]))
+			assert_ne(terrain.paving_data["rows"][tile.y][tile.x], " ", "stone runs over the foundation")
+		var mesh: ArrayMesh = prop["volume"]
+		var vertices: PackedVector2Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		var across: Vector2 = (to - from).normalized().orthogonal() * float(prop["base_width"])
+		assert_true(_contains_vertex(vertices, IsoProjection.to_screen(from + across)))
+		assert_true(_contains_vertex(vertices, IsoProjection.to_screen(from - across)))
+	assert_eq(connections, [Vector4i(9, 36, 12, 35), Vector4i(12, 35, 12, 36)],
+		"the uphill pier and the approach pier both join the lantern's plinth")
 
 
 func test_sloped_temple_rail_reaches_the_court_with_its_stone_sill() -> void:
@@ -199,24 +230,17 @@ func test_raised_rim_bevel_covers_the_gap_between_its_two_heights() -> void:
 	var cell: int = RunView.CELL_PX
 	var boundary: Array[PackedVector2Array] = GroundLayer.perimeter(terrain.paving_data, cell)
 	var offsets: Dictionary = GroundLayer.rim_offsets(terrain.paving_data, cell, boundary)
-	var bevels: Array[PackedVector2Array] = []
-	var centres: Array[Vector2] = []
-	for at: Vector2 in [Vector2(10, 37), Vector2(35, 8)]:
-		var corner: Vector2 = at * cell
-		var offset: Vector2 = offsets[corner]
-		bevels.append(PackedVector2Array([corner, corner + Vector2(2.0 * offset.x, 0.0),
-			corner + Vector2(0.0, 2.0 * offset.y)]))
-		centres.append(IsoProjection.to_screen(corner + offset * 0.5))
-	var paving: Polygon2D = terrain.build_paving(1.0, bevels)
+	var corner: Vector2 = Vector2(35, 8) * cell
+	var offset: Vector2 = offsets[corner]
+	var bevel: PackedVector2Array = PackedVector2Array([corner, corner + Vector2(2.0 * offset.x, 0.0),
+		corner + Vector2(0.0, 2.0 * offset.y)])
+	var paving: Polygon2D = terrain.build_paving(1.0, [bevel])
 	add_child_autofree(paving)
-	var mask: Image = terrain.surface_mask.get_image()
-	var lifts: Array[float] = [18.0, 15.0]
-	for index: int in centres.size():
-		var seam: Vector2 = centres[index] - Vector2(0.0, lifts[index])
-		var texel: Vector2i = Vector2i((seam - terrain.surface_bounds.position) * JadeGroveTerrain.SURFACE_MASK_SCALE)
-		var mark: Color = mask.get_pixelv(texel)
-		assert_almost_eq(mark.g, 0.5, 0.01, "the maple and temple bevels have visible retaining faces")
-		assert_almost_eq(mark.r * 127.5 - 64.0, lifts[index], 1.0)
+	var seam: Vector2 = IsoProjection.to_screen(corner + offset * 0.5) - Vector2(0.0, 15.0)
+	var texel: Vector2i = Vector2i((seam - terrain.surface_bounds.position) * JadeGroveTerrain.SURFACE_MASK_SCALE)
+	var mark: Color = terrain.surface_mask.get_image().get_pixelv(texel)
+	assert_almost_eq(mark.g, 0.5, 0.01, "the temple bevel has a visible retaining face")
+	assert_almost_eq(mark.r * 127.5 - 64.0, 15.0, 1.0)
 
 
 func test_default_run_view_projects_raised_paving_shadows_and_warnings() -> void:

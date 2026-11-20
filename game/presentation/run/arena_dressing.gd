@@ -30,8 +30,10 @@ const TEMPLE_PANEL: String = "temple_panel"
 const CLIFF_PANEL: String = "cliff_parapet"
 const BRIDGE_ARCH: String = "bridge_arch"
 const TERRACE_RELIEF: String = "terrace_relief"
+const MAPLE_LANTERN: Vector2 = Vector2(12.5, 35.5)
+const MAPLE_PARAPET: String = "maple_parapet"
 const LOW_LANTERNS: Array[Vector2] = [
-	Vector2(32.5, 9.5), Vector2(12.5, 35.5), Vector2(59.5, 20.5), Vector2(64.5, 31.5),
+	Vector2(32.5, 9.5), MAPLE_LANTERN, Vector2(59.5, 20.5), Vector2(64.5, 31.5),
 ]
 const SANCTUARY_POSTS: Array[Vector2i] = [Vector2i(16, 13), Vector2i(25, 4)]
 const SANCTUARY_JOIN: String = "sanctuary_join"
@@ -174,6 +176,17 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 		_add_balustrade(out, sprites, wall, cell_px, gate, masonry, rows, sockets)
 		if courtyard_masonry and gate.is_finite() and sprites.has_prop(GATE_ASSET, "gate"):
 			_join_sanctuary_wall(out, sprites, rows, gate * cell_px, cell_px, sockets)
+		var maple_pier: Vector2i = Vector2i(9, 36)
+		if courtyard_masonry and sockets.has(maple_pier) and _tile(rows, Vector2i(MAPLE_LANTERN)) == SOLID_CHAR:
+			var pier: Vector2 = sockets[maple_pier]
+			# The shared footing corner keeps the axis outside the playable treads.
+			var along: Vector2 = (Vector2(11, 36) * cell_px - pier).normalized()
+			var lamp_base: Vector2 = pier + along * ((MAPLE_LANTERN.x * cell_px - pier.x) / along.x)
+			out.append(_short_stone_wall(sprites, MAPLE_PARAPET, pier + along * POST_HALF_PX, lamp_base, 28.0))
+			var low_pier: Vector2i = Vector2i(12, 36)
+			if sockets.has(low_pier):
+				var jamb: Vector2 = sockets[low_pier] + Vector2.UP * POST_HALF_PX
+				out.append(_short_stone_wall(sprites, MAPLE_PARAPET, MAPLE_LANTERN * cell_px, jamb, 18.0))
 	for y: int in rows.size():
 		var row: String = rows[y]
 		for x: int in row.length():
@@ -475,6 +488,10 @@ static func _build_masonry_volume(
 		top.append(IsoProjection.to_screen(at + crown) + shift + lift + Vector2(0.0, bevel))
 		crown_lip.append(IsoProjection.to_screen(at - crown - across * bevel) + shift + lift)
 		crown_lip.append(IsoProjection.to_screen(at + crown + across * bevel) + shift + lift)
+	if item["prop"] == MAPLE_PARAPET:
+		var foundation: float = minf(support[0], support[1])
+		for corner: int in floor.size():
+			floor[corner].y += (support[0] if corner < 2 else support[1]) - foundation
 	var cap: Rect2 = uv
 	cap.position.y += uv.size.y * 0.015
 	cap.size.y *= 0.13

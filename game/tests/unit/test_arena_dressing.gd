@@ -405,7 +405,7 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 			var at: Vector2 = item["at"]
 			piers[Vector2i((at / CELL).floor())] = item["prop"]
 	for item: Dictionary in items:
-		if not item.has("panel") or item["prop"] == ArenaDressing.SANCTUARY_JOIN:
+		if not item.has("panel") or item["prop"] in [ArenaDressing.SANCTUARY_JOIN, ArenaDressing.MAPLE_PARAPET]:
 			continue
 		profiles[item["panel"]] = true
 		var from: Vector2 = item["from"]
