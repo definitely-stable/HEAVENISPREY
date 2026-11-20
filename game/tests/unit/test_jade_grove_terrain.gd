@@ -211,6 +211,17 @@ func test_surface_mask_follows_the_visible_floor_in_screen_space() -> void:
 	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
 	var polygon: Polygon2D = terrain.build_paving(1.0)
 	add_child_autofree(polygon)
+	var risers: int = 0
+	var colors: PackedColorArray = polygon.vertex_colors
+	for part: PackedInt32Array in polygon.polygons:
+		if part.size() != 4 or not is_equal_approx(colors[part[0]].r, JadeGroveTerrain.RISER_SHADE):
+			continue
+		risers += 1
+		assert_eq(colors[part[0]].g, 1.0)
+		assert_eq(colors[part[1]].g, 1.0)
+		assert_eq(colors[part[2]].g, 0.0)
+		assert_eq(colors[part[3]].g, 0.0)
+	assert_gt(risers, 0, "vertical stair stone has a lip-to-foot material coordinate")
 	var image: Image = terrain.surface_mask.get_image()
 	for cell: Vector2 in [Vector2(25.5, 10.5), Vector2(9.5, 44.5),
 			Vector2(67.5, 23.5), Vector2(53.5, 57.5), Vector2(38.5, 33.5)]:

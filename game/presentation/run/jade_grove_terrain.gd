@@ -14,6 +14,7 @@ const FLIGHTS: Array[Rect2i] = [
 const LEVELS: Array[float] = [30.0, 24.0, 24.0, -28.0]
 const SIDE_RISES: int = 4
 const MAX_STEP: float = 6.0
+const RISER_SHADE: float = 0.76
 const RETAINING_SHADE: float = 0.59
 const MAPLE_PARAPET_FOOTINGS: Array[Vector2i] = [Vector2i(11, 35), Vector2i(10, 36)]
 const VOID: int = 255
@@ -351,7 +352,7 @@ func build_paving(texels_per_px: float, bevels: Array[PackedVector2Array] = []) 
 			uvs.append(sample * texels_per_px)
 			var shade: float = face["shade"]
 			var tint: float = shade if index < 2 or shade == 1.0 else shade * 0.86
-			var edge: float = float(nosing.has(polygon[index]))
+			var edge: float = float(index < 2) if shade == RISER_SHADE else float(nosing.has(polygon[index]))
 			var course: float = (1.0 if index < 2 else 0.25) if shade == RETAINING_SHADE else 0.0
 			colors.append(Color(tint, edge, course))
 		parts.append(part)
@@ -467,7 +468,7 @@ func _join_edge(
 			top["nosing"] = PackedVector2Array([from, to])
 	_append_face(faces, PackedVector2Array([from, to, to, from]),
 		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5,
-		0.76 if is_stair else RETAINING_SHADE)
+		RISER_SHADE if is_stair else RETAINING_SHADE)
 
 
 static func _append_face(
