@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "asset_id": "asset.prop.jade_grove_gate",
+  "kind": "prop_atlas",
+  "group": "props",
+  "asset_version": 1,
+  "content_ids": [
+    "stage.jade_grove"
+  ],
+  "master": "master.webp",
+  "references": [
+    {
+      "id": "REF-029",
+      "file": "Изометрический набор арены сянься.png",
+      "sha256": "d9d568a5ea8d9c09cc04519f260d579d14e6698f7f544222eb23adaf6e91edd1"
+    },
+    {
+      "id": "REF-064",
+      "file": "Обзор арены «Нефритовая роща» по сетке.png",
+      "sha256": "59f821a46a8108195d8f90eadd0997132b2d67da4a0b5203a83878a0c5814123"
+    },
+    {
+      "id": "REF-068",
+      "file": "Набор пропсов двора в изометрии 2_1.png",
+      "sha256": "e4029dec7ae3dac4fe348ffd2ecfcece071bc0a2245a16d1dd9eb1ed8bd86970"
+    }
+  ],
+  "palette_group": "props",
+  "density": 2,
+  "generation": {
+    "capability": "GPT imagegen (Codex built-in imagegen, AGENTS.md p.3)",
+    "tool_version": "Codex Desktop",
+    "prompt_file": "prompt.txt",
+    "prompt_sha256": "d5251942948d9b2c0ce75ddc791200b090ab026b944f0fe79e6420af399e07cf",
+    "created": "2026-11-20T04:40:09+05:00",
+    "master_sha256": "ba5faa4121cbf25a4817acdb3d7e66c4809729aa9c3144e81233a519b1e300de",
+    "master_note": "Lossless WebP of the sanctuary gate painted over iso_template.py jade_grove_gate, then retouched by imagegen to close the door seam. The pivot lies halfway between the piers."
+  },
+  "sheet": {
+    "key_colour": "#00ff00",
+    "key_low": 40,
+    "key_high": 150,
+    "grid": [
+      1,
+      1
+    ],
+    "join_px": 2,
+    "min_area_px": 240
+  },
+  "props": [
+    {
+      "name": "gate",
+      "anchor": [
+        768,
+        910
+      ],
+      "sheet_scale": 2.7
+    }
+  ]
+}

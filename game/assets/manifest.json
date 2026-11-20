@@ -2127,6 +2127,68 @@
       }
     },
     {
+      "asset_id": "asset.prop.jade_grove_gate",
+      "kind": "prop_atlas",
+      "path": "game/assets/props/jade_grove_gate/jade_grove_gate.png",
+      "sha256": "dfacbc344c286ff848970d01d242532a468a03cc98898124e8fad59869ad8550",
+      "bytes": 740161,
+      "size": [
+        957,
+        514
+      ],
+      "asset_version": 1,
+      "art_bible_version": 4,
+      "content_ids": [
+        "stage.jade_grove"
+      ],
+      "layout": {
+        "density": 2,
+        "props": [
+          {
+            "name": "gate",
+            "region": [
+              6,
+              6,
+              945,
+              502
+            ],
+            "feet": [
+              478.5,
+              479.1
+            ]
+          }
+        ]
+      },
+      "normal": {
+        "path": "game/assets/props/jade_grove_gate/jade_grove_gate_n.png",
+        "sha256": "aec63794b4ad9596896ac74603888aedc6fb4d02ff107695517dd706d23209c1",
+        "bytes": 72092,
+        "method": "silhouette_pillow",
+        "bevel_px": 14.0,
+        "blur_px": 3.0,
+        "strength": 2.0
+      },
+      "source": {
+        "path": "art_source/jade_grove_gate/master.webp",
+        "sha256": "38656e8d38a52b7b4dfa4a739209e3f1e1398b8e9100646e7b2d7ff50fd3ec2d",
+        "bytes": 1353816,
+        "prompt_sha256": "d5251942948d9b2c0ce75ddc791200b090ab026b944f0fe79e6420af399e07cf"
+      },
+      "qa": {
+        "palette_group": "props",
+        "opaque_px": 23079,
+        "palette_mean_delta_e": 11.79,
+        "tones_pct": [
+          79.2,
+          20.2,
+          0.6
+        ],
+        "chroma": 0.197,
+        "threat_colour_pct": 0.0,
+        "median_l": 54.5
+      }
+    },
+    {
       "asset_id": "asset.prop.jade_grove_horizon",
       "kind": "prop_atlas",
       "path": "game/assets/props/jade_grove_horizon/jade_grove_horizon.png",

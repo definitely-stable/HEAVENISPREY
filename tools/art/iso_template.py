@@ -282,6 +282,41 @@ def fence_sheet():
 STAIR_SCALE = 2.8
 STAIR_ANCHORS = ((768, 245), (768, 751))
 
+GATE_ANCHOR = (768, 910)
+GATE_SCALE = 2.7
+
+
+def gate_sheet():
+    """Temple wall and closed gateway with both piers on the landing axis."""
+    from PIL import Image, ImageDraw
+
+    image = Image.new("RGB", SIZE, KEY)
+    draw = ImageDraw.Draw(image)
+    ax, ay = GATE_ANCHOR
+
+    def poly(points, fill):
+        draw.polygon([(ax + x * GATE_SCALE, ay + y * GATE_SCALE) for x, y in points],
+                     fill=fill, outline=EDGE)
+
+    poly([(-220, -40), (220, -40), (236, -22), (221, -5), (-221, -5), (-236, -22)], LEFT)
+    poly([(-228, -90), (-207, -103), (207, -103), (228, -90), (228, -27), (-228, -27)], LEFT)
+    poly([(-233, -93), (-210, -110), (210, -110), (233, -93), (224, -84), (-224, -84)], TOP)
+    poly([(-226, -54), (226, -54), (228, -41), (-228, -41)], RIGHT)
+    poly([(-142, -151), (142, -151), (142, -34), (-142, -34)], RIGHT)
+    poly([(-108, -141), (108, -141), (108, -26), (-108, -26)], (76, 61, 71))
+    poly([(-99, -137), (-1, -137), (-1, -27), (-99, -27)], (83, 47, 53))
+    poly([(1, -137), (99, -137), (99, -27), (1, -27)], (72, 41, 49))
+    for x in (-125, 125):
+        for width, height, bottom in ((60, 18, 15), (44, 13, -7), (34, 129, -21), (49, 13, -146)):
+            for side, points in faces(x, bottom, width, height).items():
+                poly(points, {"left": LEFT, "right": RIGHT, "top": TOP}[side])
+    poly([(-156, -174), (156, -174), (146, -149), (-146, -149)], LEFT)
+    poly([(-178, -178), (-153, -179), (-117, -207), (-106, -223), (106, -223),
+          (117, -207), (153, -179), (178, -178), (167, -167), (-167, -167)], TOP)
+    poly([(-180, -184), (-151, -173), (151, -173), (180, -184), (170, -168),
+          (125, -165), (-125, -165), (-170, -168)], LEFT)
+    return image
+
 
 def stair_sheet(sideways: bool):
     """Flights and cheek walls at the dimensions of the four Jade Grove stair footprints."""
@@ -468,6 +503,8 @@ def render(name: str):
 
     if name == "jade_grove_fence_modules":
         return fence_sheet()
+    if name == "jade_grove_gate":
+        return gate_sheet()
     if name in ("jade_grove_front_stairs", "jade_grove_side_stairs"):
         return stair_sheet(name == "jade_grove_side_stairs")
 
@@ -498,7 +535,9 @@ def render(name: str):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    sheets = sorted(LAYOUTS) + ["jade_grove_fence_modules", "jade_grove_front_stairs", "jade_grove_side_stairs"]
+    sheets = sorted(LAYOUTS) + [
+        "jade_grove_fence_modules", "jade_grove_front_stairs", "jade_grove_gate", "jade_grove_side_stairs",
+    ]
     sheets += [f"seal_ruins_{n}" for n in range(1, RUIN_SHEETS + 1)]
     parser.add_argument("sheet", choices=sheets)
     parser.add_argument("out", type=Path)

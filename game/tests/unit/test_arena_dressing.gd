@@ -407,7 +407,7 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 			var at: Vector2 = item["at"]
 			piers[Vector2i((at / CELL).floor())] = item["prop"]
 	for item: Dictionary in items:
-		if not item.has("panel"):
+		if not item.has("panel") or item["prop"] in [ArenaDressing.SANCTUARY_JOIN, "lantern_base"]:
 			continue
 		profiles[item["panel"]] = true
 		var from: Vector2 = item["from"]
@@ -438,6 +438,15 @@ func test_painted_fence_joins_fit_their_wall_cells() -> void:
 	var coping: int = 0
 	var plinths: int = 0
 	for item: Dictionary in _items():
+		if item["prop"] == "lantern_base":
+			assert_eq((item["footprint"] as Array).size(), 1)
+			var footprint: PackedVector2Array = item["footprint"][0]
+			for cell: Vector2i in ArenaDressing.GATE_LANTERN_APRON:
+				var socket: Vector2 = (Vector2(cell) + Vector2(0.5, 0.5)) * CELL
+				assert_eq(_char_at(socket), ArenaDressing.LOW_CHAR)
+				assert_true(Geometry2D.is_point_in_polygon(IsoProjection.to_screen(socket), footprint))
+			plinths += 1
+			continue
 		if item["asset"] != ArenaDressing.FENCE_MODULES_ASSET:
 			continue
 		match item["prop"]:
@@ -454,9 +463,6 @@ func test_painted_fence_joins_fit_their_wall_cells() -> void:
 				assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
 				bays += int(item["prop"] == "bridge_bay")
 				coping += int(item["prop"] == "cliff_coping")
-			"lantern_base":
-				assert_eq((item["footprint"] as Array).size(), 1, "one low plinth covers both cells at the lantern")
-				plinths += 1
 	assert_gt(clips.size(), 1, "the turn has depth-sorted sections")
 	if not clips.is_empty():
 		assert_eq(clips[0].x, -INF)
@@ -564,12 +570,27 @@ func test_blocks_cover_the_walls_without_props() -> void:
 		assert_false(blocks.has(cell), "%s stands on its own cells" % item["prop"])
 
 
-func test_lions_face_each_other_in_pairs() -> void:
+func test_guardians_and_sanctuary_follow_the_architecture() -> void:
+	var rows: Array = _data()["rows"]
+	var joins: int = 0
 	var lions: Array = []
 	for item: Dictionary in _items():
 		if item["asset"] == ArenaDressing.GUARDIANS_ASSET and (item["prop"] as String).begins_with("lion"):
 			lions.append([item["prop"], item["flip"]])
-	var pair: Array = [["lion_ball", false], ["lion_cub", true]]
+		if item["prop"] != ArenaDressing.SANCTUARY_JOIN:
+			continue
+		joins += 1
+		var from: Vector2 = item["from"]
+		var to: Vector2 = item["to"]
+		var ends: Array[String] = []
+		for point: Vector2 in [from, to]:
+			var tile: Vector2i = Vector2i((point / CELL).floor())
+			ends.append(rows[tile.y][tile.x])
+		ends.sort()
+		assert_eq(ends, ["#", "w"])
+		assert_almost_eq(IsoProjection.to_screen(from).y, IsoProjection.to_screen(to).y, 0.01)
+	assert_eq(joins, 2)
+	var pair: Array = [["lion_ball", false], ["lion_cub", false]]
 	assert_eq(lions, pair + pair + pair)
 
 
