@@ -279,6 +279,7 @@ func _build_layers() -> void:
 	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _light_points)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
+	add_child(RunThreatSilhouettes.new(self))
 	_hero_item = _item(_draw_hero_pass, RunLighting.rim_material(RIM_HERO, RIM_HERO_STRENGTH, _light_points))
 	_over = _item(_draw_over_pass, null)
 	var additive: CanvasItemMaterial = CanvasItemMaterial.new()

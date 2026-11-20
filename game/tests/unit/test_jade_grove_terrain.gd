@@ -69,6 +69,41 @@ func test_walkable_paving_has_at_most_one_step_at_every_edge() -> void:
 	assert_eq(abrupt, [], "no terrace wall interrupts a walkable edge")
 
 
+func test_regular_paving_is_flat_outside_the_authored_stair_cells() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var rows: Array = data["rows"]
+	var uneven: Array[Vector2i] = []
+	for y: int in rows.size():
+		for x: int in (rows[y] as String).length():
+			var tile: String = rows[y][x]
+			if not ArenaTopology.WALK_CHARS.contains(tile) or tile == "^":
+				continue
+			var centre: Vector2 = Vector2(x + 0.5, y + 0.5) * RunView.CELL_PX
+			var level: float = terrain.height_at(centre)
+			if tile in [".", "B"] and level != 0.0:
+				uneven.append(Vector2i(x, y))
+			for axis: Vector2 in [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]:
+				if terrain.height_at(centre + axis * RunView.CELL_PX / 3.0) != level:
+					uneven.append(Vector2i(x, y))
+					break
+	assert_eq(uneven, [], "steps belong only to their marked transitions")
+
+
+func test_plinth_corners_and_sprite_pivots_share_the_same_floor_height() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var cell_px: int = RunView.CELL_PX
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, cell_px)
+	for prop: Dictionary in data["props"]:
+		if prop["prop"] not in ["lion", "pillar", "pillar_broken", "gate", "maple_large"]:
+			continue
+		var at: Array = prop["at"]
+		var pivot: Vector2 = Vector2(at[0], at[1])
+		for offset: Vector2 in [Vector2(-0.4, -0.4), Vector2(0.4, -0.4), Vector2(0.4, 0.4), Vector2(-0.4, 0.4)]:
+			assert_eq(terrain.height_at((pivot + offset) * cell_px), terrain.height_at(pivot * cell_px),
+				"%s at %s has one supporting plane" % [prop["prop"], pivot])
+
+
 func test_surface_mask_follows_the_visible_floor_in_screen_space() -> void:
 	var data: Dictionary = P0Tuning.arena_data()
 	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
@@ -126,3 +161,21 @@ func test_masonry_contacts_reach_both_ends_of_a_raised_wall() -> void:
 			var lift: float = left if vertex == 0 or vertex == contact.size() - 1 else right
 			assert_almost_eq(footprints[index][vertex] - contact[vertex], Vector2(0.0, lift), Vector2.ONE * 0.01)
 	assert_gt(sloped, 0)
+
+
+func test_windup_cover_requires_opaque_body_samples_and_foreground_depth() -> void:
+	var image: Image = Image.create_empty(40, 40, false, Image.FORMAT_RGBA8)
+	var bounds: Rect2 = Rect2(100, 200, 40, 40)
+	var mask: BitMap = BitMap.new()
+	var cover: Dictionary = {"bounds": bounds, "order": 20, "mask": mask, "region": Rect2(0, 0, 40, 40)}
+	var feet: Vector2 = Vector2(120, 228)
+	image.set_pixel(20, 22, Color.WHITE)
+	image.set_pixel(20, 13, Color(1.0, 1.0, 1.0, 0.3))
+	mask.create_from_image_alpha(image, 0.65)
+	assert_false(RunThreatSilhouettes.covers_body(cover, feet, 10.0, 19), "a grazing overlap is transparent")
+	image.set_pixel(20, 13, Color.WHITE)
+	mask.create_from_image_alpha(image, 0.65)
+	assert_true(RunThreatSilhouettes.covers_body(cover, feet, 10.0, 19))
+	assert_false(RunThreatSilhouettes.covers_body(cover, feet, 10.0, 20), "draw order shows an enemy at the same depth")
+	assert_false(RunThreatSilhouettes.covers_body(cover, feet, 10.0, 21), "the enemy stands in front of the prop")
+	assert_false(RunThreatSilhouettes.covers_body(cover, feet + Vector2(45, 0), 10.0, 19))

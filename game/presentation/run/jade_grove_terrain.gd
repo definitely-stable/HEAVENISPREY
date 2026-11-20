@@ -8,8 +8,8 @@ const PLATEAUS: Array[Rect2i] = [
 	Rect2i(33, 10, 16, 15), Rect2i(-20, 30, 23, 13),
 ]
 const FLIGHTS: Array[Rect2i] = [
-	Rect2i(1, -32, 12, 6), Rect2i(-37, -26, 8, 13),
-	Rect2i(30, 10, 8, 15), Rect2i(-15, 27, 12, 7),
+	Rect2i(1, -32, 13, 6), Rect2i(-37, -26, 8, 13),
+	Rect2i(30, 10, 8, 15), Rect2i(-15, 27, 13, 7),
 ]
 const LEVELS: Array[float] = [30.0, 24.0, 24.0, -28.0]
 const SIDE_RISES: int = 4
@@ -37,7 +37,8 @@ func _init(data: Dictionary, cell_px: int) -> void:
 	_levels.resize(_tiles.size() * 4)
 	var walkable: PackedByteArray = PackedByteArray()
 	walkable.resize(_tiles.size())
-	var shoulders: Array[int] = []
+	var stairs: PackedByteArray = PackedByteArray()
+	stairs.resize(_tiles.size())
 	for y: int in _size.y:
 		for x: int in _size.x:
 			var delta: Vector2i = Vector2i(x, y) - seal
@@ -52,14 +53,15 @@ func _init(data: Dictionary, cell_px: int) -> void:
 					_tiles[index] = terrace + 1
 					break
 			walkable[index] = int(ArenaTopology.WALK_CHARS.contains(tile))
+			var flight: int = _flight_index(Vector2(uv)) if tile == "^" else -1
+			stairs[index] = flight + 1
+			var deck: float = LEVELS[_tiles[index] - 1] if _tiles[index] > 0 and tile not in [".", "B"] else 0.0
 			for side: int in 4:
 				var toward: Vector2i = FACE_OFFSETS[side]
 				var sample: Vector2 = Vector2(uv) + Vector2(toward.x - toward.y, toward.x + toward.y) / 3.0
-				var face: int = index * 4 + side
-				_levels[face] = _authored_height(sample, _tiles[index])
-				if walkable[index] and _levels[face] != 0.0:
-					shoulders.append(face)
-	_grade_shoulders(walkable, shoulders)
+				_levels[index * 4 + side] = _authored_height(sample, flight) if flight >= 0 else deck
+	_seat_foundations(data.get("props", []), rows)
+	_fit_stair_landings(stairs, walkable)
 
 
 func height_at(at: Vector2) -> float:
@@ -74,45 +76,86 @@ func height_at(at: Vector2) -> float:
 	return _levels[(cell.y * _size.x + cell.x) * 4 + side]
 
 
-static func _authored_height(uv: Vector2, code: int) -> float:
-	var index: int = _flight_index(uv)
-	if index >= 0:
-		var flight: Rect2i = FLIGHTS[index]
-		if index == 1 or index == 2:
-			return _side_height(uv, index)
-		var width: float = flight.size.y
-		var step: float = floorf(uv.y) - flight.position.y + 1.0
-		if index == 0:
-			step = width - step
-		return LEVELS[index] * clampf(step / width, 0.0, 1.0)
-	return LEVELS[code - 1] if code > 0 else 0.0
+static func _authored_height(uv: Vector2, index: int) -> float:
+	var flight: Rect2i = FLIGHTS[index]
+	if index == 1 or index == 2:
+		return _side_height(uv, index)
+	var width: float = flight.size.y
+	var step: float = floorf(uv.y) - flight.position.y + 1.0
+	if index == 0:
+		step = width - step
+	return LEVELS[index] * clampf(step / width, 0.0, 1.0)
 
 
-## Resolve the outer courses of the flights against walkable paving, including inside a tile.
-func _grade_shoulders(walkable: PackedByteArray, queue: Array[int]) -> void:
-	var bounds: Rect2i = Rect2i(Vector2i.ZERO, _size)
+## Square plinths share the level of their approach, at the front of the base.
+func _seat_foundations(props: Array, rows: Array) -> void:
+	for prop: Dictionary in props:
+		if prop["prop"] not in ["lion", "pillar", "pillar_broken"]:
+			continue
+		var at: Array = prop["at"]
+		var front: Vector2i = Vector2i(int(at[0]), int(at[1]))
+		var origin: Vector2i = front - Vector2i.ONE
+		var level: float = _levels[(front.y * _size.x + front.x) * 4]
+		for corner: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+			var cell: Vector2i = origin + corner
+			if rows[cell.y][cell.x] != "#":
+				continue
+			for side: int in 4:
+				_levels[(cell.y * _size.x + cell.x) * 4 + side] = level
+
+
+## Fit risers to both landing levels. The terraces and the surrounding paving stay level.
+func _fit_stair_landings(stairs: PackedByteArray, walkable: PackedByteArray) -> void:
+	var court: PackedInt32Array = _steps_from_landing(stairs, walkable, false)
+	var deck: PackedInt32Array = _steps_from_landing(stairs, walkable, true)
+	for cell: int in stairs.size():
+		if stairs[cell] == 0:
+			continue
+		var rise: float = LEVELS[stairs[cell] - 1]
+		for side: int in 4:
+			var face: int = cell * 4 + side
+			var minimum: float = maxf(0.0, absf(rise) - MAX_STEP * deck[face])
+			var maximum: float = minf(absf(rise), MAX_STEP * court[face])
+			_levels[face] = clampf(absf(_levels[face]), minimum, maximum) * signf(rise)
+
+
+func _steps_from_landing(stairs: PackedByteArray, walkable: PackedByteArray, raised: bool) -> PackedInt32Array:
+	var steps: PackedInt32Array = PackedInt32Array()
+	steps.resize(_levels.size())
+	var queue: Array[int] = []
+	for cell: int in stairs.size():
+		if stairs[cell] == 0:
+			continue
+		for side: int in 4:
+			var face: int = cell * 4 + side
+			var across: int = _face_across_cell_edge(face)
+			@warning_ignore("integer_division")
+			var neighbour: int = across / 4
+			if across >= 0 and walkable[neighbour] and stairs[neighbour] == 0 and (_levels[across] != 0.0) == raised:
+				steps[face] = 1
+				queue.append(face)
 	var head: int = 0
 	while head < queue.size():
 		var face: int = queue[head]
 		head += 1
-		var level: float = _levels[face]
-		var needed: float = absf(level) - MAX_STEP
-		if needed <= 0.0:
-			continue
 		var side: int = face % 4
-		@warning_ignore("integer_division")
-		var cell: int = face / 4
-		@warning_ignore("integer_division")
-		var coord: Vector2i = Vector2i(cell % _size.x, cell / _size.x) + FACE_OFFSETS[side]
-		var neighbors: Array[int] = [face - side + (side + 1) % 4, face - side + (side + 3) % 4]
-		if bounds.has_point(coord):
-			var next: int = coord.y * _size.x + coord.x
-			if walkable[next]:
-				neighbors.append(next * 4 + (side + 2) % 4)
-		for neighbour: int in neighbors:
-			if absf(_levels[neighbour]) < needed:
-				_levels[neighbour] = needed * signf(level)
+		for neighbour: int in [face - side + (side + 1) % 4, face - side + (side + 3) % 4, _face_across_cell_edge(face)]:
+			@warning_ignore("integer_division")
+			if neighbour >= 0 and stairs[neighbour / 4] != 0 and steps[neighbour] == 0:
+				steps[neighbour] = steps[face] + 1
 				queue.append(neighbour)
+	return steps
+
+
+func _face_across_cell_edge(face: int) -> int:
+	var side: int = face % 4
+	@warning_ignore("integer_division")
+	var cell: int = face / 4
+	@warning_ignore("integer_division")
+	var coord: Vector2i = Vector2i(cell % _size.x, cell / _size.x) + FACE_OFFSETS[side]
+	if not Rect2i(Vector2i.ZERO, _size).has_point(coord):
+		return -1
+	return (coord.y * _size.x + coord.x) * 4 + (side + 2) % 4
 
 
 static func _flight_index(uv: Vector2) -> int:
@@ -325,12 +368,14 @@ func _join_edge(
 		return
 	var from: Vector2 = Vector2(left) * _cell_px * 0.5
 	var to: Vector2 = Vector2(right) * _cell_px * 0.5
-	var top: Dictionary = faces[tread if depth < other.y else int(other.z)]
-	var corner: PackedVector2Array = top.get("nosing", PackedVector2Array())
-	if corner.is_empty() or from.distance_squared_to(to) > corner[0].distance_squared_to(corner[1]):
-		top["nosing"] = PackedVector2Array([from, to])
+	var is_stair: bool = farther - nearer <= MAX_STEP
+	if is_stair:
+		var top: Dictionary = faces[tread if depth < other.y else int(other.z)]
+		var corner: PackedVector2Array = top.get("nosing", PackedVector2Array())
+		if corner.is_empty() or from.distance_squared_to(to) > corner[0].distance_squared_to(corner[1]):
+			top["nosing"] = PackedVector2Array([from, to])
 	_append_face(faces, PackedVector2Array([from, to, to, from]),
-		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5, 0.76)
+		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5, 0.76 if is_stair else 0.59)
 
 
 static func _append_face(
