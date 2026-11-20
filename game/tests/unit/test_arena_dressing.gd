@@ -413,6 +413,8 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 		var start: Vector2i = Vector2i((from / CELL).floor())
 		var end: Vector2i = Vector2i((to / CELL).floor())
 		var step: Vector2i = (end - start).sign()
+		var endpoints: PackedVector2Array = item["masonry_ends"]
+		assert_almost_eq((endpoints[1] - endpoints[0]).cross(Vector2(step).normalized()), 0.0, 0.01)
 		assert_has(piers, start, "each run starts on a pillar")
 		assert_has(piers, end, "each run ends on a pillar")
 		if item["panel"] == ArenaDressing.TEMPLE_PANEL:
@@ -552,9 +554,10 @@ func test_blocks_cover_the_walls_without_props() -> void:
 
 func test_guardians_and_sanctuary_follow_the_architecture() -> void:
 	var rows: Array = _data()["rows"]
+	var items: Array[Dictionary] = _items()
 	var joins: int = 0
 	var lions: Array = []
-	for item: Dictionary in _items():
+	for item: Dictionary in items:
 		if item["asset"] == ArenaDressing.GUARDIANS_ASSET and (item["prop"] as String).begins_with("lion"):
 			lions.append([item["prop"], item["flip"]])
 		if item["prop"] != ArenaDressing.SANCTUARY_JOIN:
@@ -569,6 +572,9 @@ func test_guardians_and_sanctuary_follow_the_architecture() -> void:
 		ends.sort()
 		assert_eq(ends, ["#", "w"])
 		assert_almost_eq(IsoProjection.to_screen(from).y, IsoProjection.to_screen(to).y, 0.01)
+		var outer: Vector2 = from if _char_at(from) == "w" else to
+		assert_true(items.any(func(prop: Dictionary) -> bool:
+			return prop.get("wall", false) and not prop.has("panel") and prop["at"] == outer))
 	assert_eq(joins, 2)
 	var pair: Array = [["lion_ball", false], ["lion_cub", false]]
 	assert_eq(lions, pair + pair + pair)

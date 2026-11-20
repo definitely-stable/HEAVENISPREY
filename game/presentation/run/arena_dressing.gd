@@ -37,6 +37,7 @@ const SANCTUARY_POSTS: Array[Vector2i] = [Vector2i(16, 13), Vector2i(25, 4)]
 const SANCTUARY_JOIN: String = "sanctuary_join"
 const TEMPLE_RAIL_REACH: float = 17.0
 const WALL_LIP_SHIFT: float = 0.29
+const WALL_AXIS_SHIFT_MAX: float = 0.15
 ## The prop name of a rail bay: a vertical plane between two posts, textured with "rail".
 const RAIL_PROP: String = "rail_span"
 const COPING_PROP: String = "wall_coping"
@@ -168,9 +169,11 @@ static func placements(sprites: SpriteSet, data: Dictionary, cell_px: int) -> Ar
 		and sprites.has_prop(RAIL_DETAILS_ASSET, "coping_top") and sprites.has_prop(RAIL_DETAILS_ASSET, "bridge_end")
 	if walls:
 		var courtyard_masonry: bool = masonry and data.get("stage_id") == "stage.jade_grove"
-		_add_balustrade(out, sprites, balustrade(rows, propped, masonry), cell_px, gate, masonry, rows)
+		var wall: Dictionary = balustrade(rows, propped, masonry)
+		var sockets: Dictionary[Vector2i, Vector2] = _wall_anchors(rows, wall, cell_px) if masonry else {}
+		_add_balustrade(out, sprites, wall, cell_px, gate, masonry, rows, sockets)
 		if courtyard_masonry and gate.is_finite() and sprites.has_prop(GATE_ASSET, "gate"):
-			_join_sanctuary_wall(out, sprites, rows, gate * cell_px, cell_px)
+			_join_sanctuary_wall(out, sprites, rows, gate * cell_px, cell_px, sockets)
 	for y: int in rows.size():
 		var row: String = rows[y]
 		for x: int in row.length():
@@ -241,7 +244,8 @@ static func balustrade(rows: Array, skip: Dictionary = {}, masonry: bool = false
 			posts[cell] = true  # a lone post
 		elif int(links[cell]) == 1:
 			broken.append(cell)
-	return {"posts": _sorted(posts.keys()), "broken": broken, "rails": rails, "edge_on": edge_on, "turns": turns}
+	return {"posts": _sorted(posts.keys()), "broken": broken, "rails": rails, "edge_on": edge_on,
+		"turns": turns, "runs": runs}
 
 
 ## Which fragment of the ruin ring a "seal_ruin" at `at` (cells) is: its turn around the seal.
@@ -406,13 +410,14 @@ static func edge_handrail_mesh(sprites: SpriteSet, props: Array[Dictionary]) -> 
 
 ## Tie the gate's rear corners into the two existing parapet terminals on the rim's line.
 static func _join_sanctuary_wall(
-	out: Array[Dictionary], sprites: SpriteSet, rows: Array, gate: Vector2, cell_px: int
+	out: Array[Dictionary], sprites: SpriteSet, rows: Array, gate: Vector2, cell_px: int,
+	anchors: Dictionary[Vector2i, Vector2]
 ) -> void:
 	var centre: Vector2 = IsoProjection.to_screen(gate)
 	for cell: Vector2i in SANCTUARY_POSTS:
-		if _tile(rows, cell) != LOW_CHAR:
+		if not anchors.has(cell):
 			continue
-		var outer: Vector2 = (Vector2(cell) + Vector2(0.5, 0.5)) * cell_px
+		var outer: Vector2 = anchors[cell]
 		var socket: Vector2 = IsoProjection.to_screen(outer)
 		var side: float = signf(socket.x - centre.x)
 		var inner: Vector2 = IsoProjection.to_world(Vector2(centre.x + side * 211.0, socket.y))
@@ -712,7 +717,8 @@ static func _add_ruin(out: Array[Dictionary], prop: String, cells: Array, base: 
 
 ## Posts, broken posts and rail bays of `wall` (balustrade()) as placements.
 static func _add_balustrade(
-	out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int, gate: Vector2, masonry: bool, rows: Array
+	out: Array[Dictionary], sprites: SpriteSet, wall: Dictionary, cell_px: int, gate: Vector2,
+	masonry: bool, rows: Array, anchors: Dictionary[Vector2i, Vector2]
 ) -> void:
 	var half: Vector2 = Vector2(0.5, 0.5)
 	var rail_height: float = sprites.prop_size(BALUSTRADE_ASSET, "rail").y
@@ -780,14 +786,12 @@ static func _add_balustrade(
 			if panel == BRIDGE_ARCH:
 				bridge_piers[start] = true
 				bridge_piers[finish] = true
-			var start_shift: Vector2 = _lip_offset(rows, start, cell_px)
-			var end_shift: Vector2 = _lip_offset(rows, finish, cell_px)
-			var start_at: Vector2 = (Vector2(start) + half) * cell_px + start_shift
-			var end_at: Vector2 = (Vector2(finish) + half) * cell_px + end_shift
+			var start_at: Vector2 = anchors[start]
+			var end_at: Vector2 = anchors[finish]
 			var delta: Vector2i = finish - start
 			# The midpoint of the two lip offsets retains the module's full shape and keeps both
 			# sockets inside their wall cells. The end fittings are wider than the offset change.
-			var adjustment: Vector2 = (end_shift - start_shift) * 0.5
+			var adjustment: Vector2 = (end_at - start_at - Vector2(delta) * cell_px) * 0.5
 			var module_start: Vector2 = start_at + adjustment
 			var module_end: Vector2 = end_at - adjustment
 			if panel == BRIDGE_ARCH and delta == Vector2i(2, -2) and sprites.has_prop(FENCE_MODULES_ASSET, "bridge_bay"):
@@ -818,7 +822,7 @@ static func _add_balustrade(
 				prop = "bridge_pier"
 			else:
 				prop = "terminal_pier"
-			anchor += _lip_offset(rows, cell, cell_px)
+			anchor = anchors[cell]
 		_add(out, sprites, asset, prop, anchor, false)
 		out[-1]["wall"] = true
 
@@ -826,6 +830,46 @@ static func _add_balustrade(
 static func _bridge_bay(a: Vector2, b: Vector2) -> Dictionary:
 	return {"asset": FENCE_MODULES_ASSET, "prop": "bridge_bay", "at": b, "base": a, "flip": false,
 		"light": false, "flame": 0.0, "wall": true, "footprint": [_footprint_between(a, b, 12.0)]}
+
+
+## Share one lateral offset along each straight run and intersect those axes at the turn piers.
+static func _wall_anchors(rows: Array, wall: Dictionary, cell_px: int) -> Dictionary[Vector2i, Vector2]:
+	var runs: Array[Dictionary] = wall["runs"]
+	var through: Dictionary = {}
+	var axes: Array[Vector2] = []
+	var offsets: PackedFloat32Array = PackedFloat32Array()
+	for index: int in runs.size():
+		var cells: Array[Vector2i] = runs[index]["cells"]
+		var axis: Vector2 = Vector2(cells[1] - cells[0]).normalized()
+		var normal: Vector2 = axis.orthogonal()
+		axes.append(normal)
+		var samples: PackedFloat32Array = PackedFloat32Array()
+		for cell: Vector2i in cells:
+			samples.append(_lip_offset(rows, cell, cell_px).dot(normal))
+			var owners: Array = through.get(cell, [])
+			owners.append(index)
+			through[cell] = owners
+		samples.sort()
+		# Even intersections at 45 degrees keep the pier inside its original wall cell.
+		var limit: float = WALL_AXIS_SHIFT_MAX * cell_px
+		offsets.append(clampf(samples[floori(samples.size() * 0.5)], -limit, limit))
+	for owners: Array in through.values():
+		if owners.size() > 2:
+			for index: int in owners:
+				offsets[index] = 0.0
+	var anchors: Dictionary[Vector2i, Vector2] = {}
+	for cell: Vector2i in wall["posts"]:
+		var owners: Array = through.get(cell, [])
+		var motion: Vector2 = _lip_offset(rows, cell, cell_px)
+		if not owners.is_empty():
+			var first: int = owners[0]
+			motion = axes[first] * offsets[first]
+			if owners.size() == 2:
+				var second: int = owners[1]
+				var along: Vector2 = axes[first].orthogonal()
+				motion += along * ((offsets[second] - motion.dot(axes[second])) / along.dot(axes[second]))
+		anchors[cell] = (Vector2(cell) + Vector2(0.5, 0.5)) * cell_px + motion
+	return anchors
 
 
 static func _footprint_between(from: Vector2, to: Vector2, half_width: float) -> PackedVector2Array:
