@@ -36,7 +36,6 @@ func _init(data: Dictionary, cell_px: int) -> void:
 	var rows: Array = (data["rows"] as Array).duplicate()
 	paving_data["rows"] = rows
 	_size = Vector2i((rows[0] as String).length(), rows.size())
-	var infill: Array[Vector2i] = _fill_retaining_pockets(data["rows"], rows)
 	var centre: Array = data["centre"]
 	var seal: Vector2i = Vector2i(centre[0], centre[1])
 	_tiles.resize(_size.x * _size.y)
@@ -69,14 +68,7 @@ func _init(data: Dictionary, cell_px: int) -> void:
 	_seat_foundations(data.get("props", []), rows)
 	_fit_stair_landings(stairs, walkable)
 	_align_retaining_faces(rows, stairs, walkable)
-	for at: Vector2i in infill:
-		var face: int = (at.y * _size.x + at.x) * 4
-		var rear: float = maxf(_levels[face - _size.x * 4], _levels[face - 4])
-		var front: float = minf(_levels[face + _size.x * 4], _levels[face + 4])
-		_levels[face] = rear
-		_levels[face + 1] = front
-		_levels[face + 2] = front
-		_levels[face + 3] = rear
+	_fill_retaining_pockets(data["rows"], rows)
 
 
 func height_at(at: Vector2) -> float:
@@ -197,19 +189,40 @@ func _align_retaining_faces(rows: Array, stairs: PackedByteArray, walkable: Pack
 			_levels[cell * 4 + 2] = below
 
 
-## An enclosed pocket between four piers is a foundation core. Open cliff edges stay open.
-func _fill_retaining_pockets(original: Array, rows: Array) -> Array[Vector2i]:
-	var closed: Array[Vector2i] = []
+## A pocket enclosed by masonry, or a missing return between high and low walls, needs a stone core.
+func _fill_retaining_pockets(original: Array, rows: Array) -> void:
 	for y: int in range(1, _size.y - 1):
 		for x: int in range(1, _size.x - 1):
 			if original[y][x] != " ":
 				continue
-			var neighbours: Array[String] = [original[y - 1][x], original[y][x + 1], original[y + 1][x], original[y][x - 1]]
-			if neighbours.all(func(tile: String) -> bool: return "w#".contains(tile)):
-				var row: String = rows[y]
-				rows[y] = row.substr(0, x) + "#" + row.substr(x + 1)
-				closed.append(Vector2i(x, y))
-	return closed
+			var edges: PackedFloat32Array = PackedFloat32Array([INF, INF, INF, INF])
+			var wall_count: int = 0
+			var open_side: int = -1
+			var lower: float = INF
+			var upper: float = -INF
+			for side: int in 4:
+				var neighbour: Vector2i = Vector2i(x, y) + FACE_OFFSETS[side]
+				var tile: String = original[neighbour.y][neighbour.x]
+				if tile == " ":
+					open_side = side
+				if not "w#".contains(tile):
+					continue
+				var face: int = (neighbour.y * _size.x + neighbour.x) * 4 + (side + 2) % 4
+				var level: float = _levels[face]
+				edges[side] = level
+				lower = minf(lower, level)
+				upper = maxf(upper, level)
+				wall_count += 1
+			if wall_count != 4 and (wall_count != 3 or open_side < 0 or upper - lower <= MAX_STEP):
+				continue
+			var row: String = rows[y]
+			rows[y] = row.substr(0, x) + "#" + row.substr(x + 1)
+			var cell: int = y * _size.x + x
+			_tiles[cell] = 0
+			if open_side >= 0:
+				edges[open_side] = lower
+			for side: int in 4:
+				_levels[cell * 4 + side] = edges[side]
 
 
 static func configure_floor_material(material: ShaderMaterial, sprites: SpriteSet, repeat_px: float) -> void:

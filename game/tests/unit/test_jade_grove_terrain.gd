@@ -114,9 +114,26 @@ func test_retaining_corner_has_a_split_foundation_and_preserves_open_rims() -> v
 		for x: int in (original[y] as String).length():
 			if original[y][x] != paving[y][x]:
 				filled.append(Vector2i(x, y))
-	assert_eq(filled, [Vector2i(34, 8)], "only the enclosed gap is backed with stone")
-	assert_eq(original[8][34], " ", "the blocking topology still marks the pocket as nonwalkable")
-	assert_eq(paving[8][34], "#")
+	var returns: Array[Vector2i] = [Vector2i(34, 8), Vector2i(60, 20), Vector2i(18, 22),
+		Vector2i(14, 44), Vector2i(55, 47), Vector2i(42, 58)]
+	assert_eq(filled, returns, "paving only changes at closed pockets and stepped wall returns")
+	for cell: Vector2i in returns:
+		assert_eq(original[cell.y][cell.x], " ", "the blocking topology retains the void cell")
+		assert_eq(paving[cell.y][cell.x], "#")
+		var floor: Vector2 = (Vector2(cell) + Vector2.ONE * 0.5) * RunView.CELL_PX
+		var lower: float = INF
+		var lip: float = INF
+		for side: Vector2i in JadeGroveTerrain.FACE_OFFSETS:
+			var other: Vector2i = cell + side
+			var along: Vector2 = Vector2(side) * RunView.CELL_PX
+			var height: float = terrain.height_at(floor + along * 0.45)
+			if original[other.y][other.x] == " ":
+				lip = height
+				continue
+			assert_eq(height, terrain.height_at(floor + along * 0.55), "stone meets each adjoining wall")
+			lower = minf(height, lower)
+		if lip != INF:
+			assert_eq(lip, lower, "the exposed stone face starts at the lower deck")
 	for centre: Vector2 in [Vector2(19.5, 22.5), Vector2(34.5, 8.5)]:
 		var rear: Vector2 = (centre - Vector2.ONE * 0.16) * RunView.CELL_PX
 		var front: Vector2 = (centre + Vector2.ONE * 0.16) * RunView.CELL_PX
