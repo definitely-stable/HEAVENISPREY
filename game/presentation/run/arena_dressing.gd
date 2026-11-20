@@ -598,7 +598,11 @@ static func prepare_props(
 		var base: Vector2 = prop.get("base", prop["at"])
 		var screen: Vector2 = terrain.project(base) if terrain != null else IsoProjection.to_screen(base)
 		prop["screen"] = screen
-		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
+		var depth: float = IsoProjection.depth(prop["at"])
+		# The terminal covers the cut edge of its co-planar painted bay.
+		if prop["prop"] == "bridge_pier":
+			depth += 0.25
+		prop["order"] = Vector2i(roundi(depth * 16.0), -1 - index)
 		prop["fixed_light"] = RunLighting.fixed_light(base, lanterns)
 		if terrain != null:
 			_lift_prop(sprites, prop, terrain, screen - IsoProjection.to_screen(base))
@@ -856,12 +860,12 @@ static func _add_balustrade(
 			var turn: bool = (wall["turns"] as Dictionary).has(cell)
 			if temple_piers.has(cell):
 				prop = "corner_pier"
-			elif turn:
-				asset = RAIL_DETAILS_ASSET
-				prop = "bridge_end"
 			elif bridge_piers.has(cell):
 				asset = RAIL_FINISHES_ASSET
 				prop = "bridge_pier"
+			elif turn:
+				asset = RAIL_DETAILS_ASSET
+				prop = "bridge_end"
 			else:
 				prop = "terminal_pier"
 			anchor = anchors[cell]

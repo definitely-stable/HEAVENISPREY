@@ -442,8 +442,15 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 
 
 func test_bridge_bays_fit_their_wall_cells() -> void:
-	var bays: int = 0
-	for item: Dictionary in _items():
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var items: Array[Dictionary] = ArenaDressing.placements(sprites, _data(), CELL)
+	ArenaDressing.prepare_props(sprites, items, [])
+	var starts: Dictionary[Vector2i, bool] = {}
+	var ends: Dictionary[Vector2i, Dictionary] = {}
+	var piers: Dictionary[Vector2i, Dictionary] = {}
+	for item: Dictionary in items:
+		if item["prop"] == "bridge_pier":
+			piers[Vector2i((item["at"] / CELL).floor())] = item
 		if item["prop"] != "bridge_bay":
 			continue
 		var start: Vector2 = item["base"]
@@ -453,8 +460,25 @@ func test_bridge_bays_fit_their_wall_cells() -> void:
 		assert_eq(_char_at(start + step * CELL), ArenaDressing.LOW_CHAR)
 		assert_eq(_char_at(end), ArenaDressing.LOW_CHAR)
 		assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
-		bays += 1
-	assert_gt(bays, 6)
+		starts[Vector2i((start / CELL).floor())] = true
+		ends[Vector2i((end / CELL).floor())] = item
+	assert_eq(starts.size(), 9)
+	var terminals: int = 0
+	for end: Vector2i in ends:
+		if starts.has(end):
+			assert_does_not_have(piers, end, "the next module already paints the shared pier")
+			continue
+		terminals += 1
+		assert_has(piers, end, "the exposed end uses a matching bridge pier")
+		if not piers.has(end):
+			continue
+		var bay: Dictionary = ends[end]
+		var pier: Dictionary = piers[end]
+		assert_gt(pier["order"].x, bay["order"].x, "the pier draws over the cut end")
+		var bounds: Rect2 = bay["draw_bounds"]
+		var cut: Vector2 = Vector2(bounds.end.x - 0.5, bounds.get_center().y)
+		assert_true((pier["draw_bounds"] as Rect2).has_point(cut), "the pier spans the module's cut edge")
+	assert_eq(terminals, 2, "both bridge rails end in a pier")
 
 
 func test_rails_run_between_post_faces() -> void:
