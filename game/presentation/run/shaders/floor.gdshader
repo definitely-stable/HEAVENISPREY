@@ -19,6 +19,8 @@ uniform float uv_world_px = 0.0;
 // mask_size world px from mask_origin.
 uniform sampler2D wear_mask : repeat_disable, filter_linear;
 uniform sampler2D terrace_mask : repeat_disable, filter_linear;
+uniform sampler2D retaining_atlas : repeat_disable, filter_linear;
+uniform vec4 retaining_region = vec4(0.0);
 uniform bool has_terraces = false;
 uniform vec2 mask_origin = vec2(0.0);
 uniform vec2 mask_size = vec2(1.0);
@@ -51,6 +53,7 @@ const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 varying vec2 world;
 varying float face_shade;
 varying float tread_edge;
+varying float retaining_course;
 // Specular of this pixel, from fragment() to light().
 varying float gloss;
 
@@ -58,6 +61,7 @@ void vertex() {
 	world = uv_world_px > 0.0 ? UV * uv_world_px : VERTEX;
 	face_shade = uv_world_px > 0.0 ? COLOR.r : 1.0;
 	tread_edge = uv_world_px > 0.0 ? COLOR.g : 0.0;
+	retaining_course = uv_world_px > 0.0 ? COLOR.b : 0.0;
 }
 
 void fragment() {
@@ -84,9 +88,19 @@ void fragment() {
 	float nosing = smoothstep(0.85, 0.98, tread_edge);
 	albedo += nosing * vec3(0.075, 0.060, 0.049);
 	float damp = mask.a * mix(1.0, 0.64, dressing);
+	float tone = face_shade;
+	if (retaining_course > 0.0 && retaining_region.z > 0.0) {
+		float along = fract((world.x - world.y) * 0.70710678 / 92.0 + 0.26);
+		float down = (1.0 - retaining_course) / 0.75;
+		albedo = texture(retaining_atlas, retaining_region.xy + vec2(along, down) * retaining_region.zw).rgb;
+		tone = 0.81;
+		normal = vec3(0.5, 0.52, 1.0);
+		wear = 0.0;
+		damp = 0.0;
+	}
 	float seam = smoothstep(seam_luma - 0.08, seam_luma + 0.06, dot(albedo, LUMA));
 	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam) * face_shade;
-	COLOR = vec4(albedo * (1.0 - damp_darken * damp) * face_shade, COLOR.a);
+	COLOR = vec4(albedo * (1.0 - damp_darken * damp) * tone, COLOR.a);
 	normal = mix(normal, texture(worn_normal, worn_uv).rgb, wear);
 	NORMAL_MAP = mix(normal, vec3(0.5, 0.5, 1.0), damp_flatten * damp);
 }

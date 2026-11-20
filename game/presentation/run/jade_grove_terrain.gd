@@ -14,6 +14,7 @@ const FLIGHTS: Array[Rect2i] = [
 const LEVELS: Array[float] = [30.0, 24.0, 24.0, -28.0]
 const SIDE_RISES: int = 4
 const MAX_STEP: float = 6.0
+const RETAINING_SHADE: float = 0.59
 const VOID: int = 255
 const SURFACE_MASK_SCALE: float = 0.5
 const FACE_OFFSETS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
@@ -21,16 +22,21 @@ const FACE_OFFSETS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOW
 
 var surface_mask: ImageTexture
 var surface_bounds: Rect2
+var paving_data: Dictionary
 var _cell_px: float
 var _size: Vector2i
 var _tiles: PackedByteArray
 var _levels: PackedFloat32Array
+var _retaining: Dictionary[int, bool] = {}
 
 
 func _init(data: Dictionary, cell_px: int) -> void:
 	_cell_px = float(cell_px)
-	var rows: Array = data["rows"]
+	paving_data = data.duplicate()
+	var rows: Array = (data["rows"] as Array).duplicate()
+	paving_data["rows"] = rows
 	_size = Vector2i((rows[0] as String).length(), rows.size())
+	var infill: Array[Vector2i] = _fill_retaining_pockets(data["rows"], rows)
 	var centre: Array = data["centre"]
 	var seal: Vector2i = Vector2i(centre[0], centre[1])
 	_tiles.resize(_size.x * _size.y)
@@ -62,6 +68,15 @@ func _init(data: Dictionary, cell_px: int) -> void:
 				_levels[index * 4 + side] = _authored_height(sample, flight) if flight >= 0 else deck
 	_seat_foundations(data.get("props", []), rows)
 	_fit_stair_landings(stairs, walkable)
+	_align_retaining_faces(rows, stairs, walkable)
+	for at: Vector2i in infill:
+		var face: int = (at.y * _size.x + at.x) * 4
+		var rear: float = maxf(_levels[face - _size.x * 4], _levels[face - 4])
+		var front: float = minf(_levels[face + _size.x * 4], _levels[face + 4])
+		_levels[face] = rear
+		_levels[face + 1] = front
+		_levels[face + 2] = front
+		_levels[face + 3] = rear
 
 
 func height_at(at: Vector2) -> float:
@@ -73,7 +88,11 @@ func height_at(at: Vector2) -> float:
 	var side: int = 2 if local.y >= 0.0 else 0
 	if absf(local.x) > absf(local.y):
 		side = 1 if local.x > 0.0 else 3
-	return _levels[(cell.y * _size.x + cell.x) * 4 + side]
+	var index: int = cell.y * _size.x + cell.x
+	# An anchor on the retaining edge belongs to the upper course.
+	if _retaining.has(index) and is_zero_approx(local.x + local.y):
+		side = 0
+	return _levels[index * 4 + side]
 
 
 static func _authored_height(uv: Vector2, index: int) -> float:
@@ -158,6 +177,60 @@ func _face_across_cell_edge(face: int) -> int:
 	return (coord.y * _size.x + coord.x) * 4 + (side + 2) % 4
 
 
+## When both near neighbours are the same lower deck, the wall can follow the straight
+## horizontal axis of the railing through the middle of its blocked cell.
+func _align_retaining_faces(rows: Array, stairs: PackedByteArray, walkable: PackedByteArray) -> void:
+	for y: int in _size.y - 1:
+		for x: int in _size.x - 1:
+			if rows[y][x] != "w":
+				continue
+			var cell: int = y * _size.x + x
+			var east: int = cell + 1
+			var south: int = cell + _size.x
+			if not walkable[east] or not walkable[south] or stairs[east] != 0 or stairs[south] != 0:
+				continue
+			var below: float = _levels[east * 4 + 3]
+			if below != _levels[south * 4] or _levels[cell * 4] - below <= MAX_STEP:
+				continue
+			_retaining[cell] = true
+			_levels[cell * 4 + 1] = below
+			_levels[cell * 4 + 2] = below
+
+
+## An enclosed pocket between four piers is a foundation core. Open cliff edges stay open.
+func _fill_retaining_pockets(original: Array, rows: Array) -> Array[Vector2i]:
+	var closed: Array[Vector2i] = []
+	for y: int in range(1, _size.y - 1):
+		for x: int in range(1, _size.x - 1):
+			if original[y][x] != " ":
+				continue
+			var neighbours: Array[String] = [original[y - 1][x], original[y][x + 1], original[y + 1][x], original[y][x - 1]]
+			if neighbours.all(func(tile: String) -> bool: return "w#".contains(tile)):
+				var row: String = rows[y]
+				rows[y] = row.substr(0, x) + "#" + row.substr(x + 1)
+				closed.append(Vector2i(x, y))
+	return closed
+
+
+static func configure_floor_material(material: ShaderMaterial, sprites: SpriteSet, repeat_px: float) -> void:
+	material.set_shader_parameter("uv_world_px", repeat_px)
+	if repeat_px == 0.0:
+		return
+	var course: Dictionary = sprites.prop_quad(ArenaDressing.RAIL_DETAILS_ASSET, ArenaDressing.CLIFF_PANEL, Vector2.ZERO)
+	if course.is_empty():
+		return
+	var atlas: Texture2D = course["texture"]
+	if atlas is CanvasTexture:
+		atlas = (atlas as CanvasTexture).diffuse_texture
+	var region: Rect2 = course["uv"]
+	var inset: Vector2 = Vector2(3.0, 2.0) / atlas.get_size()
+	region.position += inset
+	region.size -= inset * 2.0
+	material.set_shader_parameter("retaining_atlas", atlas)
+	material.set_shader_parameter("retaining_region",
+		Vector4(region.position.x, region.position.y, region.size.x, region.size.y))
+
+
 static func _flight_index(uv: Vector2) -> int:
 	for index: int in FLIGHTS.size():
 		if Rect2(FLIGHTS[index]).has_point(uv):
@@ -205,10 +278,8 @@ func rim_edge_height(a: Vector2, b: Vector2) -> float:
 
 ## Each cell is four triangles split along the two screen axes. This puts treads on the flight
 ## axis instead of alternating the diamonds of the pathfinding grid.
-func build_paving(
-	data: Dictionary, texels_per_px: float, bevels: Array[PackedVector2Array] = []
-) -> Polygon2D:
-	var rows: Array = data["rows"]
+func build_paving(texels_per_px: float, bevels: Array[PackedVector2Array] = []) -> Polygon2D:
+	var rows: Array = paving_data["rows"]
 	var edges: Dictionary[Vector4i, Vector3] = {}
 	var faces: Array[Dictionary] = []
 	for y: int in _size.y:
@@ -262,7 +333,8 @@ func build_paving(
 			var shade: float = face["shade"]
 			var tint: float = shade if index < 2 or shade == 1.0 else shade * 0.86
 			var edge: float = float(nosing.has(polygon[index]))
-			colors.append(Color(tint, edge, 0.0))
+			var course: float = (1.0 if index < 2 else 0.25) if shade == RETAINING_SHADE else 0.0
+			colors.append(Color(tint, edge, course))
 		parts.append(part)
 	var paving: Polygon2D = Polygon2D.new()
 	paving.polygon = vertices
@@ -375,7 +447,8 @@ func _join_edge(
 		if corner.is_empty() or from.distance_squared_to(to) > corner[0].distance_squared_to(corner[1]):
 			top["nosing"] = PackedVector2Array([from, to])
 	_append_face(faces, PackedVector2Array([from, to, to, from]),
-		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5, 0.76 if is_stair else 0.59)
+		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5,
+		0.76 if is_stair else RETAINING_SHADE)
 
 
 static func _append_face(

@@ -463,9 +463,12 @@ static func _build_masonry_volume(
 	var floor: PackedVector2Array = PackedVector2Array()
 	var top: PackedVector2Array = PackedVector2Array()
 	var crown_lip: PackedVector2Array = PackedVector2Array()
+	var support: PackedFloat32Array = PackedFloat32Array()
 	item["masonry_ends"] = PackedVector2Array([from, to])
 	for at: Vector2 in [from, to]:
-		var shift: Vector2 = Vector2(0.0, -terrain.height_at(at)) if terrain != null else Vector2.ZERO
+		var height: float = terrain.height_at(at) if terrain != null else 0.0
+		support.append(height)
+		var shift: Vector2 = Vector2(0.0, -height)
 		floor.append(IsoProjection.to_screen(at - bottom) + shift)
 		floor.append(IsoProjection.to_screen(at + bottom) + shift)
 		top.append(IsoProjection.to_screen(at - crown) + shift + lift + Vector2(0.0, bevel))
@@ -500,6 +503,24 @@ static func _build_masonry_volume(
 			vertices.append_array([top[0] + drop, top[2] + drop, top[3] + drop, top[1] + drop])
 			rects.append(Rect2(uv.position + Vector2(0.0, uv.size.y * level), uv.size * Vector2(1.0, 0.045)))
 			tones.append(0.70)
+		# The sloped join rises from the lower court on a full stone sill.
+		if absf(support[0] - support[1]) > JadeGroveTerrain.MAX_STEP:
+			var side: Vector2 = IsoProjection.to_screen(across * 7.0)
+			var low: float = minf(support[0], support[1])
+			var foot_a: Vector2 = Vector2(0.0, support[0] - low)
+			var foot_b: Vector2 = Vector2(0.0, support[1] - low)
+			var a_back: Vector2 = floor[0] - side
+			var a_front: Vector2 = floor[1] + side
+			var b_back: Vector2 = floor[2] - side
+			var b_front: Vector2 = floor[3] + side
+			vertices.append_array([
+				a_back + foot_a, b_back + foot_b, b_back, a_back,
+				a_front + foot_a, b_front + foot_b, b_front, a_front,
+				a_back, b_back, b_front, a_front,
+			])
+			var stone: Rect2 = sprites.prop_quad(MASONRY_ASSET, STONE_PANEL, Vector2.ZERO)["uv"]
+			rects.append_array([stone, stone, Rect2(stone.position, stone.size * Vector2(1.0, 0.14))])
+			tones.append_array([0.65, 0.91, 0.98])
 	elif not open:
 		vertices.append_array([top[0], top[2], crown_lip[2], crown_lip[0]])
 		vertices.append_array([top[1], top[3], crown_lip[3], crown_lip[1]])
@@ -509,7 +530,7 @@ static func _build_masonry_volume(
 	for face: int in rects.size():
 		var rect: Rect2 = rects[face]
 		var base: int = face * 4
-		if face == 4 or (wooden and face > 4):
+		if face == 4 or (wooden and face in [5, 6, 9]):
 			uvs.append_array([rect.position, Vector2(rect.end.x, rect.position.y), rect.end,
 				Vector2(rect.position.x, rect.end.y)])
 		else:

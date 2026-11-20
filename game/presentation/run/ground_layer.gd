@@ -129,7 +129,7 @@ func _init(
 	follow_viewport_enabled = true
 	# Position the separate scenery canvas after Camera2D updates its smoothed scroll.
 	process_priority = 1
-	_data = data
+	_data = terrain.paving_data if terrain != null else data
 	_arena = Vector2(cells_of(data) * cell_px)
 	_centre = centre_of(data, cell_px)
 	_cell_px = cell_px
@@ -471,7 +471,7 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 		var bevels: Array[PackedVector2Array] = []
 		for part: PackedInt32Array in parts:
 			bevels.append(PackedVector2Array([points[part[0]], points[part[1]], points[part[2]]]))
-		paving = _terrain.build_paving(_data, float(texture.get_width()) / repeat_px, bevels)
+		paving = _terrain.build_paving(float(texture.get_width()) / repeat_px, bevels)
 	else:
 		paving = Polygon2D.new()
 		paving.polygon = points
@@ -498,7 +498,7 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 		return
 	var wear: ShaderMaterial = ShaderMaterial.new()
 	wear.shader = FLOOR_SHADER
-	wear.set_shader_parameter("uv_world_px", repeat_px if raised else 0.0)
+	JadeGroveTerrain.configure_floor_material(wear, sprites, repeat_px if raised else 0.0)
 	wear.set_shader_parameter("worn_albedo", worn.diffuse_texture)
 	wear.set_shader_parameter("worn_normal", worn.normal_texture)
 	wear.set_shader_parameter("wear_mask", ImageTexture.create_from_image(wear_mask(_data, _cell_px, clear_radius)))

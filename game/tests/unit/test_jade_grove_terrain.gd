@@ -104,10 +104,64 @@ func test_plinth_corners_and_sprite_pivots_share_the_same_floor_height() -> void
 				"%s at %s has one supporting plane" % [prop["prop"], pivot])
 
 
+func test_retaining_corner_has_a_split_foundation_and_preserves_open_rims() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var original: Array = data["rows"]
+	var paving: Array = terrain.paving_data["rows"]
+	var filled: Array[Vector2i] = []
+	for y: int in original.size():
+		for x: int in (original[y] as String).length():
+			if original[y][x] != paving[y][x]:
+				filled.append(Vector2i(x, y))
+	assert_eq(filled, [Vector2i(34, 8)], "only the enclosed gap is backed with stone")
+	assert_eq(original[8][34], " ", "the blocking topology still marks the pocket as nonwalkable")
+	assert_eq(paving[8][34], "#")
+	for centre: Vector2 in [Vector2(19.5, 22.5), Vector2(34.5, 8.5)]:
+		var rear: Vector2 = (centre - Vector2.ONE * 0.16) * RunView.CELL_PX
+		var front: Vector2 = (centre + Vector2.ONE * 0.16) * RunView.CELL_PX
+		assert_eq(terrain.height_at(rear), 30.0)
+		assert_eq(terrain.height_at(front), 0.0)
+	assert_eq(terrain.height_at(Vector2(19.5, 22.5) * RunView.CELL_PX), 30.0, "sockets sit on the upper cut")
+
+
+func test_sloped_temple_rail_reaches_the_court_with_its_stone_sill() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var props: Array[Dictionary] = ArenaDressing.placements(sprites, data, RunView.CELL_PX)
+	ArenaDressing.prepare_props(sprites, props, ArenaDressing.lights(props, terrain), terrain)
+	var supported: int = 0
+	for item: Dictionary in props:
+		if item.get("panel") != ArenaDressing.TEMPLE_PANEL:
+			continue
+		var ends: PackedVector2Array = item["masonry_ends"]
+		var low: float = minf(terrain.height_at(ends[0]), terrain.height_at(ends[1]))
+		if absf(terrain.height_at(ends[0]) - terrain.height_at(ends[1])) <= JadeGroveTerrain.MAX_STEP:
+			continue
+		var across: Vector2 = (ends[1] - ends[0]).normalized().orthogonal()
+		if IsoProjection.to_screen(across).y < 0.0:
+			across = -across
+		var mesh: ArrayMesh = item["volume"]
+		var vertices: PackedVector2Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		for at: Vector2 in ends:
+			var lower_foot: Vector2 = IsoProjection.to_screen(at + across * 11.0) - Vector2(0.0, low)
+			assert_true(_contains_vertex(vertices, lower_foot))
+		supported += 1
+	assert_eq(supported, 1, "the angled temple connection has a stone footing")
+
+
+func _contains_vertex(vertices: PackedVector2Array, point: Vector2) -> bool:
+	for vertex: Vector2 in vertices:
+		if vertex.distance_to(point) < 0.01:
+			return true
+	return false
+
+
 func test_surface_mask_follows_the_visible_floor_in_screen_space() -> void:
 	var data: Dictionary = P0Tuning.arena_data()
 	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
-	var polygon: Polygon2D = terrain.build_paving(data, 1.0)
+	var polygon: Polygon2D = terrain.build_paving(1.0)
 	add_child_autofree(polygon)
 	var image: Image = terrain.surface_mask.get_image()
 	for cell: Vector2 in [Vector2(25.5, 10.5), Vector2(9.5, 44.5),
