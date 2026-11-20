@@ -19,7 +19,7 @@ const DOWN: Array[float] = [0.0, 0.14, 0.43, 0.68, 1.0]
 const ALPHA: Array[float] = [0.06, 0.89, 0.97, 0.68, 0.0]
 
 
-func _init(sprites: SpriteSet, cell_px: int) -> void:
+func _init(sprites: SpriteSet, cell_px: int, terrain: JadeGroveTerrain = null) -> void:
 	name = "JadeGroveCliffRelief"
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	var vertices: PackedVector2Array = PackedVector2Array()
@@ -27,7 +27,9 @@ func _init(sprites: SpriteSet, cell_px: int) -> void:
 	var uvs: PackedVector2Array = PackedVector2Array()
 	var indices: PackedInt32Array = PackedInt32Array()
 	for section: Array in SECTIONS:
-		var at: Vector2 = IsoProjection.to_screen(section[0] * cell_px) + Vector2(0.0, section[4])
+		var world: Vector2 = section[0] * cell_px
+		var lift: float = terrain.rim_height(world) if terrain != null else 0.0
+		var at: Vector2 = IsoProjection.to_screen(world) + Vector2(0.0, section[4] - lift)
 		var quad: Dictionary = sprites.prop_quad(ASSET, section[1], at, section[2], section[3])
 		if quad.is_empty():
 			continue

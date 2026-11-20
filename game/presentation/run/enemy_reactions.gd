@@ -108,7 +108,9 @@ static func dissolve_material() -> ShaderMaterial:
 
 ## Draws every fallen body of `deaths` (CombatVfx entries [at, age, pose, fall]): the death
 ## clip frame of its age, then the decay. `light` maps world feet to their light.
-static func draw_fallen(canvas: CanvasItem, sprites: SpriteSet, deaths: Array[Array], light: Callable) -> void:
+static func draw_fallen(
+	canvas: CanvasItem, sprites: SpriteSet, deaths: Array[Array], light: Callable, surface: Callable
+) -> void:
 	for death: Array in deaths:
 		var pose: Array = death[2]
 		if pose[0] == "":
@@ -118,7 +120,7 @@ static func draw_fallen(canvas: CanvasItem, sprites: SpriteSet, deaths: Array[Ar
 			frame = sprites.clip_frame(pose[0], "death", death[1])
 		var tint: Color = light.call(death[0])
 		tint.a = 1.0 - CombatVfx.decay(death)
-		var at: Vector2 = IsoProjection.to_screen(death[0]) - Vector2(0.0, EnemyMotion.fall_lift(pose[0], death[1]))
+		var at: Vector2 = surface.call(death[0]) - Vector2(0.0, EnemyMotion.fall_lift(pose[0], death[1]))
 		if pose[1] != "":
 			sprites.draw_clip(canvas, pose[0], pose[1], pose[2], frame, at, tint)
 		else:

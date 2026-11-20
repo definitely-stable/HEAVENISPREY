@@ -471,7 +471,9 @@ static func _short_stone_wall(
 
 ## A tapered stone course retains a visible body even when viewed straight along its length.
 ## The lacquered version uses a slimmer section and the keyed openings in the painted elevations.
-static func _build_masonry_volume(sprites: SpriteSet, item: Dictionary, from: Vector2, to: Vector2) -> void:
+static func _build_masonry_volume(
+	sprites: SpriteSet, item: Dictionary, from: Vector2, to: Vector2, terrain: JadeGroveTerrain = null
+) -> void:
 	var piece: Dictionary = sprites.prop_quad(item["asset"], item["panel"], Vector2.ZERO)
 	var uv: Rect2 = piece["uv"]
 	var wooden: bool = item["panel"] == TEMPLE_PANEL
@@ -486,13 +488,15 @@ static func _build_masonry_volume(sprites: SpriteSet, item: Dictionary, from: Ve
 	var floor: PackedVector2Array = PackedVector2Array()
 	var top: PackedVector2Array = PackedVector2Array()
 	var crown_lip: PackedVector2Array = PackedVector2Array()
+	item["masonry_ends"] = PackedVector2Array([from, to])
 	for at: Vector2 in [from, to]:
-		floor.append(IsoProjection.to_screen(at - bottom))
-		floor.append(IsoProjection.to_screen(at + bottom))
-		top.append(IsoProjection.to_screen(at - crown) + lift + Vector2(0.0, bevel))
-		top.append(IsoProjection.to_screen(at + crown) + lift + Vector2(0.0, bevel))
-		crown_lip.append(IsoProjection.to_screen(at - crown - across * bevel) + lift)
-		crown_lip.append(IsoProjection.to_screen(at + crown + across * bevel) + lift)
+		var shift: Vector2 = Vector2(0.0, -terrain.height_at(at)) if terrain != null else Vector2.ZERO
+		floor.append(IsoProjection.to_screen(at - bottom) + shift)
+		floor.append(IsoProjection.to_screen(at + bottom) + shift)
+		top.append(IsoProjection.to_screen(at - crown) + shift + lift + Vector2(0.0, bevel))
+		top.append(IsoProjection.to_screen(at + crown) + shift + lift + Vector2(0.0, bevel))
+		crown_lip.append(IsoProjection.to_screen(at - crown - across * bevel) + shift + lift)
+		crown_lip.append(IsoProjection.to_screen(at + crown + across * bevel) + shift + lift)
 	var cap: Rect2 = uv
 	cap.position.y += uv.size.y * 0.015
 	cap.size.y *= 0.13
@@ -555,14 +559,18 @@ static func wall_light(light: Color) -> Color:
 
 
 ## A strip of a large prop sorts at its own cell but is drawn and lit at the sprite anchor.
-static func prepare_props(sprites: SpriteSet, props: Array[Dictionary], lanterns: Array[Dictionary]) -> void:
+static func prepare_props(
+	sprites: SpriteSet, props: Array[Dictionary], lanterns: Array[Dictionary], terrain: JadeGroveTerrain = null
+) -> void:
 	for index: int in props.size():
 		var prop: Dictionary = props[index]
 		var base: Vector2 = prop.get("base", prop["at"])
-		var screen: Vector2 = IsoProjection.to_screen(base)
+		var screen: Vector2 = terrain.project(base) if terrain != null else IsoProjection.to_screen(base)
 		prop["screen"] = screen
 		prop["order"] = Vector2i(roundi(IsoProjection.depth(prop["at"]) * 16.0), -1 - index)
 		prop["fixed_light"] = RunLighting.fixed_light(base, lanterns)
+		if terrain != null:
+			_lift_prop(sprites, prop, terrain, screen - IsoProjection.to_screen(base))
 		if prop.has("rail_bounds"):
 			continue
 		var quad: Dictionary = sprites.prop_quad(prop["asset"], prop["prop"], Vector2.ZERO, 1.0, prop["flip"])
@@ -572,6 +580,21 @@ static func prepare_props(sprites: SpriteSet, props: Array[Dictionary], lanterns
 		var bounds: Rect2 = Rect2(local.position + screen, local.size)
 		prop["draw_bounds"] = bounds
 		prop["shadow_bounds"] = (RunLighting.shadow_transform(screen) * local).merge(bounds).grow(18.0)
+
+
+static func _lift_prop(sprites: SpriteSet, prop: Dictionary, terrain: JadeGroveTerrain, delta: Vector2) -> void:
+	if prop.has("rail_bounds"):
+		var bounds: Rect2 = prop["rail_bounds"]
+		prop["rail_bounds"] = bounds.merge(Rect2(bounds.position + delta, bounds.size))
+	if prop.has("masonry_ends"):
+		var ends: PackedVector2Array = prop["masonry_ends"]
+		_build_masonry_volume(sprites, prop, ends[0], ends[1], terrain)
+	var footprint: Array = prop.get("footprint", [])
+	for index: int in footprint.size():
+		var polygon: PackedVector2Array = footprint[index]
+		for vertex: int in polygon.size():
+			polygon[vertex] += delta
+		footprint[index] = polygon
 
 
 ## Lay the silhouettes first; the white contacts keep their coverage near a lantern.
@@ -639,15 +662,16 @@ static func backdrop(sprites: SpriteSet) -> Array[Dictionary]:
 
 
 ## Shared light sources for the floor, upright sprites, shadows, and halos.
-static func lights(items: Array[Dictionary]) -> Array[Dictionary]:
+static func lights(items: Array[Dictionary], terrain: JadeGroveTerrain = null) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for item: Dictionary in items:
 		if item["light"]:
 			var profile: Vector4 = LIGHT_PROPS[item["prop"]]
 			var at: Vector2 = item["at"]
+			var screen: Vector2 = terrain.project(at) if terrain != null else IsoProjection.to_screen(at)
 			out.append({
 				"at": at, "flame": item["flame"], "radius": profile.y, "energy": profile.z, "halo": profile.w,
-				"flame_at": IsoProjection.to_screen(at) - Vector2(0.0, item["flame"]),
+				"flame_at": screen - Vector2(0.0, item["flame"]),
 			})
 	return out
 

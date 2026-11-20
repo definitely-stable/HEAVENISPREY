@@ -13,6 +13,8 @@ shader_type canvas_item;
 uniform sampler2D worn_albedo : repeat_enable, filter_linear_mipmap;
 uniform sampler2D worn_normal : repeat_enable, filter_linear_mipmap;
 uniform float worn_repeat_px = 480.0;
+// When the floor vertices are lifted, the original world position is carried in UV.
+uniform float uv_world_px = 0.0;
 // Red: wear 0..1; green: tone drift around 0.5; blue: the second clean layer 0..1. Covers
 // mask_size world px from mask_origin.
 uniform sampler2D wear_mask : repeat_disable, filter_linear;
@@ -47,11 +49,13 @@ uniform float moon_sheen = 0.45;
 const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 varying vec2 world;
+varying float face_shade;
 // Specular of this pixel, from fragment() to light().
 varying float gloss;
 
 void vertex() {
-	world = VERTEX;
+	world = uv_world_px > 0.0 ? UV * uv_world_px : VERTEX;
+	face_shade = uv_world_px > 0.0 ? COLOR.r : 1.0;
 }
 
 void fragment() {
@@ -65,7 +69,7 @@ void fragment() {
 	alt_normal.xy = 1.0 - alt_normal.xy;
 	float layer = smoothstep(0.46, 0.54, mask.b + (clean_mid - dot(alt, LUMA)) * edge_break);
 	// COLOR arrives as the clean texture (texture x modulate).
-	vec3 albedo = mix(COLOR.rgb, alt, layer);
+	vec3 albedo = mix(COLOR.rgb / max(face_shade, 0.01), alt, layer);
 	vec3 normal = mix(texture(NORMAL_TEXTURE, UV).rgb, alt_normal, layer);
 	vec2 worn_uv = world / worn_repeat_px;
 	vec3 worn = texture(worn_albedo, worn_uv).rgb;
@@ -76,8 +80,8 @@ void fragment() {
 	albedo *= mix(vec3(1.0), vec3(1.20, 1.10, 1.01), dressing);
 	float damp = mask.a * mix(1.0, 0.64, dressing);
 	float seam = smoothstep(seam_luma - 0.08, seam_luma + 0.06, dot(albedo, LUMA));
-	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam);
-	COLOR = vec4(albedo * (1.0 - damp_darken * damp), COLOR.a);
+	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam) * face_shade;
+	COLOR = vec4(albedo * (1.0 - damp_darken * damp) * face_shade, COLOR.a);
 	normal = mix(normal, texture(worn_normal, worn_uv).rgb, wear);
 	NORMAL_MAP = mix(normal, vec3(0.5, 0.5, 1.0), damp_flatten * damp);
 }

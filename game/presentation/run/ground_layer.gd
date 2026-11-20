@@ -117,12 +117,13 @@ var _data: Dictionary
 var _arena: Vector2
 var _centre: Vector2
 var _cell_px: int
+var _terrain: JadeGroveTerrain
 
 
 func _init(
 	sprites: SpriteSet, floor_asset: String, data: Dictionary, cell_px: int,
 	light_points: Array[Dictionary] = [], seal_asset: String = "", cliff_asset: String = "",
-	worn_asset: String = "", backdrop: Array[Dictionary] = []
+	worn_asset: String = "", backdrop: Array[Dictionary] = [], terrain: JadeGroveTerrain = null
 ) -> void:
 	layer = LAYER
 	follow_viewport_enabled = true
@@ -130,6 +131,7 @@ func _init(
 	_arena = Vector2(cells_of(data) * cell_px)
 	_centre = centre_of(data, cell_px)
 	_cell_px = cell_px
+	_terrain = terrain
 	_build_mist(sprites, backdrop)
 	var ambient: CanvasModulate = CanvasModulate.new()
 	ambient.color = RunLighting.GROUND_AMBIENT
@@ -331,8 +333,8 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 ## distant scenery with the view. `view_centre` is the screen point (projected px) the camera
 ## aims at, `zoom` its zoom; by default the view is centred on the hero at zoom 1.
 func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0, show_aura: bool = true) -> void:
-	var centre: Vector2 = IsoProjection.to_screen(hero) if view_centre == Vector2.INF else view_centre
-	_aura.position = IsoProjection.to_screen(hero)
+	var centre: Vector2 = surface_at(hero) if view_centre == Vector2.INF else view_centre
+	_aura.position = surface_at(hero)
 	_aura.visible = show_aura
 	for rect: ColorRect in [_sky, _veil]:
 		(rect.material as ShaderMaterial).set_shader_parameter("camera_offset", centre)
@@ -364,6 +366,10 @@ func fire_energies() -> Array[float]:
 
 func aura_position() -> Vector2:
 	return IsoProjection.to_world(_aura.position)
+
+
+func surface_at(point: Vector2) -> Vector2:
+	return _terrain.project(point) if _terrain != null else IsoProjection.to_screen(point)
 
 
 ## Dusk, horizon, spires and drifting mist behind the courtyard (REF-033, REF-056).
@@ -440,20 +446,29 @@ static func _backdrop_plane(
 ## floor shader blends the clean flagstones with the worn ones by the wear mask.
 func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, clear_radius: float) -> void:
 	var texture: Texture2D = sprites.canvas_texture(floor_asset)
-	paving = Polygon2D.new()
+	var repeat_px: float = sprites.floor_repeat_px(floor_asset, _cell_px)
+	var raised: bool = _terrain != null and texture != null
 	var points: PackedVector2Array = PackedVector2Array()
 	var parts: Array = []
 	var floor_rects: Array[Rect2] = footprint(_data, _cell_px)
-	for rect: Rect2 in floor_rects:
-		var first: int = points.size()
-		points.append_array(PackedVector2Array([
-			rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
-		]))
-		parts.append(PackedInt32Array([first, first + 1, first + 2, first + 3]))
+	if not raised:
+		for rect: Rect2 in floor_rects:
+			var first: int = points.size()
+			points.append_array(PackedVector2Array([
+				rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y),
+			]))
+			parts.append(PackedInt32Array([first, first + 1, first + 2, first + 3]))
 	if texture != null and _data.get("stage_id") == "stage.jade_grove":
 		_add_paving_caps(points, parts)
-	paving.polygon = points
-	paving.polygons = parts
+	if raised:
+		var bevels: Array[PackedVector2Array] = []
+		for part: PackedInt32Array in parts:
+			bevels.append(PackedVector2Array([points[part[0]], points[part[1]], points[part[2]]]))
+		paving = _terrain.build_paving(_data, float(texture.get_width()) / repeat_px, bevels)
+	else:
+		paving = Polygon2D.new()
+		paving.polygon = points
+		paving.polygons = parts
 	_iso.add_child(paving)
 	var mask_size: Vector2i = cells_of(_data)
 	var receiver: Image = Image.create_empty(maxi(1, mask_size.x), maxi(1, mask_size.y), false, Image.FORMAT_L8)
@@ -465,16 +480,18 @@ func _build_floor(sprites: SpriteSet, floor_asset: String, worn_asset: String, c
 		return
 	paving.texture = texture
 	# Polygon UVs are in texels; the tile repeats every floor_repeat_px world px.
-	var scale: float = sprites.floor_repeat_px(floor_asset, _cell_px) / float(texture.get_width())
-	var uvs: PackedVector2Array = PackedVector2Array()
-	for point: Vector2 in paving.polygon:
-		uvs.append(point / scale)
-	paving.uv = uvs
+	if not raised:
+		var scale: float = repeat_px / float(texture.get_width())
+		var uvs: PackedVector2Array = PackedVector2Array()
+		for point: Vector2 in paving.polygon:
+			uvs.append(point / scale)
+		paving.uv = uvs
 	var worn: CanvasTexture = sprites.canvas_texture(worn_asset) as CanvasTexture
 	if worn == null:
 		return
 	var wear: ShaderMaterial = ShaderMaterial.new()
 	wear.shader = FLOOR_SHADER
+	wear.set_shader_parameter("uv_world_px", repeat_px if raised else 0.0)
 	wear.set_shader_parameter("worn_albedo", worn.diffuse_texture)
 	wear.set_shader_parameter("worn_normal", worn.normal_texture)
 	wear.set_shader_parameter("wear_mask", ImageTexture.create_from_image(wear_mask(_data, _cell_px, clear_radius)))
@@ -581,13 +598,13 @@ func _build_cliffs(sprites: SpriteSet, cliff_asset: String) -> void:
 	add_child(faces)
 	if _data.get("stage_id") == "stage.jade_grove":
 		add_child(_cliff_growth_mesh(sprites))
-		add_child(JadeGroveCliffRelief.new(sprites, _cell_px))
+		add_child(JadeGroveCliffRelief.new(sprites, _cell_px, _terrain))
 		_build_waterfalls(sprites)
 
 
 func _build_waterfalls(sprites: SpriteSet) -> void:
 	for fall: Array in WATERFALLS:
-		var top: Vector2 = IsoProjection.to_screen((fall[0] as Vector2) * _cell_px)
+		var top: Vector2 = _rim_at((fall[0] as Vector2) * _cell_px)
 		var size: Vector2 = fall[2]
 		var water: ShaderMaterial = ShaderMaterial.new()
 		water.shader = WATERFALL_SHADER
@@ -751,7 +768,8 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				if opening == 0.0 and sides.has(at):
 					# A projected side contour must not split into independent sheets below the cap.
 					offset = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
-				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band) + offset
+				var lift: float = _rim_lift(at)
+				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band - lift) + offset
 				vertices.append(down)
 				var shade: float = [0.30, 0.06, 0.19, 0.0, 0.0, 0.0][row]
 				var tint: Color = top_color.lerp(cold, depth * 0.82).darkened(shade)
@@ -786,7 +804,7 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 			for at: Vector2 in edge:
 				var seam: Vector2 = at + rim.get(at, Vector2.ZERO)
 				var offset: Vector2 = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
-				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX) + offset)
+				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX - _rim_lift(at)) + offset)
 				colors.append(Color(0.57, 0.55, 0.66, CLIFF_VISIBILITY[row]))
 				if texture != null:
 					uvs.append(Vector2((seam.x + seam.y * 0.4) / span, depth))
@@ -837,7 +855,7 @@ func _cliff_growth_mesh(sprites: SpriteSet) -> MeshInstance2D:
 		if quad.is_empty():
 			continue
 		growth.texture = quad["texture"]
-		var at: Vector2 = IsoProjection.to_screen(item[0] * _cell_px) + Vector2(0.0, item[4])
+		var at: Vector2 = _rim_at(item[0] * _cell_px) + Vector2(0.0, item[4])
 		var size: Vector2 = (quad["rect"] as Rect2).size
 		var rect: Rect2 = Rect2(at - Vector2(size.x * 0.5, 0.0), size)
 		var uv: Rect2 = quad["uv"]
@@ -923,6 +941,15 @@ static func _surface_mesh(
 	return mesh
 
 
+func _rim_at(at: Vector2) -> Vector2:
+	var screen: Vector2 = IsoProjection.to_screen(at)
+	return screen - Vector2(0.0, _rim_lift(screen))
+
+
+func _rim_lift(screen: Vector2) -> float:
+	return _terrain.rim_height(IsoProjection.to_world(screen)) if _terrain != null else 0.0
+
+
 func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> PointLight2D:
 	var light: PointLight2D = PointLight2D.new()
 	light.texture = _radial_texture(256)
@@ -931,7 +958,7 @@ func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> Poin
 	light.energy = energy
 	light.height = RunLighting.LIGHT_HEIGHT_PX
 	# Lights live in screen space: a world circle of `radius` is a 2:1 ellipse on screen.
-	light.position = IsoProjection.to_screen(at)
+	light.position = surface_at(at)
 	light.scale = Vector2(1.0, 0.5)
 	_add_light(light)
 	return light

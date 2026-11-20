@@ -11,7 +11,7 @@ static func draw_over_pass(view: RunView) -> void:
 		var alpha: float = view._chain_left / 0.12
 		canvas.draw_polyline(view._chain_line, Color(0.50, 0.49, 1.0, alpha), 5.0, true)
 		canvas.draw_polyline(view._chain_line, Color(0.85, 0.92, 1.0, alpha), 2.0, true)
-	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px())
+	var hero: Vector2 = view.surface_at(view.driver.hero_position_px())
 	var stacks: int = view.driver.world.venom_stacks
 	var top: float = -view._hero_height() - 8.0
 	for pip: int in stacks:
@@ -26,7 +26,7 @@ static func draw_over_pass(view: RunView) -> void:
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] == 0:
 			continue
-		var at: Vector2 = IsoProjection.to_screen(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
+		var at: Vector2 = view.surface_at(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
 		canvas.draw_circle(at, float(world.shot_radius[slot]) / Fx.FX_ONE, RunView.COLOR_WISP)
 	var font: Font = view._hud.kit.font if view._hud != null and view._hud.kit != null else ThemeDB.fallback_font
 	var gem_light: bool = view._vfx != null and view._vfx.kit.has("qi_wisp")
@@ -51,8 +51,8 @@ static func draw_over_pass(view: RunView) -> void:
 
 ## Where the collected gem is on its short flight to the hero.
 static func _pickup_flight(view: RunView, pickup: Array) -> Vector2:
-	var hero: Vector2 = IsoProjection.to_screen(view.driver.hero_position_px()) - Vector2(0, RunView.GEM_LIFT_PX)
-	var from: Vector2 = IsoProjection.to_screen(pickup[0]) - Vector2(0, RunView.GEM_LIFT_PX)
+	var hero: Vector2 = view.surface_at(view.driver.hero_position_px()) - Vector2(0, RunView.GEM_LIFT_PX)
+	var from: Vector2 = view.surface_at(pickup[0]) - Vector2(0, RunView.GEM_LIFT_PX)
 	return from.lerp(hero, clampf(pickup[2] / RunView.PICKUP_FLY, 0.0, 1.0))
 
 
@@ -77,7 +77,7 @@ static func draw_glow_pass(view: RunView) -> void:
 		if world.proj_damage[slot] == 0:
 			continue
 		var ground: Vector2 = view.driver.projectile_position_px(slot)
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, RunView.FLIGHT_LIFT_PX)
+		var at: Vector2 = view.surface_at(ground) - Vector2(0, RunView.FLIGHT_LIFT_PX)
 		var heading: Vector2 = view._projectile_heading(slot)
 		if light:
 			view._vfx.draw_sword(canvas, at, heading)
@@ -86,7 +86,7 @@ static func draw_glow_pass(view: RunView) -> void:
 		RunLighting.halo(canvas, view._halo_texture, at, radius * 2.6, RunView.COLOR_SWORD_GLOW)
 	for slot: int in world.shot_slots():
 		if world.shot_damage[slot] != 0:
-			var at: Vector2 = IsoProjection.to_screen(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
+			var at: Vector2 = view.surface_at(view.driver.shot_position_px(slot)) - Vector2(0, RunView.SHOT_LIFT_PX)
 			RunLighting.halo(
 				canvas, view._halo_texture, at, float(world.shot_radius[slot]) / Fx.FX_ONE * 3.2, RunView.COLOR_WISP_GLOW
 			)
@@ -94,7 +94,7 @@ static func draw_glow_pass(view: RunView) -> void:
 	var near_px: float = float(UpgradeSystem.pickup_radius(view.driver.config, world)) / Fx.FX_ONE * RunView.GEM_NEAR_RADII
 	for slot: int in world.gem_slots():
 		if world.gem_uid[slot] != 0 and view.driver.gem_position_px(slot).distance_to(hero) <= near_px:
-			var at: Vector2 = IsoProjection.to_screen(view.driver.gem_position_px(slot)) - Vector2(0, RunView.GEM_LIFT_PX)
+			var at: Vector2 = view.surface_at(view.driver.gem_position_px(slot)) - Vector2(0, RunView.GEM_LIFT_PX)
 			RunLighting.halo(canvas, view._halo_texture, at, 14.0, RunView.COLOR_GEM_GLOW)
 
 
@@ -111,7 +111,7 @@ static func _draw_vfx_light(view: RunView, canvas: Node2D) -> void:
 			continue
 		var ground: Vector2 = view.driver.gem_position_px(slot)
 		var bob: float = sin(view._anim_time * RunView.GEM_BOB_HZ * TAU + float(uid)) * RunView.GEM_BOB_PX
-		var at: Vector2 = IsoProjection.to_screen(ground) - Vector2(0, RunView.GEM_LIFT_PX + bob)
+		var at: Vector2 = view.surface_at(ground) - Vector2(0, RunView.GEM_LIFT_PX + bob)
 		var near: bool = ground.distance_to(hero) <= near_px
 		view._vfx.draw_gem(
 			canvas, at, world.gem_value[slot], 1.0 if near else RunView.GEM_REST_ALPHA, 1.0 if near else RunView.GEM_REST_SCALE
