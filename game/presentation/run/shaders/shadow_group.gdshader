@@ -9,6 +9,7 @@ const int MAX_LIGHTS = 16;
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear_mipmap;
 uniform sampler2D paving_mask : repeat_disable, filter_nearest;
 uniform vec2 paving_size = vec2(1.0);
+uniform vec4 surface_bounds = vec4(0.0);
 uniform float shadow_alpha = 0.4;
 uniform float softness_lod = 1.5;
 // Lanterns: projected ground position, radius, and energy relative to a brazier.
@@ -37,9 +38,17 @@ void fragment() {
 	}
 	float fill = 1.0 - lantern_fill * clamp(lit, 0.0, 1.0);
 	float coverage = max(mask.a * fill, mask.r * contact_strength);
-	vec2 world = vec2(canvas_point.y + canvas_point.x * 0.5, canvas_point.y - canvas_point.x * 0.5) * sqrt(2.0);
-	vec2 uv = world / paving_size;
+	vec2 uv;
+	float surface;
+	if (surface_bounds.z > 0.0) {
+		uv = (canvas_point - surface_bounds.xy) / surface_bounds.zw;
+		surface = step(0.25, texture(paving_mask, uv).g);
+	} else {
+		vec2 world = vec2(canvas_point.y + canvas_point.x * 0.5, canvas_point.y - canvas_point.x * 0.5) * sqrt(2.0);
+		uv = world / paving_size;
+		surface = texture(paving_mask, uv).r;
+	}
 	vec2 inside = step(vec2(0.0), uv) * step(uv, vec2(1.0));
-	coverage *= texture(paving_mask, uv).r * inside.x * inside.y;
+	coverage *= surface * inside.x * inside.y;
 	COLOR = vec4(0.0, 0.0, 0.0, clamp(coverage, 0.0, 1.0) * shadow_alpha);
 }

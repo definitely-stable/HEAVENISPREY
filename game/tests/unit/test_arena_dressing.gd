@@ -395,11 +395,9 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 	var items: Array[Dictionary] = _items()
 	var piers: Dictionary = {}
 	var profiles: Dictionary = {}
+	var copings: Array[Vector4i] = []
 	for item: Dictionary in items:
-		if item["prop"] == "temple_turn":
-			for cell: Vector2i in ArenaDressing.TEMPLE_TURN:
-				piers[cell] = "corner_pier"
-		elif item["prop"] == "bridge_bay":
+		if item["prop"] == "bridge_bay":
 			var start: Vector2 = item["base"]
 			piers[Vector2i((start / CELL).floor())] = "bridge_pier"
 			profiles[ArenaDressing.BRIDGE_ARCH] = true
@@ -407,7 +405,7 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 			var at: Vector2 = item["at"]
 			piers[Vector2i((at / CELL).floor())] = item["prop"]
 	for item: Dictionary in items:
-		if not item.has("panel") or item["prop"] in [ArenaDressing.SANCTUARY_JOIN, "lantern_base"]:
+		if not item.has("panel") or item["prop"] == ArenaDressing.SANCTUARY_JOIN:
 			continue
 		profiles[item["panel"]] = true
 		var from: Vector2 = item["from"]
@@ -421,58 +419,40 @@ func test_each_masonry_run_stops_at_shared_piers() -> void:
 			assert_eq(piers.get(start), "corner_pier", "the red rail enters a full-height pillar")
 			assert_eq(piers.get(end), "corner_pier", "the red rail enters a full-height pillar")
 		if item["prop"] == ArenaDressing.COPING_PROP:
+			copings.append(Vector4i(start.x, start.y, end.x, end.y))
 			var volume: ArrayMesh = item["volume"]
 			var vertices: PackedVector2Array = volume.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
 			var width: float = absf(vertices[4].x - vertices[7].x) + absf(vertices[12].x - vertices[15].x)
 			assert_gt(width, 10.0, "an end-on stone run keeps visible sides below its coping")
+			var feet: PackedVector2Array = item["footprint"][0]
+			for side: int in 2:
+				var cell: Vector2i = start if side == 0 else end
+				var socket: Vector2 = (feet[side] + feet[3 - side]) * 0.5
+				assert_eq(Vector2i((IsoProjection.to_world(socket) / CELL).floor()), cell)
+				var section_end: Vector2 = IsoProjection.to_screen(item["masonry_ends"][side])
+				assert_lt(section_end.distance_to(socket), 5.0, "the wall enters the post's footprint")
 		for distance: int in range(1, maxi(absi(end.x - start.x), absi(end.y - start.y))):
 			var at: Vector2i = start + step * distance
 			assert_does_not_have(piers, at, "no span passes through a pier at %s" % at)
 	assert_eq(profiles.size(), 5, "open bridge arches, temple lacquer, reliefs and two masonry elevations")
+	for span: Vector4i in [Vector4i(33, 6, 34, 7), Vector4i(34, 7, 35, 8), Vector4i(33, 8, 34, 9)]:
+		assert_eq(copings.count(span), 1, "one course on each inner and outer side of the temple corner")
 
 
-func test_painted_fence_joins_fit_their_wall_cells() -> void:
-	var clips: Array[Vector2] = []
-	var contact_runs: int = 0
+func test_bridge_bays_fit_their_wall_cells() -> void:
 	var bays: int = 0
-	var coping: int = 0
-	var plinths: int = 0
 	for item: Dictionary in _items():
-		if item["prop"] == "lantern_base":
-			assert_eq((item["footprint"] as Array).size(), 1)
-			var footprint: PackedVector2Array = item["footprint"][0]
-			for cell: Vector2i in ArenaDressing.GATE_LANTERN_APRON:
-				var socket: Vector2 = (Vector2(cell) + Vector2(0.5, 0.5)) * CELL
-				assert_eq(_char_at(socket), ArenaDressing.LOW_CHAR)
-				assert_true(Geometry2D.is_point_in_polygon(IsoProjection.to_screen(socket), footprint))
-			plinths += 1
+		if item["prop"] != "bridge_bay":
 			continue
-		if item["asset"] != ArenaDressing.FENCE_MODULES_ASSET:
-			continue
-		match item["prop"]:
-			"temple_turn":
-				clips.append(item["clip"])
-				contact_runs += (item["footprint"] as Array).size()
-			"bridge_bay", "cliff_coping":
-				var start: Vector2 = item["base"]
-				var end: Vector2 = item["at"]
-				var step: Vector2 = Vector2(1, -1) if item["prop"] == "bridge_bay" else Vector2.ONE
-				assert_eq(_char_at(start), ArenaDressing.LOW_CHAR)
-				assert_eq(_char_at(start + step * CELL), ArenaDressing.LOW_CHAR)
-				assert_eq(_char_at(end), ArenaDressing.LOW_CHAR)
-				assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
-				bays += int(item["prop"] == "bridge_bay")
-				coping += int(item["prop"] == "cliff_coping")
-	assert_gt(clips.size(), 1, "the turn has depth-sorted sections")
-	if not clips.is_empty():
-		assert_eq(clips[0].x, -INF)
-		assert_eq(clips[-1].y, INF)
-	for index: int in range(1, clips.size()):
-		assert_eq(clips[index - 1].y, clips[index].x, "one sprite without gaps or duplicate strips")
-	assert_eq(contact_runs, 3)
+		var start: Vector2 = item["base"]
+		var end: Vector2 = item["at"]
+		var step: Vector2 = Vector2(1, -1)
+		assert_eq(_char_at(start), ArenaDressing.LOW_CHAR)
+		assert_eq(_char_at(start + step * CELL), ArenaDressing.LOW_CHAR)
+		assert_eq(_char_at(end), ArenaDressing.LOW_CHAR)
+		assert_almost_eq(end.distance_to(start + step * (2 * CELL)), 0.0, 0.01, "a module joins at native scale")
+		bays += 1
 	assert_gt(bays, 6)
-	assert_gt(coping, 6)
-	assert_eq(plinths, 1)
 
 
 func test_rails_run_between_post_faces() -> void:

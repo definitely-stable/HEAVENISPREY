@@ -1,6 +1,6 @@
 extends SceneTree
 ## Fixed eye-level comparisons of the 2.5D paving. The simulation stays at tick zero.
-## godot --path game --resolution 1280x720 -s res://tools/capture_terraces.gd -- <directory> [raised]
+## godot --path game --resolution 1280x720 -s res://tools/capture_terraces.gd -- <directory> [raised] [marks]
 
 const VIEWS: Dictionary[String, Vector2i] = {
 	"temple-court": Vector2i(28, 18), "temple-flight": Vector2i(27, 15), "temple-landing": Vector2i(25, 10),
@@ -8,6 +8,11 @@ const VIEWS: Dictionary[String, Vector2i] = {
 	"east-court": Vector2i(58, 26), "east-flight": Vector2i(63, 25), "east-landing": Vector2i(67, 23),
 	"south-court": Vector2i(44, 48), "south-flight": Vector2i(48, 54), "south-landing": Vector2i(53, 57),
 }
+const MARK_AIM: Dictionary[String, Vector2] = {
+	"temple": Vector2(-1, -1), "maple": Vector2(-1, 1), "east": Vector2(1, -1), "south": Vector2(1, 1),
+}
+var _mark_centre: Vector2
+var _mark_aim: Vector2
 
 
 func _initialize() -> void:
@@ -34,6 +39,8 @@ func _capture() -> void:
 		return
 	view.set_process(false)
 	view.set_physics_process(false)
+	if args.has("marks"):
+		view._danger.draw.connect(_draw_marks.bind(view._danger))
 	var camera: Camera2D = root.get_camera_2d()
 	var heights: Dictionary[String, float] = {}
 	for name: String in VIEWS:
@@ -43,6 +50,9 @@ func _capture() -> void:
 			quit(1)
 			return
 		var at: Vector2 = (Vector2(cell) + Vector2(0.5, 0.5)) * RunView.CELL_PX
+		var district: String = name.get_slice("-", 0)
+		_mark_centre = (Vector2(VIEWS[district + "-flight"]) + Vector2(0.5, 0.5)) * RunView.CELL_PX
+		_mark_aim = MARK_AIM[district].normalized()
 		heights[name] = IsoProjection.to_screen(at).y - view.surface_at(at).y
 		view.driver.world.player_x = roundi(at.x * Fx.FX_ONE)
 		view.driver.world.player_y = roundi(at.y * Fx.FX_ONE)
@@ -65,3 +75,15 @@ func _capture() -> void:
 		return
 	print("Captured %d fixed cameras and sampled these floor heights: %s" % [VIEWS.size(), JSON.stringify(heights)])
 	quit(0)
+
+
+func _draw_marks(canvas: Node2D) -> void:
+	canvas.draw_set_transform_matrix(IsoProjection.ground())
+	AttackTelegraph.draw(canvas, {
+		"radius": 308.0, "angle": _mark_aim.angle(), "form": SimConfig.FORM_CHARGE,
+		"width": 67.0, "progress": 0.57, "active": false,
+	}, _mark_centre - _mark_aim * 154.0)
+	AttackTelegraph.draw_zone(canvas, {
+		"center": _mark_centre + _mark_aim.orthogonal() * 80.0, "radius": 47.0,
+		"form": SimConfig.FORM_GROUND_ZONE, "progress": 0.65, "active": false,
+	})

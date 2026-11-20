@@ -50,12 +50,14 @@ const vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);
 
 varying vec2 world;
 varying float face_shade;
+varying float tread_edge;
 // Specular of this pixel, from fragment() to light().
 varying float gloss;
 
 void vertex() {
 	world = uv_world_px > 0.0 ? UV * uv_world_px : VERTEX;
 	face_shade = uv_world_px > 0.0 ? COLOR.r : 1.0;
+	tread_edge = uv_world_px > 0.0 ? COLOR.g : 0.0;
 }
 
 void fragment() {
@@ -69,7 +71,8 @@ void fragment() {
 	alt_normal.xy = 1.0 - alt_normal.xy;
 	float layer = smoothstep(0.46, 0.54, mask.b + (clean_mid - dot(alt, LUMA)) * edge_break);
 	// COLOR arrives as the clean texture (texture x modulate).
-	vec3 albedo = mix(COLOR.rgb / max(face_shade, 0.01), alt, layer);
+	vec3 base = uv_world_px > 0.0 ? texture(TEXTURE, UV).rgb : COLOR.rgb;
+	vec3 albedo = mix(base, alt, layer);
 	vec3 normal = mix(texture(NORMAL_TEXTURE, UV).rgb, alt_normal, layer);
 	vec2 worn_uv = world / worn_repeat_px;
 	vec3 worn = texture(worn_albedo, worn_uv).rgb;
@@ -78,6 +81,8 @@ void fragment() {
 	// The thresholds use the same slabs as the landing, with less wear across the passage.
 	float dressing = clamp(terrace.r + terrace.g * 0.67, 0.0, 1.0);
 	albedo *= mix(vec3(1.0), vec3(1.20, 1.10, 1.01), dressing);
+	float nosing = smoothstep(0.85, 0.98, tread_edge);
+	albedo += nosing * vec3(0.075, 0.060, 0.049);
 	float damp = mask.a * mix(1.0, 0.64, dressing);
 	float seam = smoothstep(seam_luma - 0.08, seam_luma + 0.06, dot(albedo, LUMA));
 	gloss = (gloss_slab + gloss_damp * damp) * mix(1.0, gloss_worn, wear) * mix(0.25, 1.0, seam) * face_shade;

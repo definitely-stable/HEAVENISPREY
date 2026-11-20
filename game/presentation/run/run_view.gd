@@ -260,8 +260,7 @@ func _build_layers() -> void:
 	var shadow_material: ShaderMaterial = ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	shadow_material.set_shader_parameter("shadow_alpha", RunLighting.SHADOW_ALPHA)
-	shadow_material.set_shader_parameter("paving_mask", _ground.shadow_receiver)
-	shadow_material.set_shader_parameter("paving_size", Vector2(P0Tuning.arena_cells() * CELL_PX))
+	RunEffectsPasses.configure_shadow_receiver(shadow_material, _ground)
 	var pools: PackedVector4Array = PackedVector4Array()
 	for source: Dictionary in _light_points.slice(0, MAX_SHADOW_POOLS):
 		var at: Vector2 = surface_at(source["at"])
@@ -273,9 +272,8 @@ func _build_layers() -> void:
 	_shadow_canvas = Node2D.new()
 	_shadow_canvas.draw.connect(_draw_shadow_pass)
 	group.add_child(_shadow_canvas)
-	_danger = Node2D.new()
+	_danger = RunEffectsPasses.add_danger_layer(under, terrain)
 	_danger.draw.connect(_draw_danger_pass)
-	under.add_child(_danger)
 	material = RunLighting.rim_material(RIM_ENEMY, RIM_ENEMY_STRENGTH, _light_points)
 	_decay = _item(_draw_decay_pass, EnemyReactions.dissolve_material())
 	_decay.show_behind_parent = true
@@ -871,8 +869,6 @@ func _draw_prop(prop: Dictionary) -> void:
 	if driver != null:
 		light = RunLighting.with_aura(light, base, driver.hero_position_px())
 	light = ArenaDressing.wall_light(light) if prop.get("wall", false) else light
-	if prop["prop"] in ["lantern_apron", "lantern_base"]:
-		light = light.darkened(0.22)
 	if prop.has("clip"):
 		_sprites.draw_prop(self, prop["asset"], prop["prop"], prop["screen"], light, false, prop["clip"])
 		return

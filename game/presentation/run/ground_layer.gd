@@ -740,6 +740,7 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	var bay: float = (bridge_right - bridge_left) / BRIDGE_SPANS
 	for edge: PackedVector2Array in _cliff_segments(faces, bridge):
 		var base: int = vertices.size()
+		var lift: float = _cliff_edge_lift(edge)
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
 			for at: Vector2 in edge:
@@ -768,7 +769,6 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 				if opening == 0.0 and sides.has(at):
 					# A projected side contour must not split into independent sheets below the cap.
 					offset = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
-				var lift: float = _rim_lift(at)
 				var down: Vector2 = seam + Vector2(0.0, drop + seam_y * band - lift) + offset
 				vertices.append(down)
 				var shade: float = [0.30, 0.06, 0.19, 0.0, 0.0, 0.0][row]
@@ -799,12 +799,13 @@ func _cliff_mesh(texture: Texture2D, span: float) -> ArrayMesh:
 	# Keep the textured front in front of this narrow, shadowed rock return.
 	for edge: PackedVector2Array in _cliff_segments(back, bridge):
 		var base: int = vertices.size()
+		var lift: float = _cliff_edge_lift(edge)
 		for row: int in CLIFF_DEPTHS.size():
 			var depth: float = CLIFF_DEPTHS[row]
 			for at: Vector2 in edge:
 				var seam: Vector2 = at + rim.get(at, Vector2.ZERO)
 				var offset: Vector2 = JadeGroveCliffRelief.return_offset(seam, centre_x, depth)
-				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX - _rim_lift(at)) + offset)
+				vertices.append(seam + Vector2(0.0, depth * CLIFF_PX - lift) + offset)
 				colors.append(Color(0.57, 0.55, 0.66, CLIFF_VISIBILITY[row]))
 				if texture != null:
 					uvs.append(Vector2((seam.x + seam.y * 0.4) / span, depth))
@@ -948,6 +949,12 @@ func _rim_at(at: Vector2) -> Vector2:
 
 func _rim_lift(screen: Vector2) -> float:
 	return _terrain.rim_height(IsoProjection.to_world(screen)) if _terrain != null else 0.0
+
+
+func _cliff_edge_lift(edge: PackedVector2Array) -> float:
+	if _terrain == null:
+		return 0.0
+	return _terrain.rim_edge_height(IsoProjection.to_world(edge[0]), IsoProjection.to_world(edge[1]))
 
 
 func _add_point(at: Vector2, color: Color, energy: float, radius: float) -> PointLight2D:

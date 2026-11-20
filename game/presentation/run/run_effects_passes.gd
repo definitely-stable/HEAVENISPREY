@@ -2,6 +2,41 @@ class_name RunEffectsPasses
 extends RefCounted
 ## Render the combat overlays and additive light in the same order as the arena view.
 
+const TERRACE_MARKS_SHADER: Shader = preload("res://presentation/run/shaders/terrace_marks.gdshader")
+
+
+static func configure_shadow_receiver(material: ShaderMaterial, ground: GroundLayer) -> void:
+	var terrain: JadeGroveTerrain = ground._terrain
+	if terrain == null or terrain.surface_mask == null:
+		material.set_shader_parameter("paving_mask", ground.shadow_receiver)
+		material.set_shader_parameter("paving_size", ground._arena)
+	else:
+		material.set_shader_parameter("paving_mask", terrain.surface_mask)
+		_set_surface_bounds(material, terrain.surface_bounds)
+
+
+static func add_danger_layer(parent: Node, terrain: JadeGroveTerrain) -> Node2D:
+	var canvas: Node2D = Node2D.new()
+	if terrain == null or terrain.surface_mask == null:
+		parent.add_child(canvas)
+		return canvas
+	var group: CanvasGroup = CanvasGroup.new()
+	# Preserve the original pixels above and below each shifted point for the surface lookup.
+	group.fit_margin = 40.0
+	var material: ShaderMaterial = ShaderMaterial.new()
+	material.shader = TERRACE_MARKS_SHADER
+	material.set_shader_parameter("surface_mask", terrain.surface_mask)
+	_set_surface_bounds(material, terrain.surface_bounds)
+	group.material = material
+	parent.add_child(group)
+	group.add_child(canvas)
+	return canvas
+
+
+static func _set_surface_bounds(material: ShaderMaterial, bounds: Rect2) -> void:
+	material.set_shader_parameter("surface_bounds",
+		Vector4(bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y))
+
 
 static func draw_over_pass(view: RunView) -> void:
 	if view.driver == null:

@@ -34,3 +34,22 @@ func test_bridge_remains_at_court_height() -> void:
 	for cell: Vector2 in [Vector2(8.5, 63.5), Vector2(18.5, 54.5), Vector2(38.5, 33.5)]:
 		var point: Vector2 = cell * RunView.CELL_PX
 		assert_eq(terrain.project(point), IsoProjection.to_screen(point))
+
+
+func test_surface_mask_follows_the_visible_floor_in_screen_space() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var polygon: Polygon2D = terrain.build_paving(data, 1.0)
+	add_child_autofree(polygon)
+	var image: Image = terrain.surface_mask.get_image()
+	for cell: Vector2 in [Vector2(25.5, 10.5), Vector2(9.5, 44.5),
+			Vector2(67.5, 23.5), Vector2(53.5, 57.5), Vector2(38.5, 33.5)]:
+		var world: Vector2 = cell * RunView.CELL_PX
+		var texel: Vector2i = Vector2i((terrain.project(world) - terrain.surface_bounds.position)
+			* JadeGroveTerrain.SURFACE_MASK_SCALE)
+		var encoded: Color = image.get_pixelv(texel)
+		assert_almost_eq(encoded.r * 127.5 - 64.0, terrain.height_at(world), 0.26)
+		assert_eq(encoded.g, 1.0, "the marked point is on a visible tread")
+	var empty: Vector2 = IsoProjection.to_screen(Vector2(20.5, 60.5) * RunView.CELL_PX)
+	var sky_texel: Vector2i = Vector2i((empty - terrain.surface_bounds.position) * JadeGroveTerrain.SURFACE_MASK_SCALE)
+	assert_eq(image.get_pixelv(sky_texel).g, 0.0, "the gorge does not receive floor marks")
