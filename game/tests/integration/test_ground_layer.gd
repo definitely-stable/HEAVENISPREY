@@ -187,7 +187,7 @@ func test_lights_reach_the_ground_layer_only() -> void:
 func test_seal_inlay_and_mist() -> void:
 	var sprites: SpriteSet = SpriteSet.load_default()
 	var ground: GroundLayer = _ground(sprites, FLOOR, [], SEAL, CLIFF, WORN)
-	var seals: Array = ground.find_children("*", "Sprite2D", true, false)
+	var seals: Array = ground._iso.find_children("*", "Sprite2D", false, false)
 	assert_eq(seals.size(), 2, "the seal and its glow")
 	for seal: Sprite2D in seals:
 		assert_eq(seal.position, _centre())

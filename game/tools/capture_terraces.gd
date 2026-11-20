@@ -1,6 +1,6 @@
 extends SceneTree
-## Fixed eye-level comparisons of the 2.5D paving. The simulation stays at tick zero.
-## godot --path game --resolution 1280x720 -s res://tools/capture_terraces.gd -- <directory> [raised] [marks]
+## Fixed cameras on the four crossings in the normal scene. The simulation stays at tick zero.
+## godot --path game --resolution 1280x720 -s res://tools/capture_terraces.gd -- <directory> [marks]
 
 const VIEWS: Dictionary[String, Vector2i] = {
 	"temple-court": Vector2i(28, 18), "temple-flight": Vector2i(27, 15), "temple-landing": Vector2i(25, 10),
@@ -29,8 +29,6 @@ func _capture() -> void:
 	var view: RunView = scene.instantiate()
 	view.read_player_input = false
 	var arena: Dictionary = P0Tuning.arena_data()
-	if args.has("raised"):
-		view.terrain = JadeGroveTerrain.new(arena, RunView.CELL_PX)
 	root.add_child(view)
 	await process_frame
 	if not view.start_run("101"):

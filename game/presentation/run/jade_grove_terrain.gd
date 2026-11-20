@@ -8,20 +8,23 @@ const PLATEAUS: Array[Rect2i] = [
 	Rect2i(33, 10, 16, 15), Rect2i(-20, 30, 23, 13),
 ]
 const FLIGHTS: Array[Rect2i] = [
-	Rect2i(2, -32, 11, 6), Rect2i(-37, -24, 8, 8),
-	Rect2i(30, 13, 8, 8), Rect2i(-14, 27, 11, 7),
+	Rect2i(1, -32, 12, 6), Rect2i(-37, -26, 8, 13),
+	Rect2i(30, 10, 8, 15), Rect2i(-15, 27, 12, 7),
 ]
 const LEVELS: Array[float] = [30.0, 24.0, 24.0, -28.0]
+const SIDE_RISES: int = 4
+const MAX_STEP: float = 6.0
 const VOID: int = 255
 const SURFACE_MASK_SCALE: float = 0.5
+const FACE_OFFSETS: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 ## Terrace code is 1 through 4. Flight faces are clipped in projected grid axes.
 
 var surface_mask: ImageTexture
 var surface_bounds: Rect2
 var _cell_px: float
 var _size: Vector2i
-var _origin: Vector2
 var _tiles: PackedByteArray
+var _levels: PackedFloat32Array
 
 
 func _init(data: Dictionary, cell_px: int) -> void:
@@ -30,45 +33,86 @@ func _init(data: Dictionary, cell_px: int) -> void:
 	_size = Vector2i((rows[0] as String).length(), rows.size())
 	var centre: Array = data["centre"]
 	var seal: Vector2i = Vector2i(centre[0], centre[1])
-	_origin = Vector2(seal) + Vector2(0.5, 0.5)
 	_tiles.resize(_size.x * _size.y)
+	_levels.resize(_tiles.size() * 4)
+	var walkable: PackedByteArray = PackedByteArray()
+	walkable.resize(_tiles.size())
+	var shoulders: Array[int] = []
 	for y: int in _size.y:
 		for x: int in _size.x:
 			var delta: Vector2i = Vector2i(x, y) - seal
 			var uv: Vector2i = Vector2i(delta.x - delta.y, delta.x + delta.y)
 			var tile: String = rows[y][x]
+			var index: int = y * _size.x + x
 			if tile == " ":
-				_tiles[y * _size.x + x] = VOID
+				_tiles[index] = VOID
 				continue
-			for index: int in PLATEAUS.size():
-				if PLATEAUS[index].has_point(uv):
-					_tiles[y * _size.x + x] = index + 1
+			for terrace: int in PLATEAUS.size():
+				if PLATEAUS[terrace].has_point(uv):
+					_tiles[index] = terrace + 1
 					break
+			walkable[index] = int(ArenaTopology.WALK_CHARS.contains(tile))
+			for side: int in 4:
+				var toward: Vector2i = FACE_OFFSETS[side]
+				var sample: Vector2 = Vector2(uv) + Vector2(toward.x - toward.y, toward.x + toward.y) / 3.0
+				var face: int = index * 4 + side
+				_levels[face] = _authored_height(sample, _tiles[index])
+				if walkable[index] and _levels[face] != 0.0:
+					shoulders.append(face)
+	_grade_shoulders(walkable, shoulders)
 
 
 func height_at(at: Vector2) -> float:
-	var cell: Vector2i = Vector2i((at / _cell_px).floor())
+	var position: Vector2 = at / _cell_px
+	var cell: Vector2i = Vector2i(position.floor())
 	if cell.x < 0 or cell.y < 0 or cell.x >= _size.x or cell.y >= _size.y:
 		return 0.0
-	var code: int = _tiles[cell.y * _size.x + cell.x]
-	if code == VOID:
-		return 0.0
-	var uv: Vector2 = _layout_point(at)
+	var local: Vector2 = position - Vector2(cell) - Vector2(0.5, 0.5)
+	var side: int = 2 if local.y >= 0.0 else 0
+	if absf(local.x) > absf(local.y):
+		side = 1 if local.x > 0.0 else 3
+	return _levels[(cell.y * _size.x + cell.x) * 4 + side]
+
+
+static func _authored_height(uv: Vector2, code: int) -> float:
 	var index: int = _flight_index(uv)
 	if index >= 0:
 		var flight: Rect2i = FLIGHTS[index]
-		var axis: int = _flight_axis(index)
-		var width: float = flight.size[axis]
-		var step: float = floorf(uv[axis]) - flight.position[axis] + 1.0
-		if index < 2:
+		if index == 1 or index == 2:
+			return _side_height(uv, index)
+		var width: float = flight.size.y
+		var step: float = floorf(uv.y) - flight.position.y + 1.0
+		if index == 0:
 			step = width - step
 		return LEVELS[index] * clampf(step / width, 0.0, 1.0)
 	return LEVELS[code - 1] if code > 0 else 0.0
 
 
-func _layout_point(at: Vector2) -> Vector2:
-	var delta: Vector2 = at / _cell_px - _origin
-	return Vector2(delta.x - delta.y, delta.x + delta.y)
+## Resolve the outer courses of the flights against walkable paving, including inside a tile.
+func _grade_shoulders(walkable: PackedByteArray, queue: Array[int]) -> void:
+	var bounds: Rect2i = Rect2i(Vector2i.ZERO, _size)
+	var head: int = 0
+	while head < queue.size():
+		var face: int = queue[head]
+		head += 1
+		var level: float = _levels[face]
+		var needed: float = absf(level) - MAX_STEP
+		if needed <= 0.0:
+			continue
+		var side: int = face % 4
+		@warning_ignore("integer_division")
+		var cell: int = face / 4
+		@warning_ignore("integer_division")
+		var coord: Vector2i = Vector2i(cell % _size.x, cell / _size.x) + FACE_OFFSETS[side]
+		var neighbors: Array[int] = [face - side + (side + 1) % 4, face - side + (side + 3) % 4]
+		if bounds.has_point(coord):
+			var next: int = coord.y * _size.x + coord.x
+			if walkable[next]:
+				neighbors.append(next * 4 + (side + 2) % 4)
+		for neighbour: int in neighbors:
+			if absf(_levels[neighbour]) < needed:
+				_levels[neighbour] = needed * signf(level)
+				queue.append(neighbour)
 
 
 static func _flight_index(uv: Vector2) -> int:
@@ -78,8 +122,17 @@ static func _flight_index(uv: Vector2) -> int:
 	return -1
 
 
-static func _flight_axis(index: int) -> int:
-	return 1 if index == 0 or index == 3 else 0
+## Side risers follow a world grid axis so they retain a face at the fixed camera angle.
+## The end courses turn back into the adjoining platforms across the width of the flight.
+static func _side_height(uv: Vector2, index: int) -> float:
+	var west: bool = index == 1
+	var axis: float = -uv.x if west else uv.x
+	var first_riser: float = 51.0 if west else 15.0
+	var into_flight: float = axis - (29.0 if west else 30.0)
+	var step: int = floori((axis - uv.y - first_riser) * 0.5) + 1
+	var tread: int = clampi(floori(into_flight), 0, 2 * SIDE_RISES - 1)
+	var rises: int = clampi(step, maxi(0, tread - SIDE_RISES + 1), mini(SIDE_RISES, tread))
+	return LEVELS[index] * rises / SIDE_RISES
 
 
 func project(at: Vector2) -> Vector2:
@@ -113,7 +166,7 @@ func build_paving(
 	data: Dictionary, texels_per_px: float, bevels: Array[PackedVector2Array] = []
 ) -> Polygon2D:
 	var rows: Array = data["rows"]
-	var edges: Dictionary[Vector4i, Vector2] = {}
+	var edges: Dictionary[Vector4i, Vector3] = {}
 	var faces: Array[Dictionary] = []
 	for y: int in _size.y:
 		for x: int in _size.x:
@@ -132,11 +185,12 @@ func build_paving(
 					Vector2(a) * _cell_px * 0.5, Vector2(b) * _cell_px * 0.5,
 					Vector2(middle) * _cell_px * 0.5,
 				])
-				var level: float = height_at((points[0] + points[1] + points[2]) / 3.0)
+				var level: float = _levels[(y * _size.x + x) * 4 + side]
 				_append_face(faces, points, PackedFloat32Array([level, level, level]), depth, 1.0)
-				_join_edge(faces, edges, a, b, level, depth)
-				_join_edge(faces, edges, b, middle, level, depth)
-				_join_edge(faces, edges, middle, a, level, depth)
+				var tread: int = faces.size() - 1
+				_join_edge(faces, edges, a, b, tread)
+				_join_edge(faces, edges, b, middle, tread)
+				_join_edge(faces, edges, middle, a, tread)
 	for bevel: PackedVector2Array in bevels:
 		var tip: Vector2 = (bevel[1] + bevel[2]) * 0.5
 		for side: int in [1, 2]:
@@ -153,8 +207,7 @@ func build_paving(
 		var polygon: PackedVector2Array = face["points"]
 		var heights: PackedFloat32Array = face["levels"]
 		var part: PackedInt32Array = PackedInt32Array()
-		var uv_centre: Vector2 = _layout_point((polygon[0] + polygon[1] + polygon[2]) / 3.0)
-		var flight: int = _flight_index(uv_centre) if polygon.size() == 3 and heights[0] != 0.0 else -1
+		var nosing: PackedVector2Array = face.get("nosing", PackedVector2Array())
 		for index: int in polygon.size():
 			part.append(vertices.size())
 			vertices.append(polygon[index] - Vector2.ONE * heights[index] / IsoProjection.K)
@@ -165,11 +218,7 @@ func build_paving(
 			uvs.append(sample * texels_per_px)
 			var shade: float = face["shade"]
 			var tint: float = shade if index < 2 or shade == 1.0 else shade * 0.86
-			var edge: float = 0.0
-			if flight >= 0:
-				var axis: int = _flight_axis(flight)
-				var across: float = clampf(_layout_point(polygon[index])[axis] - floorf(uv_centre[axis]), 0.0, 1.0)
-				edge = 1.0 - across if flight == 2 else across
+			var edge: float = float(nosing.has(polygon[index]))
 			colors.append(Color(tint, edge, 0.0))
 		parts.append(part)
 	var paving: Polygon2D = Polygon2D.new()
@@ -253,9 +302,10 @@ static func _rasterize_polygon(image: Image, points: PackedVector2Array, color: 
 
 
 func _join_edge(
-	faces: Array[Dictionary], edges: Dictionary[Vector4i, Vector2],
-	a: Vector2i, b: Vector2i, level: float, depth: float
+	faces: Array[Dictionary], edges: Dictionary[Vector4i, Vector3], a: Vector2i, b: Vector2i, tread: int
 ) -> void:
+	var level: float = faces[tread]["levels"][0]
+	var depth: float = faces[tread]["depth"]
 	var left: Vector2i = a
 	var right: Vector2i = b
 	if a.x > b.x or (a.x == b.x and a.y > b.y):
@@ -263,9 +313,9 @@ func _join_edge(
 		right = a
 	var key: Vector4i = Vector4i(left.x, left.y, right.x, right.y)
 	if not edges.has(key):
-		edges[key] = Vector2(level, depth)
+		edges[key] = Vector3(level, depth, tread)
 		return
-	var other: Vector2 = edges[key]
+	var other: Vector3 = edges[key]
 	edges.erase(key)
 	if is_equal_approx(level, other.x) or a.x - a.y == b.x - b.y:
 		return
@@ -275,6 +325,10 @@ func _join_edge(
 		return
 	var from: Vector2 = Vector2(left) * _cell_px * 0.5
 	var to: Vector2 = Vector2(right) * _cell_px * 0.5
+	var top: Dictionary = faces[tread if depth < other.y else int(other.z)]
+	var corner: PackedVector2Array = top.get("nosing", PackedVector2Array())
+	if corner.is_empty() or from.distance_squared_to(to) > corner[0].distance_squared_to(corner[1]):
+		top["nosing"] = PackedVector2Array([from, to])
 	_append_face(faces, PackedVector2Array([from, to, to, from]),
 		PackedFloat32Array([farther, farther, nearer, nearer]), (depth + other.y) * 0.5, 0.76)
 

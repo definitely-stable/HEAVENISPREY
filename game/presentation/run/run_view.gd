@@ -126,7 +126,6 @@ var runs_started: int = 0
 var session_profile: P0SessionProfile = P0SessionProfile.new()
 var rules_snapshot: RunRulesSnapshot
 var start_error: String = ""
-var terrain: JadeGroveTerrain
 var _registry: ContentRegistry
 var _facing: Vector2 = Vector2.RIGHT
 var _flash: float = 0.0
@@ -239,6 +238,9 @@ func _ready() -> void:
 ## The lit ground, the shadow buffer and danger marks, and the items over this node.
 func _build_layers() -> void:
 	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain
+	if data.get("stage_id") == "stage.jade_grove" and _sprites.has(FLOOR_ASSET) and _sprites.has(WORN_FLOOR_ASSET):
+		terrain = JadeGroveTerrain.new(data, CELL_PX)
 	_props = ArenaDressing.placements(_sprites, data, CELL_PX)
 	_light_points = ArenaDressing.lights(_props, terrain)
 	ArenaDressing.prepare_props(_sprites, _props, _light_points, terrain)
