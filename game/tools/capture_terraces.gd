@@ -58,7 +58,6 @@ func _capture() -> void:
 		view.advance_frame(0.0, Vector2i.ZERO)
 		# Match camera coordinates between the two geometries.
 		camera.position = IsoProjection.to_screen(at)
-		view._ground.follow(at, camera.position, RunView.CAMERA_ZOOM)
 		camera.reset_smoothing()
 		camera.force_update_scroll()
 		await process_frame

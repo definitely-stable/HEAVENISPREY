@@ -579,14 +579,18 @@ static func _lift_prop(sprites: SpriteSet, prop: Dictionary, terrain: JadeGroveT
 	if prop.has("rail_bounds"):
 		var bounds: Rect2 = prop["rail_bounds"]
 		prop["rail_bounds"] = bounds.merge(Rect2(bounds.position + delta, bounds.size))
+	var from_delta: Vector2 = delta
+	var to_delta: Vector2 = delta
 	if prop.has("masonry_ends"):
 		var ends: PackedVector2Array = prop["masonry_ends"]
 		_build_masonry_volume(sprites, prop, ends[0], ends[1], terrain)
+		from_delta.y = -terrain.height_at(ends[0])
+		to_delta.y = -terrain.height_at(ends[1])
 	var footprint: Array = prop.get("footprint", [])
 	for index: int in footprint.size():
 		var polygon: PackedVector2Array = footprint[index]
 		for vertex: int in polygon.size():
-			polygon[vertex] += delta
+			polygon[vertex] += from_delta if vertex == 0 or vertex == polygon.size() - 1 else to_delta
 		footprint[index] = polygon
 
 

@@ -380,7 +380,7 @@ func start_run(seed_text: Variant = null, class_id: String = "class.sword") -> b
 	_chain_line.clear()
 	_camera.position = camera_target()
 	_camera.reset_smoothing()
-	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
+	_ground.follow_hero(driver.hero_position_px())
 	_sync_menu()
 	queue_redraw()
 	return true
@@ -445,7 +445,7 @@ func _show_class_select() -> void:
 	var centre: Vector2 = GroundLayer.centre_of(P0Tuning.arena_data(), CELL_PX)
 	_camera.position = IsoProjection.to_screen(centre)
 	_camera.reset_smoothing()
-	_ground.follow(centre, _camera.position, CAMERA_ZOOM, false)
+	_ground.follow_hero(centre, false)
 	_class_select.open(_registry, session_profile.granted_unlock_ids(), _last_class_id)
 	queue_redraw()
 
@@ -518,7 +518,7 @@ func advance_frame(delta: float, move: Vector2i) -> int:
 			_hero_stride_time += travel.length() * FixedTickDriver.TICK_SECONDS / P0Tuning.HERO_SPEED_SU_PER_TICK
 	_update_facing()
 	_camera.position = camera_target()
-	_ground.follow(driver.hero_position_px(), _camera.position, CAMERA_ZOOM)
+	_ground.follow_hero(driver.hero_position_px())
 	_sync_menu()
 	if driver.world.is_over():
 		_show_results()
@@ -754,7 +754,7 @@ func _draw_shadow_pass() -> void:
 				var pose: Array = _frame_pose(slot)
 				_cast_shadow(canvas, pose, _enemy_feet(slot), EnemyMotion.lift(pose[0], world.enemy_uid[slot], _anim_time))
 		_cast_shadow(canvas, _hero_pose(), driver.hero_position_px())
-	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
+	var window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_screen_center_position())
 	ArenaDressing.draw_shadows(canvas, _sprites, _props, _disc_texture, window)
 	for source: Dictionary in _light_points:
 		RunLighting.contact(canvas, _disc_texture, surface_at(source["at"]), CELL_PX * 0.65)
@@ -826,7 +826,7 @@ func _draw_bodies() -> void:
 		for slot: int in world.enemy_slots():
 			if world.enemy_uid[slot] != 0:
 				order.append(Vector2i(roundi(IsoProjection.depth(driver.enemy_position_px(slot)) * 16.0), slot))
-	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_target_position())
+	var rail_window: Rect2 = ArenaDressing.rail_draw_window(self, _camera.get_screen_center_position())
 	for prop: Dictionary in _props:
 		if prop["prop"] == ArenaDressing.COPING_PROP and not prop.has("panel"):
 			continue

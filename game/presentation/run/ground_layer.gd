@@ -127,6 +127,8 @@ func _init(
 ) -> void:
 	layer = LAYER
 	follow_viewport_enabled = true
+	# Position the separate scenery canvas after Camera2D updates its smoothed scroll.
+	process_priority = 1
 	_data = data
 	_arena = Vector2(cells_of(data) * cell_px)
 	_centre = centre_of(data, cell_px)
@@ -329,16 +331,21 @@ static func wear_mask(data: Dictionary, cell_px: int, clear_radius: float) -> Im
 	return image
 
 
-## Moves the hero aura to the hero's ground point (world px), drifts the mist and slides the
-## distant scenery with the view. `view_centre` is the screen point (projected px) the camera
-## aims at, `zoom` its zoom; by default the view is centred on the hero at zoom 1.
-func follow(hero: Vector2, view_centre: Vector2 = Vector2.INF, zoom: float = 1.0, show_aura: bool = true) -> void:
-	var centre: Vector2 = surface_at(hero) if view_centre == Vector2.INF else view_centre
+func follow_hero(hero: Vector2, show_aura: bool = true) -> void:
 	_aura.position = surface_at(hero)
 	_aura.visible = show_aura
+
+
+func _process(_delta: float) -> void:
+	var camera: Camera2D = get_viewport().get_camera_2d()
+	if camera != null:
+		_position_scenery(camera.get_screen_center_position(), camera.zoom.x)
+
+
+func _position_scenery(centre: Vector2, zoom: float) -> void:
 	for rect: ColorRect in [_sky, _veil]:
 		(rect.material as ShaderMaterial).set_shader_parameter("camera_offset", centre)
-	var size: Vector2 = get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
+	var size: Vector2 = get_viewport().get_visible_rect().size
 	for index: int in _backdrop.get_child_count():
 		var plane: Node2D = _backdrop.get_child(index) as Node2D
 		plane.scale = Vector2.ONE * zoom

@@ -263,13 +263,35 @@ func test_backdrop_slides_slower_than_the_view() -> void:
 	assert_eq(horizon.texture, sprites.canvas_texture(ArenaDressing.HORIZON_ASSET))
 	assert_eq(far.mesh.get_surface_count(), 1)
 	assert_eq(near.mesh.get_surface_count(), 1)
-	ground.follow(_centre(), centre, 1.3)
+	ground._position_scenery(centre, 1.3)
 	var origin: Vector2 = far.position
 	var travel: Vector2 = Vector2(200, -100)
-	ground.follow(_centre(), centre + travel, 1.3)
+	ground._position_scenery(centre + travel, 1.3)
 	assert_almost_eq(far.position - origin, -travel * GroundLayer.FAR_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_almost_eq(horizon.position - origin, -travel * GroundLayer.HORIZON_PARALLAX * 1.3, Vector2(0.01, 0.01))
 	assert_lt(far.position.distance_to(origin), near.position.distance_to(origin))
+
+
+func test_scenery_and_mist_follow_the_visible_camera_while_it_settles() -> void:
+	var ground: GroundLayer = _ground(SpriteSet.new(), "none")
+	var camera: Camera2D = Camera2D.new()
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 1.0
+	camera.zoom = Vector2.ONE * 1.3
+	add_child_autofree(camera)
+	camera.make_current()
+	camera.reset_smoothing()
+	camera.position = Vector2(300, 200)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var centre: Vector2 = camera.get_screen_center_position()
+	assert_gt(centre.distance_to(camera.get_target_position()), 1.0, "the camera is still settling")
+	var size: Vector2 = ground.get_viewport().get_visible_rect().size
+	for index: int in GroundLayer.SCENERY_PARALLAX.size():
+		var plane: Node2D = ground._backdrop.get_child(index)
+		var expected: Vector2 = ground.backdrop_origin(centre, camera.zoom.x, size, GroundLayer.SCENERY_PARALLAX[index])
+		assert_almost_eq(plane.position, expected, Vector2.ONE * 0.01)
+	assert_eq(ground._veil.material.get_shader_parameter("camera_offset"), centre)
 
 
 func test_cliff_bends_beneath_the_paving_without_seams() -> void:
@@ -362,9 +384,9 @@ func test_cliff_growth_hangs_from_the_real_rock_in_one_batch() -> void:
 
 func test_aura_follows_the_hero() -> void:
 	var ground: GroundLayer = _ground(SpriteSet.new(), "none")
-	ground.follow(Vector2(300, 200))
+	ground.follow_hero(Vector2(300, 200))
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(300, 200)), 0.0, 0.01)
-	ground.follow(Vector2(500, 100), IsoProjection.to_screen(Vector2(400, 300)), 1.3)
+	ground.follow_hero(Vector2(500, 100))
 	assert_almost_eq(ground.aura_position().distance_to(Vector2(500, 100)), 0.0, 0.01, "the aura stays on the hero")
 
 

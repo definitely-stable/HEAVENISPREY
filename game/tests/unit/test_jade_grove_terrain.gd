@@ -102,3 +102,27 @@ func test_default_run_view_projects_raised_paving_shadows_and_warnings() -> void
 	assert_not_null(warnings, "the normal scene projects attack outlines onto the raised paving")
 	if warnings != null:
 		assert_eq(warnings.get_shader_parameter("surface_mask"), shadows.get_shader_parameter("paving_mask"))
+
+
+func test_masonry_contacts_reach_both_ends_of_a_raised_wall() -> void:
+	var data: Dictionary = P0Tuning.arena_data()
+	var terrain: JadeGroveTerrain = JadeGroveTerrain.new(data, RunView.CELL_PX)
+	var sprites: SpriteSet = SpriteSet.load_default()
+	var props: Array[Dictionary] = ArenaDressing.placements(sprites, data, RunView.CELL_PX)
+	var footprints: Dictionary[int, PackedVector2Array] = {}
+	for index: int in props.size():
+		if props[index].has("footprint") and props[index].has("masonry_ends"):
+			var polygon: PackedVector2Array = props[index]["footprint"][0]
+			footprints[index] = polygon.duplicate()
+	ArenaDressing.prepare_props(sprites, props, ArenaDressing.lights(props, terrain), terrain)
+	var sloped: int = 0
+	for index: int in footprints:
+		var ends: PackedVector2Array = props[index]["masonry_ends"]
+		var contact: PackedVector2Array = props[index]["footprint"][0]
+		var left: float = terrain.height_at(ends[0])
+		var right: float = terrain.height_at(ends[1])
+		sloped += int(not is_equal_approx(left, right))
+		for vertex: int in contact.size():
+			var lift: float = left if vertex == 0 or vertex == contact.size() - 1 else right
+			assert_almost_eq(footprints[index][vertex] - contact[vertex], Vector2(0.0, lift), Vector2.ONE * 0.01)
+	assert_gt(sloped, 0)
